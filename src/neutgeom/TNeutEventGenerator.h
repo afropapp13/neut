@@ -26,6 +26,7 @@
 #include "vcworkC.h"
 #include "neworkC.h"
 #include "fsihistC.h"
+#include "nucleonfsihistC.h"
 #include "neutcrsC.h"
 #include "posinnucC.h"
 
@@ -154,6 +155,22 @@ public:
     fDir[2] = fsihist_.dirvert[ip][2];
     return fDir;
   };
+
+
+  // NUCLEON FSI history information
+  int getNNFnvert()   { return nucleonfsihist_.nfnvert;   }
+  int getNNFiflag(int iv)   { return nucleonfsihist_.nfiflag[iv];   }
+  float getNNFx(int iv)   { return nucleonfsihist_.nfx[iv];   }
+  float getNNFy(int iv)   { return nucleonfsihist_.nfy[iv];   }
+  float getNNFz(int iv)   { return nucleonfsihist_.nfz[iv];   }
+  float getNNFpx(int iv)   { return nucleonfsihist_.nfpx[iv];   }
+  float getNNFpy(int iv)   { return nucleonfsihist_.nfpy[iv];   }
+  float getNNFpz(int iv)   { return nucleonfsihist_.nfpz[iv];   }
+  float getNNFe(int iv)   { return nucleonfsihist_.nfe[iv];   }
+  int getNNFfirststep(int iv)   { return nucleonfsihist_.nffirststep[iv];   }
+  int getNNFnstep()   { return nucleonfsihist_.nfnstep;   }
+  float getNNFecms2(int is)   { return nucleonfsihist_.nfecms2[is];   }
+  float getNNFptot(int is)   { return nucleonfsihist_.nfptot[is];   }
 
 
   // Cross section and bound proton info

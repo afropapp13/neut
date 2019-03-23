@@ -277,6 +277,72 @@ private:
   int    fNEiverti[kNEmaxvertp];
   int    fNEivertf[kNEmaxvertp];
 
+  
+  //
+  // nucleon fsi history for systematic reweighting
+  // added 2014-10-14 by M. Hierholzer
+  //
+  
+  // maximum number of vertices
+  static const int kNFmaxvert = 200;
+  
+  // maximum number of steps
+  static const int kNFmaxstep = 2000;
+
+  // actual number of vertices
+  int    fNFnvert;
+  
+  // 4-digit flag for interaction type at i-th vertex, in the form "BNTP":
+  //   N: charge nucleon propagated through nucleus (0 = neutron, 1 = proton)
+  //   T: charge "target" nucleon the interaction is taking place on
+  //   P: scattering process:
+  //      P=0: start tracking of nucleon (i.e. gets "created")
+  //      P=1: elastic scattering
+  //      P=2: single pion production
+  //      P=3: double pion production
+  //      P=4: stop tracking of nucleon (i.e. leaves nucleus)
+  //   B: Pauli blocking flag (0 = not blocked, 1 = interaction was Pauli blocked
+  //      and actually did not take place)
+  //   Examples:
+  //    - 103 means double pion production when a proton scattered on a neutron
+  //    - 1011 means elastic scattering of a neutron on a proton did not take
+  //      place due to Pauli blocking
+  //   For P=0 and P=4, "T" is without meaning and always set to 0.
+  int    fNFiflag[kNFmaxvert];
+
+  // x-component of i-th vertex position inside nucleus
+  float  fNFx[kNFmaxvert];
+
+  // y-component of i-th vertex position inside nucleus
+  float  fNFy[kNFmaxvert];
+  
+  // z-component of i-th vertex position inside nucleus
+  float  fNFz[kNFmaxvert];
+  
+  // x-component of nucleon momentum at i-th vertex
+  float  fNFpx[kNFmaxvert];
+  
+  // y-component of nucleon momentum at i-th vertex
+  float  fNFpy[kNFmaxvert];
+  
+  // z-component of nucleon momentum at i-th vertex
+  float  fNFpz[kNFmaxvert];
+  
+  // energy of nucleon at i-th vertex
+  float  fNFe[kNFmaxvert];
+  
+  // first step index of this track (to obtain the CMS energies for each step)
+  // Note: Fortran convention is used, i.e. counting from 1
+  int fNFfirststep[kNFmaxvert];
+  
+  // actual number of steps
+  int    fNFnstep;
+  
+  // CMS energy squared of collision at k-th step
+  // The sign of this value indicates the charge of the target nucleon:
+  //  NFecms2 > 0: proton,  NFecms2 < 0: neutron (same as "T" in NFiflag)
+  float  fNFecms2[kNFmaxstep];
+
 
   // FLUX INFORMATION
 

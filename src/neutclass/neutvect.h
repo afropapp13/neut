@@ -9,6 +9,8 @@
 #include "neutpart.h"
 #include "neutfsipart.h"
 #include "neutfsivert.h"
+#include "neutnucfsivert.h"
+#include "neutnucfsistep.h"
 
 class NeutVect : public TObject {
 
@@ -163,10 +165,30 @@ class NeutVect : public TObject {
   /* FSI Vertex Information */
   NeutFsiVert       *FsiVertInfo(Int_t idx)
 	{ return (NeutFsiVert *)((fNfsiVert>idx) ? (fFsiVertInfo->At(idx)) : NULL );};
-  void SetFsiVertInfo(Int_t idx      , NeutFsiVert VInfo);
+  void SetFsiVertInfo(Int_t idx     , NeutFsiVert VInfo);
   void SetFsiVertInfo(Int_t nvert   , NeutFsiVert *VInfo_array);
 
   Float_t Fsiprob;
+
+  /* Number of Nucleon FSI Vertices */
+  Int_t          NnucFsiVert(void)        const {return fNnucFsiVert; }
+  void           SetNnucFsiVert(Int_t nnucvert);
+
+  /* Nucleon FSI Vertex Information */
+  NeutNucFsiVert       *NucFsiVertInfo(Int_t idx)
+  { return (NeutNucFsiVert *)((fNnucFsiVert>idx) ? (fNucFsiVertInfo->At(idx)) : NULL );};
+  void SetNucFsiVertInfo(Int_t idx      , NeutNucFsiVert VInfo);
+  void SetNucFsiVertInfo(Int_t nnucvert , NeutNucFsiVert *VInfo_array);
+
+  /* Number of Nucleon FSI Steps */
+  Int_t          NnucFsiStep(void)        const {return fNnucFsiStep; }  
+  void           SetNnucFsiStep(Int_t nnucstep);
+
+  /* Nucleon FSI Step Information */
+  NeutNucFsiStep       *NucFsiStepInfo(Int_t idx)
+  { return (NeutNucFsiStep *)((fNnucFsiStep>idx) ? (fNucFsiStepInfo->At(idx)) : NULL );};
+  void SetNucFsiStepInfo(Int_t idx      , NeutNucFsiStep VInfo);
+  void SetNucFsiStepInfo(Int_t nnucstep , NeutNucFsiStep *VInfo_array);
 
  private:
 
@@ -185,8 +207,15 @@ class NeutVect : public TObject {
 
   Int_t          fNfsiPart;  // Number of FSI particles
   Int_t          fNfsiVert;  // Number of FSI vertices
+
   TObjArray      *fFsiPartInfo; // ->
   TObjArray      *fFsiVertInfo; // ->
+
+  Int_t          fNnucFsiVert;  // Number of Nucleon FSI vertices
+  Int_t          fNnucFsiStep;  // Number of Nucleon FSI steps
+
+  TObjArray      *fNucFsiVertInfo; // ->
+  TObjArray      *fNucFsiStepInfo; // ->
 
   TLorentzVector fZeroVect;  // !
   

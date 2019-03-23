@@ -46,6 +46,8 @@ C     &     LOOPPI
 
 #include "posinnuc.h"
 
+#include "nucleonfsihist.h"
+
 C      integer*4 ino16
 C      real*4    xin
 C      COMMON /SAVXIN/INO16,XIN(3)
@@ -80,6 +82,13 @@ C
       IF  ((PVC(1,2)**2+PVC(2,2)**2+PVC(3,2)**2).lt.1.e-5) THEN
          return
       endif
+
+!
+!     reset nucleon fsi common block
+!
+      NFnvert = 0
+      NFnstep = 0
+
 
   100 CONTINUE
 

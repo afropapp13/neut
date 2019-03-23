@@ -17,6 +17,7 @@
 #include "neutcrsC.h"
 #include "posinnucC.h"
 #include "fsihistC.h"
+#include "nucleonfsihistC.h"
 #include "neutcrsC.h"
 
 extern "C"
@@ -123,6 +124,9 @@ neutfillvect(char *filename, char *treename, char *branchname)
   NeutFsiVert fsivinfo;
   NeutFsiPart fsipinfo;
 
+  NeutNucFsiVert nucfsivinfo;
+  NeutNucFsiStep nucfsisinfo;  
+
   int i,j;
 
   nefillver_();
@@ -138,6 +142,8 @@ neutfillvect(char *filename, char *treename, char *branchname)
   nv->SetNpart(0);
   nv->SetNfsiPart(0);
   nv->SetNfsiVert(0);
+  nv->SetNnucFsiVert(0);
+  nv->SetNnucFsiStep(0);
   
   /****************************************************/
   nv->EventNo = event_no++;
@@ -342,6 +348,71 @@ neutfillvect(char *filename, char *treename, char *branchname)
     nv->Fsiprob = -1;
   }
 
+  // Nucleon FSI Verticies
+  Int_t nnucfsivert = nucleonfsihist_.nfnvert;
+  
+  if (nnucfsivert) {
+    nv->SetNnucFsiVert(nnucfsivert);
+
+    for ( i = 0 ; i < nnucfsivert ; i++ ){
+    
+      nucfsivinfo.fVertFlag      = nucleonfsihist_.nfiflag[i];
+      nucfsivinfo.fVertFirstStep = nucleonfsihist_.nffirststep[i];
+
+      nucfsivinfo.fPos.SetXYZT(nucleonfsihist_.nfx[i],
+							   nucleonfsihist_.nfy[i],
+							   nucleonfsihist_.nfz[i],
+							   0.);
+      nucfsivinfo.fMom.SetPxPyPzE(nucleonfsihist_.nfpx[i],
+								  nucleonfsihist_.nfpy[i],
+								  nucleonfsihist_.nfpz[i],
+								  nucleonfsihist_.nfe[i]);
+
+      nv->SetNucFsiVertInfo(i, nucfsivinfo);
+    }
+  }
+  // Generate dummy object for no FSI block (no pion) events
+  // to protect from memory leak when reading from the tree
+  // (You'll need to take care of this in downstream routines)
+  else {
+    nv->SetNnucFsiVert(1);
+	nucfsivinfo.fVertFlag      = -1;
+	nucfsivinfo.fVertFirstStep = -1;
+	
+	nucfsivinfo.fPos.SetXYZT(0.,0.,0.,0.);
+	nucfsivinfo.fMom.SetPxPyPzE(0.,0.,0.,0.);
+								
+    nv->SetNucFsiVertInfo(0, nucfsivinfo);
+  }
+
+  // Nucleon FSI Step
+  Int_t nnucfsis = nucleonfsihist_.nfnstep;
+  
+  if ( nnucfsis ) {
+    nv->SetNnucFsiStep(nnucfsis);
+
+    for ( i = 0 ; i < nnucfsis ; i++ ){
+      
+      nucfsisinfo.fECMS2 = nucleonfsihist_.nfecms2[i];
+      nucfsisinfo.fProb  = nucleonfsihist_.nfptot[i];
+  
+      nv->SetNucFsiStepInfo(i, nucfsisinfo);
+
+    }
+
+  } 
+  // Generate dummy object for no FSI block (no pion) events
+  // to protect from memory leak when reading from the tree
+  // (You'll need to take care of this in downstream routines)
+  else {
+    nv->SetNnucFsiStep(1);
+
+	nucfsisinfo.fECMS2 =  0.;
+	nucfsisinfo.fProb  = -1.;
+  
+    nv->SetNucFsiStepInfo(0, nucfsisinfo);
+
+  }
 
   if (!(neutcard_.quiet)){
 	nv->Dump();

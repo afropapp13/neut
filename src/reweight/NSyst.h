@@ -141,7 +141,8 @@ typedef enum ENSyst {
   kCascTwkDial_FrInelHigh_pi,  ///< tweak inelastic (QE in NEUT) probability for high energy pions
   kCascTwkDial_FrCExHigh_pi,   ///< tweak charge exchange probability for high energy pions	    
   kCascTwkDial_FrPiProd_pi,    ///< tweak pion (hadron) production (inelastic in NEUT) probability for pions
-  //kINukeTwkDial_MFP_N,       ///< tweak mean free path for nucleons
+
+  kINukeTwkDial_MFP_N,       ///< tweak mean free path for nucleons
   //kINukeTwkDial_FrCEx_N,     ///< tweak charge exchange probability for nucleons, for given total rescattering probability
   //kINukeTwkDial_FrElas_N,    ///< tweak elastic         probability for nucleons, for given total rescattering probability
   //kINukeTwkDial_FrInel_N,    ///< tweak inelastic       probability for nucleons, for given total rescattering probability
@@ -166,7 +167,8 @@ typedef enum ENSyst {
   //kRDcyTwkDial_Theta_Delta2Npi  ///< distort pi angular distribution in Delta -> N + pi
 
   
-  kSystNucl_PilessDcyRES
+  kSystNucl_PilessDcyRES,
+  
 
   //
   // Misc

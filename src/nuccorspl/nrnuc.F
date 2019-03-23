@@ -143,8 +143,12 @@ c     p-n double pi production
       real*4    ranf
       external  ranf
       
+      real*4 A,B,C
+      common /martindebug/  ptot,A,B,C
+      
+      
       idec=1
-      if(ecms2.le.(2.*amn)**2)go to 200
+      if(ecms2.le.(2.*amn)**2) goto 200         ! check if kinematically possible
       
       eineq=(ecms2-unucl**2-amn**2)/(2*unucl) ! unucl at rest
       ekin = eineq - amn
@@ -158,14 +162,14 @@ c     p-n double pi production
       
       if( ekin  .lt. 360. .or.
      $     ecms2 .lt. (amn+amn+ampi)**2 ) then
-      psp = 0.
-      pdp = 0.
-      call nrhis(ekin,20.,176,ilo,ihi,erem)
-      if(ka-ichint.eq.0) then
-         pel = xepp(ihi)*erem + xepp(ilo)*(1-erem)
-      else
-         pel = xepn(ihi)*erem + xepn(ilo)*(1-erem)
-      end if
+         psp = 0.
+         pdp = 0.
+         call nrhis(ekin,20.,176,ilo,ihi,erem)
+         if(ka-ichint.eq.0) then
+            pel = xepp(ihi)*erem + xepp(ilo)*(1-erem)
+         else
+            pel = xepn(ihi)*erem + xepn(ilo)*(1-erem)
+         end if
       else if( ekin .lt. 920. .or. 
      $     ecms2 .lt. (amn+amn+ampi+ampi)**2 ) then   
          pdp = 0.
@@ -192,21 +196,20 @@ c     p-n double pi production
             pdp = xdpn(ihi2)*erem2 + xdpn(ilo2)*(1-erem2)
          end if
       end if
-      
-      pel=pel*fac
-      psp=psp*fac
-      pdp=pdp*fac
-      ptot=(pel+psp+pdp)*xnucfact
-      if(ptot.eq.0)go to 200
+      pel=pel*fac*xnucfact
+      psp=psp*fac*xnucfact
+      pdp=pdp*fac*xnucfact
+      ptot=pel+psp+pdp
+      if(ptot.eq.0) goto 200
       xr=ranf()+1.e-6
       yr=ranf()*ptot
       ptot=ptot*rhon
       dist=-log(xr)/ptot
-      if(step.lt.dist)go to 200 ! no interaction
+      if(step.lt.dist) goto 200 ! no interaction
       
-      if(yr.le.pel)then
+      if(yr.le.pel) then
          iqq=1                  !elastic
-      else if(yr.le.pel+psp)then
+      else if(yr.le.pel+psp) then
          iqq=2                  !single production
       else
          iqq=3                  !double production
@@ -215,10 +218,13 @@ c     p-n double pi production
 c     make kinematics and final state
       call nrprd(iqq,eineq,ichint,piso,chiso) 
       
-      p1=sqrt(piso(1,1)**2+piso(2,1)**2+piso(3,1)**2) !check Pauli
-      if(p1.lt.pfermi)go to 200
+      ! check for Pauli blocking
+      p1=sqrt(piso(1,1)**2+piso(2,1)**2+piso(3,1)**2)
       p2=sqrt(piso(1,3)**2+piso(2,3)**2+piso(3,3)**2)
-      if(p2.lt.pfermi)go to 200
+      if(p1.lt.pfermi.or.p2.lt.pfermi) then
+        idec=10+iqq             ! return code for interaction that would have taken place, needed for reweighting systematics
+        goto 200
+      end if
       
       idec=-iqq                 !tell what took place
       

@@ -1,0 +1,10 @@
+RELEASE NOTES FOR NEUT 5.3.2.2
+==============================
+
+This version of NEUT is based on version 5.3.2.1 and adds the nucleon FSI passthrough information to the output files.
+
+The following commits (= revision numbers) are included in this version:
+
+121, 129, 132, 135, 136, 137, 139, 140: nucleon FSI passthrough information and reweighting scheme
+119, 120, 124: fixed build environment
+117: removed annoying print for each event in nrinit

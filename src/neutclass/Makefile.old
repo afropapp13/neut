@@ -15,7 +15,9 @@ FOPTFLAGS = -g -fno-backslash -fno-automatic -finit-local-zero \
 	       -fno-globals -fdollar-ok
 
 SOBJS = ${CLASSDIR}/neutctrl.so ${CLASSDIR}/neutpart.so \
-		${CLASSDIR}/neutvect.so ${CLASSDIR}/neutvtx.so
+		${CLASSDIR}/neutvect.so ${CLASSDIR}/neutvtx.so \
+		${CLASSDIR}/neutnucfsistep.so \
+		${CLASSDIR}/neutnucfsivert.so
 
 ROBJS = ${CLASSDIR}/neutfill.o \
 		${CLASSDIR}/neutrootfortwrapper.o \
