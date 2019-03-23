@@ -63,6 +63,7 @@ void NReWeightCasc::Init(void)
   fAbsDef      = fortFns->FEFABSdef  ;   
   fCExLowDef   = fortFns->FEFCXdef   ;  
   fCExHighDef  = fortFns->FEFCXHdef  ; 
+  fAllDef  = fortFns->FEFALLdef  ; 
 
   fInelLowCurr  = fInelLowDef  ;   
   fInelHighCurr = fInelHighDef ;  
@@ -70,6 +71,7 @@ void NReWeightCasc::Init(void)
   fAbsCurr      = fAbsDef      ;   
   fCExLowCurr   = fCExLowDef   ;  
   fCExHighCurr  = fCExHighDef  ; 
+  fAllCurr      = fAllDef  ; 
 
   // For 1-sigma change
   fInelLowTwkDial  = 0;   
@@ -78,6 +80,7 @@ void NReWeightCasc::Init(void)
   fAbsTwkDial      = 0;   
   fCExLowTwkDial   = 0;  
   fCExHighTwkDial  = 0; 
+  fAllTwkDial      = 0; 
 
 
   // For absolute change
@@ -101,6 +104,7 @@ bool NReWeightCasc::IsHandled(NSyst_t syst)
      case ( kCascTwkDial_FrPiProd_pi    ) :
      case ( kCascTwkDial_FrCExHigh_pi   ) :
      case ( kCascTwkDial_FrInelHigh_pi  ) :
+     case ( kCascTwkDial_All_pi         ) :
      //case ( kINukeTwkDial_MFP_N       ) :
      //case ( kINukeTwkDial_FrCEx_N     ) :
      //case ( kINukeTwkDial_FrElas_N    ) :
@@ -145,6 +149,10 @@ void NReWeightCasc::SetSystematic(NSyst_t syst, double twk_dial)
     fInelHighTwkDial =  twk_dial  ;  
     break;
 
+  case ( kCascTwkDial_All_pi  ) :
+    fAllTwkDial =  twk_dial  ;  
+    break;
+
   default:
     break;
   }
@@ -158,6 +166,7 @@ void NReWeightCasc::Reset(void)
   fAbsCurr      = fAbsDef     ;   
   fCExLowCurr   = fCExLowDef  ;  
   fCExHighCurr  = fCExHighDef ; 
+  fAllCurr      = fAllDef ; 
 
   // For 1-sigma change
   fInelLowTwkDial  = 0;   
@@ -166,6 +175,7 @@ void NReWeightCasc::Reset(void)
   fAbsTwkDial      = 0;   
   fCExLowTwkDial   = 0;  
   fCExHighTwkDial  = 0;
+  fAllTwkDial      = 0;
 
   // For absolute change
   //fInelLowTwkDial  = fInelLowDef ;   
@@ -216,6 +226,10 @@ void NReWeightCasc::Reconfigure(void)
   fCExHighCurr = fCExHighDef * (1. + fCExHighTwkDial * fracerr_CExHigh);
   fCExHighCurr   = TMath::Max(0., fCExHighCurr  );
 
+  int    sign_Alltwk = utils::rew::Sign(fAllTwkDial);
+  double fracerr_All = fracerr->OneSigmaErr(kCascTwkDial_All_pi, sign_Alltwk);
+  fAllCurr = fAllDef * (1. + fAllTwkDial * fracerr_All);
+  fAllCurr   = TMath::Max(0., fAllCurr  );
 
   // For absolute change
   //fInelLowCurr =  fInelLowTwkDial ;
@@ -241,6 +255,7 @@ double NReWeightCasc::CalcWeight()
   		   (TMath::Abs(fPiProdTwkDial) > controls::kASmallNum) ||
   		   (TMath::Abs(fCExLowTwkDial) > controls::kASmallNum) ||
   		   (TMath::Abs(fCExHighTwkDial) > controls::kASmallNum) );
+  		   (TMath::Abs(fAllTwkDial) > controls::kASmallNum) );
 
 
   //cout << fInelLowCurr << " " <<  fInelLowDef    << endl;
@@ -318,6 +333,7 @@ double NReWeightCasc::CalcWeight()
   neffpr_.fefabs  = (float)fAbsCurr;
   neffpr_.fefcx   = (float)fCExLowCurr;
   neffpr_.fefcxh  = (float)fCExHighCurr;  
+  neffpr_.fefall  = (float)fAllCurr;  
 
   fortFns->Reconfigure();
 
@@ -365,6 +381,7 @@ double NReWeightCasc::CalcChisq(void)
   chisq += TMath::Power(fPiProdTwkDial, 2.);
   chisq += TMath::Power(fCExLowTwkDial, 2.);
   chisq += TMath::Power(fCExHighTwkDial, 2.);
+  chisq += TMath::Power(fAllTwkDial, 2.);
 
   return chisq;
 }
@@ -379,6 +396,7 @@ vector<double> NReWeightCasc::GetCurrParVals(void)
   parVals.push_back(fInelHighCurr);
   parVals.push_back(fCExHighCurr);   
   parVals.push_back(fPiProdCurr);	   
+  parVals.push_back(fAllCurr);
   return parVals;  
 }
 //_______________________________________________________________________________________

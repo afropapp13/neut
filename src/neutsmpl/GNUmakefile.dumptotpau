@@ -24,23 +24,22 @@ LIBDIRS =     -L${COREDIR} -L../../lib/Linux_pc -L../nuccorspl/Linux_pc \
                        -L../nuceff/Linux_pc -L../partnuck/Linux_pc \
                        -L../skmcsvc/Linux_pc -L../specfunc -L../specfunc/Linux_pc
 
-NEUTCOREVER	= 5.3.4
-INEUTCOREVER= 534
-
-NUCEFFVER   = 5.3.3
-INUCEFFVER  = 533
-
-NUCCORVER   = 5.3.3
-INUCCORVER  = 533
-
-PARTNUCKVER = 5.3.3
-IPARTNUCKVER= 533
-
-SKMCSVCVER  = 5.3.3
-ISKMCSVCVER = 533
-
-SPECFUNCVER  = 5.3.3
-ISPECFUNCVER = 533
+NEUTCOREVER	= 5.3.5
+INEUTCOREVER= 535
+NUCEFFVER   = 5.3.5
+INUCEFFVER  = 535
+NUCCORVER   = 5.3.5
+INUCCORVER  = 535
+PARTNUCKVER = 5.3.5
+IPARTNUCKVER= 535
+SKMCSVCVER  = 5.3.5
+ISKMCSVCVER = 535
+ZBSFNSVER   = 5.3.5
+IZBSFNSVER  = 535
+SPECFUNCVER = 5.3.5
+ISPECFUNCVER= 535
+RADCORRVER  = 5.3.5
+IRADCORRVER = 535
 
 FORTRANDEFINES += -DNECORE_VERSION=$(INEUTCOREVER)
 FORTRANDEFINES += -DNENUCE_VERSION=$(INUCEFFVER)
@@ -50,7 +49,8 @@ MCLIB = ${LIBDIRS} \
 	  	-lneutcore_${NEUTCOREVER} -lspecfunc_${SPECFUNCVER} \
 		-lnuceff_${NUCEFFVER} \
 		-lneutcore_${NEUTCOREVER} -lnuccorrspl_${NUCCORVER} \
-		-lpartnuck_${PARTNUCKVER} -lskmcsvc_${SKMCSVCVER}
+		-lpartnuck_${PARTNUCKVER} -lskmcsvc_${SKMCSVCVER} \
+		-lradcorr_${RADCORRVER}		
 
 CLIBS = ${CERN}/${CERN_LEVEL}/lib/libjetset74.a \
 		${CERN}/${CERN_LEVEL}/lib/libpdflib804.a \
@@ -75,7 +75,7 @@ ROBJS = ${CLASSDIR}/neutfill.o \
 
 POBJS = ${COREDIR}/structm.o ${COREDIR}/pdfset.o ${COREDIR}/grv94di.o \
 		${COREDIR}/grv98_lo.o
-MOBJS = ${NEUT_SRC}/neutsmpl/nevecgen.o ${NEUT_SRC}/neutsmpl/grndmq.o ${NEUT_SRC}/neutsmpl/rmarin_dum.o
+#MOBJS = ${NEUT_SRC}/neutsmpl/nevecgen.o ${NEUT_SRC}/neutsmpl/grndmq.o ${NEUT_SRC}/neutsmpl/rmarin_dum.o
 
 OBJS = 
 

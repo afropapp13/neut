@@ -100,6 +100,20 @@ void TNeutOutput::InitTree(Float_t fluxVersion){
     fOutputTree->Branch("NEiverti",        fNEiverti    ,    "NEiverti[NEnvcvert]/I"   );
     fOutputTree->Branch("NEivertf",        fNEivertf    ,    "NEivertf[NEnvcvert]/I"   );
 
+    // nucleon fsi history block
+    fOutputTree->Branch("NFnvert",        &fNFnvert     ,     "NFnvert/I"               );
+    fOutputTree->Branch("NFiflag",         fNFiflag     ,     "NFiflag[NFnvert]/I"      );
+    fOutputTree->Branch("NFx",             fNFx         ,     "NFx[NFnvert]/F"          );
+    fOutputTree->Branch("NFy",             fNFy         ,     "NFy[NFnvert]/F"          );
+    fOutputTree->Branch("NFz",             fNFz         ,     "NFz[NFnvert]/F"          );
+    fOutputTree->Branch("NFpx",            fNFpx        ,     "NFpx[NFnvert]/F"         );
+    fOutputTree->Branch("NFpy",            fNFpy        ,     "NFpy[NFnvert]/F"         );
+    fOutputTree->Branch("NFpz",            fNFpz        ,     "NFpz[NFnvert]/F"         );
+    fOutputTree->Branch("NFe",             fNFe         ,     "NFe[NFnvert]/F"          );
+    fOutputTree->Branch("NFfirststep",     fNFfirststep ,     "NFfirststep[NFnvert]/I"  );
+    fOutputTree->Branch("NFnstep",        &fNFnstep     ,     "NFnstep/I"               );
+    fOutputTree->Branch("NFecms2",         fNFecms2     ,     "NFecms2[NFnstep]/F"      );
+
     if(fNuFileName) { 
       std::cout << "Warning in TNeutOutput.cc: fNuFileName has non-zero memory address at initialization" << std::endl;
       fNuFileName = NULL;
@@ -295,6 +309,23 @@ void TNeutOutput::ClearRooTrackerTree(){
     for(int ip2 = 0; ip2 < 3; ip2++){
       fNEdirvert[ip][ip2] = -999999;
     }
+  }
+
+  fNFnvert = 0;  
+  for(int ip = 0; ip < kNFmaxvert; ip++){
+    fNFiflag[ip] = -999999;
+    fNFx[ip] = -999999;
+    fNFy[ip] = -999999;
+    fNFz[ip] = -999999;
+    fNFpx[ip] = -999999;
+    fNFpy[ip] = -999999;
+    fNFpz[ip] = -999999;
+    fNFe[ip] = -999999;
+    fNFfirststep[ip] = -999999;
+  }
+  fNFnstep = 0;  
+  for(int ip = 0; ip < kNFmaxstep; ip++){
+    fNFecms2[ip] = -999999;
   }
 
   fNuParentPdg     = -999999;
@@ -708,6 +739,24 @@ void TNeutOutput::FillRooTrackerTree(Int_t                eventNumber,
     for(int ip2 = 0; ip2 < 3; ip2++){
       fNEdirvert[ip][ip2] = dir[ip2];
     }
+  }
+
+  // Fill NEUT NUCLEON FSIHIST information
+  fNFnvert = theNuFinalState->getNNFnvert();
+  for(int iv = 0; iv < fNFnvert; iv++) {
+    fNFiflag[iv] = theNuFinalState->getNNFiflag(iv);
+    fNFx[iv] = theNuFinalState->getNNFx(iv);
+    fNFy[iv] = theNuFinalState->getNNFy(iv);
+    fNFz[iv] = theNuFinalState->getNNFz(iv);
+    fNFpx[iv] = theNuFinalState->getNNFpx(iv);
+    fNFpy[iv] = theNuFinalState->getNNFpy(iv);
+    fNFpz[iv] = theNuFinalState->getNNFpz(iv);
+    fNFe[iv] = theNuFinalState->getNNFe(iv);
+    fNFfirststep[iv] = theNuFinalState->getNNFfirststep(iv);
+  }  
+  fNFnstep = theNuFinalState->getNNFnstep();
+  for(int is = 0; is < fNFnstep; is++) {
+    fNFecms2[is] = theNuFinalState->getNNFecms2(is);
   }
 
   // Fill in the Beam Information

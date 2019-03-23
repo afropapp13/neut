@@ -132,7 +132,7 @@ C
       data fname_ma       /"ma1.0.dat","ma1.1.dat",
      $                     "ma1.2.dat","ma1.3.dat"/
 
-      character*40 fname_crsdat(4)
+      character*1024 fname_crsdat(4)
 
       INTEGER*4 IDX_VECFORM,IDX_MA,IDX_NUC,NCELMODE
 

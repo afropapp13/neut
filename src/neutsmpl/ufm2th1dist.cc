@@ -5,6 +5,8 @@
 //  2011.08: First version by S. Tobayama
 
 #include "ufm2th1dist.h"
+#include <iostream>
+using namespace std;
 
 Ufm2TH1dist::~Ufm2TH1dist()
 {
@@ -25,6 +27,7 @@ void Ufm2TH1dist::Init(TH1D* hist)//Initialize using specified histogram
     binEdgs[i]=htmp.GetBinLowEdge(i+1);
     binIntg[i]=bItgtmp[i];
   }
+  binEdgs[nbin] = binEdgs[nbin-1]+htmp.GetBinWidth(nbin-1);
 }
 
 double Ufm2TH1dist::GetValue(double rnd)

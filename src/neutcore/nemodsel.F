@@ -36,6 +36,8 @@
 *       2007.11.05 ; G.Mitsuka support target nucleus besides 16O
 *       2007.11.10 ; T.Tanaka add upmu mode
 *       2013.02.25 ; A.Redij  added npnh mode
+*       2014.12.25 ; Y.Hayato added strangeness violated K prod. mode
+*                      ( interaction part has not been implemented, though )
 *     
 C%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 C
@@ -59,6 +61,12 @@ C          16 : NEU,O(16) --> LEPTON-,O(16),PI+
 C
 C               -- SINGLE GAMMA FROM DELTA RESONANCE --
 C          17 : NEU,N --> LEPTON-,P,GAMMA
+C
+C               -- SINGLE K : Strangeness violated mode --
+C                                     (added 14/12/25 Y. Hayato)
+C          18 : NEU,N --> LEPTON-,N,K+
+C          19 : NEU,N --> LEPTON-,P,K0
+C          20 : NEU,N --> LEPTON-,P,K+
 C
 C               -- MULTI PI (1.3 < W < 2.0 GeV) --
 C          21 : NEU,(N OR P) --> LEPTON-,(N OR P),MULTI PI

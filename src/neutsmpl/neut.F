@@ -4,6 +4,7 @@
 
 C#include <f77/f77_floatingpoint.h>
 
+#include "necard.h"
 #include "necardev.h"
 
       REAL*4    POS(3),DIR(3),PNEU(3)

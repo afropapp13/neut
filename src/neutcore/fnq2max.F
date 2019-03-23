@@ -33,7 +33,7 @@ C    UM    ; MUON MASS
 C    TM    ; TAU MASS
 C     
 C      COMMON /TEST/ENSTOP
-      DATA PM/0.938/
+      DATA PM/0.939/
       DATA EM/0.511E-3/
       DATA UM/0.1057/
 C      DATA TM/1.7771/

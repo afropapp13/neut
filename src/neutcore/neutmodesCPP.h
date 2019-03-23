@@ -11,7 +11,8 @@ const int kNneutModes = 27;
 int neutModeID[kNneutModes] = {
 
   0,
-  1, 
+  1,
+  2,
   11,
   12,
   13,
@@ -35,15 +36,15 @@ int neutModeID[kNneutModes] = {
   45,
   46,
   51,
-  52,
-  2
+  52
 
 };
 
 char neutModeName[kNneutModes][7] = {
 
   "tot",
-  "ccqe",  
+  "ccqe", 
+  "npnh", 
   "ccppip",
   "ccppi0",
   "ccnpip",
@@ -52,7 +53,7 @@ char neutModeName[kNneutModes][7] = {
   "ccmpi", 
   "cceta", 
   "cck",   
-  "ccdis", 
+  "ccdis",
   "ncnpi0",
   "ncppi0",
   "ncppim",
@@ -67,14 +68,14 @@ char neutModeName[kNneutModes][7] = {
   "nckp",  
   "ncdis", 
   "ncqep", 
-  "ncqen",
-  "ccmec"
+  "ncqen"
 
 };
 
 enum neutModeEnum {
   tot,
-  ccqe,  
+  ccqe, 
+  npnh,
   ccppip,
   ccppi0,
   ccnpip,
@@ -98,14 +99,14 @@ enum neutModeEnum {
   nckp,  
   ncdis, 
   ncqep, 
-  ncqen,
-  ccmec
+  ncqen
 };
 
 char neutModeTitle[kNneutModes][75] = {
 
   "Total",
-  "CCQE: #nu_{l} n #rightarrow l^{-} p",					   
+  "CCQE: #nu_{l} n #rightarrow l^{-} p",
+  "Nieves np-nh", 
   "CC 1#pi: #nu_{l} p #rightarrow l^{-} p #pi^{+}",			   
   "CC 1#pi: #nu_{l} n #rightarrow l^{-} p #pi^{0}",			   
   "CC 1#pi: #nu_{l} n #rightarrow l^{-} n #pi^{+}",			   
@@ -129,8 +130,7 @@ char neutModeTitle[kNneutModes][75] = {
   "NC 1K: #nu_{l} n #rightarrow #nu_{l} #Lambda K^{+}",			   
   "NC DIS (2 GeV < W): #nu_{l} N #rightarrow #nu_{l} N' mesons",		   
   "NC elastic: #nu_{l} p #rightarrow #nu_{l} p",				   
-  "NC elastic: #nu_{l} n #rightarrow #nu_{l} n",
-  "CCMEC: #nu_{l} n N #rightarrow l^{-} p N"
+  "NC elastic: #nu_{l} n #rightarrow #nu_{l} n"
 
 };
 

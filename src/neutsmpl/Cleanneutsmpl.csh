@@ -3,9 +3,15 @@
 #############################################################################
 source EnvMakeneutsmpl.csh
 
+
 foreach datfile ($DATFILES)
    \rm -f $datfile
 end
+
+cd ${SOMEWHERE}
+
+cd ../
+rm -rf lib inc include
 
 cd ${SOMEWHERE}/neutcore
 \rm -f pdf804
@@ -24,7 +30,7 @@ cd ${SOMEWHERE}/nuceff
 \rm -f *C.h
 cd ..
 
-foreach i ( neutcore nuccorspl nuceff partnuck skmcsvc tauola )
+foreach i ( neutcore nuccorspl nuceff partnuck skmcsvc radcorr tauola )
  
   cd ${SOMEWHERE}/$i
   \rm -rf ${MACHINE} Makefile

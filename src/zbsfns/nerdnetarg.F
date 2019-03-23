@@ -16,10 +16,11 @@
 #include "rscons.h"
 
       integer*4 NSEGM
-      PARAMETER (NSEGM=8)
+      PARAMETER (NSEGM=15)
 
-      integer*4 LSEGMTBL(10)
-      DATA LSEGMTBL/ 3, 6,11, 7, 5,27,27, 10, 0, 0/
+      integer*4 LSEGMTBL(15)
+      DATA LSEGMTBL/ 3, 6,11, 7, 5,28,28,10,10,11,
+     $               5, 3, 1,25, 3 /
 
       integer*4 IDATA(500)
       real*4    RDATA(500)
@@ -28,7 +29,7 @@
 
       CHARACTER*32 CNAME
 
-      integer*4 IERR,ISEGM,NDATA,I
+      integer*4 IERR,ISEGM,NDATA,I,NSEGMFILE
 
       CNAME='NEUTINFO'
 
@@ -55,14 +56,29 @@ C
       ISEGM   = 0
       call kzget0(CNAME,ISEGM,NDATA,IDATA)
 
-      DO 10 I=1,NSEGM
-         if (IDATA(2+I).ne.LSEGMTBL(I)) then
-            write (*,*) CNAME,':Bank length for seg #',i,
-     $           ' (',IDATA(2+I),') is different from expected:',
-     $           ' (',LSEGMTBL(I),').'
-            stop
+      DO 10 I=1,8
+         IF ((i.ne.6).and.(i.ne.7)) THEN
+            if (IDATA(2+I).ne.LSEGMTBL(I)) then
+               write (*,*) CNAME,':Bank length for seg #',i,
+     $              ' (',IDATA(2+I),') is different from expected:',
+     $              ' (',LSEGMTBL(I),').'
+               stop
+            endif
          endif
  10   continue
+
+C-- new version of the bank --
+      IF (NDATA.GT.10) THEN
+         DO 20 I=9,NDATA-2
+            if (IDATA(2+I).ne.LSEGMTBL(I)) then
+               write (*,*) CNAME,':Bank length for seg #',i,
+     $              ' (',IDATA(2+I),') is different from expected:',
+     $              ' (',LSEGMTBL(I),').'
+               stop
+            endif
+ 20      continue
+      endif
+      NSEGMFILE = NDATA-2
 
 C--------------------------      
 C- Segment 1
@@ -197,16 +213,20 @@ C- Segment 6
 C       Cross-section weights ( neutrino )
 C     + 1 : 
 C      |  : Cross-section weight for neutrino
-C     +27 : 
+C     +28 : 
 
       ISEGM    = 6
 
-      call kzget0(CNAME,ISEGM,NDATA,IDATA)
-      if (NDATA.ne.LSEGMTBL(ISEGM)) then
-         goto 9999
-      endif
+      DO 25 I=1,500
+         IDATA(I)=0
+ 25   continue
 
-      DO 30 I=1,27
+      call kzget0(CNAME,ISEGM,NDATA,IDATA)
+C      if (NDATA.ne.LSEGMTBL(ISEGM)) then
+C         goto 9999
+C      endif
+
+      DO 30 I=1,NDATA
          CRSNEUT(I) = RDATA(I)
  30   continue
 
@@ -215,17 +235,21 @@ C- Segment 7
 C       Cross-section weights ( anti neutrino )
 C     + 1 : 
 C      |  : Cross-section weight for anti neutrino
-C     +27 : 
+C     +28 : 
 C
 
       ISEGM    = 7
 
-      call kzget0(CNAME,ISEGM,NDATA,IDATA)
-      if (NDATA.ne.LSEGMTBL(ISEGM)) then
-         goto 9999
-      endif
+      DO 35 I=1,500
+         IDATA(I)=0
+ 35   continue
 
-      DO 40 I=1,27
+      call kzget0(CNAME,ISEGM,NDATA,IDATA)
+C      if (NDATA.ne.LSEGMTBL(ISEGM)) then
+C         goto 9999
+C      endif
+
+      DO 40 I=1,NDATA
          CRSNEUTB(I) = RDATA(I)
  40   continue
 
@@ -234,7 +258,6 @@ C- Segment 8
 C       Total cross-section
 C     + 1 : Energy of neutrino  ( GeV )
 C     + 2 : Cross-section       (^10-38cm^2)
-
 
       ISEGM    = 8
 
@@ -250,7 +273,211 @@ C     + 2 : Cross-section       (^10-38cm^2)
          DIFCRSNE(I-2) = RDATA(I)
  50   continue
 
-      return
+
+      IF (NSEGMFILE.eq.8) then
+         goto 99
+      endif
+
+C--------------------------     
+C- Segment 9
+C       CCQE related parameters 
+C     + 1 : QE model ( MDLQE )
+C     + 2 : QE Vector mass 
+C     + 3 : QE Axial form factor model (MDLQEAF)
+C     + 4 : QE Axial Vector mass (XMAQE)
+C     + 5 : QE Vector mass (XMVQE)
+C     + 6 : Kappa parameter ( KAPP )
+C     + 7 : Fermi surface momentum for spectral func ( PFSF )
+C     + 8 : Second class current Vector part ( SCCFV )
+C     + 9 : Second class current Axial Vector part ( SCCFA )
+C     +10 : Error term for pseudo scalar form factor ( FPQE )
+C     +11 : Radiative correction ( IRADCORR )
+
+      ISEGM    = 9
+
+      call kzget0(CNAME,ISEGM,NDATA,IDATA)
+      if (NDATA.ne.LSEGMTBL(ISEGM)) then
+         goto 9999
+      endif
+
+      MDLQE   =IDATA(1)
+      MDLQEAF =IDATA(2)
+      XMAQE   =RDATA(3)
+      XMVQE   =RDATA(4)
+      KAPP    =RDATA(5)
+      PFSF    =RDATA(6)
+      SCCFV   =RDATA(7)
+      SCCFA   =RDATA(8)
+      FPQE    =RDATA(9)
+      IRADCORR=IDATA(10)
+
+C--------------------------     
+C- Segment 10
+C       resonance production related parameters 
+C     + 1 : resonance production model ( MDLSPI )
+C     + 2 : 1pi production form factor ( NEIFF = IFFSPI )
+C     + 3 : Rein-Sehgal form factor type ( NENRTYPE )
+C     + 4 : (Graczyk-Sobczyk) 1pi production Axial Vector mass ( XMASPI )
+C     + 5 : (Graczyk-Sobczyk) 1pi production Vector mass ( XMVSPI )
+C     + 6 : (Graczyk-Sobczyk) 1pi production CA5 parameter ( RCA5ISPI )
+C     + 7 : 1pi production background normalization parameter ( RBGSCLSPI )
+C     + 8 : Rein-Sehgal resonance production Axial Vector mass ( XMARSRES )
+C     + 9 : Rein-Sehgal resonance production Vector mass ( XMVRSRES )
+C     +10 : Delta absorption ( pion less delta decay ) flag  ( IPILESSDCY )
+C     +11 : Delta absorption ( pion less delta decay ) fraction ( RPILESSDCY )
+C
+      ISEGM    = 10
+
+      call kzget0(CNAME,ISEGM,NDATA,IDATA)
+      if (NDATA.ne.LSEGMTBL(ISEGM)) then
+         goto 9999
+      endif
+
+      MDLSPI    =IDATA(1)
+      NEIFF     =IDATA(2)
+      NENRTYPE  =IDATA(3)
+      XMASPI    =RDATA(4)
+      XMVSPI    =RDATA(5)
+      RCA5ISPI  =RDATA(6)
+      RBGSCLSPI =RDATA(7)
+      XMARSRES  =RDATA(8)
+      XMVRSRES  =RDATA(9)
+      IPILESSDCY=IDATA(10)
+      RPILESSDCY=RDATA(11)
+
+C--------------------------     
+C- Segment 11
+C        coherent related parameters 
+C     + 1 : coherent pi production model ( MDLCOH )
+C     + 2 : coherent pi Axial Vector mass ( XMACOH )
+C     + 3 : RAD0NU
+C     + 4 : fA1COH
+C     + 5 : fB1COH
+C
+      ISEGM    = 11
+
+      call kzget0(CNAME,ISEGM,NDATA,IDATA)
+      if (NDATA.ne.LSEGMTBL(ISEGM)) then
+         goto 9999
+      endif
+
+      MDLCOH=IDATA(1)
+      XMACOH=RDATA(2)
+      RAD0NU=RDATA(3)
+      fA1COH=RDATA(4)
+      fB1COH=RDATA(5)
+
+C--------------------------     
+C- Segment 12
+C        DIS related parameters
+C     + 1 : DIS production model ( MDLDIS )
+C     + 2 : PDF model ( NEPDF )
+C     + 3 : Bodek Yang correciton ( NEBODEK )
+
+      ISEGM    = 12
+
+      call kzget0(CNAME,ISEGM,NDATA,IDATA)
+      if (NDATA.ne.LSEGMTBL(ISEGM)) then
+         goto 9999
+      endif
+
+      MDLDIS =IDATA(1)
+      NEPDF  =IDATA(2)
+      NEBODEK=IDATA(3)
+
+C--------------------------     
+C- Segment 13
+C        MEC related parameters
+C     + 1 : DUMMY
+C
+      ISEGM    = 13
+
+      call kzget0(CNAME,ISEGM,NDATA,IDATA)
+      if (NDATA.ne.LSEGMTBL(ISEGM)) then
+         goto 9999
+      endif
+
+C--------------------------     
+C- Segment 14
+C        general / pion nuclear effect related parameters
+C     + 1 : Fermi surface momentum in GeV ( PFSURF )
+C     + 2 : Maximum Fermi momentum in GeV ( PFMAX )
+C     + 3 : Initial state potential ( VNUINI )
+C     + 4 : Final state potential ( VNUINI )
+C     + 5 : formation zone switch ( IFORMLEN )
+C     + 6 : formation zone free parameter ( FZMU2 )
+C     + 7 : Fermin motion flag ( NEFRMFLG )
+C     + 8 : Pauli Blocking flag ( NEPAUFLG )
+C     + 9 : Nuclear effect on/off flag ( NENEFO16 )
+C     +10 : Low energy pion scattering model ( NENEFMODL )
+C     +11 : High energy pion scattering model ( NENFMODH )
+C     +12 : Kinematical model for high energy pion scattering ( NENEFKINH )
+C     +13 : Nucleon ejection after pion absoption ( NEABSPIEMIT )
+C     +14 : Pion QE-scattering ( P<500MeV/c ) correction factor (FEFQE)
+C     +15 : Pion QE-scattering ( P>500MeV/c ) correction factor (FEFQEH)
+C     +16 : Pion hadron prod.  ( P>500MeV/c ) correction factor (FEFINEL)
+C     +17 : Pion absorption    ( P<500MeV/c ) correction factor (FEFABS)
+C     +18 : Pion forward scat. ( P>500MeV/c ) correction factor (FEFCOH)
+C     +19 : Pion CEX amplitude ( P<500MeV/c ) correction factor (FEFCX)
+C     +20 : Pion CEX amplitude ( P>500MeV/c ) correction factor (FEFCXH)
+C     +21 : Pion QE scat. Isotoropic decay frac. ( P>500MeV/c ) (FEFQEHF)
+C     +22 : Pion forward scat. frac. ( P>500MeV/c ) (FEFFOHF)
+C     +23 : Fraction of inelastic scat. incl. c-ex. (p>500MeV/c)(FEFCXHF)
+C     +24 : pion scattering coulomb scattering flag on/off      (FEFCOUL)
+C     +25 : Correction factor on overall mean free path         (FEFALL)
+C
+      ISEGM    = 14
+
+      call kzget0(CNAME,ISEGM,NDATA,IDATA)
+      if (NDATA.ne.LSEGMTBL(ISEGM)) then
+         goto 9999
+      endif
+
+      PFSURF     =RDATA(1)
+      PFMAX      =RDATA(2)
+      VNUINI     =RDATA(3)
+      VNUFIN     =RDATA(4)
+      IFORMLEN   =IDATA(5)
+      FZMU2      =RDATA(6)
+      NEFRMFLG   =IDATA(7)
+      NEPAUFLG   =IDATA(8)
+      NENEFO16   =IDATA(9)
+      NENEFMODL  =IDATA(10)
+      NENEFMODH  =IDATA(11)
+      NENEFKINH  =IDATA(12)
+      NEABSPIEMIT=IDATA(13)
+      FEFQE      =RDATA(14)
+      FEFQEH     =RDATA(15)
+      FEFINEL    =RDATA(16)
+      FEFABS     =RDATA(17)
+      FEFCOH     =RDATA(18)
+      FEFCX      =RDATA(19)
+      FEFCXH     =RDATA(20)
+      FEFQEHF    =RDATA(21)
+      FEFCOHF    =RDATA(22)
+      FEFCXHF    =RDATA(23)
+      FEFCOUL    =RDATA(24)
+      FEFALL     =RDATA(25)
+
+C--------------------------     
+C- Segment 15
+C        nucleon nuclear effect related parameters
+C     + 1 : Nucleon rescattering on/off ( NUCRESCAT ) 
+C     + 2 : Nucleon rescattering factor ( XNUCFACT )
+C     + 3 : Nucleon rescattering Pauli blocking - Local/Global ( NUCRESFLG )
+
+      ISEGM    = 15
+
+      call kzget0(CNAME,ISEGM,NDATA,IDATA)
+      if (NDATA.ne.LSEGMTBL(ISEGM)) then
+         goto 9999
+      endif
+
+      NUCRESCAT = IDATA(1)
+      XNUCFACT  = RDATA(2)
+      NUCRESFLG = IDATA(3)
+
+ 99   return
       
  999  continue
       if (ierr.ne.0) then

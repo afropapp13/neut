@@ -395,7 +395,8 @@ C
 
 C     Lab frame
       if (El**2-XMLEP2.le.0.) then
-         Plep = 0.000001
+C         Plep = 0.000001
+         Plep = 1e-7
       else
          Plep = SQRT(El**2-XMLEP2)
       endif

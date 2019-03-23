@@ -1,6 +1,8 @@
 #include "neutpart.h"
 #include "neutfsipart.h"
 #include "neutfsivert.h"
+#include "neutnucfsivert.h"
+#include "neutnucfsistep.h"
 #include "neutvect.h"
 
 #include <iostream>
@@ -13,6 +15,8 @@ NeutVect::NeutVect(Int_t np, Int_t nfsip, Int_t nfsiv)
   fPartInfo = NULL;
   fFsiPartInfo = NULL;
   fFsiVertInfo = NULL;
+  fNucFsiVertInfo = NULL;
+  fNucFsiStepInfo = NULL;
 
   fZeroVect.SetXYZM(0.,0.,0.,0.);
 
@@ -257,6 +261,108 @@ NeutVect::SetFsiVertInfo(Int_t nvert, NeutFsiVert *VInfo_array)
 
 };
 
+void
+NeutVect::SetNnucFsiVert(Int_t nnucvert)
+{
+  fNnucFsiVert = nnucvert;
+
+  if (fNnucFsiVert > 0){
+	if (fNucFsiVertInfo == NULL){
+	  fNucFsiVertInfo = new TObjArray(fNnucFsiVert);
+	  fNucFsiVertInfo->SetOwner(kTRUE);
+	}else{
+	  fNucFsiVertInfo->Expand(fNnucFsiVert);
+	}
+
+	
+  }else{
+	delete fNucFsiVertInfo;
+	fNucFsiVertInfo = NULL;
+	//ClearVars();
+  }
+}
+
+void
+NeutVect::SetNucFsiVertInfo(int idx, NeutNucFsiVert VInfo)
+{
+
+  NeutNucFsiVert *VInfo_p;
+
+  if (fNnucFsiVert<=idx){
+  	SetNnucFsiVert(idx);
+  }
+
+  VInfo_p = new NeutNucFsiVert();
+
+  *VInfo_p = VInfo;
+  
+  fNucFsiVertInfo->AddAt(VInfo_p,idx);
+
+}
+
+void
+NeutVect::SetNucFsiVertInfo(Int_t nvert, NeutNucFsiVert *VInfo_array)
+{
+
+  Int_t i;
+
+  for (i = 0 ; i < nvert ; i++){
+	SetNucFsiVertInfo(i,VInfo_array[i]);
+  }
+
+};
+
+void
+NeutVect::SetNnucFsiStep(Int_t nnucstep)
+{
+  fNnucFsiStep = nnucstep;
+
+  if (fNnucFsiStep > 0){
+	if (fNucFsiStepInfo == NULL){
+	  fNucFsiStepInfo = new TObjArray(fNnucFsiStep);
+	  fNucFsiStepInfo->SetOwner(kTRUE);
+	}else{
+	  fNucFsiStepInfo->Expand(fNnucFsiStep);
+	}
+
+	
+  }else{
+	delete fNucFsiStepInfo;
+	fNucFsiStepInfo = NULL;
+	//ClearVars();
+  }
+}
+
+void
+NeutVect::SetNucFsiStepInfo(int idx, NeutNucFsiStep VInfo)
+{
+
+  NeutNucFsiStep *VInfo_p;
+
+  if (fNnucFsiStep<=idx){
+  	SetNnucFsiStep(idx);
+  }
+
+  VInfo_p = new NeutNucFsiStep();
+
+  *VInfo_p = VInfo;
+  
+  fNucFsiStepInfo->AddAt(VInfo_p,idx);
+
+}
+
+void
+NeutVect::SetNucFsiStepInfo(Int_t nvert, NeutNucFsiStep *VInfo_array)
+{
+
+  Int_t i;
+
+  for (i = 0 ; i < nvert ; i++){
+	SetNucFsiStepInfo(i,VInfo_array[i]);
+  }
+
+};
+
 NeutVect::~NeutVect()
 {
 
@@ -325,6 +431,7 @@ NeutVect::Dump()
   std::cout << "FSI HighE QE Kinematic Factor    :" << NuceffFactorPIQEHKin << "\n";
   std::cout << "FSI LowE QE Kinematic Factor     :" << NuceffFactorPIQELKin << "\n";
   std::cout << "FSI HighE CX Mix Factor          :" << NuceffFactorPICXKin  << "\n";
+  std::cout << "FSI Total Mean Free Path Factor  :" << NuceffFactorPIAll  << "\n";
 
   
   std::cout << "Intr. mode     :" << Mode   << "\n";

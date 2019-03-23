@@ -133,7 +133,8 @@ c -- Fix JDAHEP bug
                IF (ABS(IPVC(NALL)).EQ.211) IFLGVC(NALL)=0  ! pi+/-
                IF (ABS(IPVC(NALL)).EQ.111) IFLGVC(NALL)=0  ! pi0
                IF (ABS(IPVC(NALL)).EQ.321) IFLGVC(NALL)=0  ! K+/-
-
+               
+               
                ICRNVC(NALL)=0
                IF (IFLGVC(NALL).EQ.0) ICRNVC(NALL)=1
                CALL UCOPY(POSFVC(1,I),POSIVC(1,NALL),3)
@@ -146,9 +147,9 @@ c -- Fix JDAHEP bug
 C     Use this to write out the decay particles for testing
 C
 C
-C               write (*,*) "IPVC: ", nall, " Particle: ", ipvc(nall),
+C               write (*,*) "TAU: IPVC: ", nall, " Particle: ", ipvc(nall),
 C     &         " Flag: ", iflgvc(nall), " Track: ", icrnvc(nall),
-C     &         " Iorg: ", iorgvc(nall) 
+C     &         " Iorg: ", iorgvc(nall), " JDAHEP: ", JDAHEP(1,NALL), JDAHEP(2,NALL) 
 
 
  20         CONTINUE

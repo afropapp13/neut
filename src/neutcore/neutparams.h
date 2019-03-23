@@ -56,6 +56,8 @@ C    FEFCXHF: Portion of inel. scattering that includes true CX (p>500)
 C
 C    FEFCOUL: Coulomb correction to pion cascade trajectory (0: default, off)
 C
+C    FEFALL:  Correction factor to the total mean free path (all momenta)
+C
 C---------------------------------------------------------
 C
       REAL*4 PFSURF,PFMAX,VNUINI,VNUFIN,FZMU2
@@ -66,7 +68,7 @@ C
 C---------------------------------------------------------
 C
       REAL*4 FEFQE,FEFQEH,FEFINEL,FEFABS,FEFCOH,FEFQEHF,FEFCOHF,FEFCX,
-     $       FEFCXHF,FEFCXH,FEFCOUL
+     $       FEFCXHF,FEFCXH,FEFCOUL,FEFALL
 
       COMMON/NEFFPR/FEFQE,FEFQEH,FEFINEL,FEFABS,FEFCOH,FEFQEHF,FEFCOHF,
-     $              FEFCX,FEFCXHF,FEFCXH,FEFCOUL
+     $              FEFCX,FEFCXHF,FEFCXH,FEFCOUL,FEFALL

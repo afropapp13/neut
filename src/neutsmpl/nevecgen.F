@@ -71,7 +71,7 @@ C
 C
 C --  CONSIDER NULCEAR EXCITATION OF GAMMA
 C
-      CALL NEMKGAM
+      if(NUMATOM.eq.16) CALL NEMKGAM ! only 16O
 C
 C --  translate K0 -> K LONG or K SHORT 
 C
@@ -88,6 +88,10 @@ C
 C --  nucleon ejection following pion/delta absorption
 C
       call absneject
+C
+C --  radiative correction
+C     
+      call radcorr
 C
 C -- Calculate FSIPROB after all possible instances of EFTRACE
 C

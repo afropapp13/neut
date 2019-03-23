@@ -108,7 +108,7 @@ C     For form factors for Rein-Seighal update
       fA1COH  = 0.0
       fb1COH  = 0.0 
 
-      MDLQE     = 402
+      MDLQE     = 22
       MDLQEAF   = 1
 
       NEABSPIEMIT = 1
@@ -141,6 +141,7 @@ C     Paramters of new model tuned to pi-scattering data
       FEFCXH  = 1.8
       FEFCXHF = 0.
       FEFCOUL = 0
+      FEFALL  = 1.
 
 C     Pion less delta decay : with MEC, expected to be 0
 C      IPILESSDCY = 1
@@ -162,6 +163,9 @@ C     relatve size of second class currents (vector and axial)
 C     RT: adding error parameter for FP(Q2=0)
       FPQE = 1.0
       
+C     Radiative correction on/off ( default off )
+      IRADCORR = 0
+
 C --- get card file name (1st argument of the program)
 
       WRITE(6,*) 
@@ -213,8 +217,8 @@ C      CALL FFKEY('MVSPI' ,XMVSPI ,1,'REAL')
       CALL FFKEY('MVRSRES' ,XMVRSRES ,1,'REAL')
       CALL FFKEY('MVNFFRES' ,XMVNFFRES ,1,'REAL')
       CALL FFKEY('KAPP' ,KAPP ,1,'REAL')
-      CALL FFKEY('XMACOH',XMACOH ,1,'REAL')
-      CALL FFKEY('R0COH',RAD0NU ,1,'REAL')
+      CALL FFKEY('MACOH' ,XMACOH ,1,'REAL')
+      CALL FFKEY('R0COH' ,RAD0NU ,1,'REAL')
       CALL FFKEY('fA1COH',fA1COH ,1,'REAL')
       CALL FFKEY('fb1COH',fb1COH ,1,'REAL')
  
@@ -241,6 +245,7 @@ C      CALL FFKEY('MVSPI' ,XMVSPI ,1,'REAL')
       CALL FFKEY('FEFCXH',FEFCXH,1,'REAL')
       CALL FFKEY('FEFCXHF',FEFCXHF,1,'REAL')
       CALL FFKEY('FEFCOUL',FEFCOUL,1,'REAL')
+      CALL FFKEY('FEFALL',FEFALL,1,'REAL')
 
       CALL FFKEY('IPILESSDCY',IPILESSDCY,1,'INTEGER')
       CALL FFKEY('RPILESSDCY',RPILESSDCY,1,'REAL')
@@ -287,12 +292,8 @@ C Set VNUINI here ( when PFSURF is fixed)
       CALL FFKEY('FZMU2',FZMU2,1,'REAL')
       CALL FFKEY('ABSPIEMIT',NEABSPIEMIT,1,'INTEGER')
       CALL FFKEY('NUSIM',NUSIM,1,'INTEGER')
+      CALL FFKEY('IRADCORR',IRADCORR,1,'INTEGER')
       CALL FFKEY('QUIET',QUIET,1,'INTEGER')
-
-      CALL FFKEY('XMACOH' ,XMACOH ,1,'REAL')
-      CALL FFKEY('R0COH' ,RAD0NU ,1,'REAL')
-      CALL FFKEY('fA1COH',fA1COH ,1,'REAL')
-      CALL FFKEY('fb1COH',fb1COH ,1,'REAL')
 
       CALL FFGO
       CLOSE(UNIT=91)
@@ -401,6 +402,7 @@ C      WRITE(6,*) 'NECARD : MVSPI  = ',XMVSPI
       WRITE(6,*) 'NECARD : FEFQEHF = ',FEFQEHF
       WRITE(6,*) 'NECARD : FEFCOHF = ',FEFCOHF
       WRITE(6,*) 'NECARD : FEFCOUL = ',FEFCOUL
+      WRITE(6,*) 'NECARD : FEFALL = ',FEFALL
 
       WRITE(6,*) 'NECARD : IPILESSDCY = ',IPILESSDCY
       WRITE(6,*) 'NECARD : RPILESSDCY = ',RPILESSDCY
@@ -409,6 +411,8 @@ C      WRITE(6,*) 'NECARD : MVSPI  = ',XMVSPI
       WRITE(6,*) 'NECARD : NRTYPE =',NENRTYPE
       WRITE(6,*) 'NECARD : CA5 =',RNECA5I
       WRITE(6,*) 'NECARD : BGSCL =',RNEBGSCL
+
+      WRITE(6,*) 'NECARD : IRADCORR =',IRADCORR
 
 C     Parameter checks
 

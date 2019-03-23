@@ -7,6 +7,8 @@ chkreadneutvect()
 
   gSystem->Load("neutfsipart.so");
   gSystem->Load("neutfsivert.so");
+  gSystem->Load("neutnucfsipart.so");
+  gSystem->Load("neutnucfsivert.so");
   gSystem->Load("neutvtx.so");
   gSystem->Load("neutpart.so");
   gSystem->Load("neutvect.so");

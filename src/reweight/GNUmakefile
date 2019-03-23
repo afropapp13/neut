@@ -18,24 +18,24 @@ COPTFLAGS = -g -Wno-write-strings -fpermissive -fPIC
 COREDIR =	../neutcore/Linux_pc
 NUCEFFDIR =     ../nuceff/Linux_pc
 
-LIBDIRS =	-L${COREDIR}         -L../nuccorspl/Linux_pc \
-			-L../nuceff/Linux_pc -L../partnuck/Linux_pc \
-			-L../skmcsvc/Linux_pc
+LIBDIRS =	-L../../lib/Linux_pc
 
-NEUTCOREVER = 5.3.4
-INEUTCOREVER= 534
-
-NUCEFFVER   = 5.3.3
-INUCEFFVER  = 533
-
-NUCCORVER   = 5.3.3
-INUCCORVER  = 533
-
-PARTNUCKVER = 5.3.3
-IPARTNUCKVER= 533
-
-SKMCSVCVER  = 5.3.3
-ISKMCSVCVER = 533
+NEUTCOREVER	= 5.3.5
+INEUTCOREVER= 535
+NUCEFFVER   = 5.3.5
+INUCEFFVER  = 535
+NUCCORVER   = 5.3.5
+INUCCORVER  = 535
+PARTNUCKVER = 5.3.5
+IPARTNUCKVER= 535
+SKMCSVCVER  = 5.3.5
+ISKMCSVCVER = 535
+ZBSFNSVER   = 5.3.5
+IZBSFNSVER  = 535
+SPECFUNCVER = 5.3.5
+ISPECFUNCVER= 535
+RADCORRVER  = 5.3.5
+IRADCORRVER = 535
 
 FORTRANDEFINES += -DNECORE_VERSION=$(INEUTCOREVER)
 FORTRANDEFINES += -DNENUCE_VERSION=$(INUCEFFVER)
@@ -46,7 +46,8 @@ FORTRANDEFINES += -DNENUCC_VERSION=$(INUCCORVER)
 #		-lpartnuck_${PARTNUCKVER} -lskmcsvc_${SKMCSVCVER}
 
 MCLIB = ${LIBDIRS} -lnuceff_${NUCEFFVER} -lneutcore_${NEUTCOREVER} \
-        -lskmcsvc_${SKMCSVCVER} -lnuccorrspl_${NUCCORVER}
+        -lskmcsvc_${SKMCSVCVER} -lnuccorrspl_${NUCCORVER} \
+		-lradcorr_${RADCORRVER}		
 
 CLIBS = ${CERN}/${CERN_LEVEL}/lib/libjetset74.a \
 		${CERN}/${CERN_LEVEL}/lib/libpdflib804.a \
@@ -91,6 +92,9 @@ else
   LIB_DEPEND = $(PACKAGE_ALL_OBJECTS)
 endif
 
+# default target to build the library
+all: lib
+
 #
 #
 rootcint: $(DICTIONARY).o
@@ -98,7 +102,7 @@ rootcint: $(DICTIONARY).o
 $(DICTIONARY).cc: LinkDef.h $(DICTGEN_OBJECTS)
 	$(RM) $(DICTIONARY).*
 	@echo "[package: $(PACKAGE)] Generating ROOT dictionary ..."
-	rootcint -f $(DICTIONARY).cc -c $(INCDIRS) $(DICTGEN_HEADERS) LinkDef.h
+	rootcint -f $(DICTIONARY).cc -c ${ROOTINC} ${NEUTINC} -I$(NEUT_ROOT)/include -I$(NEUT_SRC)/reweight $(DICTGEN_HEADERS) LinkDef.h
 
 SOCMD     = $(FC)
 SOFLAGS   = -fPIC -shared -Wl,-soname,$(LIBNAME).$(DllSuf)
@@ -120,8 +124,6 @@ GENROOTSO = env COPTFLAGS="${COPTFLAGS}" INCDIRS="${INCDIRS}" \
 
 .F.o:
 	$(FC) $(DEFS) -c $(FCOPTIONS) $(ALLDEFINES) $(FINCDIRS) -o $@ $<
-
-all: clean lib
 
 clean:
 	$(RM) *.o *~ ${MOBJS} *Dict.* *.so _ROOT_DICT_ReWeight.*

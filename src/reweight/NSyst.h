@@ -184,7 +184,9 @@ typedef enum ENSyst {
   kCascTwkDial_FrInelHigh_pi,  ///< tweak inelastic (QE in NEUT) probability for high energy pions
   kCascTwkDial_FrCExHigh_pi,   ///< tweak charge exchange probability for high energy pions	    
   kCascTwkDial_FrPiProd_pi,    ///< tweak pion (hadron) production (inelastic in NEUT) probability for pions
-  //kINukeTwkDial_MFP_N,       ///< tweak mean free path for nucleons
+  kCascTwkDial_All_pi,    ///< tweak mean free path for pions
+
+  kINukeTwkDial_MFP_N,       ///< tweak mean free path for nucleons
   //kINukeTwkDial_FrCEx_N,     ///< tweak charge exchange probability for nucleons, for given total rescattering probability
   //kINukeTwkDial_FrElas_N,    ///< tweak elastic         probability for nucleons, for given total rescattering probability
   //kINukeTwkDial_FrInel_N,    ///< tweak inelastic       probability for nucleons, for given total rescattering probability
@@ -210,6 +212,7 @@ typedef enum ENSyst {
 
   
   kSystNucl_PilessDcyRES
+  
 
   //
   // Misc
@@ -310,6 +313,7 @@ public:
     case ( kCascTwkDial_FrInelHigh_pi      ) : return "FrInelHigh_pi";        break;
     case ( kCascTwkDial_FrCExHigh_pi       ) : return "FrCExHigh_pi";         break;
     case ( kCascTwkDial_FrPiProd_pi        ) : return "FrPiProd_pi";          break;
+    case ( kCascTwkDial_All_pi             ) : return "All_pi";          break;
       //case ( kINukeTwkDial_MFP_N           ) : return "MFP_N";                break;
       //case ( kINukeTwkDial_FrCEx_N         ) : return "FrCEx_N";              break;
       //case ( kINukeTwkDial_FrElas_N        ) : return "FrElas_N";             break;
@@ -373,7 +377,7 @@ public:
        //kXSecTwkDial_MvNCRESshape, 
        kXSecTwkDial_MaNCRES,      
        kXSecTwkDial_MvNCRES, 
-       
+     
        kXSecTwkDial_NECOHEPI,
        kXSecTwkDial_MaCOHpi,      
        kXSecTwkDial_R0COHpi,    

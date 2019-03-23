@@ -222,6 +222,8 @@ void NSystUncertainty::SetDefaults(void)
   this->SetUncertainty( kCascTwkDial_FrInelHigh_pi,    0.30, 0.30);
   this->SetUncertainty( kCascTwkDial_FrCExHigh_pi,     0.30, 0.30);
   this->SetUncertainty( kCascTwkDial_FrPiProd_pi,      0.50, 0.50);
+  this->SetUncertainty( kCascTwkDial_FrPiProd_pi,      0.50, 0.50);
+  this->SetUncertainty( kCascTwkDial_All_pi,      0.50, 0.50);
   //this->SetUncertainty( kINukeTwkDial_MFP_N,         0.20, 0.20);
   //this->SetUncertainty( kINukeTwkDial_FrCEx_N,       0.50, 0.50);
   //this->SetUncertainty( kINukeTwkDial_FrElas_N,      0.30, 0.30);

@@ -58,7 +58,7 @@ NFortFns * NFortFns::Instance()
     fInstance->XMVNFFRESdef = 0.84;
     fInstance->XMARSRESdef = 1.21;
     fInstance->XMVRSRESdef = 0.84;
-	    
+	
     fInstance->NECOHEPIdef  = 0;  
     fInstance->XMACOHdef  = 1.0;
     fInstance->RAD0NUdef  = 1.0;
@@ -68,7 +68,7 @@ NFortFns * NFortFns::Instance()
     fInstance->NEPDFdef     = 12;
     fInstance->NEBODEKdef   = 1;
 
-    fInstance->MDLQEAFdef   = 0;
+    fInstance->MDLQEAFdef   = 1;
     fInstance->MDLQEdef     = 402;
 
     fInstance->FEFQEdef   = 1.0;
@@ -77,6 +77,7 @@ NFortFns * NFortFns::Instance()
     fInstance->FEFABSdef  = 1.1;
     fInstance->FEFCXdef   = 1.0;
     fInstance->FEFCXHdef  = 1.8;
+    fInstance->FEFALLdef  = 1.0;
 
     fInstance->SCCFVdef = 0.0;
     fInstance->SCCFAdef = 0.0;
@@ -284,6 +285,7 @@ void NFortFns::SetDefaults() {
   neffpr_.fefabs  = FEFABSdef;
   neffpr_.fefcx   = FEFCXdef;
   neffpr_.fefcxh  = FEFCXHdef;
+  neffpr_.fefall  = FEFALLdef;
   
   // Fixed values
   neffpr_.fefcoh =  1;
@@ -370,11 +372,10 @@ void NFortFns::print_allparams() {
   cout << "nemdls_.xmares = " <<      nemdls_.xmares     << endl;
   cout << "nemdls_.xmvres = " <<      nemdls_.xmvres   << endl;
   cout << "nemdls_.xmacoh = " <<         nemdls_.xmacoh   << endl;    
-  cout << "nemdls_.rad0nu = " <<         nemdls_.rad0nu   << endl;   
+  cout << "nemdls_.rad0nu = " <<         nemdls_.rad0nu   << endl;    
   cout << "nemdls_.fa1coh = " <<         nemdls_.fa1coh   << endl;    
   cout << "nemdls_.fb1coh = " <<         nemdls_.fb1coh   << endl; 
   cout << "nemdls_.mdlcoh = " <<         nemdls_.mdlcoh   << endl; 
-  cout << "neutcoh_.necohepi  = " <<  neutcoh_.necohepi << endl;
   cout << "neut1pi_.xmanffres = " <<   neut1pi_.xmanffres << endl;
   cout << "neut1pi_.xmvnffres = " <<   neut1pi_.xmvnffres << endl;
   cout << "neut1pi_.xmarsres = " <<   neut1pi_.xmarsres << endl;
@@ -391,6 +392,7 @@ void NFortFns::print_allparams() {
   cout << "neffpr_.fefabs = " <<    neffpr_.fefabs  << endl;
   cout << "neffpr_.fefcx = " <<     neffpr_.fefcx   << endl;
   cout << "neffpr_.fefcxh = " <<    neffpr_.fefcxh  << endl;
+  cout << "neffpr_.fefall = " <<    neffpr_.fefall  << endl;
 
   // Fixed parameters
   cout << endl << "-- These depend on target nucleus --" << endl;
@@ -407,7 +409,7 @@ void NFortFns::print_allparams() {
 
   cout << endl << "-- These are fixed parameters [should = ()] --" << endl;
 
-  cout << "nemdls_.mdlqeaf    = (0)" << nemdls_.mdlqeaf << endl;
+  cout << "nemdls_.mdlqeaf    = (1)" << nemdls_.mdlqeaf << endl;
   cout << "nemdls_.mdlqe      = (402)" << nemdls_.mdlqe   << endl;
   cout << "nemdls_.sccfv      = (0)" << nemdls_.sccfv   << endl;
   cout << "nemdls_.sccfa      = (0)" << nemdls_.sccfa   << endl;
@@ -424,6 +426,8 @@ void NFortFns::print_allparams() {
   cout << "neutpiabs_.neabspiemit = (1)" <<  neutpiabs_.neabspiemit << endl;
   cout << "neutcard_.nusim = (1)" <<  neutcard_.nusim << endl;
   
+  cout << "neutcoh_.necohepi  = (0)" <<  neutcoh_.necohepi << endl;
+
   cout << "neffpr_.fefcoh = (1)" <<   neffpr_.fefcoh << endl;
   cout << "neffpr_.fefqehf = (1)" <<  neffpr_.fefqehf<< endl;
   cout << "neffpr_.fefcxhf = (0)" <<  neffpr_.fefcxhf<< endl;

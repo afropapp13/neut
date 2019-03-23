@@ -65,6 +65,7 @@ namespace rew   {
    double fPiProdTwkDial;    ///<
    double fCExHighTwkDial;    ///<
    double fInelHighTwkDial;    ///<
+   double fAllTwkDial;    ///<
 
    double fCExLowCurr;    ///<
    double fInelLowCurr;    ///<
@@ -72,6 +73,7 @@ namespace rew   {
    double fPiProdCurr;    ///<
    double fCExHighCurr;    ///<
    double fInelHighCurr;    ///<
+   double fAllCurr;    ///<
      
    double fCExLowDef;    ///<
    double fInelLowDef;    ///<
@@ -79,6 +81,7 @@ namespace rew   {
    double fPiProdDef;    ///<
    double fCExHighDef;    ///<
    double fInelHighDef;    ///< 
+   double fAllHighDef;    ///<
 
    NFortFns * fortFns;
 

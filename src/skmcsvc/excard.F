@@ -30,6 +30,7 @@ C
       IEND = 0
       IRET = -1
       DO 100 WHILE (.TRUE.)
+C        Read a chararcter array from 'LIN' and store it in 'LINE'
          READ(LIN,'(A)', END=1000) LINE
 
          NCH = 132
@@ -37,15 +38,26 @@ C
             NCH = NCH - 1
  110     CONTINUE
 
-         NCT = 1
+C        Strip leading whitespace
+         NWS = 1
+         DO 111 WHILE (NWS.NE.NCH .AND. LINE(NWS:NWS).EQ.' ')
+            NWS = NWS + 1
+ 111     CONTINUE
+
+C        Find first instance of '-' which separates CARD-KEY
+C    &    If there are no '-'; then skip this line.
+         NCT = NWS
          DO 120 WHILE (NCT.NE.NCH .AND. LINE(NCT:NCT).NE.'-')
             NCT = NCT + 1
  120     CONTINUE
          IF(NCT.EQ.NCH) GOTO 100
 
          LUPPER = LINE
+C        Convert 'LINE' to uppercase, storing it in 'LUPPER'
          CALL FFUPCA(LUPPER, 1, NCH)
-         IF (LUPPER(1:NCT-1) .EQ. CMATCH(1:LM)) THEN
+C        Compare the start of 'LUPPER' to 'CMATCH'
+C    &    If they match; then write the KEY to 'LOUT'
+         IF (LUPPER(NWS:NCT-1) .EQ. CMATCH(1:LM)) THEN
             IRET = 0
             WRITE(LOUT, '(A)') LINE(NCT+1:NCH)
             IF (LUPPER(NCT+1:NCH).EQ.'END') IEND = 1

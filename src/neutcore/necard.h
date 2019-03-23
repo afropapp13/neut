@@ -79,6 +79,9 @@ C
 *       NEIFF:    Tells which form factors are used (see rsdcrs)
 *       NENRTYPE: For R-S form factors, there is two separate
 *
+C       IRADCORR:  Radiative correction on/off ( 1 : on / 0: off )
+*                 ( Currently off by default )
+*
 C       QUIET : Screen output verbosity
 C         0 : Default (prints all initial state info)
 C         1 : Print only neutrino energy
@@ -131,3 +134,7 @@ C
       INTEGER IPILESSDCY
       REAL*4  RPILESSDCY
       COMMON /NEUTPILESS/IPILESSDCY,RPILESSDCY
+
+      INTEGER IRADCORR
+      COMMON /NEUTRADCORR/IRADCORR
+						  

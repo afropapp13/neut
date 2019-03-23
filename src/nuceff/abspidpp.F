@@ -25,6 +25,7 @@ c-------------------------------------------------------------
       real*8 ppi,s,ss,wpi
       real*8 sig
       real*8 w1,w2,w4
+      REAL*8 ARG
       
 
 #include "abspidpp.h"
@@ -77,7 +78,14 @@ C      write(*,*)'ss=',ss
 
 C      write(*,*)'wpi=',wpi
 
-      ppi = sqrt(wpi*wpi-mpi*mpi)
+C      ppi = sqrt(wpi*wpi-mpi*mpi)
+
+      ARG = wpi*wpi-mpi*mpi
+      if(ARG.le.0.) then
+         ppi = 0.0
+      else
+         ppi = sqrt(ARG)
+      end if
 
 C      write(*,*)'ppi=',ppi
 

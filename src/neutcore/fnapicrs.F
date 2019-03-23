@@ -60,6 +60,8 @@
 *       2007.12.05 ; G.Mitsuka  Maximum neutrno energy is extended to 100TeV
 *                               even if not upmu mode
 *       2008.11.17 ; R.Tacik    calculate inump and inumpn for each event
+*       2016.03.08 ; C.Bronner  Put back the possibility to use a given input proton fraction
+*                               inump and inumpn are computed from number of nucleons only if the input fraction is <0 or >1
 *
 ************************************************************************
 *
@@ -497,18 +499,23 @@ C---  p/n ratio is calculated by NUMBNDP,NUMFREP, and so on (2007 Nov G.Mitsuka)
          
       endif
 
+C CB  Put back possibility of using a given proton fraction
 *     Calculate the contrubution of each cross section table
          if (RP.eq.0.5) then
             inump = 0.
             inumpn = 1.
 c            print*, 'p/n ratio is 1:1'
-         else
+         elseif ((RP.gt.1) .or. (RP.lt.0)) then
             inump  = float(NUMBNDP+NUMFREP-NUMBNDN)/float(NUMBNDP+NUMFREP+NUMBNDN)
             inumpn = 2.*float(NUMBNDN)/float(NUMBNDP+NUMFREP+NUMBNDN)
 c            print*, 'p/n ratio is ',NUMBNDP+NUMFREP,' :',NUMBNDN
 c            print*, 'table contribution is ',inump,' :',inumpn
+         else
+            inump  = 2.*RP-1.
+            inumpn = 2.*(1.-RP)
          endif
 
+C CB         PRINT *,'RP, inump, inumpn: ',RP, inump, inumpn
 c         iloadcrs = 1
 c
 c      endif

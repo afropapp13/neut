@@ -1,9 +1,19 @@
-NEUTCOREVER	= 5.3.4
-NUCEFFVER   = 5.3.3
-NUCCORVER   = 5.3.3
-PARTNUCKVER = 5.3.3
-SKMCSVCVER  = 5.3.3
-SPECFUNCVER = 5.3.3
+NEUTCOREVER	= 5.3.5
+INEUTCOREVER= 535
+NUCEFFVER   = 5.3.5
+INUCEFFVER  = 535
+NUCCORVER   = 5.3.5
+INUCCORVER  = 535
+PARTNUCKVER = 5.3.5
+IPARTNUCKVER= 535
+SKMCSVCVER  = 5.3.5
+ISKMCSVCVER = 535
+ZBSFNSVER   = 5.3.5
+IZBSFNSVER  = 535
+SPECFUNCVER = 5.3.5
+ISPECFUNCVER= 535
+RADCORRVER  = 5.3.5
+IRADCORRVER = 535
 
 COREDIR=../neutcore/Linux_pc
 
@@ -25,12 +35,15 @@ LIBDIRS =     -L${COREDIR} -L../../lib/Linux_pc  -L../nuccorspl/Linux_pc \
                       -L../nuceff/Linux_pc -L../partnuck/Linux_pc  \
                       -L../skmcsvc/Linux_pc -L../specfunc/Linux_pc
 
+ROOTLIBS  = `root-config --libs`
 
 MCLIB = ${LIBDIRS} \
 		-lneutcore_${NEUTCOREVER} -lspecfunc_${SPECFUNCVER} \
-		-lskmcsvc_${SKMCSVCVER}	\
+		-lradcorr_${RADCORRVER} -lskmcsvc_${SKMCSVCVER}	\
 		-lnuceff_${NUCEFFVER} -lnuccorrspl_${NUCCORVER} \
-		-lpartnuck_${PARTNUCKVER} -lskmcsvc_${SKMCSVCVER} -lstdc++
+		-lpartnuck_${PARTNUCKVER} -lskmcsvc_${SKMCSVCVER} \
+		-lradcorr_${RADCORRVER} \
+		${ROOTLIBS} -lstdc++
 
 XCOMM ------------------------------------------------------
 XCOMM Make programs.

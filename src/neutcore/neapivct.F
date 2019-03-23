@@ -37,6 +37,9 @@
 *                               using target information
 *       2007.11.10 ; T.Tanaka   add upmu mode
 *       2008.02.18 ; G.Mitsuka  Bug fix
+*       2016.03.08 ; C.Bronner  W (x,y) generation now depends on target nucleon
+*                               Target nucleon chosen based on comparison of xsec
+*
 *
 **********************************************************************
       IMPLICIT NONE
@@ -51,7 +54,8 @@ C
       real*4    eneut
       REAL*4    DIRNEU(3)
       integer*4 ierr
-
+      REAL*4 FNAPICRS
+      EXTERNAL FNAPICRS
       real*4    rlu,rnmass,fngamfct
       external  rlu,rnmass,fngamfct
 
@@ -77,7 +81,7 @@ C      COMMON /SAVXIN/INO16,XIN(3)
       
       real*4 PNRAT(3)
 C      DATA PNRAT/0.3846 , 0.7143 , 0.5/
-
+      real*4 PXSEC, NXSEC, R1320P, R1320N
       integer*4 MAXERR
       DATA MAXERR/10/
 
@@ -111,23 +115,45 @@ C     Note:9/13 and 9/7 is given by cross section ratio(p/total)
 C     (2007 Nov G.Mitsuka)
 C      PNRAT(1)=9./13.*float(NUMBNDP+NUMFREP)/float(NUMBNDN+NUMBNDP+NUMFREP)
 C      PNRAT(2)= 9./7.*float(NUMBNDP+NUMFREP)/float(NUMBNDN+NUMBNDP+NUMFREP)
-      PNRAT(1)=float(NUMBNDP+NUMFREP)
-     $         /float(2*NUMBNDN+NUMBNDP+NUMFREP)
-      PNRAT(2)=float(2*(NUMBNDP+NUMFREP))
-     $     /float(NUMBNDN+2*(NUMBNDP+NUMFREP))
+
+C CB Use ratio of cross sections instead of number of valence quarks
+C CB     PNRAT(1)=float(NUMBNDP+NUMFREP)
+C CB     $         /float(2*NUMBNDN+NUMBNDP+NUMFREP)
+C CB      PNRAT(2)=float(2*(NUMBNDP+NUMFREP))
+C CB     $     /float(NUMBNDN+2*(NUMBNDP+NUMFREP))
 
 C      Previously assumed iso-scalar nucleus
 C      PNRAT(3)=0.5
-      PNRAT(3) = float(NUMBNDP+NUMFREP)/float(NUMBNDP+NUMFREP+NUMBNDN)
+C CB      PNRAT(3) = float(NUMBNDP+NUMFREP)/float(NUMBNDP+NUMFREP+NUMBNDN)
       
-C     Free hydrogen target should always be a proton
-      if (NUMBNDP.eq.0 .and. NUMBNDN.eq.0) PNRAT(3) = 1.0
+C CB Determine whether interaction is CC or NC      
+      ITYPE=1
+      IF(IABS(JMOD0).EQ.41.or.IABS(JMOD0).EQ.46)ITYPE=0
 
+C CB Compute cross section on neutron and on proton
+      PXSEC=FNAPICRS(E,IPAR,ITYPE,1.,R1320P)
+      NXSEC=FNAPICRS(E,IPAR,ITYPE,0,R1320N)
+      If (abs(JMOD0).eq.21.or.abs(JMOD0).eq.41) then
+         PXSEC=PXSEC*R1320P
+         NXSEC=NXSEC*R1320N
+      endif
+C CB      PRINT *,'PXSEC, NXSEC: ',PXSEC, NXSEC
+C     Free hydrogen target should always be a proton
+C CB      if (NUMBNDP.eq.0 .and. NUMBNDN.eq.0) PNRAT(3) = 1.0
+      if (NUMBNDP.eq.0 .and. NUMBNDN.eq.0) then
+         RATIO = 1.0
+      else
+         RATIO=float(NUMBNDP+NUMFREP)*PXSEC/(float(NUMBNDN)*NXSEC+float(NUMBNDP+NUMFREP)*PXSEC)
+      endif
+      
+C CB      PRINT *,'Enu, ratio: ',E,RATIO
+      
       FRFREE  =float(NUMFREP)/float(NUMBNDP+NUMFREP)
 #ifdef UPMU_RCK
-      PNRAT(1)=0.5
-      PNRAT(2)=0.5
-      PNRAT(3)=0.5
+C CB      PNRAT(1)=0.5
+C CB      PNRAT(2)=0.5
+C CB      PNRAT(3)=0.5
+      RATIO=0.5
       FRFREE  =0.0
 #endif
 
@@ -137,14 +163,14 @@ C
       MODENE=JMOD0
       IPNE(1)=IPAR
       IFLGNE(1)=-1
-      IF(JMOD0.EQ.21)RATIO=PNRAT(1)
-      IF(JMOD0.EQ.26)RATIO=PNRAT(1)
-      IF(JMOD0.EQ.41)RATIO=PNRAT(3)
-      IF(JMOD0.EQ.46)RATIO=PNRAT(3)
-      IF(JMOD0.EQ.-21)RATIO=PNRAT(2)
-      IF(JMOD0.EQ.-26)RATIO=PNRAT(2)
-      IF(JMOD0.EQ.-41)RATIO=PNRAT(3)
-      IF(JMOD0.EQ.-46)RATIO=PNRAT(3)
+C CB      IF(JMOD0.EQ.21)RATIO=PNRAT(1)
+C CB      IF(JMOD0.EQ.26)RATIO=PNRAT(1)
+C CB      IF(JMOD0.EQ.41)RATIO=PNRAT(3)
+C CB      IF(JMOD0.EQ.46)RATIO=PNRAT(3)
+C CB      IF(JMOD0.EQ.-21)RATIO=PNRAT(2)
+C CB      IF(JMOD0.EQ.-26)RATIO=PNRAT(2)
+C CB      IF(JMOD0.EQ.-41)RATIO=PNRAT(3)
+C CB      IF(JMOD0.EQ.-46)RATIO=PNRAT(3)
       RAN=RLU(DUM)
       IPNE(2)=2112
       IF(RAN.LT.RATIO)IPNE(2)=2212
@@ -254,8 +280,9 @@ C
 C
 C -- SET X, Y AND W
 C
-      ITYPE=1
-      IF(IABS(JMOD0).EQ.41.or.IABS(JMOD0).EQ.46)ITYPE=0
+C CB      Move definition of itype to the beginning as it is need for xsec on p and n
+C CB      ITYPE=1
+C CB      IF(IABS(JMOD0).EQ.41.or.IABS(JMOD0).EQ.46)ITYPE=0
 C
 C------------------------------------------------ MOD T.KAJITA 06-SEP-88
 CC200 CALL RANW(IPAR,E,X,Y,W,ITYPE,IERRR)    OLD T.KAJITA 06-SEP-88
@@ -271,7 +298,7 @@ C     Added by M.Eto on 14/Feb/1998
          ENDIF
          GOTO 5050
       ELSE
-         CALL RNW1320(IPAR,E,X,Y,W,ITYPE,IERRR)
+         CALL RNW1320(IPAR,E,X,Y,W,ITYPE,IPNE(2),IERRR)
       END IF
 C-----------------------------------------------------------------------
       IF(IERRR.EQ.1)GO TO 1000

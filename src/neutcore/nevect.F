@@ -93,9 +93,13 @@ C --  nucleon ejection following pion/delta absorption
 C
       call absneject
 C
+C --  radiative correction
+C     
+      call radcorr
+C
 C -- Calculate FSIPROB after all possible instances of EFTRACE
 C
       FSIPROB=EVPIPROB()
-     
+
       RETURN
       END

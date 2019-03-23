@@ -1,6 +1,6 @@
 ************************************************************************
 *     --------------------------------------
-      SUBROUTINE RNXY(IPAR,E,X,Y,ITYPE,IERR)
+      SUBROUTINE RNXY(IPAR,E,X,Y,ITYPE,ITARG,IERR)
 *     --------------------------------------
 *
 *     (Purpose)
@@ -11,6 +11,7 @@
 *       IPAR   : NEUTRINO SPECIES
 *       E      : NEUTRINO ENERGY ( GEV )
 *       ITYPE  : INTERACTION TYPE
+*       ITARG  : TARGET NUCLEON
 *     
 *     (Output)
 *       X      : Q**2/(2Mv) BJORKEN x
@@ -21,8 +22,13 @@
 *       1983.11.21 ; M.NAKAHATA
 *       1995.03.03 ; K. KANEYUKI  FOR S.K.
 *                    RNXY -> RNXY
-*     
+*       2016.02.28 ; C. Bronner
+*                    No longer average over neutron and proton xsec, use xsec from the right target nucleon
+*                    Fix definition of x and xmax when Bodek-Yang corrections are used.
+*                    If Bodek-Yang is not used, keep the target mass corrections  
+*
 ************************************************************************
+#include "necard.h"
       DATA PMASS/0.938/
       REAL*8 DNDXDY
       EXTERNAL DNDXDY
@@ -30,53 +36,68 @@
       integer ierr
 C     
       IERR=0
+C     -- Check target nucleon code makes sense
+      IF(ITARG.NE.2112 .AND. ITARG.NE.2212)GO TO 1000
 C     
 C     -- FIRST FIND MAXIMUM VALUE
-C     
+C     Do a grid scan in x and y to find the maximum of the double differential cross section in x and y
+C     If this maximum is >0, will be used as upper bound to generate x and y using acceptance-rejection sampling 
       XYMAX=0.
       DO 100 I=1,21
          Y=FLOAT(I-1)*0.05
+         IF (Y.LE.0)Y=0.00000001
          DO 110 J=1,21
 C            X=FLOAT(J-1)*0.05
             X=FLOAT(J-1)*0.05+0.00000001
-            XMAX=4.*E**2*(1-Y)/(PMASS**2+2.*PMASS*Y*E)
+            if(nebodek.eq.0) then
+               XMAX=4.*E**2*(1-Y)/(PMASS**2+2.*PMASS*Y*E)
+            elseif(nebodek.eq.1) then
+               XMAX=4.*E**2*(1-Y)/(2.*PMASS*Y*E)
+            endif
             IF(X.GE.XMAX)GO TO 110
-            XMAX=2.*Y*E/(2.*Y*E+PMASS)
+            if(nebodek.eq.0) then
+               XMAX=2.*Y*E/(2.*Y*E+PMASS)
+            elseif(nebodek.eq.1) then
+               XMAX=1.
+            endif
             IF(X.GE.XMAX)GO TO 110
-C            XYDIS=DNDXDY(IPAR,E,X,Y,ITYPE)
+            
             XX = X
             YY = Y
             EE = E
-            XYDIS=(DNDXDY(IPAR,2212,itype,EE,XX,YY) 
-     &             + DNDXDY(ipar,2112,itype,ee,xx,yy))/2
+            XYDIS=DNDXDY(IPAR,ITARG,itype,EE,XX,YY)
             IF(XYMAX.GT.XYDIS)GO TO 110
             XYMAX=XYDIS
   110    CONTINUE
   100 CONTINUE
       IF(XYMAX.EQ.0.)GO TO 1000
-C     
+      
 C     -- GIVE RANDOM X AND Y
-C     
-C  200 Y=RNDM(DUM)
-C      X=RNDM(DUM)
+C     Generate x and y using acceptance-rejection sampling, based on the value of the double differential cross-section in x and y
   200 Y=RLU(IDUM)
       X=RLU(IDUM)
-      XMAX=4.*E**2*(1-Y)/(PMASS**2+2.*PMASS*Y*E)
+      if(nebodek.eq.0) then
+         XMAX=4.*E**2*(1-Y)/(PMASS**2+2.*PMASS*Y*E)
+      elseif(nebodek.eq.1) then
+         XMAX=4.*E**2*(1-Y)/(2.*PMASS*Y*E)
+      endif
       IF(X.GE.XMAX)GO TO 200
-      XMAX=2.*Y*E/(2.*Y*E+PMASS)
+      if(nebodek.eq.0) then
+         XMAX=2.*Y*E/(2.*Y*E+PMASS)
+      elseif(nebodek.eq.1) then
+         XMAX=1
+      endif
       IF(X.GE.XMAX)GO TO 200
-C     
-C      XYRAN=RNDM(DUM)*XYMAX
+
+
       XYRAN=RLU(IDUM)*XYMAX
-C      XY=DNDXDY(IPAR,E,X,Y,ITYPE)
-            XX = X
-            YY = Y
-            EE = E
-      XY=(DNDXDY(IPAR,2212,itype,EE,XX,YY) 
-     &     + DNDXDY(ipar,2112,itype,ee,xx,yy))/2
+      XX = X
+      YY = Y
+      EE = E
+      XY=DNDXDY(IPAR,ITARG,itype,EE,XX,YY) 
 
       IF(XYRAN.GT.XY)GO TO 200
-
+      
 C     
       RETURN
 C     

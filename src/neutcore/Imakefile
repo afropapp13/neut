@@ -1,16 +1,30 @@
+NEUTCOREVER	= 5.3.5
+INEUTCOREVER= 535
+NUCEFFVER   = 5.3.5
+INUCEFFVER  = 535
+NUCCORVER   = 5.3.5
+INUCCORVER  = 535
+PARTNUCKVER = 5.3.5
+IPARTNUCKVER= 535
+SKMCSVCVER  = 5.3.5
+ISKMCSVCVER = 535
+ZBSFNSVER   = 5.3.5
+IZBSFNSVER  = 535
+SPECFUNCVER = 5.3.5
+ISPECFUNCVER= 535
+RADCORRVER  = 5.3.5
+IRADCORRVER = 535
+
 LIBBASE	= neutcore
-VER	= 5.3.4
-TAG	=
-COREVER = 534
 
 #ifdef ICHI_KILO
 	TAG = .kt
 #endif
 
 LIBALIAS = $(LIBBASE)$(TAG)
-LIBNAME = $(LIBALIAS)_$(VER)
+LIBNAME = $(LIBALIAS)_$(NEUTCOREVER)
 
-FORTRANDEFINES += -DNECOREVER=$(COREVER)
+FORTRANDEFINES += -DNECOREVER=$(INEUTCOREVER)
 
 XCOMM ------------------------------------------------------
 XCOMM Define Object Files
@@ -128,6 +142,8 @@ InstallInclude(nefillverC.h,$(INCDIR))
 InstallInclude(neutmodesCPP.h,$(INCDIR))
 
 InstallInclude(neutfilepath.h,$(FORTRAN_INCDIR))
+Fh2hIncludeTarget(neutfilepath)
+InstallInclude(neutfilepathC.h,$(INCDIR))
 
 XCOMM ------------------------------------------------------
 XCOMM Make programs.

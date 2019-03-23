@@ -13,10 +13,10 @@ c ----- neutrino pdg, nucleon pdg, nc logical flag
         double precision leptonMass, inNucleonMass, outNucleonMass
         common /Masses/ leptonMass, inNucleonMass, outNucleonMass
         double precision GEp_di, GEn_di, GMp_di, GMn_di
-        logical BBBA5, BBBA7
+        logical BBBA5, BBBA7, BBBA7af
         real*8 gep, gmp, gen, gmn
         real*8 q2
-        common /ff/ gep, gmp, gen, gmn, BBBA5, BBBA7
+        common /ff/ gep, gmp, gen, gmn, BBBA5, BBBA7, BBBA7af
         double precision h1, h2, h3, h4, h5
         double precision tau
         double precision f1, f2, fa, fp, fv3, fa3
@@ -42,6 +42,7 @@ c ----- sgn is negative for an incoming neutron - applies to NC events only
 c ----- decide here whether to use dipole, or BBBA fits for form factors
         BBBA5 = .FALSE.
         BBBA7 = .FALSE.
+        BBBA7af = .FALSE.
         if (mod(mod(MDLQE, 1000),400) .EQ. 2) then
           BBBA5 = .TRUE.
         else if (mod(mod(MDLQE, 1000),400) .EQ. 3) then
@@ -49,6 +50,14 @@ c ----- decide here whether to use dipole, or BBBA fits for form factors
         else
           BBBA5 = .FALSE.
           BBBA7 = .FALSE.
+        endif
+
+        if (MDLQEAF .eq. 1) then
+           BBBA7af = .FALSE.
+        else if (MDLQEAF .eq. 2) then
+           BBBA7af = .TRUE.
+        else
+           BBBA7af = .FALSE.
         endif
 
         if (BBBA5 .EQV. .TRUE.) then
@@ -96,6 +105,9 @@ c fa3 is treated as a scaling of fa
      +  (-1.) /( (1. - (dotProduct(qTilde, qTilde)/710000.))**2)
         fa3 = SCCFA * fa 
         
+c        write (*,*) "FPQE,SCC V,A"
+c        write (*,*) FPQE,SCCFV,SCCFA
+
 c  terms from free nucleon tensor
         h1 = fa**2 *(1.0 + tau) + tau*(f1 + f2)*(f1 + f2)
         h2 = fa**2 + f1**2 + tau*(f2**2 + 4*fa3**2)
@@ -145,10 +157,10 @@ c function to calculate Axial form factor
         implicit none
 #include "../neutcore/necard.h"
 #include "../neutcore/neutmodel.h"
-        logical BBBA5, BBBA7
+        logical BBBA5, BBBA7, BBBA7af
         real*8 gep, gmp, gen, gmn
         real fabbba07
-        common /ff/ gep, gmp, gen, gmn, BBBA5, BBBA7
+        common /ff/ gep, gmp, gen, gmn, BBBA5, BBBA7, BBBA7af
         logical nc
         integer sgn
         
@@ -167,7 +179,8 @@ c        MA = 1000
 
         CalcFA = gA / (( 1 -( q2 /( MA**2 ) ) )**2)
 
-        if (BBBA7 .EQV. .TRUE.)then
+        if (BBBA7af .EQV. .TRUE.)then
+           write(*,*) "BBBA7 axial FF"
           CalcFA = fabbba07(-q2/1000000.0)
         endif
 
@@ -212,9 +225,9 @@ c GE = GEp - GEn
         double precision q(4)
         logical nc
         integer sgn
-        logical BBBA5, BBBA7
+        logical BBBA5, BBBA7, BBBA7af
         real*8 gep, gmp, gen, gmn
-        common /ff/ gep, gmp, gen, gmn, BBBA5, BBBA7
+        common /ff/ gep, gmp, gen, gmn, BBBA5, BBBA7, BBBA7af
         double precision sin2ThetaW
 
 c ----- for CC interactions:        
@@ -237,9 +250,9 @@ c GM = GMp - GMn
         double precision q(4)
         logical nc
         integer sgn
-        logical BBBA5, BBBA7
+        logical BBBA5, BBBA7, BBBA7af
         real*8 gep, gmp, gen, gmn
-        common /ff/ gep, gmp, gen, gmn, BBBA5, BBBA7
+        common /ff/ gep, gmp, gen, gmn, BBBA5, BBBA7, BBBA7af
         double precision sin2ThetaW
 
 c ----- for CC interactions:

@@ -1,10 +1,25 @@
+NEUTCOREVER	= 5.3.5
+INEUTCOREVER= 535
+NUCEFFVER   = 5.3.5
+INUCEFFVER  = 535
+NUCCORVER   = 5.3.5
+INUCCORVER  = 535
+PARTNUCKVER = 5.3.5
+IPARTNUCKVER= 535
+SKMCSVCVER  = 5.3.5
+ISKMCSVCVER = 535
+ZBSFNSVER   = 5.3.5
+IZBSFNSVER  = 535
+SPECFUNCVER = 5.3.5
+ISPECFUNCVER= 535
+RADCORRVER  = 5.3.5
+IRADCORRVER = 535
+
 LIBALIAS =  nuccorrspl
-VER  = 5.3.3
-IVER = 533
 
-LIBNAME = $(LIBALIAS)_$(VER)
+LIBNAME = $(LIBALIAS)_$(NUCCORVER)
 
-FORTRANDEFINES += -DNENUCCVER=$(IVER)
+FORTRANDEFINES += -DNENUCCVER=$(INUCCORVER)
 
 XCOMM ------------------------------------------------------
 XCOMM Define Object Files
@@ -36,6 +51,9 @@ InstallInclude(nrnuclparamC.h,$(INCDIR))
 InstallInclude(nrcard.h,$(FORTRAN_INCDIR))
 Fh2hIncludeTarget(nrcard)
 InstallInclude(nrcardC.h,$(INCDIR))
+InstallInclude(nucleonfsihist.h,$(FORTRAN_INCDIR))
+Fh2hIncludeTarget(nucleonfsihist)
+InstallInclude(nucleonfsihistC.h,$(INCDIR))
 
 XCOMM ------------------------------------------------------
 XCOMM Make programs.

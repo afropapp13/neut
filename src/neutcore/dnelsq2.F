@@ -91,11 +91,13 @@ C-------
       EE=E
       Q2T1=FNQ2MIN(EE,IPAR)
       IF(Q2.LT.Q2T1) THEN
+CRT         write(*,*) "Q2<Q2min"
          DNELSQ2=0.
          RETURN
       END IF
       Q2T2=FNQ2MAX(EE,IPAR)
       IF(Q2.GT.Q2T2) THEN
+CRT         write(*,*) "Q2>Q2max"
          DNELSQ2=0.
          RETURN
       END IF
@@ -161,5 +163,7 @@ C      &     -AM**2/PM**2*((F1V+F2VG)**2+FA**2))
          DNELSQ2=CONST/E**2*(AAA+BBB*SMU/PM**2+CCC*SMU**2/PM**4)
       ENDIF
       
+CRT      write(*,*) "xsec = ",DNELSQ2
+
       RETURN
       END

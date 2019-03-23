@@ -4,7 +4,7 @@ endif
 include $(NEUT_ROOT)/src/neutsmpl/config_neut.gmk
 #include config_neut.gmk
 
-
+INSTALL = /usr/bin/install
 
 ROOTINC = -I`root-config --incdir`
 NEUTINC = -I../neutcore -I../nuccorspl -I../skmcsvc -I../nuceff -I../../include
@@ -24,23 +24,22 @@ LIBDIRS =     -L${COREDIR}  -L../../lib/Linux_pc  -L../nuccorspl/Linux_pc \
                       -L../nuceff/Linux_pc -L../partnuck/Linux_pc \
                       -L../skmcsvc/Linux_pc -L../specfunc -L../specfunc/Linux_pc
 
-NEUTCOREVER	= 5.3.4
-INEUTCOREVER= 534
-
-NUCEFFVER   = 5.3.3
-INUCEFFVER  = 533
-
-NUCCORVER   = 5.3.3
-INUCCORVER  = 533
-
-PARTNUCKVER = 5.3.3
-IPARTNUCKVER= 533
-
-SKMCSVCVER  = 5.3.3
-ISKMCSVCVER = 533
-
-SPECFUNCVER = 5.3.3
-ISPECFUNCVER= 533
+NEUTCOREVER	= 5.3.5
+INEUTCOREVER= 535
+NUCEFFVER   = 5.3.5
+INUCEFFVER  = 535
+NUCCORVER   = 5.3.5
+INUCCORVER  = 535
+PARTNUCKVER = 5.3.5
+IPARTNUCKVER= 535
+SKMCSVCVER  = 5.3.5
+ISKMCSVCVER = 535
+ZBSFNSVER   = 5.3.5
+IZBSFNSVER  = 535
+SPECFUNCVER = 5.3.5
+ISPECFUNCVER= 535
+RADCORRVER  = 5.3.5
+IRADCORRVER = 535
 
 FORTRANDEFINES += -DNECORE_VERSION=$(INEUTCOREVER)
 FORTRANDEFINES += -DNENUCE_VERSION=$(INUCEFFVER)
@@ -50,7 +49,8 @@ MCLIB = ${LIBDIRS}  \
 	  	-lneutcore_${NEUTCOREVER} -lspecfunc_${SPECFUNCVER} \
 		-lnuceff_${NUCEFFVER} \
 		-lneutcore_${NEUTCOREVER} -lnuccorrspl_${NUCCORVER} \
-		-lpartnuck_${PARTNUCKVER} -lskmcsvc_${SKMCSVCVER}
+		-lpartnuck_${PARTNUCKVER} -lskmcsvc_${SKMCSVCVER} \
+		-lradcorr_${RADCORRVER}
 
 CLIBS = ${CERN}/${CERN_LEVEL}/lib/libjetset74.a \
 		${CERN}/${CERN_LEVEL}/lib/libpdflib804.a \
@@ -63,9 +63,17 @@ LDOPTFLAGS= -g
 
 FINCDIRS  = ${NEUTINC}
 
+NEUTROOT_INCFILES = ${CLASSDIR}/neutvect.h \
+				  	${CLASSDIR}/neutpart.h \
+					${CLASSDIR}/neutfsipart.h \
+					${CLASSDIR}/neutfsivert.h \
+					${CLASSDIR}/neutrootTreeSingleton.h
+
 SOBJS = ${CLASSDIR}/neutctrl.so ${CLASSDIR}/neutpart.so \
 		${CLASSDIR}/neutvect.so ${CLASSDIR}/neutvtx.so \
-		${CLASSDIR}/neutfsipart.so ${CLASSDIR}/neutfsivert.so 
+		${CLASSDIR}/neutfsipart.so ${CLASSDIR}/neutfsivert.so \
+		${CLASSDIR}/neutnucfsistep.so ${CLASSDIR}/neutnucfsivert.so
+		
 #${CLASSDIR}/neutfillvect.o ${CLASSDIR}/neutfillvtx.o 
 ROBJS = ${CLASSDIR}/neutfill.o \
 		${CLASSDIR}/neutrootfortwrapper.o \
@@ -96,6 +104,8 @@ GENROOTSO = env COPTFLAGS="${COPTFLAGS}" INCDIRS="${INCDIRS}" \
 clean:
 	$(RM) -f *.o *~ ${MOBJS} neutroot neutroot2
 
+install.include: $(NEUTROOT_INCFILES)
+	$(INSTALL) -m0444 $(NEUTROOT_INCFILES) ${NEUT_ROOT}/include
 
 neutroot2: neutroot.o $(OBJS2)  ${CLASSDIR}/neutrootTreeSingleton.so
 	$(FC) -o $@ neutroot.o -Xlinker -R`pwd`  $(OBJS2) $(LIBS)

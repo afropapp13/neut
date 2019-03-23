@@ -53,7 +53,7 @@ C -- extract NEUT card
       CALL FFINIT(0)
       CALL FFSET('LINP', 91)
       CALL FFSET('SIZE', 5)
-      CALL FFSET('LENG', 100)
+      CALL FFSET('LENG',100)
       CALL FFKEY('MODE',ITAMODE, 1,'INTE')
       CALL FFKEY('BRA' ,TAUBRA, 22,'REAL')
       CALL FFKEY('IPOL',ITAPOL,  1,'INTE')

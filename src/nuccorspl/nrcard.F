@@ -29,6 +29,7 @@ C --  Initialize
 
       NUCRESCAT = 1
       XNUCFACT  = 1.
+      NUCRESFLG = 1
 
 C --- get card file name (1st argument of the program)
 
@@ -55,6 +56,7 @@ C -- extract NUCRES card
       CALL FFSET('SIZE', 9)
       CALL FFKEY('RESCAT',NUCRESCAT, 1,'INTEGER')
       CALL FFKEY('FACT'  ,XNUCFACT, 1,'REAL')
+      CALL FFKEY('FRMGAS',NUCRESFLG, 1,'INTEGER')
 
       CALL FFGO
       CLOSE(UNIT=91)
@@ -64,5 +66,6 @@ C -- extract NUCRES card
       WRITE(6,*) 'NUCRES : INPUTTED PARAMETER '
       WRITE(6,*) 'NUCRES : RESCAT   = ',NUCRESCAT, ' 0: off, 1: on'
       WRITE(6,*) 'NUCRES : XNUCFACT = ',XNUCFACT
+      WRITE(6,*) 'NUCRES : NUCRESFLG= ',NUCRESFLG
       RETURN
       END

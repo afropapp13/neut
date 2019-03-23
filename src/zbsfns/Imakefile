@@ -1,21 +1,24 @@
-NEUTCOREVER	= 5.3.4
-INEUTCOREVER= 534
-NUCEFFVER   = 5.3.3
-INUCEFFVER  = 533
-NUCCORVER   = 5.3.3
-INUCCORVER  = 533
-PARTNUCKVER = 5.3.3
-IPARTNUCKVER= 533
-SKMCSVCVER  = 5.3.3
-ISKMCSVCVER = 533
+NEUTCOREVER	= 5.3.5
+INEUTCOREVER= 535
+NUCEFFVER   = 5.3.5
+INUCEFFVER  = 535
+NUCCORVER   = 5.3.5
+INUCCORVER  = 535
+PARTNUCKVER = 5.3.5
+IPARTNUCKVER= 535
+SKMCSVCVER  = 5.3.5
+ISKMCSVCVER = 535
+ZBSFNSVER   = 5.3.5
+IZBSFNSVER  = 535
+SPECFUNCVER = 5.3.5
+ISPECFUNCVER= 535
+RADCORRVER  = 5.3.5
+IRADCORRVER = 535
 
 LIBALIAS = zbsfns
-VER  = 5.3.3
-IVER = 533
 
-LIBNAME = $(LIBALIAS)_$(VER)
-
-FORTRANDEFINES += -DNEZBSVER=$(IVER)
+LIBNAME = $(LIBALIAS)_$(ZBSFNSVER)
+FORTRANDEFINES += -DNEZBSVER=$(IZBSFNSVER)
 
 XCOMM ------------------------------------------------------
 XCOMM Define Object Files
@@ -23,6 +26,7 @@ XCOMM ------------------------------------------------------
 
 FOBJ = nemknebk.o  nemkmodelbk.o vcmkvc.o vcmkvx.o \
        nemknetarg.o nerdnetarg.o nemkfsibk.o nemkcrsbk.o \
+       nemknucfsibk.o nerdnucfsibk.o \
        nerdnebk.o vcrdvccm.o vcrdvc.o vcrdvx.o \
        nerdnetarg.o nerdfsibk.o nerdcrsbk.o vcmkdetgm.o \
        vcclfsicm.o 

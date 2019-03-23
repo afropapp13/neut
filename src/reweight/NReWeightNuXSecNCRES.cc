@@ -83,6 +83,13 @@ void NReWeightNuXSecNCRES::Init(void)
   fMvTwkDial   = 0.; 
   fMvDef       = fortFns->XMVNCRESdef;
   fMvCurr      = fMvDef;
+
+  fMaTwkDial   = 0.; 
+  fMaDef       = 0;
+  fMaCurr      = fMaDef;
+  fMvTwkDial   = 0.; 
+  fMvDef       = 0;
+  fMvCurr      = fMvDef;
   */
   fMaNFFTwkDial   = 0.; 
   fMaNFFDef       = fortFns->XMANFFRESdef;

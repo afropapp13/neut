@@ -234,6 +234,11 @@ C-
 
       RNDSIG = RLU(IRSISED)*SIGMAX
       W = RLU(IRSISED)*(WMAX - WMIN)+WMIN
+C      if (e.le.1.) then
+C         Q2 = -1.*RLU(IRSISED)*8
+C      else
+         Q2 = -1.*RLU(IRSISED)*e*e*8
+C      endif
 
  12   CONTINUE
       XCONS=SMAX-XMLEP**2-W**2
@@ -242,14 +247,14 @@ C-
       
       IF (PTAUA2.lt.0) GO TO 11
       PTAUA = sqrt(PTAUA2)
-      QMIN  =  XMLEP**2 
-     $      - 2*PNEUCM*sqrt(PTAUA**2+XMLEP**2)
-     $      + 2*PNEUCM*PTAUA
-      QMAX  =  XMLEP**2 
-     $      - 2*PNEUCM*sqrt(PTAUA**2+XMLEP**2)
-     $      - 2*PTAUA*PNEUCM
+C      QMIN  =  XMLEP**2 
+C     $      - 2*PNEUCM*sqrt(PTAUA**2+XMLEP**2)
+C     $      + 2*PNEUCM*PTAUA
+C      QMAX  =  XMLEP**2 
+C     $      - 2*PNEUCM*sqrt(PTAUA**2+XMLEP**2)
+C     $      - 2*PTAUA*PNEUCM
 
-      Q2 = QMIN + RLU(IRSISED)*(QMAX-QMIN)
+C      Q2 = QMIN + RLU(IRSISED)*(QMAX-QMIN)
 
       W2 = W*W 
       IF ( ((2 * XMN * E) * (2 * XMN * E + XMN2 - W2) /
@@ -260,7 +265,9 @@ C-
 
       XMLEP2 = XMLEP*XMLEP
       ELEPL=(2*E*XMN+XMN2+Q2-W2)/(2*XMN)
-      APLEPL=SQRT(ELEPL**2-XMLEP2)
+      APLEPL=ELEPL**2-XMLEP2
+      if (APLEPL.LE.0) goto 11
+      APLEPL=SQRT(APLEPL)
 
       IF (abs(Q2+2*E*ELEPL-XMLEP2)/(2*E*APLEPL).GT.1.)
      $     GOTO 11

@@ -188,10 +188,12 @@ qedifcrs_(int *ip, int *ccnc, float *energy, float *elep, float *coslep)
   F1 = (FGE + Q2*FGM/(XMNc*XMNc)/4.) / (1. + Q2/(XMNc*XMNc)/4.);
   F2 = 0.5*(FGE-FGM)/XMNc/(1.+Q2/(XMNc*XMNc)/4.);
 
-  if (FF_model == 0) {
+  if (FF_model == 1) {
+    printf("qedifcrs: axial dipole FF_model = %d\n",FF_model);
     // FA = -1.232*pow(1.+Q2/(Maxial*Maxial), -2.);
     FA = -1.267*pow(1.+Q2/((Maxial)*(Maxial)), -2.);
-  } else if (FF_model == 1) {
+  } else if (FF_model == 2) {
+    printf("qedifcrs: bbba07 BBBA07 FF_model = %d\n",FF_model);
     // FA = faBBBA07(Q2/1.e+6);
     FA = faBBBA07(Q2);
   }else{

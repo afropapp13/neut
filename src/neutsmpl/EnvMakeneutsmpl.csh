@@ -4,7 +4,7 @@ setenv SOMEWHERE `pwd`/..
 setenv MACHINE `${SOMEWHERE}/neutsmpl/bin/Machine`
 
 #setenv FC g77
-setenv FC gfortran
+#setenv FC gfortran
 if (${?FC} == 0) then
 	echo "EnvMakeneutsmpl: set environmental variable FC "
 	exit 1

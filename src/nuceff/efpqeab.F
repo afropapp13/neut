@@ -44,13 +44,11 @@ C
          PABS=DXXY*EFABPATH(PPI,DL)
       END IF
 
-      PCOH=PQE*FEFCOHF
-      PESC=1.-PABS-PQE-PCOH
-
 C     Scale parameters
-      PQE =PQE*FEFQE
-      PABS=PABS*FEFABS
-C      PCOH=PCOH*FEFCOH
+      PCOH=PQE*FEFCOHF*FEFALL
+      PQE =PQE*FEFQE*FEFALL
+      PABS=PABS*FEFABS*FEFALL
+
       
       PROBSUM=PQE+PABS+PCOH
       IF (PROBSUM.gt.1.) then
@@ -59,7 +57,6 @@ C      PCOH=PCOH*FEFCOH
          PCOH=PCOH/PROBSUM
       ENDIF
       PESC=1-PQE-PABS-PCOH
-
 #ifdef DEBUG
       write(*,*) "PPI=",PPI," : DL=",DL," : PQE=",PQE,
      $           " : PABS=",PABS," : PCOH=",PCOH,

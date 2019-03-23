@@ -3,38 +3,35 @@ ifndef NEUT_ROOT
 endif
 include $(NEUT_ROOT)/src/neutsmpl/config_neut.gmk
 
-NEUTCOREVER	= 5.3.4
-INEUTCOREVER= 534
+NEUTCOREVER	= 5.3.5
+INEUTCOREVER= 535
+NUCEFFVER   = 5.3.5
+INUCEFFVER  = 535
+NUCCORVER   = 5.3.5
+INUCCORVER  = 535
+PARTNUCKVER = 5.3.5
+IPARTNUCKVER= 535
+SKMCSVCVER  = 5.3.5
+ISKMCSVCVER = 535
+ZBSFNSVER   = 5.3.5
+IZBSFNSVER  = 535
+SPECFUNCVER = 5.3.5
+ISPECFUNCVER= 535
+RADCORRVER  = 5.3.5
+IRADCORRVER = 535
 
-NUCEFFVER   = 5.3.3
-INUCEFFVER  = 533
-
-NUCCORVER   = 5.3.3
-INUCCORVER  = 533
-
-PARTNUCKVER = 5.3.3
-IPARTNUCKVER= 533
-
-SKMCSVCVER  = 5.3.3
-ISKMCSVCVER = 533
-
-ZBSFNSVER  = 5.3.3
-IZBSFNSVER = 533
-
-SPECFUNCVER = 5.3.3
-ISPECFUNCVER= 533
 
 COREDIR =   ../neutcore/Linux_pc
 LIBDIRS =   -L${COREDIR}            -L../nuccorspl/Linux_pc \
             -L../nuceff/Linux_pc -L../partnuck/Linux_pc  \
             -L../skmcsvc/Linux_pc -L../zbsfns/Linux_pc \
-			-L../specfunc
+			-L../specfunc -L../radcorr
 
 MCLIBS  = ${LIBDIRS} -lneutcore_${NEUTCOREVER} -lspecfunc_${SPECFUNCVER} \
 		-lnuceff_${NUCEFFVER} -lneutcore_${NEUTCOREVER} \
 		-lnuccorrspl_${NUCCORVER} -lpartnuck_${PARTNUCKVER} \
-		-lskmcsvc_${SKMCSVCVER} -lzbsfns_${ZBSFNSVER}
-
+		-lskmcsvc_${SKMCSVCVER} -lzbsfns_${ZBSFNSVER} \
+		-lradcorr_${RADCORRVER}
 
 ROOTINCDIR  = `root-config --incdir`
 LOCALINCDIR = ./
@@ -113,6 +110,9 @@ t2kflux_sktest: $(OBJS)
 
 neutntpl_tq: $(NTPLTQOBJS) $(NTOBJS)
 	$(FC) ${LDFLAGS} -o $@ ${NTPLTQOBJS} ${NTOBJS} -L${SKOFL_ROOT}/lib -lskrd -liolib ${LIBS} 
+
+neutdump: neutdump.o
+	$(FC) ${LDFLAGS} -o $@ neutdump.o -L${SKOFL_ROOT}/lib -lskrd -liolib ${LIBS} 
 
 neut_test: neut_test.o $(T2KOBJS)  ${OBJS}
 	$(FC) ${LDFLAGS} -o $@ neut_test.o ${T2KOBJS} ${OBJS} ${LIBS}

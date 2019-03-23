@@ -183,10 +183,13 @@ C
 #include "neutcrs.h"
 #include "neutmodel.h"
 #include "necard.h"
+#include "vcwork.h"
+#include "posinnuc.h"
 
       integer*4 ipar,i
       real*4    e
 C      integer*4 mdlqe
+c      integer*4 IBOUND
 
 C
 C -- Preparation
@@ -217,9 +220,14 @@ C      real *4 PNEU(3),PFABS,AMIN,BETA,EV(3),GM
 
       real*4   dcohnerein
       external dcohnerein
-    
+
       real*4   dcohneberger
       external dcohneberger
+
+      real*8 dnelsq2
+      external dnelsq2
+      real*8 dnncelsq2
+      external dnncelsq2
     
 C -- Parameters
       integer*4 iorig
@@ -380,18 +388,26 @@ C         ENDIF
 
          ccnc = 1
 
-         if (mod(mdlqe,1000).ge.400) then
-            if (NUMATOM.eq.16 .or. NUMATOM.eq.12 
-     $           .or. NUMATOM.eq.56) then
-               evdifcrs
-     $              = LH(k,kPrime,p,qTilde,IPAR,nc,nucPdg)
+         if (IBOUND .eq. 1) then
+            if (mod(mdlqe,1000).ge.400 .and.
+     $           mod(mdlqe,1000).lt.500) then
+               if (NUMATOM.eq.16 .or. NUMATOM.eq.12 
+     $              .or. NUMATOM.eq.56) then
+CRT     write(*,*) "SF NUMATOM: ",NUMATOM
+                  evdifcrs
+     $                 = LH(k,kPrime,p,qTilde,IPAR,nc,nucPdg)
+               else
+CRT     write(*,*) "SF RFG NUMATOM: ",NUMATOM
+                  evdifcrs
+     $                 = qedifcrs(ipar, ccnc, e, elep, coslep)
+               endif
             else
                evdifcrs
      $              = qedifcrs(ipar, ccnc, e, elep, coslep)
             endif
          else
-            evdifcrs
-     $           = qedifcrs(ipar, ccnc, e, elep, coslep)
+CRT            write(*,*) "Free proton CC"
+            evdifcrs = dnelsq2(e,ipar,q2)
          endif
 c         if (mdlqe.lt.400) then
 c            write(*,*) "model less than 400"
@@ -423,18 +439,26 @@ c     endif
          evdifcrs = dndxdy(IPAR,IPNE(2),0,E8,X8,Y8)
       else if ((abs(modene).eq.51).or.(abs(modene).eq.52)) then
          ccnc   = 0
-         if (mod(mdlqe,1000).ge.400) then
-            if (NUMATOM.eq.16 .or. NUMATOM.eq.12 
-     $           .or. NUMATOM.eq.56) then
-               evdifcrs
-     $              = LH(k,kPrime,p,qTilde,IPAR,nc,nucPdg)
+         if (IBOUND .eq. 1) then
+            if (mod(mdlqe,1000).ge.400 .and.
+     $           mod(mdlqe,1000).lt.500 ) then
+               if (NUMATOM.eq.16 .or. NUMATOM.eq.12 
+     $              .or. NUMATOM.eq.56) then
+                  evdifcrs
+     $                 = LH(k,kPrime,p,qTilde,IPAR,nc,nucPdg)
+               else
+                  evdifcrs
+     $                 = qedifcrs(ipar, ccnc, e, elep, coslep)
+               endif
             else
                evdifcrs
      $              = qedifcrs(ipar, ccnc, e, elep, coslep)
             endif
          else
-            evdifcrs
-     $           = qedifcrs(ipar, ccnc, e, elep, coslep)
+C RT: this is for free protons; will need to amend when free
+C RT: neutrons are available
+            write(*,*) "Free proton NCEL"
+            evdifcrs = dnncelsq2(e,ipar,2212,q2)
          endif
 c         evdifcrs
 C     $        = qedifcrs(ipar, ccnc, e*1000., elep*1000., coslep)
@@ -479,7 +503,7 @@ C     $ ' ipar=',ipar,' x=',CRSX,' y=',CRSX,' z=',CRSX,' phi=',CRSPHI
 C         stop
       endif
 
-C      write(*,*) 'evdifcrs = ', evdifcrs
+C      write(*,*) evdifcrs
 
       RETURN
       END

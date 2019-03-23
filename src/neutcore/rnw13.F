@@ -21,8 +21,13 @@
 *       1988.09.06 ; T.KAJITA (MOD. FROM RANW MADE BY M.NAKAHATA)
 *       1995.03.03 ; K. KANEYUKI  FOR S.K.
 *                    RANW13 -> RNW13
+*       2016.02.28 ; C. Bronner 
+*                    Separate between interactions on protons and neutrons
+*                    Fix relation between x and Q2 when Bodek-Yang corrections are used.
+*                    If Bodek-Yang is not used, keep the target mass corrections  
 *     
 ************************************************************************
+#include "necard.h"
       DATA PMASS/0.938/
       DATA MAXTRY/10000/
 C     
@@ -30,9 +35,13 @@ C
       ITRY=0
 C     
       DO 100 ITRY=1,MAXTRY
-         CALL RNXY(IPAR,E,X,Y,ITYPE,IERRR)
+         CALL RNXY(IPAR,E,X,Y,ITYPE,ITARG,IERRR)
          IF(IERRR.EQ.1)GO TO 1001
-         Q2=X*(2.*PMASS*Y*E+PMASS**2)
+         if(nebodek.eq.0) then
+            Q2=X*(2.*PMASS*Y*E+PMASS**2)
+         elseif(nebodek.eq.1) then
+            Q2=X*(2.*PMASS*Y*E)
+         endif
          XNEU=Y*E
          W2=-Q2+PMASS**2+2.*PMASS*XNEU
          W=SQRT(W2)

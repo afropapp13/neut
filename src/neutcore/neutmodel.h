@@ -47,6 +47,7 @@ C-- Coherent pion
 C  MDLCOH = 0 ; Rein&Sehgal w/ lepton mass corr.
 C           1 ; Kartavtsev et al.
 C           2 ; Berger&Sehgal	
+C
 C  XMACOH  (Default = 1.0)
 C  RAD0NU  (Default = 1 fm)
 C  fA1COH  (Default = 0.0)

@@ -22,7 +22,10 @@
 *       YY     : v/E        BJORKEN y
 *
 *     (Creation Date and Author)
-*     
+*     ????.??.?? ; Previous versions
+*     2016.02.29 ; C. Bronner
+*                  Fix definition of x when Bodek-Yang corrections are used.
+*                  If Bodek-Yang is not used, keep the target mass corrections
 ************************************************************************
       implicit none
 #include "necard.h"
@@ -53,6 +56,7 @@
       real*8 a,b
       real*8 ymax,xmax
       real*8 rtt,qsmx
+      real*8 effq2
       real cost
       real plep,elep
 
@@ -62,6 +66,7 @@
 
       DNDXDY=0.D0
 
+C     Assign lepton mass based on neutrino and interaction type
       if(itype.eq.0) then
         amlep=0.D0
       elseif(iabs(ip).eq.12) then
@@ -74,6 +79,7 @@
         return
       endif
 
+C     Assign target nucleon mass
       if(it.eq.2212) then
         am = xmp
         const = consp
@@ -84,6 +90,7 @@
         return
       endif
 
+C     Check that the value of y leaves enough energy to produce the lepton
       YMAX=1.-AMLEP/E
       IF(YMAX.LT.0.) THEN
 *      PRINT *,' ***** 1-ML/E < 0.******',X,Y
@@ -95,6 +102,7 @@
       RETURN
       END IF
 
+C     Check value of x is not too large
 *     momentum of outgoing lepton
       RTT=E*E*(1.-Y)**2-AMLEP**2
       IF(RTT.LT.0.) THEN
@@ -110,19 +118,32 @@
       END IF
 
 *     X maximum
-      XMAX=QSMX/(AM**2+2.*AM*Y*E)
+      if(nebodek.eq.0) then
+         XMAX=QSMX/(AM**2+2.*AM*Y*E)
+      elseif(nebodek.eq.1) then
+         XMAX=QSMX/(2.*AM*Y*E)
+      endif
       IF(X.GE.XMAX) THEN
 *      PRINT *,' ***** X > Q2MAX/(M**2+2MYE) *****',X,Y
       RETURN
       END IF
 
-      XMAX=2.*Y*E/(2.*Y*E+AM)
+      if(nebodek.eq.0) then
+         XMAX=2.*Y*E/(2.*Y*E+AM)
+      elseif(nebodek.eq.1) then
+         XMAX=1
+      endif
       IF(X.GE.XMAX) THEN
 *      PRINT *,' ****** W < 0.938GEV ******',X,Y
       RETURN
       END IF
 
-      Q2=X*(2.*AM*Y*E+AM**2)
+C     Check those values of x and y give meaningful lepton kinematics
+      if(nebodek.eq.0) then
+         Q2=X*(2.*AM*Y*E+AM**2)
+      elseif(nebodek.eq.1) then
+         Q2=X*(2.*AM*Y*E)
+      endif
       ELEP=E-Y*E
       PLEP=ELEP**2-AMLEP**2
 
@@ -139,6 +160,8 @@
       RETURN
       END IF
 
+C     Compute double differential cross section in x and y.
+C     Formula taken from C.H. Albright and C. Jarlskog, Nucl. Phys B84, 467 (1975), modified as this paper looks at the case of heavy lepton.
       Q2=2.D0*am*e*y*x
       if(nebodek.eq.0) then
 !     --> Original
@@ -160,10 +183,19 @@
             Qtmp = 0.35
             R = 3.207*Q2*fnrworld(x,Qtmp)/(Q2**2 + 1.)
          endif
+
          COEFF2_1 = 1. - Y - am*X*Y/(2.*E) - (AMLEP**2)/(4.*E**2)
      &        - (AMLEP**2)/(2.*am*E*(X+1.E-30))
          COEFF2_2 = ( Y**2/2. + (Y*AMLEP**2)/(4.*am*E*(X+1.E-30)) )*
-     &        (1. + (4.*am*x**2)/Q2)/(1. + R)
+     &        (1. + (4.*(am**2)*x**2)/Q2)/(1. + R)
+C CB         Use an effective Q2 as evolution of PDF is frozen at 0.8 GeV
+C CB         if(Q2.ge.0.8) then
+C CB            effq2=Q2
+C CB         else
+C CB            effq2=0.8
+C CB         endif
+C CB         COEFF2_2 = ( Y**2/2. + (Y*AMLEP**2)/(4.*am*E*(X+1.E-30)) )*
+C CB     &        (1. + (4.*(am**2)*x**2)/effq2)/(1. + R)
          COEFF2 = COEFF2_1 + COEFF2_2
          
          COR2=-(AMLEP**2)/(4.*am*E*(X+1.E-30))

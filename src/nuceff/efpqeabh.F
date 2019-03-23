@@ -95,10 +95,10 @@ C     Re-set DXXY using CC2
 C      DXXY=CC2/100.
 C     
 C     Scale parameters
-      PQE  =PQE*FEFQEH
-      PINEL=PINEL*FEFINEL
-      PCOH =PCOH*FEFCOH
-      PCX  =PCX*FEFCXH
+      PQE  =PQE*FEFQEH*FEFALL
+      PINEL=PINEL*FEFINEL*FEFALL
+      PCOH =PCOH*FEFCOH*FEFALL
+      PCX  =PCX*FEFCXH*FEFALL
 
       PROBSUM=PQE+PINEL+PCOH+PCX
       IF (PROBSUM.gt.1.) then
@@ -108,6 +108,5 @@ C     Scale parameters
          PCX  =PCX/PROBSUM
       ENDIF
       PESC=1-PQE-PINEL-PCOH-PCX
-
       RETURN
       END

@@ -17,7 +17,7 @@ cd ${SOMEWHERE}/neutsmpl
 \rm -f neutmodel.h nework.h vcwork.h neutparams.h posinnuc.h 
 rm -rf ${MACHINE} Makefile
 
-foreach i ( neutcore nuccorspl nuceff partnuck skmcsvc )
+foreach i ( neutcore nuccorspl nuceff partnuck skmcsvc radcorr)
   cd ${SOMEWHERE}/$i
   rm -rf ${MACHINE} Makefile
   find . -name "*C.h" -exec \rm \{} \;
@@ -84,11 +84,11 @@ foreach i ( neutcore nuccorspl nuceff partnuck skmcsvc tauola )
  
   cd ${SOMEWHERE}/$i
   \rm -rf ${MACHINE} Makefile
-  imake_boot 
-  make Makefile
-  make clean
-  make includes
-  make all || ( echo "Failed in compiling $i" ; exit 2 )
+  imake_boot  || exit 1
+  make Makefile  || exit 1
+  make clean  || exit 1
+  make includes  || exit 1
+  make all || exit 2
   make install.include
   make install.lib
 
@@ -97,13 +97,20 @@ end
 echo "--------- COMPILING SPECFUNC --------- "
 cd ${SOMEWHERE}/specfunc
 make clean
-make -e install || ( echo "Failed in compiling $i" ; exit 2 )
-make all
+make -e install || exit 2
+make all || exit 1
 
-echo "--------- COMPILING NEUTCLASS --------- "
-cd ${SOMEWHERE}/neutclass
+echo "--------- COMPILING RADIATIVE CORRECTION --------- "
+cd ${SOMEWHERE}/radcorr
 make clean
-make all || ( echo "Failed in compiling $i" ; exit 2 )
+make all || exit 1
+make -e install || exit 2
+
+# note: neutclass is not compiled like this, it no longer has a Makefile
+#echo "--------- COMPILING NEUTCLASS --------- "
+#cd ${SOMEWHERE}/neutclass
+#make clean
+#make all || exit 2
 
 echo "--------- CLEANING NEUTSMPL --------- "
 cd ${SOMEWHERE}/neutsmpl
@@ -113,7 +120,7 @@ ln -s ../skmcsvc/necardev.h
 
 echo "--------- bootstrap NEUTSMPL Makefile --------- "
 rm -rf ${MACHINE} Makefile
-imake_boot
+imake_boot || exit 1
 
 echo "--------- Regen. Headers --------- "
 \rm -f neutmodel.h nework.h vcwork.h neutparams.h posinnuc.h 
@@ -126,12 +133,12 @@ ln -s ../neutcore/posinnuc.h .
 ln -s ../nuceff/efpion.h .
 
 echo "--------- Make NEUT executables --------- "
-make neut neut_ntpl dumptotpau dumpelspau dumpcohcrs dumpcrs ||( echo "Failed in compiling $i" ; exit 2 ) 
+make neut neut_ntpl dumptotpau dumpelspau dumpcohcrs dumpcrs || exit 2
 
 echo "--------- Make NEUTROOT --------- "
-make -f GNUmakefile.neutroot clean
-
-make -f GNUmakefile.neutroot neutroot2
+make -f GNUmakefile.neutroot clean  || exit 1
+make -f GNUmakefile.dumptotpau dumptotpauC  || exit 1
+make -f GNUmakefile.neutroot install.include neutroot2  || exit 1
 
 setenv NEUTCORE  ../neutcore
 
@@ -143,3 +150,12 @@ end
 echo "--------- Make Links To Spectral Function Data Files --------- "
 rm -rf qelSfData
 ln -s ${SOMEWHERE}/crsdat/qelSfData qelSfData
+
+echo "--------- Make Links To Radiation correction Data Files --------- "
+rm -rf ../radcorr/ProbDist.root ../radcorr/RadnueCCQE.root ../radcorr/RadnumuCCQE.root
+ln -s ${SOMEWHERE}/radcorr/ProbDist.root .
+ln -s ${SOMEWHERE}/radcorr/RadnueCCQE.root .
+ln -s ${SOMEWHERE}/radcorr/RadnumuCCQE.root .
+
+
+
