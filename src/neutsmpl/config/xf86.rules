@@ -1,9 +1,6 @@
-/* $Id: xf86.rules,v 1.1.1.1 2016/11/04 20:29:56 mdunkman Exp $
+/* $Id: xf86.rules,v 1.1 2007-01-20 07:35:53 skrep Exp $
  *
- * $Log: xf86.rules,v $
- * Revision 1.1.1.1  2016/11/04 20:29:56  mdunkman
- * Import of NEUT 5.3.3 v1r27 for use with T2KReWeight v1r27 (Winter OA 2017)
- *
+ * $Log: not supported by cvs2svn $
  * Revision 1.3  1998/01/06 21:13:09  mcgrew
  * Remove the MFLAGS and MAKEFLAGS cruft.  This was included to work
  * around different "make" behaviours, but we now require GNUmake and it

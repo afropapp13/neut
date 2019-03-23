@@ -17,7 +17,8 @@ C+  Creation Date and Author:
 C+       2011.02.04 ; First version by K.Ueno, pion absorption case by T.Mori
 C+       2011.09.25 ; Update of spectroscopic factors by K.Ueno
 C+       2011.10.27 ; Update of the excitation-energy region of the s-hole state by K.Ueno
-C+
+C+       2014.06.24 : Change to Ankowski spectral factor 
+C+       2014.08.11 : Revise Ankowski spectral factor 
       implicit none
       
       integer maxout
@@ -60,21 +61,21 @@ C
       integer max_shell
       parameter (max_shell = 3)
       real prob_shell(max_shell)
-      data prob_shell/0.188,0.435,0.377/ ! s(1/2), p(3/2), the others
+      data prob_shell/0.1055,0.3515,0.543/ ! s(1/2), p(3/2), the others
       
 C+ Description of p-shell proton hole modes
       integer pp_hole
-      parameter (pp_hole = 5)
+      parameter (pp_hole = 6)
       real br_ppmode(pp_hole)
-      data br_ppmode/0.375,0.0239,0.0015,0.0046,0.03/
+      data br_ppmode/0.3053,0.013425,0.000848,0.000363,0.002664,0.0289/
       real norm_br_ppmode
-      data norm_br_ppmode/0.435/ ! Total branching ratio relative to those above
+      data norm_br_ppmode/0.3515/ ! Total branching ratio relative to those above
       real e_ppgamma(pp_hole,2)
       data e_ppgamma
-     $     /6.32,9.93,6.32,5.3,0.,  ! 1st deex
-     $     0.  ,0.  ,3.61,4.64,0./  ! 2nd deex
+     $     /6.32,9.93,6.32,7.30,5.3,0.,  ! 1st deex
+     $     0.  ,0.  ,3.61,2.63,4.64,0./  ! 2nd deex
       real e_ppproton(pp_hole)
-      data e_ppproton /0.,0.,0.,0.,0.5/
+      data e_ppproton /0.,0.,0.,0.,0.,0.5/
             
 C+ Description of s-shell proton hole modes (N15 --> C13+d, C12+t, N14+n, C14+p)
       integer s_hole

@@ -31,13 +31,19 @@
 
       integer ipar,ic
       real e
-      real     cohcrsnerein,cohcrsnekart
-      external cohcrsnerein,cohcrsnekart
+      real     cohcrsnerein,cohcrsnekart,cohcrsneberger
+      external cohcrsnerein,cohcrsnekart,cohcrsneberger
 
       if(NECOHEPI.eq.0) then     ! Select Rein & Sehgal model
          COHCRSNE = COHCRSNEREIN(E,IPAR,IC)
       elseif(NECOHEPI.eq.1) then ! Select Kartavtsev et al. model
          COHCRSNE = COHCRSNEKART(E,IPAR,IC)
+      elseif(NECOHEPI.eq.2) then ! Select Berger and Sehgal model
+         COHCRSNE = COHCRSNEBERGER(E,IPAR,IC)
+      else
+         write(*,*) 'undefined model of coherent pi ( ',
+     $        cohcrsne ,') was specified.'
+         stop
       endif
 
       return

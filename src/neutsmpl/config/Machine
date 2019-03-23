@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-#  $Id: Machine,v 1.1.1.1 2016/11/04 20:29:55 mdunkman Exp $
+#  $Id: Machine,v 1.1 2007-01-20 07:35:24 skrep Exp $
 #
 #  Determine the "standard" name of this machine.
 #

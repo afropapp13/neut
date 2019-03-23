@@ -115,8 +115,11 @@ typedef enum ENSyst {
   kXSecTwkDial_MvRSNCRES,
 
   // Coherent pion production tweaking parameters:
+  kXSecTwkDial_NECOHEPI,          ///< tweak the model of coherent pion production
   kXSecTwkDial_MaCOHpi,           ///< tweak Ma for COH pion production
   kXSecTwkDial_R0COHpi,           ///< tweak R0 for COH pion production
+  kXSecTwkDial_fA1COHpi,          ///< tweak A1 coef for COH pion production (Berger&Sehgal)
+  kXSecTwkDial_fb1COHpi,          ///< tweak b1 coef for COH pion production (Berger&Sehgal)
 
   // Non-resonance background tweaking parameters:
   //kXSecTwkDial_RvpCC1pi,          ///< tweak the 1pi non-RES bkg in the RES region, for v+p CC
@@ -151,31 +154,6 @@ typedef enum ENSyst {
   //
   kXSecTwkDial_NC,                ///< tweak the inclusive NC normalization
 
-  // P.S (26.01.17) AxialFF Patch
-  // Form Factor Dials  
-  kXSecTwkDial_AxlDipToAlt,     ///< Official dial to do dipole->alternate fa
-
-  // 2/3-Comp Terms
-  kXSecTwkDial_FAxlCCQEAlpha,   ///< 2 Component Alpha        
-  kXSecTwkDial_FAxlCCQEGamma,   ///< 2 Component Gamma        
-  kXSecTwkDial_FAxlCCQEBeta,    ///< 3 Component Beta         
-  kXSecTwkDial_FAxlCCQETheta,   ///< 3 Component Theta        
-
-  // Z-Exp Terms        
-  kXSecTwkDial_FAZExp_NTerms,  ///< N Coeff in ZEx           
-  kXSecTwkDial_FAZExp_TCut,    ///< Q2 Cut of in z definition
-  kXSecTwkDial_FAZExp_T0,      ///< Q2 Optimal Value in z definition
-  kXSecTwkDial_FAZExp_Q4Cut,   ///< Apply Q^{-4} constraint flag
-  kXSecTwkDial_FAZExp_A0,      ///< Z-Expansion A0 Co-eff (keep fixed for now)
-  kXSecTwkDial_FAZExp_A1,      ///< Z-Expansion A1 Co-eff
-  kXSecTwkDial_FAZExp_A2,      ///< Z-Expansion A2 Co-eff 
-  kXSecTwkDial_FAZExp_A3,      ///< Z-Expansion A3 Co-eff 
-  kXSecTwkDial_FAZExp_A4,      ///< Z-Expansion A4 Co-eff 
-  kXSecTwkDial_FAZExp_A5,      ///< Z-Expansion A5 Co-eff (keep fixed for now) 
-  kXSecTwkDial_FAZExp_A6,      ///< Z-Expansion A6 Co-eff (keep fixed for now) 
-  kXSecTwkDial_FAZExp_A7,      ///< Z-Expansion A7 Co-eff (keep fixed for now) 
-  kXSecTwkDial_FAZExp_A8,      ///< Z-Expansion A8 Co-eff (keep fixed for now) 
-  kXSecTwkDial_FAZExp_A9,      ///< Z-Expansion A9 Co-eff (keep fixed for now) 
 
   //
   // Hadronization (free nucleon target)
@@ -221,14 +199,6 @@ typedef enum ENSyst {
   kSystNucl_CCQEFermiSurfMom,   ///<
   kSystNucl_CCQEBindingEnergy,   ///<
   //kSystNucl_CCQEMomDistroFGtoSF, ///<
-
-  kSystNucl_CCQEBindingEnergy_C12,
-  kSystNucl_CCQEBindingEnergy_O16,
-  kSystNucl_CCQEBindingEnergy_Al27,
-  kSystNucl_CCQEBindingEnergy_Fe56,
-  kSystNucl_CCQEBindingEnergy_Cu63,
-  kSystNucl_CCQEBindingEnergy_Zn64,
-  kSystNucl_CCQEBindingEnergy_Pb208,
 
   //
   // Resonance decays
@@ -296,8 +266,11 @@ public:
     case ( kXSecTwkDial_MaNCRES          ) : return "MaNCRES";              break;
     case ( kXSecTwkDial_MvNCRES          ) : return "MvNCRES";              break;
 
+    case ( kXSecTwkDial_NECOHEPI         ) : return "NECOHEPI";             break;
     case ( kXSecTwkDial_MaCOHpi          ) : return "MaCOHpi";              break;
     case ( kXSecTwkDial_R0COHpi          ) : return "R0COHpi";              break;
+    case ( kXSecTwkDial_fA1COHpi          ) : return "A1COHpi";              break;
+    case ( kXSecTwkDial_fb1COHpi          ) : return "b1COHpi";              break;
 
       //case ( kXSecTwkDial_RvpCC1pi         ) : return "NonRESBGvpCC1pi";      break;
       //case ( kXSecTwkDial_RvpCC2pi         ) : return "NonRESBGvpCC2pi";      break;
@@ -328,30 +301,6 @@ public:
       //case ( kXSecTwkDial_RnubarnuCC       ) : return "RnubarnuCC";           break;
       //case ( kXSecTwkDial_DISNuclMod       ) : return "DISNuclMod";           break;
     case ( kXSecTwkDial_NC                 ) : return "NC";            break;
-
-    // P.S (26.01.17) AxialFF Patch
-    case ( kXSecTwkDial_AxlDipToAlt ) : return "AxlDipToAlt"; break;
-
-    case ( kXSecTwkDial_FAxlCCQEAlpha     ) : return "FAAxlQEAlpha"; break;
-    case ( kXSecTwkDial_FAxlCCQEGamma     ) : return "FAAxlQEGamma"; break;
-    case ( kXSecTwkDial_FAxlCCQEBeta      ) : return "FAAxlQEBeta";  break;
-    case ( kXSecTwkDial_FAxlCCQETheta     ) : return "FAAxlQETheta"; break;
-
-    case ( kXSecTwkDial_FAZExp_NTerms    ) : return "FAZExp_NTerms"; break;
-    case ( kXSecTwkDial_FAZExp_TCut      ) : return "FAZExp_TCut";  break;
-    case ( kXSecTwkDial_FAZExp_T0        ) : return "FAZExp_T0";    break;
-    case ( kXSecTwkDial_FAZExp_Q4Cut     ) : return "FAZExp_Q4Cut"; break;
-    case ( kXSecTwkDial_FAZExp_A0        ) : return "FAZExp_A0";    break;
-    case ( kXSecTwkDial_FAZExp_A1        ) : return "FAZExp_A1";  break;
-    case ( kXSecTwkDial_FAZExp_A2        ) : return "FAZExp_A2";  break;
-    case ( kXSecTwkDial_FAZExp_A3        ) : return "FAZExp_A3";  break;
-    case ( kXSecTwkDial_FAZExp_A4        ) : return "FAZExp_A4";  break;
-    case ( kXSecTwkDial_FAZExp_A5        ) : return "FAZExp_A5";  break;
-    case ( kXSecTwkDial_FAZExp_A6        ) : return "FAZExp_A6";  break;
-    case ( kXSecTwkDial_FAZExp_A7        ) : return "FAZExp_A7";  break;
-    case ( kXSecTwkDial_FAZExp_A8        ) : return "FAZExp_A8";  break;
-    case ( kXSecTwkDial_FAZExp_A9        ) : return "FAZExp_A9";  break;
-
       //case ( kHadrAGKYTwkDial_xF1pi        ) : return "AGKYxF1pi";            break;
       //case ( kHadrAGKYTwkDial_pT1pi        ) : return "AGKYpT1pi";            break;
       //case ( kHadrNuclTwkDial_FormZone     ) : return "FormZone";             break;
@@ -371,14 +320,6 @@ public:
     case ( kSystNucl_CCQEFermiSurfMom   ) : return "CCQEFermiSurfMom";    break;
     case ( kSystNucl_CCQEBindingEnergy   ) : return "CCQEBindingEnergy";    break;
       //case ( kSystNucl_CCQEMomDistroFGtoSF ) : return "CCQEMomDistroFGtoSF";  break;
-    case ( kSystNucl_CCQEBindingEnergy_C12   ) : return "CCQEBindingEnergy_C12"; break;
-    case ( kSystNucl_CCQEBindingEnergy_O16   ) : return "CCQEBindingEnergy_O16"; break;
-    case ( kSystNucl_CCQEBindingEnergy_Al27  ) : return "CCQEBindingEnergy_Al27"; break;
-    case ( kSystNucl_CCQEBindingEnergy_Fe56  ) : return "CCQEBindingEnergy_Fe56"; break;
-    case ( kSystNucl_CCQEBindingEnergy_Cu63  ) : return "CCQEBindingEnergy_Cu63"; break;
-    case ( kSystNucl_CCQEBindingEnergy_Zn64  ) : return "CCQEBindingEnergy_Zn64"; break;
-    case ( kSystNucl_CCQEBindingEnergy_Pb208 ) : return "CCQEBindingEnergy_Pb208"; break;
-
       //case ( kRDcyTwkDial_BR1gamma         ) : return "RDecBR1gamma";         break;
       //case ( kRDcyTwkDial_BR1eta           ) : return "RDecBR1eta";           break;
       //case ( kRDcyTwkDial_Theta_Delta2Npi  ) : return "Theta_Delta2Npi";      break;
@@ -432,9 +373,12 @@ public:
        //kXSecTwkDial_MvNCRESshape, 
        kXSecTwkDial_MaNCRES,      
        kXSecTwkDial_MvNCRES, 
-     
+       
+       kXSecTwkDial_NECOHEPI,
        kXSecTwkDial_MaCOHpi,      
        kXSecTwkDial_R0COHpi,    
+       kXSecTwkDial_fA1COHpi,      
+       kXSecTwkDial_fb1COHpi,      
 
        //kXSecTwkDial_RvpCC1pi,   
        //kXSecTwkDial_RvpCC2pi,   
@@ -465,30 +409,6 @@ public:
        //kXSecTwkDial_RnubarnuCC,   
        //kXSecTwkDial_DISNuclMod, 
        kXSecTwkDial_NC,
-
-       // P.S (26.01.17) AxialFF Patch  
-       kXSecTwkDial_AxlDipToAlt,
-
-       kXSecTwkDial_FAxlCCQEAlpha,
-       kXSecTwkDial_FAxlCCQEGamma,
-       kXSecTwkDial_FAxlCCQEBeta,
-       kXSecTwkDial_FAxlCCQETheta,
- 
-       kXSecTwkDial_FAZExp_NTerms,
-       kXSecTwkDial_FAZExp_TCut,
-       kXSecTwkDial_FAZExp_T0,
-       kXSecTwkDial_FAZExp_Q4Cut,
-       kXSecTwkDial_FAZExp_A0,
-       kXSecTwkDial_FAZExp_A1,
-       kXSecTwkDial_FAZExp_A2,
-       kXSecTwkDial_FAZExp_A3,
-       kXSecTwkDial_FAZExp_A4,
-       kXSecTwkDial_FAZExp_A5,
-       kXSecTwkDial_FAZExp_A6,
-       kXSecTwkDial_FAZExp_A7,
-       kXSecTwkDial_FAZExp_A8,
-       kXSecTwkDial_FAZExp_A9,
-
        //kHadrAGKYTwkDial_xF1pi,    
        //kHadrAGKYTwkDial_pT1pi,    
        //kHadrNuclTwkDial_FormZone, 
@@ -508,13 +428,6 @@ public:
        kSystNucl_CCQEFermiSurfMom,   
        kSystNucl_CCQEBindingEnergy,   
        //kSystNucl_CCQEMomDistroFGtoSF,
-       kSystNucl_CCQEBindingEnergy_C12,
-       kSystNucl_CCQEBindingEnergy_O16,
-       kSystNucl_CCQEBindingEnergy_Al27,
-       kSystNucl_CCQEBindingEnergy_Fe56,
-       kSystNucl_CCQEBindingEnergy_Cu63,
-       kSystNucl_CCQEBindingEnergy_Zn64,
-       kSystNucl_CCQEBindingEnergy_Pb208,
        //kRDcyTwkDial_BR1gamma,       
        //kRDcyTwkDial_BR1eta,         
        //kRDcyTwkDial_Theta_Delta2Npi,

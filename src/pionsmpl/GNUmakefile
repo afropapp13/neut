@@ -21,8 +21,8 @@ LIBDIRS =	-L${COREDIR}         -L../nuccorspl/Linux_pc \
 			-L../nuceff/Linux_pc -L../partnuck/Linux_pc \
 			-L../skmcsvc/Linux_pc
 
-NEUTCOREVER = 5.3.3
-INEUTCOREVER= 533
+NEUTCOREVER = 5.3.4
+INEUTCOREVER= 534
 
 NUCEFFVER   = 5.3.3
 INUCEFFVER  = 533

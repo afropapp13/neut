@@ -8,6 +8,14 @@
 #include "posinnucC.h"
 #include "neutcrsC.h"
 
+#include "neutvect.h"
+#include "neutpart.h"
+#include "neutfsipart.h"
+#include "neutfsivert.h"
+#include "neutrootTreeSingleton.h"
+
+#include "NModeDefn.h"
+
 #include "NSyst.h"
 
 /*  for 64 bits OS & g77 compiler -- M. Fechner*/
@@ -36,7 +44,6 @@ namespace rew   {
   static FUNCTION_RETURN evpiprob();
   static void  nesetfgparams();
   static void  nefillmodel();
-  static void  zexpconfig(); // P.S (26.01.17) AxialFF Patch                   
   
   static void print_nework();
   static void print_neutcrs();
@@ -87,6 +94,8 @@ namespace rew   {
 
   float XMACOHdef ;
   float RAD0NUdef ;
+  float fA1COHdef ;
+  float fb1COHdef ;
 	      
   int NEPDFdef    ;
   int NEBODEKdef  ;

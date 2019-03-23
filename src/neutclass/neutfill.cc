@@ -185,6 +185,8 @@ neutfillvect(char *filename, char *treename, char *branchname)
 
   nv->COHMA    = nemdls_.xmacoh;
   nv->COHR0    = nemdls_.rad0nu;
+  nv->COHA1err = nemdls_.fa1coh;
+  nv->COHb1err = nemdls_.fb1coh;
 
   // neut verion
   nv->COREVer  = neutversion_.corev;

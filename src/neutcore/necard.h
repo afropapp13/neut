@@ -56,6 +56,7 @@
 *       NECOHEPI      : ( NEUT_COHEPI ) Select Coherent pi model
 *                            0 : Rein & Sehgal
 *                            1 : Kartavtsev 
+*                            2 : Berger & Sehgal
 *
 *       NEPDF         : ( NEUT-Select Parton distribution function
 *                           n = 7 : GRV94

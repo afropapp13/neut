@@ -119,57 +119,6 @@ namespace rew   {
    double fPsFFDef;        ///<
    double fPsFFCurr;       ///<
 
-   // P.S (26.01.17) AxialFF Patch
-   // Alternative FA RW                
-   bool fDipToAltFA;
-   int fAltMDLQEAF;
-
-   // 2 Component dials
-   float fTwk_3CompAlpha;
-   float fDef_3CompAlpha;
-   float fCurr_3CompAlpha;
-   float fErr_3CompAlpha;
-
-   float fTwk_3CompGamma;
-   float fDef_3CompGamma;
-   float fCurr_3CompGamma;
-   float fErr_3CompGamma;
-
-   // 3 Component Dials
-   float fTwk_3CompTheta;
-   float fDef_3CompTheta;
-   float fCurr_3CompTheta;
-   float fErr_3CompTheta;
-
-   float fTwk_3CompBeta;
-   float fDef_3CompBeta;
-   float fCurr_3CompBeta;
-   float fErr_3CompBeta;
-
-   // ZExp Dials       
-   int   fCurr_ZExp_NTerms;
-   int   fDef_ZExp_NTerms;
-   int   fCurr_ZExp_Q4Cut;
-   int   fDef_ZExp_Q4Cut;
-
-   float fTwk_ZExp_TCut;
-   float fDef_ZExp_TCut;
-   float fCurr_ZExp_TCut;
-   float fErr_ZExp_TCut;
-
-   float fTwk_ZExp_T0;
-   float fDef_ZExp_T0;
-   float fCurr_ZExp_T0;
-   float fErr_ZExp_T0;
-
-   int kMaxZExpA;
-
-   float fTwk_ZExp_ATerms[10];
-   float fDef_ZExp_ATerms[10];
-   float fCurr_ZExp_ATerms[10];
-   float fErr_ZExp_ATerms[10];
-
-   // Common block handler
    NFortFns * fortFns;
    NModeDefn modeDefn;
 

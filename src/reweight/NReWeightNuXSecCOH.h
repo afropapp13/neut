@@ -64,12 +64,26 @@ namespace rew   {
    bool   fRewNumubar;   ///< reweight nu_mu_bar?
    bool   fRewCC;        ///< reweight CC?
    bool   fRewNC;        ///< reweight NC?
+
+   double fNECOHEPITwkDial;    ///<
+   double fNECOHEPIDef;        ///<
+   double fNECOHEPICurr;       ///<
+
    double fMaTwkDial;    ///<
    double fMaDef;        ///<
    double fMaCurr;       ///<
+
    double fR0TwkDial;    ///<
    double fR0Def;        ///<
    double fR0Curr;       ///<
+
+   double fA1TwkDial;    ///<
+   double fA1Def;        ///<
+   double fA1Curr;       ///<  
+
+   double fb1TwkDial;    ///<
+   double fb1Def;        ///<
+   double fb1Curr;       ///<
 
    NFortFns * fortFns;
    NModeDefn modeDefn;

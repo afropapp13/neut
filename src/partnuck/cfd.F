@@ -1,12 +1,9 @@
 C************************************************
-C  $Id: cfd.F,v 1.1.1.1 2016/11/04 20:31:14 mdunkman Exp $
+C  $Id: cfd.F,v 1.1 2007-01-20 07:13:06 skrep Exp $
 C
 C  This is the kinematics used by IMB (west cost).
 C
-C  $Log: cfd.F,v $
-C  Revision 1.1.1.1  2016/11/04 20:31:14  mdunkman
-C  Import of NEUT 5.3.3 v1r27 for use with T2KReWeight v1r27 (Winter OA 2017)
-C
+C  $Log: not supported by cvs2svn $
 C  Revision 1.2  1997/06/02 22:08:01  mcgrew
 C  Changes to sync skrep with sksuny.
 C

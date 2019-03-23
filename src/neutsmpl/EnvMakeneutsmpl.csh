@@ -1,4 +1,4 @@
-#!/bin/tcsh
+#!/bin/csh
 
 setenv SOMEWHERE `pwd`/..
 setenv MACHINE `${SOMEWHERE}/neutsmpl/bin/Machine`
@@ -68,4 +68,3 @@ setenv PACKAGE_LEVEL ".."
 # Get required data files
 # Selecting only data files (.dat) and removing color tags
 set DATFILES=(`ls -q ${SOMEWHERE}/crsdat | grep .dat | sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"`)
-

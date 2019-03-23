@@ -1,9 +1,6 @@
 c
 c
-c     $Log: rs.spivcttest.F,v $
-c     Revision 1.1.1.1  2016/11/04 20:31:26  mdunkman
-c     Import of NEUT 5.3.3 v1r27 for use with T2KReWeight v1r27 (Winter OA 2017)
-c
+c     $Log: not supported by cvs2svn $
 c     Revision 1.2  1998/08/12 14:18:05  cmauger
 c     Just change the name of the program from test to rsspiT.  Also, add
 c     an rcs log.

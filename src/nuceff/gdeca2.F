@@ -1,10 +1,7 @@
 *
-* $Id: gdeca2.F,v 1.1.1.1 2016/11/04 20:31:13 mdunkman Exp $
+* $Id: gdeca2.F,v 1.1.1.1 1995/10/24 10:21:23 cernlib Exp $
 *
 * $Log: gdeca2.F,v $
-* Revision 1.1.1.1  2016/11/04 20:31:13  mdunkman
-* Import of NEUT 5.3.3 v1r27 for use with T2KReWeight v1r27 (Winter OA 2017)
-*
 * Revision 1.1.1.1  1995/10/24 10:21:23  cernlib
 * Geant
 *

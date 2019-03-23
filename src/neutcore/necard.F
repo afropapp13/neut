@@ -39,6 +39,9 @@
 ************************************************************************
       IMPLICIT NONE
       
+      REAL*4 SPACE
+      COMMON /CFREAD/SPACE(1000)
+
 #include "necard.h"
 #include "neutparams.h"
 #include "neutmodel.h"
@@ -102,6 +105,8 @@ C     For form factors for Rein-Seighal update
       KAPP    = 1.0
       XMACOH  = 1.0
       RAD0NU  = 1.0
+      fA1COH  = 0.0
+      fb1COH  = 0.0 
 
       MDLQE     = 402
       MDLQEAF   = 1
@@ -178,9 +183,9 @@ C -- extract NEUT card
       CLOSE(UNIT=90)
 
       OPEN(UNIT=91, FILE=TMPFIL,STATUS='OLD')
-      CALL FFINIT(0)
+      CALL FFINIT(1000)
       CALL FFSET('LINP', 91)
-      CALL FFSET('SIZE', 9)
+      CALL FFSET('SIZE', 32)
       CALL FFSET('LENG', 100)
       CALL FFKEY('CRSPATH',CRSTBLPATH,80,'CHAR')
       CALL FFKEY('FERM',NEFRMFLG, 1,'INTEGER')
@@ -208,8 +213,10 @@ C      CALL FFKEY('MVSPI' ,XMVSPI ,1,'REAL')
       CALL FFKEY('MVRSRES' ,XMVRSRES ,1,'REAL')
       CALL FFKEY('MVNFFRES' ,XMVNFFRES ,1,'REAL')
       CALL FFKEY('KAPP' ,KAPP ,1,'REAL')
-      CALL FFKEY('MACOH' ,XMACOH ,1,'REAL')
-      CALL FFKEY('R0COH' ,RAD0NU ,1,'REAL')
+      CALL FFKEY('XMACOH',XMACOH ,1,'REAL')
+      CALL FFKEY('R0COH',RAD0NU ,1,'REAL')
+      CALL FFKEY('fA1COH',fA1COH ,1,'REAL')
+      CALL FFKEY('fb1COH',fb1COH ,1,'REAL')
  
       CALL FFKEY('MDLQE',MDLQE,1,'INTEGER')
       CALL FFKEY('MDLQEAF',MDLQEAF,1,'INTEGER')
@@ -282,6 +289,11 @@ C Set VNUINI here ( when PFSURF is fixed)
       CALL FFKEY('NUSIM',NUSIM,1,'INTEGER')
       CALL FFKEY('QUIET',QUIET,1,'INTEGER')
 
+      CALL FFKEY('XMACOH' ,XMACOH ,1,'REAL')
+      CALL FFKEY('R0COH' ,RAD0NU ,1,'REAL')
+      CALL FFKEY('fA1COH',fA1COH ,1,'REAL')
+      CALL FFKEY('fb1COH',fb1COH ,1,'REAL')
+
       CALL FFGO
       CLOSE(UNIT=91)
       COMMAND = '/bin/rm '//TMPFIL
@@ -334,8 +346,11 @@ C      WRITE(6,*) 'NECARD : MVSPI  = ',XMVSPI
       WRITE(6,*) 'NECARD : MVRSRES = ',XMVRSRES
       WRITE(6,*) 'NECARD : MVNFFRES= ',XMVNFFRES
       WRITE(6,*) 'NECARD : KAPP   = ',KAPP
-      WRITE(6,*) 'NECARD : MACOH   = ',XMACOH
+      WRITE(6,*) 'NECARD : XMACOH   = ',XMACOH
       WRITE(6,*) 'NECARD : R0COH   = ',RAD0NU
+      WRITE(6,*) 'NECARD : A1COHerr   = ',fA1COH
+      WRITE(6,*) 'NECARD : b1COHerr   = ',fb1COH
+
       WRITE(6,*) 'NECARD : SCCFV     = ',SCCFV
       WRITE(6,*) 'NECARD : SCCFA     = ',SCCFA
       WRITE(6,*) 'NECARD : FPQE      = ',FPQE

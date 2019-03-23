@@ -30,8 +30,10 @@
       real*4    ENEU
       REAL*4    DIR(3)
 
-      real*4    dcohnerein,dcohnekart,dcohmxnerein,dcohmxnekart,rlu
-      external  dcohnerein,dcohnekart,dcohmxnerein,dcohmxnekart,rlu
+      real*4    dcohnerein,dcohnekart,dcohmxnerein,dcohmxnekart,
+     & dcohmxneberger,dcohneberger,rlu
+      external  dcohnerein,dcohnekart,dcohmxnerein,dcohmxnekart,
+     & dcohmxneberger,dcohneberger,rlu
 
 #include "nework.h"
 #include "necard.h"
@@ -176,8 +178,16 @@ C
          P3ABS = SQRT(ABS(E2**2-OM**2))
 
          Q2 = 2*PRMASS*Eneu*Y*X
-         if(abs(modene).eq.16) then ! CC(G.Mitsuka, Jan 2006)
-            W = 1.-(OM**2+Q2)/(2*ENEU*E2)
+         if(abs(modene).eq.16) then
+            if ((2*ENEU*SQRT(ENEU**2*(1-Y)**2-OM**2)).ne.0) then
+CC(G.Mitsuka, Jan 2006) 
+C                W = 1.-(OM**2+Q2)/(2*ENEU*E2)
+CC modified by P.Martins
+               W =  (2*ENEU**2*(1-Y)-Q2-OM**2)/
+     &              (2*ENEU*SQRT(ENEU**2*(1-Y)**2-OM**2))
+            else
+               goto 10
+            endif
          elseif(abs(modene).eq.36) then ! NC
             W = 1.-PRMASS*X*Y/E2            
          endif
@@ -205,6 +215,79 @@ C     PION MOMENTUM CALCULATION PART
          ST = SQRT(ABS(1.-Z*Z))
          CP = COS(PHI+PSI)
          SP = SIN(PHI+PSI)
+         IF ( XYABS.EQ.0. ) THEN
+            PNE(1,5) = P5ABS*ST*SP
+            PNE(2,5) = P5ABS*ST*CP
+            PNE(3,5) = P5ABS*Z
+         ELSE
+            PNE(1,5) = P5ABS*(Z*PNE(1,1)/ENEU+
+     &           ST*(PNE(1,1)*PNE(3,1)*CP/ENEU-PNE(2,1)*SP)/XYABS)
+            PNE(2,5) = P5ABS*(Z*PNE(2,1)/ENEU+
+     &           ST*(PNE(2,1)*PNE(3,1)*CP/ENEU+PNE(1,1)*SP)/XYABS)
+            PNE(3,5) = P5ABS*(Z*PNE(3,1)/ENEU-ST*XYABS*CP/ENEU)
+         ENDIF
+C============================
+C     Berger & Sehgal model
+C============================
+      elseif(NECOHEPI.eq.2) then
+         FMAX = DCOHMXNEBERGER(ENEU)
+ 12      CONTINUE
+         YMIN = PIMASS/ENEU
+         X = XMIN+(XMAX-XMIN)*RLU(DUMMY)
+         YMAX = 1./(1.+PRMASS*X/(2.*ENEU))
+         Y = YMIN+(YMAX-YMIN)*RLU(DUMMY)
+         Z = ZMIN+(ZMAX-ZMIN)*RLU(DUMMY)
+         PHI = PHIMIN+(PHIMAX-PHIMIN)*RLU(DUMMY)
+         PSI = PSIMIN+(PSIMAX-PSIMIN)*RLU(DUMMY)
+         F = FMAX*RLU(DUMMY)
+         FVALUE  = DCOHNEBERGER(ENEU,IPAR,IMODE,X,Y,Z,PHI)
+C         write(6,*) ' necohvct : dcohne = ',fvalue,FMAX,eneu,x,y,z,phi
+         IF (F .GE. FVALUE ) GOTO 12
+C      write(6,*) ' necohvct : dcohne = ',fvalue,eneu,x,y,z,phi      
+C
+C     OUTGING LEPTON MOMENTUM CALCULATION PART
+C
+         E2 = ENEU*(1.-Y)
+         P3ABS = SQRT(ABS(E2**2-OM**2))
+
+         Q2 = 2*PRMASS*Eneu*Y*X
+         if(abs(modene).eq.16) then
+            if ((2*ENEU*SQRT(ENEU**2*(1-Y)**2-OM**2)).ne.0) then
+CC(G.Mitsuka, Jan 2006) 
+C                W = 1.-(OM**2+Q2)/(2*ENEU*E2)
+CC modified by P.Martins
+               W =  (2*ENEU**2*(1-Y)-Q2-OM**2)/
+     &              (2*ENEU*SQRT(ENEU**2*(1-Y)**2-OM**2))
+            else
+               goto 12
+            endif
+         elseif(abs(modene).eq.36) then ! NC
+            W = 1.-PRMASS*X*Y/E2            
+         endif
+C
+         SA = SQRT(ABS(1.-W*W))
+         CP = COS(PSI)
+         SP = SIN(PSI)
+         XYABS = SQRT(PNE(1,1)**2+PNE(2,1)**2)
+         IF ( XYABS.EQ.0. ) THEN
+            PNE(1,3) = P3ABS*SA*SP
+            PNE(2,3) = P3ABS*SA*CP
+            PNE(3,3) = P3ABS*W
+         ELSE
+            PNE(1,3) = P3ABS*(W*PNE(1,1)/ENEU+
+     &           SA*(PNE(1,1)*PNE(3,1)*CP/ENEU-PNE(2,1)*SP)/XYABS)
+            PNE(2,3) = P3ABS*(W*PNE(2,1)/ENEU+
+     &           SA*(PNE(2,1)*PNE(3,1)*CP/ENEU+PNE(1,1)*SP)/XYABS)
+            PNE(3,3) = P3ABS*(W*PNE(3,1)/ENEU-SA*XYABS*CP/ENEU)
+         ENDIF
+C
+C     PION MOMENTUM CALCULATION PART
+         EPI = ENEU*Y
+         P5ABS = SQRT(ABS(EPI**2-PIMASS**2))
+         
+         ST = SQRT(ABS(1.-Z*Z))
+         CP = COS(PHI)
+         SP = SIN(PHI)
          IF ( XYABS.EQ.0. ) THEN
             PNE(1,5) = P5ABS*ST*SP
             PNE(2,5) = P5ABS*ST*CP

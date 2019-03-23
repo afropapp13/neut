@@ -1,12 +1,9 @@
 XCOMM  First attempt at an Imakefile for "stmu" atmpd library
 XCOMM  August 5, 1997 : Matt Earl
 XCOMM
-XCOMM  $Id: Imakefile,v 1.1.1.1 2016/11/04 20:31:24 mdunkman Exp $
+XCOMM  $Id: Imakefile,v 1.9 2008-03-06 19:08:14 skrep Exp $
 XCOMM
-XCOMM  $Log: Imakefile,v $
-XCOMM  Revision 1.1.1.1  2016/11/04 20:31:24  mdunkman
-XCOMM  Import of NEUT 5.3.3 v1r27 for use with T2KReWeight v1r27 (Winter OA 2017)
-XCOMM
+XCOMM  $Log: not supported by cvs2svn $
 XCOMM  Revision 1.8  2008/01/06 21:32:46  skrep
 XCOMM  filhep.F is no longer in the main tauola.f file.  I extracted it from
 XCOMM  the standalone main program.
@@ -61,7 +58,7 @@ XCOMM
 XCOMM
 
 LIBALIAS =  tauola
-VER = 2.0
+VER = 2.0.1
 
 LIBNAME = $(LIBALIAS)_$(VER)
 

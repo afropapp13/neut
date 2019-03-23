@@ -1,11 +1,8 @@
-/* $Id: makefile.rules,v 1.1.1.1 2016/11/04 20:29:56 mdunkman Exp $
+/* $Id: makefile.rules,v 1.1 2007-01-20 07:35:42 skrep Exp $
  * 
  * Targets to help rebuild make files.
  *
- * $Log: makefile.rules,v $
- * Revision 1.1.1.1  2016/11/04 20:29:56  mdunkman
- * Import of NEUT 5.3.3 v1r27 for use with T2KReWeight v1r27 (Winter OA 2017)
- *
+ * $Log: not supported by cvs2svn $
  * Revision 1.2  1999/07/21 13:45:04  mcgrew
  * There are default make depend targets at the end of the Imake.tmpl:
  * One for C.  One for fortran.  Make sure that the second doesn't over

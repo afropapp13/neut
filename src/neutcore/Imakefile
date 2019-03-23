@@ -1,7 +1,7 @@
 LIBBASE	= neutcore
-VER	= 5.3.3
+VER	= 5.3.4
 TAG	=
-COREVER = 533
+COREVER = 534
 
 #ifdef ICHI_KILO
 	TAG = .kt
@@ -37,8 +37,7 @@ OBJ =	dnela.o fnelscrn.o fnelscrs.o dnelsq2.o fnq2max.o  \
 		fnrworld.o \
 		grv94di.o grv98_lo.o pdfset.o structm.o \
 		nesettarg.o nrsettarg.o nesetfgparams.o \
-        bbba07.o ddifcrs.o evdifcrs.o qedifcrs.o cohma.o necrsmode.o \
-	fa3comp.o fazexp.o
+        bbba07.o ddifcrs.o evdifcrs.o qedifcrs.o cohma.o necrsmode.o
 
 RSO =	rs3drt.o rsasum.o rsdcrs.o rsclfm.o  rsdist.o rsifl1.o rsifl2.o \
 		rsifl3.o rsifl4.o rsifl5.o rsifl6.o rsifl7.o rslzbt.o rsrotvec.o \
@@ -62,7 +61,8 @@ NEO =	necard.o necohvct.o cohcrsne.o cohcrsnerein.o cohcrsnekart.o \
 		nemkgam.o nemodgam.o negamnuc.o \
 		nesortdl.o nek0.o nudeex.o nudeex_p.o nudeex_n.o \
 		negenseed.o nerdseed.o neranbll.o nefillmodel.o nelibver.o \
-		nefillver.o lenstr.o
+		nefillver.o lenstr.o dcohneberger.o dcohmxneberger.o necrosel.o \
+		cohcrsneberger.o
 
 OBJS = $(OBJ) $(RSO) $(NEO) 
 
@@ -128,8 +128,6 @@ InstallInclude(nefillverC.h,$(INCDIR))
 InstallInclude(neutmodesCPP.h,$(INCDIR))
 
 InstallInclude(neutfilepath.h,$(FORTRAN_INCDIR))
-Fh2hIncludeTarget(neutfilepath)
-InstallInclude(neutfilepathC.h,$(INCDIR))
 
 XCOMM ------------------------------------------------------
 XCOMM Make programs.

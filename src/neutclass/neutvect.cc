@@ -298,6 +298,8 @@ NeutVect::Dump()
   std::cout << "KAPPA          :" << KAPPA     << "\n";
   std::cout << "COH MA         :" << COHMA     << "\n";
   std::cout << "COH R0         :" << COHR0     << "\n";
+  std::cout << "COH A1 err     :" << COHA1err  << "\n";
+  std::cout << "COH b1 err     :" << COHb1err  << "\n";
 
   std::cout << "neutcore ver.  :" << COREVer   << "\n";
   std::cout << "nuceff ver.    :" << NUCEVer   << "\n";

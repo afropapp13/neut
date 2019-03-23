@@ -63,7 +63,7 @@ C      real      DLEP(3),PNP(3)
       REAL*8  DELEP,DTMPY,DENEU,DAMLEP
       REAL*8  DPLEPF(3)
       
-      integer*4  isub,iloop
+      integer*4  isub,iloop,jloop,nloop
       REAL PNUC(3)
       REAL XMAP(51,11)
       REAL*8 DNELSQ2, DBLE0, DBLQ2
@@ -241,7 +241,14 @@ C
      $        'q2=(',q2,')'
 #endif
 
+         if (loop.lt.5) then
+            nloop=1000000
+         else
+            nloop=1
+         endif
+
 C     DO 100 LOOP=1,1000000
+      DO 101 JLOOP=1,NLOOP
          Q2=RLU(DUM)*Q2MAXX
          DBLQ2=Q2
          HIT=RLU(DUM)*BMAX
@@ -509,6 +516,8 @@ C            write(*,*) '---------------------------------------'
             RETURN
 
          ENDIF
+ 101  continue
+
  100  if (QUIET.eq.0) write(*,*) 'neelslpv: retry..'
       CONTINUE
       WRITE(6,*) ' IN NEELSLPV ( TOO MANY TRY ) '

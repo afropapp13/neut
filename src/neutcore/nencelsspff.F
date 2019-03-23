@@ -55,6 +55,7 @@ C
       IERR=0
 
       CALL MCMASS(ITARG,AMI)
+      AMI = AMI * 1.e-3
 
       IF (ICALL.EQ.0) THEN
 C     

@@ -70,6 +70,8 @@ class NeutVect : public TObject {
   Float_t        KAPPA;
   Float_t        COHMA;
   Float_t        COHR0;
+  Float_t        COHA1err;
+  Float_t        COHb1err;
   
 
   // 1 pi CA5I and BG scale
@@ -190,7 +192,7 @@ class NeutVect : public TObject {
 
   TLorentzVector fZeroVect;  // !
   
-  ClassDef(NeutVect, 2)
+  ClassDef(NeutVect, 3)
 };
 
 #endif

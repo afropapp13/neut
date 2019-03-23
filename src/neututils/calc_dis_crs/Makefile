@@ -32,7 +32,7 @@ emptyrule::
 # platform-specific configuration parameters - edit linux.cf to change
 
 # platform:  $XConsortium: linux.cf,v 1.11 95/01/23 18:32:03 kaleb Exp $
-# $Id: Makefile,v 1.1.1.1 2016/11/04 20:31:19 mdunkman Exp $
+# $Id: linux.cf,v 1.1 2007-01-20 07:35:40 skrep Exp $
 
 # Define the linux threads libraries.
 
@@ -643,7 +643,7 @@ PROJECT_LDOPTIONS = $(PACKAGE_LDPATHS) $(EXPERIMENT_LDPATHS) 			$(SITE_LIBRARIES
 # of an experiment).
 #
 
-# $Id: Makefile,v 1.1.1.1 2016/11/04 20:31:19 mdunkman Exp $
+# $Id: Package.tmpl,v 1.1 2007-01-20 07:35:26 skrep Exp $
 # Define the package defaults.  This is where the various working
 # groups should define the working group defaults.  For the most part
 # leave this file alone, but if the working group must make new

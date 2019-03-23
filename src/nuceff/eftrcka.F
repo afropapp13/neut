@@ -1,8 +1,5 @@
 C**** 
-C**** $Log: eftrcka.F,v $
-C**** Revision 1.1.1.1  2016/11/04 20:31:13  mdunkman
-C**** Import of NEUT 5.3.3 v1r27 for use with T2KReWeight v1r27 (Winter OA 2017)
-C****
+C**** $Log: not supported by cvs2svn $
 C**** Revision 1.6  1998/03/13 16:11:09  cmauger
 C**** Uses 2/3 for k/kbar ratio when the input particle type is a klong or
 C**** a kshort.  Fixed a redundancy.

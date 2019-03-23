@@ -17,7 +17,8 @@ C+  Creation Date and Author:
 C+       2011.02.04 ; First version by K.Ueno, pion absorption case by T.Mori
 C+       2011.09.25 ; Update of spectroscopic factors by K.Ueno
 C+       2011.10.27 ; Update of the excitation-energy region of the s-hole state by K.Ueno
-C+
+C+       2014.06.24 ; Changing p3/2 factor to Ankowski value (0.3515) by Huang
+C+       2014.08.11 : Revise Ankowski spectral factor      
       implicit none
       
       integer maxout
@@ -60,18 +61,22 @@ C
       integer max_shell
       parameter (max_shell = 3)
       real prob_shell(max_shell)
-      data prob_shell/0.188,0.375,0.437/ ! s(1/2), p(3/2), the others
+      data prob_shell/0.1055,0.3515,0.543/ ! s(1/2), p(3/2), the others
             
 C+ Description of p-shell neutron hole modes
       integer pn_hole
-      parameter (pn_hole = 1)
+      parameter (pn_hole = 3)
       real br_pnmode(pn_hole)
-      data br_pnmode/0.375/
+      data br_pnmode/0.3053,0.0173,0.0289/ ! 6.17MeV, 9.61MeV, 10.48MeV level
       real norm_br_pnmode
-      data norm_br_pnmode/0.375/ ! Total branching ratio relative to those above
+      data norm_br_pnmode/0.3515/ ! Total branching ratio relative to those above (Ankowski)
       real e_pngamma(pn_hole)
-      data e_pngamma /6.18/
+      data e_pngamma /6.18,0.,0./
       
+      real e_pnproton(pn_hole)
+      data e_pnproton /0.,0.5,0.5/
+      
+
 C+ Description of s-shell neutron hole modes (O15 --> N13+d, N12+t, O14+n, N14+p)
       integer s_hole
       parameter (s_hole = 21)
@@ -188,6 +193,7 @@ C
                return
             endif
             eg1 = e_pngamma(mode)
+            ep = e_pnproton(mode)
          endif
       else
 C     

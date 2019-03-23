@@ -79,9 +79,9 @@ C--
          endif
          
          if (mode.eq.51) then
-            fnrawcrs = 
+            fnrawcrs = (
      $           FNELSCRN(E,IPAR,2212)*RATFRE +
-     $           FNELSPAN(E,IPAR,2212)*(RATP-RATFRE)
+     $           FNELSPAN(E,IPAR,2212)*(RATP-RATFRE))/RATP
          endif
          
          if (mode.eq.52) then
@@ -146,9 +146,9 @@ C---------------------------------------------------------------------
       if (ipar.lt.0) then
 
          if (mode.eq.-1) then
-            fnrawcrs =
+            fnrawcrs =(
      $           FNELSCRS(E,IPAR)*RATFRE +
-     $           FNELSPAU_SELECT(E,IPAR)*(RATP-RATFRE)
+     $           FNELSPAU_SELECT(E,IPAR)*(RATP-RATFRE))/RATP
          endif
 
          if (mode.eq.-2) then
@@ -192,9 +192,9 @@ C---------------------------------------------------------------------
          endif
 
          if (mode.eq.-51) then                        
-             fnrawcrs = 
+             fnrawcrs = (
      $           FNELSCRN(E,IPAR,2212)*RATFRE +
-     $           FNELSPAN(E,IPAR,2212)*(RATP-RATFRE)
+     $           FNELSPAN(E,IPAR,2212)*(RATP-RATFRE))/RATP
          endif
 
          if (mode.eq.-52) then

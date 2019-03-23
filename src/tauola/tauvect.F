@@ -127,6 +127,13 @@ c               IF (JMOHEP(1,J).NE.1) IORGVC(NALL)=NALL2+JMOHEP(1,J)-1
                IF (ABS(IPVC(NALL)).EQ.12) IFLGVC(NALL)=2
                IF (ABS(IPVC(NALL)).EQ.14) IFLGVC(NALL)=2
                IF (ABS(IPVC(NALL)).EQ.16) IFLGVC(NALL)=2
+c -- Fix JDAHEP bug
+               IF (ABS(IPVC(NALL)).EQ.11)  IFLGVC(NALL)=0  ! e
+               IF (ABS(IPVC(NALL)).EQ.13)  IFLGVC(NALL)=0  ! mu
+               IF (ABS(IPVC(NALL)).EQ.211) IFLGVC(NALL)=0  ! pi+/-
+               IF (ABS(IPVC(NALL)).EQ.111) IFLGVC(NALL)=0  ! pi0
+               IF (ABS(IPVC(NALL)).EQ.321) IFLGVC(NALL)=0  ! K+/-
+
                ICRNVC(NALL)=0
                IF (IFLGVC(NALL).EQ.0) ICRNVC(NALL)=1
                CALL UCOPY(POSFVC(1,I),POSIVC(1,NALL),3)

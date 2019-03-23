@@ -6,7 +6,7 @@ char  nuName[4][6]  = {"numu","nue","numub","nueb"};
 int     nuID[4]    = {14,12,-14,-12};
 
 
-const int kNneutModes = 26;
+const int kNneutModes = 27;
 
 int neutModeID[kNneutModes] = {
 
@@ -35,7 +35,8 @@ int neutModeID[kNneutModes] = {
   45,
   46,
   51,
-  52
+  52,
+  2
 
 };
 
@@ -66,7 +67,8 @@ char neutModeName[kNneutModes][7] = {
   "nckp",  
   "ncdis", 
   "ncqep", 
-  "ncqen"
+  "ncqen",
+  "ccmec"
 
 };
 
@@ -96,7 +98,8 @@ enum neutModeEnum {
   nckp,  
   ncdis, 
   ncqep, 
-  ncqen
+  ncqen,
+  ccmec
 };
 
 char neutModeTitle[kNneutModes][75] = {
@@ -126,7 +129,8 @@ char neutModeTitle[kNneutModes][75] = {
   "NC 1K: #nu_{l} n #rightarrow #nu_{l} #Lambda K^{+}",			   
   "NC DIS (2 GeV < W): #nu_{l} N #rightarrow #nu_{l} N' mesons",		   
   "NC elastic: #nu_{l} p #rightarrow #nu_{l} p",				   
-  "NC elastic: #nu_{l} n #rightarrow #nu_{l} n"
+  "NC elastic: #nu_{l} n #rightarrow #nu_{l} n",
+  "CCMEC: #nu_{l} n N #rightarrow l^{-} p N"
 
 };
 

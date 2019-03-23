@@ -6,7 +6,7 @@ include $(NEUT_ROOT)/src/neutsmpl/config_neut.gmk
 
 #.SILENT:
 
-NEUTCOREVER	= 5.3.3
+NEUTCOREVER	= 5.3.4
 NUCEFFVER   = 5.3.3
 NUCCORVER   = 5.3.3
 PARTNUCKVER = 5.3.3
@@ -34,7 +34,7 @@ INCLUDES = -I../../inc
 # libraries
 OBJECTS = fourVector.o calcLH.o selectSfValues.o buildSf.o maxDiff.o readXsecData.o sfevent.o # bbba05.o bbba07.o 
 
-all: makeTables specfuncC.h install
+all: makeTables
 
 makeTables: $(MAKETABLES) $(OBJECTS) libspecfunc_${SPECFUNCVER}.a
 	$(FC) $(FLAGS)-o makeTables.exe  $(MAKETABLES) $(INCLUDES) $(LIBDIRS) $(LIBS)
@@ -56,11 +56,8 @@ libspecfunc_${SPECFUNCVER}.a: $(OBJECTS)
 #	ar r libspecfunc.a *.o
 	ar r $@ $(OBJECTS)
 
-specfuncC.h: specfunc.h
-	fh2h.pl specfunc.h > specfuncC.h || rm specfuncC.h
-
 clean:
-	rm -rf *.o *.a *.exe specfuncC.h
+	rm -rf *.o *.a *.exe
 
 install: libspecfunc_${SPECFUNCVER}.a
 	cp libspecfunc_${SPECFUNCVER}.a ../../lib/Linux_pc

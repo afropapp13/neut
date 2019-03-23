@@ -63,6 +63,8 @@ C
          CALL MCMASS(2212,AMI)
       ENDIF         
 
+      AMI = AMI * 1.e-3
+
       IF (ICALL.EQ.0) THEN
 C     
 C     -- MAKE FERMI MOMENTUM -- DIRECTION MAP

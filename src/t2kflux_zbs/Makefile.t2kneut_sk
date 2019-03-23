@@ -3,8 +3,8 @@ ifndef NEUT_ROOT
 endif
 include $(NEUT_ROOT)/src/neutsmpl/config_neut.gmk
 
-NEUTCOREVER	= 5.3.3
-INEUTCOREVER= 533
+NEUTCOREVER	= 5.3.4
+INEUTCOREVER= 534
 
 NUCEFFVER   = 5.3.3
 INUCEFFVER  = 533

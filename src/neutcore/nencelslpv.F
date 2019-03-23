@@ -33,7 +33,7 @@
       REAL       ENEU,PF(3),PLEP(3),PNUC(3)
       INTEGER*4  IPAR,MODE,IERR
 
-      INTEGER*4  iplep,i,ilast,loop
+      INTEGER*4  iplep,i,ilast,loop,nloop
 
       REAL*4     AMIN,AMOUT      
 
@@ -62,7 +62,7 @@
       REAL     XMAP(51,11)
       REAL     FNNUCLPF
 
-      integer*4 isub,iloop
+      integer*4 isub,iloop,jloop
 
       DATA    ICOUNT/0/
       DATA    IEVENT/1/
@@ -227,6 +227,13 @@ C
 #endif
 
 C     DO 100 LOOP=1,1000000
+         if(loop.lt.5) then 
+            nloop=1000000
+         else
+            nloop=1
+         endif
+         
+         do 101 JLOOP=1,nloop
          Q2=RLU(DUM)*Q2MAXX
          DBLQ2=Q2
          HIT=RLU(DUM)*BMAX
@@ -469,6 +476,8 @@ C            write(*,*) '---------------------------------------'
             RETURN
 
          ENDIF
+ 101  continue
+
  100  if (QUIET.eq.0) write(*,*) 'neelslpv: retry..'
       CONTINUE
       WRITE(6,*) ' IN NEELSLPV ( TOO MANY TRY ) '

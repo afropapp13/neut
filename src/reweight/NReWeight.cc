@@ -39,6 +39,7 @@
 
 using std::vector;
 using std::cout;
+using std::endl;
 
 //#define _NEUT_REWEIGHT_DEBUG_
 
@@ -101,7 +102,7 @@ void NReWeight::Reconfigure(void)
   }//weight calculators
 
 #ifdef _NEUT_REWEIGHT_DEBUG_
-  cout << "Done reconfiguring\n";
+  cout << "Done reconfiguring" << endl;;
 #endif
 }
 //____________________________________________________________________________
@@ -119,7 +120,8 @@ double NReWeight::CalcWeight()
     double w = wcalc->CalcWeight();
 
  #ifdef _NEUT_REWEIGHT_DEBUG_
-    cout << "Calculator: " << it->first << " => wght = " << w << '\n';	
+    cout 
+      << "Calculator: " << it->first << " => wght = " << w << endl;	
 #endif
 
     // Store weight from neutrino cross section variations only, 
@@ -148,7 +150,7 @@ double NReWeight::CalcChisq(void)
     NReWeightI * wcalc = it->second;
     double chisq = wcalc->CalcChisq(); 
 #ifdef _NEUT_REWEIGHT_DEBUG_
-    cout << "Calculator: " << it->first << " => chisq = " << chisq << '\n';	
+    //cout << "Calculator: " << it->first << " => chisq = " << chisq;	
 #endif
     tot_chisq *= chisq;
   }
@@ -173,19 +175,16 @@ void NReWeight::Print()
   vector<neut::rew::NSyst_t> syst_vec = this->Systematics().AllIncluded();
   int vec_size = syst_vec.size();
 
-#ifdef _NEUT_REWEIGHT_DEBUG_
-  cout << "NReWeight: Current set of systematic params:" << '\n';
+  cout << "NReWeight: Current set of systematic params:" << endl;;	
   for(int i = 0 ; i < vec_size ; i ++){
-     cout << " --o "  << NSyst::AsString(syst_vec[i])
-          << " is set at " << this->Systematics().Info(syst_vec[i])->CurValue << '\n';
+     cout 
+        << " --o "  << NSyst::AsString(syst_vec[i])
+        << " is set at " << this->Systematics().Info(syst_vec[i])->CurValue << endl;;
   }		       	        
-#endif
 
   double chi2val = this->CalcChisq();
 
-#ifdef _NEUT_REWEIGHT_DEBUG_
-  cout << "Chisq_{penalty} = " << chi2val << '\n';
-#endif
+  cout << "Chisq_{penalty} = " << chi2val << endl;
 }
 //____________________________________________________________________________
 

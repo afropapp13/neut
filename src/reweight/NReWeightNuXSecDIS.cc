@@ -47,6 +47,7 @@ using namespace neut;
 using namespace neut::rew;
  
 using std::cout;
+using std::endl;
 
 //_______________________________________________________________________________________
 NReWeightNuXSecDIS::NReWeightNuXSecDIS() 
@@ -208,16 +209,14 @@ double NReWeightNuXSecDIS::CalcWeightBYOnOff()
   float new_xsec   = fortFns->evdifcrs();
 
 #ifdef _N_REWEIGHT_DIS_DEBUG_
-  cout << "differential cross section (old) = " << old_xsec << '\n';
-  cout << "differential cross section (new) = " << new_xsec << '\n';
+  cout << "differential cross section (old) = " << old_xsec << endl;
+  cout << "differential cross section (new) = " << new_xsec << endl;
 #endif 
 
   float new_weight = (new_xsec/old_xsec);
 
   if (isinf(new_weight) || isnan(new_weight)) {
-#ifdef _N_REWEIGHT_DIS_DEBUG_
-    cout << "NReWeightNuXSecDIS::CalcWeightBYOnOff() Warning: new_weight is infinite, setting to 1" << '\n';
-#endif
+    cout << "NReWeightNuXSecDIS::CalcWeightBYOnOff() Warning: new_weight is infinite, setting to 1" << endl;
     return 1;
   }
 

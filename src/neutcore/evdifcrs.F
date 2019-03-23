@@ -183,13 +183,10 @@ C
 #include "neutcrs.h"
 #include "neutmodel.h"
 #include "necard.h"
-#include "vcwork.h"
-#include "posinnuc.h"
 
       integer*4 ipar,i
       real*4    e
 C      integer*4 mdlqe
-C      integer*4 IBOUND
 
 C
 C -- Preparation
@@ -197,7 +194,7 @@ C
       real*4 plep,   elep,   xmlep
       real*4 xmn01,  xmn02,  enuc1, enuc2
       real*4 q2,     coslep 
-      real*4 w,      x,      y
+      real*4 w,      x,      xcoh,  y 
       real*8 e8,     x8,     y8,    q28
 
       real*4 dcp,    dc33p
@@ -221,9 +218,9 @@ C      real *4 PNEU(3),PFABS,AMIN,BETA,EV(3),GM
       real*4   dcohnerein
       external dcohnerein
     
-      real*8   dnelsq2
-      external dnelsq2
-
+      real*4   dcohneberger
+      external dcohneberger
+    
 C -- Parameters
       integer*4 iorig
 
@@ -348,6 +345,7 @@ cRT: end variables for SF
 
       X = -1. * q2 / (2 * XMN01 * ( E - Elep ))
       Y = (E-Elep)/e
+      xcoh = -q2/(2*0.938*E*Y)
 
       E8=e
       X8=X
@@ -382,48 +380,19 @@ C         ENDIF
 
          ccnc = 1
 
-         if (IBOUND .eq. 1) then
-            if (mod(mdlqe,1000).ge.400 .and.
-     $           mod(mdlqe,1000).lt.500) then
-               if (NUMATOM.eq.16 .or. NUMATOM.eq.12 
-     $              .or. NUMATOM.eq.56) then
-CRT     write(*,*) "SF NUMATOM: ",NUMATOM
-                  evdifcrs
-     $               =   LH(k,kPrime,p,qTilde,IPAR,nc,nucPdg)
-               else
-CRT     write(*,*) "SF RFG NUMATOM: ",NUMATOM
-                  evdifcrs
-     $               = qedifcrs(ipar, ccnc, e, elep, coslep)
-               endif
+         if (mod(mdlqe,1000).ge.400) then
+            if (NUMATOM.eq.16 .or. NUMATOM.eq.12 
+     $           .or. NUMATOM.eq.56) then
+               evdifcrs
+     $              = LH(k,kPrime,p,qTilde,IPAR,nc,nucPdg)
             else
                evdifcrs
-     $            = qedifcrs(ipar, ccnc, e, elep, coslep)
+     $              = qedifcrs(ipar, ccnc, e, elep, coslep)
             endif
          else
-CRT     write(*,*) "Free proton CC"
-            evdifcrs = dnelsq2(REAL(e,8),ipar,REAL(-1.0*q2,8))
+            evdifcrs
+     $           = qedifcrs(ipar, ccnc, e, elep, coslep)
          endif
-
-CC         if (mod(mdlqe,1000).ge.400) then
-CC            if (NUMATOM.eq.16 .or. NUMATOM.eq.12 
-CC     $           .or. NUMATOM.eq.56) then
-CC
-CCC              // P.S (26.01.17) AxialFF Patch
-CCC               if (mdlqeaf.gt.1) then
-CCC                  write(*,*) "MDLQEAF > 1 only works for RFG!"
-CCC                  exit(-1)
-CCC               endif
-CC
-CC               evdifcrs
-CC     $              = LH(k,kPrime,p,qTilde,IPAR,nc,nucPdg)
-CC            else
-CC               evdifcrs
-CC     $              = qedifcrs(ipar, ccnc, e, elep, coslep)
-CC            endif
-CC         else
-CC            evdifcrs
-CC     $           = qedifcrs(ipar, ccnc, e, elep, coslep)
-CC         endif
 c         if (mdlqe.lt.400) then
 c            write(*,*) "model less than 400"
 c            evdifcrs
@@ -471,8 +440,16 @@ c         evdifcrs
 C     $        = qedifcrs(ipar, ccnc, e*1000., elep*1000., coslep)
 c     $        = qedifcrs(ipar, ccnc, e, elep, coslep)
       else if (abs(modene).eq.16.or.abs(modene).eq.36) then
-C         evdifcrs = cohma(e,X,Y,xmlep)
-         evdifcrs = dcohnerein(e,ipar,modene,CRSX,CRSY,CRSZ,CRSPHI)
+C        write(*,*) 'in evdifcrs, MDLCOH = ',MDLCOH
+        if (MDLCOH.eq.0) then
+          evdifcrs = dcohnerein(e,ipar,modene,CRSX,CRSY,CRSZ,CRSPHI)
+C          write(*,*) 'in RS if statement, e=',e,
+C     $ ' ipar=',ipar,' x=',CRSX,' y=',CRSY,' z=',CRSZ,' phi=',CRSPHI 
+       else if (MDLCOH.eq.2) then
+          evdifcrs = dcohneberger(e,ipar,modene,CRSX,CRSY,CRSZ,CRSPHI)
+C          write(*,*) 'in BS if statement, evdifcrs = ',evdifcrs,' e=',e,
+C     $ ' ipar=',ipar,' x=',CRSX,' y=',CRSX,' z=',CRSX,' phi=',CRSPHI   
+       endif
       else if (   (abs(modene).eq.22)
      $        .or.(abs(modene).eq.42).or.(abs(modene).eq.43))
      $        then
@@ -502,7 +479,7 @@ C         evdifcrs = cohma(e,X,Y,xmlep)
 C         stop
       endif
 
-C      write(*,*) evdifcrs
+C      write(*,*) 'evdifcrs = ', evdifcrs
 
       RETURN
       END

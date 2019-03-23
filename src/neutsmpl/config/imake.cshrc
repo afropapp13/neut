@@ -1,6 +1,6 @@
 #!/bin/csh
 #
-# $Id: imake.cshrc,v 1.1.1.1 2016/11/04 20:29:56 mdunkman Exp $
+# $Id: imake.cshrc,v 1.1 2007-01-20 07:35:38 skrep Exp $
 #
 #  Set the "standard" environment variables for Imake
 #

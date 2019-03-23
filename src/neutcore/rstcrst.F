@@ -137,8 +137,9 @@ C- original form factor
       SIGMA = SIGMA / 10.
       SIGMA3= SIGMA3/ 10.
 
-      IF(E.LT.3.92) THEN
-*         write(*,*) "RSTCTST: E<3.92GeV",E,SIGMA,SIGMA3
+      IF((E.LT.3.92).and.((IMODE.lt.4).or.((IMODE.gt.10).and.(IMODE.
+     $     lt.14)))) THEN
+*        write(*,*) "RSTCTST: E<3.92GeV",E,SIGMA,SIGMA3
          SIGMA=0.
          SIGMA3=0.
       ENDIF

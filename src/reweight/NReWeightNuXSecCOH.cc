@@ -28,6 +28,8 @@
 */
 //____________________________________________________________________________
 
+//#include <NeutRootHandlers.h>
+
 #include <iostream>
 
 #include <TMath.h>
@@ -45,6 +47,7 @@ using namespace neut;
 using namespace neut::rew;
 
 using std::cout;
+using std::endl;
 //_______________________________________________________________________________________
 NReWeightNuXSecCOH::NReWeightNuXSecCOH() 
 {
@@ -67,12 +70,24 @@ void NReWeightNuXSecCOH::Init(void)
   this->RewCC     (true);
   this->RewNC     (true);
 
-  fMaTwkDial   = 0.; 
+  // dial =1, reweight the default model (RS) with BS model
+  // dial =0, do not change the model
+  fNECOHEPIDef = fortFns->NECOHEPIdef;
+  fNECOHEPICurr      = fNECOHEPIDef;
+  fNECOHEPITwkDial   = 0; 
+
+  fMaTwkDial   = 0; 
   fMaDef       = fortFns->XMACOHdef;
   fMaCurr      = fMaDef;
   fR0TwkDial   = 0.; 
   fR0Def       = fortFns->RAD0NUdef;
   fR0Curr      = fR0Def;
+  fA1TwkDial   = 0.; 
+  fA1Def       = fortFns->fA1COHdef;
+  fA1Curr      = fA1Def;
+  fb1TwkDial   = 0.; 
+  fb1Def       = fortFns->fb1COHdef;
+  fb1Curr      = fb1Def;
 }
 //_______________________________________________________________________________________
 bool NReWeightNuXSecCOH::IsHandled(NSyst_t syst)
@@ -80,8 +95,11 @@ bool NReWeightNuXSecCOH::IsHandled(NSyst_t syst)
    bool handle;
 
    switch(syst) {
+     case ( kXSecTwkDial_NECOHEPI ) : 
      case ( kXSecTwkDial_MaCOHpi ) : 
-       case ( kXSecTwkDial_R0COHpi ) : 
+     case ( kXSecTwkDial_R0COHpi ) : 
+     case ( kXSecTwkDial_fA1COHpi ) :
+     case ( kXSecTwkDial_fb1COHpi ) :
        handle = true;  
        break;
      default:
@@ -94,11 +112,20 @@ bool NReWeightNuXSecCOH::IsHandled(NSyst_t syst)
 void NReWeightNuXSecCOH::SetSystematic(NSyst_t syst, double twk_dial)
 {
    switch(syst) {
-     case ( kXSecTwkDial_MaCOHpi ) : 
+       case ( kXSecTwkDial_NECOHEPI ) : 
+       fNECOHEPITwkDial = twk_dial;
+       break;
+       case ( kXSecTwkDial_MaCOHpi ) : 
        fMaTwkDial = twk_dial;
        break;
        case ( kXSecTwkDial_R0COHpi ) : 
        fR0TwkDial = twk_dial;
+       break;
+       case ( kXSecTwkDial_fA1COHpi ) : 
+       fA1TwkDial = twk_dial;
+       break;
+       case ( kXSecTwkDial_fb1COHpi ) : 
+       fb1TwkDial = twk_dial;
        break;
      default:
        break;
@@ -107,37 +134,58 @@ void NReWeightNuXSecCOH::SetSystematic(NSyst_t syst, double twk_dial)
 //_______________________________________________________________________________________
 void NReWeightNuXSecCOH::Reset(void)
 {
+  fNECOHEPITwkDial = 0.;
+  fNECOHEPICurr    = fNECOHEPIDef;
   fMaTwkDial   = 0.; 
   fMaCurr      = fMaDef;
   fR0TwkDial   = 0.; 
   fR0Curr      = fR0Def;
-
+  fA1TwkDial   = 0.; 
+  fA1Curr      = fA1Def;
+  fb1TwkDial   = 0.; 
+  fb1Curr      = fb1Def;
   this->Reconfigure();
 }
 //_______________________________________________________________________________________
 void NReWeightNuXSecCOH::Reconfigure(void)
-{
+{  
   NSystUncertainty * fracerr = NSystUncertainty::Instance();
 
+//  cout<< "In NReweightNuXSecCOH  fNECOHEPICurr = "<<fNECOHEPICurr<<" fNECOHEPIDef = "<<fNECOHEPIDef <<" fNECOHEPITwkDial = "<< fNECOHEPITwkDial<<endl;
+ // if (fNECOHEPICurr != fNECOHEPIDef) fortFns->SetMCDefaultVal(kXSecTwkDial_NECOHEPI, fNECOHEPICurr);
+  
   double fracerr_ma = fracerr->OneSigmaErr(kXSecTwkDial_MaCOHpi);
   double fracerr_r0 = fracerr->OneSigmaErr(kXSecTwkDial_R0COHpi);
+  double fracerr_a1 = fracerr->OneSigmaErr(kXSecTwkDial_fA1COHpi);
+  double fracerr_b1 = fracerr->OneSigmaErr(kXSecTwkDial_fb1COHpi);
 
   fMaCurr = fMaDef * (1. + fMaTwkDial * fracerr_ma);
   fR0Curr = fR0Def * (1. + fR0TwkDial * fracerr_r0);
+  fA1Curr = fA1Def * (fA1TwkDial * fracerr_a1);
+  fb1Curr = fb1Def * (fb1TwkDial * fracerr_b1);
 
+  double fracerr_necohepi = fracerr->OneSigmaErr(kXSecTwkDial_NECOHEPI);
+  fNECOHEPICurr = int(fNECOHEPIDef + fNECOHEPITwkDial * fracerr_necohepi) ; 
+
+  fNECOHEPICurr = TMath::Max(0.,fNECOHEPICurr );
   fMaCurr = TMath::Max(0., fMaCurr  );
   fR0Curr = TMath::Max(0., fR0Curr  );
+  fA1Curr = TMath::Max(0., fA1Curr  );
+  fb1Curr = TMath::Max(0., fb1Curr  );
 
-}
+  }
 //_______________________________________________________________________________________
 double NReWeightNuXSecCOH::CalcWeight() 
 {
   bool is_coh = modeDefn.isCOH(nework_.modene);
   if(!is_coh) return 1.;
 
-  bool tweaked = 
+  bool tweaked =
+    (TMath::Abs(fNECOHEPITwkDial) > controls::kASmallNum) || 
     (TMath::Abs(fMaTwkDial) > controls::kASmallNum) ||
-    (TMath::Abs(fR0TwkDial) > controls::kASmallNum);
+    (TMath::Abs(fR0TwkDial) > controls::kASmallNum) ||
+    (TMath::Abs(fA1TwkDial) > controls::kASmallNum) ||
+    (TMath::Abs(fb1TwkDial) > controls::kASmallNum); 
   if(!tweaked) return 1.0;
 
   bool is_cc  = modeDefn.isCC(nework_.modene);
@@ -150,7 +198,6 @@ double NReWeightNuXSecCOH::CalcWeight()
   if(nupdg==kPdgAntiNuMu && !fRewNumubar) return 1.;
   if(nupdg==kPdgNuE      && !fRewNue    ) return 1.;
   if(nupdg==kPdgAntiNuE  && !fRewNuebar ) return 1.;
-
   
   fortFns->SetDefaults();
   fortFns->Reconfigure();
@@ -163,16 +210,16 @@ double NReWeightNuXSecCOH::CalcWeight()
   float old_xsec     = fortFns->evdifcrs();
   //float old_xsec   = event.DiffXSec();
   //float old_weight = event.Weight();
-
   if (old_xsec==0) {
-#ifdef _N_REWEIGHT_COH_DEBUG_
-    cout << "NReWeightNuXSecCOH::CalcWeight() Warning: old_xsec==0, setting weight to 1" << '\n';
-#endif
+    cout << "NReWeightNuXSecCOH::CalcWeight() Warning: old_xsec==0, setting weight to 1" << endl;
     return 1;
   }
-
+  neutcoh_.necohepi = fNECOHEPICurr;
   nemdls_.xmacoh = fMaCurr;
   nemdls_.rad0nu = fR0Curr;
+  nemdls_.fa1coh = fA1Curr;
+  nemdls_.fb1coh = fb1Curr;
+
   fortFns->Reconfigure();
 
 #ifdef _N_REWEIGHT_COH_DEBUG_
@@ -184,17 +231,15 @@ double NReWeightNuXSecCOH::CalcWeight()
   //float new_weight = old_weight * (new_xsec/old_xsec);
 
   if (isinf(new_weight) || isnan(new_weight)) {
-#ifdef _N_REWEIGHT_COH_DEBUG_
-    cout << "NReWeightNuXSecCOH::CalcWeightMa() Warning: new_weight is infinite, setting to 1" << '\n';
-#endif
+    cout << "NReWeightNuXSecCOH::CalcWeightMa() Warning: new_weight is infinite, setting to 1" << endl;
     new_weight = 1;
   }
 
 #ifdef _N_REWEIGHT_COH_DEBUG_
-  cout << "differential cross section (old) = " << old_xsec << '\n';
-  cout << "differential cross section (new) = " << new_xsec << '\n';
-  //cout << "event generation weight = " << old_weight << '\n';
-  cout << "new weight = " << new_weight << '\n';
+  cout << "differential cross section (old) = " << old_xsec << endl;
+  cout << "differential cross section (new) = " << new_xsec << endl;
+  //cout << "event generation weight = " << old_weight << endl;
+  cout << "new weight = " << new_weight << endl;
 #endif
 
   return new_weight;
@@ -204,7 +249,9 @@ double NReWeightNuXSecCOH::CalcChisq()
 {
   double chisq = 
     TMath::Power(fMaTwkDial, 2.) +
-    TMath::Power(fR0TwkDial, 2.);
+    TMath::Power(fR0TwkDial, 2.) +
+    TMath::Power(fA1TwkDial, 2.) +
+    TMath::Power(fb1TwkDial, 2.) ;
   return chisq;
 }
 //_______________________________________________________________________________________

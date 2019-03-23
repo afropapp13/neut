@@ -14,12 +14,9 @@ eval 'exec perl -w -S $0 ${1+"$@"}'
 #    maybe Absoft allows to compile more files at once?
 #  - Options with space (like -o file) are not supported.
 #
-# $Id: af77.pl,v 1.1.1.1 2016/11/04 20:29:56 mdunkman Exp $
+# $Id: af77.pl,v 1.1 2007-01-20 07:35:29 skrep Exp $
 #
-# $Log: af77.pl,v $
-# Revision 1.1.1.1  2016/11/04 20:29:56  mdunkman
-# Import of NEUT 5.3.3 v1r27 for use with T2KReWeight v1r27 (Winter OA 2017)
-#
+# $Log: not supported by cvs2svn $
 # Revision 1.2  1999/02/19 19:22:41  habig
 # If the file is a .f or .for, only pass @f77_args.  cpp wont be run
 # anyway, and some of the cpp args would cause f77 to die.

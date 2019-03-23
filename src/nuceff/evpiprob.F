@@ -72,11 +72,7 @@ C     Not bound target
 
 C     Not tuned FSI model
       IF (NENEFMODL.EQ.0 .or. NENEFMODH.EQ.0) THEN
-C
-C        mdunkman 2016-10-07: Silence warnings that are safely handled
-C        write(*,*) "EVPIPROB Warning: Attemping to call with"
-C    >//            " NENEFMODL!=0 and NENEFMODH!=0"
-C
+         write(*,*) "EVPIPROB Warning: Attemping to call with NENEFMODL!=0 and NENEFMODH!=0"
          return
       END IF
 
@@ -106,11 +102,11 @@ C     Get index in nucleusZ array for Coulomb force
 
 C     Array bounds check
       if (NVCVERT.gt.MAXVCVERT) then
-C        write(*,*) "EVPIPROB Warning: NVCVERT > ", MAXVCVERT
+         write(*,*) "EVPIPROB Warning: NVCVERT > ", MAXVCVERT
          NVCVERT=MAXVCVERT
       end if
       if (NVERT.gt.MAXVERT) then
-C        write(*,*) "EVPIPROB Warning: NVERT > ", MAXVERT
+         write(*,*) "EVPIPROB Warning: NVERT > ", MAXVERT
       end if
 
 C     Loop over all intermediate particles
@@ -120,10 +116,8 @@ C     Loop over all intermediate particles
 
 C     Check particle type
          IF (ABS(IP).NE.211.AND.IP.NE.111) then
-C           write(*,*) "EVPIPROB Error: Particle #",J," is not a pion (",IP,")"
+            write(*,*) "EVPIPROB Error: Particle #",J," is not a pion (",IP,")"
             cycle
-C           ^ move onto the next step in the loop
-C             (equivalent to continue in C++)
          END IF
 
 C     SKDETSIM implemention of NEUT cascade uses same FSI common block to
@@ -132,8 +126,6 @@ C     vertices here
          IF (IFLGVERT(IVERTI(J)).ge.100) then
 C            write(*,*) "EVPIPROB: Skipping non-eftrace interaction flag = ",IFLGVERT(IVERTI(J))
             cycle
-C           ^ move onto the next step in the loop
-C             (equivalent to continue in C++)
          end if
 
 C     Initialize variables from FSIHIST
@@ -162,8 +154,8 @@ C         write(*,*) "EVPIPROB(): ",X(1), X(2), X(3), DL
 C        This should not happen, unless particle direction doesn't correspond
 C        between two vertices (bug). Stop routine to prevent infinite loop.
          IF(DL.GE.RMAX*1.1) then
-C           write(*,*) 'EVPIPROB WARNING: Final vertex not found for'
-C    >//           ' current particle direction. Returning value = 1'
+            write(*,*) "EVPIPROB WARNING: Final vertex not found for current
+     &                  particle direction. Returning value = 1"
             EVPIPROB = 1
             RETURN
          END IF
@@ -219,12 +211,10 @@ C           Intermediate step
                EVPIPROB = EVPIPROB * PESC
 
 #ifdef DEBUG
-               if (EVPIPROB.le.0)
-     &               write(*,*) "EVPIPROB: 1. ", J, IP, ABSP
+               if (EVPIPROB.le.0) write(*,*) "EVPIPROB: 1. ", J, IP, ABSP
 #endif
                
-               if (VERBOSE.eq.3)
-     &                write (*,*) "Esc. step (blend) = ", EVPIPROB
+               if (VERBOSE.eq.3) write (*,*) "Esc. step (blend) = ",EVPIPROB
 
                GO TO 4000
 C           Vertex step               
@@ -257,12 +247,10 @@ C           Intermediate step
                EVPIPROB = EVPIPROB * PESC
 
 #ifdef DEBUG
-               if (EVPIPROB.le.0) write(*,*) "EVPIPROB: 2. ", J, IP,
-     &               ABSP
+               if (EVPIPROB.le.0) write(*,*) "EVPIPROB: 2. ", J, IP, ABSP
 #endif
 
-               if (VERBOSE.eq.3) write (*,*) "Esc. step (lowe) = ",
-     &               EVPIPROB
+               if (VERBOSE.eq.3) write (*,*) "Esc. step (lowe) = ",EVPIPROB
 
                GO TO 4000
 C           Vertex step               
@@ -282,8 +270,7 @@ C           Charge exchange probability determined within QE channel
                   PPI(3) = 0
 
 #ifdef DEBUG
-                  write(*,*) "EVPIPROB: Before EVSETPF, EVPIPROB =  ",
-     &                  EVPIPROB
+                  write(*,*) "EVPIPROB: Before EVSETPF, EVPIPROB =  ",EVPIPROB
 #endif
 
                   CALL EVSETPF(IP,PPI,DL,IFLGVERT(IVERTF(J)),PROB)
@@ -308,12 +295,9 @@ C              Should be a high energy calculation
                end if
 
 #ifdef DEBUG
-               if (EVPIPROB.le.0) write(*,*) "EVPIPROB: 3. ", J, IP,
-     &               ABSP, IFLGVERT(IVERTF(J)), PPI(1), PPI(2), PPI(3),
-     &               DL, EVPIPROB, PROB
+               if (EVPIPROB.le.0) write(*,*) "EVPIPROB: 3. ", J, IP, ABSP, IFLGVERT(IVERTF(J)), PPI(1), PPI(2), PPI(3), DL, EVPIPROB, PROB
 #endif
-               if (VERBOSE.eq.3) write (*,*) "Int. step (lowe) = ",
-     &               IFLGVERT(IVERTF(J)),EVPIPROB
+               if (VERBOSE.eq.3) write (*,*) "Int. step (lowe) = ",IFLGVERT(IVERTF(J)),EVPIPROB
 
 
                GO TO 10
@@ -404,16 +388,15 @@ C              Should be a low energy calculation
                   goto 200
 
                ELSE 
-C                 write(*,*) "EVPIPROB: Unknown hi interaction mode =",
-C    &                 IFLGVERT(IVERTF(J))
+                  write(*,*) "EVPIPROB: Unknown hi interaction mode =",
+     &                 IFLGVERT(IVERTF(J))
                end if
 
 #ifdef DEBUG
-               if (EVPIPROB.le.0) write(*,*) "EVPIPROB: 5. ",
-     &                  J, IP, ABSP, IFLGVERT(IVERTF(J))
+               if (EVPIPROB.le.0) write(*,*) "EVPIPROB: 5. ", J, IP, ABSP, IFLGVERT(IVERTF(J))
 #endif
                if (VERBOSE.eq.3) write (*,*) "Int. step (hie) = ",
-     &                  IFLGVERT(IVERTF(J)),EVPIPROB
+     &                           IFLGVERT(IVERTF(J)),EVPIPROB
                
                GO TO 10
             end if
@@ -454,10 +437,10 @@ C     See neututils/calc_nuc_dens/coulomb_factor.xls
       goto 100
       
  5000 if (EVPIPROB .le. 0) then 
-C        write(*,*) "Warning: EVPIPROB<=0 (",EVPIPROB, "), returning 1"
+         write(*,*) "Warning: EVPIPROB<=0 (",EVPIPROB, "), returning 1"
          EVPIPROB=1
       else if (EVPIPROB .ne. EVPIPROB) then
-C        write(*,*) "Warning: EVPIPROB=NaN (",EVPIPROB, "), returning 1"
+         write(*,*) "Warning: EVPIPROB=NaN (",EVPIPROB, "), returning 1"
          EVPIPROB=1
       end if
       

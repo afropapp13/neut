@@ -1,6 +1,6 @@
 ************************************************************************
 *     ----------------------------
-      FUNCTION DCOHNEREIN(E,IPAR,IMODE,X,Y,Z,PHI)
+      FUNCTION DCOHNEBERGER(E,IPAR,IMODE,X,Y,Z,PHI)
 *     ----------------------------
 *
 *     (Purpose)
@@ -38,7 +38,7 @@
 C     COMMON /NVECT/ IMOD,LVECT,IP(20),PIN(3,20)
 C
 
-      REAL*4    DCOHNEREIN
+      REAL*4    DCOHNEBERGER
       INTEGER*4 IPAR,IMODE
 
       REAL*4    E,X,Y,Z,PHI
@@ -79,12 +79,12 @@ C      PARAMETER (     RAD0NU  = 1.0                 )
       REAL*4 DUNIT
       PARAMETER (     DUNIT   = 1.E+12              )
 C
-      REAL*8 ARG, SOLN, ARG1, ARG2, ARG3
-      REAL*8 FRONT
+      REAL*4 KIN, ARG1, ARG2, u,v,q,cosa, Jacobian, t
+      REAL*4 FRONT, THETACAB
 
       INTEGER*4 ITYPE
-      common/REIN/itype
-
+      common/BERGER/itype
+      
       INTEGER*4 IPAROUT
 
       REAL*4 PRMASS,PIMASS
@@ -95,31 +95,30 @@ C
       REAL*4 XMAX,XMIN,YMAX,YMIN,Y2MPE2
       REAL*4 EPITOT,EPIKIN
 
-      REAL*4 BTE,P2OS
-
-      REAL*4 FEMTO,R
-      REAL*4 DSIGDT
+      REAL*4 DSIGEL
 
 C
-C     PION MASS
+C     PION AND PROTON MASS
 C
       CALL MCMASSGV(IPNE(5),PIMASS)
       CALL MCMASSGV(2112,PRMASS)
 
       if (imode.ne.modene) then
          write(*,*) 
-     $        'dcohnerein: Interaction mode flags are inconsistent'
+     $        'dcohneberger: Interaction mode flags are inconsistent'
          write(*,*) 'Imode = ',imode, '/ modene=', modene
          stop
       endif
 
       if ((abs(imode).ne.16).and.(abs(imode).ne.36)) then
          write(*,*) 
-     $        'dcohnerein: Incorrect interaction mode?.'
+     $        'dcohneberger: Incorrect interaction mode?.'
          write(*,*) 'Imode = ',imode
          stop
       endif
-
+C
+C     SET LEPTON MASS ACCORDING TO THE INTERACTION MODE
+C
       if (abs(imode).eq.36) then
          XLEPMASS = 0
       else
@@ -128,7 +127,7 @@ C
       endif
 
       ATOMN = float(NUMATOM)
-      DCOHNEREIN = 0.
+      DCOHNEBERGER = 0.
       CORR = 1.
 
       if(Y.lt.PIMASS/E) goto 100
@@ -146,107 +145,86 @@ C
       if(abs(modene).eq.36) goto 101
 
 C     **************************
-      ! for CC cross section(G.Mitsuka, Jan 2006)
+C      ! for CC cross section(G.Mitsuka, Jan 2006)
+C     PCAC CORRECTION FACTOR 
+
       ymin = PIMASS/E
       ymax = 1.-XLEPMASS/E
 
       Q2min = XLEPMASS**2.*Y/(1-Y)
       Q2max = 2.*PRMASS*E*(1.-XLEPMASS/E)
       Q2 = 2.*PRMASS*E*X*Y
+      THETACAB = 13.02*PI/180
 
       corr = 1.-Q2min/(2.*(Q2+PIMASS**2.))
-      corr = corr*corr + Y/4.*Q2min*(Q2-Q2min)/(Q2+PIMASS**2.)**2.      
+      corr = corr*corr + Y/4.*Q2min*(Q2-Q2min)/(Q2+PIMASS**2.)**2.   
+C      corr = corr*2*COS(THETACAB)**2
 C
-C--- Need to multiply 2 as follows if we want to use correct cross-section
-C    However, there are some issues:
 C--- cross-section became half for CC but to keep consistency 
 C    with the previously generated events
 C    also, dcohmxne uses 1/2 values for CC.
 C      
-C       corr = 2*corr     
-C
+      corr = corr*COS(THETACAB)**2
       if(Y.lt.ymin.or.Y.gt.ymax.or.
      &     Q2.lt.Q2min.or.Q2.gt.Q2max) corr=0.
 C     **************************
-
- 101  continue
-
-C     
+ 101  continue 
 C
 C  ((OUTGOING PION MOMENTUM) / (INCIDENT NEUTRINO ENERGY))**2
       Y2MPE2=Y**2-(PIMASS/E)**2
-C
-C  BTE : (RADIUS OF NEUCLEI)*E**2
-      BTE   = RAD0NU**2*ATOMN**(2./3.)*E**2/(3.*HBARC**2)
-C
-      FRONT = PRMASS*(ATOMN*PIMASS*GFERMI)**2
-      FRONT = FRONT*E**3
-      FRONT = FRONT*FPIFAC**2/PI**2
-      FRONT = FRONT/HBARC**8
-      FRONT = FRONT*EXP(BTE*(PIMASS/E)**2)
-C      FRONT = FRONT*DFLOAT(FMTCTM)**2
-C
-C     UNIT : 10**-38 cm**2 = 10**-12 fm **2 
-C      
-      FRONT = FRONT*DUNIT
-C      write(6,*) ' dcohne : front = ',front,fmtctm
-C     
-      SOLN = SQRT(ABS(Y*(Y+2.*PRMASS*X/E)*ABS(Y2MPE2)))
-      SOLN = SOLN*(1.-Y)/(1.+2.*PRMASS*E*X*Y/XMACOH**2)**2
-C
-C  PION TOTAL ENERGY
-      EPITOT = E*Y
-C
+
+C  CONSTANT FACTOR
+      FRONT = (GFERMI*PIMASS)**2
+      FRONT = FRONT*FPIFAC**2/(4*PI**2)
+      FRONT = FRONT/HBARC**6
+
+C  Convert in unit of 10^-38 cm^2  
+      FRONT = FRONT*1.E-24*1.E+38
+
+C  COS ALPHA WITH LEPTON MASS
+      cosa = (2*E**2*(1-Y)-2*PRMASS*E*X*Y-XLEPMASS**2)/
+     & (2*E*SQRT(ABS(E**2*(1-Y)**2-XLEPMASS**2))) 
+      IF(ABS(cosa).GT.1) goto 100
+
+C  Q WITH LEPTON MASS
+      q = SQRT(ABS(2*E**2*(1-Y)*(1-SQRT(ABS(1-XLEPMASS**2/
+     & (E**2*(1-Y)**2)))*cosa)+(E*Y)**2)-XLEPMASS**2)  
+      IF(ISNAN(q).OR.q.EQ.0) goto 100    
+
+C  u AND v AS DESCRIBED IN B&S PAPER
+      u = (E*(2-Y)+q)/(2*E)
+      v = (E*(2-Y)-q)/(2*E)
+      Jacobian = 2*E**2*Y**2*SQRT(1-(PIMASS/(E*Y))**2)*
+     & SQRT(1+2*PRMASS*X/(E*Y)) * 2*PRMASS*E*Y
+
+C  FULL KINEMATIC FACTOR
+      KIN = E*u*v*Jacobian/q
+     & *(XMACOH**2/(2.*PRMASS*E*X*Y+XMACOH**2))**2
+
 C  PION KINEMATIC NEERGY
       EPIKIN = E*Y-PIMASS
-C
-      ARG1=Y+PRMASS*X/E
+      IF(EPIKIN.LE.0) goto 100
+
+C  CALCULATE |t| WITH A SCALING
+      ARG1=Y+PRMASS*X/E-PIMASS**2/(2*E**2*Y)
       ARG1=Y*(ARG1-Z*(1+PRMASS*X/E)*SQRT(ABS(Y2MPE2)))
-      ARG1=-2.*BTE*ARG1
-C
+
       ARG2=(1.-Z**2)*Y2MPE2*(2.*PRMASS/E)*X*Y
       ARG2=ARG2*(1.-Y*(1.+PRMASS*X/(2.*E)))
-      ARG2=-2.*BTE*SQRT(ABS(ARG2))*COS(PHI)
-C
+      ARG2=SQRT(ABS(ARG2))*COS(PHI)
+      t = 2*E**2*(ARG1+ARG2)*(ATOMN/12.)**(2/3)
+      
+      IF(ISNAN(t)) goto 100  
+
 C  PION-NEUCLEON INELASTIC CROSS SECTION SUBROUTINE (UNIT FM)
-      CALL NECROSIN(EPIKIN, FEMTO)
-C      write(6,*) ' dcohne : FEMTO = ',EPIKIN,FEMTO
-C
-C  EXP(ARG3) = FABS : PION ABSOLUTION COEFFICIENT
-      ARG3=-9.*ATOMN**(1./3.)*FEMTO/(16.*PI*RAD0NU**2)
-C
-      ARG = DBLE(ARG1+ARG2+ARG3)
-C      write(6,*) ' dcohne : arg = ',arg,arg1,arg2,arg3
-C     
-      IF (ARG.LT.-20.D0) THEN
-         DCOHNEREIN = 0.0
-         RETURN
-      ELSE
-         SOLN = SOLN*DEXP(ARG)
-      ENDIF
-C
-C      P2OS = ABS(EPITOT**2 - PIMASS**2)
-C      P2OS = P2OS/(EPITOT + ((PRMASS**2+PIMASS**2)/(2.*PRMASS)))**2
-C      P2OS = P2OS/4.
-C
-      P2OS = 1./4.
-C
-C  PION-NEUCLEON TOTAL CROSS SECTION
-      CALL NECROSTO(EPIKIN,FEMTO)
-C      write(6,*) ' dcohne : femto = ',femto,epikin
-C     
-C  CASE REGGE FORM OF TOTAL CROSS SECTION
-C      FEMTO = 2.4 + 1.2/SQRT(EPIKIN+TINY)
-C
-C  R : REAL(SCATTERING AMPLITUDE) / IM(SCATTERING AMPLITUDE)
-      CALL NEGETR(EPIKIN,EPITOT,FEMTO,R)
-C      write(6,*) ' dcohne : r = ',r,epikin,epitot,femto
-C
-      DSIGDT = P2OS*FEMTO**2*(1.+R**2)/(4.*PI)
-C
-C      write(6,*) ' dcohne : dcohne = ',front,soln,dsigdt,
-C     &            front*soln*dsigdt
-      DCOHNEREIN = FRONT*SOLN*DSIGDT*corr
-C
+      CALL NECROSEL(EPIKIN,t,DSIGEL)     
+      IF (DSIGEL.LT.0.00) goto 100
+
+C  DIFFERENTIAL XS WITH A SCALING
+      DCOHNEBERGER = FRONT*KIN*DSIGEL*corr*(ATOMN/12.)**2
+    
+C      write(*,*) 'DCOHNER = ',DCOHNEBERGER
+C      write(*,*) '-------------------------------------------'
+
  100  RETURN
       END

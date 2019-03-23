@@ -45,10 +45,12 @@ C  XMANFFRES (XMVNFFRES)
 C
 C-- Coherent pion
 C  MDLCOH = 0 ; Rein&Sehgal w/ lepton mass corr.
-C             1 ; Kartavtsev et al.
-C
+C           1 ; Kartavtsev et al.
+C           2 ; Berger&Sehgal	
 C  XMACOH  (Default = 1.0)
 C  RAD0NU  (Default = 1 fm)
+C  fA1COH  (Default = 0.0)
+C  fb1COH  (Default = 0.0)
 C
 C-- DIS
 C  MODELDIS = 70 ; GRV94 Original
@@ -59,36 +61,18 @@ C            121 ; GRV98 Bodek
       INTEGER*4 MODELDIS,MODELCOH
       INTEGER*4 MDLQE,MDLSPI,MDLDIS,MDLCOH,MDLQEAF
       REAL*4    XMAQE,XMASPI,XMARES,XMVQE,XMVSPI,XMVRES,
-     $          KAPP,XMACOH,RAD0NU
+     $          KAPP,XMACOH,RAD0NU,fA1COH,fb1COH
       INTEGER*4 IFFSPI,NRTYPESPI
       REAL*4    RCA5ISPI,RBGSCLSPI
       REAL*4    SCCFV, SCCFA, FPQE
       REAL*4    PFSF
 
-C     // P.S (26.01.17) AxialFF Patch  
-      REAL*4    AXFFALPHA, AXFFGAMMA,
-     $          AXFFTHETA, AXFFBETA
-
-      INTEGER*4 AXZEXPQ4, AXZEXPNT
-      REAL*4    AXZEXPT0, AXZEXPTC,
-     $          AXZEXPA0,AXZEXPA1,AXZEXPA2,
-     $          AXZEXPA3,AXZEXPA4,AXZEXPA5,
-     $          AXZEXPA6,AXZEXPA7,AXZEXPA8,
-     $          AXZEXPA9
       
 	  COMMON /NEUTMODEL/MODELDIS,MODELCOH
       COMMON /NEMDLS/MDLQE,MDLSPI,MDLDIS,MDLCOH,
      $               MDLQEAF,XMAQE,XMASPI,XMVQE,XMVSPI,
-     $               KAPP,XMACOH,RAD0NU,
+     $               KAPP,XMACOH,RAD0NU,fA1COH,fb1COH,
      $               IFFSPI,NRTYPESPI,RCA5ISPI,RBGSCLSPI,
      $               XMARES,XMVRES,
      $               SCCFV, SCCFA, FPQE,
-     $               PFSF,
-     $               AXFFALPHA, AXFFGAMMA,
-     $               AXFFTHETA, AXFFBETA,
-     $               AXZEXPQ4, AXZEXPNT,
-     $               AXZEXPT0, AXZEXPTC,
-     $               AXZEXPA0,AXZEXPA1,AXZEXPA2,
-     $               AXZEXPA3,AXZEXPA4,AXZEXPA5,
-     $               AXZEXPA6,AXZEXPA7,AXZEXPA8,
-     $               AXZEXPA9
+     $               PFSF

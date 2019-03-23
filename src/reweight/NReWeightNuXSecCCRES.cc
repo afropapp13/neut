@@ -45,6 +45,7 @@ using namespace neut;
 using namespace neut::rew;
 
 using std::cout;
+using std::endl;
 
 const int NReWeightNuXSecCCRES::kModeMaMv;
 const int NReWeightNuXSecCCRES::kModeNormAndMaShape;
@@ -395,9 +396,7 @@ double NReWeightNuXSecCCRES::CalcWeightMaMv()
   //float old_weight = event.Weight();
 
   if (old_xsec==0) {
-#ifdef _N_REWEIGHT_CCRES_DEBUG_
-    cout << "NReWeightNuXSecCCRES::CalcWeightMa() Warning: old_xsec==0, setting weight to 1" << '\n';
-#endif
+    //cout << "NReWeightNuXSecCCRES::CalcWeightMa() Warning: old_xsec==0, setting weight to 1" << endl;
     return 1;
   }
 
@@ -423,8 +422,8 @@ double NReWeightNuXSecCCRES::CalcWeightMaMv()
   //float new_weight = old_weight * (new_xsec/old_xsec);
 
 #ifdef _N_REWEIGHT_CCRES_DEBUG_
-  cout << "differential cross section (old) = " << old_xsec << '\n';
-  cout << "differential cross section (new) = " << new_xsec << '\n';
+  cout << "differential cross section (old) = " << old_xsec << endl;
+  cout << "differential cross section (new) = " << new_xsec << endl;
 #endif
 
   // Normalize out change in total cross section from MA variations for MA_shape variation
@@ -437,8 +436,8 @@ double NReWeightNuXSecCCRES::CalcWeightMaMv()
     else if (nework_.ipne[0] == 12) inu = neutTotCrs->nue;
     else if (nework_.ipne[0] == -12) inu = neutTotCrs->nueb;
     else {
-      std::cerr << "NReWeightNuXSecCCRES::CalcWeightMa() Error: Cannot MA-shape reweight this neutrino type = " 
-	        << nework_.ipne[0] << '\n';
+      cout << "NReWeightNuXSecCCRES::CalcWeightMa() Error: Cannot MA-shape reweight this neutrino type = " 
+	   << nework_.ipne[0] << endl;
       exit (-1);
     }
     
@@ -459,7 +458,7 @@ double NReWeightNuXSecCCRES::CalcWeightMaMv()
     else if (abs(nework_.modene)==34) imode = neutTotCrs->neutmode34;
     else {
       //  cout << "NReWeightNuXSecCCRES::CalcWeightMa() Warning: Cannot reweight MaShape for mode = " 
-      //       << nework_.modene << ", setting weight = 1" << '\n';
+      //       << nework_.modene << ", setting weight = 1" << endl;
       return 1;
     }
     
@@ -467,29 +466,25 @@ double NReWeightNuXSecCCRES::CalcWeightMaMv()
     float new_tot_xsec = neutTotCrs->resspi_crs[inu][imode]->Interpolate(Enu, fMaCurr);
 
     if (new_tot_xsec==0) {
-#ifdef _N_REWEIGHT_CCRES_DEBUG_
-      cout << "NReWeightNuXSecCCRES::CalcWeightMa() Warning: new_tot_xsec==0, setting weight to 1" << '\n';
-#endif
+      cout << "NReWeightNuXSecCCRES::CalcWeightMa() Warning: new_tot_xsec==0, setting weight to 1" << endl;
       return 1;
     }
 
 #ifdef _N_REWEIGHT_CCRES_DEBUG_
-    cout << "total cross section (old) = " << old_tot_xsec << '\n';
-    cout << "total cross section (new) = " << new_tot_xsec << '\n';
+    cout << "total cross section (old) = " << old_tot_xsec << endl;
+    cout << "total cross section (new) = " << new_tot_xsec << endl;
 #endif 
 
     new_weight *= old_tot_xsec / new_tot_xsec ;
   }
 
   if (isinf(new_weight) || isnan(new_weight)) {
-#ifdef _N_REWEIGHT_CCRES_DEBUG_
-    cout << "NReWeightNuXSecCCRES::CalcWeightMa() Warning: new_weight is infinite, setting to 1" << '\n';
-#endif
+    cout << "NReWeightNuXSecCCRES::CalcWeightMa() Warning: new_weight is infinite, setting to 1" << endl;
     new_weight = 1;
   }
 
 #ifdef _N_REWEIGHT_CCRES_DEBUG_
-  cout << "new weight = " << new_weight << '\n';
+  cout << "new weight = " << new_weight << endl;
 #endif
 
   return new_weight;

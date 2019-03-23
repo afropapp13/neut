@@ -51,7 +51,7 @@ NSystUncertainty::~NSystUncertainty()
 NSystUncertainty * NSystUncertainty::Instance()
 {
   if(fInstance == 0) {
-    //std::cout << std::endl << "NSystUncertainty late initialization" << std::endl;
+    std::cout << std::endl << "NSystUncertainty late initialization" << std::endl;
     static NSystUncertainty::Cleaner cleaner;
     cleaner.DummyMethodAndSilentCompiler();
     fInstance = new NSystUncertainty;
@@ -167,8 +167,11 @@ void NSystUncertainty::SetDefaults(void)
   this->SetUncertainty( kXSecTwkDial_MaRSNCRES,     0.165289256, 0.165289256);
   this->SetUncertainty( kXSecTwkDial_MvRSNCRES,     0.119047619, 0.119047619);
 
+  this->SetUncertainty( kXSecTwkDial_NECOHEPI,          0,    1);
   this->SetUncertainty( kXSecTwkDial_MaCOHpi,        0.50, 0.50);
   this->SetUncertainty( kXSecTwkDial_R0COHpi,        0.10, 0.10);
+  this->SetUncertainty( kXSecTwkDial_fA1COHpi,       0.10, 0.10);
+  this->SetUncertainty( kXSecTwkDial_fb1COHpi,       0.10, 0.10);
 
   //this->SetUncertainty( kXSecTwkDial_RvpCC1pi,       0.50, 0.50);
   //this->SetUncertainty( kXSecTwkDial_RvpCC2pi,       0.50, 0.50);
@@ -207,27 +210,6 @@ void NSystUncertainty::SetDefaults(void)
   //this->SetUncertainty( kXSecTwkDial_RnubarnuCC,       0.05, 0.05);
   //this->SetUncertainty( kXSecTwkDial_DISNuclMod,     1.00, 1.00);
   this->SetUncertainty( kXSecTwkDial_NC,               0.30, 0.30);
-
-  // P.S (26.01.17) AxialFF Patch   
-
-  this->SetUncertainty( kXSecTwkDial_FAxlCCQEAlpha    , 0.547374419586, 0.547374419586 ); // 0.22505499999999998 +- 0.12318935
-  this->SetUncertainty( kXSecTwkDial_FAxlCCQEGamma    , 0.276619847554, 0.276619847554 ); //0.43633890000000003 +- 0.1207 (inflated to account for correlations)
-  this->SetUncertainty( kXSecTwkDial_FAxlCCQEBeta     , 0.164910087277,  0.164910087277 ); //1.081382 +- 0.1783308
-  this->SetUncertainty( kXSecTwkDial_FAxlCCQETheta    , 0.179147035786,  0.179147035786 ); // -0.1710739999999999 +- 0.0306474
-
-  this->SetUncertainty( kXSecTwkDial_FAZExp_TCut      , 1.0, 1.0);
-  this->SetUncertainty( kXSecTwkDial_FAZExp_T0        , 1.0, 1.0);
-  this->SetUncertainty( kXSecTwkDial_FAZExp_A0        , 1.0, 1.0);
-  this->SetUncertainty( kXSecTwkDial_FAZExp_A1        , 0.0809326542131, 0.0809326542131); //2.30 +- 0.12409673646*1.5
-  this->SetUncertainty( kXSecTwkDial_FAZExp_A2        , 1.44337567298, 1.44337567298); //-0.6 +- 1.03923048454*1.5
-  this->SetUncertainty( kXSecTwkDial_FAZExp_A3        , 1.00947725152, 1.00947725152); //-3.8 +- 2.55734237051*1.5
-  this->SetUncertainty( kXSecTwkDial_FAZExp_A4        , 1.77410484897, 1.77410484897); //2.3 +- 2.72029410175*1.5
-  this->SetUncertainty( kXSecTwkDial_FAZExp_A5        , 1.0, 1.0);
-  this->SetUncertainty( kXSecTwkDial_FAZExp_A6        , 1.0, 1.0);
-  this->SetUncertainty( kXSecTwkDial_FAZExp_A7        , 1.0, 1.0);
-  this->SetUncertainty( kXSecTwkDial_FAZExp_A8        , 1.0, 1.0);
-  this->SetUncertainty( kXSecTwkDial_FAZExp_A9        , 1.0, 1.0);
-
   //this->SetUncertainty( kHadrAGKYTwkDial_xF1pi,      0.20, 0.20);
   //this->SetUncertainty( kHadrAGKYTwkDial_pT1pi,      0.03, 0.03);
   //this->SetUncertainty( kHadrNuclTwkDial_FormZone,   0.50, 0.50);
@@ -250,14 +232,6 @@ void NSystUncertainty::SetDefaults(void)
   this->SetUncertainty( kSystNucl_CCQEPauliSupViaKF, 0.01, 0.01);
   this->SetUncertainty( kSystNucl_CCQEFermiSurfMom,  0.15, 0.15);
   this->SetUncertainty( kSystNucl_CCQEBindingEnergy, 0.50, 0.50);
-  this->SetUncertainty( kSystNucl_CCQEBindingEnergy_C12,   9./25, 9./25);
-  this->SetUncertainty( kSystNucl_CCQEBindingEnergy_O16,   9./27, 9./27);
-  this->SetUncertainty( kSystNucl_CCQEBindingEnergy_Al27,  9./28, 9./28);
-  this->SetUncertainty( kSystNucl_CCQEBindingEnergy_Fe56,  9./33, 9./33);
-  this->SetUncertainty( kSystNucl_CCQEBindingEnergy_Cu63,  9./35, 9./35);
-  this->SetUncertainty( kSystNucl_CCQEBindingEnergy_Zn64,  9./35, 9./35);
-  this->SetUncertainty( kSystNucl_CCQEBindingEnergy_Pb208, 9./44, 9./44);
-  
 
 
   //this->SetUncertainty( kRDcyTwkDial_BR1gamma,       0.50, 0.50);
@@ -265,6 +239,7 @@ void NSystUncertainty::SetDefaults(void)
   //this->SetUncertainty( kRDcyTwkDial_Theta_Delta2Npi,         0.50, 0.50);
 
   this->SetUncertainty( kSystNucl_PilessDcyRES, 0.20, 0.20);
+
   
 }
 //____________________________________________________________________________

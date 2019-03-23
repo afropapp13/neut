@@ -158,7 +158,7 @@ C -- extract NEUT card
       CALL FFKEY('MVQE' ,XMVQE ,1,'REAL')
       CALL FFKEY('MVSPI' ,XMVSPI ,1,'REAL')
       CALL FFKEY('KAPP' ,KAPP ,1,'REAL')
-      CALL FFKEY('MACOH' ,XMACOH ,1,'REAL')
+      CALL FFKEY('XMACOH' ,XMACOH ,1,'REAL')
       CALL FFKEY('R0COH' ,RAD0NU ,1,'REAL')
  
       CALL FFKEY('MDLQE',MDLQE,1,'INTEGER')
@@ -265,7 +265,7 @@ C Set VNUINI here ( when PFSURF is fixed)
       WRITE(6,*) 'NECARD : MVQE   = ',XMVQE
       WRITE(6,*) 'NECARD : MVSPI  = ',XMVSPI
       WRITE(6,*) 'NECARD : KAPP   = ',KAPP
-      WRITE(6,*) 'NECARD : MACOH   = ',XMACOH
+      WRITE(6,*) 'NECARD : XMACOH   = ',XMACOH
       WRITE(6,*) 'NECARD : R0COH   = ',RAD0NU
  
       IF (NEMODFLG.EQ.-1) THEN
