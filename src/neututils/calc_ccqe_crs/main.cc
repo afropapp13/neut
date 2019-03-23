@@ -16,11 +16,12 @@ int main(int argc, char *argv[]) {
   output = fopen("cross.dat","w");
 
   //--- initialize
-  int nu_type = atoi(argv[1]);
-  int nu_sign = atoi(argv[2]);
-  double Pfermi = atof(argv[3]);
+  int nu_type    = atoi(argv[1]);
+  int nu_sign    = atoi(argv[2]);
+  double Pfermi  = atof(argv[3]);
+  double XMaxial = atof(argv[4]);
 
-  CrossSection* QECrossSection = new CrossSection(Pfermi, nu_type, nu_sign);
+  CrossSection* QECrossSection = new CrossSection(Pfermi, nu_type, nu_sign, XMaxial);
    
   if (nu_type != 16) {
     MaxiEnergy = 210;

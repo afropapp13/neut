@@ -3,8 +3,8 @@ ifndef NEUT_ROOT
 endif
 include $(NEUT_ROOT)/src/neutsmpl/config_neut.gmk
 
-NEUTCOREVER	= 5.3.1
-INEUTCOREVER= 531
+NEUTCOREVER	= 5.3.2
+INEUTCOREVER= 532
 
 NUCEFFVER   = 5.3.1
 INUCEFFVER  = 531
@@ -21,8 +21,8 @@ ISKMCSVCVER = 505
 ZBSFNSVER  = 5.3.1
 IZBSFNSVER = 531
 
-SPECFUNCVER = 5.3.1
-ISPECFUNCVER= 531
+SPECFUNCVER = 5.3.2
+ISPECFUNCVER= 532
 
 COREDIR =   ../neutcore/Linux_pc
 LIBDIRS =   -L${COREDIR}            -L../nuccorspl/Linux_pc \

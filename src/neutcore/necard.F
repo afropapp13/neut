@@ -84,8 +84,8 @@ C --  Initialize
       NEPDF   = 12
       NEBODEK = 1
 
-C      XMAQE   = 1.21
-      XMAQE   = 1.03
+      XMAQE   = 1.21
+C      XMAQE   = 1.03
       XMVQE   = 0.84
 C      XMASPI  = 1.21
       XMARSRES = 1.21
@@ -103,7 +103,7 @@ C     For form factors for Rein-Seighal update
       XMACOH  = 1.0
       RAD0NU  = 1.0
 
-      MDLQE     = 1
+      MDLQE     = 402
       MDLQEAF   = 1
 
       NEABSPIEMIT = 1
@@ -145,6 +145,10 @@ C      RPILESSDCY = 0.20E0
 
 C     Cross-section data table PATH
       CRSTBLPATH ='./'
+
+C     FermiMomentum used for pauli blocking in SF model only
+C     (NOTE: default is -1, gets set elsewhere correctly if not user-defined)
+      PFSF = -1
 
 C     relatve size of second class currents (vector and axial)
       SCCFV = 0.0
@@ -230,6 +234,8 @@ C      CALL FFKEY('MVSPI' ,XMVSPI ,1,'REAL')
       CALL FFKEY('IPILESSDCY',IPILESSDCY,1,'INTEGER')
       CALL FFKEY('RPILESSDCY',RPILESSDCY,1,'REAL')
       
+      CALL FFKEY('PFSF',PFSF,1,'REAL')
+
       CALL FFKEY('SCCFV',SCCFV,1,'REAL')
       CALL FFKEY('SCCFA',SCCFA,1,'REAL')
       
@@ -275,7 +281,7 @@ C Set VNUINI here ( when PFSURF is fixed)
       COMMAND = '/bin/rm '//TMPFIL
       CALL SYSTEM(COMMAND)
 
-      IF (MDLQE/100 .EQ. 4) THEN
+      IF (mod(MDLQE, 1000)/100 .EQ. 4) THEN
         IF (NUMATOM .EQ. 12) THEN
           write (6,*) "Using Spectral Function for elastic events"
           GOTO 200
@@ -326,6 +332,7 @@ C      WRITE(6,*) 'NECARD : MVSPI  = ',XMVSPI
       WRITE(6,*) 'NECARD : R0COH   = ',RAD0NU
       WRITE(6,*) 'NECARD : SCCFV     = ',SCCFV
       WRITE(6,*) 'NECARD : SCCFA     = ',SCCFA
+      WRITE(6,*) 'NECARD : PFSF      = ',PFSF
  
       IF (NEMODFLG.EQ.-1) THEN
          WRITE(6,*) 'NECARD : CRS  = ',CRSNEUT

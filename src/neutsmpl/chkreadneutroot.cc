@@ -26,20 +26,13 @@ chkreadneutroot()
 
   nevents = tn->GetEntries();
 
-  cout << nevents << endl;
-
-
-  TH1D* HEhist = new TH1D("HEhist","",50,0,1500);
-  TH1D* LEhist = new TH1D("LEhist","",50,0,1500);
-  TH1D* ALLhist = new TH1D("ALLhist","",50,0,1500);
   for ( j = 0 ; j < nevents ; j++ ){
 
 	cout << "---------------------------------------------" << "\n";
 
 	tn->GetEntry(j);
 
-  /*
-	/ *************************************************************** /
+	/***************************************************************/
 	cout << "Event #        :" << nvect->EventNo << "\n";
 	cout << "Target A       :" << nvect->TargetA << "\n";
 	cout << "Target Z       :" << nvect->TargetA << "\n";
@@ -50,32 +43,8 @@ chkreadneutroot()
 	cout << "Flux ID        :" << nvect->FluxID   << "\n";
 
 	cout << "Intr. mode     :" << nvect->Mode   << "\n";
-*/
 
-// Momentum of highest energy outgoing particle
-  double mom1 = sqrt(pow(nvect->PartInfo(3)->fP.Px(),2)+pow(nvect->PartInfo(3)->fP.Py(),2)+pow(nvect->PartInfo(3)->fP.Pz(),2));
-  double mom2 = 0;//sqrt(pow(nvect->PartInfo(5)->fP.Px(),2)+pow(nvect->PartInfo(5)->fP.Py(),2)+pow(nvect->PartInfo(5)->fP.Pz(),2));
-  double mom3=0;
-  
-
-  double temp = mom1;
-  if(mom2>mom1){
-    mom1 = mom2;
-    mom2=temp;
-  }
-
-  HEhist->Fill(mom1);
-  LEhist->Fill(mom2); 
-
-  
-
-	for ( i = 3 ; i < nvect->Npart() ; i++ ){
-         if((nvect->PartInfo(i))->fIsAlive==1&&(nvect->PartInfo(i))->fPID>1000){ 
-		mom3 = sqrt(pow(nvect->PartInfo(i)->fP.Px(),2)+pow(nvect->PartInfo(i)->fP.Py(),2)+pow(nvect->PartInfo(i)->fP.Pz(),2));   
-          ALLhist->Fill(mom3); 
-          }
-          continue;
-	  
+	for ( i = 0 ; i < nvect->Npart() ; i++ ){
 	  cout << "i=" << i << "\n";
 	  cout << "Vertex         =" << nvect->VertexID(i) << "\n";
 	  cout << "Parent Index   =" << nvect->ParentIdx(i) << "\n";
@@ -85,7 +54,7 @@ chkreadneutroot()
 	  cout << "Particle Mom.  =(" << (nvect->PartInfo(i))->fP.Px() << ","
 	  	   << (nvect->PartInfo(i))->fP.Py() << "," 
 		   << (nvect->PartInfo(i))->fP.Pz() << ","
-		   << (nvect->PartInfo(i))->fP.E() << "," <<mom3<< ")" 
+		   << (nvect->PartInfo(i))->fP.E()  << ")"
 		   << "\n";
 	  cout << "Particle Flag  = " << (nvect->PartInfo(i))->fIsAlive << "\n";
 	  cout << "Particle Stat. = " << (nvect->PartInfo(i))->fStatus  << "\n";
@@ -112,17 +81,6 @@ chkreadneutroot()
 		   << "\n";
 	}
   }
-
-  TCanvas *c = new TCanvas();
-  HEhist->Draw();
-  c->Print("HEhist.eps");
-  TCanvas *c0 = new TCanvas();
-  LEhist->Draw();
-  c0->Print("LEhist.eps");
-   TCanvas *c1 = new TCanvas();
-  ALLhist->Draw();
-  c1->Print("ALLhist.eps");  
-
   exit();
 }
   

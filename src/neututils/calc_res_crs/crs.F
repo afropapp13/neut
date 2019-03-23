@@ -5,6 +5,7 @@
 #include "neutmodel.h"
 #include "rscons.h"
 
+*     Original Rein-Seghal model xsec
 *     Lepton mass effects are taken into account
 *     following the formalism by Ch.Berger and L.M.Sehgal
 *     Phys. Rev. D 76, 113004 (2007)
@@ -33,6 +34,7 @@
 
       character*15 fname_ref(3)
       character*50 fname,tmpstr
+      character*10 arg
 
       data fname_ref/
      $     'spi_nue_xsec_ma',
@@ -105,15 +107,22 @@
          enddo
       enddo
 
-      read (*,*) IPARLOP
-      if ((IPARLOP.GT.3).or.(IPARLOP.lt.1)) goto 9999
+C      call getarg(1, arg)
+C      read(arg, '(I10)') IPARLOP
+C      print *, 'IPARLOP=', IPARLOP
+
+C      if ((IPARLOP.GT.3).or.(IPARLOP.lt.1)) then
+C         write(*,*) 'IPARLOP=', IPARLOP, ' invalid'
+C         goto 9999
+C      endif
 
       DO 110  IPFLAG = 0,1
          DO 105  IFLAG = 1,7
-            
             INTFLAG = IFLAG+IPFLAG*10
             
-C            DO 5000 IPARLOP=1,3
+            DO 5000 IPARLOP=1,3
+               print *, 'IPARLOP=', IPARLOP
+               if ((IPARLOP.GT.3).or.(IPARLOP.lt.1)) goto 9999
                iOrg = ieffect ! Consider lepton mass effecs(0) or not(1)
                IF (IPARLOP.eq.1)  XMLEP=XME
                IF (IPARLOP.eq.2)  XMLEP=XMMU
@@ -122,7 +131,6 @@ C            DO 5000 IPARLOP=1,3
                   iOrg = 1 ! Original R-S model
                   XMLEP=0.0E0
                ENDIF
-
                write(*,*)  "XMLEP=",XMLEP
                write(*,*) "WMAX=",WWMAX
 
@@ -138,7 +146,7 @@ C               DO 95 IE = 1,5
                   if (IPARLOP.eq.1.and.E.gt.1.5 ) iOrg = 1
                   if (IPARLOP.eq.2.and.E.gt.100.) iOrg = 1
                   if (IPARLOP.eq.3.and.E.gt.200.) iOrg = 1
-                  
+
                   SIGMA = 0.
                   SIGMA3 = 0.
                   SMAX = (2 * XMN * E) + XMN2

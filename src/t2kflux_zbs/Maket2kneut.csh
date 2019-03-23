@@ -58,7 +58,6 @@ make Makefile
 make clean
 make -f Makefile.t2kneut_sk clean
 make -f Makefile.t2kneut_sk necardbmC.h beamntplC.h skheadC.h  || exit
-make dump_crs_for_shota_main || exit
 make t2kneut neutntpl dumpcrs_main dumptotpau || exit
 make split_zbsfile || exit
 make t2kneut_ndall || exit

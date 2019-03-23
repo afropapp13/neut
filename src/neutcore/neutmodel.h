@@ -23,6 +23,10 @@ C
 C-- Kappa factor for QE (ala MiniBooNE)
 C  KAPP
 C
+C-- FermiMomentum used in SF model only (for pauli blocking)
+C-- (if user doesn't define, uses default for nucleus)
+C  PFSF
+C
 C-- Second class form factors for CCQE (both 0.0 as default)
 C  SCCFV
 C  SCCFA
@@ -56,6 +60,7 @@ C            121 ; GRV98 Bodek
       INTEGER*4 IFFSPI,NRTYPESPI
       REAL*4    RCA5ISPI,RBGSCLSPI
       REAL*4    SCCFV, SCCFA
+      REAL*4    PFSF
 
       
 	  COMMON /NEUTMODEL/MODELDIS,MODELCOH
@@ -64,4 +69,5 @@ C            121 ; GRV98 Bodek
      $               KAPP,XMACOH,RAD0NU,
      $               IFFSPI,NRTYPESPI,RCA5ISPI,RBGSCLSPI,
      $               XMARES,XMVRES,
-     $               SCCFV, SCCFA
+     $               SCCFV, SCCFA,
+     $               PFSF

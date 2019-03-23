@@ -138,9 +138,9 @@ C
 
       lenpath = lenstr(CRSTBLPATH)
 
-       if (MDLQE/100 .EQ. 4 .AND. (numbndp .eq. 6 .or. 
+       if (mod(MDLQE, 1000)/100 .EQ. 4 .AND. (numbndp .eq. 6 .or. 
      &    numbndp .eq. 8 .or. numbndp .eq. 26)) then
-c      if (MDLQE/100 .EQ. 4) then
+c      if (mod(MDLQE, 1000)/100 .EQ. 4) then
         if (iloadsfelcrs.ne.0) goto 300
       else
         if (iloadelcrs.ne.0) goto 100
@@ -149,7 +149,7 @@ c      if (MDLQE/100 .EQ. 4) then
 *******  Spectral function implementation *****
 * A.Furmanski - 2013
 *
-      if (MDLQE/100 .EQ. 4 .AND. (numbndp .eq. 6 .or. 
+      if (mod(MDLQE, 1000)/100 .EQ. 4 .AND. (numbndp .eq. 6 .or. 
      &    numbndp .eq. 8 .or. numbndp .eq. 26)) then
 c ----- load xsec table required
         DUMSTR = 'qelSfData/totXsec/'
@@ -226,8 +226,8 @@ C
 
       if (iloadelcrs.ne.0) goto 100
       NCELMODE = mod(MDLQE,100)/10
-      if (MDLQE/100 .eq. 4) then
-      NCELMODE = mod(MDLQE,400)
+      if (mod(MDLQE, 1000)/100 .eq. 4) then
+      NCELMODE = mod(mod(MDLQE, 1000),400)
       endif
 
 

@@ -14,6 +14,8 @@ foreach datfile ($DATFILES)
     ln -sf $NEUT_ROOT/src/crsdat/$datfile .
 end
 
+ln -sf $NEUT_ROOT/src/crsdat/qelSfData .
+
 setenv RFLIST  rflist.$$
 cat <<! >! $RFLIST
 11{

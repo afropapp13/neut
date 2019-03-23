@@ -139,7 +139,7 @@ C
          stop
       endif
 
-      if ((MDLQE/400 .EQ. 1).and.(MDLQE.lt.500)) then
+      if (mod(MDLQE, 1000)/400 .EQ. 1) then
          if (iloadsfelcrs.ne.0) goto 300
       else
          write(*,*) 'fnelspan_sf: mode (',mdlqe,
@@ -150,7 +150,7 @@ C
 *******  Spectral function implementation *****
 * A.Furmanski - 2013
 *
-      if (MDLQE/400 .EQ. 1 .AND. (NUMBNDP.eq.6 .or. NUMBNDP.eq.8
+      if (mod(MDLQE, 1000)/400 .EQ. 1 .AND. (NUMBNDP.eq.6 .or. NUMBNDP.eq.8
      &    .or. NUMBNDP.eq. 26)) then
 c ----- load xsec table required
         DUMSTR = 'qelSfData/totXsec/'

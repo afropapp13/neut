@@ -1,11 +1,17 @@
+ifndef NEUT_ROOT
+      NEUT_ROOT = ../../
+endif
+include $(NEUT_ROOT)/src/neutsmpl/config_neut.gmk
+#include config_neut.gmk
+
 #.SILENT:
 
-NEUTCOREVER	= 5.3.1
+NEUTCOREVER	= 5.3.2
 NUCEFFVER   = 5.3.1
 NUCCORVER   = 5.3.1
 PARTNUCKVER = 5.0.5
 SKMCSVCVER  = 5.0.5
-SPECFUNCVER = 5.3.1
+SPECFUNCVER = 5.3.2
 
 # compiler
 #ifndef ${FC}
@@ -21,7 +27,7 @@ LIBDIRS = -L. -L${CERN}/2005/lib -L../../lib/Linux_pc
 
 LIBS = -lspecfunc_${SPECFUNCVER} -lneutcore_${NEUTCOREVER} -lskmcsvc_${SKMCSVCVER} -lnuccorrspl_${NUCCORVER} -lnuceff_${NUCEFFVER} -lpartnuck_${PARTNUCKVER} -lpawlib -lpacklib -lmathlib -lgraflib -lkernlib -lstdc++
 
-FLAGS = -pedantic-errors -Wall -W -w -Wunused -Wuninitialized -DstrictF77 # -fdefault-real-8
+FLAGS = -pedantic-errors -Wall -W -w -Wunused -Wuninitialized -DstrictF77 $(FCOPTIONS) # -fdefault-real-8
 
 INCLUDES = -I../../inc
 

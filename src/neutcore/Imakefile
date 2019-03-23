@@ -1,7 +1,7 @@
 LIBBASE	= neutcore
-VER	= 5.3.1
+VER	= 5.3.2
 TAG	=
-COREVER = 531
+COREVER = 532
 
 #ifdef ICHI_KILO
 	TAG = .kt
@@ -21,7 +21,7 @@ OBJ =	dnela.o fnelscrn.o fnelscrs.o dnelsq2.o fnq2max.o  \
 		rnazi.o neelsspf.o dnels.o fnelspf.o neelsvcp.o fvfrmgev.o \
 		neelslvc.o nechadir.o fnnpot.o fnelsint.o fnelspau_select.o \
                 nemecvcp.o nemeclpv.o fnmec_select.o fnmec_nieves.o nemechad.o \
-                fnelspan_intpol.o neranbll2.o \
+                fnelspan_intpol.o neranbll2.o fnels_rpascl.o fnels_erpascl.o\
                 fnelspau_sf.o fnelspan_sf.o fnelspau_intpol.o fntotpau.o \
 		bbba05.o \
 		fnncelscrs.o dnncela.o dnncelsq2.o \

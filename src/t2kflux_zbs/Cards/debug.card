@@ -4,7 +4,7 @@ C========================================================================
 C
 C Number of events ; NEBM-NEVNT
 C
-NEBM-NEVNT  500000
+NEBM-NEVNT  1000000
 C
 C--------------------------------
 C
@@ -29,7 +29,7 @@ C--------------------------------
 C
 C Detector ID   ; NEBM-DETID
 C
-NEBM-DETID    5
+NEBM-DETID    3
 C
 C
 C--------------------------------
@@ -42,27 +42,27 @@ C
 C NUMBNDN : total number of neutron
 C           (e.g. CH => 6, H2O => 8, Ar => 22, Fe => 30)
 C
-NEUT-NUMBNDN 8
+NEUT-NUMBNDN 6
 C
 C NUMBNDP : total number of bound proton
 C           (e.g. CH => 6, H2O => 8, Ar => 18, Fe => 26)
 C
-NEUT-NUMBNDP 8
+NEUT-NUMBNDP 6
 C
 C NUMFREP : total number of free proton
 C           (e.g. CH => 1, H2O => 2, Ar => 0, Fe => 0)
 C
-NEUT-NUMFREP 2
+NEUT-NUMFREP 1
 C
 C NUMATOM : atomic number of atom heavier than hydrogen
 C           (e.g. CH => 12, H2O =>16, Ar => 40, Fe => 56)
 C
-NEUT-NUMATOM 16
+NEUT-NUMATOM 12
 C
 C The Fermi surface momentum(0.225GeV/c is default)
 C
-NEUT-PFSURF 0.225
-NEUT-PFMAX  0.225
+CNEUT-PFSURF 0.217
+CNEUT-PFMAX  0.217
 C
 C ****************************
 C
@@ -152,7 +152,7 @@ C RAND : random seed
 C      0 : Read RANDOM number from FILE
 C      1 : Generating RANDOM SEED from the time
 C
-NEUT-RAND 0
+NEUT-RAND 1
 C
 C RNDM : TAUOLA RANDUM NUMBER SEED
 C        IF IRNDM(1)=0, SEED IS NOT INITIALIZED.(TERMINATED)

@@ -8,6 +8,7 @@
 c ----- include spectral function arrays, variables etc
 #include "specfunc.h"
 #include "../neutcore/necard.h"
+#include "../neutcore/neutmodel.h"
         logical RFG
         double precision theta, phi, mag, y
         double precision val, maxValueE, maxValuep, interpVal
@@ -33,8 +34,12 @@ c ----- work out which nucleus to choose from, and set the fermiMomentum accordi
           fermiMomentum = 209
         endif
 
+c ----- if fermiMomentum set in card, then use this value (default set to -1)
+        if (PFSF .ge. 0) then
+          fermiMomentum = PFSF
+        endif
 
-        
+
         theta = acos(dble(RLU(dummy))*2 - 1)
         phi = 2 * 3.14159265358 * dble(RLU(dummy))
 

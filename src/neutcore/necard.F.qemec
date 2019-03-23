@@ -229,7 +229,7 @@ C Set VNUINI here ( when PFSURF is fixed)
       COMMAND = '/bin/rm '//TMPFIL
       CALL SYSTEM(COMMAND)
 
-      IF (MDLQE/100 .EQ. 4) THEN
+      IF (mod(MDLQE, 1000)/100 .EQ. 4) THEN
         IF (NUMATOM .EQ. 12) THEN
           write (6,*) "Using Spectral Function for elastic events"
           GOTO 200

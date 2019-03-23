@@ -151,6 +151,12 @@ c ----- extrapolation based on bins N and N-2
         bin = 200
 
         write (*,*) "Selected energy greater than maximum calculated"
+        if ( ipar. gt. 0 ) then 
+           neutrino = 1
+        else
+           neutrino = 2
+        endif
+
         maxDiff = diffXsecsnc(neutrino,itarg, nuc,  bin-2)
      & + (diffXsecsnc(neutrino,itarg, nuc,  bin)-
      & diffXsecsnc(neutrino,itarg, nuc,  bin-2))
@@ -163,6 +169,12 @@ c ----- extrapolation based on bins N and N-2
 
 
 c ----- interpolate to correct point in maxDiff array
+        if ( ipar. gt. 0 ) then 
+           neutrino = 1
+        else
+           neutrino = 2
+        endif
+
         maxDiff = diffXsecsnc(neutrino,itarg, nuc,  bin)
      & + (diffXsecsnc(neutrino,itarg, nuc,  bin+1)-
      & diffXsecsnc(neutrino,itarg, nuc,  bin))

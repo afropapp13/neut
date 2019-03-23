@@ -30,6 +30,7 @@ class T2Kflux_SK{
 
  private:
   static const char flavor_string[4][10];
+  static const char beam_flavor_string[4][10];
   static const int pidtbl[4];
   static const int luni;
   static const int histo_luni;
@@ -38,6 +39,7 @@ class T2Kflux_SK{
   int flux_loaded;
   int load_flux();
   int load_flux_histograms();
+  int load_beam_flux_histograms();
   int reset_histos();
   int pid_idx(int pid);
 

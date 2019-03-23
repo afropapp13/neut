@@ -186,7 +186,7 @@ C
 
       lenpath = lenstr(crstblpath)
 
-      if ((MDLQE/400 .EQ. 1).and.(MDLQE.lt.500)) then
+      if (mod(MDLQE, 1000)/400 .EQ. 1) then
 C
 C - Spectral function mode
 C

@@ -10,6 +10,11 @@
 
 using namespace std;
 
+/*
+extern "C"{
+  double faBBBA07(double, double);
+}
+*/
 // proton mass, GeV
 double const MP = 0.9383;
 
@@ -30,15 +35,17 @@ double const LambdaD = 0.71;
 
 // squared axial mass
 //double const MA = 1.015;
-double const MA = 1.21;
-double const MA2 = MA*MA;
+//double const MA = 1.21;
+//double const MA2 = MA*MA;
 
 // 
 //double const GA = -1.267;
 double const GA = -1.232;
 
+double ParDipoleA[2] = { 0, GA };
+
 // Nachtman variable xi
-double xi(double qsq, double m)
+double xi_fa(double qsq, double m)
 {
     if (qsq==0) {
         return 0.;
@@ -48,16 +55,13 @@ double xi(double qsq, double m)
 }
 
 // dipole parameterization
-double dipole(const double& x, const double* par)
+double dipole_fa(double x, const double* par)
 {
     return par[1]*pow(1. + x/par[0],-2);
 }
 
-double const ParDipoleA[2] = { MA2, GA };
-
-
 // Lagrange parameterization
-double lagrange(const double& x, const double* par)
+double lagrange(const double x, const double* par)
 {
   int const N = 7;
     double const nodes[N] = { 0., 1./6., 2./6., 3./6., 4./6., 5./6., 1. };
@@ -65,7 +69,7 @@ double lagrange(const double& x, const double* par)
     double qsq = x;
     double mass = par[7];
     double xi1;
-    xi1 = xi(qsq, mass);
+    xi1 = xi_fa(qsq, mass);
 
     double sum = 0.;
     for (int i = 0; i<N; ++i) {
@@ -85,11 +89,12 @@ double const ParFaLagrange[8] = {1., 0.9133, 0.9955, 1.1043, 1.1753, 1.3912, 0.7
 
 // BBBA07
 // Fa
-double faBBBA07(const double& x)
+double faBBBA07(double x, double xamass)
 {  
   double lagr;
   double dip;
   lagr = lagrange(x, ParFaLagrange);
-  dip = dipole(x, ParDipoleA);
+  ParDipoleA[0] = xamass*xamass;
+  dip = dipole_fa(x, ParDipoleA);
   return lagr*dip;
 }

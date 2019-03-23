@@ -42,9 +42,9 @@ c ----- sgn is negative for an incoming neutron - applies to NC events only
 c ----- decide here whether to use dipole, or BBBA fits for form factors
         BBBA5 = .FALSE.
         BBBA7 = .FALSE.
-        if (mod(MDLQE,400) .EQ. 2) then
+        if (mod(mod(MDLQE, 1000),400) .EQ. 2) then
           BBBA5 = .TRUE.
-        else if (mod(MDLQE,400) .EQ. 3) then
+        else if (mod(mod(MDLQE, 1000),400) .EQ. 3) then
           BBBA7 = .TRUE.
         else
           BBBA5 = .FALSE.
@@ -89,9 +89,11 @@ c form factors
         fp = CalcFp(qTilde,nc,sgn)
 
 c second-class form factors - off by default.  Use card parameter SCC to turn on
+c fv3 is treated as a dipole (using same vector mass)
+c fa3 is treated as a scaling of fa
         fv3 = SCCFV*
-     +  4.4 /( (1. - (dotProduct(qTilde, qTilde)/710000.))**2)
-        fa3 = SCCFA * 0.15 * fa 
+     +  (-1.) /( (1. - (dotProduct(qTilde, qTilde)/710000.))**2)
+        fa3 = SCCFA * fa 
         
 c  terms from free nucleon tensor
         h1 = fa**2 *(1.0 + tau) + tau*(f1 + f2)*(f1 + f2)

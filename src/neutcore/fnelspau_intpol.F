@@ -203,9 +203,9 @@ C
 
       lenpath = lenstr(crstblpath)
 
-      if (MDLQE/100 .EQ. 4 .AND. (numbndp .eq. 6 .or. 
+      if (mod(MDLQE, 1000)/100 .EQ. 4 .AND. (numbndp .eq. 6 .or. 
      &    numbndp .eq. 8 .or. numbndp .eq. 26)) then
-c      if (MDLQE/100 .EQ. 4) then
+c      if (mod(MDLQE, 1000)/100 .EQ. 4) then
         if (iloadsfqecrs.ne.0) goto 300
       else
         if (iloadqecrs.ne.0) goto 100
@@ -216,9 +216,9 @@ c      if (MDLQE/100 .EQ. 4) then
 *******  Spectral function implementation *****
 * A.Furmanski - 2013
 *
-      if (MDLQE/100 .EQ. 4 .AND. (numbndp .eq. 6 .or. 
+      if (mod(MDLQE, 1000)/100 .EQ. 4 .AND. (numbndp .eq. 6 .or. 
      &    numbndp .eq. 8 .or. numbndp .eq. 26)) then
-c       if (MDLQE/100 .EQ. 4) then
+c       if (mod(MDLQE, 1000)/100 .EQ. 4) then
 c ----- load xsec table required
         DUMSTR = 'qelSfData/totXsec/'
         if (IPAR .EQ. 14) then
@@ -338,7 +338,7 @@ C
       end if
 
 
-      if (MDLQE/100.eq.1) THEN
+      if (mod(MDLQE, 1000)/100.eq.1) THEN
          DUMSTR = DUMSTR(1:23) // '_trcor.dat'
          print*, ' with Bodek transverse enhancement'
       else

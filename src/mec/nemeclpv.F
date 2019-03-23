@@ -26,7 +26,7 @@
 *     (Creation Date and Author)
 *       2013.02.26 ; P.Sinclair (based on NEELSLPV)
 *       2013.08.23 ; P.Sinclair Added extension up to Enu=30GeV
-*  
+*       2014.01.15 ; A.Redij Added extension of different target  
 ************************************************************************
       IMPLICIT NONE
 #include "necard.h"
@@ -45,17 +45,18 @@ C  Lookup function return interger bin labels for a given Enu
       REAL XSECMAX
       REAL EXTPLT
 C  Array to store xsecs at Enu bin edges 
-      REAL XSECBINS_INPUT(2,31,31)
+      REAL XSECBINS_INPUTL(2,31,31)
+      REAL XSECBINS_INPUT(2,31,31)	
       REAL XSECBINS(2,31,31) 
 C  Array to store interpolated xsec at precise Enu
       REAL XSEC(31,31)
       REAL XSECVAL
-      REAL ETABLE(92),PTABLE(31),TTABLE(31)
+      REAL ETABLE(92),PTABLE(31),PTABLEL(31),TTABLE(31)
       REAL P,T,HIT
 C  Maximum and minimum possible values of Tmu and cos(thetaMu). Maximum Pmu somewhat arbitrarily defined here.
       REAL PMAX, PMIN, TMAX, TMIN
       INTEGER NEVALS, NPVALS, NTVALS
-      REAL LEPMOM, LEPMASS, Q
+      REAL LEPMOM, LEPMASS, Q,QL
 C Some variables for the filename formatting
       INTEGER EINTLEN, NUINTLEN
       CHARACTER*80 FILEFORM
@@ -64,13 +65,21 @@ C Some variables to make bin interpolation more intelligible
       REAL X1_LOWE, X1_HIGHE, X2_LOWE, X2_HIGHE
       REAL PEVAL, TEVAL
 C Variable to input correct file for atom
-      CHARACTER*3 ATOMSTRING
+      CHARACTER*4 ATOMSTRINGL
 C Variables for high energy extension
       REAL Q3MAX_DATA 
       REAL Q3MAX
-      REAL PMAX_DATA,PMIN_DATA,TMAX_DATA,TMIN_DATA
+      REAL PMAX_DATA,PMIN_DATA,TMAX_DATA,TMIN_DATA,PMAX_DATA_L
       REAL Q3THROW
-
+C Array of atomic mass number for which the cross-section tables are available.
+      INTEGER*4 ATABLE(3)
+      DATA ATABLE/12,16,40/
+      INTEGER*4 IAM
+      INTEGER*4 AMASS
+C  Weight to scale the cross-section table for given value of Atomic mass
+      REAL WEIGHT
+ 
+       
 C NOTE: throughout this code: E = neutrino energy, P = Tmu (muon kinetic energy), T = cos(thetaMu) (neutrino-muon opening angle)
 
       NEVALS=92
@@ -115,20 +124,54 @@ C Interpolation code has problems if neutrino energy is exactly equal to the kin
         ENEU=1.5000001
       ENDIF
 
+C AMASS is mass number of target element.  Check if the elements is C12, O16 or Ca40 for which tables are available set IAM to 0. If not, identify the elements on either side of the target element for interpolation. Set IAM =1 if atomic mass number of the element is between C12 and O16 and IAM to 2 if its greater than O16. 
+      
+       AMASS=NUMBNDP+NUMBNDN
+        
+       IF(AMASS.EQ.12 .OR. AMASS.EQ.16 .OR. AMASS.EQ.40) THEN 
+       IAM=0 
+       GOTO 11
+       ENDIF
+       DO 10 J=1,2
+         IF((AMASS.GE.ATABLE(J))
+     $        .and.  
+     $        (AMASS.LT.ATABLE(J+1))) THEN
+            IAM = J
+            GOTO 10
+         ELSE IF(AMASS.GE.ATABLE(3))THEN
+            IAM=3
+            
+         ENDIF
+ 10    CONTINUE           
+ 11    CONTINUE
+    
+      IF(IAM.EQ.1)WEIGHT=REAl(AMASS)/REAL(ATABLE(1))
+      IF(IAM.EQ.2)WEIGHT=REAL(AMASS)/REAL(ATABLE(2))
+      IF(IAM.EQ.3)WEIGHT=REAL(AMASS)/REAL(ATABLE(3))
+      IF(IAM.EQ.0)WEIGHT=1.0
+            
+
 C Set Q value. This is an energy related to the difference between initial and final nuclear state in Nieves code. Card coded numbers come from values used by Nieves
 
-      IF((IPMODE(1).gt.0).and.(NUMBNDP.eq.8).and.(NUMBNDN.eq.8)) THEN
+
+      IF((IPMODE(1).gt.0).and.(((NUMBNDP.eq.8).and.(NUMBNDN.eq.8)).OR.IAM.eq.2)) THEN
 C neutrino on o16
       Q=0.014906
-      ELSE IF((IPMODE(1).gt.0).and.(NUMBNDP.eq.6).and.(NUMBNDN.eq.6)) THEN
+      ELSE IF((IPMODE(1).gt.0).and.(((NUMBNDP.eq.6).and.(NUMBNDN.eq.6)).OR.IAM.eq.1)) THEN
 C neutrino on c12
       Q=0.016827
-      ELSE IF((IPMODE(1).lt.0).and.(NUMBNDP.eq.6).and.(NUMBNDN.eq.6)) THEN
+      ELSE IF((IPMODE(1).lt.0).and.(((NUMBNDP.eq.6).and.(NUMBNDN.eq.6)).OR.IAM.eq.1 )) THEN
 C antineutrino on c12
       Q=0.013880
-      ELSE IF((IPMODE(1).lt.0).and.(NUMBNDP.eq.8).and.(NUMBNDN.eq.8)) THEN
+      ELSE IF((IPMODE(1).lt.0).and.(((NUMBNDP.eq.8).and.(NUMBNDN.eq.8)).OR.IAM.eq.2 )) THEN
 C antineutrino on o16
       Q=0.010931
+      ELSE IF((IPMODE(1).gt.0).and.(((NUMBNDP.eq.20).and.(NUMBNDN.eq.20)).OR.IAM.eq.3 )) THEN
+C neutrino on ca40 
+      Q=0.013809 
+      ELSE IF((IPMODE(1).lt.0).and.(((NUMBNDP.eq.20).and.(NUMBNDN.eq.20)).OR.IAM.eq.3)) THEN
+C antineutrino on ca40 
+      Q=0.001822
       ELSE
         PRINT *,"ERROR IN nemeclpv.F: Unidentified neutrino or target."
         RETURN
@@ -166,12 +209,13 @@ C
 C First, get values at lower edge of Enu bin in which ENEU lies
 
       EINT=ELOOKUP(ENEU)
-
-      IF((NUMBNDP.eq.8).and.(NUMBNDN.eq.8)) ATOMSTRING="O16"
-      IF((NUMBNDP.eq.6).and.(NUMBNDN.eq.6)) ATOMSTRING="C12"
-
+      
 
 C    Some statements to unify formatting of xsec filenames
+      IF(IAM.EQ.1 .OR. AMASS.EQ.12) ATOMSTRINGL="C12"
+      IF(IAM.EQ.2 .OR. AMASS.EQ.16) ATOMSTRINGL="O16"
+      IF(IAM.EQ.3 .OR. AMASS.EQ.40) ATOMSTRINGL="Ca40"
+
       IF(ABS(IPMODE(1)).LT.10) NUINTLEN=1
       IF(ABS(IPMODE(1)).GT.9) NUINTLEN=2
       IF(ABS(IPMODE(1)).GT.99) NUINTLEN=3
@@ -180,24 +224,34 @@ C    Some statements to unify formatting of xsec filenames
       IF(EINT.LT.10) EINTLEN=1
       IF(EINT.GT.9) EINTLEN=2
       IF(EINT.GT.99) EINTLEN=3
-
-      WRITE(FILEFORM,'(A5,I1,A11,I1,A4)')
-     & '(A7,I',NUINTLEN,',A1,A3,A1,I',EINTLEN,',A4)'
+      
 
 C Now get xsec data from tables
-      WRITE(FILENAME,FILEFORM)
-     $      'Nieves_', IPMODE(1),'_',ATOMSTRING,'_',EINT, '.dat'
 
+      IF(IAM.EQ.3 .OR. AMASS.EQ.40)THEN
+      WRITE(FILEFORM,'(A5,I1,A11,I1,A4)')
+     & '(A7,I',NUINTLEN,',A1,A4,A1,I',EINTLEN,',A4)'
+      ELSE
+      WRITE(FILEFORM,'(A5,I1,A11,I1,A4)')
+     & '(A7,I',NUINTLEN,',A1,A3,A1,I',EINTLEN,',A4)'
+      ENDIF
+
+      WRITE(FILENAME,FILEFORM)
+     $      'Nieves_',IPMODE(1),'_',ATOMSTRINGL,'_',EINT, '.dat'
+
+      
 C Get values from file 
-      OPEN(unit=2,file=FILENAME)
+      OPEN(unit=21,file=FILENAME)
       DO 220 I=1,NTVALS
         DO 230 J=1,NPVALS
-          READ(2,*)
-     $      TEMP0,TEMP1,TEMP2,XSECBINS_INPUT(1,I,J)
+          READ(21,*)
+     $    TEMP0,TEMP1,TEMP2,XSECBINS_INPUTL(1,I,J)
+C   Scale the value for resp. target.
+          XSECBINS_INPUT(1,I,J)=XSECBINS_INPUTL(1,I,J)*WEIGHT
  230    continue
  220  continue
 
-      CLOSE(2)
+      CLOSE(21)
 
 C Now get values from file containing xsec at upper edge of Enu bin 
 C (or lower edge of bin above, if xsec is to be extrapolated outside range of Enu for which we have data)
@@ -206,23 +260,28 @@ C (or lower edge of bin above, if xsec is to be extrapolated outside range of En
       IF((EINT+1).GT.9) EINTLEN=2
       IF((EINT+1).GT.99) EINTLEN=3
 
+      IF(IAM.EQ.3 .OR. AMASS.EQ.40)THEN
+      WRITE(FILEFORM,'(A5,I1,A11,I1,A4)')
+     & '(A7,I',NUINTLEN,',A1,A4,A1,I',EINTLEN,',A4)'
+      ELSE
       WRITE(FILEFORM,'(A5,I1,A11,I1,A4)')
      & '(A7,I',NUINTLEN,',A1,A3,A1,I',EINTLEN,',A4)'
+      ENDIF
 
       WRITE(FILENAME,FILEFORM)
-     $      'Nieves_', IPMODE(1),'_',ATOMSTRING,'_',(EINT+1), '.dat'
-
-      OPEN(unit=3,file=FILENAME)
-
+     $      'Nieves_', IPMODE(1),'_',ATOMSTRINGL,'_',(EINT+1), '.dat'
+     
+      OPEN(unit=31,file=FILENAME)
       DO 320 I=1,NTVALS
         DO 330 J=1,NPVALS
-           READ(3,*)
-     $      TEMP0,TEMP1,TEMP2,XSECBINS_INPUT(2,I,J)
+           READ(31,*)
+     $      TEMP0,TEMP1,TEMP2,XSECBINS_INPUTL(2,I,J)     
+C   Scale the value for resp. target.
+	   XSECBINS_INPUT(2,I,J)=XSECBINS_INPUTL(2,I,J)*WEIGHT
  330    continue
  320  continue
 
-      CLOSE(3)
-
+      CLOSE(31)
 C 
 C -------------------------------------------------------------
 C
@@ -236,6 +295,8 @@ C Make list of Tmu, cosThetaMu values at this energy
       DO 336 I=1,NPVALS
         PTABLE(I) = PEVAL(I,ENEU,PMIN_DATA,PMAX_DATA,NPVALS)
  336  CONTINUE
+
+       
 C
 C Linear interpolation of cross-section to precise value at ENEU
 C ------------------------------------------------------------

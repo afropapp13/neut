@@ -26,7 +26,9 @@
 *                    Even if PFSURF is 0.225(GeV/c), 
 *                           fnelspau_intpol is used.
 C       2013.04.13 ; Y. Hayato
-C                    Support spectral function function      
+C                    Support spectral function function 
+C       2013.12.30   A. Redij
+C		     Support for RPA correction
 *
 ************************************************************************
 
@@ -37,16 +39,21 @@ C                    Support spectral function function
 
       real E
       integer IPAR
-      real     fnelspau_intpol,fnelspau_sf
-      external fnelspau_intpol,fnelspau_sf
+      real     fnelspau_intpol,fnelspau_sf,fnels_erpascl
+      external fnelspau_intpol,fnelspau_sf,fnels_erpascl
 
-      if ((MDLQE/400 .EQ. 1).and.(MDLQE.lt.500) 
+      if ((mod(MDLQE, 1000)/400 .EQ. 1) 
      & .AND. (numbndp .eq. 6 .or. 
      &    numbndp .eq. 8 .or. numbndp .eq. 26)) then
          FNELSPAU_SELECT = fnelspau_sf(E, IPAR)
       else
          FNELSPAU_SELECT = fnelspau_intpol(E, IPAR)
       endif
+      
+      if (mod(MDLQE, 10000)/1000 .EQ. 1)then
+         FNELSPAU_SELECT =FNELSPAU_SELECT*fnels_erpascl(E,IPAR)
+      endif
+   
       
       return
       end

@@ -31,9 +31,9 @@ void clenshaw_curtis_compute_nd ( int dim_num, int order_1d[], double point[],
 void clenshaw_curtis_set ( int order, double xtab[], double weight[] );
 void comp_next ( int n, int k, int a[], bool *more, int *h, int *t );
 void compnz_next ( int n, int k, int a[], bool *more );
-void dtable_close_write ( ofstream &output );
-void dtable_data_write ( ofstream &output, int m, int n, double table[] );
-void dtable_header_write ( char *output_filename, ofstream &output, int m, 
+void dtable_close_write ( ofstream *);
+void dtable_data_write ( ofstream *, int m, int n, double table[] );
+void dtable_header_write ( char *output_filename, ofstream *, int m, 
   int n );
 void dtable_write ( char *output_filename, int m, int n, double table[], 
   bool header );

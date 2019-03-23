@@ -24,8 +24,8 @@ LIBDIRS =     -L${COREDIR} -L../../lib/Linux_pc -L../nuccorspl/Linux_pc \
                        -L../nuceff/Linux_pc -L../partnuck/Linux_pc \
                        -L../skmcsvc/Linux_pc -L../specfunc -L../specfunc/Linux_pc
 
-NEUTCOREVER	= 5.3.1
-INEUTCOREVER= 531
+NEUTCOREVER	= 5.3.2
+INEUTCOREVER= 532
 
 NUCEFFVER   = 5.3.1
 INUCEFFVER  = 531
@@ -39,8 +39,8 @@ IPARTNUCKVER= 505
 SKMCSVCVER  = 5.0.5
 ISKMCSVCVER = 505
 
-SPECFUNCVER  = 5.3.1
-ISPECFUNCVER = 531
+SPECFUNCVER  = 5.3.2
+ISPECFUNCVER = 532
 
 FORTRANDEFINES += -DNECORE_VERSION=$(INEUTCOREVER)
 FORTRANDEFINES += -DNENUCE_VERSION=$(INUCEFFVER)

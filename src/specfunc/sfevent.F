@@ -58,6 +58,9 @@ C ----- masses
         double precision outNucleonMass
         common /masses/ leptonMass, inNucleonMass, outNucleonMass
 
+C        double precision dQQ
+        REAL dQQ
+
 C ----- 4-vectors
         double precision k(4), kPrime(4), p(4), pPrime(4)
         double precision q(4), qTilde(4)
@@ -82,8 +85,10 @@ C ----- when calculating tables or total cross-sections
 
 C ----- external functions
         double precision modMomentum, LH, dotProduct, maxDiff
-        real RLU
-        external modMomentum, LH, dotProduct, RLU, maxDiff
+
+        real RLU, FNELS_RPASCL
+        external modMomentum, LH, dotProduct, RLU, maxDiff, 
+     &  FNELS_RPASCL
 C ----- parameters        
         double precision Gf, cosThetaC, Pi
 
@@ -347,6 +352,15 @@ c ----- turn cross-sections into per-nucleon cross-sections in cm^2
         crossSection = crossSection * 3.89E-22
 
 
+c ----- RPA correction to dsigma/dQ2 spectrum.
+c ----- Not fully clear whether this is double counting effects.
+c ----- Not used for total cross-section calculation, only vector generation
+        if ((mod(MDLQE,10000)/1000 .eq. 1)
+     &     .and.(single .eqv. .TRUE.)) then
+           dQQ = REAL(dotProduct(q,q)/(-1.e6))
+           crossSection=crossSection*FNELS_RPASCL(dQQ,IPAR)
+        endif
+
 c sent straight here if event is impossible
 20      continue
         if (nc .EQV. .FALSE.)then
@@ -378,10 +392,12 @@ c            write (*,*) "max = ",maxValueNC(1), maxValueNC(2)
           endif
 c event complete - go back to start to generate more
           goto 10
+        
+
 
 C ----- for event generation -  compare to value loaded from xsec table
 c ----- 1% factor reduces efficiency but avoids errors from interpolation
-       else if (crossSection*1E38 .LT. RLU(dummy)*tableMax*1.01) then
+       else if (crossSection*1E38 .LT. RLU(dummy)*tableMax*1.05) then
          goto 10
        endif
 

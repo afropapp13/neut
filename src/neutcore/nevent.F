@@ -127,7 +127,7 @@ C --      ELASTIC PROCESS IN O16
 C
 
 C --      Use spectral function
-           IF (MDLQE / 100 .EQ. 4) then
+           IF (mod(MDLQE, 1000) / 100 .EQ. 4) then
                CALL SFEVENT(IPAR,E,DIRNEU,IERR,.TRUE.,mode,first)
            ELSE
                CALL NEELSVCP(IPAR,E,DIRNEU,IERR)
@@ -222,7 +222,7 @@ C
 C
 C --           N.C. ELASTIC PROCESS IN O16
 
-               if (MDLQE / 100 .EQ. 4) then
+               if (mod(MDLQE, 1000) / 100 .EQ. 4) then
 c               use spectral function               
                  CALL SFEVENT(IPAR,E,DIRNEU,IERR,.TRUE.,mode,first)
                else

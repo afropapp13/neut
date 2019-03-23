@@ -48,6 +48,7 @@ namespace rew   {
    double CalcChisq      (void);
 
    // various config options
+   void SetModeEnu  (double aModeEnu) { fModeEnu = aModeEnu; }
    void RewNue      (bool tf ) { fRewNue     = tf;   }
    void RewNuebar   (bool tf ) { fRewNuebar  = tf;   }
    void RewNumu     (bool tf ) { fRewNumu    = tf;   }
@@ -58,6 +59,9 @@ namespace rew   {
    void   Init                (void);
    double CalcWeightPilessDcy ();
 
+   double fModeEnu;      ///< 0: Apply to all energies and weight all events (Default)
+                         ///< fModeEnu>0: Apply to Enu<fModeEnu[GeV] and weight all events
+                         ///< fModeEnu<0: Apply to Enu<-fModeEnu[GeV] and weight only PDD events
    bool   fRewNue;       ///< reweight nu_e CC?
    bool   fRewNuebar;    ///< reweight nu_e_bar CC?
    bool   fRewNumu;      ///< reweight nu_mu CC?

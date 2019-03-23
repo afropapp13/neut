@@ -294,6 +294,12 @@ double NReWeightCasc::CalcWeight()
   else
     old_xsec = fsihist_.fsiprob;
 
+  if (old_xsec<=0) {
+    cout << "NReWeightCasc() Warning: evpiprob old_xsec <= 0, returning weight = 1" << endl;
+    return 1;
+  }
+
+
 #ifdef _N_REWEIGHT_CASC_DEBUG_
   cout << "FSI Probability (old) = " << old_xsec << endl;
   fortFns->evpiprob();
@@ -323,13 +329,13 @@ double NReWeightCasc::CalcWeight()
   float new_xsec   = fortFns->evpiprob();
 
   // evpiprob not passing properly with g77 64-bit so grab from common block
-  //#if defined(f2cFortran)&&!defined(gFortran)
+#if defined(f2cFortran)&&!defined(gFortran)
   //if (new_xsec) {
   //cout << "NReWeightCasc() Error: new_xsec=" << new_xsec << " when 0 expected for g77 compiled Fortran code on 64-bit machine" << endl;
   //exit (-1);
   //}
   new_xsec = fsihist_.fsiprob;
-  //#endif
+#endif
   float new_weight = (new_xsec/old_xsec);
 
 #ifdef _N_REWEIGHT_CASC_DEBUG_

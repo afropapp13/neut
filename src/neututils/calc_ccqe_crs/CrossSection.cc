@@ -1,17 +1,36 @@
+# include <cstdlib>
+# include <cmath>
+# include <iostream>
+# include <iomanip>
+# include <fstream>
+# include <ctime>
+
+using namespace std;
+
 # include "CrossSection.hh"
-# include "clenshaw_curtis.cc"
-# include "bbba07.cc"
+# include "clenshaw_curtis.hh"
+//# include "bbba07.cc"
 
 //#define DEBUG
 
-CrossSection::CrossSection(double Pfermi, int nu_type, int nu_sign)
+extern "C"{
+  double bbba05_(double *,double *,double *,double *,double *);
+  int bbba07_(double *x, 
+			  double *gep, double *gmp, double *gen, double *gmn);
+
+}
+
+extern double faBBBA07(double,double);
+
+
+CrossSection::CrossSection(double Pfermi, int nu_type, int nu_sign, double XAmass)
   : PFermi(Pfermi), ITYPE(nu_type), NUSIG(nu_sign)
 {
 #ifdef DEBUG
   cout << "Neutrino type= " << ITYPE << " : " << NUSIG 
        << ", Fermi momentum= " << PFermi << endl;
 #endif
-  Initialize();
+  Initialize(XAmass);
 }
 CrossSection::~CrossSection(){}
 
@@ -38,6 +57,10 @@ double CrossSection::DifferentialCrossSection(const double energy) {
   double COX, DSIG;
   double PFn;
 
+  double Q2GEV;
+
+  double GPE,GPM,GNE,GNM;
+
   DSIG = 0.;
   EL = 0.;
 
@@ -59,8 +82,23 @@ double CrossSection::DifferentialCrossSection(const double energy) {
   Q2EF = Q*Q - WEF*WEF - DMN;
 
   //--- Form factor
-  FGE = pow(1. + Q2/7.1e+5, -2.);
-  FGM = (1. + 3.71)*FGE;
+  if (V_FF_model == 1){
+	Q2GEV = Q2*1.e-6;
+	bbba05_(&Q2GEV,&GPE,&GPM,&GNE,&GNM);
+	FGE=GPE-GNE;
+	FGM=GPM-GNM;
+  }else if (V_FF_model == 2){
+	Q2GEV = Q2*1.e-6;
+	bbba07_(&Q2GEV,&GPE,&GPM,&GNE,&GNM);
+	FGE=GPE-GNE;
+	FGM=GPM-GNM;
+  }else if (V_FF_model == 0){
+	FGE = pow(1. + Q2/7.1e+5, -2.);
+	FGM = (1. + 3.71)*FGE;
+  }else {
+	cout << "Unknown V_FF_model parameter " << V_FF_model << endl;
+	exit(2);
+  }
 
   if (Trans_Corr == 1){
 	FGM = FGM * sqrt( 1 + 6.0 * Q2 /1.e+6 * exp( -1.*Q2/1.e+6/.34 ) );
@@ -69,12 +107,13 @@ double CrossSection::DifferentialCrossSection(const double energy) {
   F1 = (FGE + Q2*FGM/(XMN*XMN)/4.) / (1. + Q2/(XMN*XMN)/4.);
   F2 = 0.5*(FGE-FGM)/XMN/(1.+Q2/(XMN*XMN)/4.);
 
-  if (FF_model == 0) {
+  if (A_FF_model == 0) {
 	//    FA = -1.232*pow(1.+Q2/(Maxial*Maxial), -2.);
-	FA = -1.267*pow(1.+Q2/(Maxial*Maxial), -2.);
-  } else if (FF_model == 1) {
-    FA = faBBBA07(Q2/1.e+6);
+	FA = -1.267*pow(1.+Q2/(XMaxial*XMaxial), -2.);
+  } else if (A_FF_model == 1) {
+    FA = faBBBA07(Q2/1.e+6,XMaxial/1.e3);
   }else{
+	cout << "Unknown A_FF_model parameter " << A_FF_model << endl;
 	exit(1);
   }
   FP = 2.*XMN*FA/(Q2 + 139.57*139.57);

@@ -55,8 +55,8 @@ c ----- nc array second index is proton(1)/neutron(2)
         endif
 
 c ----- filename:
-        write (fileName, "(A33,A2,A4)") "qelSfData/maxDiff/ALL_100000000
-     &0_",interaction,".csv"
+        write (fileName, "(A33,A2,A4)") 
+     $       "qelSfData/maxDiff/ALL_1000000000_",interaction,".csv"
 
 c ----- open file
         open(99, file=fileName, status='old')

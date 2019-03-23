@@ -63,6 +63,8 @@ void NReWeightNuclPiless::Init(void)
 {
   fortFns = NFortFns::Instance();
 
+  this->SetModeEnu(0);
+
   this->RewNue    (true);
   this->RewNuebar (true);
   this->RewNumu   (true);
@@ -172,15 +174,23 @@ double NReWeightNuclPiless::CalcWeightPilessDcy()
   
   double new_weight = 1;
   
+  // Calculate neutrino energy
+  float Enu = 0;  // GeV
+  for (int i=0; i<3; i++)
+    Enu += nework_.pne[0][i]*nework_.pne[0][i];
+  Enu = sqrt(Enu);
+
   // Find Pionless Delta decay events
   if (nework_.ipne[3]==kPdgP33m1232_DeltaPP || nework_.ipne[3]==kPdgP33m1232_DeltaP
 	|| nework_.ipne[3]==kPdgP33m1232_Delta0 || nework_.ipne[3]==kPdgP33m1232_DeltaM) {
-
-    new_weight = fPilessDcyCurr/fPilessDcyDef;
     
-  } else {
-
-    new_weight = (1-fPilessDcyCurr)/(1-fPilessDcyDef);
+    if (fabs(fModeEnu)<0.001 || Enu<fabs(fModeEnu)) 
+      new_weight = fPilessDcyCurr/fPilessDcyDef;
+    
+  } else if (fModeEnu>=0) {
+    
+    if (fabs(fModeEnu)<0.001 || Enu<fabs(fModeEnu)) 
+      new_weight = (1-fPilessDcyCurr)/(1-fPilessDcyDef);
     
   }
   

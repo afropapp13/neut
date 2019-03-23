@@ -33,12 +33,12 @@
 *       2000.09.05 ; K.Kaneyuki COMMENT OUT   IF(KP.GE.3) GO TO 220
 *       2000.09.14 ; K.Kaneyuki FNNUCL(PFABS) -> FNNUCLPF
 *       2001.03.03 ; Y.Hayato   create neelslvp.F to return P_nucl
+*       2013.11.19 ; A.Redij RPA correction added to CCQE cross-section
 *
 ************************************************************************
       IMPLICIT NONE
 #include "necard.h"
 #include "neutparams.h"
-
       REAL    ENEU,AMIN,AMOUT
       INTEGER IPAR,IERR,iplep,i,ilast,loop
 
@@ -51,8 +51,8 @@ C      real    phi,pabs,eabs
       
 C      real    fnq2max,fnnucl,rlu
 C      external fnq2max,fnnucl,rlu
-      real    fnq2max,fnnpot,rlu
-      external fnq2max,fnnpot,rlu
+      real    fnq2max,fnnpot,rlu, fnels_rpascl
+      external fnq2max,fnnpot,rlu, fnels_rpascl 
 
       REAL PF(3),PNEU(3),EV(3),DNEU(3),PLEP(3),ENF
 C      real      DLEP(3),PNP(3)
@@ -147,6 +147,11 @@ C
          BMAX=0.
          BLAST=0.E+0
          FNNUCLPF=FNNPOT(1,PFABS)
+
+C For RPA correction to CCQE cross-section, QE amplitude is scaled by the ratio of (rpa corrected CCQE/CCQE)cross-section
+C FNELSPAU_RPASCL(Q2,IPAR) returns this ratio given, Q**2 and neutrino type for repective target element.
+C The function will return 1 when RPA effect is disabled through neut.card.
+C
 C     
 C     --  SEARCH PEAK ROUGHLY
 C     
@@ -158,7 +163,7 @@ C
             IF(ABS(COST).GT.1.)GO TO 10
             DBLE0=ENSTOP
             DBLQ2=Q2
-            AMP=DNELSQ2(DBLE0,IPAR,DBLQ2)
+            AMP=DNELSQ2(DBLE0,IPAR,DBLQ2)*FNELS_RPASCL(Q2,IPAR)
             IF (BMAX.LT.AMP) BMAX=AMP
             IF (AMP.LT.BLAST) GOTO 20
             BLAST=AMP
@@ -177,7 +182,7 @@ C
          ELSE
             DBLE0=ENSTOP
             DBLQ2=Q2
-            AMP=DNELSQ2(DBLE0,IPAR,DBLQ2)
+            AMP=DNELSQ2(DBLE0,IPAR,DBLQ2)*FNELS_RPASCL(Q2,IPAR)
          ENDIF
          IF (AMP.GT.BLAST) THEN
 C     
@@ -193,7 +198,7 @@ C
                IF(ABS(COST).GT.1.)GO TO 30
                DBLE0=ENSTOP
                DBLQ2=Q2
-               AMP=DNELSQ2(DBLE0,IPAR,DBLQ2)
+               AMP=DNELSQ2(DBLE0,IPAR,DBLQ2)*FNELS_RPASCL(Q2,IPAR)
                IF (BMAX.LT.AMP) BMAX=AMP
                IF (AMP.LT.BLAST) GOTO 50
                BLAST=AMP
@@ -210,7 +215,7 @@ C
                IF(ABS(COST).GT.1.)GO TO 40
                DBLE0=ENSTOP
                DBLQ2=Q2
-               AMP=DNELSQ2(DBLE0,IPAR,DBLQ2)
+               AMP=DNELSQ2(DBLE0,IPAR,DBLQ2)*FNELS_RPASCL(Q2,IPAR)
                IF (BMAX.LT.AMP) BMAX=AMP
                IF (AMP.LT.BLAST) GOTO 50
                BLAST=AMP
@@ -238,7 +243,9 @@ C     DO 100 LOOP=1,1000000
          Q2=RLU(DUM)*Q2MAXX
          DBLQ2=Q2
          HIT=RLU(DUM)*BMAX
-         SIGMA=DNELSQ2(DBLE0,IPAR,DBLQ2)
+
+         
+         SIGMA=DNELSQ2(DBLE0,IPAR,DBLQ2)*FNELS_RPASCL(Q2,IPAR)
          IF (SIGMA.GT.HIT) THEN
             
             PHIANG=6.283*RLU(DUM)
@@ -249,6 +256,7 @@ C     DO 100 LOOP=1,1000000
                DSGN=-1.D0
             ENDIF
 
+            
             PNEULAB(1)=ENEU
             PNEULAB(2)=0.
             PNEULAB(3)=0.
@@ -483,6 +491,8 @@ C            IF ((abs(EINIT+FNNUCLPF-(EFINAL+FNNUCL(PNFABS)))*1000
             PNUC(2)=PNF(2)
             PNUC(3)=PNF(3)
 
+
+
 C           write(*,*) '---------------------------------------'
 C           write(*,'(A10,F12.8,A,F12.8,A,F12.8,A,F12.8)') 
 C    $           'OUTLEP=(',PLEP(1),',',PLEP(2),',',PLEP(3),
@@ -508,6 +518,6 @@ C     ++ ERROR RETURN
 C     
  9000 WRITE(6,900)
  900  FORMAT(' ***ERROR IN NEELSLPV(NOT ENOUGH NEUTRINO ENERGY)***')
-      IERR=1
+      IERR=1 
       RETURN
       END

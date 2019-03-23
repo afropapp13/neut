@@ -24,17 +24,12 @@
 C     
 C     
 C------------------------------------------------------------------
-C     2013.01.25  A.Redij - if Atomic mass number ANUM is given,
-C     X-section can be interpolated for desired value of ANUM,
-C     from available data for Carbon and oxygen. 
-C     At present this feature is disabled and only X-section 
-C     values for C12 and O16 is returned; For rest of the elements it returns zero
-C     
+C     2013.01.25  A.Redij - if Atomic mass number ANUM is given,mec
+C     X-section is interpolated for desired value of ANUM,
+C     from available data for Carbon and oxygen, Calcium. 
 C     Cross-section tables available for 
-C     nue C12 O16, 
-C     nuebar C12 O16,
-C     numu C12,O16 
-C     numubar C12 O16
+C     nue, nuebar, numu, numubar 
+C     C12 O16,Ca40 
 C     
 C     
 C     
@@ -127,6 +122,7 @@ C     Cross-section files are read only once
       IDTAG=1
 
 C-----------------------------------------------------------------
+C Read data first time the function is called.
       DUMSTR=CRSTBLPATH(1:lenpath)//DUMSTR
       print*, 'MEC cross-section read from file: ', 
      $     DUMSTR(1:LENSTR(DUMSTR))
@@ -152,10 +148,9 @@ C-----------------------------------------------------------------
          read(LUN,*) IDUM,RDUM,CRSMLE(1,i),CRSMLE(2,i),CRSMLE(3,i)
          
          if ( abs(RDUM-EE1(I)).gt.0.001 ) then
-            write(*,*) 'Cross-section table seems to be corrupted.',RDUM , EE1(I)
+            write(*,*) 'npnh Cross-section table seems to be corrupted.',RDUM , EE1(I)
             stop
          endif
-C     print*, 'debug:CRSMLM',i,CRSMLM(1,i),CRSMLM2(2,i),CRSMLM3(3,i)
          
       enddo
 
@@ -165,10 +160,9 @@ C     print*, 'debug:CRSMLM',i,CRSMLM(1,i),CRSMLM2(2,i),CRSMLM3(3,i)
          read(LUN,*) IDUM,RDUM,CRSMRE(1,i),CRSMRE(2,i),CRSMRE(3,i)
          
          if ( abs(RDUM-EE1(I)).gt.0.001 ) then
-            write(*,*) 'Cross-section table seems to be corrupted.'
+            write(*,*) 'npnh Cross-section table seems to be corrupted.'
             stop
          endif
-C     print*, 'debug:CRSMRE',i,CRSMRE(1,i),CRSMRE(2,i),CRSMRE(3,i)
          
       enddo
 *     numu 
@@ -177,10 +171,9 @@ C     print*, 'debug:CRSMRE',i,CRSMRE(1,i),CRSMRE(2,i),CRSMRE(3,i)
          read(LUN,*) IDUM,RDUM,CRSMLM(1,i),CRSMLM(2,i),CRSMLM(3,i)
          
          if ( abs(RDUM-EE1(I)).gt.0.001 ) then
-            write(*,*) 'Cross-section table seems to be corrupted.'
+            write(*,*) 'npnh Cross-section table seems to be corrupted.'
             stop
          endif
-C     print*, 'debug:CRSMLM1',i,CRSMLM(1,i),CRSMLM(2,i),CRSMLM(3,i)
          
       enddo
 
@@ -189,10 +182,9 @@ C     print*, 'debug:CRSMLM1',i,CRSMLM(1,i),CRSMLM(2,i),CRSMLM(3,i)
          read(LUN,*) IDUM,RDUM,CRSMRM(1,i),CRSMRM(2,i),CRSMRM(3,i)
          
          if ( abs(RDUM-EE1(I)).gt.0.001 ) then
-            write(*,*) 'Cross-section table seems to be corrupted.'
+            write(*,*) 'npnh Cross-section table seems to be corrupted.'
             stop
          endif
-C     print*, 'debug:CRSMLM1',i,CRSMRM(1,i),CRSMRM(2,i),CRSMRM(3,i)
          
       enddo
       
@@ -202,9 +194,7 @@ C     print*, 'debug:CRSMLM1',i,CRSMRM(1,i),CRSMRM(2,i),CRSMRM(3,i)
       write(*,*) 'Completed npnh cross-section loading.'
  100  continue
 C--------------------------------------------------------------------
-      NUMTAR = NUMBNDN+NUMBNDP
-
-
+C initialise variables.
       WeightEnu=0.
       WeightA=0.
       ii=0
@@ -212,27 +202,11 @@ C--------------------------------------------------------------------
       CRSLOW=0.
       CRSHIG=0.
 C---------------------------------------------------------------------
-
-C     check if the nucleus is isoscaler, if not return 0.      
-      if(NUMBNDN.ne.NUMBNDP) then
-         return
-      endif
-
-C     Following condition will change depending on what is decided after meeting nieves
-C     when these conditions are removed this function will return interpolated value for given A.
-      if(iabs(ipar).eq.12 .AND.(NUMTAR.ne.12) .and.(NUMTAR.ne.16) ) then
-         write(*,*) 'Cross-section table not available for this mode.'
-         return
-      endif
-      if( iabs(ipar).eq.14 .AND. (NUMTAR.ne.12) .and. (NUMTAR.ne.16)) then
-         write(*,*) 'Cross-section table not available for this mode.'
-         return
-      endif
-
-C---------------------------------------------------------------------
-
+C return if Mass number less than 12 and heavier than 70
+      NUMTAR = NUMBNDN+NUMBNDP
 C     set weight for interpolation over A
-      if((NUMTAR.lt.MASSNUM(1)).or.(NUMTAR.gt.MASSNUM(3))) then
+      if((NUMTAR.lt.MASSNUM(1)).or.(NUMTAR.gt.70)) then
+         write(*,*) 'Cross-section table not available for this mode.'
          return
       endif
 
@@ -243,18 +217,16 @@ C     set weight for interpolation over A
      $        (NUMTAR.lt.MASSNUM(j+1))) then
             jj = j
             goto 10
-         else if(NUMTAR.eq.MASSNUM(3))then
+         else if(NUMTAR.ge.MASSNUM(3))then
             jj=2
          endif
  10   continue
       
       
+       WeightA  = (REAL(NUMTAR)-REAL(MASSNUM(jj)))
+     $     /(REAL(MASSNUM(jj+1))-REAL(MASSNUM(jj)))
 
-      WeightA
-     $     = (NUMTAR-MASSNUM(jj))
-     $     /(MASSNUM(jj+1)-MASSNUM(jj))
-
-
+        
 
 C-----------------------------------------------------------------------------------
       ii = 1

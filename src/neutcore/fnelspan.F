@@ -68,11 +68,11 @@ C
       IF (IPAR.LT.0) IPTEMP=-12
 
       NCELMODE = mod(MDLQE,100)/10
-      if (MDLQE/100 .EQ. 4 ) then
-        NCELMODE = mod(MDLQE,400)/10
+      if (mod(MDLQE, 1000)/100 .EQ. 4 ) then
+        NCELMODE = mod(mod(MDLQE, 1000),400)/10
       endif
 
-      if ((MDLQE/400 .EQ. 1).and.(MDLQE.lt.500) 
+      if ((mod(MDLQE, 1000)/400 .EQ. 1) 
      & .AND. (numbndp .eq. 6 .or. 
      &    numbndp .eq. 8.or. numbndp .eq. 26)) then
          FNELSPAN=FNELSPAN_SF(E,IPTEMP,INUC)

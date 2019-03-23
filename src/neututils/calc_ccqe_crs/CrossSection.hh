@@ -9,23 +9,23 @@ class CrossSection {
 
 public:
 
-  CrossSection(double Pfermi, int nu_type, int nu_sign);
+  CrossSection(double Pfermi, int nu_type, int nu_sign, double XAmass);
   ~CrossSection();
 
   int    SetParameters(const double energy, const double x, const double y);
   double TotalCrossSection(const double energy, const int nloop);
   double DifferentialCrossSection(const double energy);
-  void   Initialize();
+  void   Initialize(double xamass);
 
 private:
 
   double mass_lep, PFermi, Ebind;
-  double elep, coslep, Maxial;
+  double elep, coslep, XMaxial;
   double Nnum, Znum;
   double XM;
   int ITYPE, NUSIG;
   double kappa;
-  int FF_model;
+  int A_FF_model,V_FF_model;
   int Trans_Corr;
 };
 

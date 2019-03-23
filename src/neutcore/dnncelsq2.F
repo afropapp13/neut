@@ -111,7 +111,7 @@ C-------
       GVE=GPE-GNE
       GVM=GPM-GNM
 
-      if (MDLQE/100.eq.1) THEN
+      if (mod(MDLQE, 1000)/100.eq.1) THEN
          GVM = GVM * sqrt(1+TRCORA * Q2 * exp( SQ2 / TRCORB ))
       endif
 
