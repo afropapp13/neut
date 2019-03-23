@@ -1,6 +1,9 @@
-/* $Id: Package.def,v 1.1 2007-01-20 07:35:26 skrep Exp $
+/* $Id: Package.def,v 1.1.1.1 2016/11/04 20:29:56 mdunkman Exp $
  *
- * $Log: not supported by cvs2svn $
+ * $Log: Package.def,v $
+ * Revision 1.1.1.1  2016/11/04 20:29:56  mdunkman
+ * Import of NEUT 5.3.3 v1r27 for use with T2KReWeight v1r27 (Winter OA 2017)
+ *
  * Revision 1.6  2001/02/12 18:12:08  sharkey
  * Hack in the ugly KT_IS_E362 hack in the proper place, rather than setting
  * this in site.def like I'd done before.

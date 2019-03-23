@@ -22,7 +22,6 @@
 #include "NSystSet.h"
 
 using std::cout;
-using std::endl;
 
 using namespace neut;
 using namespace neut::rew;

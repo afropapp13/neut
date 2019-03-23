@@ -45,7 +45,6 @@ using namespace neut;
 using namespace neut::rew;
 
 using std::cout;
-using std::endl;
 //_______________________________________________________________________________________
 NReWeightNuXSecCOH::NReWeightNuXSecCOH() 
 {
@@ -166,7 +165,9 @@ double NReWeightNuXSecCOH::CalcWeight()
   //float old_weight = event.Weight();
 
   if (old_xsec==0) {
-    cout << "NReWeightNuXSecCOH::CalcWeight() Warning: old_xsec==0, setting weight to 1" << endl;
+#ifdef _N_REWEIGHT_COH_DEBUG_
+    cout << "NReWeightNuXSecCOH::CalcWeight() Warning: old_xsec==0, setting weight to 1" << '\n';
+#endif
     return 1;
   }
 
@@ -183,15 +184,17 @@ double NReWeightNuXSecCOH::CalcWeight()
   //float new_weight = old_weight * (new_xsec/old_xsec);
 
   if (isinf(new_weight) || isnan(new_weight)) {
-    cout << "NReWeightNuXSecCOH::CalcWeightMa() Warning: new_weight is infinite, setting to 1" << endl;
+#ifdef _N_REWEIGHT_COH_DEBUG_
+    cout << "NReWeightNuXSecCOH::CalcWeightMa() Warning: new_weight is infinite, setting to 1" << '\n';
+#endif
     new_weight = 1;
   }
 
 #ifdef _N_REWEIGHT_COH_DEBUG_
-  cout << "differential cross section (old) = " << old_xsec << endl;
-  cout << "differential cross section (new) = " << new_xsec << endl;
-  //cout << "event generation weight = " << old_weight << endl;
-  cout << "new weight = " << new_weight << endl;
+  cout << "differential cross section (old) = " << old_xsec << '\n';
+  cout << "differential cross section (new) = " << new_xsec << '\n';
+  //cout << "event generation weight = " << old_weight << '\n';
+  cout << "new weight = " << new_weight << '\n';
 #endif
 
   return new_weight;

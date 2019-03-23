@@ -37,9 +37,6 @@
 using namespace neut;
 using namespace neut::rew;
 
-using std::cout;
-using std::endl;
-
 //_______________________________________________________________________________________
 NReWeightNuXSecNC::NReWeightNuXSecNC() 
 {

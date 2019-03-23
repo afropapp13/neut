@@ -1,7 +1,10 @@
 *
-* $Id: structm.F,v 1.1 2007-01-20 07:09:42 skrep Exp $
+* $Id: structm.F,v 1.1.1.1 2016/11/04 20:31:29 mdunkman Exp $
 *
-* $Log: not supported by cvs2svn $
+* $Log: structm.F,v $
+* Revision 1.1.1.1  2016/11/04 20:31:29  mdunkman
+* Import of NEUT 5.3.3 v1r27 for use with T2KReWeight v1r27 (Winter OA 2017)
+*
 * Revision 1.1  2002/08/29 13:46:22  saji
 * Add modifications and corrections to GRV94 PDF according to
 * Bodek's paper[hep-ex/0203009].

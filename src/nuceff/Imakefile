@@ -1,4 +1,7 @@
-XCOMM  $Log: not supported by cvs2svn $
+XCOMM  $Log: Imakefile,v $
+XCOMM  Revision 1.1.1.1  2016/11/04 20:31:13  mdunkman
+XCOMM  Import of NEUT 5.3.3 v1r27 for use with T2KReWeight v1r27 (Winter OA 2017)
+XCOMM
 XCOMM  Revision 1.10  2007/11/05 22:53:20  skrep
 XCOMM  add efconv2roxy.F
 XCOMM

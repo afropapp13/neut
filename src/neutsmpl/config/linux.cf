@@ -1,6 +1,9 @@
-/* $Id: linux.cf,v 1.1 2007-01-20 07:35:40 skrep Exp $
+/* $Id: linux.cf,v 1.1.1.1 2016/11/04 20:29:56 mdunkman Exp $
  *
- * $Log: not supported by cvs2svn $
+ * $Log: linux.cf,v $
+ * Revision 1.1.1.1  2016/11/04 20:29:56  mdunkman
+ * Import of NEUT 5.3.3 v1r27 for use with T2KReWeight v1r27 (Winter OA 2017)
+ *
  * Revision 1.50  2003/02/21 18:25:05  mcgrew
  * Add the -lthreads to ExtraLibraries in sun.cf, and update linux.cf so
  * it can handle threads as well.  Also fix a couple of minor bugs in
@@ -272,7 +275,7 @@
  *
  */
 XCOMM platform:  $XConsortium: linux.cf,v 1.11 95/01/23 18:32:03 kaleb Exp $
-XCOMM $Id: linux.cf,v 1.1 2007-01-20 07:35:40 skrep Exp $
+XCOMM $Id: linux.cf,v 1.1.1.1 2016/11/04 20:29:56 mdunkman Exp $
 
 #ifndef OSName
 #  define OSName			Linux

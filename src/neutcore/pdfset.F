@@ -1,7 +1,10 @@
 *
-* $Id: pdfset.F,v 1.1 2007-01-20 07:09:27 skrep Exp $
+* $Id: pdfset.F,v 1.1.1.1 2016/11/04 20:31:26 mdunkman Exp $
 *
-* $Log: not supported by cvs2svn $
+* $Log: pdfset.F,v $
+* Revision 1.1.1.1  2016/11/04 20:31:26  mdunkman
+* Import of NEUT 5.3.3 v1r27 for use with T2KReWeight v1r27 (Winter OA 2017)
+*
 * Revision 1.3  2006/08/10 08:03:13  skrep
 * Add Bodek Correction for GRV94di and GRV98_lo except for charm production
 * (Aug'06 G.Mitsuka)

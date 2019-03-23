@@ -91,10 +91,10 @@ C ----- external functions
         external modMomentum, LH, dotProduct, RLU, maxDiff, 
      &  FNELS_RPASCL
 C ----- parameters        
-        double precision Gf, cosThetaC, Pi
+        double precision Gf, cosThetaC, Pi, hbarc_sq
 
         parameter(Gf = 1.16639E-11,cosThetaC = 0.97418
-     &  ,Pi = 3.14159265358)
+     &  ,Pi = 3.14159265358, hbarc_sq = 3.89E-22)
 C ******************************************************** C
 c        write (*,*) "MAKING CCQE EVENT"
 c        write (*,*) numbndp,numatom, mode, E
@@ -350,7 +350,7 @@ c ----- for nc events there is no cabibbo mixing to worry about
      &  LH(k, kPrime, p, qTilde, IPAR, nc,tmp_IPNE(2))
 
 c ----- turn cross-sections into per-nucleon cross-sections in cm^2
-        crossSection = crossSection * 3.89E-22
+        crossSection = crossSection * hbarc_sq
 
 
 c ----- RPA correction to dsigma/dQ2 spectrum.

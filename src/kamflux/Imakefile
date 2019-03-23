@@ -1,9 +1,12 @@
 XCOMM  First attempt at an Imakefile for "ringlib" atmpd library
 XCOMM  August 4, 1997 : Matt Earl
 XCOMM
-XCOMM  $Id: Imakefile,v 1.4 2000-10-21 01:00:42 casper Exp $
+XCOMM  $Id: Imakefile,v 1.1.1.1 2016/11/04 20:30:38 mdunkman Exp $
 XCOMM
-XCOMM  $Log: not supported by cvs2svn $
+XCOMM  $Log: Imakefile,v $
+XCOMM  Revision 1.1.1.1  2016/11/04 20:30:38  mdunkman
+XCOMM  Import of NEUT 5.3.3 v1r27 for use with T2KReWeight v1r27 (Winter OA 2017)
+XCOMM
 XCOMM  Revision 1.3  2000/02/28 16:58:38  cmauger
 XCOMM  Only changes in comments from merger: ichikilo <-> main.
 XCOMM

@@ -36,6 +36,7 @@ namespace rew   {
   static FUNCTION_RETURN evpiprob();
   static void  nesetfgparams();
   static void  nefillmodel();
+  static void  zexpconfig(); // P.S (26.01.17) AxialFF Patch                   
   
   static void print_nework();
   static void print_neutcrs();

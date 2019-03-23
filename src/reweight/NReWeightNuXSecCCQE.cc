@@ -49,7 +49,6 @@ using namespace neut;
 using namespace rew;
 
 using std::cout;
-using std::endl;
 
 const int NReWeightNuXSecCCQE::kModeMa;
 const int NReWeightNuXSecCCQE::kModeNormAndMaShape;
@@ -121,6 +120,63 @@ void NReWeightNuXSecCCQE::Init(void)
   fPsFFTwkDial  = 0;
   fPsFFDef      = fortFns->FPQEdef;
   fPsFFCurr     = fPsFFDef;
+
+   // Alternative Form Factors
+  fAltMDLQEAF = 0; // Default - Dipole
+
+  // 2/3 Comp
+  fTwk_3CompAlpha  = 0.0;
+  fDef_3CompAlpha  = 0.225055;
+  fCurr_3CompAlpha = fDef_3CompAlpha;
+  fErr_3CompAlpha  = 0.0;
+
+  fTwk_3CompGamma  = 0.0;
+  fDef_3CompGamma  = 0.4363389;
+  fCurr_3CompGamma = fDef_3CompGamma;
+  fErr_3CompGamma  = 0.0;
+  
+  fTwk_3CompBeta  = 0.0;
+  fDef_3CompBeta  = 1.081382;
+  fCurr_3CompBeta = fDef_3CompBeta;
+  fErr_3CompBeta  = 0.0;
+
+  fTwk_3CompTheta  = 0.0;
+  fDef_3CompTheta  = -0.171074;
+  fCurr_3CompTheta = fDef_3CompTheta;
+  fErr_3CompTheta  = 0.0;
+
+  // P.S (26.01.17) AxialFF Patch
+  // Z expansion
+  kMaxZExpA = 10;
+    
+  fDef_ZExp_NTerms  = 4;
+  fCurr_ZExp_NTerms = fDef_ZExp_NTerms;
+  fDef_ZExp_Q4Cut   = 1;
+  fCurr_ZExp_Q4Cut  = fDef_ZExp_Q4Cut;
+		   
+  fTwk_ZExp_TCut  = 0.0;
+  fDef_ZExp_TCut  = 0.1764;
+  fCurr_ZExp_TCut = fDef_ZExp_TCut;
+  fErr_ZExp_TCut  = 0.0;
+
+  fTwk_ZExp_T0  = 0.0;
+  fDef_ZExp_T0  = -0.28; 
+  fCurr_ZExp_T0 = fDef_ZExp_T0;
+  fErr_ZExp_T0  = 0.0;
+
+  for (int i = 0; i < kMaxZExpA; i++){
+    fTwk_ZExp_ATerms[i]  = 0.0;
+    fDef_ZExp_ATerms[i]  = 1.0;
+    fCurr_ZExp_ATerms[i] = 1.0;
+    fErr_ZExp_ATerms[i]  = 0.0;
+  }
+
+  // Set 4 Starting  ZExp Terms
+  fDef_ZExp_ATerms[1] =  2.3;
+  fDef_ZExp_ATerms[2] = -0.6;
+  fDef_ZExp_ATerms[3] = -3.8;
+  fDef_ZExp_ATerms[4] =  2.3;
+
 }
 //_______________________________________________________________________________________
 bool NReWeightNuXSecCCQE::IsHandled(NSyst_t syst)
@@ -162,6 +218,38 @@ bool NReWeightNuXSecCCQE::IsHandled(NSyst_t syst)
   case ( kXSecTwkDial_SCCAxlQE ) :
   case ( kXSecTwkDial_PsFF ) :
     handle = true;  
+  break;
+
+ // P.S (26.01.17) AxialFF Patch
+ // Alt FA Dial
+ case ( kXSecTwkDial_AxlDipToAlt ) :
+    handle = true;
+  break;
+
+  // 2/3 Comp
+  case ( kXSecTwkDial_FAxlCCQEAlpha ) :
+  case ( kXSecTwkDial_FAxlCCQEGamma ) :
+  case ( kXSecTwkDial_FAxlCCQEBeta  ) :
+  case ( kXSecTwkDial_FAxlCCQETheta ) :
+    handle = true;
+    break;
+
+    // ZExp
+  case (kXSecTwkDial_FAZExp_NTerms) :
+  case (kXSecTwkDial_FAZExp_TCut) :
+  case (kXSecTwkDial_FAZExp_T0 ) : 
+  case (kXSecTwkDial_FAZExp_Q4Cut ) : 
+  case (kXSecTwkDial_FAZExp_A0 ) : 
+  case (kXSecTwkDial_FAZExp_A1 ) : 
+  case (kXSecTwkDial_FAZExp_A2 ) : 
+  case (kXSecTwkDial_FAZExp_A3 ) : 
+  case (kXSecTwkDial_FAZExp_A4 ) : 
+  case (kXSecTwkDial_FAZExp_A5 ) : 
+  case (kXSecTwkDial_FAZExp_A6 ) : 
+  case (kXSecTwkDial_FAZExp_A7 ) : 
+  case (kXSecTwkDial_FAZExp_A8 ) : 
+  case (kXSecTwkDial_FAZExp_A9 ) : 
+    handle = true;
   break;
 
   default:
@@ -220,8 +308,51 @@ void NReWeightNuXSecCCQE::SetSystematic(NSyst_t syst, double twk_dial)
   case ( kXSecTwkDial_PsFF ) :
     fPsFFTwkDial = twk_dial;
     break;
+
+  // P.S (26.01.17) AxialFF Patch
+  case ( kXSecTwkDial_AxlDipToAlt ) :
+    fAltMDLQEAF = twk_dial;
+    break;
+
+  case ( kXSecTwkDial_FAxlCCQEAlpha ) :
+    fTwk_3CompAlpha = twk_dial;
+    break;
+  case ( kXSecTwkDial_FAxlCCQEGamma ) :
+    fTwk_3CompGamma = twk_dial;
+    break;
+  case ( kXSecTwkDial_FAxlCCQETheta ) :
+    fTwk_3CompTheta = twk_dial;
+    break;
+  case ( kXSecTwkDial_FAxlCCQEBeta ) :
+    fTwk_3CompBeta = twk_dial;
+    break;
+    
+
+  // ZExp Info Fill IN
+  case (kXSecTwkDial_FAZExp_NTerms) :
+    fCurr_ZExp_NTerms = twk_dial;
+    break;
+  case (kXSecTwkDial_FAZExp_Q4Cut ) :
+    fCurr_ZExp_Q4Cut = twk_dial;
+    break;
+  case (kXSecTwkDial_FAZExp_TCut) :
+    fTwk_ZExp_TCut = twk_dial;
+    break;
+  case (kXSecTwkDial_FAZExp_T0 ) :
+    fTwk_ZExp_T0 = twk_dial;
+    break;
+      
   default:
     break;
+  }
+
+  // Fill 10 ZExp ATerms in loop
+  int zexpenum = (int) kXSecTwkDial_FAZExp_A0;
+  for (int i = 0; i < kMaxZExpA; i++){
+    if ( syst == zexpenum + i ){
+      fTwk_ZExp_ATerms[i] = twk_dial;
+      break;
+    }
   }
 }
 //_______________________________________________________________________________________
@@ -259,6 +390,38 @@ void NReWeightNuXSecCCQE::Reset(void)
 
   fPsFFTwkDial = 0.;
   fPsFFCurr = fPsFFDef;
+
+  // P.S (26.01.17) AxialFF Patch
+  // Alt FF
+  fAltMDLQEAF = 0;
+  
+  fTwk_3CompAlpha  = 0.0;
+  fCurr_3CompAlpha = fDef_3CompAlpha;
+
+  fTwk_3CompGamma  = 0.0;
+  fCurr_3CompGamma = fDef_3CompGamma;
+
+  fTwk_3CompBeta  = 0.0;
+  fCurr_3CompBeta = fDef_3CompBeta;
+
+  fTwk_3CompTheta  = 0.0;
+  fCurr_3CompTheta = fDef_3CompTheta;
+
+  // ZEXP
+  // Z expansion
+  fCurr_ZExp_NTerms = fDef_ZExp_NTerms;
+  fCurr_ZExp_Q4Cut  = fDef_ZExp_Q4Cut;
+
+  fTwk_ZExp_TCut  = 0.0;
+  fCurr_ZExp_TCut = fDef_ZExp_TCut;
+
+  fTwk_ZExp_T0  = 0.0;
+  fCurr_ZExp_T0 = fDef_ZExp_T0;
+
+  for (int i = 0; i < kMaxZExpA; i++){
+    fTwk_ZExp_ATerms[i]  = 0.0;
+    fCurr_ZExp_ATerms[i] = fDef_ZExp_ATerms[i];
+  }
 
   this->Reconfigure();
 }
@@ -333,6 +496,50 @@ void NReWeightNuXSecCCQE::Reconfigure(void)
   double fracerr_psff = fracerr->OneSigmaErr(kXSecTwkDial_PsFF, sign_psff);
   fPsFFCurr = fPsFFDef * (1. + fPsFFTwkDial * fracerr_psff);//RT: not sure if this is correct just yet....
 
+  // P.S (26.01.17) AxialFF Patch
+  // Make sure MDLQEAF is set correctly
+  if (fAltMDLQEAF > 4) {
+    std::cout << "ERROR: MDLQEAF can only go between 0 and 4" << std::endl;
+    std::cout << "0. Dipole, 1. BBBA07, 2. 2 Comp, 3. 3 Comp. 4. Z Exp." << std::endl;
+    throw;
+  }
+
+  // Set 2/3 Comp Values
+  int sign_3compalpha = utils::rew::Sign(fTwk_3CompAlpha);
+  fErr_3CompAlpha = fracerr->OneSigmaErr(kXSecTwkDial_FAxlCCQEAlpha, sign_3compalpha);
+  fCurr_3CompAlpha = fDef_3CompAlpha * ( 1. + fTwk_3CompAlpha * fErr_3CompAlpha );
+
+  int sign_3compgamma = utils::rew::Sign(fTwk_3CompGamma);
+  fErr_3CompGamma = fracerr->OneSigmaErr(kXSecTwkDial_FAxlCCQEGamma, sign_3compgamma);
+  fCurr_3CompGamma = fDef_3CompGamma * ( 1. + fTwk_3CompGamma * fErr_3CompGamma );
+
+  int sign_3compbeta = utils::rew::Sign(fTwk_3CompBeta);
+  fErr_3CompBeta = fracerr->OneSigmaErr(kXSecTwkDial_FAxlCCQEBeta, sign_3compbeta);
+  fCurr_3CompBeta = fDef_3CompBeta * ( 1. + fTwk_3CompBeta * fErr_3CompBeta );
+
+  int sign_3comptheta = utils::rew::Sign(fTwk_3CompTheta);
+  fErr_3CompTheta = fracerr->OneSigmaErr(kXSecTwkDial_FAxlCCQETheta, sign_3comptheta);
+  fCurr_3CompTheta = fDef_3CompTheta * ( 1. + fTwk_3CompTheta * fErr_3CompTheta );
+
+  // Set Z Expansion Values
+  // TCut
+  fErr_ZExp_TCut  = fracerr->OneSigmaErr( kXSecTwkDial_FAZExp_TCut,
+					  utils::rew::Sign(fTwk_ZExp_TCut) );
+  fCurr_ZExp_TCut = fDef_ZExp_TCut * ( 1.0 + fTwk_ZExp_TCut * fErr_ZExp_TCut );
+
+  // T0
+  fErr_ZExp_T0  = fracerr->OneSigmaErr( kXSecTwkDial_FAZExp_T0,
+					  utils::rew::Sign(fTwk_ZExp_T0) );
+  fCurr_ZExp_T0 = fDef_ZExp_T0 * ( 1.0 + fTwk_ZExp_T0 * fErr_ZExp_T0 );
+  
+  // A Terms
+  int zexpenum = (int) kXSecTwkDial_FAZExp_A0;
+  for (int i = 0; i < kMaxZExpA; i++){
+    fErr_ZExp_ATerms[i] = fracerr->OneSigmaErr( zexpenum + i,
+						utils::rew::Sign(fTwk_ZExp_ATerms[i]) );
+    fCurr_ZExp_ATerms[i]
+      = fDef_ZExp_ATerms[i] * ( 1.0 + fTwk_ZExp_ATerms[i] * fErr_ZExp_ATerms[i] );    
+  }
 }
 //_______________________________________________________________________________________
 double NReWeightNuXSecCCQE::CalcWeight() 
@@ -388,6 +595,7 @@ double NReWeightNuXSecCCQE::CalcWeightNorm()
 //_______________________________________________________________________________________
 double NReWeightNuXSecCCQE::CalcWeightMa() 
 {
+  // P.S (26.01.17) AxialFF Patch
   bool tweaked = (TMath::Abs(fMaTwkDial) > controls::kASmallNum ||
 		  TMath::Abs(fKapTwkDial) > controls::kASmallNum ||
 		  TMath::Abs(fPfTwkDial) > controls::kASmallNum ||
@@ -397,8 +605,20 @@ double NReWeightNuXSecCCQE::CalcWeightMa()
 		  TMath::Abs(fVecFFOutTwkDial) > controls::kASmallNum ||
 		  TMath::Abs(fSCCVecTwkDial) > controls::kASmallNum ||
 		  TMath::Abs(fSCCAxlTwkDial) > controls::kASmallNum ||
-		  TMath::Abs(fPsFFTwkDial) > controls::kASmallNum
-		  );
+		  TMath::Abs(fPsFFTwkDial) > controls::kASmallNum ||
+		  (fAltMDLQEAF > 0) || 
+		  TMath::Abs(fTwk_3CompAlpha) > controls::kASmallNum ||
+		  TMath::Abs(fTwk_3CompGamma) > controls::kASmallNum ||
+		  TMath::Abs(fTwk_3CompBeta) > controls::kASmallNum ||
+		  TMath::Abs(fTwk_3CompTheta) > controls::kASmallNum ||
+		  TMath::Abs(fTwk_ZExp_TCut) > controls::kASmallNum ||
+		  TMath::Abs(fTwk_ZExp_T0) > controls::kASmallNum);
+
+  for (int i = 0; i < kMaxZExpA; i++){
+  	if (TMath::Abs(fTwk_ZExp_ATerms[i]) > controls::kASmallNum){
+  		tweaked = true;
+  	}
+  }
   
   if(!tweaked) return 1.0;
 
@@ -418,7 +638,9 @@ double NReWeightNuXSecCCQE::CalcWeightMa()
   if (nemdls_.mdlqe == 402) old_xsec *= 1E-23;
 
   if (old_xsec==0) {
-    //cout << "NReWeightNuXSecCCQE::CalcWeightMa() Warning: old_xsec==0, setting weight to 1" << endl;
+#ifdef _N_REWEIGHT_CCQE_DEBUG_
+    cout << "NReWeightNuXSecCCQE::CalcWeightMa() Warning: old_xsec==0, setting weight to 1" << '\n';
+#endif
     return 1;
   }
   
@@ -437,6 +659,51 @@ double NReWeightNuXSecCCQE::CalcWeightMa()
   if (fSCCVecCurr) nemdls_.sccfv = fSCCVecCurr;
   if (fSCCAxlCurr) nemdls_.sccfa = fSCCAxlCurr;
   if (fPsFFCurr) nemdls_.fpqe = fPsFFCurr;
+
+
+
+  // P.S (26.01.17) AxialFF Patch
+  // Dipole to alternative RW Functions
+  if (fAltMDLQEAF > 0) {
+    nemdls_.mdlqeaf = fAltMDLQEAF;
+  }
+
+  // 2 Component
+  if (nemdls_.mdlqeaf == 2){
+    nemdls_.axffalpha = fCurr_3CompAlpha;
+    nemdls_.axffgamma = fCurr_3CompGamma;
+  }
+
+  // 3 Component
+  if (nemdls_.mdlqeaf == 3){
+    nemdls_.axffalpha = fCurr_3CompAlpha;
+    nemdls_.axffgamma = fCurr_3CompGamma;
+    nemdls_.axfftheta = fCurr_3CompTheta;
+    nemdls_.axffbeta  = fCurr_3CompBeta;
+  }
+
+  // Z Expansion
+  // Calling zexpconfig handled in NFortFns
+  if (nemdls_.mdlqeaf == 4){
+
+    nemdls_.axzexpnt = fCurr_ZExp_NTerms;
+    nemdls_.axzexpq4 = fCurr_ZExp_Q4Cut;
+
+    nemdls_.axzexptc = fCurr_ZExp_TCut;
+    nemdls_.axzexpt0 = fCurr_ZExp_T0;
+
+    nemdls_.axzexpa0 = fCurr_ZExp_ATerms[0];
+    nemdls_.axzexpa1 = fCurr_ZExp_ATerms[1];
+    nemdls_.axzexpa2 = fCurr_ZExp_ATerms[2];
+    nemdls_.axzexpa3 = fCurr_ZExp_ATerms[3];
+    nemdls_.axzexpa4 = fCurr_ZExp_ATerms[4];
+    nemdls_.axzexpa5 = fCurr_ZExp_ATerms[5];
+    nemdls_.axzexpa6 = fCurr_ZExp_ATerms[6];
+    nemdls_.axzexpa7 = fCurr_ZExp_ATerms[7];
+    nemdls_.axzexpa8 = fCurr_ZExp_ATerms[8];
+    nemdls_.axzexpa9 = fCurr_ZExp_ATerms[9];
+    
+  }
 
   fortFns->Reconfigure();
 
@@ -458,8 +725,8 @@ double NReWeightNuXSecCCQE::CalcWeightMa()
   //float new_weight = old_weight * (new_xsec/old_xsec);
 
 #ifdef _N_REWEIGHT_CCQE_DEBUG_
-  cout << "differential cross section (old) = " << old_xsec << endl;
-  cout << "differential cross section (new) = " << new_xsec << endl;
+  cout << "differential cross section (old) = " << old_xsec << '\n';
+  cout << "differential cross section (new) = " << new_xsec << '\n';
 #endif 
 
   // Normalize out change in total cross section from MA variations for MA_shape variation
@@ -472,8 +739,8 @@ double NReWeightNuXSecCCQE::CalcWeightMa()
     else if (nework_.ipne[0] == 12) inu = neutTotCrs->nue;
     else if (nework_.ipne[0] == -12) inu = neutTotCrs->nueb;
     else {
-      cout << "NReWeightNuXSecCCQE::CalcWeightMa() Error: Cannot MA-shape reweight this neutrino type = " 
-	   << nework_.ipne[0] << endl;
+      std::cerr << "NReWeightNuXSecCCQE::CalcWeightMa() Error: Cannot MA-shape reweight this neutrino type = " 
+	        << nework_.ipne[0] << '\n';
       exit (-1);
     }
     
@@ -488,25 +755,29 @@ double NReWeightNuXSecCCQE::CalcWeightMa()
     float new_tot_xsec = neutTotCrs->ccqe_crs[inu]->Interpolate(Enu, fPfDef, fMaCurr);
 
     if (new_tot_xsec==0) {
-      cout << "NReWeightNuXSecCCQE::CalcWeightMa() Warning: new_tot_xsec==0, setting weight to 1" << endl;
+#ifdef _N_REWEIGHT_CCQE_DEBUG_
+      cout << "NReWeightNuXSecCCQE::CalcWeightMa() Warning: new_tot_xsec==0, setting weight to 1" << '\n';
+#endif
       return 1;
     }
 
 #ifdef _N_REWEIGHT_CCQE_DEBUG_
-    cout << "total cross section (old) = " << old_tot_xsec << endl;
-    cout << "total cross section (new) = " << new_tot_xsec << endl;
+    cout << "total cross section (old) = " << old_tot_xsec << '\n';
+    cout << "total cross section (new) = " << new_tot_xsec << '\n';
 #endif 
 
     new_weight *= old_tot_xsec / new_tot_xsec ;
   }
 
   if (isinf(new_weight) || isnan(new_weight)) {
-    cout << "NReWeightNuXSecCCQE::CalcWeightMa() Warning: new_weight is infinite, setting to 1" << endl;
+#ifdef _N_REWEIGHT_CCQE_DEBUG_
+    cout << "NReWeightNuXSecCCQE::CalcWeightMa() Warning: new_weight is infinite, setting to 1" << '\n';
+#endif
     return 1;
   }
   
 #ifdef _N_REWEIGHT_CCQE_DEBUG_
-  cout << "new weight = " << new_weight << endl;
+  cout << "new weight = " << new_weight << '\n';
 #endif 
 
   return new_weight;

@@ -7,12 +7,15 @@ NEUT_SRC =  $(NEUT_ROOT)/src
 
 ROOTINC = -I`root-config --incdir`
 NEUTINC = -I../neutcore -I../nuccorspl -I../skmcsvc -I../nuceff -I../../include -I./
+NEUTINC += -I../neutclass -I../specfunc
 INCDIRS = ${ROOTINC} ${NEUTINC}
 
-FCOPTIONS = -g
+#FCOPTIONS = -g
+FCOPTIONS = -O2 -march=native -Wall
 
 CXXFLAGS  = `root-config --cflags`
-COPTFLAGS = -g -Wno-write-strings -fpermissive -fPIC
+#COPTFLAGS = -g -Wno-write-strings -fpermissive -fPIC
+COPTFLAGS = -O2 -march=native -Wall -Wno-write-strings -fpermissive -fPIC
 
 
 COREDIR =	../neutcore/Linux_pc
@@ -20,7 +23,7 @@ NUCEFFDIR =     ../nuceff/Linux_pc
 
 LIBDIRS =	-L${COREDIR}         -L../nuccorspl/Linux_pc \
 			-L../nuceff/Linux_pc -L../partnuck/Linux_pc \
-			-L../skmcsvc/Linux_pc
+			-L../skmcsvc/Linux_pc -L../specfunc
 
 NEUTCOREVER = 5.3.3
 INEUTCOREVER= 533
@@ -37,6 +40,9 @@ IPARTNUCKVER= 533
 SKMCSVCVER  = 5.3.3
 ISKMCSVCVER = 533
 
+SPECFUNCVER  = 5.3.3
+ISPECFUNCVER = 533
+
 FORTRANDEFINES += -DNECORE_VERSION=$(INEUTCOREVER)
 FORTRANDEFINES += -DNENUCE_VERSION=$(INUCEFFVER)
 FORTRANDEFINES += -DNENUCC_VERSION=$(INUCCORVER)
@@ -45,15 +51,17 @@ FORTRANDEFINES += -DNENUCC_VERSION=$(INUCCORVER)
 #		-lneutcore_${NEUTCOREVER} -lnuccorrspl_${NUCCORVER} \
 #		-lpartnuck_${PARTNUCKVER} -lskmcsvc_${SKMCSVCVER}
 
-MCLIB = ${LIBDIRS} -lnuceff_${NUCEFFVER} -lneutcore_${NEUTCOREVER} \
-        -lskmcsvc_${SKMCSVCVER}
+MCLIB = ${LIBDIRS} -lnuceff_${NUCEFFVER} -lspecfunc_${SPECFUNCVER} \
+        -lneutcore_${NEUTCOREVER} -lnuceff_${NUCEFFVER} \
+		-lnuccorrspl_${NUCCORVER} -lskmcsvc_${SKMCSVCVER} 
+		
 
 CLIBS = ${CERN}/${CERN_LEVEL}/lib/libjetset74.a \
 		${CERN}/${CERN_LEVEL}/lib/libpdflib804.a \
 		`cernlib jetset74 photos202 mathlib packlib kernlib`
 
 ROOTLIBS  = `root-config --libs`
-LIBS      = $(ROOTLIBS) ${MCLIB} ${CLIBS} -lstdc++
+LIBS      = $(ROOTLIBS) ${MCLIB} ${CLIBS} -lstdc++ -lgfortran
 
 LDOPTFLAGS= -g
 
@@ -91,6 +99,9 @@ else
   LIB_DEPEND = $(PACKAGE_ALL_OBJECTS)
 endif
 
+# default target to build the library
+all: clean lib
+
 #
 #
 rootcint: $(DICTIONARY).o
@@ -109,7 +120,7 @@ OutPutOpt = -o
 
 .SUFFIXES:	.so
 
-GENROOTSO = env COPTFLAGS="${COPTFLAGS}" INCDIRS="${INCDIRS}" \
+GENROOTSO = env COPTFLAGS="${COPTFLAGS} ${LIBS}" INCDIRS="${INCDIRS}" \
 			./bin/gen_root_so.sh
 
 .cc.o:
@@ -121,12 +132,10 @@ GENROOTSO = env COPTFLAGS="${COPTFLAGS}" INCDIRS="${INCDIRS}" \
 .F.o:
 	$(FC) $(DEFS) -c $(FCOPTIONS) $(ALLDEFINES) $(FINCDIRS) -o $@ $<
 
-all: clean lib
-
 clean:
 	$(RM) *.o *~ ${MOBJS} *Dict.* *.so _ROOT_DICT_ReWeight.*
 
 lib: $(LIB_DEPEND)
 	@echo "[package: $(PACKAGE)] Generating shared library ..."
-	$(SOCMD) $(SOFLAGS) $(SOMINF) $(PACKAGE_ALL_OBJECTS) $(MCLIB) $(EXTRA_EXT_LIBS) $(OutPutOpt) $(PACKAGE_LIB_WITH_PATH)
+	$(SOCMD) $(SOFLAGS) $(SOMINF) $(PACKAGE_ALL_OBJECTS) $(LIBS) $(EXTRA_EXT_LIBS) $(OutPutOpt) $(PACKAGE_LIB_WITH_PATH)
 

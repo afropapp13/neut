@@ -70,6 +70,19 @@ C--   taken from A. Bodek et al, Eur. Phys. J. C 71 (2011) 1726
       PARAMETER (TRCORA = 6.0)
       PARAMETER (TRCORB = 0.34)
 
+C     Form factor functions
+      double precision fabbba07
+      external fabbba07
+
+      double precision fa2COMP
+      external fa2COMP
+
+      double precision fa3COMP
+      external fa3COMP
+
+      double precision faZEXP
+      external faZEXP
+
 CCCC  DATA TM/1.7842/     MODIFICATION  K.Kaneyuki 2-FEB-95
 C      DATA TM/1.7842/
       DATA PIM/0.13957/
@@ -130,14 +143,26 @@ C      FA=-1.23/(1.-SQ2/AVMASS**2)**2
       F3V = SCCFV*(-1.) /(1.-SQ2/VVMASS**2)**2
 
 
-      if (MDLQEAF.eq.1) then
+C     Updated Form Factors (PS)
+      if (MDLQEAF.eq.0) then
          FA=-1.267/(1.-SQ2/AVMASS**2)**2
+C     BBBA07 FF
+      else if (MDLQEAF.eq.1) then
+         FA = fabbba07( Q2 )
+C     2 Component FF
       else if (MDLQEAF.eq.2) then
-         FA=faBBBA07(q2)
-      else
+         FA = fa2COMP( Q2 )
+C     3 Component FF
+      else if (MDLQEAF.eq.3) then
+         FA = fa3COMP( Q2 )
+C     ZEXP FF
+      else if (MDLQEAF.eq.4) then
+         FA = faZEXP( Q2 )
+      else 
          write(*,*) 'Invalid CCQE mode specified by MDLQEAF',MDLQEAF
          stop
       endif
+
       FP=FPQE*2.*(PM**2)*FA/(-SQ2+PIM**2)
       F3A = SCCFA * FA 
      

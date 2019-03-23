@@ -1,8 +1,11 @@
-/* $Id: install.rules,v 1.1 2007-01-20 07:35:39 skrep Exp $ 
+/* $Id: install.rules,v 1.1.1.1 2016/11/04 20:29:56 mdunkman Exp $ 
  *
  * Targets to install all sorts of different types of files.
  *
- * $Log: not supported by cvs2svn $
+ * $Log: install.rules,v $
+ * Revision 1.1.1.1  2016/11/04 20:29:56  mdunkman
+ * Import of NEUT 5.3.3 v1r27 for use with T2KReWeight v1r27 (Winter OA 2017)
+ *
  * Revision 1.14  1999/07/21 18:28:00  mcgrew
  * Fix the Install Library and Install Library Alias functions to use the
  * full library for their internal rules.  This will prevent collisions

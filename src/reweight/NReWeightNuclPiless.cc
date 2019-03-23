@@ -47,7 +47,6 @@ using namespace neut;
 using namespace neut::rew;
 
 using std::cout;
-using std::endl;
 
 //_______________________________________________________________________________________
 NReWeightNuclPiless::NReWeightNuclPiless() 
@@ -163,7 +162,7 @@ double NReWeightNuclPiless::CalcWeightPilessDcy()
   if(!tweaked) return 1.0;
   
 #ifdef _N_REWEIGHT_NUCLPILESS_DEBUG_
-  cout << "CalcWeightPilessDcy(): mode = " << nework_.modene << ", ibound = " << posinnuc_.ibound << endl;
+  cout << "CalcWeightPilessDcy(): mode = " << nework_.modene << ", ibound = " << posinnuc_.ibound << '\n';
 #endif
 
   // Only 1-pi production events
@@ -195,8 +194,8 @@ double NReWeightNuclPiless::CalcWeightPilessDcy()
   }
   
 #ifdef _N_REWEIGHT_NUCLPILESS_DEBUG_
-  cout << "NReWeightNuclPiless::CalcWeightPilessDcy(): fPilessDcyCurr = " << fPilessDcyCurr << ", fPilessDcyDef = " << fPilessDcyDef << endl;
-  cout << "NReWeightNuclPiless::CalcWeightPilessDcy(): new_weight = " << new_weight << endl;
+  cout << "NReWeightNuclPiless::CalcWeightPilessDcy(): fPilessDcyCurr = " << fPilessDcyCurr << ", fPilessDcyDef = " << fPilessDcyDef << '\n';
+  cout << "NReWeightNuclPiless::CalcWeightPilessDcy(): new_weight = " << new_weight << '\n';
 #endif
 
 

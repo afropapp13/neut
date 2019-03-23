@@ -34,7 +34,7 @@ INCLUDES = -I../../inc
 # libraries
 OBJECTS = fourVector.o calcLH.o selectSfValues.o buildSf.o maxDiff.o readXsecData.o sfevent.o # bbba05.o bbba07.o 
 
-all: makeTables
+all: makeTables specfuncC.h install
 
 makeTables: $(MAKETABLES) $(OBJECTS) libspecfunc_${SPECFUNCVER}.a
 	$(FC) $(FLAGS)-o makeTables.exe  $(MAKETABLES) $(INCLUDES) $(LIBDIRS) $(LIBS)
@@ -56,8 +56,11 @@ libspecfunc_${SPECFUNCVER}.a: $(OBJECTS)
 #	ar r libspecfunc.a *.o
 	ar r $@ $(OBJECTS)
 
+specfuncC.h: specfunc.h
+	fh2h.pl specfunc.h > specfuncC.h || rm specfuncC.h
+
 clean:
-	rm -rf *.o *.a *.exe
+	rm -rf *.o *.a *.exe specfuncC.h
 
 install: libspecfunc_${SPECFUNCVER}.a
 	cp libspecfunc_${SPECFUNCVER}.a ../../lib/Linux_pc

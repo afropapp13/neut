@@ -295,7 +295,9 @@ double NReWeightCasc::CalcWeight()
     old_xsec = fsihist_.fsiprob;
 
   if (old_xsec<=0) {
+#   ifdef _N_REWEIGHT_CASC_DEBUG_
     cout << "NReWeightCasc() Warning: evpiprob old_xsec <= 0, returning weight = 1" << endl;
+#   endif
     return 1;
   }
 
@@ -343,7 +345,9 @@ double NReWeightCasc::CalcWeight()
 #endif
 
   if (isinf(new_weight) || isnan(new_weight) || new_weight<0) {
+#ifdef _N_REWEIGHT_CASC_DEBUG_
     cout << "NReWeightCasc::CalcWeight() Warning: new_weight is infinite or negative (" << new_weight << "), setting to 1" << endl;
+#endif
     new_weight = 1;
   }
 

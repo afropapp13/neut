@@ -1,4 +1,4 @@
-#!/bin/csh
+#!/bin/tcsh
 
 #############################################################################
 source EnvMakeneutsmpl.csh
@@ -143,3 +143,4 @@ end
 echo "--------- Make Links To Spectral Function Data Files --------- "
 rm -rf qelSfData
 ln -s ${SOMEWHERE}/crsdat/qelSfData qelSfData
+

@@ -183,10 +183,13 @@ C
 #include "neutcrs.h"
 #include "neutmodel.h"
 #include "necard.h"
+#include "vcwork.h"
+#include "posinnuc.h"
 
       integer*4 ipar,i
       real*4    e
 C      integer*4 mdlqe
+C      integer*4 IBOUND
 
 C
 C -- Preparation
@@ -218,6 +221,9 @@ C      real *4 PNEU(3),PFABS,AMIN,BETA,EV(3),GM
       real*4   dcohnerein
       external dcohnerein
     
+      real*8   dnelsq2
+      external dnelsq2
+
 C -- Parameters
       integer*4 iorig
 
@@ -376,19 +382,48 @@ C         ENDIF
 
          ccnc = 1
 
-         if (mod(mdlqe,1000).ge.400) then
-            if (NUMATOM.eq.16 .or. NUMATOM.eq.12 
-     $           .or. NUMATOM.eq.56) then
-               evdifcrs
-     $              = LH(k,kPrime,p,qTilde,IPAR,nc,nucPdg)
+         if (IBOUND .eq. 1) then
+            if (mod(mdlqe,1000).ge.400 .and.
+     $           mod(mdlqe,1000).lt.500) then
+               if (NUMATOM.eq.16 .or. NUMATOM.eq.12 
+     $              .or. NUMATOM.eq.56) then
+CRT     write(*,*) "SF NUMATOM: ",NUMATOM
+                  evdifcrs
+     $               =   LH(k,kPrime,p,qTilde,IPAR,nc,nucPdg)
+               else
+CRT     write(*,*) "SF RFG NUMATOM: ",NUMATOM
+                  evdifcrs
+     $               = qedifcrs(ipar, ccnc, e, elep, coslep)
+               endif
             else
                evdifcrs
-     $              = qedifcrs(ipar, ccnc, e, elep, coslep)
+     $            = qedifcrs(ipar, ccnc, e, elep, coslep)
             endif
          else
-            evdifcrs
-     $           = qedifcrs(ipar, ccnc, e, elep, coslep)
+CRT     write(*,*) "Free proton CC"
+            evdifcrs = dnelsq2(REAL(e,8),ipar,REAL(-1.0*q2,8))
          endif
+
+CC         if (mod(mdlqe,1000).ge.400) then
+CC            if (NUMATOM.eq.16 .or. NUMATOM.eq.12 
+CC     $           .or. NUMATOM.eq.56) then
+CC
+CCC              // P.S (26.01.17) AxialFF Patch
+CCC               if (mdlqeaf.gt.1) then
+CCC                  write(*,*) "MDLQEAF > 1 only works for RFG!"
+CCC                  exit(-1)
+CCC               endif
+CC
+CC               evdifcrs
+CC     $              = LH(k,kPrime,p,qTilde,IPAR,nc,nucPdg)
+CC            else
+CC               evdifcrs
+CC     $              = qedifcrs(ipar, ccnc, e, elep, coslep)
+CC            endif
+CC         else
+CC            evdifcrs
+CC     $           = qedifcrs(ipar, ccnc, e, elep, coslep)
+CC         endif
 c         if (mdlqe.lt.400) then
 c            write(*,*) "model less than 400"
 c            evdifcrs

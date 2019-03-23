@@ -65,6 +65,16 @@ C            121 ; GRV98 Bodek
       REAL*4    SCCFV, SCCFA, FPQE
       REAL*4    PFSF
 
+C     // P.S (26.01.17) AxialFF Patch  
+      REAL*4    AXFFALPHA, AXFFGAMMA,
+     $          AXFFTHETA, AXFFBETA
+
+      INTEGER*4 AXZEXPQ4, AXZEXPNT
+      REAL*4    AXZEXPT0, AXZEXPTC,
+     $          AXZEXPA0,AXZEXPA1,AXZEXPA2,
+     $          AXZEXPA3,AXZEXPA4,AXZEXPA5,
+     $          AXZEXPA6,AXZEXPA7,AXZEXPA8,
+     $          AXZEXPA9
       
 	  COMMON /NEUTMODEL/MODELDIS,MODELCOH
       COMMON /NEMDLS/MDLQE,MDLSPI,MDLDIS,MDLCOH,
@@ -73,4 +83,12 @@ C            121 ; GRV98 Bodek
      $               IFFSPI,NRTYPESPI,RCA5ISPI,RBGSCLSPI,
      $               XMARES,XMVRES,
      $               SCCFV, SCCFA, FPQE,
-     $               PFSF
+     $               PFSF,
+     $               AXFFALPHA, AXFFGAMMA,
+     $               AXFFTHETA, AXFFBETA,
+     $               AXZEXPQ4, AXZEXPNT,
+     $               AXZEXPT0, AXZEXPTC,
+     $               AXZEXPA0,AXZEXPA1,AXZEXPA2,
+     $               AXZEXPA3,AXZEXPA4,AXZEXPA5,
+     $               AXZEXPA6,AXZEXPA7,AXZEXPA8,
+     $               AXZEXPA9

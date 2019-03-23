@@ -6,8 +6,6 @@
 using namespace neut;
 using namespace neut::rew;
 
-using std::cout;
-using std::endl;
 
 NTotCrs * NTotCrs::fInstance = 0;
 //____________________________________________________________________________
@@ -24,13 +22,13 @@ NTotCrs::~NTotCrs()
 NTotCrs * NTotCrs::Instance()
 {
   if(fInstance == 0) {
-    //cout << "NTotCrs late initialization" << endl;
+    //std::cout << "NTotCrs late initialization" << '\n';
     static NTotCrs::Cleaner cleaner;
     cleaner.DummyMethodAndSilentCompiler();
     fInstance = new NTotCrs;
   
     if (!getenv("NEUT_ROOT")) {
-      cout << "NTotCrs::LoadCCQE() Error: Set \"NEUT_ROOT\" environment variable (without the 'src')" << endl;
+      std::cerr << "NTotCrs::LoadCCQE() Error: Set \"NEUT_ROOT\" environment variable (without the 'src')" << '\n';
       exit (1);
     }
     else {
@@ -49,6 +47,7 @@ NTotCrs * NTotCrs::Instance()
 
 
 void NTotCrs::LoadCCQE() {
+  //TODO: Use TH1::SetDirectory(0) and TFile::GetObject() to replace the craziness and allow us to close the input file
 
   // Load CCQE cross section histogram
   ccqeCrsFile = new TFile(Form("%s/ccqe_tcrs.root",neut_folder.c_str()));
@@ -60,11 +59,11 @@ void NTotCrs::LoadCCQE() {
       ccqe_crs[nue] = new TH3D(*(TH3D*)ccqeCrsFile->Get("h_ccqe_tcrs_nue"));
       ccqe_crs[nueb] = new TH3D(*(TH3D*)ccqeCrsFile->Get("h_ccqe_tcrs_nueb"));
     } else {
-      cout << "NTotCrs::LoadCCQE() Error: File " << Form("%s/ccqe_tcrs.root",neut_folder.c_str()) << " not open" << endl;
+      std::cerr << "NTotCrs::LoadCCQE() Error: File " << Form("%s/ccqe_tcrs.root",neut_folder.c_str()) << " not open" << '\n';
       exit (-1);
     }
   } else {
-    cout << "NTotCrs::LoadCCQE() Error: ccqeCrsFile is NULL for file " << Form("%s/ccqe_tcrs.root",neut_folder.c_str()) << " not open" << endl;
+    std::cerr << "NTotCrs::LoadCCQE() Error: ccqeCrsFile is NULL for file " << Form("%s/ccqe_tcrs.root",neut_folder.c_str()) << " not open" << '\n';
     exit (-1);
   }
 }
@@ -72,6 +71,7 @@ void NTotCrs::LoadCCQE() {
 
 
 void NTotCrs::LoadRESSPI() {
+  //TODO: Use TH1::SetDirectory(0) and TFile::GetObject() to replace the craziness and allow us to close the input file
 
   resspiCrsFile = new TFile(Form("%s/resspi_tcrs.root",neut_folder.c_str()));
 
@@ -95,11 +95,11 @@ void NTotCrs::LoadRESSPI() {
 	resspi_crs[nueb][imode_swap] = new TH2D(*(TH2D*)resspiCrsFile->Get(Form("hresspi_crs_nueb_%d_0",imode+1)));
       }
     } else {
-      cout << "NTotCrs::LoadRESSPI() Error: File " << Form("%s/resspi_tcrs.root",neut_folder.c_str()) << " not open" << endl;
+      std::cerr << "NTotCrs::LoadRESSPI() Error: File " << Form("%s/resspi_tcrs.root",neut_folder.c_str()) << " not open" << '\n';
       exit (-1);
     }
   } else {
-    cout << "NTotCrs::LoadRESSPI() Error: resspiCrsFile is NULL for file " << Form("%s/resspi_tcrs.root",neut_folder.c_str()) << " not open" << endl;
+    std::cerr << "NTotCrs::LoadRESSPI() Error: resspiCrsFile is NULL for file " << Form("%s/resspi_tcrs.root",neut_folder.c_str()) << " not open" << '\n';
     exit (-1);
   }
 

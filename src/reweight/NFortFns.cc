@@ -7,13 +7,12 @@ extern "C" {
   FUNCTION_RETURN evpiprob_();
   void  nesetfgparams_();
   void  nefillmodel_();
+  void  zexpconfig_();   // P.S (26.01.17) AxialFF Patch                  
 }
   
 using namespace neut;
 using namespace neut::rew;
 
-using std::cout;
-using std::endl;
 
 NFortFns * NFortFns::fInstance = 0;
 //____________________________________________________________________________
@@ -30,7 +29,9 @@ NFortFns::~NFortFns()
 NFortFns * NFortFns::Instance()
 {
   if(fInstance == 0) {
-    //cout << "NFortFns late initialization" << endl;
+#ifdef NEUT_REWEIGHT_DEBUG
+    std::cout << "NFortFns late initialization" << '\n';
+#endif
     static NFortFns::Cleaner cleaner;
     cleaner.DummyMethodAndSilentCompiler();
     fInstance = new NFortFns;
@@ -90,115 +91,143 @@ FUNCTION_RETURN NFortFns::evdifcrs()      {  return evdifcrs_(); }
 FUNCTION_RETURN NFortFns::evpiprob()      {  return evpiprob_(); }
 void  NFortFns::nesetfgparams() { nesetfgparams_(); }
 void  NFortFns::nefillmodel()   { nefillmodel_(); }
+void  NFortFns::zexpconfig() { zexpconfig(); } // P.S (26.01.17) AxialFF Patch
 
 void NFortFns::Reconfigure() {
   nefillmodel_();
   nesetfgparams_();
+  if (nemdls_.mdlqeaf == 4) zexpconfig_(); // P.S (26.01.17) AxialFF Patch
 }
 
 void NFortFns::SetMCDefaultVal(NSyst_t syst, double val) {
 
-  cout << endl << "NFortFns::SetMCDefaultVal(): Changing MC generated default value for systematic: " << NSyst::AsString(syst).c_str() << " from ";
+# ifdef NEUT_REWEIGHT_DEBUG
+  std::cout << "NFortFns::SetMCDefaultVal(): Changing MC generated default value for systematic: " << NSyst::AsString(syst).c_str() << " from ";
+# endif
 
   switch(syst) {
 
   case ( kXSecTwkDial_MaCCQEshape ) :
   case ( kXSecTwkDial_MaCCQE ) :
-    cout << XMAQEdef;
+#   ifdef NEUT_REWEIGHT_DEBUG
+    std::cout << XMAQEdef;
+#   endif
     XMAQEdef = val;
 
   break;
   
   case ( kXSecTwkDial_AxlFFCCQE ) :
-    cout << MDLQEAFdef;
+#   ifdef NEUT_REWEIGHT_DEBUG
+    std::cout << MDLQEAFdef;
+#   endif
     MDLQEAFdef = val;
     break;
     
   case ( kXSecTwkDial_VecFFCCQE ) :
-    cout << MDLQEdef;
+#   ifdef NEUT_REWEIGHT_DEBUG
+    std::cout << MDLQEdef;
+#   endif
     MDLQEdef = val;
     break;
     
   case ( kXSecTwkDial_SCCVecQE ) :
-    cout << SCCFVdef;
+#   ifdef NEUT_REWEIGHT_DEBUG
+    std::cout << SCCFVdef;
+#   endif
     SCCFVdef = val;
     break;
 
   case ( kXSecTwkDial_SCCAxlQE ) :
-    cout << SCCFAdef;
+#   ifdef NEUT_REWEIGHT_DEBUG
+    std::cout << SCCFAdef;
+#   endif
     SCCFAdef = val;
     break;
     
   case ( kXSecTwkDial_PsFF ) :
-    cout << FPQEdef;
+#   ifdef NEUT_REWEIGHT_DEBUG
+    std::cout << FPQEdef;
+#   endif
     FPQEdef = val;
     break;
 
   case ( kSystNucl_CCQEPauliSupViaKF ) :
-    cout << KAPPdef;
+#   ifdef NEUT_REWEIGHT_DEBUG
+    std::cout << KAPPdef;
+#   endif
     KAPPdef = val;
     break;
 
-    //case ( kSystNucl_CCQEFermiSurfMom ) :
-    //fPfTwkDial = twk_dial;
-    //break;
-
-    //case ( kSystNucl_CCQEBindingEnergy ) :
-    //fEbTwkDial = twk_dial;
-    //break;
-    
   case ( kXSecTwkDial_BYOnOffDIS ) :
-    cout << NEBODEKdef;
+#   ifdef NEUT_REWEIGHT_DEBUG
+    std::cout << NEBODEKdef;
+#   endif
     NEBODEKdef = val;
     break;
 
   case ( kXSecTwkDial_FFRES ) :
-    cout << NEIFFdef;
+#   ifdef NEUT_REWEIGHT_DEBUG
+    std::cout << NEIFFdef;
+#   endif
     NEIFFdef = val;
     break;
 
   case ( kXSecTwkDial_TypeRES ) :
-    cout << NENRTYPEdef;
+#   ifdef NEUT_REWEIGHT_DEBUG
+    std::cout << NENRTYPEdef;
+#   endif
     NENRTYPEdef = val;
     break;
 
   case ( kXSecTwkDial_CA5RES ) :
-    cout << RNECA5Idef;
+#   ifdef NEUT_REWEIGHT_DEBUG
+    std::cout << RNECA5Idef;
+#   endif
     RNECA5Idef = val;
     break;
 
   case ( kXSecTwkDial_BgSclRES ) :
-    cout << RNEBGSCLdef;
+#   ifdef NEUT_REWEIGHT_DEBUG
+    std::cout << RNEBGSCLdef;
+#   endif
     RNEBGSCLdef = val;
     break;
 
     //if (NEIFFdef!=0) {
     case ( kXSecTwkDial_MaRES ) :
-      cout << XMASPIdef;
+#   ifdef NEUT_REWEIGHT_DEBUG
+      std::cout << XMASPIdef;
+#   endif
       XMASPIdef = val;
       break;
     case ( kXSecTwkDial_MvRES ) :
-      cout << XMVSPIdef;
+#   ifdef NEUT_REWEIGHT_DEBUG
+      std::cout << XMVSPIdef;
+#   endif
       XMVSPIdef = val;
       break;
-      //} else {
-      //case ( kXSecTwkDial_MaRES ) :
-      //cout << XMARESdef;
-      //XMASPIdef = val;
-      //break;
-      //case ( kXSecTwkDial_MvRES ) :
-      //cout << XMVRESdef;
-      //XMVSPIdef = val;
-      //break;
-      //}
+    //} else {
+    //case ( kXSecTwkDial_MaRES ) :
+    //std::cout << XMARESdef;
+    //XMASPIdef = val;
+    //break;
+    //case ( kXSecTwkDial_MvRES ) :
+    //std::cout << XMVRESdef;
+    //XMVSPIdef = val;
+    //break;
+    //}
 
   default:
-    cout << "NFortFns::SetMCDefaultVal() Warning: " << NSyst::AsString(syst).c_str() << " not implemented." << endl;
+#   ifdef NEUT_REWEIGHT_DEBUG
+    std::cout << "NFortFns::SetMCDefaultVal() Warning: " << NSyst::AsString(syst).c_str() << " not implemented." << '\n';
+#   endif
     return;
     break;
   }
   
-  cout << " to " << val << endl;
+#   ifdef NEUT_REWEIGHT_DEBUG
+  std::cout << " to " << val << '\n';
+#   endif
   
 }
 
@@ -284,138 +313,138 @@ void NFortFns::SetDefaults() {
 
 void NFortFns::print_fsihist() {
   
-  cout << endl << "-------------------------------" << endl;
-  cout << "FSI History Common Block" << endl;
-  cout << endl << "Nvert: " << fsihist_.nvert << endl;
-  cout << "ivert  iflgvert posvert[3]" << endl;
+  std::cout << '\n' << "-------------------------------" << '\n';
+  std::cout << "FSI History Common Block" << '\n';
+  std::cout << '\n' << "Nvert: " << fsihist_.nvert << '\n';
+  std::cout << "ivert  iflgvert posvert[3]" << '\n';
   for (int ivert=0; ivert<fsihist_.nvert; ivert++) {
-    cout << fsihist_.iflgvert[ivert] << " ";
+    std::cout << fsihist_.iflgvert[ivert] << " ";
     for (int j=0; j<3; j++)
-      cout << fsihist_.posvert[ivert][j] << " ";
-    cout << endl;
+      std::cout << fsihist_.posvert[ivert][j] << " ";
+    std::cout << '\n';
   }
     
   
-  cout << endl << "Nvcvert: " << fsihist_.nvcvert << endl;
-  cout << "ip ipvert abspvert iverti ivertf dirvert[3]" << endl;
+  std::cout << '\n' << "Nvcvert: " << fsihist_.nvcvert << '\n';
+  std::cout << "ip ipvert abspvert iverti ivertf dirvert[3]" << '\n';
   for (int ip=0; ip<fsihist_.nvcvert; ip++) {
-    cout << fsihist_.ipvert[ip] << " " << fsihist_.abspvert[ip] << " " << fsihist_.iverti[ip] << " " << fsihist_.ivertf[ip] << " ";
+    std::cout << fsihist_.ipvert[ip] << " " << fsihist_.abspvert[ip] << " " << fsihist_.iverti[ip] << " " << fsihist_.ivertf[ip] << " ";
     for (int j=0; j<3; j++)
-      cout << fsihist_.dirvert[ip][j] << " ";
-    cout << endl;
+      std::cout << fsihist_.dirvert[ip][j] << " ";
+    std::cout << '\n';
   }
 
-  cout << endl << "Ibound = " << posinnuc_.ibound << endl;
-  cout << endl << "Fsiprob = " << fsihist_.fsiprob << endl;
+  std::cout << '\n' << "Ibound = " << posinnuc_.ibound << '\n';
+  std::cout << '\n' << "Fsiprob = " << fsihist_.fsiprob << '\n';
  
-  cout << endl;
+  std::cout << '\n';
 }
 
 
 void NFortFns::print_nework() {
   
-  cout << endl << "-------------------------------" << endl;
-  cout << "NEWORK Common Block" << endl;
-  cout << endl << "Mode = " << nework_.modene << ", Numne = " << nework_.numne << endl;
-  cout << "ipne pne[3]" << endl;
+  std::cout << '\n' << "-------------------------------" << '\n';
+  std::cout << "NEWORK Common Block" << '\n';
+  std::cout << '\n' << "Mode = " << nework_.modene << ", Numne = " << nework_.numne << '\n';
+  std::cout << "ipne pne[3]" << '\n';
   for (int ip=0; ip<nework_.numne; ip++) {
-    cout << nework_.ipne[ip] << " ";
+    std::cout << nework_.ipne[ip] << " ";
     for (int j=0; j<3; j++)
-      cout << nework_.pne[ip][j] << " ";
-    cout << endl;
+      std::cout << nework_.pne[ip][j] << " ";
+    std::cout << '\n';
   }
   
-  cout << endl;
+  std::cout << '\n';
 }
 
 void NFortFns::print_neutcrs() {
   
-  cout << endl << "-------------------------------" << endl;
-  cout << "NEUTCRS Common Block" << endl;
-  cout << "Crs[3] = " << neutcrscom_.crsx << " " << neutcrscom_.crsy << " " << neutcrscom_.crsz << " " << endl;
-  cout << "Crsphi = " << neutcrscom_.crsphi << endl;
-  cout << endl;
+  std::cout << '\n' << "-------------------------------" << '\n';
+  std::cout << "NEUTCRS Common Block" << '\n';
+  std::cout << "Crs[3] = " << neutcrscom_.crsx << " " << neutcrscom_.crsy << " " << neutcrscom_.crsz << " " << '\n';
+  std::cout << "Crsphi = " << neutcrscom_.crsphi << '\n';
+  std::cout << '\n';
 }
 
 void NFortFns::print_allevent() {
   print_nework();
   print_neutcrs();
   print_fsihist();
-  cout << endl << "-------------------------------" << endl;
+  std::cout << '\n' << "-------------------------------" << '\n';
 }
 
 
 void NFortFns::print_allparams() {
 
-  cout << endl << endl;
+  std::cout << '\n' << '\n';
 
   // Input parameters
-  cout << endl << "-- Variable Model Parameters --" << endl;
+  std::cout << '\n' << "-- Variable Model Parameters --" << '\n';
 
-  cout << "nemdls_.xmaqe = " <<         nemdls_.xmaqe   << endl;    
-  cout << "nemdls_.xmvqe = " <<        nemdls_.xmvqe     << endl;  
-  cout << "nemdls_.kapp = " <<          nemdls_.kapp      << endl;  
-  cout << "nemdls_.xmaspi = " <<      nemdls_.xmaspi     << endl;
-  cout << "nemdls_.xmvspi = " <<      nemdls_.xmvspi   << endl;
-  cout << "nemdls_.xmares = " <<      nemdls_.xmares     << endl;
-  cout << "nemdls_.xmvres = " <<      nemdls_.xmvres   << endl;
-  cout << "nemdls_.xmacoh = " <<         nemdls_.xmacoh   << endl;    
-  cout << "nemdls_.rad0nu = " <<         nemdls_.rad0nu   << endl;    
-  cout << "neut1pi_.xmanffres = " <<   neut1pi_.xmanffres << endl;
-  cout << "neut1pi_.xmvnffres = " <<   neut1pi_.xmvnffres << endl;
-  cout << "neut1pi_.xmarsres = " <<   neut1pi_.xmarsres << endl;
-  cout << "neut1pi_.xmvrsres = " <<   neut1pi_.xmvrsres << endl;
-  cout << "neut1pi_.neiff = " <<   neut1pi_.neiff << endl;
-  cout << "neut1pi_.nenrtype = " <<   neut1pi_.nenrtype << endl;
-  cout << "neut1pi_.rneca5i = " <<   neut1pi_.rneca5i << endl;
-  cout << "neut1pi_.rnebgscl = " <<   neut1pi_.rnebgscl << endl;
-  cout << "neutdis_.nepdf = " <<       neutdis_.nepdf   << endl;  
-  cout << "neutdis_.nebodek = " <<     neutdis_.nebodek  << endl;  
-  cout << "neffpr_.fefqe = " <<     neffpr_.fefqe   << endl;
-  cout << "neffpr_.fefqeh = " <<    neffpr_.fefqeh  << endl;
-  cout << "neffpr_.fefinel = " <<   neffpr_.fefinel << endl;
-  cout << "neffpr_.fefabs = " <<    neffpr_.fefabs  << endl;
-  cout << "neffpr_.fefcx = " <<     neffpr_.fefcx   << endl;
-  cout << "neffpr_.fefcxh = " <<    neffpr_.fefcxh  << endl;
+  std::cout << "nemdls_.xmaqe = " <<         nemdls_.xmaqe   << '\n';    
+  std::cout << "nemdls_.xmvqe = " <<        nemdls_.xmvqe     << '\n';  
+  std::cout << "nemdls_.kapp = " <<          nemdls_.kapp      << '\n';  
+  std::cout << "nemdls_.xmaspi = " <<      nemdls_.xmaspi     << '\n';
+  std::cout << "nemdls_.xmvspi = " <<      nemdls_.xmvspi   << '\n';
+  std::cout << "nemdls_.xmares = " <<      nemdls_.xmares     << '\n';
+  std::cout << "nemdls_.xmvres = " <<      nemdls_.xmvres   << '\n';
+  std::cout << "nemdls_.xmacoh = " <<         nemdls_.xmacoh   << '\n';    
+  std::cout << "nemdls_.rad0nu = " <<         nemdls_.rad0nu   << '\n';    
+  std::cout << "neut1pi_.xmanffres = " <<   neut1pi_.xmanffres << '\n';
+  std::cout << "neut1pi_.xmvnffres = " <<   neut1pi_.xmvnffres << '\n';
+  std::cout << "neut1pi_.xmarsres = " <<   neut1pi_.xmarsres << '\n';
+  std::cout << "neut1pi_.xmvrsres = " <<   neut1pi_.xmvrsres << '\n';
+  std::cout << "neut1pi_.neiff = " <<   neut1pi_.neiff << '\n';
+  std::cout << "neut1pi_.nenrtype = " <<   neut1pi_.nenrtype << '\n';
+  std::cout << "neut1pi_.rneca5i = " <<   neut1pi_.rneca5i << '\n';
+  std::cout << "neut1pi_.rnebgscl = " <<   neut1pi_.rnebgscl << '\n';
+  std::cout << "neutdis_.nepdf = " <<       neutdis_.nepdf   << '\n';  
+  std::cout << "neutdis_.nebodek = " <<     neutdis_.nebodek  << '\n';  
+  std::cout << "neffpr_.fefqe = " <<     neffpr_.fefqe   << '\n';
+  std::cout << "neffpr_.fefqeh = " <<    neffpr_.fefqeh  << '\n';
+  std::cout << "neffpr_.fefinel = " <<   neffpr_.fefinel << '\n';
+  std::cout << "neffpr_.fefabs = " <<    neffpr_.fefabs  << '\n';
+  std::cout << "neffpr_.fefcx = " <<     neffpr_.fefcx   << '\n';
+  std::cout << "neffpr_.fefcxh = " <<    neffpr_.fefcxh  << '\n';
 
   // Fixed parameters
-  cout << endl << "-- These depend on target nucleus --" << endl;
+  std::cout << '\n' << "-- These depend on target nucleus --" << '\n';
 
-  cout << "neuttarget_.numbndn = " << neuttarget_.numbndn << endl;
-  cout << "neuttarget_.numbndp = " <<   neuttarget_.numbndp << endl;
-  cout << "neuttarget_.numfrep = " <<  neuttarget_.numfrep<< endl;
-  cout << "neuttarget_.numatom = " <<  neuttarget_.numatom<< endl;
+  std::cout << "neuttarget_.numbndn = " << neuttarget_.numbndn << '\n';
+  std::cout << "neuttarget_.numbndp = " <<   neuttarget_.numbndp << '\n';
+  std::cout << "neuttarget_.numfrep = " <<  neuttarget_.numfrep<< '\n';
+  std::cout << "neuttarget_.numatom = " <<  neuttarget_.numatom<< '\n';
   
-  cout << "nenupr_.pfsurf = " <<  nenupr_.pfsurf<< endl;
-  cout << "nenupr_.pfmax = " <<  nenupr_.pfmax<< endl;
-  cout << "nenupr_.vnuini = " << nenupr_.vnuini<< endl;
-  cout << "nenupr_.vnufin = " << nenupr_.vnufin<< endl;
+  std::cout << "nenupr_.pfsurf = " <<  nenupr_.pfsurf<< '\n';
+  std::cout << "nenupr_.pfmax = " <<  nenupr_.pfmax<< '\n';
+  std::cout << "nenupr_.vnuini = " << nenupr_.vnuini<< '\n';
+  std::cout << "nenupr_.vnufin = " << nenupr_.vnufin<< '\n';
 
-  cout << endl << "-- These are fixed parameters [should = ()] --" << endl;
+  std::cout << '\n' << "-- These are fixed parameters [should = ()] --" << '\n';
 
-  cout << "nemdls_.mdlqeaf    = (0)" << nemdls_.mdlqeaf << endl;
-  cout << "nemdls_.mdlqe      = (402)" << nemdls_.mdlqe   << endl;
-  cout << "nemdls_.sccfv      = (0)" << nemdls_.sccfv   << endl;
-  cout << "nemdls_.sccfa      = (0)" << nemdls_.sccfa   << endl;
-  cout << "nemdls_.fpqe       = (1)" << nemdls_.fpqe   << endl;
+  std::cout << "nemdls_.mdlqeaf    = (0)" << nemdls_.mdlqeaf << '\n';
+  std::cout << "nemdls_.mdlqe      = (402)" << nemdls_.mdlqe   << '\n';
+  std::cout << "nemdls_.sccfv      = (0)" << nemdls_.sccfv   << '\n';
+  std::cout << "nemdls_.sccfa      = (0)" << nemdls_.sccfa   << '\n';
+  std::cout << "nemdls_.fpqe       = (1)" << nemdls_.fpqe   << '\n';
 
-  cout << "nenupr_.iformlen = (1)" <<     nenupr_.iformlen   << endl;
-  cout << "neutcard_.nefrmflg = (0)" <<  neutcard_.nefrmflg<< endl; 
-  cout << "neutcard_.nepauflg = (0)" <<   neutcard_.nepauflg<< endl; 
-  cout << "neutcard_.nenefo16 = (0)" <<  neutcard_.nenefo16 << endl;
-  cout << "neutcard_.nemodflg = (0)" <<  neutcard_.nemodflg << endl;
-  cout << "neutcard_.nenefmodl = (1)" <<  neutcard_.nenefmodl << endl;
-  cout << "neutcard_.nenefmodh = (1)" <<  neutcard_.nenefmodh << endl;
-  cout << "neutcard_.nenefkinh = (1)" <<  neutcard_.nenefkinh << endl;
-  cout << "neutpiabs_.neabspiemit = (1)" <<  neutpiabs_.neabspiemit << endl;
-  cout << "neutcard_.nusim = (1)" <<  neutcard_.nusim << endl;
+  std::cout << "nenupr_.iformlen = (1)" <<     nenupr_.iformlen   << '\n';
+  std::cout << "neutcard_.nefrmflg = (0)" <<  neutcard_.nefrmflg<< '\n'; 
+  std::cout << "neutcard_.nepauflg = (0)" <<   neutcard_.nepauflg<< '\n'; 
+  std::cout << "neutcard_.nenefo16 = (0)" <<  neutcard_.nenefo16 << '\n';
+  std::cout << "neutcard_.nemodflg = (0)" <<  neutcard_.nemodflg << '\n';
+  std::cout << "neutcard_.nenefmodl = (1)" <<  neutcard_.nenefmodl << '\n';
+  std::cout << "neutcard_.nenefmodh = (1)" <<  neutcard_.nenefmodh << '\n';
+  std::cout << "neutcard_.nenefkinh = (1)" <<  neutcard_.nenefkinh << '\n';
+  std::cout << "neutpiabs_.neabspiemit = (1)" <<  neutpiabs_.neabspiemit << '\n';
+  std::cout << "neutcard_.nusim = (1)" <<  neutcard_.nusim << '\n';
   
-  cout << "neutcoh_.necohepi  = (0)" <<  neutcoh_.necohepi << endl;
+  std::cout << "neutcoh_.necohepi  = (0)" <<  neutcoh_.necohepi << '\n';
 
-  cout << "neffpr_.fefcoh = (1)" <<   neffpr_.fefcoh << endl;
-  cout << "neffpr_.fefqehf = (1)" <<  neffpr_.fefqehf<< endl;
-  cout << "neffpr_.fefcxhf = (0)" <<  neffpr_.fefcxhf<< endl;
-  cout << "neffpr_.fefcohf  = (0)" << neffpr_.fefcohf<< endl;
+  std::cout << "neffpr_.fefcoh = (1)" <<   neffpr_.fefcoh << '\n';
+  std::cout << "neffpr_.fefqehf = (1)" <<  neffpr_.fefqehf<< '\n';
+  std::cout << "neffpr_.fefcxhf = (0)" <<  neffpr_.fefcxhf<< '\n';
+  std::cout << "neffpr_.fefcohf  = (0)" << neffpr_.fefcohf<< '\n';
 
-  cout << endl;
+  std::cout << '\n';
 }

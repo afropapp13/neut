@@ -1,6 +1,9 @@
-/* $Id: osf1.cf,v 1.1 2007-01-20 07:35:45 skrep Exp $
+/* $Id: osf1.cf,v 1.1.1.1 2016/11/04 20:29:56 mdunkman Exp $
  *
- * $Log: not supported by cvs2svn $
+ * $Log: osf1.cf,v $
+ * Revision 1.1.1.1  2016/11/04 20:29:56  mdunkman
+ * Import of NEUT 5.3.3 v1r27 for use with T2KReWeight v1r27 (Winter OA 2017)
+ *
  * Revision 1.7  1997/08/26 03:42:32  mcgrew
  * Changes to compile on the alpha.
  *

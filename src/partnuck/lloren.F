@@ -1,9 +1,12 @@
 C************************************************
-C  $Id: lloren.F,v 1.1 2007-01-20 07:13:06 skrep Exp $
+C  $Id: lloren.F,v 1.1.1.1 2016/11/04 20:31:14 mdunkman Exp $
 C
 C  This is the kinematics used by IMB (west cost).
 C
-C  $Log: not supported by cvs2svn $
+C  $Log: lloren.F,v $
+C  Revision 1.1.1.1  2016/11/04 20:31:14  mdunkman
+C  Import of NEUT 5.3.3 v1r27 for use with T2KReWeight v1r27 (Winter OA 2017)
+C
 C  Revision 1.3  1997/11/22 09:53:59  bviren
 C  Many changes:
 C

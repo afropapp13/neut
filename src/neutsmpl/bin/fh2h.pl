@@ -1,7 +1,7 @@
 eval 'exec perl -w -S $0 ${1+"$@"}'
     if 0;
 #
-# $Id: fh2h.pl,v 1.1 2008-04-13 16:17:19 skrep Exp $
+# $Id: fh2h.pl,v 1.1.1.1 2016/11/04 20:29:56 mdunkman Exp $
 #
 # Author: Tomasz Barszczak
 #         tomba@hepxvt.ps.uci.edu
@@ -45,7 +45,10 @@ eval 'exec perl -w -S $0 ${1+"$@"}'
 # (SK group members should check the CVS repository instead.)
 #
 #
-# $Log: not supported by cvs2svn $
+# $Log: fh2h.pl,v $
+# Revision 1.1.1.1  2016/11/04 20:29:56  mdunkman
+# Import of NEUT 5.3.3 v1r27 for use with T2KReWeight v1r27 (Winter OA 2017)
+#
 # Revision 1.2  1999/03/16 05:39:06  mcgrew
 # Merge the fh2h.pl bugfixes from the ichikilo branch.
 #

@@ -54,6 +54,12 @@ extern struct neuttarget_common {
 
 extern double faBBBA07(const double);
 
+// P.S (26.01.17) AxialFF Patch
+extern double fa2COMP(const double);
+extern double fa3COMP(const double);
+extern double faZEXP(const double);
+
+
 double
 qedifcrs_(int *ip, int *ccnc, float *energy, float *elep, float *coslep)
 {
@@ -188,16 +194,32 @@ qedifcrs_(int *ip, int *ccnc, float *energy, float *elep, float *coslep)
   F1 = (FGE + Q2*FGM/(XMNc*XMNc)/4.) / (1. + Q2/(XMNc*XMNc)/4.);
   F2 = 0.5*(FGE-FGM)/XMNc/(1.+Q2/(XMNc*XMNc)/4.);
 
+ 
   if (FF_model == 0) {
     // FA = -1.232*pow(1.+Q2/(Maxial*Maxial), -2.);
     FA = -1.267*pow(1.+Q2/((Maxial)*(Maxial)), -2.);
   } else if (FF_model == 1) {
     // FA = faBBBA07(Q2/1.e+6);
     FA = faBBBA07(Q2);
+
+  // P.S (26.01.17) AxialFF Patch 
+  } else if (FF_model == 2) {
+    //    printf("fa2COMP\n");
+    FA = fa2COMP(Q2);
+  } else if (FF_model == 3) {
+    //    printf("fa3COMP\n");
+    FA = fa3COMP(Q2);
+  } else if (FF_model == 4) {
+    //    printf("faZEXP\n");
+    FA = faZEXP(Q2);
+
   }else{
     printf("qedifcrs: Unknown FF_model = %d\n",FF_model);
     exit(1);
   }
+
+  //  printf("FA(%g) = %g for %d\n",Q2,FA,FF_model);
+
   //FP = 2.*XMNc*FA/(Q2 + 139.57*139.57);
   FP = fperr * 2.*XMNc*FA/(Q2 + 0.13957*0.13957); 
 

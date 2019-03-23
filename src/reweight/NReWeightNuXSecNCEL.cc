@@ -49,7 +49,6 @@ using namespace neut;
 using namespace neut::rew;
 
 using std::cout;
-using std::endl;
 
 const int NReWeightNuXSecNCEL::kModeMa;
 const int NReWeightNuXSecNCEL::kModeNormAndMaShape;
@@ -397,7 +396,9 @@ double NReWeightNuXSecNCEL::CalcWeightMa()
   //float old_weight = event.Weight();
 
   if (old_xsec==0) {
-    //cout << "NReWeightNuXSecNCEL::CalcWeightMa() Warning: old_xsec==0, setting weight to 1" << endl;
+#ifdef _N_REWEIGHT_NCEL_DEBUG_
+    cout << "NReWeightNuXSecNCEL::CalcWeightMa() Warning: old_xsec==0, setting weight to 1" << '\n';
+#endif
     return 1;
   }
   
@@ -434,8 +435,8 @@ double NReWeightNuXSecNCEL::CalcWeightMa()
 
 
 #ifdef _N_REWEIGHT_NCEL_DEBUG_
-  cout << "differential cross section (old) = " << old_xsec << endl;
-  cout << "differential cross section (new) = " << new_xsec << endl;
+  cout << "differential cross section (old) = " << old_xsec << '\n';
+  cout << "differential cross section (new) = " << new_xsec << '\n';
 #endif 
 
   // Normalize out change in total cross section from MA variations for MA_shape variation
@@ -447,8 +448,10 @@ double NReWeightNuXSecNCEL::CalcWeightMa()
     if (nework_.ipne[0] > 0 ) inu = neutTotCrs->nue;
     else if (nework_.ipne[0] < 0) inu = neutTotCrs->nueb;
     else {
+#ifdef _N_REWEIGHT_NCEL_DEBUG_
       cout << "NReWeightNuXSecNCEL::CalcWeightMa() Error: Cannot MA-shape reweight this neutrino type = " 
-	   << nework_.ipne[0] << endl;
+	       << nework_.ipne[0] << '\n';
+#endif
       exit (-1);
     }
     
@@ -463,25 +466,29 @@ double NReWeightNuXSecNCEL::CalcWeightMa()
     float new_tot_xsec = neutTotCrs->ccqe_crs[inu]->Interpolate(Enu, fPfDef, fMaCurr);
 
     if (new_tot_xsec==0) {
-      cout << "NReWeightNuXSecNCEL::CalcWeightMa() Warning: new_tot_xsec==0, setting weight to 1" << endl;
+#ifdef _N_REWEIGHT_NCEL_DEBUG_
+      cout << "NReWeightNuXSecNCEL::CalcWeightMa() Warning: new_tot_xsec==0, setting weight to 1" << '\n';
+#endif
       return 1;
     }
 
 #ifdef _N_REWEIGHT_NCEL_DEBUG_
-    cout << "total cross section (old) = " << old_tot_xsec << endl;
-    cout << "total cross section (new) = " << new_tot_xsec << endl;
+    cout << "total cross section (old) = " << old_tot_xsec << '\n';
+    cout << "total cross section (new) = " << new_tot_xsec << '\n';
 #endif 
 
     new_weight *= old_tot_xsec / new_tot_xsec ;
   }
 
   if (isinf(new_weight) || isnan(new_weight)) {
-    cout << "NReWeightNuXSecNCEL::CalcWeightMa() Warning: new_weight is infinite, setting to 1" << endl;
+#ifdef _N_REWEIGHT_NCEL_DEBUG_
+    cout << "NReWeightNuXSecNCEL::CalcWeightMa() Warning: new_weight is infinite, setting to 1" << '\n';
+#endif
     return 1;
   }
   
 #ifdef _N_REWEIGHT_NCEL_DEBUG_
-  cout << "new weight = " << new_weight << endl;
+  cout << "new weight = " << new_weight << '\n';
 #endif 
 
   return new_weight;

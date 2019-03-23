@@ -1,10 +1,10 @@
-#!/bin/csh
+#!/bin/tcsh
 
 setenv SOMEWHERE `pwd`/..
 setenv MACHINE `${SOMEWHERE}/neutsmpl/bin/Machine`
 
-setenv FC g77
-#setenv FC gfortran
+#setenv FC g77
+setenv FC gfortran
 if (${?FC} == 0) then
 	echo "EnvMakeneutsmpl: set environmental variable FC "
 	exit 1
@@ -68,3 +68,4 @@ setenv PACKAGE_LEVEL ".."
 # Get required data files
 # Selecting only data files (.dat) and removing color tags
 set DATFILES=(`ls -q ${SOMEWHERE}/crsdat | grep .dat | sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"`)
+

@@ -37,7 +37,8 @@ OBJ =	dnela.o fnelscrn.o fnelscrs.o dnelsq2.o fnq2max.o  \
 		fnrworld.o \
 		grv94di.o grv98_lo.o pdfset.o structm.o \
 		nesettarg.o nrsettarg.o nesetfgparams.o \
-        bbba07.o ddifcrs.o evdifcrs.o qedifcrs.o cohma.o necrsmode.o
+        bbba07.o ddifcrs.o evdifcrs.o qedifcrs.o cohma.o necrsmode.o \
+	fa3comp.o fazexp.o
 
 RSO =	rs3drt.o rsasum.o rsdcrs.o rsclfm.o  rsdist.o rsifl1.o rsifl2.o \
 		rsifl3.o rsifl4.o rsifl5.o rsifl6.o rsifl7.o rslzbt.o rsrotvec.o \
@@ -127,6 +128,8 @@ InstallInclude(nefillverC.h,$(INCDIR))
 InstallInclude(neutmodesCPP.h,$(INCDIR))
 
 InstallInclude(neutfilepath.h,$(FORTRAN_INCDIR))
+Fh2hIncludeTarget(neutfilepath)
+InstallInclude(neutfilepathC.h,$(INCDIR))
 
 XCOMM ------------------------------------------------------
 XCOMM Make programs.

@@ -1,4 +1,4 @@
-#!/bin/csh
+#!/bin/tcsh
 
 #############################################################################
 source EnvMakeneutsmpl.csh
@@ -65,3 +65,4 @@ make -f GNUmakefile.neutroot clean
 
 \rm -rf ${SOMEWHERE}/../inc
 \rm -rf ${SOMEWHERE}/../include
+
