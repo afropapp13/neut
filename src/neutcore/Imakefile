@@ -1,7 +1,7 @@
 LIBBASE	= neutcore
-VER	= 5.3.2
+VER	= 5.3.2.1
 TAG	=
-COREVER = 532
+COREVER = 5321
 
 #ifdef ICHI_KILO
 	TAG = .kt

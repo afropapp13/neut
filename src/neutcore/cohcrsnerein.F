@@ -619,7 +619,11 @@ C       ENERGY OVER 1000GEV
       END IF
 
       SLOPE = (SIGEND(2)-SIGEND(1))/(EEND(2)-EEND(1))
-      ScalingFactor = (NUMATOM/16.)**(1./3.) ! Scaling by A^(1/3) rule
+      if ( NUMATOM.ne.1 ) THEN
+         ScalingFactor = (NUMATOM/16.)**(1./3.) ! Scaling by A^(1/3) rule
+      else
+         ScalingFactor = 0.
+      endif
       COHCRSNEREIN = (SIGEND(1)+SLOPE*(E-EEND(1)))*ScalingFactor
       
 #ifdef MARTEAU

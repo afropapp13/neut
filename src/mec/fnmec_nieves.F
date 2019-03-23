@@ -26,7 +26,7 @@ C
 C------------------------------------------------------------------
 C     2013.01.25  A.Redij - if Atomic mass number ANUM is given,mec
 C     X-section is interpolated for desired value of ANUM,
-C     from available data for Carbon and oxygen, Calcium. 
+C     from available data for Carbon and Oxygen, Calcium. 
 C     Cross-section tables available for 
 C     nue, nuebar, numu, numubar 
 C     C12 O16,Ca40 
@@ -202,30 +202,31 @@ C initialise variables.
       CRSLOW=0.
       CRSHIG=0.
 C---------------------------------------------------------------------
-C return if Mass number less than 12 and heavier than 70
+C return if Mass number less than 10 and heavier than 70
       NUMTAR = NUMBNDN+NUMBNDP
 C     set weight for interpolation over A
-      if((NUMTAR.lt.MASSNUM(1)).or.(NUMTAR.gt.70)) then
-         write(*,*) 'Cross-section table not available for this mode.'
+      if((NUMTAR.lt.10).or.(NUMTAR.gt.208)) then
+C         write(*,*) 'Cross-section table not available for this mode.'
          return
       endif
 
 
       do 10 j=1,2
-         if( (NUMTAR.ge.MASSNUM(j) )
+         if( (NUMTAR.ge.MASSNUM(j))
      $        .and.  
      $        (NUMTAR.lt.MASSNUM(j+1))) then
             jj = j
             goto 10
          else if(NUMTAR.ge.MASSNUM(3))then
             jj=2
+         else if(NUMTAR.lt.MASSNUM(1))then
+            jj=1
          endif
  10   continue
       
-      
        WeightA  = (REAL(NUMTAR)-REAL(MASSNUM(jj)))
      $     /(REAL(MASSNUM(jj+1))-REAL(MASSNUM(jj)))
-
+       
         
 
 C-----------------------------------------------------------------------------------

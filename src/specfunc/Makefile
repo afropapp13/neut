@@ -6,12 +6,12 @@ include $(NEUT_ROOT)/src/neutsmpl/config_neut.gmk
 
 #.SILENT:
 
-NEUTCOREVER	= 5.3.2
-NUCEFFVER   = 5.3.1
-NUCCORVER   = 5.3.1
-PARTNUCKVER = 5.0.5
-SKMCSVCVER  = 5.0.5
-SPECFUNCVER = 5.3.2
+NEUTCOREVER	= 5.3.2.1
+NUCEFFVER   = 5.3.2.1
+NUCCORVER   = 5.3.2.1
+PARTNUCKVER = 5.3.2.1
+SKMCSVCVER  = 5.3.2.1
+SPECFUNCVER = 5.3.2.1
 
 # compiler
 #ifndef ${FC}

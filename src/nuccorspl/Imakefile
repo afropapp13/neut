@@ -1,6 +1,6 @@
 LIBALIAS =  nuccorrspl
-VER  = 5.3.1
-IVER = 531
+VER  = 5.3.2.1
+IVER = 5321
 
 LIBNAME = $(LIBALIAS)_$(VER)
 

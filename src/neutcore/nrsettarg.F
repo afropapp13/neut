@@ -231,6 +231,7 @@
 
       NRPFSURF = PFSURF
 
+      call nrinit(apn,1)
 
       return
       end

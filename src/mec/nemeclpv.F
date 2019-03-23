@@ -51,12 +51,12 @@ C  Array to store xsecs at Enu bin edges
 C  Array to store interpolated xsec at precise Enu
       REAL XSEC(31,31)
       REAL XSECVAL
-      REAL ETABLE(92),PTABLE(31),PTABLEL(31),TTABLE(31)
+      REAL ETABLE(92),PTABLE(31),TTABLE(31)
       REAL P,T,HIT
 C  Maximum and minimum possible values of Tmu and cos(thetaMu). Maximum Pmu somewhat arbitrarily defined here.
       REAL PMAX, PMIN, TMAX, TMIN
       INTEGER NEVALS, NPVALS, NTVALS
-      REAL LEPMOM, LEPMASS, Q,QL
+      REAL LEPMOM, LEPMASS, Q
 C Some variables for the filename formatting
       INTEGER EINTLEN, NUINTLEN
       CHARACTER*80 FILEFORM
@@ -65,11 +65,11 @@ C Some variables to make bin interpolation more intelligible
       REAL X1_LOWE, X1_HIGHE, X2_LOWE, X2_HIGHE
       REAL PEVAL, TEVAL
 C Variable to input correct file for atom
-      CHARACTER*4 ATOMSTRINGL
+      CHARACTER*4 ATOMSTRING
 C Variables for high energy extension
       REAL Q3MAX_DATA 
       REAL Q3MAX
-      REAL PMAX_DATA,PMIN_DATA,TMAX_DATA,TMIN_DATA,PMAX_DATA_L
+      REAL PMAX_DATA,PMIN_DATA,TMAX_DATA,TMIN_DATA
       REAL Q3THROW
 C Array of atomic mass number for which the cross-section tables are available.
       INTEGER*4 ATABLE(3)
@@ -128,20 +128,33 @@ C AMASS is mass number of target element.  Check if the elements is C12, O16 or 
       
        AMASS=NUMBNDP+NUMBNDN
         
-       IF(AMASS.EQ.12 .OR. AMASS.EQ.16 .OR. AMASS.EQ.40) THEN 
+       IF((NUMBNDP.eq.6).and.(NUMBNDN.eq.6))THEN 
+       IAM=0 
+       GOTO 11
+       ELSE IF((NUMBNDP.eq.8).and.(NUMBNDN.eq.8))THEN 
+       IAM=0 
+       GOTO 11
+       ELSE IF((NUMBNDP.eq.20).and.(NUMBNDN.eq.20))THEN 
        IAM=0 
        GOTO 11
        ENDIF
+  
+       IF(AMASS.LT.ATABLE(1))THEN
+       IAM=1
+       GOTO 11
+       ELSE IF(AMASS.GE.ATABLE(3))THEN
+       IAM=3
+       GOTO 11           
+       ENDIF
+ 
        DO 10 J=1,2
          IF((AMASS.GE.ATABLE(J))
      $        .and.  
      $        (AMASS.LT.ATABLE(J+1))) THEN
             IAM = J
-            GOTO 10
-         ELSE IF(AMASS.GE.ATABLE(3))THEN
-            IAM=3
-            
+            GOTO 10           
          ENDIF
+
  10    CONTINUE           
  11    CONTINUE
     
@@ -150,7 +163,7 @@ C AMASS is mass number of target element.  Check if the elements is C12, O16 or 
       IF(IAM.EQ.3)WEIGHT=REAL(AMASS)/REAL(ATABLE(3))
       IF(IAM.EQ.0)WEIGHT=1.0
             
-
+      
 C Set Q value. This is an energy related to the difference between initial and final nuclear state in Nieves code. Card coded numbers come from values used by Nieves
 
 
@@ -212,9 +225,9 @@ C First, get values at lower edge of Enu bin in which ENEU lies
       
 
 C    Some statements to unify formatting of xsec filenames
-      IF(IAM.EQ.1 .OR. AMASS.EQ.12) ATOMSTRINGL="C12"
-      IF(IAM.EQ.2 .OR. AMASS.EQ.16) ATOMSTRINGL="O16"
-      IF(IAM.EQ.3 .OR. AMASS.EQ.40) ATOMSTRINGL="Ca40"
+      IF(IAM.EQ.1 .OR. AMASS.EQ.12) ATOMSTRING="C12"
+      IF(IAM.EQ.2 .OR. AMASS.EQ.16) ATOMSTRING="O16"
+      IF(IAM.EQ.3 .OR. AMASS.EQ.40) ATOMSTRING="Ca40"
 
       IF(ABS(IPMODE(1)).LT.10) NUINTLEN=1
       IF(ABS(IPMODE(1)).GT.9) NUINTLEN=2
@@ -225,7 +238,6 @@ C    Some statements to unify formatting of xsec filenames
       IF(EINT.GT.9) EINTLEN=2
       IF(EINT.GT.99) EINTLEN=3
       
-
 C Now get xsec data from tables
 
       IF(IAM.EQ.3 .OR. AMASS.EQ.40)THEN
@@ -237,7 +249,7 @@ C Now get xsec data from tables
       ENDIF
 
       WRITE(FILENAME,FILEFORM)
-     $      'Nieves_',IPMODE(1),'_',ATOMSTRINGL,'_',EINT, '.dat'
+     $      'Nieves_',IPMODE(1),'_',ATOMSTRING,'_',EINT, '.dat'
 
       
 C Get values from file 
@@ -246,6 +258,7 @@ C Get values from file
         DO 230 J=1,NPVALS
           READ(21,*)
      $    TEMP0,TEMP1,TEMP2,XSECBINS_INPUTL(1,I,J)
+      
 C   Scale the value for resp. target.
           XSECBINS_INPUT(1,I,J)=XSECBINS_INPUTL(1,I,J)*WEIGHT
  230    continue
@@ -269,13 +282,14 @@ C (or lower edge of bin above, if xsec is to be extrapolated outside range of En
       ENDIF
 
       WRITE(FILENAME,FILEFORM)
-     $      'Nieves_', IPMODE(1),'_',ATOMSTRINGL,'_',(EINT+1), '.dat'
+     $      'Nieves_', IPMODE(1),'_',ATOMSTRING,'_',(EINT+1), '.dat'
      
       OPEN(unit=31,file=FILENAME)
       DO 320 I=1,NTVALS
         DO 330 J=1,NPVALS
            READ(31,*)
      $      TEMP0,TEMP1,TEMP2,XSECBINS_INPUTL(2,I,J)     
+          
 C   Scale the value for resp. target.
 	   XSECBINS_INPUT(2,I,J)=XSECBINS_INPUTL(2,I,J)*WEIGHT
  330    continue
