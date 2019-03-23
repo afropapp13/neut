@@ -1,0 +1,41 @@
+cd //pawc
+hi/del *
+close 1
+
+hi/file 1 skevrate_flux_10a.hbk
+
+hrin 0
+
+hi/file 2 skevrate_07a.hbk
+hi/list
+
+nt/chain -skev
+#for j in 0 1 2 3 4 5 6 7 8 9
+#    nt/chain skev vects/flux04a_40GeV_2.5deg/h2o.neut4.5.1.flux04a_40GeV_2.5deg.sk.00[j].nfsi.nt
+#endfor
+nt/chain skev ../neut_505_H2O_flx_10a_sk_250kA.nt
+
+cd //pawc
+1d 9114  'mu at sk'         200 0. 10.
+1d 9999  'dummy'            200 0. 10.
+1d 10114 'mu at sk(renorm)' 200 0. 10.
+
+nt/pl //skev/10.abspnu(1) idh=9114
+
+numev=$hinfo(9114,'sum')
+crsnorm=$hinfo(1114,'sum')
+
+mess [numev]  events
+mess norm : [crsnorm]
+
+norm=$sigma([crsnorm]/[numev])
+
+add 9114 9999 10114 [norm] 0.
+
+set hcol 2
+set hwid 6
+hi/pl 10114
+set hcol 3
+hi/pl 1114 chopt=s
+set hcol 4
+hi/pl //lun2/1114 chopt=s

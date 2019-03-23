@@ -1,0 +1,118 @@
+C
+C ++ PI+,PI+ SCATTERING SIMULATION FOR O16
+C
+      Implicit None
+      real XIN(3),PIN(3),PFI(3)
+      real rmax,r,tin,ppp,pinabs,xzig,pfiabs,tpi
+      real theta,weight,cost,sint,weigt2
+      real area,dtheta
+      integer kin,itoti,itot,iabs,ifree,ichex,iij,i
+      integer nabs,nzig,kfi,iinel
+      real dum,apn,ap
+      real rn
+      external rn
+      integer LTINEL,LTABS,LTCOH
+      integer ISEED,IRDSED
+      
+      COMMON /RNSEED/ISEED
+#include<efpion.h>
+      COMMON /YHDEBUG/LTINEL,LTABS,LTCOH
+
+C
+C
+C
+C	read parameters
+C
+C
+      write(*,*) "Random SEED"
+      read(*,*) IRDSED
+      write(*,*) "Event #"
+      read(*,*) ITOT
+      write(*,*) "P(pi)"
+      read(*,*) PPP
+      write(*,*) "Event : ",ITOT
+      write(*,*) "P(pi) : ",PPP
+C
+C
+C	set common blocks
+C
+C
+      CALL RNSET(IRDSED)
+
+      call efblkset
+      call efsabrho
+C      
+C  for debug
+C
+      LTINEL=0
+      LTABS=0
+      LTCOH=0
+C
+C	set parameters
+C
+      RMAX=2.5*C
+C	(RMAX: maximum radius,C:Woods-Saxon const.)
+      KIN=211
+C	(KIN:kind of incoming pion,pi+ -> 211,pi- -> -211,pi0 -> 111)
+C
+      area=pi*RMAX*RMAX*10
+C	(area:area of circle radius RMAX fm,
+C	 1fm^2 = 10mb,so x10 was added)
+C
+      dtheta=PI/180.*2.
+C	(dtheta is for calc. cross-section,
+C	 currentry 2 degree / bin.) 
+
+      TIN=SQRT(PPP**2+139.**2)-139.
+      PIN(1)=PPP
+      PIN(2)=0.
+      PIN(3)=0.
+      PINABS=PPP
+
+      IABS=0
+      IFREE=0
+      ICHEX=0
+      DO 100 I=1,ITOT
+  110 XIN(2)=-RMAX+RN(DUM)*RMAX*2.
+      XIN(3)=-RMAX+RN(DUM)*RMAX*2.
+      R=SQRT(XIN(2)**2+XIN(3)**2)
+      IF(R.GE.RMAX)GO TO 110
+      XIN(1)=-SQRT(RMAX**2-R**2)+0.0001
+      CALL EFTRACE(APN,AP,KIN,XIN,PIN,NABS,NZIG,KFI,PFI)
+      XZIG=FLOAT(NZIG)+0.5
+      IF(NABS.EQ.0)GO TO 200
+      IF(NZIG.EQ.0)GO TO 300
+      PFIABS=SQRT(PFI(1)**2+PFI(2)**2+PFI(3)**2)
+      TPI=SQRT(PFIABS**2+139.**2)-139.
+      COST=PIN(1)*PFI(1)/PINABS/PFIABS
+      THETA=ACOS(COST)
+      THETA=THETA/3.141593*180.
+      if (abs(cost).eq.1.) then
+         sint=0.
+      else
+         SINT=SQRT(1.-COST**2)
+      endif
+      WEIGHT=1./SINT
+      WEIGT2=WEIGHT*area/float(ITOT)/(2 * PI * dtheta)
+      IF(KFI.NE.KIN)GO TO 400
+      GO TO 100
+  200 IABS=IABS+1
+      PFIABS=SQRT(PFI(1)**2+PFI(2)**2+PFI(3)**2)
+      TPI=SQRT(PFIABS**2+139.**2)-139.
+      COST=PIN(1)*PFI(1)/PINABS/PFIABS
+      GO TO 100
+  300 IFREE=IFREE+1
+      GO TO 100
+  400 ICHEX=ICHEX+1
+  100 CONTINUE
+C
+      IINEL=ITOT-IABS-IFREE-ICHEX
+      WRITE(100,600)ITOT,IFREE,IABS,IINEL,ICHEX,RMAX
+  600 FORMAT(///5X,'TOTAL # OF EVENT :',I6/
+     &5X,'FREE ESCAPE      :',I6/
+     &5X,'ABSORPTION       :',I6/
+     &5X,'INELASTIC SCATTER:',I6/
+     &5X,'CHARGE EXCHANGE  :',I6/
+     &5X,'RMAX             :',G15.7,' FERMI')
+      STOP
+      END

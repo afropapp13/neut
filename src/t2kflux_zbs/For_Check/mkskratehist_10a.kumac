@@ -1,0 +1,61 @@
+macro mkskratehist [flxdir]
+
+close 1
+hi/del *
+vec/del *
+
+nt/chain -skflx
+
+do idx=1,100
+  nt/chain skflx [flxdir]/10a/sk/nu.sk_horn250ka.[idx].hbk
+enddo
+
+mess rdtotpau
+exec rdtotpau.kumac
+mess rdtotpau done.
+
+mess efill
+exec efill
+mess efill done.
+
+mul 100 114 1114
+mul 200 214 1214
+mul 300 112 1112
+mul 400 212 1212
+
+mul 100 112 12014
+
+hi/file 30 skevrate_[flxdir].hbk chopt='N'
+hrout 0
+close 30
+mess nu_mu $hinfo(1114,'sum')
+mess \bar{nu_mu}  $hinfo(1214,'sum')
+mess nu_e  $hinfo(1112,'sum')
+mess \bar{nu_e}  $hinfo(1212,'sum')
+
+mess flux(nu_mu) x crs(nu_e) $hinfo(12014,'sum')
+
+return
+
+macro efill
+* n_mu
+  exec mkskratehist#mkhist 100 [m] (int(mode/10)=1)
+  exec mkskratehist#mkhist 101 '[m] from [p]' (mode=11)
+  exec mkskratehist#mkhist 102 '[m] from K' (mode=12)
+* nu_mubar
+  exec mkskratehist#mkhist 200 '[m]&^\261' (int(mode/10)=2)
+* nu_e
+  exec mkskratehist#mkhist 300 'e' (int(mode/10)=3)
+  exec mkskratehist#mkhist 301 'e from K^+' (mode=31)
+  exec mkskratehist#mkhist 302 'e from K^0?L' (mode=32)
+  exec mkskratehist#mkhist 303 'e from [m]^+' (mode=33)
+* nu_ebar
+  exec mkskratehist#mkhist 400 'e&^\261' (int(mode/10)=4)
+return
+
+macro mkhist hid=100 type cond
+   htit = 'E[n]?'//[type]
+   1dhist [hid] [htit] 200 0. 10.
+   nt/proj [hid] //skflx/2000.enu [cond]*norm
+return
+

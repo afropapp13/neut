@@ -1,0 +1,66 @@
+NEUTCOREVER	= 5.3.1
+INEUTCOREVER= 531
+NUCEFFVER   = 5.3.1
+INUCEFFVER  = 531
+NUCCORVER   = 5.3.1
+INUCCORVER  = 531
+PARTNUCKVER = 5.0.5
+IPARTNUCKVER= 505
+SKMCSVCVER  = 5.0.5
+ISKMCSVCVER = 505
+
+LIBALIAS = zbsfns
+VER  = 5.3.1
+IVER = 531
+
+LIBNAME = $(LIBALIAS)_$(VER)
+
+FORTRANDEFINES += -DNEZBSVER=$(IVER)
+
+XCOMM ------------------------------------------------------
+XCOMM Define Object Files
+XCOMM ------------------------------------------------------
+
+FOBJ = nemknebk.o  nemkmodelbk.o vcmkvc.o vcmkvx.o \
+       nemknetarg.o nerdnetarg.o nemkfsibk.o nemkcrsbk.o \
+       nerdnebk.o vcrdvccm.o vcrdvc.o vcrdvx.o \
+       nerdnetarg.o nerdfsibk.o nerdcrsbk.o vcmkdetgm.o \
+       vcclfsicm.o 
+
+OBJS = $(FOBJ) 
+
+INCLUDES = -I${SKOFL_ROOT}/inc -I${CERN}/${CERN_LEVEL}/include \
+           -I../neutcore -I../t2kflux_zbs -I../nuccorspl
+
+XCOMM ------------------------------------------------------
+XCOMM Link Libraries
+XCOMM ------------------------------------------------------
+
+COREDIR =	../neutcore/Linux_pc
+LIBDIRS =	-L${COREDIR}            -L../nuccorspl/Linux_pc \
+			-L../nuceff/Linux_pc -L../partnuck/Linux_pc  \
+			-L../skmcsvc/Linux_pc 
+
+MCLIB = ${LIBDIRS} -lneutcore_${NEUTCOREVER} -lnuceff_${NUCEFFVER} \
+		-lneutcore_${NEUTCOREVER} \
+		-lnuccorrspl_${NUCCORVER} -lpartnuck_${PARTNUCKVER} \
+		-lskmcsvc_${SKMCSVCVER}  \
+		-L${SKOFL_ROOT}/lib -lzbs -liolib -llibrary -liolib -lrfa \
+		#-L/opt/intel/cce/10.0.023/lib -lirc
+
+SKOFLLIB = -L${SKOFL_ROOT} -lskroot -lDataDefinition -lRoot2zbs \
+			-ltqrealroot -lloweroot \
+			-latmpdroot -lmcinfo -lsofttrgroot
+
+XCOMM ------------------------------------------------------
+XCOMM Build Library
+XCOMM ------------------------------------------------------
+
+NormalLibraryTarget($(LIBNAME),$(OBJS))
+InstallLibrary($(LIBNAME),$(LIBDIR))
+InstallLibraryAlias($(LIBNAME),$(LIBALIAS),$(LIBDIR))
+
+
+XCOMM ------------------------------------------------------
+XCOMM Install any include directories
+XCOMM ------------------------------------------------------

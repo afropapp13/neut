@@ -1,0 +1,23 @@
+*******************************************
+*       COMMON BLOCK FOR FNELSPAU
+*
+*
+*******************************************
+
+      REAL CRSRFGLE(9,210)
+      REAL CRSRFGRE(9,210)
+      REAL CRSRFGLM(9,210)
+      REAL CRSRFGRM(9,210)
+      REAL CRSRFGLT(9,210)
+      REAL CRSRFGRT(9,210)
+
+      REAL CRSSFLE(9,210)
+      REAL CRSSFRE(9,210)
+      REAL CRSSFLM(9,210)
+      REAL CRSSFRM(9,210)
+      REAL CRSSFLT(9,210)
+      REAL CRSSFRT(9,210)
+
+      COMMON /QECRS/
+     $       CRSRFGLE,CRSRFGRE,CRSRFGLM,CRSRFGRM,CRSRFGLT,CRSRFGRT,
+     $       CRSSFLE,CRSSFRE,CRSSFLM,CRSSFRM,CRSSFLT,CRSSFRT

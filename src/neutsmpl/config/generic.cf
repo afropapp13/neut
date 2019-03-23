@@ -1,0 +1,29 @@
+/* $Id: generic.cf,v 1.1 2007-01-20 07:35:35 skrep Exp $
+ *
+ * $Log: not supported by cvs2svn $
+ * Revision 1.2  1997/05/27 15:55:40  mcgrew
+ * Add patches to keep compadible with the K2K config files.
+ *
+ * Revision 1.1.1.1  1997/04/26 08:45:50  mcgrew
+ * import config files
+ *
+ * Revision 1.1.1.1  1995/12/20 15:26:45  cernlib
+ * X11R6 config files unmodified
+ *
+ *
+ */
+XCOMM platform:  $XConsortium: generic.cf,v 1.6 91/07/03 14:47:42 rws Exp $
+
+#define OSName            Unknown Operating System
+XCOMM operating system:  OSName
+#define OSMajorVersion    0
+#define OSMinorVersion    0
+
+#ifdef SYSV
+#define SystemV		YES
+#endif
+#ifdef SVR4
+#define SystemV4	YES
+#endif
+
+#define BuildServer	NO

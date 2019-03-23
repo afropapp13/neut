@@ -1,0 +1,135 @@
+ifndef NEUT_ROOT
+      NEUT_ROOT = ../../
+endif
+include $(NEUT_ROOT)/src/neutsmpl/config_neut.gmk
+
+NEUTCOREVER	= 5.3.1
+INEUTCOREVER= 531
+
+NUCEFFVER   = 5.3.1
+INUCEFFVER  = 531
+
+NUCCORVER   = 5.3.1
+INUCCORVER  = 531
+
+PARTNUCKVER = 5.0.5
+IPARTNUCKVER= 505
+
+SKMCSVCVER  = 5.0.5
+ISKMCSVCVER = 505
+
+ZBSFNSVER  = 5.3.1
+IZBSFNSVER = 531
+
+SPECFUNCVER = 5.3.1
+ISPECFUNCVER= 531
+
+COREDIR =   ../neutcore/Linux_pc
+LIBDIRS =   -L${COREDIR}            -L../nuccorspl/Linux_pc \
+            -L../nuceff/Linux_pc -L../partnuck/Linux_pc  \
+            -L../skmcsvc/Linux_pc -L../zbsfns/Linux_pc \
+			-L../specfunc
+
+MCLIBS  = ${LIBDIRS} -lneutcore_${NEUTCOREVER} -lspecfunc_${SPECFUNCVER} \
+		-lnuceff_${NUCEFFVER} -lneutcore_${NEUTCOREVER} \
+		-lnuccorrspl_${NUCCORVER} -lpartnuck_${PARTNUCKVER} \
+		-lskmcsvc_${SKMCSVCVER} -lzbsfns_${ZBSFNSVER}
+
+
+ROOTINCDIR  = `root-config --incdir`
+LOCALINCDIR = ./
+INCDIRS     = -I${LOCALINCDIR} -I${ROOTINCDIR} -I${SKOFL_ROOT}/inc
+
+CXXFLAGS  = -g -O0 `root-config --cflags`
+
+SKAMLIBS    = ${MCLIBS} -L${SKOFL_ROOT}/lib -lzbs -liolib -llibrary -L/opt/FJSVrdass/lib -lrfa -lmon -lzbs \
+		 #-L/opt/intel/cce/10.0.023/lib -lirc
+
+ROOTLIBS    = `root-config --libs` -lUnuran
+
+#CERN        = /cern
+#CERN_LEVEL  = 2005
+CERNLIBS    = ${CERN}/${CERN_LEVEL}/lib/libjetset74.a \
+              ${CERN}/${CERN_LEVEL}/lib/libpdflib804.a \
+              `cernlib jetset74 photos202 mathlib packlib kernlib` 
+POBJS       = ${COREDIR}/structm.o ${COREDIR}/pdfset.o \
+			  ${COREDIR}/grv94di.o ${COREDIR}/grv98_lo.o
+LIBS        = ${POBJS} ${SKAMLIBS} ${ROOTLIBS} ${CERNLIBS} -lstdc++
+
+ROOTLDFLAG  = -L`root-config --libdir`
+LDFLAGS     = ${ROOTLDFLAG}
+
+T2KOBJS     = necardbm.o  \
+              t2kflux_sk.o neopskfxv.o tauvect.o rmarin.o rnpos.o \
+	      ranlux_trandom3.o
+
+
+NTPLTQOBJS  = neutntpl_tq.o
+
+#COPTFLAGS   = -g -O0 -I../neutcore -I../nuccorspl
+#FOPTFLAGS   = -g -O0 -I../neutcore -I../nuccorspl
+
+COPTFLAGS   = -g -O0 -I../neutcore -I../nuccorspl -DFLUX_10C $(ALLDEFINES)
+FOPTFLAGS   = -g -O0 -I../neutcore -I../nuccorspl -DFLUX_10C $(ALLDEFINES)
+#FCFLAGS     = -fno-backslash -fno-automatic -finit-local-zero \
+#			  -fno-second-underscore -fugly-complex -ffixed-line-length-132 \
+#		      -fno-globals -fdollar-ok #-ffortran-bounds-check
+
+FFLAGS      = ${FOPTFLAGS} ${FCOPTIONS} $(FCFLAGS) 
+
+NTOBJS= nerdjndfx.o  
+
+T2KSKOBJS   = t2kneut_sk.o ${T2KOBJS} ${OBJS}
+
+necardbmC.h: necardbm.h	
+	rm -f necardbmC.h
+	fh2h.pl necardbm.h > necardbmC.h
+
+beamntplC.h: beamntpl.h	
+	rm -f beamntplC.h
+	fh2h.pl beamntpl.h > beamntplC.h
+
+skheadC.h: ${SKOFL_ROOT}/inc/skhead.h
+	rm -f skheadC.h
+	fh2h.pl ${SKOFL_ROOT}/inc/skhead.h > skheadC.h
+
+t2kneut_sk.o: necardbmC.h beamntplC.h skheadC.h
+
+t2kneut_sk: necardbm.h $(T2KSKOBJS) 
+	$(FC) ${LDFLAGS} -o $@ ${T2KSKOBJS} ${LIBS}
+
+skflux_dump: skflux_dump.o necardbm.h $(T2KOBJS) 
+	$(FC) ${LDFLAGS} -o $@ skflux_dump.o ${T2KOBJS} ${LIBS}
+
+split_data: split_data.o fort_fopen.o atoi_.o concat_.o
+	$(FC) ${LDFLAGS} -o $@ split_data.o fort_fopen.o atoi_.o concat_.o \
+	${LIBS} -liolib
+
+empdist: empdist.o
+	$(CXX) ${LDFLAGS} -o $@ empdist.o ${ROOTLIBS}
+
+t2kflux_sktest: $(OBJS) 
+	$(FC) ${LDFLAGS} -o $@ ${OBJS} ${LIBS}
+
+neutntpl_tq: $(NTPLTQOBJS) $(NTOBJS)
+	$(FC) ${LDFLAGS} -o $@ ${NTPLTQOBJS} ${NTOBJS} -L${SKOFL_ROOT}/lib -lskrd -liolib ${LIBS} 
+
+neut_test: neut_test.o $(T2KOBJS)  ${OBJS}
+	$(FC) ${LDFLAGS} -o $@ neut_test.o ${T2KOBJS} ${OBJS} ${LIBS}
+
+.cc.o:
+	$(CXX) -c $(COPTFLAGS) $(CXXFLAGS) $(INCDIRS) -o $@ $<
+
+.F.o:
+	$(FC) -c $(FFLAGS) $(INCDIRS) -o $@ $<
+
+t2kflux_sktest.o : t2kflux_sk.h
+t2kflux_sk.o     : t2kflux_sk.h
+
+clean:
+	$(RM) -f *.o t2kflux_sktest t2kneut_sk skflux_dump
+
+veryclean:
+	$(RM) -f *.o t2kflux_sktest t2kneut_sk skflux_dump *~ #* rflist*
+
+

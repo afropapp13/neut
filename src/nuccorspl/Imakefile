@@ -1,0 +1,52 @@
+LIBALIAS =  nuccorrspl
+VER  = 5.3.1
+IVER = 531
+
+LIBNAME = $(LIBALIAS)_$(VER)
+
+FORTRANDEFINES += -DNENUCCVER=$(IVER)
+
+XCOMM ------------------------------------------------------
+XCOMM Define Object Files
+XCOMM ------------------------------------------------------
+
+OBJS =	nrcfd.o		nrazio.o 	nrinit.o 	nrroxy.o \
+		nrllor.o 	nrcone.o 	nrkin.o 	nrprd.o 	nrstp.o \
+		nrloren.o 	nrfermi.o 	nrnuc.o 	nrprton.o 	nrprbin.o \
+		nr2iso.o 	nrhis.o 	nrrodis.o 	nrranve.o \
+		nrcst.o 	nrctpp.o 	nrctpnl.o 	nrctpnh.o \
+		wgproton.o	vcmkvcbf.o  nrintr.o    nrsetxpos.o \
+		nrcard.o	nrlibver.o
+
+XCOMM ------------------------------------------------------
+XCOMM Build Library
+XCOMM ------------------------------------------------------
+
+NormalLibraryTarget($(LIBNAME),$(OBJS))
+InstallLibrary($(LIBNAME),$(LIBDIR))
+InstallLibraryAlias($(LIBNAME),$(LIBALIAS),$(LIBDIR))
+
+XCOMM ------------------------------------------------------
+XCOMM Install any include directories
+XCOMM ------------------------------------------------------
+
+InstallInclude(nrnuclparam.h,$(FORTRAN_INCDIR))
+Fh2hIncludeTarget(nrnuclparam)
+InstallInclude(nrnuclparamC.h,$(INCDIR))
+InstallInclude(nrcard.h,$(FORTRAN_INCDIR))
+Fh2hIncludeTarget(nrcard)
+InstallInclude(nrcardC.h,$(INCDIR))
+
+XCOMM ------------------------------------------------------
+XCOMM Make programs.
+XCOMM ------------------------------------------------------
+
+ATMPDLIB=-lneut_${VER} -lnuceff -lnuceff -lneut -lska -ltauola
+SKAMLIB=-lmon -lskrd -lgeom -lsklib -liolib -lrfa_dummy -lzbs \
+		-llibrary -lnsl -lsocket
+
+FortranProgramTarget(proton_nuceff,proton_nuceff.o $(OBJS), lib$(LIBNAME).a,  $(ATMPDLIB) $(SKAMLIB) `cernlib packlib kernlib mathlib `,)
+
+InstallProgram(proton_nuceff,$(BINDIR))
+
+

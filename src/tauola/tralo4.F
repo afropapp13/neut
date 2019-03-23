@@ -1,0 +1,20 @@
+      SUBROUTINE TRALO4(KTO,P,Q,AM)
+C     **************************
+C SUBSITUTE OF TRALO4
+      REAL  P(4),Q(4)
+C
+      COMMON / PARMAS / AMTAU,AMNUTA,AMEL,AMNUE,AMMU,AMNUMU
+     *                 ,AMPIZ,AMPI,AMRO,GAMRO,AMA1,GAMA1
+     *                 ,AMK,AMKZ,AMKST,GAMKST
+C
+      REAL*4            AMTAU,AMNUTA,AMEL,AMNUE,AMMU,AMNUMU
+     *                 ,AMPIZ,AMPI,AMRO,GAMRO,AMA1,GAMA1
+     *                 ,AMK,AMKZ,AMKST,GAMKST
+      COMMON /PTAU/ PTAU
+      AM=AMAS4(P)
+      ETAU=SQRT(PTAU**2+AMTAU**2)
+      EXE=(ETAU+PTAU)/AMTAU
+C      IF(KTO.EQ.2) EXE=(ETAU-PTAU)/AMTAU
+      CALL BOSTR3(EXE,P,Q)
+      RETURN
+      END

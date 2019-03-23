@@ -1,0 +1,59 @@
+cd //pawc
+hi/del *
+close 1
+hi/file 1 ndevrate.hbk
+cd //lun1
+hrin 0
+hi/list
+
+*for i in  5 
+*  nt/chain -nd[i]ev
+*  for j in 1 2 3 4 5 6 7 8 9
+*    nt/chain nd[i]ev vects/flux04a_40GeV_2.5deg/h2o.neut4.5.1.flux04a_40GeV_2.5deg.nd[i].00[j].nfsi.nt
+*  endfor
+*endfor
+
+nt/chain nd5ev vect_nd5_001.nt vect_nd5_002.nt vect_nd5_003.nt vect_nd5_004.nt  
+
+1d 9999  'dummy'            200 0. 10.
+
+zone 1 2
+****************************************************
+do ndid=5,5
+  vechid=$sigma(10000+[ndid]*1000+114)
+  rnmhid=$sigma(20000+[ndid]*1000+114)
+
+  1d [vechid] 'mu at nd'         200 0. 10.
+  1d [rnmhid] 'mu at nd(renorm)' 200 0. 10.
+
+  nt/pl //nd[ndid]ev/10.abspnu(1) idh=[vechid]
+
+  numev=$hinfo([vechid],'sum')
+
+  normhid=$sigma([ndid]*1000+114)
+
+  crsnorm=$hinfo([normhid],'sum')
+
+*  mess [numev]  events
+*  mess norm : [crsnorm]
+
+  norm=$sigma([crsnorm]/[numev])
+
+  add [vechid] 9999 [rnmhid] [norm]
+
+  zone 1 2
+
+  set hcol 2
+  set hwid 6
+  hi/pl [rnmhid]
+  set hcol 3
+  hi/pl [normhid] chopt=s
+
+  div [rnmhid] [normhid] 5000
+  hi/pl 5000
+
+  wait
+enddo
+
+
+

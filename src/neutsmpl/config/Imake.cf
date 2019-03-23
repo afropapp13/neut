@@ -1,0 +1,569 @@
+/* $Id: Imake.cf,v 1.1 2007-01-20 07:35:22 skrep Exp $
+ *
+ * $Log: not supported by cvs2svn $
+ * Revision 1.6  1999/07/26 21:48:42  bviren
+ * Fix it so that the Linux vendor version actually gets defined.
+ *
+ * Revision 1.5  1999/07/22 18:45:07  mcgrew
+ * Imake.cf now checks for the processor type before defiing "i386Architecture".
+ *
+ * Revision 1.4  1999/07/22 18:23:57  mcgrew
+ * Major cleanup of the linux definitions.  Much of the stuff that was in
+ * site.def, but belonged in linux.cf has been moved there.  I've also
+ * added the Linux distributions as vendors so that Linux looks a lot
+ * more like the unixen.
+ *
+ * Revision 1.3  1997/05/27 15:55:10  mcgrew
+ * Add patches to keep compadible with the K2K config files.
+ *
+ * Revision 1.3  1997/05/19 06:54:19  mcgrew
+ * Add the hitachi machines (ccps1 to ccps6) to imake.
+ *
+ * Revision 1.2  1997/04/27 05:05:43  mcgrew
+ * partially adapted to SK
+ *
+ * Revision 1.1.1.1  1997/04/26 08:45:48  mcgrew
+ * import config files
+ *
+ * Revision 1.1.1.1  1995/12/20  15:26:44  cernlib
+ * X11R6 config files unmodified
+ *
+ *
+ */
+XCOMM $XConsortium: Imake.cf,v 1.19 95/01/05 19:24:32 kaleb Exp $
+
+/*
+To add support for another platform:
+
+BE REALLY SURE THAT STEP 0.0 AND 0.1 ARE NECESSARY BEFORE
+PROCEEDING.  YOU CAN ALMOST CERTAINLY SKIP TO STEP 1.0
+
+0.0 Identify a machine-specific cpp symbol.  If your preprocessor
+does not have any built in, you will need to rebuild the imake
+executable.  You almost certainly don't need to rebuild imake, so
+don't do that first.  If you must do this, then please add the
+symbol to the cpp_argv table in config/imakemdep.h and rebuild
+imake with the BOOTSTRAPCFLAGS variable set (see the macII for an
+example).
+ 
+0.1 Add all machine-specific cpp symbols (either defined by you
+or by the preprocessor or compiler) to the predefs table in
+config/imakemdep.h.
+ 
+THE USUAL FIRST STEP.
+ 
+1.0 But a new #ifdef block into imake.cf that defines
+PrivateMacroIncludeFile, PrivateMacroFile, MacroIncludeFile and
+MacroFile for your new platform and then #undefs the
+machine-specific preprocessor symbols (to avoid problems with
+file names).  Copy a similar example for elsewhere in this file.
+
+2.0 Create a .cf file, and a .p-cf with the name given by
+MacroFile.
+
+ */
+
+#ifdef ultrix
+#define MacroIncludeFile <ultrix.cf>
+#define PrivateMacroIncludeFile <ultrix.p-cf>
+#define MacroFile ultrix.cf
+#define PrivateMacroFile ultrix.p-cf
+#ifdef vax
+#undef vax
+#define VaxArchitecture
+#endif
+#ifdef mips
+#undef mips
+#define MipsArchitecture
+#endif
+#undef ultrix
+#define UltrixArchitecture
+#endif /* ultrix */
+
+#if defined(vax) && !defined(UltrixArchitecture)
+#define MacroIncludeFile <bsd.cf>
+#define PrivateMacroIncludeFile <bsd.p-cf>
+#define MacroFile bsd.cf
+#define PrivateMacroFile bsd.p-cf
+#undef vax
+#define BSDArchitecture
+#define VaxArchitecture
+#endif /* vax */
+
+#ifdef bsdi
+#define MacroIncludeFile <bsdi.cf>
+#define PrivateMacroIncludeFile <bsdi.p-cf>
+#define MacroFile bsdi.cf
+#define PrivateMacroFile bsdi.p-cf
+#undef bsdi
+#define BSD386Architecture
+#define i386BsdArchitecture
+#define i386Architecture
+#endif /* bsdi */
+
+#ifdef __NetBSD__
+#define MacroIncludeFile <NetBSD.cf>
+#define PrivateMacroIncludeFile <NetBSD.p-cf>
+#define MacroFile NetBSD.cf
+#define PrivateMacroFile NetBSD.p-cf
+#undef __NetBSD__
+#define NetBSDArchitecture
+#ifdef __i386__
+#define i386BsdArchitecture
+#define i386Architecture
+#endif
+#if defined(__sparc__) || defined(sparc)
+#define SparcArchitecture
+#undef sparc
+#endif
+#endif /* NetBSD */
+
+#ifdef __FreeBSD__
+#define MacroIncludeFile <FreeBSD.cf>
+#define PrivateMacroIncludeFile <FreeBSD.p-cf>
+#define MacroFile FreeBSD.cf
+#define PrivateMacroFile FreeBSD.p-cf
+#undef __FreeBSD__
+#define FreeBSDArchitecture
+#ifdef __i386__
+#define i386BsdArchitecture
+#define i386Architecture
+#endif
+#endif /* __FreeBSD__ */
+
+#ifdef AMOEBA
+/* Should be before the 'sun' entry because we may be cross-compiling */
+#define MacroIncludeFile <Amoeba.cf>
+#define PrivateMacroIncludeFile <Amoeba.p-cf>
+#define MacroFile Amoeba.cf
+#define PrivateMacroFile Amoeba.p-cf
+#if defined(i80386) || defined(__i80386__)
+#define i386Architecture
+#else
+#if defined(mc68000) || defined(__mc68000__)
+#define Sun3Architecture
+#define SunArchitecture
+#else
+#if defined(sparc) || defined(__sparc__)
+#define SparcArchitecture
+#define SunArchitecture
+#endif
+#endif
+#endif
+#undef i80386
+#undef mc68000
+#undef sparc
+#undef sun
+#endif /* AMOEBA */
+
+#ifdef sun
+#define MacroIncludeFile <sun.cf>
+#define PrivateMacroIncludeFile <sun.p-cf>
+#define MacroFile sun.cf
+#define PrivateMacroFile sun.p-cf
+#ifdef SVR4
+#undef SVR4
+#define SVR4Architecture
+#endif
+#ifdef sparc
+#undef sparc
+#define SparcArchitecture
+#endif
+#ifdef mc68000
+#undef mc68000
+#define Sun3Architecture
+#endif
+#ifdef i386
+#undef i386
+#define i386Architecture
+#endif
+#undef sun
+#define SunArchitecture
+#endif /* sun */
+
+#ifdef hpux
+#define MacroIncludeFile <hp.cf>
+#define PrivateMacroIncludeFile <hp.p-cf>
+#define MacroFile hp.cf
+#define PrivateMacroFile hp.p-cf
+#undef hpux
+#define HPArchitecture
+#endif /* hpux */
+
+#ifdef USL
+#define MacroIncludeFile <usl.cf>
+#define PrivateMacroIncludeFile <usl.p-cf>
+#define MacroFile usl.cf
+#define PrivateMacroFile usl.p-cf
+#undef USL
+#undef SVR4
+#define SVR4Architecture
+#define i386Architecture
+#endif /* USL */
+
+#ifdef NCR
+#define MacroIncludeFile <ncr.cf>
+#define PrivateMacroIncludeFile <ncr.p-cf>
+#define MacroFile ncr.cf
+#define PrivateMacroFile ncr.p-cf
+#undef NCR
+#undef SVR4
+#define SVR4Architecture
+#define i386Architecture
+#endif /* NCR */
+
+#ifdef apollo
+#define MacroIncludeFile <apollo.cf>
+#define PrivateMacroIncludeFile <apollo.p-cf>
+#define MacroFile apollo.cf
+#define PrivateMacroFile apollo.p-cf
+#undef apollo
+#define ApolloArchitecture
+#endif /* apollo */
+
+#ifdef sony
+#define MacroIncludeFile <sony.cf>
+#define PrivateMacroIncludeFile <sony.p-cf>
+#define MacroFile sony.cf
+#define PrivateMacroFile sony.p-cf
+#undef sony
+#undef sony_news
+#define SonyArchitecture
+#ifdef mc68020
+#undef mc68020
+#undef mc68030
+#define Mc68020Architecture
+#endif
+#ifdef mips
+#undef mips
+#define MipsArchitecture
+#endif
+#if !defined(bsd43) || defined(SYSTYPE_SYSV) || defined(_SYSTYPE_SYSV)
+#define SonySysvArchitecture
+#else
+#define SonyBsdArchitecture
+#endif
+#endif /* sony */
+
+#ifdef M4310
+#define MacroIncludeFile <pegasus.cf>
+#define PrivateMacroIncludeFile <pegasus.p-cf>
+#define MacroFile pegasus.cf
+#define PrivateMacroFile pegasus.p-cf
+#undef M4310
+#define PegasusArchitecture
+#endif /* M4310 */
+
+#ifdef M4330
+#define MacroIncludeFile <m4330.cf>
+#define PrivateMacroIncludeFile <m4330.p-cf>
+#define MacroFile m4330.cf
+#define PrivateMacroFile m4330.p-cf
+#undef  M4330
+#define M4330Architecture
+#endif /* M4330 */
+
+#ifdef macII
+#define MacroIncludeFile <macII.cf>
+#define PrivateMacroIncludeFile <macII.p-cf>
+#define MacroFile macII.cf
+#define PrivateMacroFile macII.p-cf
+#undef  macII
+#define MacIIArchitecture
+#endif /* macII */
+
+#ifdef _CRAY
+#define MacroIncludeFile <cray.cf>
+#define PrivateMacroIncludeFile <cray.p-cf>
+#define MacroFile cray.cf
+#define PrivateMacroFile cray.p-cf
+#undef cray
+#undef CRAY
+#undef CRAY1
+#undef CRAY2
+#undef YMP
+#define CrayArchitecture
+#endif /* _CRAY */
+
+#ifdef sgi
+#define MacroIncludeFile <sgi.cf>
+#define PrivateMacroIncludeFile <sgi.p-cf>
+#define MacroFile sgi.cf
+#define PrivateMacroFile sgi.p-cf
+#undef sgi
+#define SGIArchitecture
+#undef mips
+#define MipsArchitecture
+#endif /* sgi */
+
+#ifdef stellar
+#define MacroIncludeFile <stellar.cf>
+#define PrivateMacroIncludeFile <stellar.p-cf>
+#define MacroFile stellar.cf
+#define PrivateMacroFile stellar.p-cf
+#undef stellar
+#define StellarArchitecture
+#endif /* stellar */
+
+#ifdef HITACHI
+#define MacroIncludeFile <hitachi.cf>
+#define PrivateMacroIncludeFile <hitachi.p-cf>
+#define MacroFile hitachi.cf
+#define PrivateMacroFile hitachi.p-cf
+#undef HITACHI
+#define HitachiArchitecture
+#endif /* HITACHI */
+
+#if defined(ibm) || defined(_IBMR2) || defined(ibm032) || defined(aix)
+#define MacroIncludeFile <ibm.cf>
+#define PrivateMacroIncludeFile <ibm.p-cf>
+#define MacroFile ibm.cf
+#define PrivateMacroFile ibm.p-cf
+#ifdef ibm
+#undef ibm
+#endif
+#define IBMArchitecture
+#ifdef i386
+#undef i386
+#define PS2Architecture
+#endif
+#ifdef ibm032
+#undef ibm032
+#define RtArchitecture
+#endif
+#ifdef aix
+#undef aix
+#define AIXArchitecture
+#endif
+#ifdef _IBMR2
+#undef _IBMR2
+#define RsArchitecture
+#endif
+#endif /* ibm */
+
+#ifdef luna
+#undef luna
+#define MacroIncludeFile <luna.cf>
+#define PrivateMacroIncludeFile <luna.p-cf>
+#define MacroFile luna.cf
+#define PrivateMacroFile luna.p-cf
+#define LunaArchitecture
+#ifdef mc68000
+#undef mc68000
+#define Mc68000Architecture
+#else
+#undef mc88000
+#define Mc88000Architecture
+#endif
+#endif /* luna */
+
+#ifdef Mips
+#  define MacroIncludeFile <Mips.cf>
+#  define PrivateMacroIncludeFile <Mips.p-cf>
+#  define MacroFile Mips.cf
+#  define PrivateMacroFile Mips.p-cf
+#  undef Mips
+#  undef mips
+#  if defined(SYSTYPE_BSD43) || defined(BSD) || defined(BSD43)
+#    define MipsBsdArchitecture
+#  else /* BSD */
+#    define MipsSysvArchitecture
+#  endif /* BSD */
+#endif /* Mips */
+
+#ifdef MOTOROLA
+# define MacroIncludeFile <moto.cf>
+# define PrivateMacroIncludeFile <moto.p-cf>
+# define MacroFile moto.cf
+# define PrivateMacroFile moto.p-cf
+# undef MOTOROLA	
+# ifdef SYSV
+#  define MotoR3Architecture
+# endif
+# ifdef SVR4
+#  define MotoR4Architecture
+# endif
+#endif /* MOTOROLA */
+
+#ifdef SVR4
+# ifdef i386
+#  define i386Architecture
+# endif
+# define SVR4Architecture
+# define MacroIncludeFile <svr4.cf>
+# define PrivateMacroIncludeFile <svr4.p-cf>
+# define MacroFile svr4.cf
+# define PrivateMacroFile svr4.p-cf
+# undef SVR4
+#endif /* SVR4 */
+
+#ifdef SYSV
+# ifdef i386
+#  define MacroIncludeFile <x386.cf>
+#  define PrivateMacroIncludeFile <x386.p-cf>
+#  define MacroFile x386.cf
+#  define PrivateMacroFile x386.p-cf
+#  define i386SVR3Architecture
+# endif
+#endif /* SYSV */
+
+#ifdef SYSV386
+# ifdef SVR4
+#  define i386Architecture
+#  define SVR4Architecture
+#  define i386SVR4Architecture
+#  define MacroIncludeFile <svr4.cf>
+#  define PrivateMacroIncludeFile <svr4.p-cf>
+#  define MacroFile svr4.cf
+#  define PrivateMacroFile svr4.p-cf
+#  undef SVR4
+# else
+#  define MacroIncludeFile <x386.cf>
+#  define PrivateMacroIncludeFile <x386.p-cf>
+#  define MacroFile x386.cf
+#  define PrivateMacroFile x386.p-cf
+#  define i386SVR3Architecture
+# endif
+#endif /* SYSV386 */
+
+#ifdef DGUX
+#define MacroIncludeFile <DGUX.cf>
+#define PrivateMacroIncludeFile <DGUX.p-cf>
+#define MacroFile DGUX.cf
+#define PrivateMacroFile DGUX.p-cf
+#undef DGUX
+#define DguxArchitecture
+#endif /* DGUX */
+
+#ifdef __convex__
+# define MacroIncludeFile <convex.cf>
+# define PrivateMacroIncludeFile <convex.p-cf>
+# define MacroFile convex.cf
+# define PrivateMacroFile convex.p-cf
+# ifdef convex
+#  undef convex
+# endif
+# define ConvexArchitecture
+#endif /* _convex_ */
+
+/*  GF. #ifdef __osf__ */
+#if defined(__osf__) || defined(__alpha)
+#define MacroIncludeFile <osf1.cf>
+#define PrivateMacroIncludeFile <osf1.p-cf>
+#define MacroFile osf1.cf
+#define PrivateMacroFile osf1.p-cf
+#define OSF1Architecture
+#undef __osf__
+#ifdef __mips__
+#undef __mips__
+#define MipsArchitecture
+#endif
+#ifdef __alpha
+#undef __alpha
+#define AlphaArchitecture
+#endif
+#endif /* __osf__ */
+
+#ifdef Oki
+#define MacroIncludeFile <Oki.cf>
+#define PrivateMacroIncludeFile <Oki.p-cf>
+#define MacroFile Oki.cf
+#define PrivateMacroFile Oki.p-cf
+#undef Oki
+#define i860SVR4Architecture
+#endif /* Oki */
+
+#ifdef WIN32
+#define MacroIncludeFile <Win32.cf>
+#define PrivateMacroIncludeFile <Win32.p-cf>
+#define MacroFile Win32.cf
+#define PrivateMacroFile Win32.p-cf
+#define Win32Architecture
+#endif /* WIN32 */
+
+#ifdef linux 
+#define MacroIncludeFile <linux.cf>
+#define PrivateMacroIncludeFile <linux.p-cf>
+#define MacroFile linux.cf
+#define PrivateMacroFile linux.p-cf
+#undef linux
+#define LinuxArchitecture
+#ifdef __i386__
+#define i386Architecture
+#endif
+#ifdef DEBIAN
+#define DebianGnuLinuxArchitecture DEBIAN
+#endif
+#ifdef SLACKWARE
+#define SlackWareLinuxArchitecture SLACKWARE
+#endif
+#ifdef REDHAT
+#define RedhatLinuxArchitecture    REDHAT
+#endif
+#ifdef CALDERA
+#define CalderaLinuxArchitecture   CALDERA
+#endif
+#ifdef SUSE
+#define SuseLinuxArchitecture      SUSE
+#endif
+#ifdef MANDRAKE
+#define MandrakeLinuxArchitecture  MANDRAKE
+#endif
+#endif /* linux */
+
+#ifdef __uxp__
+#define MacroIncludeFile <fujitsu.cf>
+#define PrivateMacroIncludeFile <fujitsu.p-cf>
+#define MacroFile fujitsu.cf
+#define PrivateMacroFile fujitsu.p-cf
+#undef __uxp__
+#ifdef sparc
+#undef sparc
+#define SparcArchitecture
+#endif
+#endif /* __uxp__ */
+
+#ifdef __sxg__
+#define MacroIncludeFile <fujitsu.cf>
+#define PrivateMacroIncludeFile <fujitsu.p-cf>
+#define MacroFile fujitsu.cf
+#define PrivateMacroFile fujitsu.p-cf
+#undef __sxg__
+#define mc68000Architecture
+#endif /* __sxg__ */
+
+#if defined(sequent) || defined(_SEQUENT_)
+# define MacroIncludeFile <sequent.cf>
+# define PrivateMacroIncludeFile <sequent.p-cf>
+# define MacroFile sequent.cf
+# define PrivateMacroFile sequent.p-cf
+# ifdef sequent
+#  undef sequent
+#  define Dynix3Architecture
+# endif
+# ifdef _SEQUENT_
+#  undef _SEQUENT_
+#  define DynixPtxArchitecture
+# endif
+# define SequentArchitecture
+#endif
+
+#if defined(_nec_ews_svr4) || defined(nec_ews_svr4) || defined(nec_ews_svr2) || defined(SX) || defined(_nec_up) || defined(_nec_ft) || defined(PC_UX)
+#ifdef nec
+#undef nec
+#endif
+#define MacroIncludeFile <nec.cf>
+#define PrivateMacroIncludeFile <nec.p-cf>
+#define MacroFile nec.cf
+#define PrivateMacroFile nec.p-cf
+#define NecArchitecture
+#endif
+
+#ifndef MacroIncludeFile
+XCOMM WARNING:  Imake.cf not configured; guessing at definitions!!!
+XCOMM This might mean that BOOTSTRAPCFLAGS was not set when building imake.
+#define MacroIncludeFile <generic.cf>
+#define PrivateMacroIncludeFile <generic.p-cf>
+#define MacroFile generic.cf
+#define PrivateMacroFile generic.p-cf
+#endif

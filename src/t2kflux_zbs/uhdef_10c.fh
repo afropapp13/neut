@@ -1,0 +1,207 @@
+#define FDLOOP 1000
+#define MAX_FD 10
+
+#define HID_NUSK 2000
+#define HID_NUFD0 3000
+#define HID_NUFD1 3001
+#define HID_NUFD2 3002
+#define HID_ENEDEP_TRGT 5000
+#define HID_ENEDEP_DGAS 5001
+#define HID_ENEDEP_DUMP 5004
+#define HID_ENEDEP_DV 5100
+#define HID_MUMON 8000
+
+CHGEN*ECHO(FORTRAN)
+
+C 9001-9010 for testplane ntuple
+
+C Ntuple variables for neutrino at SK
+c Modified by NA - 25/03/09
+c Modified by NA - 17/04/09
+c Modified by NA - 20/04/09
+c Modified by NA - 03/07/09
+c Modified by HK - 22/07/10
+
+      real EnuSK, ppiSK, xpiSK(3), npiSK(3), cospibmSK, normSK
+      real ppi0SK, xpi0SK(3), npi0SK(3), cospi0bmSK
+      real psi0SK, xsi0SK(3), nsi0SK(3), cossi0bmSK, xsiSK(3)
+      integer modeSK, ppidSK, nvtx0SK, spidSK, pgenSK
+      integer smechSK, intgtSK, smedSK
+      real prvtxSK(3)
+      integer gppidSK
+      real xgpi0SK(3), xgpiSK(3), pgpi0SK
+      integer gpmechSK, gpmedSK, prmechSK, prmedSK
+      integer prdghtSK, sdghtSK, gpdghtSK, chainSK
+      integer gipartSK
+      real gpos0SK(3), gvec0SK(3), gamom0SK
+c---
+      integer ngSK
+      real    gpxSK(20),gpySK(20),gpzSK(20),gcosbmSK(20)
+      real    gvxSK(20),gvySK(20),gvzSK(20)
+      integer gpidSK(20),gmecSK(20)
+
+C---  10a default variables
+      common /nusk/ EnuSK, ppidSK, modeSK, ppiSK, xpiSK, npiSK, cospibmSK, 
+     &	normSK, nvtx0SK, ppi0SK, xpi0SK, npi0SK, cospi0bmSK, 
+     &  gipartSK, gpos0SK, gvec0SK, gamom0SK
+
+      character*60 nusktags(6)
+      character*360 nusktag
+      equivalence (nusktag, nusktags)
+      data nusktags/
+     &	   'Enu:R             ,ppid:I            ,modef:I           ,',
+     &     'ppi:R             ,xpi(3):R          ,npi(3):R          ,',
+     &     'cospibm:R         ,norm:R            ,nvtx0:I           ,',
+     &     'ppi0:R            ,xpi0(3):R         ,npi0(3):R         ,',
+     &     'cospi0bm:R        ,gipart[0,100]:I   ,gpos0(3):R        ,',
+     &     'gvec0(3):R        ,gamom0:R '/
+
+C---  10a optional variables
+      common /nuskopt/ spidSK, pgenSK, psi0SK, xsi0SK, nsi0SK, cossi0bmSK,
+     &  xsiSK, smechSK, prvtxSK, intgtSK, smedSK, gppidSK, xgpi0SK,
+     &  xgpiSK, pgpi0SK, gpmechSK, gpmedSK, prmechSK, prmedSK,
+     &  prdghtSK, sdghtSK, gpdghtSK, chainSK
+
+      character*60 nusktagsopt(8)
+      character*480 nusktagopt
+      equivalence (nusktagopt, nusktagsopt)
+      data nusktagsopt/
+     &     'spid:I            ,pgen:I            ,psi0:R            ,',
+     &     'xsi0(3):R         ,nsi0(3):R         ,cossi0bm:R        ,',
+     &     'xsi(3):R          ,smech:I           ,prvtx(3):R        ,',
+     &     'intgt:I           ,smed:I            ,gppid:I           ,',
+     &     'xgpi0(3):R        ,xgpi(3):R         ,pgpi0:R           ,',
+     &     'gpmech:I          ,gpmed:I           ,prmech:I          ,',
+     &     'prmed:I           ,prdgh:I           ,sdght:I           ,',
+     &     'gpdght:I          ,chain:I '/   
+
+
+C---  10b new variables
+      common /nusk10b/ ngSK, gpxSK, gpySK, gpzSK, gcosbmSK,
+     &  gvxSK, gvySK, gvzSK, gpidSK, gmecSK
+	
+      character*60 nusktags10b(4)
+      character*240 nusktag10b
+      equivalence (nusktag10b, nusktags10b)
+      data nusktags10b/
+     &     'ng:I::[0,20]      ,gpx(ng):R         ,gpy(ng):R         ,',
+     &     'gpz(ng):R         ,gcosbm(ng):R      ,gvx(ng):R         ,',
+     &     'gvy(ng):R         ,gvz(ng):R         ,gpid(ng):I        ,',
+     &     'gmec(ng):I '/
+
+C common variables for the Detector setting
+      integer NFD	
+      real BXFD(MAX_FD), BYFD(MAX_FD) ! beam center at ZFD
+      real XFD(MAX_FD), YFD(MAX_FD), ZFD(MAX_FD), HFD(MAX_FD), VFD(MAX_FD)
+      common /DEFFD/NFD, BXFD, BYFD, XFD, YFD, ZFD, HFD, VFD
+      character*180 defFDtag
+      character*60  defFDtags(3)
+      equivalence (defFDtag, defFDtags)
+      data defFDtags/
+     &     'NFD[0,10]:I       ,BXFD(NFD):R       ,BYFD(NFD):R       ,',
+     &     'XFD(NFD):R        ,YFD(NFD):R        ,ZFD(NFD):R        ,',
+     &     'HFD(NFD):R        ,VFD(NFD):R                            '/
+
+
+C Ntuple variables for neutrino at Near detectors
+c Modified by NA - 25/03/09
+c Modified by NA - 17/04/09
+c Modified by NA - 20/04/09
+c Modified by NA - 03/07/09
+c Modified by H.K 2010/07/22 
+
+      real EnuFD, ppiFD, xpiFD(3), npiFD(3), cospibmFD, normFD
+      real ppi0FD, xpi0FD(3), npi0FD(3), cospi0bmFD
+      real psi0FD, xsi0FD(3), nsi0FD(3), cossi0bmFD, xsiFD(3)
+      real rFD, xnuFD, ynuFD, nnuFD(3)
+      integer modeFD, ppidFD, nvtx0FD, spidFD
+      integer idFD
+      integer pgenFD
+      integer intgtFD, smechFD, smedFD
+      real prvtxFD(3)
+      integer gppidFD
+      real xgpi0FD(3), xgpiFD(3), pgpi0FD
+      integer gpmechFD, gpmedFD, prmechFD, prmedFD
+      integer prdghtFD, sdghtFD, gpdghtFD, chainFD
+      integer gipartFD
+      real gpos0FD(3), gvec0FD(3), gamom0FD
+      real EnuSKFD, normSKFD
+      real anormFD
+
+c---
+      integer ngFD
+      real    gpxFD(20),gpyFD(20),gpzFD(20),gcosbmFD(20)
+      real    gvxFD(20),gvyFD(20),gvzFD(20)
+      integer gpidFD(20),gmecFD(20)
+
+#ifdef FLUX_10A
+C---  10a default variables
+
+      common /nuFD/ EnuFD, ppidFD, modeFD, ppiFD, xpiFD, npiFD, 
+     &	cospibmFD, normFD, nvtx0FD, ppi0FD, xpi0FD, npi0FD, cospi0bmFD, 
+     &	rFD, xnuFD, ynuFD, nnuFD, idFD,
+     &  gipartFD, gpos0FD, gvec0FD, gamom0FD
+
+      character*60 nuFDtags(8)
+      character*480 nuFDtag
+      equivalence (nuFDtag, nuFDtags)
+      data nuFDtags/
+     &	   'Enu:R             ,ppid:I            ,modef:I            ,',
+     &     'ppi:R             ,xpi(3):R          ,npi(3):R          ,',
+     &     'cospibm:R         ,norm:R            ,nvtx0:I           ,',
+     &     'ppi0:R            ,xpi0(3):R         ,npi0(3):R         ,',
+     &     'cospi0bm:R        ,rnu:R             ,xnu:R             ,',
+     &     'ynu:R             ,nnu(3):R          ,idFD:I            ,',
+     &     'gipart[0,100]:I   ,gpos0(3):R        ,gvec0(3):R        ,',
+     &     'gamom0:R '/
+
+C---  10a optional variables
+
+      common /nuFDopt/
+     &	spidFD, pgenFD, psi0FD, xsi0FD, nsi0FD, cossi0bmFD, xsiFD, smechFD,
+     &	intgtFD, prvtxFD, smedFD, gppidFD, xgpi0FD, xgpiFD, pgpi0FD,
+     &  gpmechFD, gpmedFD, prmechFD, prmedFD,
+     &  prdghtFD, sdghtFD, gpdghtFD, chainFD
+
+      character*60 nuFDtagsopt(8)
+      character*480 nuFDtagopt
+      equivalence (nuFDtagopt, nuFDtagsopt)
+      data nuFDtagsopt/
+     &     '                  ,spid:I            ,pgen:I            ,',
+     &     'psi0:R            ,xsi0(3):R         ,nsi0(3):R         ,',
+     &     'cossi0bm:R        ,xsi(3):R          ,smech:I           ,',
+     &     'intgt:I           ,prvtx(3):R        ,smed:I            ,',
+     &     'gppid:I           ,xgpi0(3):R        ,xgpi(3):R         ,',
+     &     'pgpi0:R           ,gpmech:I          ,gpmed:I           ,',
+     &     'prmech:I          ,prmed:I           ,prdght:I          ,',
+     &     'sdght:I           ,gpdght:I          ,chain:I            '/
+#endif
+#ifdef FLUX_10C
+C---  10b new variables
+
+      common /nuFD/ EnuFD, ppidFD, modeFD, ppiFD, xpiFD, npiFD, 
+     &	cospibmFD, normFD, nvtx0FD, ppi0FD, xpi0FD, npi0FD, cospi0bmFD, 
+     &	rFD, xnuFD, ynuFD, nnuFD, idFD,
+     &  gipartFD, gpos0FD, gvec0FD, gamom0FD,
+     &  ngFD, gpxFD, gpyFD, gpzFD, gcosbmFD, gvxFD, gvyFD, gvzFD, 
+     &  gpidFD, gmecFD, EnuSKFD, normSKFD, anormFD
+
+      character*60  nuFDtags10c(13)
+      character*780 nuFDtag
+      equivalence (nuFDtag, nuFDtags10c)
+      data nuFDtags10c/
+     &	   'Enu:R             ,ppid:I            ,modef:I            ,',
+     &     'ppi:R             ,xpi(3):R          ,npi(3):R          ,',
+     &     'cospibm:R         ,norm:R            ,nvtx0:I           ,',
+     &     'ppi0:R            ,xpi0(3):R         ,npi0(3):R         ,',
+     &     'cospi0bm:R        ,rnu:R             ,xnu:R             ,',
+     &     'ynu:R             ,nnu(3):R          ,idFD:I            ,',
+     &     'gipart[0,100]:I   ,gpos0(3):R        ,gvec0(3):R        ,',
+     &     'gamom0:R,',
+     &     'ng:I::[0,20]      ,gpx(ng):R         ,gpy(ng):R         ,',
+     &     'gpz(ng):R         ,gcosbm(ng):R      ,gvx(ng):R         ,',
+     &     'gvy(ng):R         ,gvz(ng):R         ,gpid(ng):I        ,',
+     &     'gmec(ng):I        ,EnuSK:R           ,normSK:R          ,',
+     &     'anorm:R '/
+#endif
+CHGEN*END

@@ -1,0 +1,97 @@
+macro mkndratehist [fluxdir]
+
+close 1
+hi/del *
+vec/del *
+
+vec/cre horiz(6) R 800. 300. 1000. 100.  300. 300.
+vec/cre vert(6)  R 800. 300.  100. 1000. 300. 800.
+
+nt/chain -nd1flx
+
+do id=5,5
+  nt/chain -nd[id]flx
+  do idx=1,50
+    nt/chain nd[id]flx [fluxdir]/nubeam.40gev.nd[id].[idx].hbk
+  enddo
+enddo
+
+mess rdtotpau
+exec rdtotpau.kumac
+mess rdtotpau done.
+
+do id=5,5
+  mess efill [id]
+  exec efill [id]
+  srchid=$sigma([id]*1000+100)
+  dsthid=$sigma([id]*1000+114)
+  mul [srchid] 114 [dsthid]
+
+  numevall=$hinfo([dsthid],'sum')
+  numev=$sigma([numevall]/50.)
+  entries=$hinfo([dsthid],'entries')
+  eventrate = $sigma([numev]*6.02e-9/(horiz([id])*vert([id])))
+  mess numu : detector #[id] : [numev] : [eventrate] events/ton/1yr (entries=[entries])
+
+  srchid=$sigma([id]*1000+200)
+  dsthid=$sigma([id]*1000+214)
+  mul [srchid] 214 [dsthid] 
+
+  srchid=$sigma([id]*1000+300)
+  dsthid=$sigma([id]*1000+112)
+  mul [srchid] 112 [dsthid]
+
+  numevall=$hinfo([dsthid],'sum')
+  numev=$sigma([numevall]/50.)
+  entries=$hinfo([dsthid],'entries')
+  eventrate = $sigma([numev]*6.02e-9/(horiz([id])*vert([id])))
+  mess nue  : detector #[id] : [numev] : [eventrate] events/ton/1yr (entries=[entries])
+
+  srchid=$sigma([id]*1000+400)
+  dsthid=$sigma([id]*1000+212)
+  mul [srchid] 212 [dsthid]
+
+*  mess efill done.
+enddo
+
+hi/file 30 'ndevrate.hbk' chopt='N'
+hrout 0
+close 30
+
+return
+
+macro efill id
+  offset=$sigma([id]*1000)
+* n_mu
+  hid=$sigma([offset]+100)
+  exec mkhist [hid] [m] (int(mode/10)=1)     [id]
+  hid=$sigma([offset]+101)
+  exec mkhist [hid] '[m] from [p]' (mode=11) [id]
+  hid=$sigma([offset]+102)
+  exec mkhist [hid] '[m] from K' (mode=12)   [id]
+* nu_mubar
+  hid=$sigma([offset]+200)
+  exec mkhist [hid] '[m]&^\261' (int(mode/10)=2) [id]
+* nu_e
+  hid=$sigma([offset]+300)
+  exec mkhist [hid] 'e' (int(mode/10)=3)     [id]
+  hid=$sigma([offset]+301)
+  exec mkhist [hid] 'e from K^+' (mode=31)   [id]
+  hid=$sigma([offset]+302)
+  exec mkhist [hid] 'e from K^0?L' (mode=32) [id]
+  hid=$sigma([offset]+303)
+  exec mkhist [hid] 'e from [m]^+' (mode=33) [id]
+* nu_ebar
+  hid=$sigma([offset]+400)
+  exec mkhist [hid] 'e&^\261' (int(mode/10)=4) [id]
+return
+
+macro mkhist hid=100 type cond flxid
+*   mess flxid=[flxid]
+   htit = 'E[n]?'//[type]
+   1dhist [hid] [htit] 200 0. 10.
+   nt/proj [hid] //nd[flxid]flx/3001.enu [cond]*norm
+return
+
+
+

@@ -1,0 +1,4 @@
+export CERN=/lustre/ific.uv.es/sw/t2k.org/vector2/CERNLIB
+export ROOTSYS=/lustre/ific.uv.es/sw/t2k.org/nd280v10r11p25/ROOT/v5r30p02n01/amd64_linux26
+export PATH=${CERN}/${CERN_LEVEL}/bin:${ROOTSYS}/bin:$PATH
+export LD_LIBRARY_PATH=${ROOTSYS}/lib/root:${LD_LIBRARY_PATH}

@@ -1,0 +1,149 @@
+/* $Id: site.def,v 1.2 2008-04-13 16:14:12 skrep Exp $ */
+
+/*
+	site.def for SLC4 / gfortran
+
+	Used by Hayato (Based on Fedora in Duke)
+*/
+
+XCOMM site:  $Kamioka: site.sample,v 1.9 94/04/08 17:02:06 rws Exp $
+
+/*****************************************************************************
+ *                                                                           *
+ *			   SITE-SPECIFIC DEFINITIONS                         *
+ *                                                                           *
+ * This file contains two halves, one included before the vendor-specific    *
+ * configuration file (.cf file), and one included after the .cf file.       *
+ * The before-half should be protected by #ifdef BeforeVendorCF, and the     *
+ * after-half should be protected by #ifdef AfterVendorCF.                   *
+ *                                                                           *
+ * The before-half should only set things that the .cf file depends on.      *
+ * For the .cf files shipped in this release, the main variables in this     *
+ * category are HasGcc and HasGcc2.                                          *
+ *                                                                           *
+ * The after-half should contain all other definitions.  For example,        *
+ * place your ProjectRoot definition here.                                   *
+ *                                                                           *
+ * OS Major and Minor version numbers should be changed directly in the .cf  *
+ * file, not overridden in site.def.                                         *
+ *                                                                           *
+ *****************************************************************************/
+
+/**********************************************************/
+/* Executed before the vender.cf file has been processed. */
+/**********************************************************/
+#ifdef BeforeVendorCF
+
+#ifndef HasFortran
+#define HasFortran		YES
+#endif
+
+#define HasGcc2ForCplusplus YES
+
+#ifdef LinuxArchitecture
+/* 
+	Choose your flavor of Linux FORTRAN compiler from the following 
+*/
+#if ! ((defined UseG77)||(defined UseFort77)||(defined UseGFortran)||\
+       (defined UseAbsoft)||(defined UsePGroup))
+/*
+	Portland Group's compiler will handle POINTERs and STRUCTUREs
+	but there is some incompatibilites with the G77 compiled
+	CERNLIBs which CERN compiles. There should be a pgf77 compiled
+	lib at asisftp in the near future. However, it is fairly easy
+	to compile CERNLIB using pgf77, CERN's imake config files,
+	plus SuperK's linux.cf and this site.def
+
+	G77 will not compile POINTERs and STRUCTUREs so it is pretty much
+	out for compiling usmc and F77 things that use zform 
+
+	Fort77/f2c will not compile POINTERs and STRUCTUREs so it is
+	pretty much out for compiling USMC and F77 things that use zform 
+
+	Absoft will handle POINTERs and STRUCTUREs but currently 
+	has a bug in how it passes it's subroutine's arguments.
+*/
+#undef UsePGroup
+#undef UseG77
+#define UseGFortran
+#undef UseFort77
+#undef UseAbsoft
+#endif
+#endif /* LinuxArchitecture */
+
+/* If you do not have GCC version 2 or later installed set to NO */
+#ifndef HasGcc2
+#  define HasGcc2 YES
+#endif
+
+/* Set this to the correct location for GNU make.  On many systems, */
+/* "make" is GNU make, but sometimes it is "gmake".  The default is */
+/* gmake to avoid getting vanilla make accidentally.  You can check */
+/* if your version of make is GNU make with the command "make -v"   */
+/* or "gmake -v".  GNU make will produce a message like:            */
+/* "GNU Make version 3.75, by Richard Stallman and Roland McGrath"  */
+
+XCOMM These config files require GNUmake.
+#ifndef MakeCmd
+#  define MakeCmd make
+#endif
+
+/* The default CPP on the CCPS is not ANSI compliant.  Use gcc as a */
+/* preprocessor instead.                                            */
+
+/* Set it if rfa_dummy (librfa_dummy.a) should pretend it is rfa (librfa.a) */
+
+/* Not to define RFA
+#ifndef HasNoRfa
+#  define HasNoRfa YES
+#endif
+*/
+
+#endif /* BeforeVendorCF */
+
+/*********************************************************/
+/* Executed after the vender.cf file has been processed. */
+/*********************************************************/
+#ifdef AfterVendorCF
+
+#ifndef UseXargs
+#  define UseXargs YES
+#endif
+
+/* Make sure that you have a working xargs.  If necessary, use the GNU */
+/* release. */
+#ifndef XargsCmd
+#  define XargsCmd xargs
+#endif
+
+/* Any site specific load options.  This is usually used to point to unusual */
+/* library locations */
+
+SITE_LDOPTIONS += -L/usr/X11R6/lib64
+
+/* Fill in any CPP definitions needed at this site.  The favorite ones are: */
+/*   SITE_HAS_RFA      -- Define if the site has a RFA or RFA_DUMMY library. */
+
+SITE_DEFINES += -DUSE_STDARG
+
+/* Fill in any include paths needed at this site.  The favorite ones are: */
+/*   Where the X11 include files are.  */
+/*   Where the CERNLIB include files are. */
+
+SITE_INCLUDES += -I/usr/include 
+SITE_INCLUDES += -I${CERN}/${CERN_LEVEL}/include 
+
+/* Fill in any site specific libraries and library paths.  The */
+/*  favorites are: */
+/*  Machine dependent IO libraries. */
+
+SITE_LIBRARIES += -lm
+
+/* Uncomment it if your site has XPM: a popular, pretty standard X11 library */
+/* In particular X11/xpm.h and libXpm.a need to be available */
+/* for #include and for linking with -lXpm */
+#ifndef HasXpm
+#   define HasXpm
+#endif
+
+#endif /* AfterVendorCF */

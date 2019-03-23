@@ -1,0 +1,69 @@
+/* $Id: Package.def,v 1.1 2007-01-20 07:35:26 skrep Exp $
+ *
+ * $Log: not supported by cvs2svn $
+ * Revision 1.6  2001/02/12 18:12:08  sharkey
+ * Hack in the ugly KT_IS_E362 hack in the proper place, rather than setting
+ * this in site.def like I'd done before.
+ *
+ * Revision 1.5  1999/02/22 06:45:44  mcgrew
+ * Make the project and package defines into integers.
+ *
+ * Revision 1.4  1999/02/04 06:57:50  mcgrew
+ * Change the definition values to prevent recursive defines and print a
+ * message when compiling one kilo-ton code.
+ *
+ * Revision 1.3  1999/01/31 01:55:38  mcgrew
+ * Pass cpp definitions to the compilation.
+ *
+ * Revision 1.2  1999/01/31 01:44:50  mcgrew
+ * Enable passing the command line and package defines through a make
+ * Makefile command.
+ *
+ * Revision 1.1  1999/01/31 01:22:46  mcgrew
+ * Add Package and Project .def files that are loaded immediately after
+ * the site.def files and before the defaults.tmpl file.  This lets the
+ * Package and Project override variables used to define the rules.
+ * The Package and Project files are the only files that should be
+ * changed in the config directories to customise for a particular
+ * library or experiment.
+ *
+ */
+
+#ifdef KT_IS_E362
+XCOMM ----------------------------------------------------------------------
+XCOMM Customize for the 1kt forward Cherenkov detector in the "K2K"
+XCOMM experimental hall.
+XCOMM ----------------------------------------------------------------------
+#  ifndef K2K
+#    define K2K YES
+#  endif
+
+XCOMM Make sure the that the "KT_IS_E362" flag is passed to later make files
+   BOOT_DEFINES += -DKT_IS_E362=YES
+   EXPERIMENT_DEFINES += -DKT_IS_E362=YES
+   TMP := $(shell echo "********  K T   I S   E 3 6 2   ********" 1>&2)
+#endif
+
+#ifdef ICHI_KILO
+XCOMM ----------------------------------------------------------------------
+XCOMM Customize for the 1kt forward Cherenkov detector in the "K2K"
+XCOMM experimental hall.
+XCOMM ----------------------------------------------------------------------
+#  ifndef K2K
+#    define K2K YES
+#  endif
+
+XCOMM Make sure the that the "ICHI_KILO" flag is passed to later make files
+   BOOT_DEFINES += -DICHI_KILO=YES
+   EXPERIMENT_DEFINES += -DICHI_KILO=YES
+   TMP := $(shell echo "******** I C H I   K I L O T O N ********" 1>&2)
+#else
+XCOMM ----------------------------------------------------------------------
+XCOMM Customize for the Super-Kamiokande detector.
+XCOMM ----------------------------------------------------------------------
+#  ifndef SKAM
+#    define SKAM YES
+#  endif 
+#endif
+
+

@@ -1,0 +1,44 @@
+C-------------------------------------------------------------
+C
+C     INCLUDE FILE FOR VECTOR GENERATOR ( vcwork.h )
+C
+C     WORK AREA OF M.C. VECTOR GENERATOR
+C
+C-------------------------------------------------------------
+      INTEGER MAXVC
+      PARAMETER(MAXVC=100)
+C
+C     NVC         : # OF PARTICLE
+C     POSVC(3)    : VERTEX POSITION OF INITIAL INTERACTION
+C     IPVC(I)     : PARTICLE CODE OF I-TH PARTICLE
+C     AMASVC(I)   : MASS OF I-TH PARTICLE ( MEV/C**2 )
+C     PVC(3,I)    : MOMENTUM OF I-TH PARTICLE ( MEV/C )
+C     IORGVC(I)   : ID OF ORIGIN PARTICLE
+C     IFLGVC(I)   : FLAG OF FINAL STATE 
+C                   0 : DETERMINED LATER PROCEDURE
+C                   1 : DECAY TO OTHER PARTICLE
+C                   2 : ESCAPE FROM DETECTOR
+C                   3 : ABSORPTION
+C                   4 : CHARGE EXCHANGE
+C                   5 : STOP AND NOT CONSIDER IN M.C. 
+C                   6 : E.M. SHOWER
+C                   7 : HADRON PRODUCTION
+C                   8 : QUASI-ELASTIC SCATTER
+C                   9 : FORWARD (ELASTIC-LIKE) SCATTER
+C     ICRNVC(I)   : FLAG OF TO CHASE OR NOT
+C                   0 : DO NOT CHASE
+C                   1 : CHASE 
+C     TIMVC(I)    : TIME OF VERTEX
+C     POSIVC(3,I) : INITIAL VERTEX POSITION
+C     IVTIVC(I)   : ID OF INITIAL VERTEX
+C     POSFVC(3,I) : FINAL VERTEX POSITION
+C     IVTFVC(I)   : ID OF FINAL VERTEX
+C
+      INTEGER NVC, IPVC, IORGVC, IFLGVC, ICRNVC, IVTIVC, IVTFVC
+      REAL    POSVC, AMASVC, PVC, TIMVC, POSIVC, POSFVC
+      COMMON /VCWORK/ NVC,POSVC(3),
+     $    IPVC(MAXVC),AMASVC(MAXVC),PVC(3,MAXVC),
+     $    IORGVC(MAXVC),IFLGVC(MAXVC),ICRNVC(MAXVC),
+     $    TIMVC(MAXVC),POSIVC(3,MAXVC),IVTIVC(MAXVC),
+     $    POSFVC(3,MAXVC),IVTFVC(MAXVC)
+

@@ -1,0 +1,25 @@
+Kajita sama                                                                                         
+                                                                                                    
+  Zenith-angle dependent Neutrino flux are put in the file                                          
+'c2s5090.kamflx.data' with 20 members. Each member has the name of                                  
+'kam' + (M) + number, where the number represents the lager end                                     
+of cos(zenith) bin multiplied by factor 10 and (M) statns for minus sign.                           
+For example, member kam09 contains the flux of 0.8 < cos(z) < 0.9 and                               
+kamm08 -0.9 < cos(z) < -0.8.                                                                        
+                                                                                                    
+  In the member file first column represent the enegy of neutrinos, and in                          
+the followint four columns mu-nu, anti-mu-nu, e-nu, and anti-e-nu fluxes are                        
+given in integral form in this order. The next four columns show the                                
+differential fluxes of neutrinos AT THE ENERGY in the same order.                                   
+The rest are ratios of fluxes which can be calculated from the fluxes.                              
+In our method we calculate the integral flux first, then approximate it                             
+by 3rd order spline function. The differential flux is obtained by      .                           
+differentiating the spline function.                                                                
+                                                                                                    
+  I beleave this method is the best way to get the differntial flux.                                
+Actually when we use the flux calculated by others, we do the same procedure                        
+as explaned in the above.                                                                           
+                                                                                                    
+Don't hesitate to ask me if you have any questions.                                                 
+                                                                                                    
+M.Honda                                                                                             

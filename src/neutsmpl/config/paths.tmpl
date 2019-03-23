@@ -1,0 +1,310 @@
+XCOMM For the truly paranoid.  Mostly this is just being overly
+XCOMM organized.  We can ignore it.
+#ifndef PathSeparator
+#  define PathSeparator /
+#endif
+          PATHSEP = PathSeparator
+
+XCOMM The build configuration info.  ConfigDir ConfigDir comes from
+XCOMM Project.tmpl 
+        CONFIGDIR = ConfigDir		/* build configuration information */
+
+XCOMM Where the config source is kept.  This is where the default
+XCOMM config files (like this one) are kept.
+#ifndef ConfigSrc
+#  define ConfigSrc $(CVSCOSRC)
+#endif
+        CONFIGSRC = ConfigSrc
+         IMAKESRC = $(CONFIGSRC)/imake
+
+XCOMM Where the source for makedepend is kept.  This isn't used
+XCOMM outside of the X11 distribution so you can safely ignore it.
+#ifndef DependDir
+#  if UseCCMakeDepend
+#    define DependDir $(CONFIGSRC)/util
+#  else
+#    define DependDir $(CONFIGSRC)/makedepend
+#  endif
+#endif
+        DEPENDSRC = DependDir
+
+XCOMM A convenient definition for the other man directories.
+#ifndef ManSourcePath
+#  define ManSourcePath $(MANPATH)/man
+#endif
+    MANSOURCEPATH = ManSourcePath	/* prefix for man page sources */
+
+XCOMM The directory for the command manual pages.
+#ifndef ManSuffix
+#  define ManSuffix	n		/* use just one tab or cpp will die */
+#endif
+#ifndef ManDir
+#  define ManDir $(MANSOURCEPATH)$(MANSUFFIX)
+#endif 
+        MANSUFFIX = ManSuffix		/* suffix for command man pages */
+          MANDIR = ManDir		/* man pages for commands */
+
+XCOMM The directory for the library manual pages.
+#ifndef LibManSuffix
+#  define LibManSuffix	3		/* use just one tab or cpp will die */
+#endif
+#ifndef LibmanDir
+#  define LibmanDir $(MANSOURCEPATH)$(LIBMANSUFFIX)
+#endif
+     LIBMANSUFFIX = LibManSuffix	/* suffix for library man pages */
+        LIBMANDIR = LibmanDir		/* man pages for library routines */
+
+XCOMM The directory for the file format manual pages.
+#ifndef FileManSuffix
+#  if SystemV || SystemV4 || defined(OSF1Architecture)
+#    define FileManSuffix	4	/* use just one tab or cpp will die */
+#  else
+#    define FileManSuffix	5	/* use just one tab or cpp will die */
+#  endif
+#endif
+#ifndef FileManDir
+#  define FileManDir $(MANSOURCEPATH)$(FILEMANSUFFIX)
+#endif
+    FILEMANSUFFIX = FileManSuffix	/* suffix for config file man pages */
+       FILEMANDIR = FileManDir		/* man pages for config files */
+
+XCOMM Where the system files are.
+/* DefaultUsrBin is independent of ProjectRoot.
+   This is a directory where programs will be found even if PATH
+   is not set, for example when coming in remotely via rsh. */
+#ifndef DefaultUsrBin
+#  define DefaultUsrBin /usr/bin
+#endif
+
+#ifndef UsrLibDir
+#  ifdef ProjectRoot
+#    define UsrLibDir Concat(ProjectRoot,/lib)
+#    ifndef AlternateUsrLibDir
+#      define AlternateUsrLibDir YES
+#    endif
+#  else
+#    define UsrLibDir /usr/lib
+#    ifndef AlternateUsrLibDir
+#      define AlternateUsrLibDir NO
+#    endif
+#  endif
+#else
+#  ifndef AlternateUsrLibDir
+#    define AlternateUsrLibDir YES
+#  endif
+#endif
+
+#ifndef ShLibDir
+#  define ShLibDir UsrLibDir
+#endif
+
+XCOMM Define the "root" on this machine.  Mostly this is not used.
+#ifdef ProjectRoot
+      PROJECTROOT = ProjectRoot
+#else
+      PROJECTROOT = /usr
+#endif
+
+#ifndef IncRoot
+#  ifdef ProjectRoot
+#    define IncRoot Concat(ProjectRoot,/include)
+#    ifndef AlternateIncRoot
+#      define AlternateIncRoot YES
+#    endif
+#  else
+#    define IncRoot /usr/include
+#    ifndef AlternateIncRoot
+#      define AlternateIncRoot NO
+#    endif
+#  endif
+#else
+#  ifndef AlternateIncRoot
+#    define AlternateIncRoot YES
+#  endif
+#endif
+          INCROOT = IncRoot		/* base of where to put header files */
+        USRLIBDIR = UsrLibDir		/* nonshared libraries */
+         SHLIBDIR = ShLibDir            /* shared libraries */
+
+XCOMM Define the location of this directory relative to the TOP.
+#ifndef TOPDIR
+#define TOPDIR .
+#endif
+#ifndef CURDIR
+#define CURDIR .
+#endif
+              TOP = TOPDIR
+      CURRENT_DIR = CURDIR
+
+XCOMM ------------------------------------------------------------
+XCOMM Check to see if private root is enable in the environment.  If
+XCOMM it is, then query the user to make sure it's intentional.  The 
+XCOMM user can prevent the query by setting PRIVATE on the command
+XCOMM line. 
+XCOMM ------------------------------------------------------------
+ifneq ($(origin PRIVATE),command line)
+  ifneq ($(strip $(PRIVATE_ROOT)),)
+    TMP := $(shell echo "This message can be overridden by 'make PRIVATE=y'" 1>&2)
+    TMP := $(shell (echo "PRIVATE_ROOT is set to $(PRIVATE_ROOT): Continue? [n]" 1>&2; read ANSWER; echo $$ANSWER))
+    ifneq ($(findstring y, $(TMP)),y)
+      TMP := $(shell echo "***** unset PRIVATE_ROOT then make again." 1>&2)
+      TMP := $(shell echo "***** You could use 'make PRIVATE=y'" 1>&2 )
+      THIS_MUST_CRASH
+    endif
+  endif
+endif
+
+XCOMM ------------------------------------------------------------
+XCOMM The following section is set up so that a user can override the group
+XCOMM directories by defining PRIVATE_ROOT.   If PRIVATE_ROOT root is
+XCOMM defined, then the libraries and include files in PRIVATE_ROOT are
+XCOMM searched before the group directories which allows the user to
+XCOMM override the group files to test new version without interfering with
+XCOMM others.  If PrivateRoot is defined in Project.tmpl or
+XCOMM Package.tmpl this is used as the default value; otherwise the value
+XCOMM is taken from the environment.  PRIVATE_ROOT is always overriden
+XCOMM by the environment.
+XCOMM ------------------------------------------------------------
+#ifndef PrivateRoot
+#define PrivateRoot /**/
+#endif
+ifeq ($(strip $(PRIVATE_ROOT)),)
+     PRIVATE_ROOT = PrivateRoot
+endif
+
+XCOMM ------------------------------------------------------------
+XCOMM Define where the Experiment files and directories are found.
+XCOMM The user is must define the environment variable EXPERIMENT before
+XCOMM using make.  This environment variable holds the location of the
+XCOMM experiment libraires and include files.
+
+ifeq ($(strip $(EXPERIMENT)),)
+  EXPERIMENT=DefaultExperiment
+endif
+ifeq ($(strip $(EXPERIMENT_LEVEL)),)
+  EXPERIMENT_LEVEL=DefaultExperimentLevel
+endif
+
+XCOMM Define where the installed public experiment files are.
+PUBLIC_EXPERIMENT_ROOT = $(EXPERIMENT)/$(EXPERIMENT_LEVEL)
+
+XCOMM See if the user is overriding them with a local copy.  This can
+XCOMM be done by defining PRIVATE_ROOT on the command line or as an
+XCOMM environment variable. 
+ifneq ($(strip $(PRIVATE_ROOT)),) 
+  EXPERIMENT_ROOT = $(PRIVATE_ROOT)
+else
+  EXPERIMENT_ROOT = $(EXPERIMENT)/$(EXPERIMENT_LEVEL)
+endif
+
+XCOMM Define where to find the experiment libraries.  If PRIVATE_ROOT
+XCOMM is defined then the lib directory in PRIVATE_ROOT is search
+XCOMM first. 
+       EXPERIMENT_LIBDIR = $(EXPERIMENT_ROOT)/lib/$(MACHINE)
+PUBLIC_EXPERIMENT_LIBDIR = $(PUBLIC_EXPERIMENT_ROOT)/lib/$(MACHINE)
+       EXPERIMENT_OBJDIR = $(EXPERIMENT_ROOT)/obj/$(MACHINE)
+PUBLIC_EXPERIMENT_OBJDIR = $(PUBLIC_EXPERIMENT_ROOT)/obj/$(MACHINE)
+     EXPERIMENT_SHLIBDIR = $(PUBLIC_EXPERIMENT_ROOT)/shlib/$(MACHINE)
+    EXPERIMENT_LDPATHS = -L$(EXPERIMENT_LIBDIR) \
+				-L$(EXPERIMENT_SHLIBDIR) \
+				-L$(PUBLIC_EXPERIMENT_LIBDIR)
+
+XCOMM Define where the experiment include files are.  If PRIVATE_ROOT
+XCOMM is defined then the include directory in PRIVATE_ROOT is searched
+XCOMM first. 
+       EXPERIMENT_INCDIR = $(EXPERIMENT_ROOT)/include
+PUBLIC_EXPERIMENT_INCDIR = $(PUBLIC_EXPERIMENT_ROOT)/include
+     EXPERIMENT_INCLUDES = -I$(EXPERIMENT_INCDIR) \
+				-I$(PUBLIC_EXPERIMENT_INCDIR)
+       EXPERIMENT_FORTRAN_INCDIR = $(EXPERIMENT_ROOT)/inc
+PUBLIC_EXPERIMENT_FORTRAN_INCDIR = $(PUBLIC_EXPERIMENT_ROOT)/inc
+     EXPERIMENT_FORTRAN_INCLUDES = -I$(EXPERIMENT_FORTRAN_INCDIR) \
+				-I$(PUBLIC_EXPERIMENT_FORTRAN_INCDIR)
+
+XCOMM Define where the experiment binary files are.  This is mostly
+XCOMM used to install programs.  If PRIVATE_ROOT is defined the it overrides
+XCOMM the group directories.
+       EXPERIMENT_BINDIR = $(EXPERIMENT_ROOT)/bin/$(MACHINE)
+PUBLIC_EXPERIMENT_BINDIR = $(PUBLIC_EXPERIMENT_ROOT)/bin/$(MACHINE)
+
+XCOMM Define where the experiment script files are.  This is mostly
+XCOMM used to install programs.  If PRIVATE_ROOT is defined the it overrides
+XCOMM the group directories.
+       EXPERIMENT_SCRIPTDIR = $(EXPERIMENT_ROOT)/bin
+PUBLIC_EXPERIMENT_SCRIPTDIR = $(PUBLIC_EXPERIMENT_ROOT)/bin
+
+XCOMM ------------------------------------------------------------
+XCOMM Define where the working group files and directories are.  These
+XCOMM can be overridden by the PRIVATE_ROOT variable.  If PACKAGE is
+XCOMM not defined then it defaults to EXPERIMENT.  If you are working
+XCOMM on the main expermiment libraries, then PACKAGE should be the
+XCOMM same as EXPERIMENT.  Really it should only be different for something
+XCOMM that won't be used the the EXPERIMENT as a whole (perhaps online
+XCOMM or MC).  In SuperK, example packages are atmpd, or lowe
+ifeq ($(strip $(PACKAGE)),)
+  PACKAGE=$(EXPERIMENT)
+endif
+ifeq ($(strip $(PACKAGE_LEVEL)),)
+  PACKAGE_LEVEL=DefaultPackageLevel
+endif
+
+XCOMM See if the user is overriding them with a local copy.  This can
+XCOMM be done by defining PRIVATE_ROOT on the command line or as an
+XCOMM environment variable. 
+ifneq ($(strip $(PRIVATE_ROOT)),) 
+  PACKAGE_ROOT = $(PRIVATE_ROOT)
+else
+  PACKAGE_ROOT = $(PACKAGE)/$(PACKAGE_LEVEL)
+endif
+
+XCOMM Define where the installed public package files are.
+PUBLIC_PACKAGE_ROOT = $(PACKAGE)/$(PACKAGE_LEVEL)
+
+XCOMM Define where to find the package libraries.  If PRIVATE_ROOT
+XCOMM is defined then the lib directory in PRIVATE_ROOT is search
+XCOMM first. 
+        LIBDIR = $(PACKAGE_ROOT)/lib/$(MACHINE)
+PACKAGE_LIBDIR = $(PUBLIC_PACKAGE_ROOT)/lib/$(MACHINE)
+        OBJDIR = $(PACKAGE_ROOT)/obj/$(MACHINE)
+PACKAGE_OBJDIR = $(PUBLIC_PACKAGE_ROOT)/obj/$(MACHINE)
+      SHLIBDIR = $(PUBLIC_PACKAGE_ROOT)/shlib/$(MACHINE)
+PACKAGE_LDPATHS = -L$(LIBDIR) \
+			-L$(SHLIBDIR) \
+			-L$(PACKAGE_LIBDIR)
+
+XCOMM Define where the package include files are.  If PRIVATE_ROOT
+XCOMM is defined then the include directory in PRIVATE_ROOT is searched
+XCOMM first. 
+	  INCDIR = $(PACKAGE_ROOT)/include
+  PACKAGE_INCDIR = $(PUBLIC_PACKAGE_ROOT)/include
+PACKAGE_INCLUDES = -I. -I$(INCDIR) \
+			-I$(PACKAGE_INCDIR)
+
+          FORTRAN_INCDIR = $(PACKAGE_ROOT)/inc
+  PACKAGE_FORTRAN_INCDIR = $(PUBLIC_PACKAGE_ROOT)/inc
+PACKAGE_FORTRAN_INCLUDES = -I. -I$(FORTRAN_INCDIR) \
+				-I$(PACKAGE_FORTRAN_INCDIR)
+
+XCOMM Define where the package binary files are.  This is mostly
+XCOMM used to install programs.  If PRIVATE_ROOT is defined the it overrides
+XCOMM the group directories.
+        BINDIR = $(PACKAGE_ROOT)/bin/$(MACHINE)
+PACKAGE_BINDIR = $(PUBLIC_PACKAGE_ROOT)/bin/$(MACHINE)
+
+XCOMM Define where the package script files are.  This is mostly
+XCOMM used to install programs.  If PRIVATE_ROOT is defined the it overrides
+XCOMM the group directories.
+        SCRIPTDIR = $(PACKAGE_ROOT)/bin
+PACKAGE_SCRIPTDIR = $(PUBLIC_PACKAGE_ROOT)/bin
+
+XCOMM Define where the package manual files are.  If PRIVATE_ROOT is
+XCOMM then it overrides the group directories.
+	MANPATH = $(PACKAGE_ROOT)/man
+
+XCOMM Define where the library of data files is found.
+	DATADIR = $(PACKAGE_ROOT)/lib
+ PUBLIC_DATADIR = $(PUBLIC_PACKAGE_ROOT)/lib
+
+XCOMM Add a obsolete definition to be compadible with the old
+XCOMM Imakefiles.
+   COMMONLIBDIR = $(DATADIR)

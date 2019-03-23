@@ -1,0 +1,39 @@
+      FUNCTION DCDMAS(IDENT)
+      COMMON / PARMAS / AMTAU,AMNUTA,AMEL,AMNUE,AMMU,AMNUMU
+     *                 ,AMPIZ,AMPI,AMRO,GAMRO,AMA1,GAMA1
+     *                 ,AMK,AMKZ,AMKST,GAMKST
+C
+      REAL*4            AMTAU,AMNUTA,AMEL,AMNUE,AMMU,AMNUMU
+     *                 ,AMPIZ,AMPI,AMRO,GAMRO,AMA1,GAMA1
+     *                 ,AMK,AMKZ,AMKST,GAMKST
+
+      IF      (IDENT.EQ. 1) THEN
+        APKMAS=AMPI
+      ELSEIF  (IDENT.EQ.-1) THEN
+        APKMAS=AMPI
+      ELSEIF  (IDENT.EQ. 2) THEN
+        APKMAS=AMPIZ
+      ELSEIF  (IDENT.EQ.-2) THEN
+        APKMAS=AMPIZ
+      ELSEIF  (IDENT.EQ. 3) THEN
+        APKMAS=AMK
+      ELSEIF  (IDENT.EQ.-3) THEN
+        APKMAS=AMK
+      ELSEIF  (IDENT.EQ. 4) THEN
+        APKMAS=AMKZ
+      ELSEIF  (IDENT.EQ.-4) THEN
+        APKMAS=AMKZ
+      ELSEIF  (IDENT.EQ. 8) THEN
+        APKMAS=0.0001
+      ELSEIF  (IDENT.EQ.-8) THEN
+        APKMAS=0.0001
+      ELSEIF  (IDENT.EQ. 9) THEN
+        APKMAS=0.5488
+      ELSEIF  (IDENT.EQ.-9) THEN
+        APKMAS=0.5488
+      ELSE
+        PRINT *, 'STOP IN APKMAS, WRONG IDENT=',IDENT
+        STOP
+      ENDIF
+      DCDMAS=APKMAS
+      END

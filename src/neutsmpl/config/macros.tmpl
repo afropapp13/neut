@@ -1,0 +1,55 @@
+/* 
+  $Id: macros.tmpl,v 1.1 2007-01-20 07:35:42 skrep Exp $
+
+  Define any miscellanious macros needed by the Imakefile.  These
+  should only be for internal use.
+
+  $Log: not supported by cvs2svn $
+  Revision 1.2  1997/05/27 15:55:56  mcgrew
+  Add patches to keep compadible with the K2K config files.
+
+  Revision 1.1  1997/04/27 05:06:02  mcgrew
+  partially adapted to SK
+
+
+ */
+
+XCOMM The following supports forcing of function prototypes
+#if NeedFunctionPrototypes && NeedVarargsPrototypes && NeedConstPrototypes && NeedNestedPrototypes
+#define _funcprotodef -DFUNCPROTO=15
+#else
+#if NeedFunctionPrototypes && NeedVarargsPrototypes && NeedNestedPrototypes
+#define _funcprotodef -DFUNCPROTO=11
+#else
+#if NeedFunctionPrototypes && NeedNestedPrototypes
+#define _funcprotodef -DFUNCPROTO=9
+#else
+#if NeedFunctionPrototypes && NeedVarargsPrototypes && NeedConstPrototypes
+#define _funcprotodef -DFUNCPROTO=7
+#else
+#if NeedFunctionPrototypes && NeedConstPrototypes
+#define _funcprotodef -DFUNCPROTO=5
+#else
+#if NeedFunctionPrototypes && NeedVarargsPrototypes
+#define _funcprotodef -DFUNCPROTO=3
+#else
+#if NeedFunctionPrototypes
+#define _funcprotodef -DFUNCPROTO
+#else
+#define _funcprotodef /**/
+#endif
+#endif
+#endif
+#endif
+#endif
+#endif
+#endif
+
+#if NeedWidePrototypes
+#define _wideprotodef /**/
+#else
+#define _wideprotodef -DNARROWPROTO
+#endif
+    PROTO_DEFINES = _funcprotodef _wideprotodef 
+#undef _funcprotodef
+#undef _wideprotodef

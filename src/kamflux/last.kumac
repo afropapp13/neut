@@ -1,0 +1,7 @@
+*** Begin of history file: Wed Sep 10 15:51:07 1997
+fun1 100 flux.f(12,x) 100 0.1 1
+fun1 100 flux.f(14,x) 100 0.1 1
+fun1 100 flux.f77(14,x) 100 0.1 1
+fun1 100 flux.f77(-14,x) 100 0.1 1 S
+quit
+*** End   of history file: Wed Sep 10 15:51:52 1997

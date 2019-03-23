@@ -1,0 +1,23 @@
+vec/cre etbl(200)
+vec/cre crsmu(200)
+vec/cre crsmub(200)
+vec/cre crse(200)
+vec/cre crseb(200)
+vec/read vlist='etbl,crsmu,crsmub,crse,crseb' FNAME='totpau.tbl'
+
+1d 114 'crsmu' 200 0. 10.
+hi/put_vect/cont 114 crsmu
+
+1d 214 'crsmub' 200 0. 10.
+hi/put_vect/cont 214 crsmub
+
+1d 112 'crse' 200 0. 10.
+hi/put_vect/cont 112 crse
+
+1d 212 'crse' 200 0. 10.
+hi/put_vect/cont 212 crseb
+
+
+
+
+

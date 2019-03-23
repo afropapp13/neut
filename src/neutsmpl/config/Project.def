@@ -1,0 +1,45 @@
+/* $Id: Project.def,v 1.1 2007-01-20 07:35:27 skrep Exp $
+ *
+ * $Log: not supported by cvs2svn $
+ * Revision 1.6  1999/02/22 06:45:45  mcgrew
+ * Make the project and package defines into integers.
+ *
+ * Revision 1.5  1999/02/04 09:13:36  mcgrew
+ * The elif cpp directive is not supported on some broken machines like
+ * the CCPS.  Fix to use else and if.
+ *
+ * Revision 1.4  1999/02/04 06:57:51  mcgrew
+ * Change the definition values to prevent recursive defines and print a
+ * message when compiling one kilo-ton code.
+ *
+ * Revision 1.3  1999/01/31 02:21:16  mcgrew
+ * Put the k2k object files in a different subdirectory than the sk
+ * object files.  This only changes the compilation location, not the
+ * installation location.
+ *
+ * Revision 1.2  1999/01/31 01:55:39  mcgrew
+ * Pass cpp definitions to the compilation.
+ *
+ * Revision 1.1  1999/01/31 01:22:48  mcgrew
+ * Add Package and Project .def files that are loaded immediately after
+ * the site.def files and before the defaults.tmpl file.  This lets the
+ * Package and Project override variables used to define the rules.
+ * The Package and Project files are the only files that should be
+ * changed in the config directories to customise for a particular
+ * library or experiment.
+ *
+ */
+
+#if defined(K2K)
+   BOOT_DEFINES += -DK2K=YES
+   EXPERIMENT_DEFINES += -DK2K=YES
+
+/* Make sure that we do not mix k2k and skam object files. */
+#  define ObjectPrefix $(MACHINE)/k2k/
+
+#else
+#if defined(SKAM)
+   BOOT_DEFINES += -DSKAM=YES
+   EXPERIMENT_DEFINES += -DSKAM=YES
+#endif
+#endif

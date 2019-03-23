@@ -1,0 +1,97 @@
+**********************************************************************
+*     ------------------------------
+      SUBROUTINE NEVECGEN(IP,POS,PMOM,IERR)
+*     ------------------------------
+*     
+*     ( purpose )
+*       VECTOR GENERATION ( NEUTRINO INTERACTION )
+*
+*     ( input ) 
+*       IP      : PARICLE CODE
+*       POS(3)  : VERTEX POSITION
+*       PMOM(3) : MOMENTUM ( MEV/C)
+*
+*     ( output ) 
+*       COMMON VCWORK,VCVRTX
+*
+*     ( creation date and author )
+*       1995.02.25 ; First version by K.Kaneyuki
+*       1996.01.11 ; K.Kaneyuki  NENEFO16 = 1 -> no nuclear effect in O16
+*       1998.03.07 ; add nek0(k0 -> KL or KS) by J.K.
+*       2004.07.06 ; save interaction position in O16 by M.Ishitsuka
+*       2009.12.09 ; R.Tacik, P. de Perio
+*                    - Add nucleon ejection by pi/Delta absorption
+*
+**********************************************************************
+      IMPLICIT NONE
+
+C#include "mcgenpar.h"
+#include "necard.h"
+#include "fsihist.h"
+
+      INTEGER*4 IP
+
+      INTEGER*4 IERR
+
+      REAL POS(3),PMOM(3)
+
+      real*4    EVPIPROB
+      external  EVPIPROB
+C
+      IERR = 1
+C
+      write(*,*) '-----------------------------------------------------'
+C
+C --  CLEAR COMMONS
+C
+      CALL VCCLCM
+      CALL NECLPOS
+C     
+C --  MAKE VECTOR
+C      
+      IF ((abs(ip).ne.12).and.(abs(ip).ne.14)) then
+         write(*,*) 'IP should be 12 or 14.'
+         stop
+      endif
+
+      CALL NEVENT(IP,PMOM,IERR)
+
+      IF (IERR.ne.0) THEN
+         RETURN
+      ENDIF
+C
+C --  COPY PARAMETER FROM NEWOK TO VCWORK, VCVRTX
+C
+      CALL NECPNEWK(POS)
+C
+C --  TRACE IN O16
+C
+      CALL EFCLFSI 
+      IF (NENEFO16.EQ.0) CALL NEFFECT
+C
+C --  CONSIDER NULCEAR EXCITATION OF GAMMA
+C
+      CALL NEMKGAM
+C
+C --  translate K0 -> K LONG or K SHORT 
+C
+      CALL NEK0
+C
+C --  decay omega meson 
+C
+      CALL NEOMEGA
+C
+C --  nucleon rescattering
+C
+      call nrintr
+C      
+C --  nucleon ejection following pion/delta absorption
+C
+      call absneject
+C
+C -- Calculate FSIPROB after all possible instances of EFTRACE
+C
+      FSIPROB=EVPIPROB()
+     
+      RETURN
+      END

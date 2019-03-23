@@ -1,0 +1,103 @@
+#!/bin/sh
+# $Id: imake_boot,v 1.1 2007-01-20 07:35:39 skrep Exp $
+#
+# Bootstrap the Imakefile. 
+
+if [ "$CVSCOSRC" = "" ] ; then
+        echo YOU must set CVSCOSRC first
+        echo " try : setenv CVSCOSRC /home/skrep"
+        echo " or : export CVSCOSRC=/home/skrep"
+        exit 1
+fi
+
+if [ "$MACHINE" = "" -a "$MACHINE_DIR" = "" ] ; then
+        echo YOU must set MACHINE first
+        echo ' try : setenv MACHINE `Machine`'
+        echo ' or : export MACHINE=`Machine`'
+        exit 1
+fi
+
+if [ "${EXPERIMENT}" = "" ] ; then
+    echo YOU need to set EXPERIMENT
+    echo Try: setenv EXPERIMENT=/skam
+    echo or: export EXPERIMENT=/skam
+    exit 1
+fi
+
+# The search_path here must match the search path defined in
+#    commands.tmpl 
+search_path="${IMAKE_INCLUDES} -I. -I./config" 
+
+if [ "${PRIVATE_ROOT}x" != "x" ]; then
+    if [ -f ${PRIVATE_ROOT}/config/Imake.tmpl ]; then
+	search_path="${search_path} -I${PRIVATE_ROOT}/config"
+    fi
+fi
+
+if [ -f ${CVSCOSRC}/config/Imake.tmpl ]; then
+    search_path="${search_path} -I${CVSCOSRC}/config"
+else
+    search_path="${search_path} -I${CVSCOSRC}"
+fi
+
+if [ -x ${CVSCOSRC}/linux_version ]; then
+    if ${CVSCOSRC}/linux_version>>/dev/null; then
+	extra_defines=`${CVSCOSRC}/linux_version`
+    fi
+fi
+
+# Check if we are trying to rebuild an existing Makefile
+if [ -f Makefile ]; then
+    echo
+    echo WARNING: Overwriting an existing Makefile.  Your compilation
+    echo '        ' environment may be changing.  If you wish to preserve
+    echo '        ' your environment, use \"make Makefile\".
+    echo 
+fi
+
+if [ -f Imakefile ] ; then
+	imake -v -DUseInstalled ${search_path} \
+		-DTOPDIR=`/bin/pwd` -DCURDIR= -fImakefile \
+		-DCMDLINE="${extra_defines} $*" ${extra_defines} $*
+else
+# The Imakefile doesn't exist yet.  Print a friendly warning and exit.
+    echo "Oops...  The Imakefile is missing.  Perhaps you are in the"
+    echo "wrong directory?"
+fi
+
+
+#
+# $Log: not supported by cvs2svn $
+# Revision 1.10  1999/07/22 18:23:59  mcgrew
+# Major cleanup of the linux definitions.  Much of the stuff that was in
+# site.def, but belonged in linux.cf has been moved there.  I've also
+# added the Linux distributions as vendors so that Linux looks a lot
+# more like the unixen.
+#
+# Revision 1.9  1999/07/08 12:01:24  sharkey
+# Add test for Red Hat Linux.  If /var/lib/rpm exists but /var/lib/dpkg does
+# not, then define REDHAT.
+#
+# I'm not so sure that all REDHAT systems will lack /var/lib/dpkg, if they
+# have alien installed, but we'll cross that bridge when we come to it.
+#
+# Revision 1.8  1999/03/23 07:38:19  mcgrew
+# Make sure that the command line is available in the Makefile so that
+# options are correctly passed to the build.  Add a warning if
+# imake_boot is overriding an existing Makefile which can lead to
+# surprising changes in the compilation commands.
+#
+# Revision 1.7  1999/03/17 05:17:20  sharkey
+# imake_boot can now detect Debian Linux systems by checking for the existence
+# of /var/lib/dpkg.  Debian differentiates between f2c (g77) and g2c (egcs g77)
+# libraries, and we want to link in both, if they exist.
+#
+# imake_boot will pass -DDEBIAN if it finds /var/lib/dpkg and kek.def and
+# linux-fortran.def now define HasG2C if it sees DEBIAN defined, and linux.cf
+# will append -lg2c if it sees HasG2C.  This should make all systems
+# happy.  Except maybe those Red Hatters out there...
+#
+# Revision 1.6  1997/07/31 17:08:53  bviren
+# Allow for passing cmd line options to imake, and added CVS logging
+#
+#

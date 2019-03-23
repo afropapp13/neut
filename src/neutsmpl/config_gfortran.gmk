@@ -1,0 +1,4 @@
+FC = gfortran
+FCOPTIONS = -fno-backslash -fno-automatic -fno-second-underscore -ffixed-line-length-132 -fdollar-ok -fpic -fbounds-check -Wall -W -ffpe-trap=invalid,zero,overflow
+ALLDEFINES += -DgFortran -Df2cFortran -ffpe-trap=invalid,zero,overflow
+

@@ -1,0 +1,67 @@
+#!/bin/sh
+#
+#  $Id: Machine,v 1.1 2007-01-20 07:35:18 skrep Exp $
+#
+#  Determine the "standard" name of this machine.
+#
+
+DefaultType="unknown"
+
+# If MACHINE_DIR is defined then use that as the default type.
+if [ "${MACHINE_DIR}"x != x ]; then
+    DefaultType=${MACHINE_DIR}
+fi
+
+# MACHINE is already set so just return that value.
+if [ "${MACHINE}"x != x ]; then
+    DefaultType=${MACHINE}
+fi
+
+# Choose the machine type.
+if [ ${DefaultType} = unknown ]; then
+    OPSYS=`uname -s`
+    if [ ${OPSYS} = SunOS ]
+    then
+	PROC=`uname -p`
+	VRSN=`uname -r`
+	if [ `expr 5.3  \<= ${VRSN}` ]
+	then
+	    OPSYS=solaris
+	fi
+	export IMAKECPP
+	IMAKECPP=/usr/ccs/lib/cpp
+    elif [ ${OPSYS} = Linux ] 
+    then 
+	PROC=`uname -m`
+	case "${PROC}" in
+        *86*) PROC=pc;;
+	esac
+    elif [ ${OPSYS} = IRIX ] || [ ${OPSYS} = IRIX32 ] || [ ${OPSYS} = IRIX64 ]
+    then
+	PROC=`uname -p`
+	VRSN=`uname -r`
+	case "${VRSN}" in
+	1.*) OPSYS=IRIX32;;
+	2.*) OPSYS=IRIX32;;
+	3.*) OPSYS=IRIX32;;
+	4.*) OPSYS=IRIX32;;
+	5.*) OPSYS=IRIX32;;
+	*)   OPSYS=IRIX64;;
+	esac
+    elif [ ${OPSYS} = HP-UX ]
+    then
+	PROC=`uname -m`
+	case "$PROC" in
+        9000/31? )            PROC=m68000 ;;
+        9000/[34]?? )         PROC=m68k ;;
+        9000/7?? | 9000/8?[1679] ) PROC=hppa1.1 ;;
+        9000/8?? )            PROC=hppa1.0 ;;
+        esac
+    else
+	PROC=`uname -m`
+    fi
+    DefaultType=${OPSYS}_${PROC}
+fi
+
+echo ${DefaultType}
+

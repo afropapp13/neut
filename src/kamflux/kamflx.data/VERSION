@@ -1,0 +1,20 @@
+                                                          Apr. 6, 94                                
+ Temporal version 0.99 (Need checks for effects of >100TeV CR)                                      
+ Notes:                                                                                             
+ In the data set, neutrino fluxes of 1-10,000TeV are given,                                         
+ but actual integration is from 10GeV to 100TeV for primary CR.                                     
+ Only the flux in the 3-1,000GeV is reliable (I hope).                                              
+                                                                                                    
+Interaction Model:                                                                                  
+                                                                                                    
+       E < 5 GeV NUCRIN                                                                             
+ 5   < E < 500   LUND                                                                               
+ 500 < E         KASAHARA ORIGINAL                                                                  
+                                                                                                    
+Primary Flux:                                                                                       
+                                                                                                    
+Newly compiled by M.Honda.                                                                          
+                                                                                                    
+The systematic error due to the primary flux is estimated 5% below 100GeV                           
+and 10% at 1TeV. However, there always is systematic error of absolute                              
+values. This should be fixed by mu-on flux and/or BESS observation.                                 

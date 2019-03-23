@@ -1,0 +1,59 @@
+*** Begin of history file: Wed Sep 10 15:42:12 1997
+fun1 100 flux(12,x) 100 1 100
+fun1 100 flux(12,x).f77 100 1 100
+fun1 100 flux(12,x).f 100 1 100
+help fun1
+fun1 100 flux(12,x).f 100 1 100
+help fun1
+fun/pl  100 flux(12,x).f 100 1 100
+help fun/pl
+fun/pl flux(12,x).f 1 100
+fun/pl y=flux(12,x).f 1 100
+fun/pl flux(12,x).f 1 100
+fun/pl flux.f(12,x) 1 100
+fun/pl flux.f77(12,x) 1 100
+fun/pl flux.f(12,x) 1 100
+fun/pl flux.f(12,x) 1 10
+fun/pl flux.f(12,x) 0.01 10
+fun/pl flux.f(12,x) 0.01 1
+fun/pl flux.f(12,x) 0.001 1
+opt logx
+fun/pl flux.f(12,x) 0.001 10
+fun/pl flux.f(12,x) 0.01 10
+fun1 100 flux.f(12,x) 0.01 1
+fun1 100 flux.f(12,x) 100 0.01 1
+fun1 100 flux.f(-12,x) 100 0.01 1
+fun1 100 flux.f(12,x) 100 0.01 1
+fun1 100 flux.f(12,x) 100 0.01 1
+fun1 100 flux.f(-12,x) 100 0.01 1 S
+fun1 100 flux.f(14,x) 100 0.01 1 S
+fun1 100 flux.f(14,x) 100 0.01 1
+fun1 100 flux.f(-14,x) 100 0.01 1 S
+fun1 100 flux.f(14,x) 100 0.01 1
+opt logy
+fun1 100 flux.f(14,x) 100 0.01 100
+fun1 100 flux.f(-14,x) 100 0.01 100
+fun1 100 flux.f(-14,x) 100 0.01 100 S
+opt liny
+fun1 100 flux.f(-14,x) 100 0.01 100 S
+h/pl 100
+fun1 100 flux.f(-14,x) 100 0.01 100
+fun1 100 flux.f(14,x) 100 0.01 100
+fun1 200 flux.f(14,x) 100 0.01 100
+opt linx
+fun1 200 flux.f(14,x) 100 0.01 100
+fun1 200 flux.f(14,x) 100 0.01 1
+fun1 200 flux.f(14,x) 100 0.1 1
+opt logx
+fun1 200 flux.f(14,x) 100 0.1 1
+opt linx
+fun1 200 flux.f(14,x) 100 0.1 1
+fun1 200 flux.f(-14,x) 100 0.1 1 S
+fun1 200 flux.f(12,x) 100 0.1 1 S
+fun1 200 flux.f(-12,x) 100 0.1 1 S
+opt logy
+fun1 200 flux.f(-14,x) 100 0.1 1
+fun1 200 flux.f(14,x) 100 0.1 1 S
+opt liny
+quit
+*** End   of history file: Wed Sep 10 15:51:06 1997

@@ -1,0 +1,21 @@
+XCOMM $Id: tqmap.tmpl,v 1.1 2007-01-20 07:35:51 skrep Exp $
+
+XCOMM ==========
+XCOMM tqmap.tmpl
+XCOMM ==========
+XCOMM    Some definitions for TQMAP tools.
+
+
+XCOMM ---------------------------
+XCOMM Directories for TQMAP tools
+XCOMM ---------------------------
+XCOMM     It should be set to the environment variable "TQ_ROOT".
+XCOMM     If TQ_ROOT is not set, EXPERIMENT_ROOT is set to TQ_ROOT.
+ifeq ($(strip $(TQ_ROOT)),)
+  TQ_ROOT=$(EXPERIMENT_ROOT)
+endif
+
+TQINCDIR=$(TQ_ROOT)/include
+TQLIBDIR=$(TQ_ROOT)/lib/$(MACHINE)
+TQBINDIR=$(TQ_ROOT)/bin/$(MACHINE)
+TQETCDIR=$(TQ_ROOT)/etc

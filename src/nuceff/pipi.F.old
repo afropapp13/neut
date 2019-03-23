@@ -1,0 +1,167 @@
+C
+C ++ PI+,PI+ SCATTERING SIMULATION FOR O16
+C
+      Implicit None
+      real XIN(3),PIN(3),PFI(3)
+      real H(50000)
+      real rmax,r,tin,ppp,pinabs,xzig,pfiabs,tpi
+      real theta,weight,cost,sint,weigt2
+      real area,dtheta
+      integer kin,itoti,itot,iabs,ifree,ichex,iij,i
+      integer nabs,nzig,kfi,iinel
+      real dum,apn,ap
+      integer IDUM
+C      real rndm
+C      external rndm
+      real RLU
+      external RLU
+      integer LTINEL,LTABS,LTCOH
+      integer ISEED
+
+      integer NTHETA
+      data NTHETA/30/
+      
+      COMMON /PAWC/H
+      COMMON /RNSEED/ISEED
+#include<efpion.h>
+      COMMON /YHDEBUG/LTINEL,LTABS,LTCOH
+
+C
+      CALL HLIMIT(50000)
+      CALL HBOOK1(1,'SCATTERING ANGLE DISTRIBUTION COS(THETA)$',100,
+     &            -1.,1.,0.)
+      CALL HBOOK1(2,'SCATTERING ANGLE DISTRIBUTION THETA$',NTHETA,
+     &            0.,180.,0.)
+      CALL HBOOK1(3,'FINAL MOMENTUM DISTRIBUTION$',100,0.,300.,0.)
+      CALL HBOOK1(4,'FINAL KINETIC ENERGY DISTRIBUTION$',100,0.,200.,0.)
+      CALL HBOOK1(5,'TPI (THETA = 35)$',60,0.,300.,0.)
+      CALL HBOOK1(6,'TPI (THETA = 60)$',60,0.,300.,0.)
+      CALL HBOOK1(7,'TPI (THETA = 130)$',60,0.,300.,0.)
+      CALL HBOOK1(10,'NZIG$',10,0.,10.,0.)
+      CALL HBOOK1(30,'NZIG BEFORE ABSORPTION$',50,0.,50.,0.)
+      CALL HBOOK1(20,'SCATTERING ANGLE DISTRIBUTION THETA(WEIGHTED)$',
+     &NTHETA,0.,180.,0.)
+      CALL HBOOK1(21,'Differential cross-section$',
+     &NTHETA,0.,180.,0.)
+      CALL HBOOK1(31,'KINETIC ENERGY BEFORE ABSORPTION$',100,
+     &0.,200.,0.)
+      CALL HBOOK2(32,'PLACE WHERE ABSORBED(X .VS. INPACT PARAMETER)$',
+     &100,-7.,7.,50,0.,7.,0.)
+      CALL HBOOK1(33,'COS(THETA) BEFORE ABSORPTION$',100,
+     &-1.,1.,0.)
+      CALL HBOOK1(40,'SCATTERING ANGLE DISTRIBUTION THETA(WEIGHTED)'
+     &  //' CHARGE EXCHANGE PI+,PI0$',NTHETA,0.,180.,0.)
+      CALL HBOOK1(99,'Random Number distribution',100,0.,1.,0.)
+C
+C
+C	read parameters
+C
+C
+      write(*,*) "Random SEED"
+      read(*,*) ISEED
+      call rdmin(iseed)
+      write(*,*) "Event #"
+      read(*,*) ITOT
+      write(*,*) "P(pi)"
+      read(*,*) PPP
+      write(*,*) "Event : ",ITOT
+      write(*,*) "P(pi) : ",PPP
+C
+C
+C	set common blocks
+C
+      CALL NECARD
+      CALL NECARDEV
+C
+C  for debug
+C
+      LTINEL=0
+      LTABS=0
+      LTCOH=0
+C
+C	set parameters
+C
+      RMAX=2.5*C
+C	(RMAX: maximum radius,C:Woods-Saxon const.)
+      KIN=211
+C	(KIN:kind of incoming pion,pi+ -> 211,pi- -> -211,pi0 -> 111)
+C
+      area=pi*RMAX*RMAX*10
+C	(area:area of circle radius RMAX fm,
+C	 1fm^2 = 10mb,so x10 was added)
+C
+      dtheta=PI/180.*(180./real(NTHETA))
+C	(dtheta is for calc. cross-section,
+C	 currentry 2 degree / bin.) 
+C
+      TIN=SQRT(PPP**2+139.**2)-139.
+      PIN(1)=PPP
+      PIN(2)=0.
+      PIN(3)=0.
+      PINABS=PPP
+
+      IABS=0
+      IFREE=0
+      ICHEX=0
+      DO 100 I=1,ITOT
+C  110 XIN(2)=-RMAX+RNDM(DUM)*RMAX*2.
+C      XIN(3)=-RMAX+RNDM(DUM)*RMAX*2.
+  110 XIN(2)=-RMAX+RLU(IDUM)*RMAX*2.
+      XIN(3)=-RMAX+RLU(IDUM)*RMAX*2.
+      R=SQRT(XIN(2)**2+XIN(3)**2)
+      IF(R.GE.RMAX)GO TO 110
+      XIN(1)=-SQRT(RMAX**2-R**2)+0.0001
+      CALL EFTRACE(APN,AP,KIN,XIN,PIN,NABS,NZIG,KFI,PFI)
+      XZIG=FLOAT(NZIG)+0.5
+      CALL HF1(10,XZIG,1.)
+      IF(NABS.EQ.0)GO TO 200
+      IF(NZIG.EQ.0)GO TO 300
+      PFIABS=SQRT(PFI(1)**2+PFI(2)**2+PFI(3)**2)
+      TPI=SQRT(PFIABS**2+139.**2)-139.
+      COST=PIN(1)*PFI(1)/PINABS/PFIABS
+      THETA=ACOS(COST)
+      THETA=THETA/3.141593*180.
+      if (abs(cost).eq.1.) then
+         sint = 0.
+      else
+         SINT=SQRT(1.-COST**2)
+      endif
+      WEIGHT=1./SINT
+      WEIGT2=WEIGHT*area/float(ITOT)/(2 * PI * dtheta)
+      IF(KFI.NE.KIN)GO TO 400
+      CALL HF1(1,COST,1.)
+      CALL HF1(2,THETA,1.)
+      CALL HF1(20,THETA,WEIGHT)
+      CALL HF1(21,THETA,WEIGT2)
+      CALL HF1(3,PFIABS,1.)
+      CALL HF1(4,TPI,1.)
+      IF(ABS(COST-0.5) .LT. 0.14)CALL HF1(6,TPI,weigt2/5.)
+      IF(ABS(COST+0.6945) .LT. 0.1)CALL HF1(7,TPI,weigt2/5.)
+      GO TO 100
+  200 IABS=IABS+1
+      PFIABS=SQRT(PFI(1)**2+PFI(2)**2+PFI(3)**2)
+      TPI=SQRT(PFIABS**2+139.**2)-139.
+      COST=PIN(1)*PFI(1)/PINABS/PFIABS
+      CALL HF1(30,XZIG,1.)
+      CALL HF1(31,TPI,1.)
+      CALL HF1(33,COST,1.)
+      GO TO 100
+  300 IFREE=IFREE+1
+      GO TO 100
+  400 ICHEX=ICHEX+1
+      IF(KFI.EQ.40)CALL HF1(40,THETA,WEIGHT)
+  100 CONTINUE
+C
+      IINEL=ITOT-IABS-IFREE-ICHEX
+      WRITE(100,600)ITOT,IFREE,IABS,IINEL,ICHEX,RMAX
+  600 FORMAT(///5X,'TOTAL # OF EVENT :',I6/
+     &5X,'FREE ESCAPE      :',I6/
+     &5X,'ABSORPTION       :',I6/
+     &5X,'INELASTIC SCATTER:',I6/
+     &5X,'CHARGE EXCHANGE  :',I6/
+     &5X,'RMAX             :',G15.7,' FERMI')
+      write(200,*) 'INEL=',LTINEL,'  :ABS=',LTABS,'  :COH=',LTCOH
+      CALL HRPUT(0,'difcrs-O16.hb','N')
+
+      STOP
+      END

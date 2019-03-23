@@ -1,0 +1,79 @@
+README for SK ATMPD Tauola directory.
+
+Please update if you change Tauola
+
+* Updated to http://cern.ch/~wasm/public/TAUOLA-exp-11-10-2005.tar.gz
+on 2007/06/06 (CWW)
+
+Chris Walter 1/3/2007
+
+Tauola source and versions
+====================
+Look Here:
+http://hpjmiady.ifj.edu.pl/programs/programs.html
+
+Links to old versions can be found here:
+http://hpjmiady.ifj.edu.pl/programs/node6.html
+
+Do *not* use these.  The versions in this directory are from 1994 and
+1995.  In 2004 our code was updated to the 1995 version (taola 2.6)
+
+http://annapurna.ifj.edu.pl/PROGRAMS/korale-new-exp.tar.gz
+
+The official up-to-date versions (last updated in 2005) are found
+here:
+
+http://wasm.web.cern.ch/wasm/goodies.html
+
+Files included in this directory:
+====================
+Imakefile
+README
+
+Tauola library files
+Taken from the standalone tauola-F directory.
+*include common block and record decay info for ATMPD(tauola.f/C. Walter).
+*comment out line in tralo4 (done by others before)
+----------------------------
+tauola.F
+tauola.F-2.5
+tauola.F-2.6
+formf.F
+pkorb.F
+
+Tauola subroutines extracted from the main or demo program.
+These are used by tauola.F
+-------------------------------------------------
+choice.F
+dcdmas.F
+lunpik.F
+tralo4.F
+filhep.F
+taurdf.F
+
+tauola interface routines for ATMPD.
+----------------------------
+nemktaubk.F - Make the Tau MC bank
+taumc.h         - Common block to record decay and polarization info
+
+tacard.F          - Read the NEUT cardfile tau info 
+tacard.h         - Variables for neut cardfile
+
+tahepevt.h     - HEPEVT common. Filled by tadecay used by tauola
+tapricom.F     - Print taaola common
+taucom.h       - Common blocks extracted from tauola for use by SK routines
+
+tainicom.F   - Initilize variables for tauola
+tainidcy.F    - " "
+tainimas.F   - " "
+tainipar.F     - " "
+
+tauvect.F      - Read vector info and the call taudecay
+taudecay.F   - Call taupol and then decay through tauola dexay  routine
+
+Tau Polarization routines from Hagiwara, Mawatari, and Yokoya 
+See  hep-ph/0305324.  Added by C. Walter in 2004/05.
+---------------------------------------------------
+taupol.f
+mrst2002.f
+mrst2002nlo.dat

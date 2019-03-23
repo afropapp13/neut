@@ -1,0 +1,111 @@
+XCOMM  $Log: not supported by cvs2svn $
+XCOMM  Revision 1.10  2007/11/05 22:53:20  skrep
+XCOMM  add efconv2roxy.F
+XCOMM
+XCOMM  Revision 1.9  2006/07/27 06:26:40  skrep
+XCOMM
+XCOMM  Update include files
+XCOMM
+XCOMM  Revision 1.8  2006/07/27 05:12:50  skrep
+XCOMM
+XCOMM  Use initial position stored in NEUT
+XCOMM
+XCOMM  Revision 1.7  2003/10/21 09:17:25  skrep
+XCOMM  versions btwn main truck and ap02b branch were merged
+XCOMM  only small change in comment was corrected, not affected in program
+XCOMM
+XCOMM  Revision 1.5.2.2  2003/04/07 00:17:16  skrep
+XCOMM  Version number was increased due to introduction of omega tracking
+XCOMM
+XCOMM  Revision 1.5.2.1  2003/04/04 13:39:54  ishi
+XCOMM  I changed to consider the nuclear effect of omega meson.
+XCOMM  The program code of the tracking of omega is first made by Hatakeyama-san
+XCOMM  for proton decay study. I modified the programs for ATMnu MC.
+XCOMM
+XCOMM  Revision 1.5  2002/08/07 08:29:23  ishi
+XCOMM  I have changed "neffect.F"(neut) and added "eftrcomega.F","efomegadcy.F",
+XCOMM  "dcy3bd.F"(nuceff) to consider tracking and decay of omega meson. However,
+XCOMM  for the moment, the nuclear effect of omega meson has not been considered.
+XCOMM  All of omega mesons run through their life time and decay after that.
+XCOMM  And I changed the program "nevent.F" and add "neomega.F" to make
+XCOMM  omega meson generated in free proton decay directly. The case you do not
+XCOMM  consider nuclear effect (NEUT-NEFF 1), all omega mesons decay immediately.
+XCOMM
+XCOMM  Revision 1.4  1998/03/05 00:32:54  atmpd
+XCOMM  For eta tracking by Kameda
+XCOMM
+XCOMM  Revision 1.3  1998/03/04 20:44:32  cmauger
+XCOMM  Added eftrcka.F which calls partnuc in IMBWest for Kaon interactions
+XCOMM  in O16.  To include this file, please link to the following libs:
+XCOMM   -lnuceff -limbwest -lkinem -lska `cernlib mathlib phtools`
+XCOMM
+XCOMM  Revision 1.2  1998/02/25 11:54:20  cmauger
+XCOMM  Initial commit of nuceff.
+XCOMM
+XCOMM  
+XCOMM  
+
+LIBALIAS = nuceff
+VER  = 5.3.1
+IVER = 531
+
+LIBNAME = $(LIBALIAS)_$(VER)
+
+FORTRANDEFINES += -DNENUCEVER=$(IVER)
+
+XCOMM ------------------------------------------------------
+XCOMM Define Object Files
+XCOMM ------------------------------------------------------
+
+FOBJ = efabpath.o efabrho.o efabsrat.o efcalamp.o efcohsct.o \
+efd13.o efd15.o effrmgas.o effrmmom.o effsquar.o efgammn.o \
+efgammnt.o efgammp.o efgammpt.o efgampi.o efhadpro.o \
+efinels.o efintegral.o efmakmap.o efp11.o efp11mc.o efp13.o \
+efp13mc.o efp31.o efp31mc.o efp33.o efp33mc.o efparq.o efpfcost.o \
+efpncrsh.o efpnmltp.o efpqeab.o efpqeabh.o \
+efqepath.o efranbll.o efrho.o efs11.o efs11mc.o efs31.o \
+efs31mc.o efsabrho.o efscatt.o efsetpf.o eftrace.o efcoulforce.o \
+eftrcka.o eftrans.o efvertra.o \
+density.o passl.o ainvms.o eftrceta.o \
+gamfct.o typdcy.o rsmass.o  dcy2bd.o sigeta.o dcy3bd.o \
+eftrcomega.o efomegadcy.o efprobom.o efkinom.o efxsctom.o \
+efconv2roxy.o eflibver.o \
+absboost.o     absgen_four.o   absnegenbod.o  abspi.o	  absrotres2.o \
+absflpsor.o    absgen_three.o  absneject.o    abspidpp.o  absthreebody.o \
+absfourbody.o  absgen_two.o    absnepdk.o     absprob.o   abstwobody.o \
+absdelta.o \
+efgampi0n.o efgampi0nt.o  efgampimp.o efgampiprod.o \
+efgampi0p.o  efgampimpt.o  efgampi0pt.o  efgampipn.o efgampipnt.o \
+efpqeabh_pnsep.o efpncrsh_pnsep.o efhinels_iso.o gdeca2.o \
+efhinels_ps.o efdsg.o efdsgps.o efdsgamp.o efdsgfn.o efhinelscx.o \
+efabpathtun.o efqepathtun.o \
+fsifillpart.o fsifillvert.o evpiprob.o evsetpf.o efclfsi.o \
+efcoulforce.o
+
+OBJS = $(FOBJ)
+
+XCOMM ------------------------------------------------------
+XCOMM Build Library
+XCOMM ------------------------------------------------------
+
+NormalLibraryTarget($(LIBNAME),$(OBJS))
+InstallLibrary($(LIBNAME),$(LIBDIR))
+InstallLibraryAlias($(LIBNAME),$(LIBALIAS),$(LIBDIR))
+
+
+XCOMM ------------------------------------------------------
+XCOMM Install any include directories
+XCOMM ------------------------------------------------------
+
+InstallInclude(efpion.h,$(FORTRAN_INCDIR))
+InstallInclude(efomega.h,$(FORTRAN_INCDIR))
+InstallInclude(efpiinth.h,$(FORTRAN_INCDIR))
+
+InstallInclude(fsihist.h,$(FORTRAN_INCDIR))
+Fh2hIncludeTarget(fsihist)
+InstallInclude(fsihistC.h,$(INCDIR))
+
+InstallInclude(efpion.h,$(FORTRAN_INCDIR))
+Fh2hIncludeTarget(efpion)
+InstallInclude(efpionC.h,$(INCDIR))
+

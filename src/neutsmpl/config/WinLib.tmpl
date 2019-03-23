@@ -1,0 +1,26 @@
+/* $Id: WinLib.tmpl,v 1.1 2007-01-20 07:35:29 skrep Exp $
+ *
+ * $Log: not supported by cvs2svn $
+ * Revision 1.2  1997/05/27 15:55:26  mcgrew
+ * Add patches to keep compadible with the K2K config files.
+ *
+ * Revision 1.1.1.1  1997/04/26 08:45:49  mcgrew
+ * import config files
+ *
+ * Revision 1.1.1.1  1995/12/20 15:26:44  cernlib
+ * X11R6 config files unmodified
+ *
+ *
+ */
+XCOMM $XConsortium: WinLib.tmpl,v 1.1 94/01/08 18:32:51 rws Exp $
+
+#define SharedOldXReqs $(LDPRELIB) $(XLIBONLY)
+#define SharedXtReqs $(LDPRELIB) $(XLIBONLY)
+#define SharedXawReqs $(LDPRELIB) $(XMULIB) $(XTOOLLIB) $(XLIB)
+#define SharedXmuReqs $(LDPRELIB) $(XTOOLLIB) $(XLIB)
+#define SharedXextReqs $(LDPRELIB) $(XLIBONLY)
+#define SharedXiReqs $(LDPRELIB) $(XLIB)
+#define SharedPexReqs $(LDPRELIB) $(XLIBONLY) MathLibrary
+#define SharedXtstReqs $(LDPRELIB) $(XLIB)
+#define SharedXieReqs $(LDPRELIB) $(XLIBONLY)
+#define SharedSMReqs $(LDPRELIB) $(ICELIB)

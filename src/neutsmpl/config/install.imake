@@ -1,0 +1,56 @@
+#!/bin/sh
+#
+#  $Id: install.imake,v 1.1 2007-01-20 07:35:39 skrep Exp $
+#
+#  Install the Imake executables.
+#
+
+DESTDIR=""
+
+putit () {
+    tmp=/tmp/$1.$$
+    sed s%SeDnAmE%`pwd`% ${1} | sed s%DeStDiR%${DESTDIR}% > ${tmp}
+    echo ./install-sh -c -m 0755 ${tmp} ${DESTDIR}/$2
+    ./install-sh -c -m 0755 ${tmp} ${DESTDIR}/$2
+    /bin/rm ${tmp}
+}
+
+checkdir () {
+    if [ "${DESTDIR}" = "" ]; then
+	if [ "${1}" != "" ]; then
+	    if [ -d ${1} -a -w ${1} ]; then
+		if [ "${2}" = "query" ]; then
+		    echo "Install config files into ${1}/bin? [n]"
+		    read TMP
+		    if [ "${TMP}" = "y" ]; then
+			DESTDIR=${1}/bin
+		    fi
+		else
+		    DESTDIR=${1}/bin
+		fi
+	    fi
+	fi
+    fi
+}
+
+# Find out where to install the scripts
+checkdir "${HOME}" query
+if [ "${PRIVATE_ROOT}" != "" ]; then
+    checkdir "${PRIVATE_ROOT}" query
+fi
+if [ "${EXPERIMENT}" != "" ]; then
+    checkdir "${EXPERIMENT}" query
+fi
+if [ "${PACKAGE}" != "" ]; then
+    checkdir "${PACKAGE}" query
+fi
+if [ "${DESTDIR}" = "" ]; then
+    DESTDIR=${HOME}
+fi
+
+# Install the scripts.
+putit imake_boot imake_boot
+putit Machine Machine
+putit imake.profile imake.profile
+putit imake.cshrc imake.cshrc
+putit af77.pl af77.pl

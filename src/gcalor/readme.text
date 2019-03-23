@@ -1,0 +1,226 @@
+                       GEANT-CALOR Interface
+                       =====================
+                      C.Zeitnitz, T.A.Gabriel
+
+Report problems to : Christian Zeitnitz, University of Arizona
+            e-mail : ZEITNITZ@UAZHEP.PHYSICS.ARIZONA.EDU
+                 or  ZEITNITZ_C@VIPMZW.PHYSIK.UNI-MAINZ.DE
+
+The interface consists of the following program parts:
+
+- NMTC (Nucleon-Meson-Transport-Code) used for nucleons up to 3.5 GeV and
+  charged pions up to 2.5 GeV. 
+- Above the NMTC limit a Scaling Model is used up to 10 GeV.
+- FLUKA takes over above 10GeV. All particle types not implemented in CALOR
+  are given to FLUKA independent of the energy.
+- Low energetic neutrons (Ekin < 20 MeV) are transported by the MICAP neutron
+  code.
+
+All electromagnetic interacting particles are transported by GEANT.
+
+To use GCALOR in GEANT the following subroutines have to be changed:
+
+      SUBROUTINE GUPHAD
+C get interaction probability
+C     CALL GPGHEI
+C USE CALOR INSTEAD OF GHEISHA
+      CALL CALSIG 
+      RETURN
+
+      SUBROUTINE GUHADR
+C inelastic hadronic interaction
+C     CALL GHEISH
+C USE CALOR INSTEAD OF GHEISHA
+      CALL GCALOR
+      RETURN
+
+The interface is expecting the data files in the CERN_ROOT directory, if
+existing, otherwise in the current working directory. 
+
+GCALOR has been tested on the following computers:
+VAX under VMS
+SGI, HP, SUN, IBM-R6000 under UNIX (AIX)
+IBM 3090 under MVS
+
+Files :
+        GCALOR.CAR      - CMZ file
+                          For ALL unix machines SELECT UNIX in CMZ
+                          PILOT file *calor
+                          GEANT 3.16 sequences are needed  
+        GCALOR_VAX.FOR  - FORTRAN source for VAX
+        GCALOR_UNIX.FOR - FORTRAN source for UNIX
+        XSNEUT.DAT      - Neutron cross-section file used by MICAP
+        XSNEUT.DAT-GZ   - same, but compressed with GZIP
+
+        HELIUM.DAT      - Neutron cross-section file used by MICAP for 
+                          Helium (He-3 and He-4)
+
+        CHETC.DAT       - Datafile used by HETC
+       
+        GCALOR.TAR-GZ   - compressed (GZIP) tape archieve file. 
+                          Contains all the above files, except xsneut.dat.
+                          UNIX name should be gcalor.tar.z
+                          Use GUNZIP to uncompress this file.
+
+
+        GCALOR.CONTENTS-  content of compressed files
+
+================================== N E W S ====================================
+Aug 24, 1995 C.Zeitnitz
+     MICAP routine Photon modified in order to generate low multiplicities
+     differently. This ensures, that for example in a p(n,gamma)D reaction
+     always a 2.2MeV gamma is generated
+
+Aug 18, 1995 C.Zeitnitz
+     Bug in MOXSEC removed ( size of MOX3 banks sometimes too small).
+     2 changes in the x-section file:
+       - total cross section for Iodine was wrong and has been replaced by
+         ENDF/B-VI
+       - Some photon cross section tables did not start at 1.E-5 eV but at the
+         threshold of the reaction, which lead to the effect, that the 
+         photon multiplicity for neutron energies below the threshold was 
+         not 0, but could get very big!!
+
+     So, get the new GCALOR version 1.04/05 AND the modified x-section file
+     XSNEUT.DAT 
+     CZ
+ 
+Feb 22, 1995 C.Zeitnitz
+     Version 1.04/04
+     Bug in MICAP removed. Tritium now returned on the GEANT particle stack
+     CZ
+
+Feb 20, 1995 C.Zeitnitz
+     Version 1.04/03
+     Bug in TWOBOD, only a problem for Helium as target, removed and 
+     CHETC modified. 
+     CZ
+
+Feb 13,1995 C.Zeitnitz
+     Version 1.04/02
+     Clash (at least for some compilers) between subroutine and common name
+     MICFIL has been removed by renaming the common.
+     CZ
+
+Feb 9, 1995 C.Zeitnitz
+     Version 1.04/01
+     Due to technical problems it was necessary to change the method to 
+     provide the additional x-section file. There is now as separate routine:
+      CALL MICFIL('usr$root:[zeitnitz]helium.dat')  
+
+Feb 2, 1995 C.Zeitnitz
+     Version 1.04/00
+     Modifications to MICAP in order to read in additional x-section files
+     like HELIUM.DAT. The additional file has to be specified by a call to
+     MICSET:  CALL MICSET(0,10,'usr$root:[zeitnitz]helium.dat')  
+     This has to be done before GCALOR is called the first time !
+
+Jan 20, 1995 C.Zeitnitz
+     Version 1.03/08
+     Minor changes in MICAP and GCALOR concerning the mechanism stored in LMEC.
+ 
+Nov 24, 1994 C.Zeitnitz
+     Version 1.03/07
+     Some minor changes in MICAP. Now the input files CHETC.DAT and XSNEUT.DAT
+     are expected in the current working directory and only if not found the
+     version in the CERN library is used. LMEC is now set correctly in GCALOR.
+     LMEC(1)=12 and LMEC(2) contains the process which occured. In addition 
+     KCASE contains the name of the mechanism.
+
+Nov 4, 1994 C.Zeitnitz
+     New neutron cross-section file with some more elements/isotopes.
+     (zirconium, gadolinium, cerium, bismuth)
+     Second line in XSNEUT.DAT should read:
+      Wed Nov  2 13:53:35 1994  
+
+June 1, 1994 C.Zeitnitz
+     Version 1.03/00. 
+     New neutron cross-section file generated from ENDF/B-VI. Contains now
+     65 isotopes. Natural composition is automatically mixed, if data are
+     available. For example Xenon data include 7 different isotopes.
+     An exception from this rule is uranium, for which it makes no sense to
+     a natural composition, since only depleted uranium is used in HEP.
+     The second line of XSNEUT.DAT should read:
+       Fri May 27 10:19:12 1994
+
+     The subroutines MORINI and MOXSEC changed considerably. All information
+     about the availability of an isotopes has been moved to the x-section
+     file and is no longer directly coded in MORINI. The output file calor.out
+     had to be changed in order to allow more than one isotope per selected
+     element. Additional comments about isotopes are printed in addition, e.g
+     the I-127 secondary distributions are taken from Xe-128.
+  
+     The new x-section file can not be used by the older GCALOR versions and
+     vice versa.
+ 
+      ->   You have to get BOTH the x-section file AND the new code!
+ 
+     Some new subroutines are needed now. 
+
+February 16, 1994 C.Zeitnitz
+     Missing common GCBANK added in CALINI.
+
+February 3, 1994 C.Zeitnitz
+     Version 1.02/05. Again a chane in the material list printed in 
+     MOXSEC. The collision length for a 1 MeV neutron is printed for
+     each isotope used.
+
+February 2, 1994 C.Zeitnitz
+     Version 1.02/04. The material table printed in CALOR.OUT has been
+     Changed. MOXSEC and MORINI had to be modified for this. The table
+     gives now the material name and the A,Z used in GEANT as well as
+     in MICAP.
+
+January 28, 1994 C.Zeitnitz
+     Version 1.02/02. Subroutine name VERTIM changed to GCDATE in order to
+     avoid a clash with a PAW subroutine.
+
+January 26, 1994 C.Zeitnitz
+     Version 1.02/01. The neutron cross-section file contains Cadmium, but
+     it was not used in the program. Morini has been changed in order
+     to do this.
+
+January 25, 1994 C.Zeitnitz
+     Version 1.02/00. This version works with GEANT 3.16 !!
+
+November 18,1993 C.Zeitnitz
+     A few necessary changes lead to version 1.01/16
+
+November 15,1993 C.Zeitnitz
+     The version 1.01/15 will NOT work with GEANT 3.16, because the new
+     GEANT version needs to get the position of the secondaries. Thats not
+     provided by GCALOR yet, but easy to fix. I will change it soon.
+
+August 18,1993  C Zeitnitz
+     There seems to be some interest in the recoil nucleus after the 
+     interaction. An example for GUHADR, how to access these 
+     informations, can be found in the file RECOIL.GUHADR. 
+     This will work ONLY with  Version 1.01/15 or higher.
+
+June 4, 1993    C.Zeitnitz
+     Release 1.01 needs a new neutron cross-section file XSNEUT.DAT. The date
+     in the file header has to be June 2, 1993 .
+     Some bugs in the code have been removed, which effects the elastic
+     scattering in MICAP, the hydrogen cross-sections used in NMTC and 
+     calculation of the recoil nucleus momentum in MICAP.
+
+
+March 3, 1993   C.Zeitnitz
+     Due to a precision problem in GEANT, there has been a problem with very
+     low energetic neutrons Ekin<1.E-8. The following fix in GLTRAC will be
+     included in the next correction cradle for GEANT 3.15 and in GEANT 3.16.
+     Please use the corrected version if you are interested in thermal 
+     neutrons, or capture gammas etc. !!!
+
++REP,GTRAK,GLTRAC,60-64.
+      P2 = DBLE(PVERT(1))**2+DBLE(PVERT(2))**2+DBLE(PVERT(3))**2
+      IF (P2.EQ.0.D0) THEN
+         VECT(7) = 0.
+      ELSE
+         VECT(7) = DSQRT(P2)
++REP,GTRAK,GLTRAC,94-95.
+      GETOTD = DSQRT(P2+DBLE(AMASS)*DBLE(AMASS))
+      GEKIND = GETOTD - DBLE(AMASS)
+
+
+

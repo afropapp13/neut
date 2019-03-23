@@ -1,0 +1,64 @@
+/* All Rights Reserved, Copyright (C) 1993, Hitachi, Ltd. */
+XCOMM Hitachi Vendor Configuration
+
+#define OSName                 HI-UX/WE2
+
+/* for Imake.tmpl */
+#define HasSharedLibraries	YES
+#define SystemV			YES
+#define OSMajorVersion          2
+#define OSMinorVersion          0
+
+#define HasSockets             YES
+#define HasVFork               YES
+
+#define UNCOMPRESSPATH /usr/bin/uncompress
+
+#define BootstrapCFlags -DHITACHI -DSYSV
+
+#define Malloc0ReturnsNull     YES
+#define LnCmd                  ln
+#define MvCmd                  mv -f
+#define OptimizedCDebugFlags   -O
+
+#define StandardDefines -DSYSV -DHITACHI
+
+/* for Project.tmpl */
+/*#define ShLibIncludeFile <hitlib.rules>*/
+#define DefaultFontPath $(FONTDIR)/hitachi/,$(FONTDIR)/misc/,$(FONTDIR)/100dpi/,$(FONTDIR)/75dpi/
+
+/* for Library.tmpl */
+#define LibraryDefines StandardDefines -DX_USEBFUNCS
+
+/* for Install */
+#define ManSuffix  1
+
+/*  CERNlib modifications below */
+
+#define FortranCmd             fort77
+
+/*                   +ppu to add trailing underscore; +B to treat \ as escape
+ *						      like all other Unixes do
+ */
+XCOMM CERN modifications for Hitachi.
+
+#define DefaultFCOptions	+ppu +B +U77 +es +E6
+#define FortranSaveFlags	-K
+#define ExperimentSystem	-Df2cFortran -DEXPERIMENT_HIUX -DEXPERIMENT_UNIX
+#define EXPERIMENT_HIUX
+#define EXPERIMENT_UNIX
+#ifndef ExtraLoadOptions
+#define ExtraLoadOptions -Wl,'-a,archive'
+#endif
+#ifndef FortranLibraries 
+#define FortranLibraries -lU77 -lcl -lisamstub -lm -lc /usr/lib/libdld.sl
+#endif
+#define MotifIncludes		-I/usr/include/Motif1.2
+#define X11Includes		-I/usr/include/X11R5
+
+#define SedCmd			gsed	/* sed is broken, returns 0 even 
+					 * if cannot open input file     */
+
+
+
+

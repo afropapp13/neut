@@ -1,0 +1,49 @@
+************************************************************************
+*     -----------------------------------------
+      SUBROUTINE RNW1320(IPAR,E,X,Y,W,ITYPE,IERR)
+*     -----------------------------------------
+*
+*     (Purpose)
+*        ++ GIVE RANDOM VALUE OF X AND Y
+*        THIS SUBROUTINE GIVE W VALUE WHITCH IS 1.3-1.4 GEV
+*
+*     (Input)
+*       IPAR   : NEUTRINO SPECIES
+*       E      : NEUTRINO ENERGY ( GEV )
+*       ITYPE  : INTERACTION TYPE
+*     
+*     (Output)
+*       X      : Q**2/(2Mv) BJORKEN x
+*       Y      : v/E        BJORKEN y
+*       W      : 
+*
+*     (Creation Date and Author)
+*       1988.09.06 ; T.KAJITA (MOD. FROM RANW MADE BY M.NAKAHATA)
+*       1995.03.03 ; K. KANEYUKI  FOR S.K.
+*                    RANW13 -> RNW13
+*     
+************************************************************************
+      DATA PMASS/0.938/
+      DATA MAXTRY/10000/
+C     
+      IERR=0
+      ITRY=0
+C     
+      DO 100 ITRY=1,MAXTRY
+         CALL RNXY(IPAR,E,X,Y,ITYPE,IERRR)
+         IF(IERRR.EQ.1)GO TO 1001
+         Q2=X*(2.*PMASS*Y*E+PMASS**2)
+         XNEU=Y*E
+         W2=-Q2+PMASS**2+2.*PMASS*XNEU
+         W=SQRT(W2)
+         IF ( W.GT.1.3 .AND. W.LT.2.0 ) RETURN
+ 100  CONTINUE
+C     
+C     -- ERROR ROUTINE
+C     
+ 1000 WRITE(6,600)E,ITYPE
+  600 FORMAT(' *** WARNING *** ERROR AT RANW TRY OVER. (E,ITYPE)=',
+     &     G15.7,I6)
+ 1001 IERR=1
+      RETURN
+      END

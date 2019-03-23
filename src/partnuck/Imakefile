@@ -1,0 +1,44 @@
+LIBBASE	= partnuck
+VER	= 5.0.5
+TAG	=
+#ifdef ICHI_KILO
+	TAG = .kt
+#endif
+
+LIBALIAS = $(LIBBASE)$(TAG)
+LIBNAME = $(LIBALIAS)_$(VER)
+ 
+XCOMM ------------------------------------------------------
+XCOMM Define Object Files
+XCOMM ------------------------------------------------------
+
+XCOMM kaon tracking functions taken from IMB west 
+IOBJ =	partnuc.o ranve.o cfd.o lloren.o loren.o prbin.o cone.o \
+	ranf.o
+
+XCOMM IOBJ =	partnuc.o ranve.o cfd.o lloren.o loren.o prbin.o cone.o \
+XCOMM 		ranf_wrap.o ranf.o ran_ranlux.o
+
+OBJS = $(IOBJ)
+
+XCOMM ------------------------------------------------------
+XCOMM Link Libraries
+XCOMM ------------------------------------------------------
+
+XCOMM ------------------------------------------------------
+XCOMM Build Library
+XCOMM ------------------------------------------------------
+
+NormalLibraryTarget($(LIBNAME),$(OBJS))
+InstallLibrary($(LIBNAME),$(LIBDIR))
+InstallLibraryAlias($(LIBNAME),$(LIBALIAS),$(LIBDIR))
+
+XCOMM ------------------------------------------------------
+XCOMM Install any include directories
+XCOMM ------------------------------------------------------
+
+XCOMM InstallInclude(hadron.cdk,$(FORTRAN_INCDIR))
+XCOMM InstallInclude(masses.cdk,$(FORTRAN_INCDIR))
+XCOMM InstallInclude(nucnewprd.cdk,$(FORTRAN_INCDIR))
+XCOMM InstallInclude(partnucint.cdk,$(FORTRAN_INCDIR))
+XCOMM InstallInclude(ran_ranlux.h,$(FORTRAN_INCDIR))

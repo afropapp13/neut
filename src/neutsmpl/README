@@ -1,0 +1,41 @@
+   TO BUILD NEUT LIBARIES AND NEUTRINO PROGRAMS
+
+1) set the following environment variables
+   CERN, CERN_LEVEL and ROOTSYS
+
+2) change directory to neutsmpl
+
+3) Modify neutsmpl/config/site.def
+
+      If you are using 32bit version of linux, you need to change
+      the line 121 as follows:
+
+      SITE_LDOPTIONS += -L/usr/X11R6/lib
+
+4) run " Makeneutsmpl.csh "
+      This script try to compile all the necessary libraries and
+	  sample programs "neut" and "neutroot"
+	  Previously, you needed to specify M_A values for the quasi-elastic
+	  and single pion productions before compilation. Now, you must 
+	  specify in neut.card.
+
+5) run " neut_qema1.1.sh neut.card " or " neut_qema1.2.sh neut.card " or
+       "neut_qema1.1.sh neut.card "
+   depending on your selected configuration.
+      They are the script files to run neut. The file "neut.card" 
+      specifies various configurable parameters.
+      This program does not generate output file, though.
+
+6) run " neutroot neut.card output.dat "
+      This is a program to generate vector files in the root format.
+	  This program geneartes a file named neutvect.root .
+      You can access the result file (neutvect.root) by using
+	  chkreadneutroot.cc script.
+
+      In order to run neutroot, you need to have cross-section files.
+	 ( Please take look at the files Makeneutsmpl.csh or 
+       neut_qema1.?.sh to make proper symbolic links. )
+
+	NOTE: NEED TO ADD SINGLE-PI CROSS SECTION FILES TO LINKING
+	      SCRIPTS
+

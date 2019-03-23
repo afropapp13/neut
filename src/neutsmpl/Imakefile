@@ -1,0 +1,79 @@
+NEUTCOREVER	= 5.3.1
+NUCEFFVER   = 5.3.1
+NUCCORVER   = 5.3.1
+PARTNUCKVER = 5.0.5
+SKMCSVCVER  = 5.0.5
+SPECFUNCVER = 5.3.1
+
+COREDIR=../neutcore/Linux_pc
+
+TAG	=
+
+XCOMM ------------------------------------------------------
+XCOMM Define Object Files
+XCOMM ------------------------------------------------------
+
+OBJS  = nevecgen.o grndmq.o rmarin_dum.o 
+POBJS = ${COREDIR}/structm.o ${COREDIR}/pdfset.o ${COREDIR}/grv94di.o ${COREDIR}/grv98_lo.o
+
+XCOMM ------------------------------------------------------
+XCOMM Link Libraries
+XCOMM ------------------------------------------------------
+
+
+LIBDIRS =     -L${COREDIR} -L../../lib/Linux_pc  -L../nuccorspl/Linux_pc \
+                      -L../nuceff/Linux_pc -L../partnuck/Linux_pc  \
+                      -L../skmcsvc/Linux_pc -L../specfunc/Linux_pc
+
+
+MCLIB = ${LIBDIRS} \
+		-lneutcore_${NEUTCOREVER} -lspecfunc_${SPECFUNCVER} \
+		-lskmcsvc_${SKMCSVCVER}	\
+		-lnuceff_${NUCEFFVER} -lnuccorrspl_${NUCCORVER} \
+		-lpartnuck_${PARTNUCKVER} -lskmcsvc_${SKMCSVCVER} -lstdc++
+
+XCOMM ------------------------------------------------------
+XCOMM Make programs.
+XCOMM ------------------------------------------------------
+
+XCOMM   Program to generate vectors
+
+INCLUDES = -I${CERN}/${CERN_LEVEL}/include
+FortranProgramTarget(neut,neut.o ${OBJS} , , ${POBJS} \
+	${MCLIB} ${CERN}/${CERN_LEVEL}/lib/libjetset74.a \
+	${CERN}/${CERN_LEVEL}/lib/libpdflib804.a \
+	`cernlib jetset74 photos202 mathlib packlib kernlib`,)
+
+FortranProgramTarget(neut_ntpl,neut_ntpl.o ${OBJS} , , ${POBJS} \
+	${MCLIB} ${CERN}/${CERN_LEVEL}/lib/libjetset74.a \
+	${CERN}/${CERN_LEVEL}/lib/libpdflib804.a \
+	`cernlib jetset74 photos202 mathlib packlib kernlib`,)
+
+#FortranProgramTarget(piscat_ntpl, piscat_ntupl.o atoi_.o ${OBJS} ,, ${POBJS} \
+#	${MCLIB} ${CERN}/${CERN_LEVEL}/lib/libjetset74.a \
+#	${CERN}/${CERN_LEVEL}/lib/libpdflib804.a \
+#	`cernlib jetset74 photos202 mathlib packlib kernlib`,)
+
+FortranProgramTarget(dumptotpau ,dumptotpau.o  ${OBJS} ,, ${POBJS} \
+	${MCLIB} ${CERN}/${CERN_LEVEL}/lib/libjetset74.a \
+	${CERN}/${CERN_LEVEL}/lib/libpdflib804.a \
+	`cernlib jetset74 photos202 mathlib packlib kernlib`,)
+
+FortranProgramTarget(dumpelspau ,dumpelspau.o  ${OBJS} ,, ${POBJS} \
+	${MCLIB} ${CERN}/${CERN_LEVEL}/lib/libjetset74.a \
+	${CERN}/${CERN_LEVEL}/lib/libpdflib804.a \
+	`cernlib jetset74 photos202 mathlib packlib kernlib`,)
+
+FortranProgramTarget(dumpcohcrs ,dumpcohcrs.o  ${OBJS} ,, ${POBJS} \
+	${MCLIB} ${CERN}/${CERN_LEVEL}/lib/libjetset74.a \
+	${CERN}/${CERN_LEVEL}/lib/libpdflib804.a \
+	`cernlib jetset74 photos202 mathlib packlib kernlib`,)
+
+FortranProgramTarget(dumpcrs ,dumpcrs.o fnrawcrs.o ${OBJS} ,, ${POBJS} \
+	${MCLIB} ${CERN}/${CERN_LEVEL}/lib/libjetset74.a \
+	${CERN}/${CERN_LEVEL}/lib/libpdflib804.a \
+	`cernlib jetset74 photos202 mathlib packlib kernlib`,)
+
+InstallProgram(neut,$(BINDIR))
+InstallProgram(neut_ntpl,$(BINDIR))
+InstallProgram(dumptotpau,$(BINDIR))

@@ -1,0 +1,8 @@
+XCOMM $Id: Package.tmpl,v 1.1 2007-01-20 07:35:26 skrep Exp $
+XCOMM Define the package defaults.  This is where the various working
+XCOMM groups should define the working group defaults.  For the most part
+XCOMM leave this file alone, but if the working group must make new
+XCOMM definitions it should go in $(PACKAGE_TOP)/config
+#ifndef DefaultPackageLevel
+#  define DefaultPackageLevel new
+#endif

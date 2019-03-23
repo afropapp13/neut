@@ -1,0 +1,49 @@
+ROOTINC = -I`root-config --incdir`
+NEUTINC = -I../neutcore -I../nuccorspl -I../skmcsvc 
+CLASSDIR = ../neutclass
+CLASSINC= -I${CLASSDIR}
+INCDIRS = ${ROOTINC} ${NEUTINC} ${CLASSINC}
+
+CXXFLAGS  = `root-config --cflags`
+COPTFLAGS = -g
+
+COREDIR =	../neutcore/Linux_pc
+
+FINCDIRS  = -I../neutcore -I../skmcsvc
+FOPTFLAGS = -g -fno-backslash -fno-automatic -finit-local-zero \
+	       -fno-second-underscore -fugly-complex -ffixed-line-length-132 \
+	       -fno-globals -fdollar-ok
+
+SOBJS = ${CLASSDIR}/neutctrl.so ${CLASSDIR}/neutpart.so \
+		${CLASSDIR}/neutvect.so ${CLASSDIR}/neutvtx.so
+
+ROBJS = ${CLASSDIR}/neutfill.o \
+		${CLASSDIR}/neutrootfortwrapper.o \
+		${CLASSDIR}/NeutRootHandlers.o 
+
+OBJS  = ${ROBJS} ${SOBJS} 
+
+.SUFFIXES:	.so
+
+GENROOTSO = env COPTFLAGS="${COPTFLAGS}" INCDIRS="${INCDIRS}" \
+			./gen_root_so.sh
+
+.cc.o:
+	$(CXX) -c $(COPTFLAGS) $(CXXFLAGS) $(INCDIRS) -o $@ $<
+
+.cc.so:
+	$(GENROOTSO) $(basename $<)
+
+.F.o:
+	$(FC) -c $(FOPTFLAGS) $(FINCDIRS) -o $@ $<
+
+all: $(OBJS)
+
+clean:
+	$(RM) -f *.so *.o *~ *LinkDef.h *Dict.* ${OBJS} chkfort
+
+chkfort: chkfort.o $(OBJS) 
+	g77 -o $@ chkfort.o -Xlinker -R`pwd`  $(OBJS) $(LIBS)
+
+
+

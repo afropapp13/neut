@@ -1,0 +1,44 @@
+/* $Id: ibmLib.tmpl,v 1.1 2007-01-20 07:35:38 skrep Exp $
+ *
+ * $Log: not supported by cvs2svn $
+ * Revision 1.2  1997/05/27 15:55:47  mcgrew
+ * Add patches to keep compadible with the K2K config files.
+ *
+ * Revision 1.1.1.1  1997/04/26 08:45:51  mcgrew
+ * import config files
+ *
+ * Revision 1.1.1.1  1995/12/20 15:26:44  cernlib
+ * X11R6 config files unmodified
+ *
+ *
+ */
+XCOMM $XConsortium: ibmLib.tmpl,v 1.16 94/03/09 11:16:26 matt Exp $
+
+/*
+ * AIX shared library template
+ */
+
+#if ThreadedX
+#define SharedX11Reqs -lpthreads
+#endif
+#define SharedXextReqs $(XLIBONLY)
+#define SharedXmuReqs $(XTOOLLIB) $(XLIB)
+#define SharedOldXReqs $(XLIBONLY)
+#if ThreadedX
+#define SharedXtReqs $(XLIBONLY) $(SMLIB) $(ICELIB) -lpthreads
+#else
+#define SharedXtReqs $(XLIBONLY) $(SMLIB) $(ICELIB) 
+#endif
+#define SharedXawReqs $(XMULIB) $(XTOOLLIB) $(XLIB)
+#define SharedXiReqs $(XLIB)
+#define SharedXtstReqs $(XLIB)
+#define SharedPexReqs $(XLIBONLY)
+#define SharedXieReqs $(XLIBONLY)
+#define SharedSMReqs $(ICELIB)
+#define SharedFrescoReqs $(XLIBONLY) CplusplusLibC
+#define SharedXtfReqs $(FRESCOLIB) $(XTOOLLIB) $(XLIB) CplusplusLibC
+
+#ifndef FixupLibReferences
+#define FixupLibReferences()						@@\
+DEPXTOOLLIB = _UseCat($(USRLIBDIR),$(TOOLKITSRC),/libXt.a)
+#endif

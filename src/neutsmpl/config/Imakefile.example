@@ -1,0 +1,27 @@
+XCOMM This is an example Imakefile.  This is a comment line.
+
+XCOMM The library objects.
+OBJS = a.o b.o c.o
+
+XCOMM Set the targets to build for "all"
+AllTarget(libd.a e)
+
+XCOMM This creates libd.a
+NormalLibraryTarget(d,$(OBJS))
+
+XCOMM This compiles a program named e using e.o, the local libd.a and
+XCOMM libsk.a with cernlib
+NormalProgramTarget(e,e.o libd.a,,-lsk `cernlib`,)
+
+XCOMM This installs libd.a
+InstallLibrary(d,$(LIBDIR))
+
+XCOMM This installs the program "e"
+InstallProgram(e,$(BINDIR))
+
+XCOMM This installs a C include file named c.h
+InstallInclude(c.h,$(INCDIR))
+
+XCOMM This installs a Fortran include file named f.inc
+InstallInclude(f.inc,$(FORTRAN_INCDIR))
+

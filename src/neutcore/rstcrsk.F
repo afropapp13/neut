@@ -1,0 +1,124 @@
+***********************************************************************
+*     ---------------------------------------------------
+      SUBROUTINE RSTCRSK(IMODE,E,SIGMA,SIGMA3)
+*     ---------------------------------------------------
+*
+*     ( purpose )
+*       return cross-section for specified mode and energy.
+*              for electron neutrino
+*
+*     ( input )
+*       IMODE       : Interaction mode
+*       E           : Energy of incident neutrino
+*
+*     ( output )
+*       sigma       : cross-section
+*       sigma3      : dummy (same as sigma)
+*
+*     ( creation date and author )
+*       1993.Dec. ; for Super-Kamioka by Y.Hayato
+*                   (Based on Rein and Sehgal's code)
+*
+*       2007.Dec  ; Cross section of MA=1.21 is added by G.Mitsuka
+*
+*     ( comment )
+*       Reference:Rein and Sehgal,Ann. of Phys. 133(1981),79-153
+*                 Rein           ,Z.Phys.C 35(1987),43-64
+*                 Feynman et al. ,Phys.Rev.D3(1971),2706-
+***********************************************************************
+
+      IMPLICIT NONE
+
+#include "rscons.h"
+#include "neutfilepath.h"
+#include "neutmodel.h"
+
+      INTEGER IMODE
+      REAL E,SIGMA,SIGMA3
+
+      INTEGER SFLAG
+      SAVE SFLAG
+      DATA SFLAG/0/
+
+      INTEGER IEMAX
+      PARAMETER (IEMAX=24)
+
+      INTEGER LUNI
+      PARAMETER (LUNI=88)
+
+      INTEGER IP
+      PARAMETER (IP=12)
+
+      INTEGER I
+
+      INTEGER ISPIMA
+
+      SAVE XNUCRS
+      
+      REAL ETBL(IEMAX),XNUCRS(13,IEMAX)
+
+      DATA ETBL/0.37,0.4,0.5,0.625,0.75,0.875,1.00,1.125,1.25,
+     $     1.375,1.50,2.00,2.50,3.00,3.50,4.75,6.00,10.0,50.0,
+     $     100.0,200.0,400.0,650.0,1000.0/
+
+      CHARACTER*256 DUMSTR
+      character*1024 fname
+      integer*4      LENSTR
+      external       lenstr
+      integer*4      lenpath
+
+      lenpath = lenstr(crstblpath)
+      ISPIMA = INT(XMARES*100+0.5)
+      
+      IF (SFLAG.eq.0) then
+         IF (ISPIMA.eq.121) then
+            fname = 'sk_nue_xsec_ma1.21.dat'
+            fname = crstblpath(1:lenpath)//fname
+            open(LUNI,file=fname,
+     $           form='formatted',status='OLD')
+         else if (ISPIMA.eq.111) then
+            fname = 'sk_nue_xsec_ma1.11.dat'
+            fname = crstblpath(1:lenpath)//fname
+            open(LUNI,file=fname,
+     $           form='formatted',status='OLD')
+         else
+            write(*,*) 'Invalid MA value was specified: ',ISPIMA
+            stop
+         endif
+         
+         read(LUNI,*) DUMSTR
+
+         call rstcrskrd(LUNI,IP,IEMAX,ETBL,XNUCRS)
+         
+         close(LUNI)
+
+         SFLAG=1
+      endif
+            
+      IF (E.GE.ETBL(IEMAX)) GOTO 9999
+
+      DO 110 I=1,IEMAX
+         IF (E.LT.ETBL(I)) THEN
+            IF (I.NE.1) THEN
+               SIGMA = (E-ETBL(I-1))/(ETBL(I)-ETBL(I-1))*
+     $              (XNUCRS(IMODE,I)-XNUCRS(IMODE,I-1))
+     $              +XNUCRS(IMODE,I-1)
+               GOTO 120
+            ELSE
+               SIGMA = 0.000000E0
+               GOTO 120
+            ENDIF
+         ENDIF
+ 110  CONTINUE
+
+ 120  CONTINUE
+      SIGMA = SIGMA / 10.
+      SIGMA3= SIGMA / 10.
+
+      RETURN
+
+ 9999 SIGMA=XNUCRS(IMODE,IEMAX)/10.
+      SIGMA3=XNUCRS(IMODE,IEMAX)/10.
+      RETURN
+
+      END

@@ -1,0 +1,12 @@
+./generate.sh 14 C12 NC   makeTables.+14.C12.NC.log &
+./generate.sh -14 C12 NC  makeTables.-14.C12.NC.log  &
+./generate.sh 12 C12 NC   makeTables.+12.C12.NC.log  &
+./generate.sh -12 C12 NC  makeTables.-12.C12.NC.log  &
+./generate.sh 16 C12 NC   makeTables.+16.C12.NC.log  &
+./generate.sh -16 C12 NC  makeTables.-16.C12.NC.log  &
+./generate.sh 14 C12 CC   makeTables.+14.C12.CC.log  &
+./generate.sh -14 C12 CC  makeTables.-14.C12.CC.log  &
+./generate.sh 12 C12 CC   makeTables.+12.C12.CC.log  &
+./generate.sh -12 C12 CC  makeTables.-12.C12.CC.log  &
+./generate.sh 16 C12 CC   makeTables.+16.C12.CC.log  &
+./generate.sh -16 C12 CC  makeTables.-16.C12.CC.log & 

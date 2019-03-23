@@ -1,0 +1,662 @@
+/* $Id: Imake.rules,v 1.1 2007-01-20 07:35:23 skrep Exp $
+ *
+ * $Log: not supported by cvs2svn $
+ * Revision 1.21  1999/02/28 05:39:48  sharkey
+ * Make "make clean" remove shared as well as static libraries.
+ *
+ * Revision 1.20  1999/02/18 01:35:09  mcgrew
+ * Add a "ProgramAlias" target to attach an easy to use alias to an
+ * executable with a version number.
+ *
+ * Revision 1.19  1999/01/29 01:43:47  mcgrew
+ * The MKDIR command should be defined as a variable so that it can be
+ * overridden in a Makefile.  It is now.
+ *
+ * Revision 1.18  1998/02/19 18:05:01  skrep
+ * Fix "LibMkdir" so that it removes the trailing "/" from the object
+ * subdirectory.  Some mkdir commands don't like the extra "/".
+ *
+ * Revision 1.17  1997/07/28 05:30:24  mcgrew
+ * Added shared libarry stuff.
+ *
+ * Revision 1.16  1997/07/01 21:03:48  mcgrew
+ * Remove archive files from the object subdirectory.
+ *
+ * Revision 1.15  1997/06/10 18:04:22  mcgrew
+ * Many changes so that these config files work in a
+ * multiple-architecture environment.
+ *
+ * Revision 1.14  1997/05/27  15:55:11  mcgrew
+ * Add patches to keep compadible with the K2K config files.
+ *
+ * Revision 1.16  1997/05/19 08:39:05  mcgrew
+ * Added AlwaysInstall so that the age of an installed file is not checked.
+ *
+ * Revision 1.15  1997/05/19 08:08:38  mcgrew
+ * Added some better comments.
+ *
+ * Revision 1.14  1997/05/19 06:54:20  mcgrew
+ * Add the hitachi machines (ccps1 to ccps6) to imake.
+ *
+ * Revision 1.13  1997/05/18 08:25:54  mcgrew
+ * General clean up and rearrangements before turning these files loose
+ * on the world.
+ *
+ * Revision 1.12  1997/05/18 07:20:13  mcgrew
+ * Added some extra new lines to help the HP cpp.
+ *
+ * Revision 1.11  1997/05/16 08:43:12  mcgrew
+ * Stop this link stuff that the guys at CERN are so fond of.  It simply
+ * doesn't work in many situations.
+ *
+ * Revision 1.10  1997/05/06  10:00:41  mcgrew
+ * More bug fixes to make these config files compile the sk libraries.
+ *
+ * Revision 1.9  1997/05/04 05:31:40  mcgrew
+ * Added rules for chgen and inc2h
+ *
+ * Revision 1.8  1997/05/04 05:22:35  mcgrew
+ * Added some more private overide files and fixed for linux.
+ *
+ * Revision 1.7  1997/05/02 11:03:49  mcgrew
+ * Some minor bug fixes found while building the SuperK libraries.
+ *
+ * Revision 1.6  1997/04/28 06:52:51  mcgrew
+ * Change the bin target to exec so that it's compadible with the older
+ * Imakefiles.
+ *
+ * Revision 1.5  1997/04/28 06:13:22  mcgrew
+ * Bug fixes to make the off-site libraries compile.
+ *
+ * Revision 1.4  1997/04/27 11:50:56  mcgrew
+ * Fixed a minor bug in the recursive clean target.
+ *
+ * Revision 1.3  1997/04/27 11:46:26  mcgrew
+ * First almost working version of the Imake config files.
+ *
+ * Revision 1.2  1997/04/27 05:05:45  mcgrew
+ * partially adapted to SK
+ *
+ * Revision 1.1.1.1  1997/04/26 08:45:48  mcgrew
+ * import config files
+ *
+ * Revision 1.1.1.1  1995/12/20  15:26:46  cernlib
+ * X11R6 config files unmodified
+ */
+XCOMM -----------------------------------------------------------------------
+XCOMM Imake rules for building libraries, programs, scripts, and data files
+XCOMM rules:  $XConsortium: Imake.rules,v 1.197.1.1 95/06/19 18:01:48 gildea Exp $
+
+XCOMM Here is a summary of the "normal" targets.  Almost everything
+XCOMM can be done with these targets.  If you don't see what you need, the
+XCOMM ask an expert since there's probably an easy way to do it.
+XCOMM
+XCOMM   "NormalLibraryTarget	(libname,objlist)"
+XCOMM 
+XCOMM	Build a library from a list of objects.  The library name is
+XCOMM	the name that is used in a -l statement:
+XCOMM	example: to build libsk.a
+XCOMM		"NormalLibraryTarget(sk,$(OBJS))"
+XCOMM
+XCOMM   "NormalProgramTarget(program,objects,deplibs,locallibs,syslibs)"
+XCOMM
+XCOMM	Compile and link a program from objects.  The deplibs should
+XCOMM	usually be empty. The locallibs and syslibs are the list of
+XCOMM   libraries to use.
+XCOMM   example:  to compile fitit from fitit.F, now.c, libsk.a and
+XCOMM		cernlib. 
+XCOMM		"NormalProgramTarget(fitit,fitit.o now.o,,-lsk `cernlib`,)"
+XCOMM
+XCOMM   "NormalFortranProgramTarget(program,objects,deplibs,locallibs,syslibs)"
+XCOMM	
+XCOMM	Used under certain rare circumstances where
+XCOMM	NormalProgramTarget just won't do.  Please try
+XCOMM	NormalProgramTarget first and bug the imake configuration
+XCOMM	manager to make it work.
+XCOMM
+XCOMM   "InstallProgram		(program,dest)"
+XCOMM   "InstallScript		(script,dest)"
+XCOMM   "InstallLibrary		(libname,dest)"
+XCOMM   "InstallInclude		(file,dest)"
+XCOMM   "InstallManPage		(file,dest)"
+XCOMM   "InstallNonExecFile	(file,dest)"
+XCOMM
+XCOMM   Install files out of the source tree.  Any "final" target like
+XCOMM   a library or user program should be installed.  By default
+XCOMM   installs go into PRIVATE_ROOT.  The library manager will make
+XCOMM	installs into the group area.
+XCOMM
+XCOMM   "DependTarget		()"
+XCOMM   "MakeScriptFromCpp	(name,defs)"
+XCOMM   "AllTarget		(depends)"
+
+/*
+ *		   MACHINE-INDEPENDENT RULES; DO NOT MODIFY
+ *
+ * Warning, when defining rules: make sure you do not include both a trailing
+ * backslash and double ampersand backslash or else you will get an extra
+ * backslash in the Makefile.
+ * 
+ * The following macros are defined for the various templates and Imakefiles
+ * (for a list of the applicable make variables, see the template files):
+ *
+ * The macros that a normal person will use are marked with "**".
+ * 
+ * Concat			(a,b)
+ * Concat3			(a,b,c)
+ * Concat4			(a,b,c,d)
+ * _Use				(a,b)
+ * _UseCat			(a,b,c)
+ * ProgramTargetName		(target)
+ * RunProgram			(progvar,options)
+ * RemoveFile			(file)
+ * RemoveFiles			(files)
+ * CenterLoadTarget		(target,srclist,libs,defines)
+ * CenterProgramTarget		(program,srclist,objlist,locallibs,syslibs)
+ * SentinelLinkTarget		(step,program,linklist)
+ * SentinelProgramTarget	(program,deplist,linklist)
+ * SentinelCplusplusProgramTarget	(program,deplist,linklist)
+ * PurifyLinkTarget		(step,program,linklist)
+ * PurifyProgramTarget		(program,deplist,linklist)
+ * PurifyCplusplusProgramTarget	(program,deplist,linklist)
+ * ProofLinkTarget		(step,program,linklist)
+ * ProofProgramTarget		(program,deplist,linklist)
+ * ProofCplusplusProgramTarget	(program,deplist,linklist)
+ * ProofCleanTarget		()
+ * RemoveTargetProgram		(program)
+ * MakeDir			(dir)
+ * BuildIncludesTop		(srclist)
+ * BuildIncludes		(srclist,dstsubdir,dstupdir)
+ * LinkRule			(program,options,objlist,libraries)
+ * HostLinkRule			(program,options,objlist,libraries)
+** NormalProgramTarget		(program,objlist,deplibs,locallibs,syslibs)
+ * SetUIDProgramTarget		(program,objlist,deplibs,locallibs,syslibs)
+ * SingleProgramTarget		(program,objlist,locallibs,syslibs)
+ * SimpleProgramTarget		(program)
+ * ComplexProgramTarget		(program)
+ * ComplexProgramTarget_1	(program,locallib,syslib)
+ * ComplexProgramTarget_2	(program,locallib,syslib)
+ * ComplexProgramTarget_3	(program,locallib,syslib)
+ * ServerTargetWithFlags	(server,subdirs,objlist,libs,syslibs,flags)
+ * ServerTarget			(server,subdirs,objlist,libs,syslibs)
+ * MoveToBakFile		(file)
+ * RMoveToBakFile		(file)
+ * RanLibrary			(args)
+ * LibraryTargetName		(libname)
+ * LibraryTargetNameSuffix	(libname,suffix)
+ * InstallNamedTarget		(step,srcname,flags,dest,dstname)
+ * InstallTarget		(step,file,flags,dest)
+** InstallInclude		(file,dest)
+** InstallLibrary		(libname,dest)
+ * MergeIntoInstalledLibrary	(tolib,fromlib)
+ * InstallLibraryAlias		(libname,alias,dest)
+ * InstallLintLibrary		(libname,dest)
+ * InstallLibManPageLong	(file,destdir,dest)
+ * InstallLibManPage		(file,destdir)
+ * InstallLibManPageAliases	(file,destdir,aliases)
+ * InstallManPageLong		(file,destdir,dest)
+** InstallManPage		(file,destdir)
+** InstallManPageAliases	(file,destdir,aliases)
+ * InstallNamedNonExec		(srcname,dstname,dest)
+** InstallNonExecFile		(file,dest)
+ * InstallNonExec		(file,dest)
+ * InstallProgramWithFlags	(program,dest,flags)
+** InstallProgram		(program,dest)
+** InstallScript		(program,dest)
+ * InstallNamedProg		(srcname,dstname,dest)
+ * LinkFileList			(step,list,dir,sub)
+ * InstallMultipleDestFlags	(step,list,dest,flags)
+ * InstallMultipleDest		(step,list,dest)
+ * InstallMultiple		(list,dest)
+ * InstallMultipleFlags		(list,dest,flags)
+ * InstallMultipleMan		(list,dest)
+ * DependDependency		()
+** DependTarget			()
+ * DependTarget3		(srcs1,srcs2,srcs3)
+ * CleanTarget			()
+ * TagsTarget			()
+ * ImakeDependency		(target)
+ * BuildMakefileTarget		(notused,imakeflags)
+ * MakefileTarget		()
+ * LibMkdir			(dir)
+ * LibCleanDir			(dir)
+ * LintLibReferences		(varname,libname,libsource)
+ * UnsharedLibReferences	(varname,libname,libsource)
+ * SharedLibDependencies	(libname,libsource,revname)
+ * SharedDSLibDependencies	(libname,libsource,revname)
+ * SharedLibReferences		(varname,libname,libsource,revname,rev)
+ * SharedDSLibReferences	(varname,libname,libsource,revname,rev)
+ * ObjectCompile		(options)
+ * NormalLibObjCompile		(options)
+ * NormalSharedLibObjCompile	(options)
+ * LibObjCompile		(dir,options)
+ * DebuggedLibObjCompile	(options)
+ * ProfiledLibObjCompile	(options)
+ * SharedLibObjCompile		(options)
+ * NormalLibraryObjectRule	()
+ * NormalFortranObjectRule	()
+ * ObjectFromSpecialSource	(dst,src,flags)
+ * SpecialObjectRule		(objs,depends,options)
+ * SpecialCObjectRule		(basename,depends,options)
+ * LexFile			(file)
+ * YaccFile			(file,flags)
+ * MakeLibrary			(libname,objlist)
+** NormalLibraryTarget		(libname,objlist)
+ * NormalLibraryTarget2		(libname,objlist1,objlist2)
+ * NormalLibraryTarget3		(libname,objlist1,objlist2,objlist3)
+ * NormalDepLibraryTarget	(libname,deplist,objlist)
+ * UnsharedLibraryTarget	(libname,objlist,down,up)
+ * UnsharedLibraryTarget3	(libname,objlist1,objlist2,objlist3,down,up)
+ * SubdirLibraryRule		(objlist)
+ * ProfiledLibraryTarget	(libname,objlist)
+ * DebuggedLibraryTarget	(libname,objlist)
+ * AliasedLibraryTarget		(libname,alias)
+ * NormalRelocatableTarget	(objname,objlist)
+ * ProfiledRelocatableTarget	(objname,objlist)
+ * DebuggedRelocatableTarget	(objname,objlist)
+ * LintLibraryTarget		(libname,srclist)
+ * NormalLintTarget		(srclist)
+ * LintTarget			()
+ * LinkSourceFile		(src,dir)
+ * LinkFile			(tofile,fromfile)
+ * MakeSubincludesForBuild	(step,dir,srclist)
+ * NamedTargetSubdirs		(name,dirs,verb,flags,subname)
+ * NamedMakeSubdirs		(name,dirs)
+ * MakeSubdirs			(dirs)
+ * DependSubdirs		(dirs)
+ * ForceSubdirs			(dirs)
+ * InstallSubdirs		(dirs)
+ * InstallManSubdirs		(dirs)
+ * IncludesSubdirs		(dirs)
+ * NamedCleanSubdirs		(name,dirs)
+ * CleanSubdirs			(dirs)
+ * NamedTagSubdirs		(name,dirs)
+ * TagSubdirs			(dirs)
+ * MakeLintSubdirs		(dirs,target,subtarget)
+ * LintSubdirs			(dirs)
+ * MakeLintLibSubdirs		(dirs)
+ * MakeMakeSubdirs		(dirs,target)
+ * MakefileSubdirs		(dirs)
+ * CppScriptTarget		(dst,src,defs,deplist)
+** MakeScriptFromCpp		(name,defs)
+ * CppFileTarget		(dst,src,defs,deplist)
+ * MakeDirectories		(step,dirs)
+** AllTarget			(depends)
+ *
+ *
+ * The following are in specific <os>Lib.rules:
+ *
+ * SharedLibraryTarget		(libname,rev,solist,down,up)
+ * SharedLibraryDataTarget	(libname,rev,salist)
+ * InstallSharedLibrary		(libname,rev,dest)
+ * InstallSharedLibraryData	(libname,rev,dest)
+ * 
+ * The following are in fortran.rules:
+ *
+** NormalFortranProgramTarget(program,objlist,deplibs,locallibs,syslibs)
+ */
+
+/*
+ * AllTarget - generate rules to build necessary things during make all.
+ */
+#ifndef AllTarget
+#define AllTarget(depends)\
+									@@\
+all:: depends
+#endif /* AllTarget */
+
+#define NullParameter
+
+/* if [ -d ] or [ ! -d ] causes make to fail, define this as - */
+#ifndef DirFailPrefix
+#define DirFailPrefix
+#endif
+
+XCOMM ---------------------------------------------------------------
+XCOMM Lots of useful macros to help build rules.
+
+/*
+ * Concat - concatenates two strings.
+ */
+#ifndef Concat
+#if (__STDC__ && !defined(UnixCpp)) || defined(AnsiCpp)
+#define Concat(a,b)a##b
+#else
+#define Concat(a,b)a/**/b
+#endif
+#endif
+
+/*
+ * Concat3 - concatenates three strings.
+ */
+#ifndef Concat3
+#if (__STDC__ && !defined(UnixCpp)) || defined(AnsiCpp)
+#define Concat3(a,b,c)a##b##c
+#else
+#define Concat3(a,b,c)a/**/b/**/c
+#endif
+#endif
+
+/*
+ * Concat4 - concatenates four strings.
+ */
+#ifndef Concat4
+#if (__STDC__ && !defined(UnixCpp)) || defined(AnsiCpp)
+#define Concat4(a,b,c,d)a##b##c##d
+#else
+#define Concat4(a,b,c,d)a/**/b/**/c/**/d
+#endif
+#endif
+
+/*
+ * _Use - makes a choice based on UseInstalled.
+ */
+#ifndef _Use
+#ifdef UseInstalled
+#define _Use(a,b) a
+#else
+#define _Use(a,b) b
+#endif
+#endif /* _Use */
+
+/*
+ * _UseCat - combination of _Use and Concat.
+ *           exists to avoid problems with some preprocessors
+ */
+#ifndef _UseCat
+#if (__STDC__ && !defined(UnixCpp)) || defined(AnsiCpp)
+#ifdef UseInstalled
+#define _UseCat(a,b,c) a##c
+#else
+#define _UseCat(a,b,c) b##c
+#endif
+#else
+#ifdef UseInstalled
+#define _UseCat(a,b,c) a/**/c
+#else
+#define _UseCat(a,b,c) b/**/c
+#endif
+#endif
+#endif /* _UseCat */
+
+XCOMM -------------------------------------------------------------
+XCOMM Helpers to place objects in a machine dependent sub directory.
+
+XCOMM The list of objects to not add a prefix to.
+#ifndef ObjectAbsoluteList
+#define ObjectAbsoluteList $(LIBDIR)% $(OBJDIR)%
+#endif
+
+XCOMM Take an object list and prepend the necessary prefix.  This is
+XCOMM used so the objects are placed into a subdirectory.  If an
+XCOMM object starts with one of "ObjectAbsoluteList" then the object
+XCOMM file is treated as an absolute file reference.
+#ifndef Objects
+#define Objects(objlist)\
+		$(filter -l% $(LIBDIR)%,objlist)\
+		$(addprefix $(OBJPREFIX),$(filter-out -l% $(LIBDIR)%,objlist))
+#endif
+
+#ifndef ShObj
+#define ShObj(solist)\
+		$(filter -l% $(LIBDIR)%,solist)\
+		$(addprefix $(OBJPREFIX),$(filter-out -l% $(LIBDIR)%,solist))
+#endif
+
+XCOMM Build the name of the object file that will be made as the
+XCOMM target of a compile. This is used to place objects into a
+XCOMM subdirectory. 
+#ifndef ObjTargetName
+#define ObjTargetName(target) Concat($(OBJPREFIX),target)
+#endif
+
+#ifndef ProgramTargetName
+#define ProgramTargetName(target) Concat($(OBJPREFIX),target)
+#endif
+
+#ifndef LibraryName
+#define LibraryName(libname) Concat(lib,libname.a)
+#endif
+
+#ifndef ShLibName
+#define ShLibName(libname) Concat(lib,libname.so)
+#endif
+
+#ifndef ShLibNameRev
+#define ShLibNameRev(libname,rev) $(addsuffix .rev,ShLibName(libname))
+#endif
+
+#ifndef LibraryTargetName
+#define LibraryTargetName(libname) $(addprefix $(OBJPREFIX),LibraryName(libname))
+#endif
+
+#ifndef ShLibTargetName
+#define ShLibTargetName(libname,rev) $(addprefix $(OBJPREFIX), ShLibNameRev(libname,rev))
+#endif
+
+#ifndef LibraryNameSuffix
+#define LibraryNameSuffix(libname,suffix) Concat3(lib,libname,suffix.a)
+#endif
+
+#ifndef LibraryTargetNameSuffix
+#define LibraryTargetNameSuffix(libname,suffix) $(addprefix $(OBJPREFIX),LibraryNameSuffix(libname,suffix))
+#endif
+
+XCOMM ------------------------------------------------------------------
+XCOMM Ways to execute programs from a makefile. These should be used
+XCOMM instead of directly executing the program.
+
+#ifndef RunProgram
+#define RunProgram(progvar,options) $(progvar) options
+#endif
+
+#ifndef RemoveFile
+#define RemoveFile(file) $(RM) file
+#endif /* RemoveFile */
+
+#ifndef RemoveFiles
+#define RemoveFiles(files) $(RM) files
+#endif /* RemoveFiles */
+
+/* Remove a program file.  This is allows the option of moving a
+   program to a backup file. */
+#ifndef RemoveTargetProgram
+#if RemoveTargetProgramByMoving
+#define RemoveTargetProgram(program) \
+-if [ -f program ]; then RemoveFile(Concat(program,~)); $(MV) program Concat(program,~); fi
+#else
+#define RemoveTargetProgram(program) RemoveFile(program)
+#endif
+#endif /* RemoveTargetProgram */
+
+/* Make sure a directory exists. */
+#ifndef MakeDir
+#define MakeDir(dir) DirFailPrefix if [ -d dir ]; then set +x; \	@@\
+		else (set -x; $(MKDIRHIER) dir); fi
+#endif /* MakeDir */
+
+#ifndef MakeLibrary
+#define MakeLibrary(libname,objlist) $(AR) libname Objects(objlist)
+#endif
+
+#ifndef MakeSubDirs
+#define MakeSubDirs(dirs)\
+									@@\
+directories: dirs							@@\
+									@@\
+dirs:									@@\
+	LibMkdir($@)
+#endif
+
+/*
+ * LinkFileList - link a list of list of files from one place to another
+ */
+#ifndef LinkFileList
+#define LinkFileList(step,list,dir,sub)					@@\
+step:: list								@@\
+	@case '${MFLAGS}' in *[i]*) set +e;; esac; \			@@\
+	echo "	cd" dir; cd dir; \					@@\
+	for i in list; do (set -x; RemoveFile($$i); $(LN) sub/$$i .); done
+#endif
+
+/* 
+ * LinkFileFromDir(dir,file)
+ *  create a symlink ( or copy that file ) to a file in another dir
+ */
+#ifndef LinkFileFromDir
+#define LinkFileFromDir(dir,file)\
+									@@\
+file: dir/file								@@\
+	RemoveFile(file)						@@\
+	LnCmd $< $@
+#endif
+
+/*
+ * LinkSourceFile - snag source file from some other directory
+ */
+#ifndef LinkSourceFile
+#define LinkSourceFile(src,dir)						@@\
+LinkFileFromDir(dir,src)						@@\
+									@@\
+includes:: src								@@\
+									@@\
+depend:: src								@@\
+									@@\
+clean::									@@\
+	RemoveFile(src)
+#endif
+
+/*
+ * LibMkdir - helper for creating library object subdirectories
+ */
+#ifndef LibMkdir
+#define LibMkdir(dir) DirFailPrefix@if [ -d dir ]; \
+	then exit 0; \
+	else set -x; \
+	     $(MKDIR) $(patsubst %/,%,dir); \
+	fi
+#endif
+
+/*
+ * LibCleanDir - helper for cleaning library object subdirectories
+ */
+#ifndef LibCleanDir
+#define LibCleanDir(dir) -@if [ -d dir ]; then \			@@\
+		(set -x; cd dir; RemoveFiles(*.Osuf *.a *.so *.so.*)); else exit 0; fi
+#endif
+
+#ifndef MoveToBakFile
+#define MoveToBakFile(file) -@if [ -f file ]; then set -x; \		@@\
+	$(MV) file file.bak; else exit 0; fi
+#endif /* MoveToBakFile */
+
+#ifndef RMoveToBakFile
+#define RMoveToBakFile(file) -@if [ -f file ]; then set -x; \		@@\
+	RemoveFile(file.bak); $(MV) file file.bak; \			@@\
+	else exit 0; fi
+#endif /* RMoveToBakFile */
+
+#if DoRanlibCmd
+#define RanLibrary(args) $(RANLIB) args
+#else
+#define RanLibrary(args) $(_NULLCMD_)
+#endif
+
+/*
+ *  CopyFile(fromfile,tofile) copy a file 
+ */
+#ifndef CopyFile
+#define CopyFile(fromfile,tofile)\
+									@@\
+tofile:: fromfile							@@\
+	@RemoveFile($@)							@@\
+	$(CP) $< $@							@@\
+									@@\
+clean::									@@\
+	@RemoveFile(tofile)
+#endif
+
+#include <programs.rules>
+
+#include <install.rules>
+
+#include <makefile.rules>
+
+#include <compile.rules>
+
+#include <other.rules>
+
+#include <library.rules>
+
+#include <tree.rules>
+
+/*
+ * Translate XCOMM into pound sign with sed, rather than passing -DXCOMM=XCOMM
+ * to cpp, because that trick does not work on all ANSI C preprocessors.
+ * Also delete line numbers from the cpp output (-P is not portable, I guess).
+ */
+#ifndef CppSedMagic
+#define CppSedMagic sed -e '/^#  *[0-9][0-9]*  *.*$$/d' -e '/^XCOMM$$/s//#/' -e '/^XCOMM[^a-zA-Z0-9_]/s/^XCOMM/#/'
+#endif /* CppSedMagic */
+
+
+#ifdef DefineOldLibraryRules
+#include <oldlib.rules> 
+#endif
+
+/*  Additions for CERN program library--------------------------- */
+
+#ifndef TopOfPackage
+#define TopOfPackage(package)\
+PACKAGETOP=$(CURRENT_DIR)						@@\
+PACKAGE_NAME=package
+#endif
+
+/* DefinePackageLibrary
+ * get the path/name of the library for the current package
+ * and possible add a local library
+ *
+ */
+#ifndef DefinePackageLibrary
+#define DefinePackageLibrary(locallib) \
+ifeq ($(strip $(PACKAGE_LIB)),)						@@\
+PACKAGE_LIB=$(TOP)$(PACKAGETOP)/LibraryTargetName($(PACKAGE_NAME))	@@\
+endif									@@\
+ifneq (locallib,)							@@\
+override PACKAGE_LIB:= LibraryTargetName(locallib) $(PACKAGE_LIB)	@@\
+									@@\
+endif
+#endif
+
+/*
+ * PackageDirFileTarget(file) copy a file to the PACKAGETOP directory
+ */
+#ifndef PackageDirFileTarget
+#define PackageDirFileTarget(file) CopyFile(file,$(TOP)$(PACKAGETOP)/file)
+#endif
+
+#ifndef DoIncludePackage
+#define DoIncludePackage(pack)\						@@\
+IMAKE_INCLUDES=-I$(TOP)$(PACKAGETOP)/pack\				@@\
+		-I$(PROJECTROOT)$(LOCALTOP)$(PACKAGETOP)/pack
+#endif
+
+/*
+#ifndef Quote
+#define Quote(string)$(QUOTE)$(strip string)$(QUOTE)
+#endif
+	QUOTE="@@\ENDQUOTE="
+*/
+
+
+/*
+ *  Create a Make Variable to allow to flags systems without Motif
+ */
+#ifndef MotifDependantMakeVar
+#define MotifDependantMakeVar(variable,value)\
+									@@\
+variable=value								@@\
+
+#endif
+
+/* The end*/

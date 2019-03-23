@@ -1,0 +1,112 @@
+#! /bin/csh -f
+setenv RFLIST  rflist.$$
+echo "Output file=" $3
+echo "Flux dir=" $2
+cat <<! >! $RFLIST
+10{
+{"$2/nu.nd34_horn250ka.1.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+{"$2/nu.nd34_horn250ka.2.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+{"$2/nu.nd34_horn250ka.3.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+{"$2/nu.nd34_horn250ka.4.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+{"$2/nu.nd34_horn250ka.5.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+{"$2/nu.nd34_horn250ka.6.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+{"$2/nu.nd34_horn250ka.7.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+{"$2/nu.nd34_horn250ka.8.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+{"$2/nu.nd34_horn250ka.9.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+{"$2/nu.nd34_horn250ka.10.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+{"$2/nu.nd34_horn250ka.11.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+{"$2/nu.nd34_horn250ka.12.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+{"$2/nu.nd34_horn250ka.13.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+{"$2/nu.nd34_horn250ka.14.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+{"$2/nu.nd34_horn250ka.15.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+{"$2/nu.nd34_horn250ka.16.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+{"$2/nu.nd34_horn250ka.17.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+{"$2/nu.nd34_horn250ka.18.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+{"$2/nu.nd34_horn250ka.19.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+{"$2/nu.nd34_horn250ka.20.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+{"$2/nu.nd34_horn250ka.21.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+{"$2/nu.nd34_horn250ka.22.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+{"$2/nu.nd34_horn250ka.23.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+{"$2/nu.nd34_horn250ka.24.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+{"$2/nu.nd34_horn250ka.25.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+{"$2/nu.nd34_horn250ka.26.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+{"$2/nu.nd34_horn250ka.27.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+{"$2/nu.nd34_horn250ka.28.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+{"$2/nu.nd34_horn250ka.29.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+{"$2/nu.nd34_horn250ka.30.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+}
+20{{"$3",LOCAL,,WRT,,,"recl=5670 status=new"}}
+!
+./Linux_pc/t2kneut $1
+
+#
+#{"$2/nu.nd34_horn250ka.31.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.32.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.33.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.34.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.35.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.36.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.37.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.38.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.39.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.40.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.41.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.42.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.43.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.44.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.45.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.46.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.47.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.48.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.49.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.50.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.51.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.52.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.53.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.54.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.55.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.56.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.57.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.58.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.59.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.60.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.61.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.62.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.63.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.64.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.65.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.66.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.67.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.68.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.69.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.70.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.71.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.72.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.73.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.74.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.75.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.76.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.77.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.78.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.79.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.80.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.81.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.82.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.83.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.84.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.85.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.86.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.87.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.88.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.89.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.90.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.91.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.92.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.93.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.94.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.95.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.96.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.97.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.98.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.99.hbk",LOCAL,,RED,,,"recl=1024 status=old"}
+#{"$2/nu.nd34_horn250ka.100.hbk",LOCAL,,RED,,,"recl=1024 status=old"}

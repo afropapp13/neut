@@ -1,0 +1,38 @@
+C     
+      SUBROUTINE VCCLFSICM
+C     
+C     ( purpose )
+C       Clear common VERTWORK
+C
+C     ( input ) 
+C       none
+C
+C     ( output ) 
+C       COMMON /VERTWORK/
+C
+C     ( creation date and author )
+C       2010.9.19 ; First version by Y.Hayato
+C
+C     ( comment )
+C      
+C
+      IMPLICIT NONE
+#include "fsihist.h"
+
+      NVERT=0
+      CALL VZERO(POSVERT,3*MAXVERT)
+      CALL VZERO(IFLGVERT,MAXVERT)
+      
+      NVCVERT=0
+
+      CALL VZERO(DIRVERT,3*MAXVCVERT)
+      CALL VZERO(ABSPVERT,MAXVCVERT)
+      CALL VZERO(ABSTPVERT,MAXVCVERT)
+      CALL VZERO(IPVERT,MAXVCVERT)
+      CALL VZERO(IVERTI,MAXVCVERT)
+      CALL VZERO(IVERTF,MAXVCVERT)
+
+      FSIPROB=1
+
+      RETURN
+      END

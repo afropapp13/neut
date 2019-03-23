@@ -1,0 +1,188 @@
+C**** 
+C**** $Log: not supported by cvs2svn $
+C**** Revision 1.6  1998/03/13 16:11:09  cmauger
+C**** Uses 2/3 for k/kbar ratio when the input particle type is a klong or
+C**** a kshort.  Fixed a redundancy.
+C****
+C**** Revision 1.5  1998/03/11 14:31:20  itow
+C**** 98-MAR-11 Bug was fixed (totmom**2) by Y.Itow
+C****
+C**** Revision 1.4  1998/03/06 13:04:00  cmauger
+C**** Removed an extraneous print statement.
+C****
+C**** Revision 1.3  1998/03/06 12:56:35  cmauger
+C**** Acceptable inputs are kplus, kminus, klong, kshort, kzero, and kzerobar.
+C**** Output particles are kplus, kminus, klong and kshort.
+C**** If there is no interaction in the nucleus (the momentum doesn't change),
+C**** and kin is klong or kshort, kout will be equal to kin.  Otherwise, if
+C**** the output is a neutral kaon, kout will be randomly one or the other.
+C****
+C**** Revision 1.2  1998/03/06 07:50:58  cmauger
+C**** Now the inputs are kplus, klong, kshort, or kminus.
+C**** The outputs are also kplus, klong, kshort or kminus.
+C**** Klong and kshort are converted randomly to kzero or kzerobar.
+C**** If there is no charge exchange, the output particle (ie klong or kshort)
+C**** will be the same as the input particle.  If a kplus or kminus charge
+C**** exchanges to a neutral kaon, the output will be randomly kshort or
+C**** klong.
+C****
+C**** Revision 1.1  1998/03/04 20:44:34  cmauger
+C**** Added eftrcka.F which calls partnuc in IMBWest for Kaon interactions
+C**** in O16.  To include this file, please link to the following libs:
+C****  -lnuceff -limbwest -lkinem -lska `cernlib mathlib phtools`
+C****
+c**** A subroutine for the old-onsite MC to call partnuc from IMBWest
+c**** 
+c****     
+      subroutine eftrcka(pin,kin,pout,kout)
+      implicit none
+      real pin(3), pout(3)
+      real sump
+      integer lsflag
+      integer kin, kout, oldkin, newkin
+      integer i1,i2
+      real ranf
+      integer isetn
+      parameter (isetn = 0)
+      real anuc
+      parameter (anuc = 16.0)
+C**** The input energy, momentum, mass and charge
+      real ei(20),pi(3,20),ui(20),chi(20)
+C**** The number of input particles.
+      integer ni
+C**** The output energy, momentum, mass, and charge.
+      real eo(20),po(3,20),uo(20),cho(20)
+C**** The starting point for the hadron.  This is an output variable for 
+C     icont equal 0 and an input variable if icont is 1.
+      real start(3)
+C**** The final position of the hadron.  This is used to restart a new
+C     hadron from the stopping point after a decay.
+      real decp(3)
+C**** The starting point for each hadron in the stack.  This should be 
+C     zero unless icont is 1
+      real stpt(3,20)
+C**** The density mode of the model
+      integer imode
+      parameter (imode = 2)
+C**** Flag if this hadron is being restarted
+      integer icont
+      parameter (icont = 0)
+      real totmom
+      real entmp
+
+c**** charged kaon mass is 0.493677
+c**** kzero mass is 0.497672
+      lsflag = 0
+      ni = 1
+      pi(1,1) = pin(1)
+      pi(2,1) = pin(2)
+      pi(3,1) = pin(3)
+      totmom = 0
+      do i2=1,3
+         totmom = totmom + pin(i2)**2
+      enddo
+
+      oldkin = kin
+c**** Convert from kshort and klong to kzero and kzerobar
+c**** klong 
+C**** the value of 2/3 is from the ratio of kplus/kminus 
+C**** production given by jetset it should be replaced by 
+C**** an energy dependent value to do it correctly
+      if(oldkin.eq.310) then
+         if(ranf().le.0.667) then
+            oldkin = 311
+         else
+            oldkin = -311
+         endif
+      endif
+c**** kshort
+      if(oldkin.eq.130) then
+         if(ranf().le.0.667) then
+            oldkin = 311
+         else
+            oldkin = -311
+         endif
+      endif
+
+c**** kplus
+      if(oldkin.eq.321) then
+         chi(1) = 1.0
+         ui(1) = 0.493677
+c**** kzero
+      else if(oldkin.eq.311) then
+         chi(1) = 0.0
+         ui(1) = 0.497672
+c**** kzerobar
+      else if(oldkin.eq.-311) then
+         chi(1) = -0.1
+         ui(1) = 0.497672
+c**** kminus
+      else if(oldkin.eq.-321) then
+         chi(1) = -1.0
+         ui(1) = 0.493677
+      else
+         print*, 'The particle is not a kaon'
+         return
+      endif
+c**** find the total energy of the kaon
+      entmp = totmom + ui(1)**2
+      ei(1) = sqrt(entmp)
+c**** this calls a subroutine in IMBWest
+      call partkaon ( isetn,anuc,
+     $                     stpt,
+     $                     ei,pi,ui,chi,ni,
+     $                     eo,po,uo,cho,
+     $                     start,decp,
+     $                     imode,icont)
+c**** 
+c**** Set output momentum
+C**** 
+      pout(1) = po(1,1)
+      pout(2) = po(2,1)
+      pout(3) = po(3,1)
+c**** Check to see if there was an interaction
+      sump = 0.0
+      do i1=1,3
+          sump = sump + abs(pout(i1) - pin(i1))
+      enddo
+      if(sump.le.0.00001) then
+         lsflag = 1
+      endif
+
+c**** output particles      
+C**** kplus
+      if(cho(1).gt.0.9) then
+         newkin = 321
+c**** kzero
+      else if(cho(1).gt.0.0) then
+         newkin = 311
+c**** kzerobar
+      else if(cho(1).gt.-0.9) then
+         newkin = -311
+c**** kminus
+      else if(cho(1).le.-0.9) then
+         newkin = -321
+      else
+         print*, 'Unknown output from kaon nuclear interaction'
+         return
+      endif
+
+c**** CHARGED KAON OUTPUT
+      if(abs(newkin).eq.321) then
+         kout = newkin
+
+C**** NEUTRAL KAON OUTPUT
+
+c**** kaon came in neutral and didn't interact in 
+c**** the nucleus
+      else if(newkin.eq.oldkin.and.lsflag.eq.1.and.kin.ne.oldkin) then
+         kout = kin
+c**** the incoming kaon interacted
+      elseif(ranf().le.0.5) then
+         kout = 310
+
+      else
+         kout = 130
+      endif
+      return  
+      end

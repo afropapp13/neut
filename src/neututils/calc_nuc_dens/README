@@ -1,0 +1,6 @@
+Program to integrate NEUT's Wood-Saxon distribution for all nuclei
+
+1) Make
+2) ./integrate
+3) root analyze.cc
+4) Output "nucdens_int_coulomb.dat": table of integrals normalized with Coulomb factor used as input to eftrace/evpiprob 

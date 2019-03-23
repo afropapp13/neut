@@ -1,0 +1,73 @@
+************************************************************************
+*     ----------------------------------
+      SUBROUTINE NECROSTO( EPIKIN, FEMTO)
+*     ----------------------------------
+*
+*     (Purpose)
+*       THIS SUBROUTINE IS FOR 'COHVCT' THAT IS COHERENT PI0 PRODUCTION
+*       PROGRAM.
+*
+*     (Input)
+*       EPIKIN :
+*
+*     (Output)
+*       FEMTO :
+*     
+*     (Creation Date and Author)
+*       1994.08.30 ; G.DION & K.Okumura
+*       1996.02.05 ; K.Kaneyuki   CROSTO -> NECROSTO
+*
+*     (Comment)
+* TOTAL PI-0 / NUCLEON SCATTERING, OBTAINED BY LINE FITTING THE DATA GIVEN
+* IN THE PAPER BY REIN AND SEGHAL.  THE DATA IS ALREADY A PIECEWISE LINE FIT
+* TAKEN FROM OTHERS AUTHORS.  REFERENCES ARE GIVEN IN THE PAPER.
+* NOTE: THEY GIVE CROSTO = 0.25*(PI_D_PLUS + PI_D_MINUS)
+* IN ORDER TO MAKE THE FIT FROM THIER PAPER, THE DATA WERE ENLARGED BY
+* PHOTOCOPY.  PIECEWISE ENDPOINTS WERE OBTAINED ON A
+* STANDARD RULER SCALE, AND THEN CONVERTED BY XFACT AND YFACT, WHICH
+* ARE SCALE FACTORS TO GET X IN UNITS OF ENERGY AND Y IN UNITS OF MILLIBARNS.
+* FINALLY, A FACTOR OF 0.001 IS INCLUDED AT THE END TO CONVERT MILLIBARNS TO
+* BARNS.
+*
+************************************************************************
+
+      PARAMETER(BRNTFM=1.E2)
+
+      DIMENSION EPI0XC(10),EPI0YC(10),ITEMP(10)
+      PARAMETER (XFACT = 17.7/5.0, YFACT = 100./7.05)
+
+      DATA EPI0XC /
+     &  0.00,0.90,2.05,2.42,2.85,3.50,4.22,5.30,6.98,17.7 /
+
+      DATA EPI0YC /
+     &  0.00,7.72,1.85,2.10,1.95,2.70,2.20,2.55,2.15,1.85 /
+
+      EPI0 = EPIKIN*XFACT
+
+      IF (EPIKIN.GT.4.9) THEN
+         FEMTO = 2.4 + 1.2/SQRT(EPIKIN)
+         RETURN
+      ENDIF
+
+      DO 10 I=1,9
+         ITEMP(I)  = SIGN(1., EPI0 - EPI0XC(I+1) )
+ 10   CONTINUE
+
+      DO 100 J = 1,9
+         IF (ITEMP(J).EQ.-1) THEN
+            N = J
+            GOTO 200
+         ENDIF
+ 100  CONTINUE
+
+ 200  CONTINUE
+
+      BARNS = (EPI0YC(N+1)-EPI0YC(N))/(EPI0XC(N+1)-EPI0XC(N))
+      BARNS = BARNS*(EPI0-EPI0XC(N+1))+EPI0YC(N+1)
+
+      BARNS = BARNS*YFACT*0.001
+      FEMTO = BRNTFM*BARNS
+
+      RETURN
+
+      END

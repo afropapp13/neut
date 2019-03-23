@@ -1,0 +1,46 @@
+opt nstat
+nt/cre idn=100 title='crssect(5.3.1)' nvar=31 chrzpa=' ' nprime=1000 varlist=mode enu
+nt/read 100 dumpcrs.tbl
+
+nt/cre idn=200 title='crssect(5.1.4)' nvar=31 chrzpa=' ' nprime=1000 varlist=mode enu
+nt/read 200 dumpcrs_5142.tbl
+
+
+fort/file 30 ccqe_mec.eps
+
+meta 30 -113
+null 0. 3. 0. 1.5
+set lwid 6
+set dmod 1
+set plci 4
+nt/pl 100.(var3+var30)%enu option=ls
+set plci 2
+set dmod 1
+nt/pl 100.var3%enu option=ls
+
+set lwid 6
+set dmod 1
+set plci 3
+nt/pl 200.var3%enu option=ls
+
+close 30
+
+fort/file 30 cc1pi.eps
+
+meta 30 -113
+null 0. 5. 0. 1.0
+set lwid 6
+set dmod 1
+set plci 2
+nt/pl 100.(var4)%enu option=ls
+
+*set plci 2
+*set dmod 1
+*nt/pl 100.var3%enu option=ls
+
+set lwid 6
+set dmod 1
+set plci 3
+nt/pl 200.var4%enu option=ls
+
+close 30
