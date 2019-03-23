@@ -42,7 +42,14 @@ typedef enum ENSyst {
   //
 
   // NCEL tweaking parameters:
+  kXSecTwkDial_NormNCEL,          ///< tweak NCEL normalization (energy independent)
+  //kXSecTwkDial_NormNCELenu,       ///< tweak NCEL normalization (maintains dependence on neutrino energy)
+  kXSecTwkDial_MaNCELshape,       ///< tweak Ma NCEL, affects dsigma(NCEL)/dQ2 in shape only (normalized to constant integral). Warning: This overrides kXSecTwkDial_MaNCEL below
+  kXSecTwkDial_1overMaNCEL2,       ///< tweak 1/MaNCEL^2, affects dsigma(NCEL)/dQ2. More symmetric response in cross section when assuming Gaussian errors on this parameter
   kXSecTwkDial_MaNCEL,            ///< tweak Ma NCEL, affects dsigma(NCEL)/dQ2 both in shape and normalization
+  kXSecTwkDial_AxlFFNCEL,    ///< tweak elastic nucleon form factors (default/dipole -> BBBA07) NOT VALIDATED
+  kXSecTwkDial_VecFFNCEL,    ///< tweak elastic nucleon form factors (default/dipole -> BBBA05)
+  //kXSecTwkDial_VecFFNCELshape,    ///< tweak elastic nucleon form factors (BBA/default -> dipole) - shape only effect of dsigma(NCEL)/dQ2
   //kXSecTwkDial_EtaNCEL,           ///< tweak NCEL strange axial form factor eta, affects dsigma(NCEL)/dQ2 both in shape and normalization
 
   // CCQE tweaking parameters:
@@ -52,8 +59,14 @@ typedef enum ENSyst {
   kXSecTwkDial_1overMaCCQE2,       ///< tweak 1/MaCCQE^2, affects dsigma(CCQE)/dQ2. More symmetric response in cross section when assuming Gaussian errors on this parameter
   kXSecTwkDial_MaCCQE,            ///< tweak Ma CCQE, affects dsigma(CCQE)/dQ2 both in shape and normalization
   kXSecTwkDial_AxlFFCCQE,    ///< tweak elastic nucleon form factors (default/dipole -> BBBA07) NOT VALIDATED
-  kXSecTwkDial_VecFFCCQE,    ///< tweak elastic nucleon form factors (default/dipole -> BBBA05)
+  kXSecTwkDial_VecFFCCQE,      ///< tweak the MDLQE used in the calculation (default is MDLQE = 402) 
+/// Note that this affects the default calculation, so should be changed to whatever was used to generate the file.
+  kXSecTwkDial_VecFFCCQE_out,  ///< tweak the MDLQE used to calculate the output. Use in conjunction with kXSecTwkDial_VecFFCCQE for all possibilities.
   //kXSecTwkDial_VecFFCCQEshape,    ///< tweak elastic nucleon form factors (BBA/default -> dipole) - shape only effect of dsigma(CCQE)/dQ2
+
+  kXSecTwkDial_SCCVecQE,    ///< tweak vector 2nd class current FF
+  kXSecTwkDial_SCCAxlQE,    ///< tweak axial 2nd class current FF
+  kXSecTwkDial_PsFF,    ///< tweak pseudoscalar FF at Q2=0
 
   // Resonance neutrino-production tweaking parameters:
 
@@ -62,17 +75,44 @@ typedef enum ENSyst {
   kXSecTwkDial_MaRESshape,      ///< tweak Ma RES, affects d2sigma(RES)/dWdQ2 in shape only (normalized to constant integral)
   kXSecTwkDial_MvRES,           ///< tweak Mv CCRES, affects d2sigma(CCRES)/dWdQ2 both in shape and normalization
 
+  kXSecTwkDial_FFRES,
+  kXSecTwkDial_TypeRES,
+  kXSecTwkDial_CA5RES,
+  kXSecTwkDial_BgSclRES,
+  kXSecTwkDial_MaNFFRES,
+  kXSecTwkDial_MvNFFRES,
+  kXSecTwkDial_MaRSRES,
+  kXSecTwkDial_MvRSRES,
+
   kXSecTwkDial_NormCCRES,         ///< tweak CCRES normalization
   kXSecTwkDial_MaCCRESshape,      ///< tweak Ma CCRES, affects d2sigma(CCRES)/dWdQ2 in shape only (normalized to constant integral)
   //kXSecTwkDial_MvCCRESshape,      ///< tweak Mv CCRES, affects d2sigma(CCRES)/dWdQ2 in shape only (normalized to constant integral)
   kXSecTwkDial_MaCCRES,           ///< tweak Ma CCRES, affects d2sigma(CCRES)/dWdQ2 both in shape and normalization
   kXSecTwkDial_MvCCRES,           ///< tweak Mv CCRES, affects d2sigma(CCRES)/dWdQ2 both in shape and normalization
 
+  kXSecTwkDial_FFCCRES,
+  kXSecTwkDial_TypeCCRES,
+  kXSecTwkDial_CA5CCRES,
+  kXSecTwkDial_BgSclCCRES,
+  kXSecTwkDial_MaNFFCCRES,
+  kXSecTwkDial_MvNFFCCRES,
+  kXSecTwkDial_MaRSCCRES,
+  kXSecTwkDial_MvRSCCRES,
+
   kXSecTwkDial_NormNCRES,         ///< tweak NCRES normalization
   kXSecTwkDial_MaNCRESshape,      ///< tweak Ma NCRES, affects d2sigma(NCRES)/dWdQ2 in shape only (normalized to constant integral)
   //kXSecTwkDial_MvNCRESshape,      ///< tweak Mv NCRES, affects d2sigma(NCRES)/dWdQ2 in shape only (normalized to constant integral)
   kXSecTwkDial_MaNCRES,           ///< tweak Ma NCRES, affects d2sigma(NCRES)/dWdQ2 both in shape and normalization
   kXSecTwkDial_MvNCRES,           ///< tweak Mv NCRES, affects d2sigma(NCRES)/dWdQ2 both in shape and normalization
+
+  kXSecTwkDial_FFNCRES,
+  kXSecTwkDial_TypeNCRES,
+  kXSecTwkDial_CA5NCRES,
+  kXSecTwkDial_BgSclNCRES,
+  kXSecTwkDial_MaNFFNCRES,
+  kXSecTwkDial_MvNFFNCRES,
+  kXSecTwkDial_MaRSNCRES,
+  kXSecTwkDial_MvRSNCRES,
 
   // Coherent pion production tweaking parameters:
   kXSecTwkDial_MaCOHpi,           ///< tweak Ma for COH pion production
@@ -141,8 +181,7 @@ typedef enum ENSyst {
   kCascTwkDial_FrInelHigh_pi,  ///< tweak inelastic (QE in NEUT) probability for high energy pions
   kCascTwkDial_FrCExHigh_pi,   ///< tweak charge exchange probability for high energy pions	    
   kCascTwkDial_FrPiProd_pi,    ///< tweak pion (hadron) production (inelastic in NEUT) probability for pions
-
-  kINukeTwkDial_MFP_N,       ///< tweak mean free path for nucleons
+  //kINukeTwkDial_MFP_N,       ///< tweak mean free path for nucleons
   //kINukeTwkDial_FrCEx_N,     ///< tweak charge exchange probability for nucleons, for given total rescattering probability
   //kINukeTwkDial_FrElas_N,    ///< tweak elastic         probability for nucleons, for given total rescattering probability
   //kINukeTwkDial_FrInel_N,    ///< tweak inelastic       probability for nucleons, for given total rescattering probability
@@ -167,8 +206,7 @@ typedef enum ENSyst {
   //kRDcyTwkDial_Theta_Delta2Npi  ///< distort pi angular distribution in Delta -> N + pi
 
   
-  kSystNucl_PilessDcyRES,
-  
+  kSystNucl_PilessDcyRES
 
   //
   // Misc
@@ -184,7 +222,14 @@ public:
   static string AsString(NSyst_t syst) 
   {
     switch(syst) {
+    case ( kXSecTwkDial_NormNCEL         ) : return "NormNCEL";             break;
+      //case ( kXSecTwkDial_NormNCELenu      ) : return "NormNCELenu";          break;
     case ( kXSecTwkDial_MaNCEL           ) : return "MaNCEL";               break;
+    case ( kXSecTwkDial_MaNCELshape      ) : return "MaNCELshape";          break;
+    case ( kXSecTwkDial_1overMaNCEL2      ) : return "1overMaNCEL2";          break;
+    case ( kXSecTwkDial_AxlFFNCEL   ) : return "AxlFFNCEL";       break;
+    case ( kXSecTwkDial_VecFFNCEL   ) : return "VecFFNCEL";       break;
+      //case ( kXSecTwkDial_VecFFNCELshape   ) : return "VecFFNCELshape";       break;
       //case ( kXSecTwkDial_EtaNCEL          ) : return "EtaNCEL";              break;
 
     case ( kXSecTwkDial_NormCCQE         ) : return "NormCCQE";             break;
@@ -192,9 +237,13 @@ public:
     case ( kXSecTwkDial_MaCCQE           ) : return "MaCCQE";               break;
     case ( kXSecTwkDial_MaCCQEshape      ) : return "MaCCQEshape";          break;
     case ( kXSecTwkDial_1overMaCCQE2      ) : return "1overMaCCQE2";          break;
-    case ( kXSecTwkDial_AxlFFCCQE   ) : return "AxlFFCCQE";       break;
-    case ( kXSecTwkDial_VecFFCCQE   ) : return "VecFFCCQE";       break;
+    case ( kXSecTwkDial_AxlFFCCQE     ) : return "AxlFFCCQE";       break;
+    case ( kXSecTwkDial_VecFFCCQE     ) : return "VecFFCCQE";       break;
+    case ( kXSecTwkDial_VecFFCCQE_out ) : return "VecFFCCQE_out";   break;
       //case ( kXSecTwkDial_VecFFCCQEshape   ) : return "VecFFCCQEshape";       break;
+    case ( kXSecTwkDial_SCCVecQE   ) : return "SCCVecQE";       break;
+    case ( kXSecTwkDial_SCCAxlQE   ) : return "SCCAxlQE";       break;
+    case ( kXSecTwkDial_PsFF   ) : return "PsFF";       break;
 
 
     case ( kXSecTwkDial_NormRES        ) : return "NormRES";            break;
@@ -279,7 +328,14 @@ public:
  {
    NSyst_t systematics[] = 
      {
-       kXSecTwkDial_MaNCEL,
+       kXSecTwkDial_NormNCEL,   
+       //kXSecTwkDial_NormNCELenu,   
+       kXSecTwkDial_MaNCEL,        
+       kXSecTwkDial_MaNCELshape,   
+       kXSecTwkDial_1overMaNCEL2,   
+       kXSecTwkDial_AxlFFNCEL,
+       kXSecTwkDial_VecFFNCEL,
+       //kXSecTwkDial_VecFFNCELshape,
        //kXSecTwkDial_EtaNCEL,
 
        kXSecTwkDial_NormCCQE,   
@@ -289,7 +345,11 @@ public:
        kXSecTwkDial_1overMaCCQE2,   
        kXSecTwkDial_AxlFFCCQE,
        kXSecTwkDial_VecFFCCQE,
+       kXSecTwkDial_VecFFCCQE_out,
        //kXSecTwkDial_VecFFCCQEshape,
+       kXSecTwkDial_SCCVecQE,
+       kXSecTwkDial_SCCAxlQE,
+       kXSecTwkDial_PsFF,
 
        kXSecTwkDial_NormRES,
        kXSecTwkDial_MaRESshape,   

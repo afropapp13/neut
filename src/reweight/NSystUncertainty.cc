@@ -105,7 +105,12 @@ void NSystUncertainty::GetUncertainty(
 }//____________________________________________________________________________
 void NSystUncertainty::SetDefaults(void)
 {
+  this->SetUncertainty( kXSecTwkDial_NormNCEL,       0.15, 0.15);
+  this->SetUncertainty( kXSecTwkDial_MaNCELshape,    0.165289256, 0.165289256);
+  this->SetUncertainty( kXSecTwkDial_1overMaNCEL2,    0.2, 0.2);
   this->SetUncertainty( kXSecTwkDial_MaNCEL,         0.165289256, 0.165289256);
+  this->SetUncertainty( kXSecTwkDial_AxlFFNCEL,    0, 1);
+  this->SetUncertainty( kXSecTwkDial_VecFFNCEL,    0, 1);
   //this->SetUncertainty( kXSecTwkDial_EtaNCEL,        0.30, 0.30);
   this->SetUncertainty( kXSecTwkDial_NormCCQE,       0.15, 0.15);
   this->SetUncertainty( kXSecTwkDial_MaCCQEshape,    0.165289256, 0.165289256);
@@ -113,11 +118,24 @@ void NSystUncertainty::SetDefaults(void)
   this->SetUncertainty( kXSecTwkDial_MaCCQE,         0.165289256, 0.165289256);
   this->SetUncertainty( kXSecTwkDial_AxlFFCCQE,    0, 1);
   this->SetUncertainty( kXSecTwkDial_VecFFCCQE,    0, 1);
+  this->SetUncertainty( kXSecTwkDial_VecFFCCQE_out, 0, 1);
+  this->SetUncertainty( kXSecTwkDial_SCCVecQE,    1.0, 1.0);
+  this->SetUncertainty( kXSecTwkDial_SCCAxlQE,    1.0, 1.0);
+  this->SetUncertainty( kXSecTwkDial_PsFF,    0.03, 0.03);
 
   this->SetUncertainty( kXSecTwkDial_NormRES,      0.20, 0.20);
   this->SetUncertainty( kXSecTwkDial_MaRESshape,   0.165289256, 0.165289256);
   this->SetUncertainty( kXSecTwkDial_MaRES,        0.165289256, 0.165289256);
   this->SetUncertainty( kXSecTwkDial_MvRES,        0.119047619, 0.119047619);
+
+  this->SetUncertainty( kXSecTwkDial_FFRES,       1,1);
+  this->SetUncertainty( kXSecTwkDial_TypeRES,     1,1);
+  this->SetUncertainty( kXSecTwkDial_CA5RES,      0.247524752,0.247524752);
+  this->SetUncertainty( kXSecTwkDial_BgSclRES,    0.153846154,0.153846154);
+  this->SetUncertainty( kXSecTwkDial_MaNFFRES,    0.157894737,0.157894737);
+  this->SetUncertainty( kXSecTwkDial_MvNFFRES,    0.119047619, 0.119047619);
+  this->SetUncertainty( kXSecTwkDial_MaRSRES,     0.165289256, 0.165289256);
+  this->SetUncertainty( kXSecTwkDial_MvRSRES,     0.119047619, 0.119047619);
 
   this->SetUncertainty( kXSecTwkDial_NormCCRES,      0.20, 0.20);
   this->SetUncertainty( kXSecTwkDial_MaCCRESshape,   0.165289256, 0.165289256);
@@ -125,11 +143,29 @@ void NSystUncertainty::SetDefaults(void)
   this->SetUncertainty( kXSecTwkDial_MaCCRES,        0.165289256, 0.165289256);
   this->SetUncertainty( kXSecTwkDial_MvCCRES,        0.119047619, 0.119047619);
 
+  this->SetUncertainty( kXSecTwkDial_FFCCRES,       1,1);
+  this->SetUncertainty( kXSecTwkDial_TypeCCRES,     1,1);
+  this->SetUncertainty( kXSecTwkDial_CA5CCRES,      0.247524752,0.247524752);
+  this->SetUncertainty( kXSecTwkDial_BgSclCCRES,    0.153846154,0.153846154);
+  this->SetUncertainty( kXSecTwkDial_MaNFFCCRES,    0.157894737,0.157894737);
+  this->SetUncertainty( kXSecTwkDial_MvNFFCCRES,    0.119047619, 0.119047619);
+  this->SetUncertainty( kXSecTwkDial_MaRSCCRES,     0.165289256, 0.165289256);
+  this->SetUncertainty( kXSecTwkDial_MvRSCCRES,     0.119047619, 0.119047619);
+
   this->SetUncertainty( kXSecTwkDial_NormNCRES,      0.20, 0.20);
   this->SetUncertainty( kXSecTwkDial_MaNCRESshape,   0.165289256, 0.165289256);
   //this->SetUncertainty( kXSecTwkDial_MvNCRESshape,   0.05, 0.05);
   this->SetUncertainty( kXSecTwkDial_MaNCRES,        0.165289256, 0.165289256);
   this->SetUncertainty( kXSecTwkDial_MvNCRES,        0.119047619, 0.119047619);
+
+  this->SetUncertainty( kXSecTwkDial_FFNCRES,       1,1);
+  this->SetUncertainty( kXSecTwkDial_TypeNCRES,     1,1);
+  this->SetUncertainty( kXSecTwkDial_CA5NCRES,      0.247524752,0.247524752);
+  this->SetUncertainty( kXSecTwkDial_BgSclNCRES,    0.153846154,0.153846154);
+  this->SetUncertainty( kXSecTwkDial_MaNFFNCRES,    0.157894737,0.157894737);
+  this->SetUncertainty( kXSecTwkDial_MvNFFNCRES,    0.119047619, 0.119047619);
+  this->SetUncertainty( kXSecTwkDial_MaRSNCRES,     0.165289256, 0.165289256);
+  this->SetUncertainty( kXSecTwkDial_MvRSNCRES,     0.119047619, 0.119047619);
 
   this->SetUncertainty( kXSecTwkDial_MaCOHpi,        0.50, 0.50);
   this->SetUncertainty( kXSecTwkDial_R0COHpi,        0.10, 0.10);

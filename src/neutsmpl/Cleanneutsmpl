@@ -1,5 +1,0 @@
-#!/bin/sh
-#
-# Wrapper script to run Cleanneutsmpl.csh when your PATH/LD_LIBRARY_PATH variables are too long for csh to handle.
-#
-LD_LIBRARY_PATH="$ROOTSYS/lib/root" PATH="/bin:/usr/bin:$CERN/$CERN_LEVEL/bin:$ROOTSYS/bin" ./Cleanneutsmpl.csh || exit 1

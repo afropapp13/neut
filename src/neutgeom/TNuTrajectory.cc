@@ -280,7 +280,7 @@ void TNuTrajectory::CalcScatCoefficients(){
 	
 	  // cross sections are reported in units of 10^{getExponentCm2)
 	  // usually, 10^{-38}
-	  alpha += xsec *  pow(10.,(double)fXsecFunc->getExponentCm2()) * nDens;
+	  alpha += xsec *  pow(10,fXsecFunc->getExponentCm2()) * nDens;
 
 	} // end loop over elements in mixture
 	
@@ -346,7 +346,7 @@ Double_t TNuTrajectory::GetPathIntProb(Int_t i)
 // retrieve maximum interaction probability based on random sampling
 Double_t TNuTrajectory::GetMaxIntProb()
 {
-  return fMaxIntProb * pow(10.,(double)fXsecFunc->getExponentCm2()) ;
+  return fMaxIntProb * pow(10,fXsecFunc->getExponentCm2()) ;
 }
 
 // retrieve scat coefficient for a material
@@ -509,7 +509,7 @@ Double_t TNuTrajectory::GetRawProbability(){
 	      << std::endl;
   }
 
-  Double_t intProb = fSumIntProb * pow(10.,(double)fXsecFunc->getExponentCm2()) *fBeamWeight;
+  Double_t intProb = fSumIntProb * pow(10,fXsecFunc->getExponentCm2()) *fBeamWeight;
   return intProb;
 }
 
@@ -576,7 +576,7 @@ TLorentzVector TNuTrajectory::DrawVertexFromPath(TGeoElement*& theTarget){
     do {
 	  
       TGeoElement* theNucleus = theMix->GetElement(ie);
-      Double_t xsec     = GetXsec(theNucleus) * pow(10.,(double)fXsecFunc->getExponentCm2());
+      Double_t xsec     = GetXsec(theNucleus) * pow(10,fXsecFunc->getExponentCm2());
       Double_t wfrac    = wfracs[ie];
       Double_t nDens    = rhogcm3 * wfrac * TMath::Na()/theNucleus->A();
 

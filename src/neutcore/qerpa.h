@@ -4,9 +4,9 @@
 *
 *******************************************
 
-      REAL RPALE_QQ(2,300)
-      REAL RPARE_QQ(2,300)
-      REAL RPALM_QQ(2,300)
-      REAL RPARM_QQ(2,300)
+      REAL RPAL_C_QQ(27,300)
+      REAL RPAR_C_QQ(27,300)
+      REAL RPAL_O_QQ(27,300)
+      REAL RPAR_O_QQ(27,300)
     
-      COMMON /QERPA/RPALE_QQ,RPARE_QQ,RPALM_QQ,RPARM_QQ
+      COMMON /QERPA/RPAL_C_QQ,RPAR_C_QQ,RPAL_O_QQ,RPAR_O_QQ

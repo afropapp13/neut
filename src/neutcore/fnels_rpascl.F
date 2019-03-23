@@ -1,6 +1,6 @@
 ************************************************************************
 *     -------------------------
-      REAL FUNCTION FNELS_RPASCL(dQQ,IPAR)
+      REAL FUNCTION FNELS_RPASCL(dEE,dQQ,IPAR)
 *     -------------------------
 *
 *     (Purpose)
@@ -8,6 +8,7 @@
 *       
 *
 *     (Input)
+*       dE    : Energy (GeV) in rest frame.
 *       dQQ   : Q**2 ( GEV**2 )
 *       IPAR   : NEUTRINO TYPE
 *                  12 : NEU-E
@@ -27,14 +28,14 @@ C       2013.11.19  A.Redij - if Atomic mass number ANUM is given,
 C		     X-section can be interpolated for desired value of ANUM,
 C 		     from available data for Carbon and oxygen. 
 C 		     At present this feature is disabled and only X-section 
-C		     values for C12 and O16 is returned; For rest of the elements it returns zero
+C		     values for C12 and O16 is returned; For rest of the elements it returns 1
 C		     
-C		      Scaling tables available for 
-C			nue C12 O16, 
-C			nuebar C12 O16,
-C		        numu C12,O16 
-C			numubar C12 O16
-C		      
+C		      Scaling table is available for
+C			nue C12 O16, O16, for energies values given by array E1
+C			nue C12 for energy values give by array E2
+C		      Studies showed that the RPA scaling does not differ for numu and nue.
+C		        
+C					      
 C			
 C
 ************************************************************************
@@ -43,20 +44,28 @@ C
 #include "neutparams.h"      
 #include "qerpa.h"
 #include "neutmodel.h"
-
+#include "neutfilepath.h"
    
 
       REAL dQQ
+      REAL dEE,dE
       INTEGER IPAR
       
-      INTEGER LUN
-      DATA LUN/80/
+      INTEGER LUN1,LUN2,LUN3,LUN4
+      DATA LUN1/80/
+      DATA LUN2/81/
+      DATA LUN3/82/
+      DATA LUN4/83/
 
-      INTEGER I,II,J,JJ,IDUM,ILOADQERPA
+      INTEGER I,II,J,JJ,K,KK,L,LL,IDUM,ILOADQERPA
       REAL RDUM
-      CHARACTER*80 DUMSTR
+      CHARACTER*1024 DUMSTR1,DUMSTR2,DUMSTR3,DUMSTR4
       SAVE ILOADQERPA
       DATA ILOADQERPA/0/
+
+      integer*4      LENSTR
+      external       lenstr
+      integer*4      lenpath
 
       INTEGER*4 IDTAG
       SAVE      IDTAG
@@ -70,8 +79,10 @@ C
 
 C     Enu for e/mu-nu
       REAL QQ(300) 
-
-      REAL WeightQQ,WeightA
+      REAL E1(27)
+      
+      REAL WeightQQ,WeightE,WeightA
+      REAL FNELS_RPASCL_C,FNELS_RPASCL_O
       REAL RPALOW,RPAHIG
       REAL RPA11,RPA12,RPA21,RPA22
 
@@ -79,7 +90,10 @@ C     Enu for e/mu-nu
       REAL*4    ADUM(2)
 
       INTEGER*4 NEN
-      NEN=300
+      INTEGER*4 NQQ
+      NQQ=300
+      NEN=27
+      
      
 C     
 C --  Q**2 table
@@ -145,32 +159,21 @@ C
      $		2.86, 2.87, 2.88, 2.89, 2.90  ,
      $               2.91, 2.92, 2.93, 2.94, 2.95, 
      $		2.96, 2.97, 2.98, 2.99 /
-CC, 3.00  ,
-C     $		     3.01, 3.02, 3.03, 3.04, 3.05,
-C     $		 3.06, 3.07, 3.08, 3.09, 3.10  ,
-C     $               3.11, 3.12, 3.13, 3.14, 3.15, 
-C     $		3.16, 3.17, 3.18, 3.19, 3.20  ,
-C     $               3.21, 3.22, 3.23, 3.24, 3.25, 
-C     $		3.26, 3.27, 3.28, 3.29, 3.30  ,
-C     $               3.31, 3.32, 3.33, 3.34, 3.35, 
-C     $		3.36, 3.37, 3.38, 3.39, 3.40  ,
-C     $               3.41, 3.42, 3.43, 3.44, 3.45, 
-C     $		3.46, 3.47, 3.48, 3.49, 3.50  ,
-C     $               3.51, 3.52, 3.53, 3.54, 3.55, 
-C     $		3.56, 3.57, 3.58, 3.59, 3.60  ,
-C     $               3.61, 3.62, 3.63, 3.64, 3.65, 
-C     $		3.66, 3.67, 3.68, 3.69, 3.70  ,
-C     $               3.71, 3.72, 3.73, 3.74, 3.75, 
-C     $		3.76, 3.77, 3.78, 3.79, 3.80  ,
-C     $               3.81, 3.82, 3.83, 3.84, 3.85, 
-C     $		3.86, 3.87, 3.88, 3.89, 3.90  ,
-C     $               3.91, 3.92, 3.93, 3.94, 3.95, 
-C     $		3.96, 3.97, 3.98, 3.99/
 
-         
 
-C-------------------------------------------------------------
-        
+C  Energy bins          
+
+
+         DATA E1/ 0.15, 0.25, 0.35, 0.45, 0.55,
+     $         	  0.65, 0.75, 0.85, 0.95, 1.05,
+     $         	  1.5,  1.25, 1.35, 1.5,  1.6,  
+     $            1.7,  1.8,  1.9,  2.0,  2.2,
+     $            2.4,  2.6,  3.0,  4.0,  5.0,
+     $         	  7.5,  10.0/
+
+
+
+C-------------------------------------------------------------      
 C
 C check is energy is within permissible range.
 C
@@ -185,93 +188,144 @@ C
        endif
 
 C--------------------------------------------------------------
-C   Cross-section files are read only once when ILOADQERPA = 0
-        if (iloadqerpa.ne.0) goto 100
-               
-	DUMSTR='RPA_corr_nu_Q2.dat' 
-        IDTAG=1
+C   All cross-section files are read only once when ILOADQERPA = 0
+ 
+       if (iloadqerpa.ne.0) goto 100
+C Open four files                
+    	 DUMSTR1='RPA_corr_E-Q2_numu_c.dat' 
+         IDTAG=1
+         DUMSTR1=CRSTBLPATH(1:lenpath)//DUMSTR1
+         print*, 'RPA cross-section read from file: ', DUMSTR1
+         open(LUN1,file=DUMSTR1,form='formatted',status='old')
 
-         print*, 'RPA cross-section read from file: ', DUMSTR
-         open(LUN,file=DUMSTR,form='formatted',status='old')
-         read(LUN,*) IDDUM
-     $           ,RDUM,ADUM(1),ADUM(2)
+         DUMSTR2='RPA_corr_E-Q2_numub_c.dat' 
+         IDTAG=1
+         DUMSTR2=CRSTBLPATH(1:lenpath)//DUMSTR2
+         print*, 'RPA cross-section read from file: ', DUMSTR2
+         open(LUN2,file=DUMSTR2,form='formatted',status='old')
 
-         if (IDDUM.ne.IDTAG) then
-          write(*,*) 'RPA correction table is not compatible.'
-          stop
+         DUMSTR3='RPA_corr_E-Q2_numu_o.dat' 
+         IDTAG=1
+         DUMSTR3=CRSTBLPATH(1:lenpath)//DUMSTR3
+         print*, 'RPA cross-section read from file: ', DUMSTR3
+         open(LUN3,file=DUMSTR3,form='formatted',status='old')
+
+         DUMSTR4='RPA_corr_E-Q2_numub_o.dat' 
+         IDTAG=1
+         DUMSTR4=CRSTBLPATH(1:lenpath)//DUMSTR4
+         print*, 'RPA cross-section read from file: ', DUMSTR4
+         open(LUN4,file=DUMSTR4,form='formatted',status='old')
+
+
+C Reading table for,
+C numu on Carbon
+         do i = 1,NQQ
+
+         read(LUN1,*) IDUM,RDUM,RPAL_C_QQ(1,i),RPAL_C_QQ(2,i),
+     $  	RPAL_C_QQ(3,i),RPAL_C_QQ(4,i),RPAL_C_QQ(5,i),
+     $          RPAL_C_QQ(6,i),RPAL_C_QQ(7,i),RPAL_C_QQ(8,i),
+     $          RPAL_C_QQ(9,i),RPAL_C_QQ(10,i),RPAL_C_QQ(11,i),
+     $          RPAL_C_QQ(12,i),RPAL_C_QQ(13,i),RPAL_C_QQ(14,i),
+     $          RPAL_C_QQ(15,i),RPAL_C_QQ(16,i),RPAL_C_QQ(17,i),
+     $          RPAL_C_QQ(18,i),RPAL_C_QQ(19,i),RPAL_C_QQ(20,i),
+     $          RPAL_C_QQ(21,i),RPAL_C_QQ(22,i),RPAL_C_QQ(23,i),
+     $          RPAL_C_QQ(24,i),RPAL_C_QQ(25,i), RPAL_C_QQ(26,i),
+     $  	RPAL_C_QQ(27,i)
+
+         if ( abs(RDUM-QQ(I)).gt.0.001 ) then
+         write(*,*)'RPA correction table corrupted 0',RDUM,QQ(I),I
+         stop
          endif
+         enddo
+        
+C nue bar on Carbon
+         do i = 1,NQQ
 
-         do 200 i = 1, 2
-          if (abs(ADUM(i)-MASSNUM(i)).gt.0.001) then
-             write(*,*) 'RPA correction table is not compatible.'
-             stop
-          endif
- 200     continue
+         read(LUN2,*) IDUM,RDUM,RPAR_C_QQ(1,i),RPAR_C_QQ(2,i),
+     $  	RPAR_C_QQ(3,i),RPAR_C_QQ(4,i),RPAR_C_QQ(5,i),
+     $          RPAR_C_QQ(6,i),RPAR_C_QQ(7,i),RPAR_C_QQ(8,i),
+     $          RPAR_C_QQ(9,i),RPAR_C_QQ(10,i),RPAR_C_QQ(11,i),
+     $          RPAR_C_QQ(12,i),RPAR_C_QQ(13,i),RPAR_C_QQ(14,i),
+     $          RPAR_C_QQ(15,i),RPAR_C_QQ(16,i),RPAR_C_QQ(17,i),
+     $          RPAR_C_QQ(18,i),RPAR_C_QQ(19,i),RPAR_C_QQ(20,i),
+     $          RPAR_C_QQ(21,i),RPAR_C_QQ(22,i),RPAR_C_QQ(23,i),
+     $          RPAR_C_QQ(24,i),RPAR_C_QQ(25,i),RPAR_C_QQ(26,i),
+     $          RPAR_C_QQ(27,i)
 
-*nue
-         do i = 1,NEN
-
-           read(LUN,*) IDUM,RDUM,RPALE_QQ(1,i),RPALE_QQ(2,i)
-		
-            if ( abs(RDUM-QQ(I)).gt.0.001 ) then
-               write(*,*) 'RPA correction table seems to be corrupted 0.',RDUM , QQ(I),I
-               stop
-            endif
-     
-C            print*, 'debug:RPALM_QQ',i,RPALM_QQ(1,i),RPALM_QQ(2,i)
-          enddo
-
-*nue bar
-       do i = 1,NEN
-
-           read(LUN,*) IDUM,RDUM,RPARE_QQ(1,i),RPARE_QQ(2,i)
-		
-            if ( abs(RDUM-QQ(I)).gt.0.001 ) then
-        write(*,*) 'RPA correction table seems to be corrupted 0.',RDUM , QQ(I),I
-               stop
-            endif
-C            print*, 'debug:RPARE_QQ',i,RPARE_QQ(1,i),RPARE_QQ(2,i)
-     
-        enddo
-*numu 
-         do i = 1,NEN
-
-           read(LUN,*) IDUM,RDUM,RPALM_QQ(1,i),RPALM_QQ(2,i)
-		
-            if ( abs(RDUM-QQ(I)).gt.0.001 ) then
-               write(*,*) 'RPA correction table seems to be corrupted 0 '
-               stop
-            endif
-C            print*, 'debug:RPALM_QQ',i,RPALM_QQ(1,i),RPALM_QQ(2,i)
+         if ( abs(RDUM-QQ(I)).gt.0.001 ) then
+            write(*,*)'RPA correction table corrupted 1.',RDUM ,QQ(I),I
+         stop
+         endif
+C            print*, 'debug:RPAR_C_QQ',i,RPAR_C_QQ(1,i),RPAR_C_QQ(2,i)
      
          enddo
 
-*numu bar
-       do i = 1,NEN
-          read(LUN,*) IDUM,RDUM,RPARM_QQ(1,i),RPARM_QQ(2,i)
-		
-            if ( abs(RDUM-QQ(I)).gt.0.001 ) then
-               write(*,*) 'RPA correction table seems to be corrupted 0'
-               stop
-            endif
-C            print*, 'debug:RPALM_QQ1',i,RPARM_QQ(1,i),RPARM_QQ(2,i)
+
+C numu on Oxygen
+         do i = 1,NQQ
+
+         read(LUN3,*) IDUM,RDUM,RPAL_O_QQ(1,i),RPAL_O_QQ(2,i),
+     $  	RPAL_O_QQ(3,i),RPAL_O_QQ(4,i),RPAL_O_QQ(5,i),
+     $          RPAL_O_QQ(6,i),RPAL_O_QQ(7,i),RPAL_O_QQ(8,i),
+     $          RPAL_O_QQ(9,i),RPAL_O_QQ(10,i),RPAL_O_QQ(11,i),
+     $          RPAL_O_QQ(12,i),RPAL_O_QQ(13,i),RPAL_O_QQ(14,i),
+     $          RPAL_O_QQ(15,i),RPAL_O_QQ(16,i) ,RPAL_O_QQ(17,i),
+     $          RPAL_O_QQ(18,i),RPAL_O_QQ(19,i),RPAL_O_QQ(20,i),
+     $          RPAL_O_QQ(21,i),RPAL_O_QQ(22,i),RPAL_O_QQ(23,i),
+     $          RPAL_O_QQ(24,i),RPAL_O_QQ(25,i), RPAL_O_QQ(26,i),
+     $          RPAL_O_QQ(27,i)
+
+         if ( abs(RDUM-QQ(I)).gt.0.001 ) then
+            write(*,*)'RPA correction table corrupted 2.',RDUM ,QQ(I),I
+         stop
+         endif
+         enddo
+C nue bar on Oxygen
+         do i = 1,NQQ
+
+         read(LUN4,*) IDUM,RDUM,RPAR_O_QQ(1,i),RPAR_O_QQ(2,i),
+     $  	RPAR_O_QQ(3,i),RPAR_O_QQ(4,i),RPAR_O_QQ(5,i),
+     $          RPAR_O_QQ(6,i),RPAR_O_QQ(7,i),RPAR_O_QQ(8,i),
+     $          RPAR_O_QQ(9,i),RPAR_O_QQ(10,i),RPAR_O_QQ(11,i),
+     $          RPAR_O_QQ(12,i),RPAR_O_QQ(13,i),RPAR_O_QQ(14,i),
+     $          RPAR_O_QQ(15,i),RPAR_O_QQ(16,i),RPAR_O_QQ(17,i),
+     $          RPAR_O_QQ(18,i),RPAR_O_QQ(19,i),RPAR_O_QQ(20,i),
+     $          RPAR_O_QQ(21,i),RPAR_O_QQ(22,i),RPAR_O_QQ(23,i),
+     $          RPAR_O_QQ(24,i),RPAR_O_QQ(25,i),RPAR_O_QQ(26,i),
+     $          RPAR_O_QQ(27,i)
+
+
+         if ( abs(RDUM-QQ(I)).gt.0.001 ) then
+           write(*,*)'RPA correction table corrupted 3.',RDUM ,QQ(I),I
+         stop
+         endif
+C            print*, 'debug:RPAR_C_QQ',i,RPAR_C_QQ(1,i),RPAR_C_QQ(2,i)
      
-        enddo
-	
+         enddo
 
-       close(LUN)
-       iloadqerpa = 1
-       write(*,*) 'Completed loading RPA diff. table.'
- 100   continue
+        close(LUN1)
+        close(LUN2)
+        close(LUN3)
+        close(LUN4)
+
+        iloadqerpa = 1
+        write(*,*) 'Completed loading RPA diff. table.'
+ 100    continue
 C--------------------------------------------------------------------
-       NUMTAR = NUMBNDN+NUMBNDP
+        NUMTAR = NUMBNDN+NUMBNDP
 
+C Initialize variables
+   
         WeightQQ=0.
-        WeightA=0.
+        WeightE=0.
+	WeightA=0.
         ii=0
         jj=0
         RPALOW=0.
         RPAHIG=0.
+	FNELS_RPASCL_C=0.
+	FNELS_RPASCL_O=0.
+        dE=dEE
 C---------------------------------------------------------------------
 
 C       check if the nucleus is isoscaler, if not return 0.      
@@ -282,102 +336,145 @@ C        endif
         
 C       Following condition will change depending on what is decided after meeting nieves
 C       when these conditions are removed this function will return interpolated value for given A.
-        if(iabs(ipar).eq.12 .AND.(NUMTAR.ne.12) .and.(NUMTAR.ne.16) ) then
-         write(*,*) 'RPA correction tables not available for this mode.'
-         return 
+        if(iabs(ipar).eq.12.AND.(NUMTAR.ne.12).and.(NUMTAR.ne.16))then
+        write(*,*) 'RPA correction tables not available for this mode.'
+        return 
         endif
-        if( iabs(ipar).eq.14 .AND. (NUMTAR.ne.12) .and. (NUMTAR.ne.16)) then
-         write(*,*) 'RPA correction tables not available for this mode.'
-         return 
+        if(iabs(ipar).eq.14.AND.(NUMTAR.ne.12).and. (NUMTAR.ne.16))then
+        write(*,*) 'RPA correction tables not available for this mode.'
+        return 
         endif
 
 C---------------------------------------------------------------------
 C      set weight for interpolation over A
-        if((NUMTAR.lt.MASSNUM(1)).or.(NUMTAR.gt.MASSNUM(2))) then
-         return
+        if((NUMTAR.lt.MASSNUM(1)).or.(NUMTAR.gt.MASSNUM(2)))then
+        return
         endif
 
-        do 10 j=1,1
-         if( (NUMTAR.ge.MASSNUM(j) )
+        do 5 l=1,1
+        if( (NUMTAR.ge.MASSNUM(l) )
      $        .and.  
-     $        (NUMTAR.lt.MASSNUM(j+1))) then
-            jj = j
-            goto 10
+     $        (NUMTAR.lt.MASSNUM(l+1)))then
+            ll = l
+        goto 5
         else if(NUMTAR.eq.MASSNUM(2))then
- 	    jj=1
-         endif
- 10     continue
+ 	    ll=1
+        endif
+ 5      continue
       
-         WeightA
-     $     = (NUMTAR-MASSNUM(jj))
-     $     /(MASSNUM(jj+1)-MASSNUM(jj))
+        WeightA
+     $     = (REAL(NUMTAR)-REAL(MASSNUM(ll)))
+     $     /(REAL(MASSNUM(ll+1))-REAL(MASSNUM(ll)))
+
+
+
+C------------------------------------------------------------------------------------
+       	        
+	if (dE.le.E1(1))then
+               jj= 1
+        dE=E1(1)
+        goto 16
+        endif
+       
+        do 15 j=1,NEN-1
+        if( (dE.gt.E1(j) )
+     $        .and.  
+     $        (dE.le.E1(j+1)))then
+            jj = j
+        goto 15
+        else if(dE.gt.E1(NEN))then
+ 	    jj=NEN-1
+            dE=E1(NEN)
+        endif
+ 15     continue
+      
+ 16    continue 
+        WeightE    = (dE-E1(jj))
+     $         /(E1(jj+1)-E1(jj))
+ 
 
 C-----------------------------------------------------------------------------------
-           if (dQQ.le.QQ(1))then
+        if (dQQ.le.QQ(1))then
                ii= 1
-               goto 12
-           endif
-           do 11 i=1,NEN-1
-           
-            if (dQQ.gt.QQ(i) .and. dQQ.le.QQ(i+1)) then
+        goto 12
+        endif
+
+        do 11 i=1,NQQ-1
+        if (dQQ.gt.QQ(i) .and. dQQ.le.QQ(i+1))then
                ii = i
-               goto 11
-            endif
- 11        continue
+        goto 11
+        else if(dQQ.gt.QQ(NQQ)) then
+               ii = NQQ-1 
+        goto 11
+        endif
+ 11     continue
                      
- 12           WeightQQ = (dQQ-QQ(ii))/(QQ(ii+1)-QQ(ii))
+ 12     WeightQQ = (dQQ-QQ(ii))/(QQ(ii+1)-QQ(ii))
 	 
 C
-C ++ FOR E-NEUTRINO
+C ++ FOR Carbon target
 C
-*     set weight for interpolation of Q**2
+*       set weight for interpolation of Q**2
 
-        if (iabs(ipar).eq.12) then
-          if (ipar.eq.12) then
-              RPA11   = RPALE_QQ(jj,  ii)
-              RPA12   = RPALE_QQ(jj,  ii+1)
-              RPA21   = RPALE_QQ(jj+1,ii)
-              RPA22   = RPALE_QQ(jj+1,ii+1)
-          else
-               RPA11   = RPARE_QQ(jj  ,ii)
-               RPA12   = RPARE_QQ(jj  ,ii+1)
-               RPA21   = RPARE_QQ(jj+1,ii)
-               RPA22   = RPARE_QQ(jj+1,ii+1)
-               
-          endif
+        if (iabs(ipar).eq.12 .OR. iabs(ipar).eq.14)then
+        if (ipar.eq.12 .OR. ipar.eq.14) then
+              RPA11   = RPAL_C_QQ(jj,  ii)
+              RPA12   = RPAL_C_QQ(jj,  ii+1)
+              RPA21   = RPAL_C_QQ(jj+1,ii)
+              RPA22   = RPAL_C_QQ(jj+1,ii+1)
+            
+        else 
+               RPA11   = RPAR_C_QQ(jj  ,ii)
+               RPA12   = RPAR_C_QQ(jj  ,ii+1)
+               RPA21   = RPAR_C_QQ(jj+1,ii)
+               RPA22   = RPAR_C_QQ(jj+1,ii+1)
+ 
         endif
-
-C
-C ++ FOR MU-NEUTRINO
-C
-*      set weight for interpolation of Q**2
-        if (iabs(ipar).eq.14) then
-         if (ipar.eq.14) then
-               RPA11   = RPALM_QQ(jj,  ii)
-               RPA12   = RPALM_QQ(jj,  ii+1)
-               RPA21   = RPALM_QQ(jj+1,ii)
-               RPA22   = RPALM_QQ(jj+1,ii+1)
-
-         else
-               RPA11   = RPARM_QQ(jj  ,ii)
-               RPA12   = RPARM_QQ(jj  ,ii+1)
-               RPA21   = RPARM_QQ(jj+1,ii)
-               RPA22   = RPARM_QQ(jj+1 ,ii+1)
-
-          endif
         endif
-
 C    Bilinear Interpolation
 
-           RPALOW   = RPA11
+               RPALOW   = RPA11
      $              + (RPA12-RPA11)*WeightQQ
-           RPAHIG   = RPA21
+               RPAHIG   = RPA21
      $              + (RPA22-RPA21)*WeightQQ
 
 
-         FNELS_RPASCL = RPALOW
-     $        + (RPAHIG-RPALOW)*WeightA
- 
+               FNELS_RPASCL_C = RPALOW
+     $        + (RPAHIG-RPALOW)*WeightE
+
+C
+C ++ FOR Oxygen target
+C
+*      set weight for interpolation of Q**2
+        if (iabs(ipar).eq.12 .OR. iabs(ipar).eq.14)then
+        if (ipar.eq.12 .OR. ipar.eq.14) then
+               RPA11   = RPAL_O_QQ(jj,  ii)
+               RPA12   = RPAL_O_QQ(jj,  ii+1)
+               RPA21   = RPAL_O_QQ(jj+1,ii)
+               RPA22   = RPAL_O_QQ(jj+1,ii+1)
+        else
+               RPA11   = RPAR_O_QQ(jj  ,ii)
+               RPA12   = RPAR_O_QQ(jj  ,ii+1)
+               RPA21   = RPAR_O_QQ(jj+1,ii)
+               RPA22   = RPAR_O_QQ(jj+1 ,ii+1)
+
+        endif
+        endif
+  
+C    Bilinear Interpolation
+
+               RPALOW   = RPA11
+     $              + (RPA12-RPA11)*WeightQQ
+               RPAHIG   = RPA21
+     $              + (RPA22-RPA21)*WeightQQ
+
+C-------------------
+               FNELS_RPASCL_O = RPALOW
+     $         + (RPAHIG-RPALOW)*WeightE
+C-------------------
+                FNELS_RPASCL = FNELS_RPASCL_C
+     $         + (FNELS_RPASCL_O-FNELS_RPASCL_C)*WeightA
+  
                   
         RETURN
         END

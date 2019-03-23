@@ -63,7 +63,7 @@ C       2009.01.19 ; Y.Hayato  - PF table change from XX0 to XX5
 
       INTEGER I,II,J,JJ,IDUM,ILOADQECRS,ILOADSFQECRS,IQEMA
       REAL RDUM
-      CHARACTER*80 DUMSTR
+      CHARACTER*1024 DUMSTR
       integer*4      LENSTR
       external       lenstr
       integer*4      lenpath

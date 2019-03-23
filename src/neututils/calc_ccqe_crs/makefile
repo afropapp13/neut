@@ -15,7 +15,7 @@ FFLAGS      = ${FOPTFLAGS} ${FCOPTIONS} $(FCFLAGS)
 .F.o:
 	$(FC) -c $(FFLAGS) $(INCDIRS) -o $@ $<
 
-LIBOBJS = Initialize.o SetParameters.o bbba07.o CrossSection.o clenshaw_curtis.o bbba05.o bbba07_vec.o
+LIBOBJS = SetParameters.o bbba07.o CrossSection.o clenshaw_curtis.o bbba05.o Initialize.o # bbba07_vec.o
 LIB = librecipes.a
 $(LIB): $(LIBOBJS)
 	ar r $(LIB) $(LIBOBJS)

@@ -59,6 +59,10 @@ c ----- initialise parameters in sfevent required for table building
         single = .FALSE.
         first = .TRUE.
         ierr = 0
+
+c       need to set FPQE and PF too - otherwise default is zero
+        FPQE = 1
+        PFSF = 209
 *********************************************************************
 
 c ----- set parameters for interaction - neutrino, target, interaction
@@ -69,10 +73,14 @@ c ----- these are the defaults - others read in on the command line
         NUMATOM = 12
 
 ******* set value of MAQE to be used *******
-        XMAQE = 1.03
+        XMAQE = 1.21
 
 ******* set which form factors to use ******
         MDLQE = 402
+
+******* set scc if desired *******
+c        SCCFV = 1
+c        SCCFA = 1
 
 c ----- if commandline arguments given then read them in
 c ----- run makeTables.exe IPAR(PDG) Nucleus(e.g C12) NC/CC

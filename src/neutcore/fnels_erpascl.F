@@ -28,7 +28,7 @@ C
 #include "neutparams.h"      
 #include "qeerpa.h"
 #include "neutmodel.h"
-
+#include "neutfilepath.h"
    
 
       REAL dE
@@ -39,9 +39,13 @@ C
 
       INTEGER I,II,J,JJ,IDUM,ILOADQERPAE
       REAL RDUM
-      CHARACTER*80 DUMSTR
+      CHARACTER*1024 DUMSTR
       SAVE ILOADQERPAE
       DATA ILOADQERPAE/0/
+
+      integer*4      LENSTR
+      external       lenstr
+      integer*4      lenpath
 
       INTEGER*4 IDTAG
       SAVE      IDTAG
@@ -64,7 +68,6 @@ C     Enu for e/mu-nu
       REAL*4    ADUM(2)
 
       INTEGER*4 NEN
-      NEN=210
      
 C     
 C --  E table
@@ -113,6 +116,9 @@ C
      $		11.00,12.00,13.00,14.00,15.00,
      $          16.00,17.00,18.00,19.00,20.00/
 
+      NEN=210
+
+      lenpath = lenstr(crstblpath)
 
 C-------------------------------------------------------------     
 C
@@ -125,25 +131,24 @@ C
             return  
          endif
 
-       if( dE.lt. 0.0 .OR. dE.gt. 20.0) then
-       return 
-       endif
+        if( dE.lt. 0.0 .OR. dE.gt. 30.0) then
+        return 
+        endif
 
 C--------------------------------------------------------------
        if (iloadqerpae.ne.0) goto 100
        DUMSTR = 'RPA_corr_nu_E.dat'
-        
+       DUMSTR=CRSTBLPATH(1:lenpath)//DUMSTR        
         open(LUN,file=DUMSTR,form='formatted',status='old')  
         do i = 1,NEN           
-            read(LUN,*) IDUM,RDUM, RPALE_E(i)
-
+            read(LUN,*)IDUM,RDUM,RPALE_E(1,i),RPALE_E(2,i)
             if ( abs(RDUM-E(I)).gt.0.001 ) then
                write(*,*) 'RPA table seems to be corrupted.'
                stop
             endif
         enddo
         do i = 1,NEN
-              read(LUN,*) IDUM,RDUM, RPARE_E(i)
+              read(LUN,*)IDUM,RDUM,RPARE_E(1,i),RPARE_E(2,i)
 
             if ( abs(RDUM-E(I)).gt.0.001 ) then
                write(*,*) 'RPA table seems to be corrupted.'
@@ -151,16 +156,15 @@ C--------------------------------------------------------------
             endif
 	 enddo
          do i = 1,NEN
-            read(LUN,*) IDUM,RDUM, RPALM_E(i)
+            read(LUN,*)IDUM,RDUM,RPALM_E(1,i),RPALM_E(2,i)
    
             if ( abs(RDUM-E(I)).gt.0.001 ) then
                write(*,*) 'RPA table seems to be corrupted.'
                stop
             endif
 	 enddo 
-         do i = 1,NEN
-           
-            read(LUN,*) IDUM,RDUM, RPARM_E(i)
+         do i = 1,NEN           
+            read(LUN,*)IDUM,RDUM,RPARM_E(1,i),RPARM_E(2,i)
 
             if ( abs(RDUM-E(I)).gt.0.001 ) then
                write(*,*) 'RPA table seems to be corrupted.'
@@ -178,7 +182,7 @@ C--------------------------------------------------------------------
         WeightE=0.
         WeightA=0.
         ii=0
-        jj=0
+        jj=1
         RPALOW=0.
         RPAHIG=0.
 C---------------------------------------------------------------------        
@@ -191,55 +195,74 @@ C       this condition will be removed on getting Ca table, once A independence 
          write(*,*) 'RPA correction tables not available for this mode.'
          return 
         endif
- 	    jj=1
-           if (dE.le.E(1))then
-               ii= 1
-               goto 12
-           endif
+ 	   
+           if(dE.lt.E(1)) return            
+           
            do 11 i=1,NEN-1
            
-            if (dE.gt.E(i) .and. dE.le.E(i+1)) then
+           if (dE.ge.E(i) .and. dE.lt.E(i+1))then
                ii = i
                goto 11
             endif
+
  11        continue
                      
- 12           WeightE = (dE-E(ii))/(E(ii+1)-E(ii))
 	 
+          if (dE.ge.E(NEN)) then
+           ii = NEN-1
+          endif
+ 
+ 12       WeightE = (dE-E(ii))/(E(ii+1)-E(ii))
+
+          WeightA  = (REAL(NUMTAR)-REAL(MASSNUM(jj)))
+     $     /(REAL(MASSNUM(jj+1))-REAL(MASSNUM(jj)))
+
 C
 C ++ FOR E-NEUTRINO
 C
-     
-        if (iabs(ipar).eq.12) then
+ 
+          if (iabs(ipar).eq.12) then
           if (ipar.eq.12) then
-              RPA11   = RPALE_E(ii)
-              RPA12   = RPALE_E(ii+1)
+              
+               RPA11   = RPALE_E(jj,  ii)
+               RPA12   = RPALE_E(jj,  ii+1)
+               RPA21   = RPALE_E(jj+1,ii)
+               RPA22   = RPALE_E(jj+1,ii+1)          
           else
-               RPA11   = RPARE_E(ii)
-               RPA12   = RPARE_E(ii+1)
+               RPA11   = RPARE_E(jj  ,ii)
+               RPA12   = RPARE_E(jj  ,ii+1)
+               RPA21   = RPARE_E(jj+1,ii)
+              RPA22   = RPARE_E(jj+1,ii+1)
           endif
-        endif
+          endif
 
 C
 C ++ FOR MU-NEUTRINO
 C
   
-        if (iabs(ipar).eq.14) then
+         if (iabs(ipar).eq.14) then
          if (ipar.eq.14) then
-               RPA11   = RPALM_E(ii)
-               RPA12   = RPALM_E(ii+1)
-         else
-               RPA11   = RPARM_E(ii)
-               RPA12   = RPARM_E(ii+1)
-          endif
-        endif
+               RPA11   = RPALM_E(jj,  ii)
+               RPA12   = RPALM_E(jj,  ii+1)
+               RPA21   = RPALM_E(jj+1,ii)
+               RPA22   = RPALM_E(jj+1,ii+1)
+         else           
+               RPA11   = RPARM_E(jj  ,ii)
+               RPA12   = RPARM_E(jj  ,ii+1)
+               RPA21   = RPARM_E(jj+1,ii)
+               RPA22   = RPARM_E(jj+1,ii+1)
+         endif
+         endif
 
-C    Linear Interpolation
-
-           RPALOW   = RPA11
-     $              + (RPA12-RPA11)*WeightE
-
+C    Bilinear Interpolation
+      
+         RPALOW   = RPA11
+     $        + (RPA12-RPA11)*WeightE
+         RPAHIG   = RPA21
+     $        + (RPA22-RPA21)*WeightE
+     
          FNELS_ERPASCL = RPALOW
-                  
-        RETURN
-        END
+     $     + (RPAHIG-RPALOW)*WeightA
+                            
+         RETURN
+         END

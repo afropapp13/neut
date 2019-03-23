@@ -49,7 +49,7 @@ C
 
       INTEGER I,II,J,JJ,IDUM,ILOADMECCRS
       REAL RDUM
-      CHARACTER*80 DUMSTR
+      CHARACTER*1024 DUMSTR
       integer*4      LENSTR
       external       lenstr
       integer*4      lenpath

@@ -25,8 +25,6 @@
  @ Oct 20, 2010 - CA
    Made static consts `kModeMaMv' and `kModeNormAndMaMvShape' public to
    aid external configuration.
- @ Apr 13, 2011 - PD
-   Implemented for NEUT
 */
 //____________________________________________________________________________
 
@@ -78,12 +76,39 @@ void NReWeightNuXSecNCRES::Init(void)
   fNormTwkDial = 0.;
   fNormDef     = 1.;
   fNormCurr    = fNormDef;
+  /*
   fMaTwkDial   = 0.; 
-  fMaDef       = fortFns->XMASPIdef;
+  fMaDef       = fortFns->XMANCRESdef;
   fMaCurr      = fMaDef;
   fMvTwkDial   = 0.; 
-  fMvDef       = fortFns->XMVSPIdef;
+  fMvDef       = fortFns->XMVNCRESdef;
   fMvCurr      = fMvDef;
+  */
+  fMaNFFTwkDial   = 0.; 
+  fMaNFFDef       = fortFns->XMANFFRESdef;
+  fMaNFFCurr      = fMaNFFDef;
+  fMvNFFTwkDial   = 0.; 
+  fMvNFFDef       = fortFns->XMVNFFRESdef;
+  fMvNFFCurr      = fMvNFFDef;
+  fMaRSTwkDial   = 0.; 
+  fMaRSDef       = fortFns->XMARSRESdef;
+  fMaRSCurr      = fMaRSDef;
+  fMvRSTwkDial   = 0.; 
+  fMvRSDef       = fortFns->XMVRSRESdef;
+  fMvRSCurr      = fMvRSDef;
+  fCA5TwkDial   = 0.; 
+  fCA5Def       = fortFns->RNECA5Idef;
+  fCA5Curr      = fCA5Def;
+  fBgSclTwkDial   = 0.; 
+  fBgSclDef       = fortFns->RNEBGSCLdef;
+  fBgSclCurr      = fBgSclDef;
+  fIFFTwkDial   = 0; 
+  fIFFDef       = fortFns->NEIFFdef;
+  fIFFCurr      = fIFFDef;
+  fNRTypeTwkDial   = 0; 
+  fNRTypeDef       = fortFns->NENRTYPEdef;
+  fNRTypeCurr      = fNRTypeDef;
+
 
 }
 //_______________________________________________________________________________________
@@ -103,9 +128,9 @@ bool NReWeightNuXSecNCRES::IsHandled(NSyst_t syst)
      //  }
      //  break;
 
-     case ( kXSecTwkDial_MaNCRESshape ) : 
-     case ( kXSecTwkDial_MaNCRES ) :
-     case ( kXSecTwkDial_MvNCRES ) : 
+     case ( kXSecTwkDial_MaNCRESshape ) :
+       //case ( kXSecTwkDial_MaNCRES ) :
+       //case ( kXSecTwkDial_MvNCRES ) :
      case ( kXSecTwkDial_NormNCRES    ) : // Placed here temporarily, in GENIE it's only used with Shape as above
        //if(fMode==kModeMaMv) { 
           handle = true;  
@@ -113,6 +138,21 @@ bool NReWeightNuXSecNCRES::IsHandled(NSyst_t syst)
        //   handle = false; 
        //}
        break;
+
+     //case ( kSystNucl_PilessDcyNCRES ) :
+     //  handle = true;
+     //  break;
+
+     case ( kXSecTwkDial_MaNFFNCRES ) :
+     case ( kXSecTwkDial_MvNFFNCRES ) :
+     case ( kXSecTwkDial_MaRSNCRES ) :
+     case ( kXSecTwkDial_MvRSNCRES ) :
+     case ( kXSecTwkDial_CA5NCRES ) :
+     case ( kXSecTwkDial_BgSclNCRES ) :
+     case ( kXSecTwkDial_FFNCRES ) :
+     case ( kXSecTwkDial_TypeNCRES ) :
+       handle = true;
+     break;
 
      default:
           handle = false;
@@ -130,23 +170,57 @@ void NReWeightNuXSecNCRES::SetSystematic(NSyst_t syst, double twk_dial)
     case ( kXSecTwkDial_NormNCRES ) :
       fNormTwkDial = twk_dial;
       break;
-      
+
+
     // Following kludge necessary when using MaCCQEshape and MaCCQE in same
+      /*
     // instantiation (i.e. for weight tree generation      
     case ( kXSecTwkDial_MaNCRESshape ) :
       if (fMode==kModeNormAndMaShape)
 	fMaTwkDial = twk_dial;
       break;
 
-    case ( kXSecTwkDial_MaNCRES ) :
-      if (fMode==kModeMaMv)
-	fMaTwkDial = twk_dial;
-      break;
+     case ( kXSecTwkDial_MaNCRES ) :
+       if (fMode==kModeMaMv)
+	 fMaTwkDial = twk_dial;
+       break;
 
       //case ( kXSecTwkDial_MvNCRESshape ) :
-    case ( kXSecTwkDial_MvNCRES ) :
-      fMvTwkDial = twk_dial;
-      break;
+     case ( kXSecTwkDial_MvNCRES ) :
+       fMvTwkDial = twk_dial;
+       break;
+      */
+     case ( kXSecTwkDial_MaNFFNCRES ) :
+       fMaNFFTwkDial = twk_dial;
+       break;
+
+     case ( kXSecTwkDial_MvNFFNCRES ) :
+       fMvNFFTwkDial = twk_dial;
+       break;
+
+     case ( kXSecTwkDial_MaRSNCRES ) :
+       fMaRSTwkDial = twk_dial;
+       break;
+
+     case ( kXSecTwkDial_MvRSNCRES ) :
+       fMvRSTwkDial = twk_dial;
+       break;
+
+     case ( kXSecTwkDial_CA5NCRES ) :
+       fCA5TwkDial = twk_dial;
+       break;
+
+     case ( kXSecTwkDial_BgSclNCRES ) :
+       fBgSclTwkDial = twk_dial;
+       break;
+
+     case ( kXSecTwkDial_FFNCRES ) :
+       fIFFTwkDial = twk_dial;
+       break;
+
+     case ( kXSecTwkDial_TypeNCRES ) :
+       fNRTypeTwkDial = twk_dial;
+       break;
 
     default:
       break;
@@ -157,10 +231,28 @@ void NReWeightNuXSecNCRES::Reset(void)
 {
   fNormTwkDial = 0.;
   fNormCurr    = fNormDef;
+  /*
   fMaTwkDial   = 0.; 
   fMaCurr      = fMaDef;
   fMvTwkDial   = 0.; 
   fMvCurr      = fMvDef;
+  */
+  fMaNFFTwkDial   = 0.; 
+  fMaNFFCurr      = fMaNFFDef;
+  fMvNFFTwkDial   = 0.; 
+  fMvNFFCurr      = fMvNFFDef;
+  fMaRSTwkDial   = 0.; 
+  fMaRSCurr      = fMaRSDef;
+  fMvRSTwkDial   = 0.; 
+  fMvRSCurr      = fMvRSDef;
+  fCA5TwkDial   = 0.; 
+  fCA5Curr      = fCA5Def;
+  fBgSclTwkDial   = 0.; 
+  fBgSclCurr      = fBgSclDef;
+  fIFFTwkDial   = 0; 
+  fIFFCurr      = fIFFDef;
+  fNRTypeTwkDial   = 0; 
+  fNRTypeCurr      = fNRTypeDef;
 
   this->Reconfigure();
 }
@@ -175,26 +267,57 @@ void NReWeightNuXSecNCRES::Reconfigure(void)
      fMaCurr = fMaDef * (1. + fMaTwkDial * fracerr_ma);
      fMvCurr = fMvDef * (1. + fMvTwkDial * fracerr_mv);
   }
-  
+
   else if(fMode==kModeNormAndMaShape) { 
     double fracerr_mash = fracerr->OneSigmaErr(kXSecTwkDial_MaNCRESshape);
-    fMaCurr   = fMaDef   * (1. + fMaTwkDial   * fracerr_mash);     
+    fMaCurr   = fMaDef   * (1. + fMaTwkDial   * fracerr_mash);    
     //double fracerr_mvsh = fracerr->OneSigmaErr(kXSecTwkDial_MvNCRESshape);
-     //fMvCurr   = fMvDef   * (1. + fMvTwkDial   * fracerr_mvsh);
+    //fMvCurr   = fMvDef   * (1. + fMvTwkDial   * fracerr_mvsh);
   }
 
-  double fracerr_norm = fracerr->OneSigmaErr(kXSecTwkDial_NormNCRES);
-  fNormCurr = fNormDef * (1. + fNormTwkDial * fracerr_norm);
+     double fracerr_norm = fracerr->OneSigmaErr(kXSecTwkDial_NormNCRES);
+     fNormCurr = fNormDef * (1. + fNormTwkDial * fracerr_norm);     
 
+
+     double fracerr_nffma = fracerr->OneSigmaErr(kXSecTwkDial_MaNFFNCRES);
+     double fracerr_nffmv = fracerr->OneSigmaErr(kXSecTwkDial_MvNFFNCRES);
+     fMaNFFCurr = fMaNFFDef * (1. + fMaNFFTwkDial * fracerr_nffma);
+     fMvNFFCurr = fMvNFFDef * (1. + fMvNFFTwkDial * fracerr_nffmv);
+
+     double fracerr_rsma = fracerr->OneSigmaErr(kXSecTwkDial_MaRSNCRES);
+     double fracerr_rsmv = fracerr->OneSigmaErr(kXSecTwkDial_MvRSNCRES);
+     fMaRSCurr = fMaRSDef * (1. + fMaRSTwkDial * fracerr_rsma);
+     fMvRSCurr = fMvRSDef * (1. + fMvRSTwkDial * fracerr_rsmv);
+
+     double fracerr_ca5 = fracerr->OneSigmaErr(kXSecTwkDial_CA5NCRES);
+     double fracerr_bgscl = fracerr->OneSigmaErr(kXSecTwkDial_BgSclNCRES);
+     fCA5Curr = fCA5Def * (1. + fCA5TwkDial * fracerr_ca5);
+     fBgSclCurr = fBgSclDef * (1. + fBgSclTwkDial * fracerr_bgscl);
+
+     double fracerr_iff = fracerr->OneSigmaErr(kXSecTwkDial_FFNCRES);
+     fIFFCurr = int(fIFFDef + fracerr_iff * fIFFTwkDial);
+
+     double fracerr_type = fracerr->OneSigmaErr(kXSecTwkDial_TypeNCRES); 
+     fNRTypeCurr = int(fNRTypeDef + fracerr_type * fNRTypeTwkDial);
+     //fIFFCurr   = TMath::Max(0, fIFFTwkDial  );
+     //fNRTypeCurr   = TMath::Max(0, fNRTypeTwkDial  );
+     fIFFCurr = TMath::Max(0, fIFFCurr);
   fNormCurr = TMath::Max(0., fNormCurr);
   fMaCurr   = TMath::Max(0., fMaCurr  );
   fMvCurr   = TMath::Max(0., fMvCurr  );
+  fMaNFFCurr   = TMath::Max(0., fMaNFFCurr  );
+  fMvNFFCurr   = TMath::Max(0., fMvNFFCurr  );
+  fMaRSCurr   = TMath::Max(0., fMaRSCurr  );
+  fMvRSCurr   = TMath::Max(0., fMvRSCurr  );
+  fCA5Curr   = TMath::Max(0., fCA5Curr  );
+  fBgSclCurr   = TMath::Max(0., fBgSclCurr  );
 
 }
 //_______________________________________________________________________________________
 double NReWeightNuXSecNCRES::CalcWeight() 
 {
   bool is_res = modeDefn.isNCRES(nework_.modene);
+  
   if(!is_res) return 1.;
 
   double wght = 1;
@@ -206,7 +329,7 @@ double NReWeightNuXSecNCRES::CalcWeight()
   if(nupdg==kPdgAntiNuE  && !fRewNuebar ) return 1.;
 
   //if(fMode==kModeMaMv) {
-     wght *= this->CalcWeightMaMv()*this->CalcWeightNorm();
+    wght *= this->CalcWeightMaMv()*this->CalcWeightNorm();
   //} 
   //else 
   //if(fMode==kModeNormAndMaShape) {
@@ -230,7 +353,7 @@ double NReWeightNuXSecNCRES::CalcChisq()
      chisq += TMath::Power(fNormTwkDial, 2.);
   //   chisq += TMath::Power(fMaTwkDial,   2.);
   //   chisq += TMath::Power(fMvTwkDial,   2.);
-  //}
+  //}  
 
   return chisq;
 }
@@ -247,6 +370,14 @@ double NReWeightNuXSecNCRES::CalcWeightNorm()
 double NReWeightNuXSecNCRES::CalcWeightMaMv() 
 {
   bool tweaked = 
+     (TMath::Abs(fMaNFFTwkDial) > controls::kASmallNum) ||
+     (TMath::Abs(fMvNFFTwkDial) > controls::kASmallNum) ||
+     (TMath::Abs(fMaRSTwkDial) > controls::kASmallNum) ||
+     (TMath::Abs(fMvRSTwkDial) > controls::kASmallNum) ||
+     (TMath::Abs(fCA5TwkDial) > controls::kASmallNum) ||
+     (TMath::Abs(fBgSclTwkDial) > controls::kASmallNum) ||
+     (TMath::Abs(fIFFTwkDial) > controls::kASmallNum) ||
+     (TMath::Abs(fNRTypeTwkDial) > controls::kASmallNum) ||
      (TMath::Abs(fMaTwkDial) > controls::kASmallNum) ||
      (TMath::Abs(fMvTwkDial) > controls::kASmallNum);
   if(!tweaked) return 1.0;
@@ -269,14 +400,23 @@ double NReWeightNuXSecNCRES::CalcWeightMaMv()
     return 1;
   }
 
-  nemdls_.xmaspi = fMaCurr;
-  nemdls_.xmvspi = fMvCurr;
+  //nemdls_.xmaspi = fMaCurr;
+  //nemdls_.xmvspi = fMvCurr;
+  neut1pi_.xmanffres = fMaNFFCurr;
+  neut1pi_.xmvnffres = fMvNFFCurr;
+  neut1pi_.xmarsres = fMaRSCurr;
+  neut1pi_.xmvrsres = fMvRSCurr;
+  neut1pi_.neiff    = fIFFCurr;
+  neut1pi_.nenrtype = fNRTypeCurr;
+  neut1pi_.rneca5i  = fCA5Curr;
+  neut1pi_.rnebgscl = fBgSclCurr;
+
   fortFns->Reconfigure();
-  
+
 #ifdef _N_REWEIGHT_NCRES_DEBUG_
   fortFns->print_allparams();
 #endif
-  
+
   float new_xsec   = fortFns->evdifcrs();
   float new_weight = (new_xsec/old_xsec);
   //float new_weight = old_weight * (new_xsec/old_xsec);
@@ -318,7 +458,7 @@ double NReWeightNuXSecNCRES::CalcWeightMaMv()
     else if (abs(nework_.modene)==34) imode = neutTotCrs->neutmode34;
     else {
       //  cout << "NReWeightNuXSecNCRES::CalcWeightMa() Warning: Cannot reweight MaShape for mode = " 
-      //       << nework_.modene << endl;
+      //       << nework_.modene << ", setting weight = 1" << endl;
       return 1;
     }
     
@@ -338,7 +478,6 @@ double NReWeightNuXSecNCRES::CalcWeightMaMv()
     new_weight *= old_tot_xsec / new_tot_xsec ;
   }
 
-
   if (isinf(new_weight) || isnan(new_weight)) {
     cout << "NReWeightNuXSecNCRES::CalcWeightMa() Warning: new_weight is infinite, setting to 1" << endl;
     new_weight = 1;
@@ -348,9 +487,9 @@ double NReWeightNuXSecNCRES::CalcWeightMaMv()
   cout << "new weight = " << new_weight << endl;
 #endif
 
-
   return new_weight;
 }
+
 //_______________________________________________________________________________________
 double NReWeightNuXSecNCRES::CalcWeightMaMvShape() 
 {

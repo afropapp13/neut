@@ -50,9 +50,14 @@ NFortFns * NFortFns::Instance()
     fInstance->XMASPIdef  = 0.95;
     fInstance->XMVSPIdef  = 0.84;
     fInstance->NEIFFdef   = 1;
-	fInstance->NENRTYPEdef= 0;
-	fInstance->RNECA5Idef = 1.01;
+    fInstance->NENRTYPEdef= 0;
+    fInstance->RNECA5Idef = 1.01;
     fInstance->RNEBGSCLdef= 1.30;
+
+    fInstance->XMANFFRESdef = 0.95;
+    fInstance->XMVNFFRESdef = 0.84;
+    fInstance->XMARSRESdef = 1.21;
+    fInstance->XMVRSRESdef = 0.84;
 	
     fInstance->XMACOHdef  = 1.0;
     fInstance->RAD0NUdef  = 1.0;
@@ -62,7 +67,7 @@ NFortFns * NFortFns::Instance()
 
     fInstance->NECOHEPIdef  = 0;
     fInstance->MDLQEAFdef   = 0;
-    fInstance->MDLQEdef     = 1;
+    fInstance->MDLQEdef     = 402;
 
     fInstance->FEFQEdef   = 1.0;
     fInstance->FEFQEHdef  = 1.8;
@@ -70,6 +75,10 @@ NFortFns * NFortFns::Instance()
     fInstance->FEFABSdef  = 1.1;
     fInstance->FEFCXdef   = 1.0;
     fInstance->FEFCXHdef  = 1.8;
+
+    fInstance->SCCFVdef = 0.0;
+    fInstance->SCCFAdef = 0.0;
+    fInstance->FPQEdef = 1.0;
 
     fInstance->SetDefaults();
   }
@@ -110,6 +119,21 @@ void NFortFns::SetMCDefaultVal(NSyst_t syst, double val) {
     MDLQEdef = val;
     break;
     
+  case ( kXSecTwkDial_SCCVecQE ) :
+    cout << SCCFVdef;
+    SCCFVdef = val;
+    break;
+
+  case ( kXSecTwkDial_SCCAxlQE ) :
+    cout << SCCFAdef;
+    SCCFAdef = val;
+    break;
+    
+  case ( kXSecTwkDial_PsFF ) :
+    cout << FPQEdef;
+    FPQEdef = val;
+    break;
+
   case ( kSystNucl_CCQEPauliSupViaKF ) :
     cout << KAPPdef;
     KAPPdef = val;
@@ -127,6 +151,46 @@ void NFortFns::SetMCDefaultVal(NSyst_t syst, double val) {
     cout << NEBODEKdef;
     NEBODEKdef = val;
     break;
+
+  case ( kXSecTwkDial_FFRES ) :
+    cout << NEIFFdef;
+    NEIFFdef = val;
+    break;
+
+  case ( kXSecTwkDial_TypeRES ) :
+    cout << NENRTYPEdef;
+    NENRTYPEdef = val;
+    break;
+
+  case ( kXSecTwkDial_CA5RES ) :
+    cout << RNECA5Idef;
+    RNECA5Idef = val;
+    break;
+
+  case ( kXSecTwkDial_BgSclRES ) :
+    cout << RNEBGSCLdef;
+    RNEBGSCLdef = val;
+    break;
+
+    //if (NEIFFdef!=0) {
+    case ( kXSecTwkDial_MaRES ) :
+      cout << XMASPIdef;
+      XMASPIdef = val;
+      break;
+    case ( kXSecTwkDial_MvRES ) :
+      cout << XMVSPIdef;
+      XMVSPIdef = val;
+      break;
+      //} else {
+      //case ( kXSecTwkDial_MaRES ) :
+      //cout << XMARESdef;
+      //XMASPIdef = val;
+      //break;
+      //case ( kXSecTwkDial_MvRES ) :
+      //cout << XMVRESdef;
+      //XMVSPIdef = val;
+      //break;
+      //}
 
   default:
     cout << "NFortFns::SetMCDefaultVal() Warning: " << NSyst::AsString(syst).c_str() << " not implemented." << endl;
@@ -149,18 +213,30 @@ void NFortFns::SetDefaults() {
   nemdls_.xmvqe = XMVQEdef;
   nemdls_.kapp  = KAPPdef;
 
+  nemdls_.sccfv = SCCFVdef;
+  nemdls_.sccfa = SCCFAdef;
+  nemdls_.fpqe = FPQEdef;
+
   //  nemdls_.xmaspi = XMASPIdef;
   //  nemdls_.xmvspi = XMVSPIdef;
-  nemdls_.xmares = XMARESdef;
-  nemdls_.xmvres = XMVRESdef;
+  //nemdls_.xmares = XMARESdef;
+  //nemdls_.xmvres = XMVRESdef;
 
-  nemdls_.xmaspi    = XMASPIdef;
-  nemdls_.xmvspi    = XMVSPIdef;
-  nemdls_.iffspi    = NEIFFdef;
-  nemdls_.nrtypespi = NENRTYPEdef;
-  nemdls_.rca5ispi  = RNECA5Idef;
-  nemdls_.rbgsclspi = RNEBGSCLdef;
-	
+  //nemdls_.xmaspi    = XMASPIdef;
+  //nemdls_.xmvspi    = XMVSPIdef;
+  //nemdls_.iffspi    = NEIFFdef;
+  //nemdls_.nrtypespi = NENRTYPEdef;
+  //nemdls_.rca5ispi  = RNECA5Idef;
+  //nemdls_.rbgsclspi = RNEBGSCLdef;
+  
+  neut1pi_.xmanffres = XMANFFRESdef;
+  neut1pi_.xmvnffres = XMVNFFRESdef;
+  neut1pi_.xmarsres = XMARSRESdef;
+  neut1pi_.xmvrsres = XMVRSRESdef;
+  neut1pi_.neiff    = NEIFFdef;
+  neut1pi_.nenrtype = NENRTYPEdef;
+  neut1pi_.rneca5i  = RNECA5Idef;
+  neut1pi_.rnebgscl = RNEBGSCLdef;
 
   nemdls_.xmacoh = XMACOHdef;
   nemdls_.rad0nu = RAD0NUdef;
@@ -281,8 +357,18 @@ void NFortFns::print_allparams() {
   cout << "nemdls_.kapp = " <<          nemdls_.kapp      << endl;  
   cout << "nemdls_.xmaspi = " <<      nemdls_.xmaspi     << endl;
   cout << "nemdls_.xmvspi = " <<      nemdls_.xmvspi   << endl;
+  cout << "nemdls_.xmares = " <<      nemdls_.xmares     << endl;
+  cout << "nemdls_.xmvres = " <<      nemdls_.xmvres   << endl;
   cout << "nemdls_.xmacoh = " <<         nemdls_.xmacoh   << endl;    
   cout << "nemdls_.rad0nu = " <<         nemdls_.rad0nu   << endl;    
+  cout << "neut1pi_.xmanffres = " <<   neut1pi_.xmanffres << endl;
+  cout << "neut1pi_.xmvnffres = " <<   neut1pi_.xmvnffres << endl;
+  cout << "neut1pi_.xmarsres = " <<   neut1pi_.xmarsres << endl;
+  cout << "neut1pi_.xmvrsres = " <<   neut1pi_.xmvrsres << endl;
+  cout << "neut1pi_.neiff = " <<   neut1pi_.neiff << endl;
+  cout << "neut1pi_.nenrtype = " <<   neut1pi_.nenrtype << endl;
+  cout << "neut1pi_.rneca5i = " <<   neut1pi_.rneca5i << endl;
+  cout << "neut1pi_.rnebgscl = " <<   neut1pi_.rnebgscl << endl;
   cout << "neutdis_.nepdf = " <<       neutdis_.nepdf   << endl;  
   cout << "neutdis_.nebodek = " <<     neutdis_.nebodek  << endl;  
   cout << "neffpr_.fefqe = " <<     neffpr_.fefqe   << endl;
@@ -294,7 +380,7 @@ void NFortFns::print_allparams() {
 
   // Fixed parameters
   cout << endl << "-- These depend on target nucleus --" << endl;
-  
+
   cout << "neuttarget_.numbndn = " << neuttarget_.numbndn << endl;
   cout << "neuttarget_.numbndp = " <<   neuttarget_.numbndp << endl;
   cout << "neuttarget_.numfrep = " <<  neuttarget_.numfrep<< endl;
@@ -305,10 +391,14 @@ void NFortFns::print_allparams() {
   cout << "nenupr_.vnuini = " << nenupr_.vnuini<< endl;
   cout << "nenupr_.vnufin = " << nenupr_.vnufin<< endl;
 
-  cout << "nemdls_.mdlqeaf    = (0)" << nemdls_.mdlqeaf << endl;
-  cout << "nemdls_.mdlqe      = (1)" << nemdls_.mdlqe   << endl;
-  
   cout << endl << "-- These are fixed parameters [should = ()] --" << endl;
+
+  cout << "nemdls_.mdlqeaf    = (0)" << nemdls_.mdlqeaf << endl;
+  cout << "nemdls_.mdlqe      = (402)" << nemdls_.mdlqe   << endl;
+  cout << "nemdls_.sccfv      = (0)" << nemdls_.sccfv   << endl;
+  cout << "nemdls_.sccfa      = (0)" << nemdls_.sccfa   << endl;
+  cout << "nemdls_.fpqe       = (1)" << nemdls_.fpqe   << endl;
+
   cout << "nenupr_.iformlen = (1)" <<     nenupr_.iformlen   << endl;
   cout << "neutcard_.nefrmflg = (0)" <<  neutcard_.nefrmflg<< endl; 
   cout << "neutcard_.nepauflg = (0)" <<   neutcard_.nepauflg<< endl; 

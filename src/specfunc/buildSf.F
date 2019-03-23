@@ -32,6 +32,8 @@
 c include sf arrays, variables etc
 c sfArray built as (p, E)
 #include "specfunc.h"
+#include "neutfilepath.h"
+
         double precision p, E1, E2, E3, E4
         double precision val1, val2, val3, val4
         integer p_iterator, E_iterator
@@ -40,8 +42,16 @@ c sfArray built as (p, E)
         integer pMax, EMax
         integer E_iteratorMax
 
+        CHARACTER*1024 FNAME
+        integer*4      LENSTR
+        external       lenstr
+        integer*4      lenpath
+      
+        lenpath = lenstr(CRSTBLPATH)
 c load file and fill array with values
-        open(99, file='qelSfData/sf/pke12_tot.grid', status='old')
+        FNAME = 'qelSfData/sf/pke12_tot.grid'
+        FNAME = CRSTBLPATH(1:lenpath)//FNAME
+        open(99, file=FNAME, status='old')
         
         read(99, *) ERes, pRes
         read(99, *) EMin, pMin
@@ -122,6 +132,8 @@ c set all values outside defined range to zero
 c include sf arrays, variables etc
 c sfArray built as (p, E)
 #include "specfunc.h"
+#include "neutfilepath.h"
+
         double precision p, E1, E2, E3, E4
         double precision val1, val2, val3, val4
         integer p_iterator, E_iterator
@@ -130,8 +142,16 @@ c sfArray built as (p, E)
         integer pMax, EMax
         integer E_iteratorMax
 
+        CHARACTER*1024 FNAME
+        integer*4      LENSTR
+        external       lenstr
+        integer*4      lenpath
+      
+        lenpath = lenstr(CRSTBLPATH)
 c load file and fill array with values
-        open(99, file="qelSfData/sf/pke16.grid", status='old')
+        FNAME = 'qelSfData/sf/pke16.grid'
+        FNAME = CRSTBLPATH(1:lenpath)//FNAME
+        open(99, file=FNAME, status='old')
         
         read(99, *) ERes, pRes
         read(99, *) EMin, pMin
@@ -216,6 +236,8 @@ c set all values outside defined range to zero
 c include sf arrays, variables etc
 c sfArray built as (p, E)
 #include "specfunc.h"
+#include "neutfilepath.h"
+
         double precision p, E1, E2, E3, E4
         double precision val1, val2, val3, val4
         integer p_iterator, E_iterator
@@ -224,8 +246,16 @@ c sfArray built as (p, E)
         integer pMax, EMax
         integer E_iteratorMax
 
+        CHARACTER*1024 FNAME
+        integer*4      LENSTR
+        external       lenstr
+        integer*4      lenpath
+      
+        lenpath = lenstr(CRSTBLPATH)
 c load file and fill array with values
-        open(99, file='qelSfData/sf/pke56_tot.grid', status='old')
+        FNAME = 'qelSfData/sf/pke56_tot.grid'
+        FNAME = CRSTBLPATH(1:lenpath)//FNAME
+        open(99, file=FNAME, status='old')
         
         read(99, *) ERes, pRes
         read(99, *) EMin, pMin

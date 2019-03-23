@@ -79,6 +79,31 @@ namespace rew   {
    double fMvDef;        ///<
    double fMvCurr;       ///<
 
+   double fMaNFFTwkDial;
+   double fMaNFFDef;
+   double fMaNFFCurr;
+   double fMvNFFTwkDial;
+   double fMvNFFDef;
+   double fMvNFFCurr;
+   double fMaRSTwkDial;
+   double fMaRSDef;
+   double fMaRSCurr;
+   double fMvRSTwkDial;
+   double fMvRSDef;
+   double fMvRSCurr;
+   double fCA5TwkDial;
+   double fCA5Def;
+   double fCA5Curr;
+   double fBgSclTwkDial;
+   double fBgSclDef;
+   double fBgSclCurr;
+   int fIFFTwkDial;
+   int fIFFDef;
+   int fIFFCurr;
+   int fNRTypeTwkDial;
+   int fNRTypeDef;
+   int fNRTypeCurr;
+
    NFortFns * fortFns;
    NModeDefn modeDefn;
 

@@ -39,7 +39,7 @@ C       2011.03.03 ; Y.Hayato  - For neutral current
 
       INTEGER I,II,J,JJ,IDUM,ILOADSFELCRS,IQEMA
       REAL RDUM
-      CHARACTER*80 DUMSTR
+      CHARACTER*1024 DUMSTR
 
       integer*4      LENSTR
       external       lenstr

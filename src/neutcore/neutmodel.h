@@ -31,6 +31,9 @@ C-- Second class form factors for CCQE (both 0.0 as default)
 C  SCCFV
 C  SCCFA
 C
+C-- Error term for pseudoscalar form factor for CCQE
+C  QEFP
+C
 C-- Model for Single pion production
 C  MDLSPI = 1 ; Rein Sehgal
 C
@@ -59,7 +62,7 @@ C            121 ; GRV98 Bodek
      $          KAPP,XMACOH,RAD0NU
       INTEGER*4 IFFSPI,NRTYPESPI
       REAL*4    RCA5ISPI,RBGSCLSPI
-      REAL*4    SCCFV, SCCFA
+      REAL*4    SCCFV, SCCFA, FPQE
       REAL*4    PFSF
 
       
@@ -69,5 +72,5 @@ C            121 ; GRV98 Bodek
      $               KAPP,XMACOH,RAD0NU,
      $               IFFSPI,NRTYPESPI,RCA5ISPI,RBGSCLSPI,
      $               XMARES,XMVRES,
-     $               SCCFV, SCCFA,
+     $               SCCFV, SCCFA, FPQE,
      $               PFSF

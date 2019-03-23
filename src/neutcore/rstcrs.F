@@ -64,7 +64,7 @@
       REAL ETBL(IEMAX),XNUCRS(17,2,IEMAX)
 
       character*15 fname_ref(3)
-      character*100 fname
+      character*1024 fname
       integer*4      LENSTR
       external       lenstr
       integer*4      lenpath

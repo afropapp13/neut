@@ -31,13 +31,17 @@
       IMPLICIT NONE
 #include "necard.h"
 #include "neutparams.h"
+#include "neutfilepath.h"
 
       REAL    ENEU
       REAL TEMP0,TEMP1,TEMP2
       REAL*4 DUM, RLU
       INTEGER IPAR,IERR,I,J,IPMODE(6)
       REAL PLEP(3), ELEP
-      CHARACTER*80 FILENAME
+      CHARACTER*1024 FILENAME
+      integer*4      LENSTR
+      external       lenstr
+      integer*4      lenpath
       INTEGER COUNTER
 C  Lookup function return interger bin labels for a given Enu
       INTEGER ELOOKUP, PLOOKUP, TLOOKUP
@@ -80,18 +84,6 @@ C  Weight to scale the cross-section table for given value of Atomic mass
       REAL WEIGHT
  
        
-C NOTE: throughout this code: E = neutrino energy, P = Tmu (muon kinetic energy), T = cos(thetaMu) (neutrino-muon opening angle)
-
-      NEVALS=92
-      NPVALS=31
-      NTVALS=31
-
-C Q3MAX_DATA is the Q3 limit used to make the tables
-C Q3MAX is the Q3 limit you want to actually use (must be <= Q3MAX_DATA)
-
-      Q3MAX_DATA=1.5
-      Q3MAX=1.2
-
 C
 C Table with hardcoded Enu values. These must correspond to points in the files in crsdat
 C
@@ -115,6 +107,20 @@ C
      $               1.65  , 1.8   , 1.9   , 2     , 2.5   , 
      $               3     , 4     , 6     , 7.5   , 10    , 
      $               20    , 30/
+
+C NOTE: throughout this code: E = neutrino energy, P = Tmu (muon kinetic energy), T = cos(thetaMu) (neutrino-muon opening angle)
+
+      NEVALS=92
+      NPVALS=31
+      NTVALS=31
+
+C Q3MAX_DATA is the Q3 limit used to make the tables
+C Q3MAX is the Q3 limit you want to actually use (must be <= Q3MAX_DATA)
+
+      Q3MAX_DATA=1.5
+      Q3MAX=1.2
+
+      lenpath = lenstr(crstblpath)
 
       CALL MCMASS(IPMODE(4),LEPMASS)
       LEPMASS = LEPMASS*1.0E-3
@@ -251,6 +257,7 @@ C Now get xsec data from tables
       WRITE(FILENAME,FILEFORM)
      $      'Nieves_',IPMODE(1),'_',ATOMSTRING,'_',EINT, '.dat'
 
+      FILENAME=CRSTBLPATH(1:lenpath)//FILENAME
       
 C Get values from file 
       OPEN(unit=21,file=FILENAME)
@@ -284,6 +291,8 @@ C (or lower edge of bin above, if xsec is to be extrapolated outside range of En
       WRITE(FILENAME,FILEFORM)
      $      'Nieves_', IPMODE(1),'_',ATOMSTRING,'_',(EINT+1), '.dat'
      
+      FILENAME=CRSTBLPATH(1:lenpath)//FILENAME
+
       OPEN(unit=31,file=FILENAME)
       DO 320 I=1,NTVALS
         DO 330 J=1,NPVALS

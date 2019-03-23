@@ -1,3 +1,5 @@
+EVCT-NEVT 1000
+
 EVCT-IDPT 14
 C
 C fixed  VERTEX ; EVCT-MPOS 1
@@ -424,3 +426,5 @@ C      0 : Read RANDOM number from FILE
 C      1 : Generating RANDOM SEED from the time
 C
 NEUT-RAND 1
+
+NEUT-CRSPATH '../crsdat'

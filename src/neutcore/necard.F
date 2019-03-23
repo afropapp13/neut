@@ -153,6 +153,9 @@ C     (NOTE: default is -1, gets set elsewhere correctly if not user-defined)
 C     relatve size of second class currents (vector and axial)
       SCCFV = 0.0
       SCCFA = 0.0
+
+C     RT: adding error parameter for FP(Q2=0)
+      FPQE = 1.0
       
 C --- get card file name (1st argument of the program)
 
@@ -178,7 +181,8 @@ C -- extract NEUT card
       CALL FFINIT(0)
       CALL FFSET('LINP', 91)
       CALL FFSET('SIZE', 9)
-      CALL FFKEY('CRSPATH',CRSTBLPATH, 1,'CHAR')
+      CALL FFSET('LENG', 100)
+      CALL FFKEY('CRSPATH',CRSTBLPATH,80,'CHAR')
       CALL FFKEY('FERM',NEFRMFLG, 1,'INTEGER')
       CALL FFKEY('PAUL',NEPAUFLG, 1,'INTEGER')
       CALL FFKEY('NEFF',NENEFO16, 1,'INTEGER')
@@ -239,6 +243,8 @@ C      CALL FFKEY('MVSPI' ,XMVSPI ,1,'REAL')
       CALL FFKEY('SCCFV',SCCFV,1,'REAL')
       CALL FFKEY('SCCFA',SCCFA,1,'REAL')
       
+      CALL FFKEY('FPQE',FPQE,1,'REAL')
+
       CALL FFGO
       CLOSE(UNIT=91)
       COMMAND = '/bin/rm '//TMPFIL
@@ -259,7 +265,7 @@ C----------------- Loop twice to override default parameters
       CALL FFINIT(0)
       CALL FFSET('LINP', 91)
       CALL FFSET('SIZE', 9)
-
+      CALL FFSET('LENG', 100)
 C-- Initialize parameters here to allow override
 
       CALL FFKEY('PFSURF',PFSURF,1,'REAL')
@@ -332,6 +338,7 @@ C      WRITE(6,*) 'NECARD : MVSPI  = ',XMVSPI
       WRITE(6,*) 'NECARD : R0COH   = ',RAD0NU
       WRITE(6,*) 'NECARD : SCCFV     = ',SCCFV
       WRITE(6,*) 'NECARD : SCCFA     = ',SCCFA
+      WRITE(6,*) 'NECARD : FPQE      = ',FPQE
       WRITE(6,*) 'NECARD : PFSF      = ',PFSF
  
       IF (NEMODFLG.EQ.-1) THEN

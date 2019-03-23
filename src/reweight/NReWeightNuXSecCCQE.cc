@@ -46,7 +46,7 @@
 //#define _N_REWEIGHT_CCQE_DEBUG_
 
 using namespace neut;
-using namespace neut::rew;
+using namespace rew;
 
 using std::cout;
 using std::endl;
@@ -90,9 +90,13 @@ void NReWeightNuXSecCCQE::Init(void)
   fAxlFFDef       = fortFns->MDLQEAFdef;
   fAxlFFCurr      = fAxlFFDef;
 
-  fVecFFTwkDial   = 0.; 
   fVecFFDef       = fortFns->MDLQEdef;
   fVecFFCurr      = fVecFFDef;
+  fVecFFTwkDial   = 0;
+
+  fVecFFOutDef     = fortFns->MDLQEdef; 
+  fVecFFOutCurr    = fVecFFOutDef;
+  fVecFFOutTwkDial = 0;
 
   fPfTwkDial   = 0.; 
   fPfDef       = 0;  // Set in nesetfgparms.F  
@@ -106,6 +110,17 @@ void NReWeightNuXSecCCQE::Init(void)
   fKapDef       = fortFns->KAPPdef;
   fKapCurr      = fKapDef;
  
+  fSCCVecTwkDial  = 0;
+  fSCCVecDef      = fortFns->SCCFVdef;
+  fSCCVecCurr     = fSCCVecDef;
+
+  fSCCAxlTwkDial  = 0;
+  fSCCAxlDef      = fortFns->SCCFAdef;
+  fSCCAxlCurr     = fSCCAxlDef;
+
+  fPsFFTwkDial  = 0;
+  fPsFFDef      = fortFns->FPQEdef;
+  fPsFFCurr     = fPsFFDef;
 }
 //_______________________________________________________________________________________
 bool NReWeightNuXSecCCQE::IsHandled(NSyst_t syst)
@@ -136,9 +151,16 @@ bool NReWeightNuXSecCCQE::IsHandled(NSyst_t syst)
 
   case ( kXSecTwkDial_AxlFFCCQE ) :
   case ( kXSecTwkDial_VecFFCCQE ) :
+  case ( kXSecTwkDial_VecFFCCQE_out ) :
   case ( kSystNucl_CCQEPauliSupViaKF ) :  
   case ( kSystNucl_CCQEFermiSurfMom  ) :  
   case ( kSystNucl_CCQEBindingEnergy ) :  
+    handle = true;  
+  break;
+
+  case ( kXSecTwkDial_SCCVecQE ) :
+  case ( kXSecTwkDial_SCCAxlQE ) :
+  case ( kXSecTwkDial_PsFF ) :
     handle = true;  
   break;
 
@@ -176,6 +198,9 @@ void NReWeightNuXSecCCQE::SetSystematic(NSyst_t syst, double twk_dial)
    case ( kXSecTwkDial_VecFFCCQE ) :
     fVecFFTwkDial = twk_dial;
     break;
+  case ( kXSecTwkDial_VecFFCCQE_out ) :
+    fVecFFOutTwkDial = twk_dial;
+    break;
   case ( kSystNucl_CCQEPauliSupViaKF ) :
     fKapTwkDial = twk_dial;
     break;
@@ -184,6 +209,16 @@ void NReWeightNuXSecCCQE::SetSystematic(NSyst_t syst, double twk_dial)
     break;
   case ( kSystNucl_CCQEBindingEnergy ) :
     fEbTwkDial = twk_dial;
+    break;
+
+  case ( kXSecTwkDial_SCCVecQE ) :
+    fSCCVecTwkDial = twk_dial;
+    break;
+  case ( kXSecTwkDial_SCCAxlQE ) :
+    fSCCAxlTwkDial = twk_dial;
+    break;
+  case ( kXSecTwkDial_PsFF ) :
+    fPsFFTwkDial = twk_dial;
     break;
   default:
     break;
@@ -204,6 +239,9 @@ void NReWeightNuXSecCCQE::Reset(void)
   fVecFFTwkDial   = 0.; 
   fVecFFCurr      = fVecFFDef;
 
+  fVecFFOutTwkDial = 0.;
+  fVecFFOutCurr    = fVecFFOutDef;
+
   fPfTwkDial   = 0.; 
   fPfCurr      = fPfDef;
 
@@ -212,6 +250,15 @@ void NReWeightNuXSecCCQE::Reset(void)
 
   fKapTwkDial   = 0.; 
   fKapCurr      = fKapDef;
+
+  fSCCVecTwkDial = 0.;
+  fSCCVecCurr = fSCCVecDef;
+
+  fSCCAxlTwkDial = 0.;
+  fSCCAxlCurr = fSCCAxlDef;
+
+  fPsFFTwkDial = 0.;
+  fPsFFCurr = fPsFFDef;
 
   this->Reconfigure();
 }
@@ -247,7 +294,13 @@ void NReWeightNuXSecCCQE::Reconfigure(void)
   fMaCurr   = TMath::Max(0., fMaCurr  );
 
   fAxlFFCurr = TMath::Max(0,fAxlFFTwkDial);
-  fVecFFCurr = TMath::Max(0,fVecFFTwkDial);
+
+  // If this dial has been tweaked, if changes the default in NFortFns.cc
+  if (fVecFFTwkDial) fVecFFCurr = fVecFFTwkDial;
+  if (fVecFFCurr != fVecFFDef) fortFns->SetMCDefaultVal(kXSecTwkDial_VecFFCCQE, fVecFFCurr);
+  
+  if (fVecFFOutTwkDial) fVecFFOutCurr = fVecFFOutTwkDial;
+  else fVecFFOutCurr = fVecFFCurr;
 
   int    sign_kaptwk = utils::rew::Sign(fKapTwkDial);
   double fracerr_kap = fracerr->OneSigmaErr(kSystNucl_CCQEPauliSupViaKF,    sign_kaptwk);
@@ -267,6 +320,19 @@ void NReWeightNuXSecCCQE::Reconfigure(void)
   // Multiplied by default later in CalcWeightMa()
   fEbCurr = 1. + fEbTwkDial * fracerr_eb;
   fEbCurr = TMath::Max(0., fEbCurr);
+
+  int sign_sccvec = utils::rew::Sign(fSCCVecTwkDial);
+  double fracerr_sccvec = fracerr->OneSigmaErr(kXSecTwkDial_SCCVecQE, sign_sccvec);
+  fSCCVecCurr = fSCCVecDef + fSCCVecTwkDial * fracerr_sccvec;//RT: not sure if this is correct just yet....
+
+  int sign_sccaxl = utils::rew::Sign(fSCCAxlTwkDial);
+  double fracerr_sccaxl = fracerr->OneSigmaErr(kXSecTwkDial_SCCAxlQE, sign_sccaxl);
+  fSCCAxlCurr = fSCCAxlDef + fSCCAxlTwkDial * fracerr_sccaxl;//RT: not sure if this is correct just yet....
+
+  int sign_psff = utils::rew::Sign(fPsFFTwkDial);
+  double fracerr_psff = fracerr->OneSigmaErr(kXSecTwkDial_PsFF, sign_psff);
+  fPsFFCurr = fPsFFDef * (1. + fPsFFTwkDial * fracerr_psff);//RT: not sure if this is correct just yet....
+
 }
 //_______________________________________________________________________________________
 double NReWeightNuXSecCCQE::CalcWeight() 
@@ -327,7 +393,11 @@ double NReWeightNuXSecCCQE::CalcWeightMa()
 		  TMath::Abs(fPfTwkDial) > controls::kASmallNum ||
 		  TMath::Abs(fEbTwkDial) > controls::kASmallNum ||
 		  TMath::Abs(fAxlFFTwkDial) > controls::kASmallNum ||
-		  TMath::Abs(fVecFFTwkDial) > controls::kASmallNum
+		  TMath::Abs(fVecFFTwkDial) > controls::kASmallNum ||
+		  TMath::Abs(fVecFFOutTwkDial) > controls::kASmallNum ||
+		  TMath::Abs(fSCCVecTwkDial) > controls::kASmallNum ||
+		  TMath::Abs(fSCCAxlTwkDial) > controls::kASmallNum ||
+		  TMath::Abs(fPsFFTwkDial) > controls::kASmallNum
 		  );
   
   if(!tweaked) return 1.0;
@@ -344,6 +414,9 @@ double NReWeightNuXSecCCQE::CalcWeightMa()
   //float old_xsec   = event.DiffXSec();
   //float old_weight = event.Weight();
 
+  // Correct for the units change between RFG and SF
+  if (nemdls_.mdlqe == 402) old_xsec *= 1E-23;
+
   if (old_xsec==0) {
     //cout << "NReWeightNuXSecCCQE::CalcWeightMa() Warning: old_xsec==0, setting weight to 1" << endl;
     return 1;
@@ -359,7 +432,11 @@ double NReWeightNuXSecCCQE::CalcWeightMa()
 //          : 1x : Scaling to Spectrum func. with Dipole (prior to v5.1.2)
 //          : 2x : Scaling to Spectrum func. with BBBA05 (default from v5.1.2)
   if (fAxlFFCurr) nemdls_.mdlqeaf = fAxlFFCurr;
-  if (fVecFFCurr) nemdls_.mdlqe = fVecFFCurr;
+  if (fVecFFOutCurr != fVecFFCurr) nemdls_.mdlqe = fVecFFOutCurr;
+
+  if (fSCCVecCurr) nemdls_.sccfv = fSCCVecCurr;
+  if (fSCCAxlCurr) nemdls_.sccfa = fSCCAxlCurr;
+  if (fPsFFCurr) nemdls_.fpqe = fPsFFCurr;
 
   fortFns->Reconfigure();
 
@@ -373,9 +450,12 @@ double NReWeightNuXSecCCQE::CalcWeightMa()
   fortFns->print_allparams();
 #endif
   float new_xsec   = fortFns->evdifcrs();
+
+  // Correct for the units change between RFG and SF
+  if (nemdls_.mdlqe == 402) new_xsec *= 1E-23;
+
   float new_weight = (new_xsec/old_xsec);
   //float new_weight = old_weight * (new_xsec/old_xsec);
-
 
 #ifdef _N_REWEIGHT_CCQE_DEBUG_
   cout << "differential cross section (old) = " << old_xsec << endl;

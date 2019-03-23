@@ -1,17 +1,17 @@
-NEUTCOREVER	= 5.3.2.2
-INEUTCOREVER= 5322
-NUCEFFVER   = 5.3.2.2
-INUCEFFVER  = 5322
-NUCCORVER   = 5.3.2.2
-INUCCORVER  = 5322
-PARTNUCKVER = 5.3.2.2
-IPARTNUCKVER= 5322
-SKMCSVCVER  = 5.3.2.2
-ISKMCSVCVER = 5322
+NEUTCOREVER	= 5.3.3
+INEUTCOREVER= 533
+NUCEFFVER   = 5.3.3
+INUCEFFVER  = 533
+NUCCORVER   = 5.3.3
+INUCCORVER  = 533
+PARTNUCKVER = 5.3.3
+IPARTNUCKVER= 533
+SKMCSVCVER  = 5.3.3
+ISKMCSVCVER = 533
 
 LIBALIAS = zbsfns
-VER  = 5.3.2.2
-IVER = 5322
+VER  = 5.3.3
+IVER = 533
 
 LIBNAME = $(LIBALIAS)_$(VER)
 
@@ -23,7 +23,6 @@ XCOMM ------------------------------------------------------
 
 FOBJ = nemknebk.o  nemkmodelbk.o vcmkvc.o vcmkvx.o \
        nemknetarg.o nerdnetarg.o nemkfsibk.o nemkcrsbk.o \
-       nemknucfsibk.o nerdnucfsibk.o \
        nerdnebk.o vcrdvccm.o vcrdvc.o vcrdvx.o \
        nerdnetarg.o nerdfsibk.o nerdcrsbk.o vcmkdetgm.o \
        vcclfsicm.o 

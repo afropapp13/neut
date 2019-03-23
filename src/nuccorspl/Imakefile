@@ -1,6 +1,6 @@
 LIBALIAS =  nuccorrspl
-VER  = 5.3.2.2
-IVER = 5322
+VER  = 5.3.3
+IVER = 533
 
 LIBNAME = $(LIBALIAS)_$(VER)
 
@@ -36,9 +36,6 @@ InstallInclude(nrnuclparamC.h,$(INCDIR))
 InstallInclude(nrcard.h,$(FORTRAN_INCDIR))
 Fh2hIncludeTarget(nrcard)
 InstallInclude(nrcardC.h,$(INCDIR))
-InstallInclude(nucleonfsihist.h,$(FORTRAN_INCDIR))
-Fh2hIncludeTarget(nucleonfsihist)
-InstallInclude(nucleonfsihistC.h,$(INCDIR))
 
 XCOMM ------------------------------------------------------
 XCOMM Make programs.

@@ -22,20 +22,20 @@ LIBDIRS =	-L${COREDIR}         -L../nuccorspl/Linux_pc \
 			-L../nuceff/Linux_pc -L../partnuck/Linux_pc \
 			-L../skmcsvc/Linux_pc
 
-NEUTCOREVER = 5.3.2.2
-INEUTCOREVER= 5322
+NEUTCOREVER = 5.3.3
+INEUTCOREVER= 533
 
-NUCEFFVER   = 5.3.2.2
-INUCEFFVER  = 5322
+NUCEFFVER   = 5.3.3
+INUCEFFVER  = 533
 
-NUCCORVER   = 5.3.2.2
-INUCCORVER  = 5322
+NUCCORVER   = 5.3.3
+INUCCORVER  = 533
 
-PARTNUCKVER = 5.3.2.2
-IPARTNUCKVER= 5322
+PARTNUCKVER = 5.3.3
+IPARTNUCKVER= 533
 
-SKMCSVCVER  = 5.3.2.2
-ISKMCSVCVER = 5322
+SKMCSVCVER  = 5.3.3
+ISKMCSVCVER = 533
 
 FORTRANDEFINES += -DNECORE_VERSION=$(INEUTCOREVER)
 FORTRANDEFINES += -DNENUCE_VERSION=$(INUCEFFVER)
@@ -46,7 +46,7 @@ FORTRANDEFINES += -DNENUCC_VERSION=$(INUCCORVER)
 #		-lpartnuck_${PARTNUCKVER} -lskmcsvc_${SKMCSVCVER}
 
 MCLIB = ${LIBDIRS} -lnuceff_${NUCEFFVER} -lneutcore_${NEUTCOREVER} \
-        -lskmcsvc_${SKMCSVCVER} -lnuccorrspl_${NUCCORVER}
+        -lskmcsvc_${SKMCSVCVER}
 
 CLIBS = ${CERN}/${CERN_LEVEL}/lib/libjetset74.a \
 		${CERN}/${CERN_LEVEL}/lib/libpdflib804.a \
@@ -91,9 +91,6 @@ else
   LIB_DEPEND = $(PACKAGE_ALL_OBJECTS)
 endif
 
-# default target to build the library
-all: clean lib
-
 #
 #
 rootcint: $(DICTIONARY).o
@@ -123,6 +120,8 @@ GENROOTSO = env COPTFLAGS="${COPTFLAGS}" INCDIRS="${INCDIRS}" \
 
 .F.o:
 	$(FC) $(DEFS) -c $(FCOPTIONS) $(ALLDEFINES) $(FINCDIRS) -o $@ $<
+
+all: clean lib
 
 clean:
 	$(RM) *.o *~ ${MOBJS} *Dict.* *.so _ROOT_DICT_ReWeight.*

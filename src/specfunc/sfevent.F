@@ -32,10 +32,10 @@
 c ----- temporary values to copy to output common block
         integer tmp_MODENE
         integer tmp_NUMNE
-        integer tmp_IPNE(4)
-        integer tmp_IORGNE(4)
-        integer tmp_IFLGNE(4)
-        integer tmp_ICRNNE(4)
+        integer tmp_IPNE(5)
+        integer tmp_IORGNE(5)
+        integer tmp_IFLGNE(5)
+        integer tmp_ICRNNE(5)
 
         
 #include "../neutcore/necard.h"
@@ -85,6 +85,7 @@ C ----- when calculating tables or total cross-sections
 
 C ----- external functions
         double precision modMomentum, LH, dotProduct, maxDiff
+        logical isCorr
 
         real RLU, FNELS_RPASCL
         external modMomentum, LH, dotProduct, RLU, maxDiff, 
@@ -230,9 +231,9 @@ c ----- setup temp values for output common block
         else
           tmp_IPNE(3) = IPAR
         endif
-        data tmp_IORGNE / 0, 0, 1, 2 /
-        data tmp_IFLGNE / -1, -1, 0, 0 /
-        data tmp_ICRNNE / 0, 0, 1, 1 /
+        data tmp_IORGNE / 0, 0, 1, 2, 0 /
+        data tmp_IFLGNE / -1, -1, 0, 0, 0 /
+        data tmp_ICRNNE / 0, 0, 1, 1, 1 / ! note that an additional nucleon is allowed for
 
 C ******************************************************************** C
 C ----- Begin event generation -----
@@ -401,6 +402,7 @@ c ----- 1% factor reduces efficiency but avoids errors from interpolation
          goto 10
        endif
 
+
 c ----- if event has got to here - event is saved
 c ----- need to change everything into GeV
         MODENE = tmp_MODENE
@@ -420,6 +422,23 @@ c ----- need to change everything into GeV
 
         E = E / 1000 ! turn back into GeV for the rest of neut
       
+      
+c ----- Add second nucleon, if interaction in correlated tail
+        if (isCorr(p, Etilde, targetType) .eqv..true.) then
+          NUMNE = 5          
+          if (IPNE(2) .eq. 2212) then ! all correlated pairs treated as n-p
+            IPNE(5) = 2112
+          else
+            IPNE(5) = 2212
+          endif
+          IORGNE(5) = tmp_IORGNE(5)
+          IFLGNE(5) = tmp_IFLGNE(5)
+          ICRNNE(5) = tmp_ICRNNE(5)
+          do i = 1,3
+            PNE(i,5) = -1*real(p(i+1)/1000)
+          enddo
+        endif
+       
       return
       end
 
@@ -463,3 +482,45 @@ c        Jacobian = sqrt(sinTheta0**2 + gam*(cosTheta0**2) )
 
         return
         end
+
+
+***********************************************************************
+* function returns true if initial nucleon comes from correlated tail
+***********************************************************************
+        logical function isCorr(p, Etilde, targetType)
+          double precision p(4), Etilde
+          integer targetType
+
+          double precision pMax, eMax
+
+          double precision modMomentum
+          external modMomentum
+
+          pMax = 0
+          eMax = 0
+
+          if (targetType .eq. 1000060120) then ! C12
+            pMax = 300 ! return to values later
+            eMax = 100 ! return to values later
+          endif
+
+          if (targetType .eq. 1000080160) then ! O16
+            pMax = 300 ! return to values later
+            eMax = 100 ! return to values later
+          endif
+
+          if (targetType .eq. 1000260560) then ! Fe56
+            pMax = 300 ! return to values later
+            eMax = 100 ! return to values later
+          endif
+          
+          write(*,*) modMomentum(p), Etilde
+          if ((modMomentum(p) .gt. pMax) .or. (Etilde .gt. eMax))then
+            isCorr = .TRUE.
+            return 
+          endif
+
+          isCorr = .FALSE.
+          
+          return
+          end

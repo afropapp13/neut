@@ -127,6 +127,8 @@ C-------
       F1V=(GVE-SQ2*GVM/4./PM**2)/(1.-SQ2/4./PM**2)
       F2VG=(GVM-GVE)/(1.-SQ2/4./PM**2)
 C      FA=-1.23/(1.-SQ2/AVMASS**2)**2
+      F3V = SCCFV*(-1.) /(1.-SQ2/VVMASS**2)**2
+
 
       if (MDLQEAF.eq.1) then
          FA=-1.267/(1.-SQ2/AVMASS**2)**2
@@ -136,7 +138,8 @@ C      FA=-1.23/(1.-SQ2/AVMASS**2)**2
          write(*,*) 'Invalid CCQE mode specified by MDLQEAF',MDLQEAF
          stop
       endif
-      FP=2.*(PM**2)*FA/(-SQ2+PIM**2)
+      FP=FPQE*2.*(PM**2)*FA/(-SQ2+PIM**2)
+      F3A = SCCFA * FA 
      
 C       AAA=(AM**2-SQ2)/4./PM**2*((4.-SQ2/PM**2)*FA**2-(4.+SQ2/PM**2)*
 C      &     F1V**2-SQ2/PM**2*F2VG**2*(1.+SQ2/4./PM**2)
@@ -144,10 +147,12 @@ C      &     -4.*SQ2*F1V*F2VG/PM**2
 C      &     -AM**2/PM**2*((F1V+F2VG)**2+FA**2))
       AAA=(AM**2-SQ2)/4./PM**2*((4.-SQ2/PM**2)*FA**2-(4.+SQ2/PM**2)*
      &     F1V**2-SQ2/PM**2*F2VG**2*(1.+SQ2/4./PM**2)
-     &     -4.*SQ2*F1V*F2VG/PM**2
-     &     -AM**2/PM**2*((F1V+F2VG)**2+(FA+2.*FP)**2+(SQ2/PM**2-4.)*FP**2))
-      BBB=-SQ2/PM**2*FA*(F1V+F2VG)
-      CCC=(FA**2+F1V**2-SQ2/PM**2*F2VG**2/4.)/4.
+     &     -4.*SQ2*F1V*F2VG/PM**2+SQ2/PM**2*(4-SQ2/PM**2)*F3V*2
+     &     -AM**2/PM**2*((F1V+F2VG)**2+(FA+2.*FP)**2
+     &     +(SQ2/PM**2-4.)*(F3V**2+FP**2)))
+      BBB=-SQ2/PM**2*FA*(F1V+F2VG)-AM**2/PM**2*(F1V+SQ2/4./PM**2*F2VG)
+     &     *F3V-(FA+SQ2*FP/2./PM**2)*F3A
+      CCC=(FA**2+F1V**2-SQ2/PM**2*F2VG**2/4.-SQ2/PM**2*F3A**2)/4.
       SMU=4.*PM*E+SQ2-AM**2
      
       IF (IPAR.GT.0) THEN

@@ -4,7 +4,6 @@
 #include "neutparamsC.h"
 #include "neworkC.h"
 #include "fsihistC.h"
-#include "nucleonfsihistC.h"
 #include "vcworkC.h"
 #include "posinnucC.h"
 #include "neutcrsC.h"
@@ -55,6 +54,10 @@ namespace rew   {
   float MDLQEAFdef;
   float MDLQEdef;
 
+  float SCCFVdef;
+  float SCCFAdef;
+  float FPQEdef;
+
   float XMAQEdef  ;
   float XMVQEdef  ;
   float KAPPdef   ;
@@ -75,6 +78,11 @@ namespace rew   {
   float NENRTYPEdef;
   float RNECA5Idef;
   float RNEBGSCLdef;
+
+  float XMANFFRESdef;
+  float XMVNFFRESdef;
+  float XMARSRESdef;
+  float XMVRSRESdef;
 
   float XMACOHdef ;
   float RAD0NUdef ;

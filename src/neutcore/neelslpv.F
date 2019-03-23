@@ -149,13 +149,15 @@ C
          FNNUCLPF=FNNPOT(1,PFABS)
 
 C For RPA correction to CCQE cross-section, QE amplitude is scaled by the ratio of (rpa corrected CCQE/CCQE)cross-section
-C FNELSPAU_RPASCL(Q2,IPAR) returns this ratio given, Q**2 and neutrino type for repective target element.
+C FNELSPAU_RPASCL(Enu,Q2,IPAR) returns this ratio given, neutrino Energy, Q**2 and neutrino type for repective target element.
 C The function will return 1 when RPA effect is disabled through neut.card.
+C
+CCCCCC Here the imeplemetation is wrong as the E is in lab frame and Q2 in nucleon frame.
 C
 C     
 C     --  SEARCH PEAK ROUGHLY
 C     
-         DO 10 I=0,50
+         DO 10 I=0,50 
             Q2=DQ2*FLOAT(I)
             EL=ENSTOP-Q2/2./AMIN
             PL=SQRT(EL**2-AMLEP**2)
@@ -163,7 +165,7 @@ C
             IF(ABS(COST).GT.1.)GO TO 10
             DBLE0=ENSTOP
             DBLQ2=Q2
-            AMP=DNELSQ2(DBLE0,IPAR,DBLQ2)*FNELS_RPASCL(Q2,IPAR)
+            AMP=DNELSQ2(DBLE0,IPAR,DBLQ2)*FNELS_RPASCL(ENEU,Q2,IPAR)
             IF (BMAX.LT.AMP) BMAX=AMP
             IF (AMP.LT.BLAST) GOTO 20
             BLAST=AMP
@@ -182,7 +184,7 @@ C
          ELSE
             DBLE0=ENSTOP
             DBLQ2=Q2
-            AMP=DNELSQ2(DBLE0,IPAR,DBLQ2)*FNELS_RPASCL(Q2,IPAR)
+            AMP=DNELSQ2(DBLE0,IPAR,DBLQ2)*FNELS_RPASCL(ENEU,Q2,IPAR)
          ENDIF
          IF (AMP.GT.BLAST) THEN
 C     
@@ -198,7 +200,7 @@ C
                IF(ABS(COST).GT.1.)GO TO 30
                DBLE0=ENSTOP
                DBLQ2=Q2
-               AMP=DNELSQ2(DBLE0,IPAR,DBLQ2)*FNELS_RPASCL(Q2,IPAR)
+               AMP=DNELSQ2(DBLE0,IPAR,DBLQ2)*FNELS_RPASCL(ENEU,Q2,IPAR)
                IF (BMAX.LT.AMP) BMAX=AMP
                IF (AMP.LT.BLAST) GOTO 50
                BLAST=AMP
@@ -215,7 +217,7 @@ C
                IF(ABS(COST).GT.1.)GO TO 40
                DBLE0=ENSTOP
                DBLQ2=Q2
-               AMP=DNELSQ2(DBLE0,IPAR,DBLQ2)*FNELS_RPASCL(Q2,IPAR)
+               AMP=DNELSQ2(DBLE0,IPAR,DBLQ2)*FNELS_RPASCL(ENEU,Q2,IPAR)
                IF (BMAX.LT.AMP) BMAX=AMP
                IF (AMP.LT.BLAST) GOTO 50
                BLAST=AMP
@@ -245,7 +247,7 @@ C     DO 100 LOOP=1,1000000
          HIT=RLU(DUM)*BMAX
 
          
-         SIGMA=DNELSQ2(DBLE0,IPAR,DBLQ2)*FNELS_RPASCL(Q2,IPAR)
+         SIGMA=DNELSQ2(DBLE0,IPAR,DBLQ2)*FNELS_RPASCL(ENEU,Q2,IPAR)
          IF (SIGMA.GT.HIT) THEN
             
             PHIANG=6.283*RLU(DUM)

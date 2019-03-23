@@ -19,6 +19,7 @@
 //extern "C" {
   //FUNCTION_RETURN bbba05_(double* Q2,double* GPE,double* GPM,double* GNE,double* GNM);
   double bbba05_(double* Q2,double* GPE,double* GPM,double* GNE,double* GNM);
+  double bbba07_(double* Q2,double* GPE,double* GPM,double* GNE,double* GNM);
 //}
 
 /*
@@ -84,6 +85,8 @@ qedifcrs_(int *ip, int *ccnc, float *energy, float *elep, float *coslep)
 
   int FF_model = nemdls_.mdlqeaf;
 
+  float fperr = nemdls_.fpqe;
+
   //  float PFermi = nenupr_.pfsurf*1000;
   //  float Ebind  = nenupr_.vnuini*(-1000);
   float PFermi = nenupr_.pfsurf;
@@ -92,10 +95,12 @@ qedifcrs_(int *ip, int *ccnc, float *energy, float *elep, float *coslep)
   float Nnum   = neuttarget_.numbndn;
   float Znum   = neuttarget_.numbndp;
   
+  float sccv = nemdls_.sccfv;
+  float scca = nemdls_.sccfa;
   
   //--- Local variables
   double W,Q,Q2,PLEP,WEF,QVEC2,AP,BP,Q2EF;
-  double FGE,FGM,F1,F2,FA,FP;
+  double FGE,FGM,F1,F2,FA,FP,FV3,FA3;
   double  GPE,GPM,GNE,GNM;
   double T1,T2,TA,TB,T8;
   double W1,W2,WA,WB,W8;
@@ -161,6 +166,13 @@ qedifcrs_(int *ip, int *ccnc, float *energy, float *elep, float *coslep)
     FGE=GPE-GNE;
     FGM=GPM-GNM;
   }
+  else if ((nemdls_.mdlqe%10)==3) {
+    //printf("qedifcrs.c Q2 = %g\n",Q2);
+    bbba07_(&Q2,&GPE,&GPM,&GNE,&GNM);
+    //printf("qedifcrs.c GPE GPM GNE GNM = %g %g %g %g\n",GPE   , GPM  ,  GNE, GNM);
+    FGE=GPE-GNE;
+    FGM=GPM-GNM;
+  }
   else if ((nemdls_.mdlqe%10)==1) {
     FGE = pow(1. + Q2/((Mvec)*(Mvec)), -2.);
     FGM = (1. + 3.71)*FGE;
@@ -187,15 +199,27 @@ qedifcrs_(int *ip, int *ccnc, float *energy, float *elep, float *coslep)
     exit(1);
   }
   //FP = 2.*XMNc*FA/(Q2 + 139.57*139.57);
-  FP = 2.*XMNc*FA/(Q2 + 0.13957*0.13957); 
+  FP = fperr * 2.*XMNc*FA/(Q2 + 0.13957*0.13957); 
+
+  //Second-class currents
+  FV3 = sccv*(-1.)*pow(1. + Q2/((Mvec)*(Mvec)), -2.);
+  FA3 = scca * FA ;
 
 
-  //--- T parameters
+  //--- T parameters,still need to add SCC here
   T1 = 0.5*Q2*pow(F1- 2.*XMNc*F2, 2.) + (2.*XMNc*XMNc + .5*Q2)*FA*FA;
-  T2 = 2.*XMNc*XMNc*(F1*F1 + Q2*F2*F2 + FA*FA);
-  TA = XMNc*XMNc*(2.*XMNc*F1*F2 + (.5*Q2 - 2.*XMNc*XMNc)*F2*F2
-				-2.*XMNc*FA*FP + .5*Q2*FP*FP);
-  TB = -.5*T2;
+  T2 = 2.*XMNc*XMNc*(F1*F1 + Q2*(F2*F2 + FA3*FA3) + FA*FA);
+//  TA = XMNc*XMNc*(2.*XMNc*F1*F2 + (.5*Q2 - 2.*XMNc*XMNc)*F2*F2 
+//				-2.*XMNc*FA*FP + .5*Q2*FP*FP);
+// add second class currents
+  //TA = XMNc*XMNc*(2.*XMNc*F1*F2 + (.5*Q2 - 2.*XMNc*XMNc)*(F2*F2 - FV3*FV3)
+  //				-2.*XMNc*FA*FP + .5*Q2*FP*FP
+  //              + FA3*(2*XMNc*FA - Q2*FP) + FV3*(2*XMNc*F1 + Q2*F2));
+  TA = XMNc*XMNc*(2*XMNc*F1*F2 + (.5*Q2-2*XMNc*XMNc)*F2*F2 
+		  + FV3*FV3*(0.5*Q2+2*XMNc*XMNc) -2.*XMNc*FA*FP + 0.5*Q2*FP*FP
+              + FA3*(2*XMNc*FA - Q2*FP) + FV3*(2*XMNc*F1 + Q2*F2)
+		  + 0.5*Q2*FA3*FA3);
+  TB = -.5*T2 - XMNc*XMNc*FV3*(2*XMNc*F1 + F2*Q2) - XMNc*XMNc*FA3*(2*XMNc*FA - Q2*FP);
   T8 = 2.*XMNc*XMNc*FA*(F1- 2.*XMNc*F2);
 
   //--- B parameters

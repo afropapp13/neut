@@ -84,11 +84,11 @@ foreach i ( neutcore nuccorspl nuceff partnuck skmcsvc tauola )
  
   cd ${SOMEWHERE}/$i
   \rm -rf ${MACHINE} Makefile
-  imake_boot  || exit 1
-  make Makefile  || exit 1
-  make clean  || exit 1
-  make includes  || exit 1
-  make all || exit 2
+  imake_boot 
+  make Makefile
+  make clean
+  make includes
+  make all || ( echo "Failed in compiling $i" ; exit 2 )
   make install.include
   make install.lib
 
@@ -97,14 +97,13 @@ end
 echo "--------- COMPILING SPECFUNC --------- "
 cd ${SOMEWHERE}/specfunc
 make clean
-make -e install || exit 2
-make all || exit 1
+make -e install || ( echo "Failed in compiling $i" ; exit 2 )
+make all
 
-# note: neutclass is not compiled like this, it no longer has a Makefile
-#echo "--------- COMPILING NEUTCLASS --------- "
-#cd ${SOMEWHERE}/neutclass
-#make clean
-#make all || exit 2
+echo "--------- COMPILING NEUTCLASS --------- "
+cd ${SOMEWHERE}/neutclass
+make clean
+make all || ( echo "Failed in compiling $i" ; exit 2 )
 
 echo "--------- CLEANING NEUTSMPL --------- "
 cd ${SOMEWHERE}/neutsmpl
@@ -114,7 +113,7 @@ ln -s ../skmcsvc/necardev.h
 
 echo "--------- bootstrap NEUTSMPL Makefile --------- "
 rm -rf ${MACHINE} Makefile
-imake_boot || exit 1
+imake_boot
 
 echo "--------- Regen. Headers --------- "
 \rm -f neutmodel.h nework.h vcwork.h neutparams.h posinnuc.h 
@@ -127,11 +126,12 @@ ln -s ../neutcore/posinnuc.h .
 ln -s ../nuceff/efpion.h .
 
 echo "--------- Make NEUT executables --------- "
-make neut neut_ntpl dumptotpau dumpelspau dumpcohcrs dumpcrs || exit 2
+make neut neut_ntpl dumptotpau dumpelspau dumpcohcrs dumpcrs ||( echo "Failed in compiling $i" ; exit 2 ) 
 
 echo "--------- Make NEUTROOT --------- "
-make -f GNUmakefile.neutroot clean  || exit 1
-make -f GNUmakefile.neutroot neutroot2  || exit 1
+make -f GNUmakefile.neutroot clean
+
+make -f GNUmakefile.neutroot neutroot2
 
 setenv NEUTCORE  ../neutcore
 

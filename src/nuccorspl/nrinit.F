@@ -48,7 +48,7 @@ C         pfermi=NRPFSURF*1000. ! NRPFSURF is GeV uniti
 	  PROBS=0.0
 C     e.g. NBIN=30(O),27(C),38(AR)
 	  NBIN=NINT((RMAX-RMIN)/RBIN)
-C          print*, '#of bins in nucleus for nuccorspl = ',NBIN
+          print*, '#of bins in nucleus for nuccorspl = ',NBIN
 	  call nrrodis(rmin,rbin,nbin,probm,rhotab)
           if(icont.eq.0) then
              print*, 'THIS MODE IS NOT GUARANTEED NOW (see nrinit.F)'

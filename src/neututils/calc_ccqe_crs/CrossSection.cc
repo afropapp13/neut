@@ -17,10 +17,9 @@ extern "C"{
   double bbba05_(double *,double *,double *,double *,double *);
   int bbba07_(double *x, 
 			  double *gep, double *gmp, double *gen, double *gmn);
-
+  //  double faBBBA07(double);
+  double faBBBA07(double, double);
 }
-
-extern double faBBBA07(double,double);
 
 
 CrossSection::CrossSection(double Pfermi, int nu_type, int nu_sign, double XAmass)

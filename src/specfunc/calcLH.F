@@ -85,8 +85,9 @@ c form factors
         f2 = ( GM(qTilde,nc,sgn) - GE(qTilde,nc,sgn) ) / (1 + tau)
 
         fa = CalcFa(qTilde,nc,sgn)
-        
-        fp = CalcFp(qTilde,nc,sgn)
+
+c RT:Allow for error term on fp as well for this form factor        
+        fp = FPQE * CalcFp(qTilde,nc,sgn)
 
 c second-class form factors - off by default.  Use card parameter SCC to turn on
 c fv3 is treated as a dipole (using same vector mass)
@@ -189,7 +190,7 @@ c pseudo-scalar form factor
 
         external dotProduct
 
-        call MCMASS(2112, dummy)
+        call MCMASS(2212, dummy)
         protonMass = dble(dummy)
         call MCMASS(211, dummy)
         piMass2 = dble(dummy)**2

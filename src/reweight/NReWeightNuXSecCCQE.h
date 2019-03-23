@@ -90,6 +90,11 @@ namespace rew   {
    int fVecFFDef;        ///<
    int fVecFFCurr;       ///<
 
+   // These are used to reweight to another MDLQE.
+   int fVecFFOutTwkDial;    ///<
+   int fVecFFOutDef;        ///<
+   int fVecFFOutCurr;       ///<
+
    double fPfTwkDial;    ///<
    double fPfDef;        ///<
    double fPfCurr;       ///<
@@ -101,6 +106,18 @@ namespace rew   {
    double fKapTwkDial;    ///<
    double fKapDef;        ///<
    double fKapCurr;       ///<
+
+   float fSCCVecTwkDial;    ///<
+   float fSCCVecDef;        ///<
+   float fSCCVecCurr;       ///<
+
+   float fSCCAxlTwkDial;    ///<
+   float fSCCAxlDef;        ///<
+   float fSCCAxlCurr;       ///<
+
+   double fPsFFTwkDial;    ///<
+   double fPsFFDef;        ///<
+   double fPsFFCurr;       ///<
 
    NFortFns * fortFns;
    NModeDefn modeDefn;
