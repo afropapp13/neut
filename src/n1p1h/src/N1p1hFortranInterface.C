@@ -209,9 +209,13 @@ double N1p1hGetKinematics(int id,int nuclei,double Enu, double dir[3], double p[
   pnu[3] = Enu*dir[2]/dd;
 
   double R,xsect; 
-  
-  n1p1h->GenerateVectors(id,nuclei,pnu,p,idpart,parent,R,xsect);
 
+
+  if(nuclei==1)
+    n1p1h->GenerateHVectors(id,nuclei,pnu,p,idpart,parent,R,xsect);
+  else
+    n1p1h->GenerateVectors(id,nuclei,pnu,p,idpart,parent,R,xsect);
+  
   double phi = (double)random()/(double)RAND_MAX*2.*M_PI;
   double costheta = 2.*(double)random()/(double)RAND_MAX-1;
   double sintheta = sqrt(1.-costheta*costheta); 

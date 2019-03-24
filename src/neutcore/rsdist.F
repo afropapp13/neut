@@ -1,6 +1,7 @@
 ***********************************************************************
 *     ---------------------------------------------------
-      SUBROUTINE RSDIST(IMODE,INLEP,ENU,XINPPR,RETPMU,RETPPI,RETPPR)
+      SUBROUTINE RSDIST(IMODE,INLEP,ENU,XINPPR,RETPMU,RETPPI,RETPPR,
+     $                  IERR)
 *     ---------------------------------------------------
 *
 *     ( purpose )
@@ -34,6 +35,7 @@
       INTEGER*4 IMODE,INLEP
       REAL*4    ENU
       REAL*4    XINPPR(3),RETPMU(3),RETPPI(3),RETPPR(3)
+      INTEGER*4 IERR
 
 #include<rscons.h>
 
@@ -46,6 +48,7 @@
       INTEGER*4 I
 
 C---initialize valiables
+      IERR = 0
 
       XMLEP = 0.00000
       if ((IMODE.lt.4).or.((IMODE.gt.10).and.(IMODE.lt.14)))
@@ -97,7 +100,10 @@ C
         SINPHI=0.00000
       ENDIF
 
-      CALL RSDT33(IMODE,INLEP,XPNU,TMPPMU,TMPPPI,TMPPPR)
+      CALL RSDT33(IMODE,INLEP,XPNU,TMPPMU,TMPPPI,TMPPPR,IERR)
+      if (ierr.ne.0) then
+         return
+      endif
 
       CALL RS3DRT(TMPPMU,SINTH,COSTH,SINPHI,COSPHI)
       CALL RS3DRT(TMPPPI,SINTH,COSTH,SINPHI,COSPHI)

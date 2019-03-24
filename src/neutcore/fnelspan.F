@@ -62,6 +62,10 @@ C
 C
       FNELSPAN=0.
 
+      if ((numbndp.eq.0).and.(numbndn.eq.0)) then
+         return
+      endif
+
       IF (INUC.NE.2212 .AND. INUC.NE.2112) RETURN
       IF (IABS(IPAR).NE.12 .AND. IABS(IPAR).NE.14 .AND.
      &   IABS(IPAR).NE.16) RETURN

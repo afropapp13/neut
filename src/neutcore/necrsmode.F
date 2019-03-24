@@ -22,6 +22,8 @@
 *                             - neutcore/nemodsel.F
 *                             - neutcore/fntotpau.F
 *       2013.04.11 ; A. Redij - Add npnh mode
+*       2019.02.07 ; Y. Hayato- Backup and restore original CRSNEUT(B)
+*
 ************************************************************************
 
       IMPLICIT NONE
@@ -31,6 +33,12 @@
       integer ipar, mode, i
       logical first
 
+C-Keep the original value (2019/02/07 Y.H.)
+      real*4 CRSNEUT2(30),CRSNEUTB2(30)
+      do 10 I=1,30
+         CRSNEUT2(I)=CRSNEUT(I)
+         CRSNEUTB2(I)=CRSNEUTB(I)
+ 10   continue
 
       if (mode.ne.0) then
          NEMODFLG=-1
@@ -175,6 +183,12 @@ C     Anti-neutrino
             CRSNEUTB(I)= 1.
          end do
       endif
+
+C-Restore the original value (2019/02/07 Y.H.)
+      do 20 I=1,30
+         CRSNEUT(I)=CRSNEUT2(I)
+         CRSNEUTB(I)=CRSNEUTB2(I)
+ 20   continue
 
       END
 

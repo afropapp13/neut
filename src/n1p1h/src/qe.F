@@ -817,11 +817,18 @@ c      dmnuf=DMNU
       Enu=ein*hbarc
       Emu=eout*hbarc
       Eq=Q0*hbarc
-      if(ieta.eq.1) Ep=Eex
-      if(ieta.eq.-1) En=Eex
+      if(ieta.eq.1) then
+         Ep=Eex
+         En=dmnui
+      elseif(ieta.eq.-1)then
+         En=Eex
+         Ep=dmnui
+      endif
       pm=Pout*hbarc
       dqt=DQ*hbarc
-
+      dPt=0.d0
+      thetap=0.d0
+      
       aJacob=2.d0*dmnui
 
       Sigthfree = sig*aJacob/2.d0*1.d18/hbarc
@@ -1214,7 +1221,9 @@ ccccccccccccccccccxma = 1.049*1.D3/hbarc
          xmuf2v =0.5d0*gq*(-1.d0+dmagp
      f        -dmagn*(1.d0+xln*tau+tau)/(1.d0+xln*tau))/(1.d0+tau)
          
-         GAQ = ga /(1.d0-Q2/xma**2)**2 
+C     GAQ = ga /(1.d0-Q2/xma**2)**2
+         GAQ =(-1.)*ELAXFF(-q2/((1.d3/ hbarc)**2),.false.,ieta)
+         
          GPQ = 2.d0*dmnu*gaq/(xmpi**2-q2)
          
 ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -1428,7 +1437,8 @@ cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
       xmuf2v =0.5d0*gq*(-1.d0+dmagp
      f     -dmagn*(1.d0+xln*tau+tau)/(1.d0+xln*tau))/(1.d0+tau)
       
-      GAQ = ga /(1.d0-Q2/xma**2)**2 
+C      GAQ = ga /(1.d0-Q2/xma**2)**2
+      GAQ =(-1.)*ELAXFF(-q2/((1.d3/ hbarc)**2),.false.,ieta)
 ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
       
       A1=8.d0*q2*((f1v+xmuf2v)**2+GAQ**2*(1.d0/4.d0-dmnui**2/q2))

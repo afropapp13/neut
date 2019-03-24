@@ -59,9 +59,11 @@ isCCdis(int mode)
 }
 
 bool
-isLepton(Int_t ip)
+isLepton(Int_t ip_in)
 {
-
+  Int_t ip ;
+  ip = abs(ip_in);
+  
   if (( ip != 12 ) && ( ip != 14 ) && ( ip != 16 ) &&
 	  ( ip != 11 ) && ( ip != 13 ) && ( ip != 15 )){
 	cout << "IP is not lepton.. " << ip << endl;
@@ -190,7 +192,7 @@ fill_in_enu_hist(NeutVect *nvect, TH1D *h1, Double_t weight)
 {
   Int_t    ip;
 
-  ip = (nvect->PartInfo(0))->fPID;
+  ip = abs((nvect->PartInfo(0))->fPID);
   if (( ip != 12 ) && ( ip != 14 ) && ( ip != 16 )){
 	cout << "IP is not neutrino.. " << ip << endl;
 	return -1;

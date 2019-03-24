@@ -19,9 +19,21 @@
 #define FLXCOM  nusk_
 #define NDBMNTPLID HID_NUFD2
 #else
+#ifdef FLUX_11B
+#include "uhdef_11b.fh"
+#define FLXCOM  nusk_
+#define NDBMNTPLID HID_NUFD2
+#else
+#ifdef FLUX_13
+#include "uhdef_13_uwfunc.fh"
+#define FLXCOM  nusk_
+#define NDBMNTPLID HID_NUFD2
+#else
 #include "beamntpl.h"
 #define FLXCOM  fxvcsk_
 #define NDBMNTPLID HID_NUFD1
+#endif      
+#endif      
 #endif      
 #endif      
 #endif
@@ -200,7 +212,7 @@ C--------------
                   giparttbl(nptall)  =gipartFD
                   gamom0tbl(nptall)  =gamom0FD
 #endif
-#if defined(FLUX_10C)||defined(FLUX_11A)
+#if defined(FLUX_10C)||defined(FLUX_11A)||defined(FLUX_11B)||defined(FLUX_13)
                   nvtx0tbl(nptall)   =nvtx0FD   
                   giparttbl(nptall)  =gipartFD  
                   gamom0tbl(nptall)  =gamom0FD  
@@ -208,6 +220,11 @@ C--------------
                   normSKtbl(nptall)  =normSKFD  
                   anormtbl(nptall)   =anormFD   
                   ngtbl(nptall)      =ngFD      
+#ifdef FLUX_11B
+      if (ngFD.gt.ngFDMAX) then
+         ngFD = ngFDMAX
+      endif
+#endif
       
                   DO 80 I=1,ngFD
                      gpxtbl(I,nptall)   = gpxFD(I)
@@ -249,16 +266,23 @@ C                 endif
                      gpos0tbl(i,nptall)   =gpos0FD(i)
                      gvec0tbl(i,nptall)   =gvec0FD(i)
 #endif
-#ifdef FLUX_11A
+#if defined(FLUX_11A)||defined(FLUX_11B)||defined(FLUX_13)
                      gmatFDtbl(I,nptall)   =gmatFD(I)   
                      gdistcFDtbl(I,nptall) =gdistcFD(I) 
                      gdistalFDtbl(I,nptall)=gdistalFD(I)
                      gdisttiFDtbl(I,nptall)=gdisttiFD(I)
                      gdistfeFDtbl(I,nptall)=gdistfeFD(I)
 #endif                     
-
+#if defined(FLUX_13)
+                     posExitFDtbl(I,nptall)=posExitFD(I)
+                     momExitFDtbl(I,nptall)=momExitFD(I)
+#endif                  
  90               continue
-                  
+
+#if defined(FLUX_13)
+                  idExitFDtbl(nptall)=idExitFD
+                  ngExitFDtbl(nptall)=ngExitFD
+#endif
                   j=int(modetbl(nptall)/10)
                   maxfvnpt(j)=maxfvnpt(j)+1
                   idxtbl(j,maxfvnpt(j))=nptall

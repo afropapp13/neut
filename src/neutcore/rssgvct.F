@@ -289,7 +289,11 @@ C-----------------------------------------------------------------
   
  1000 continue
 
-      CALL RSDISTG(IFLAG,IPNE(1),E,PNCEPZ(1),RTPLEP,RTPGAM,RTPNC)
+      CALL RSDISTG(IFLAG,IPNE(1),E,PNCEPZ(1),RTPLEP,RTPGAM,RTPNC,
+     $     IERR)
+      if (ierr.ne.0) then
+         return
+      endif
 
 CCCC Comment out by Y.H. on Mar.17, 2003
 CCCC  --------- check pauli blocking ---------

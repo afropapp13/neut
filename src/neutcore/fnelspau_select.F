@@ -54,12 +54,30 @@ C -- currently dummy argument
          mode = -1
       endif
 
+      FNELSPAU_SELECT = 0.
+
 C     Free Nucleon Calculation
-      if ((numbndp + numbndn).eq.1) then
-         FNELSPAU_SELECT = fnelscrs(E, IPAR)
+
+      if ((numbndp.eq.0).and.(numbndn.eq.0).and.(numfrep.eq.1)) then
          return
+         stop
       endif
 
+C     neutron only (special case)
+      if ((numbndn.eq.1).and.(numbndp.eq.0).and.(numfrep.eq.0)) then
+         if (ipar.gt.0) then
+            FNELSPAU_SELECT = fnelscrs(E, IPAR)
+            return
+         endif
+      endif
+
+C     proton only
+      if ((numbndp.eq.1).and.(numbndn.eq.0)) then
+         write(*,*) 'fnelspau_select: strange setting...'
+         write(*,*) 'Bound proton = 1, bound neutron = 0'
+         write(*,*) 'stop execution'
+         stop
+      endif
 
 C     Nuclear Calculations
 

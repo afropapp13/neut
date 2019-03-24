@@ -13,7 +13,15 @@
 #ifdef FLUX_11A
 #include "uhdef_11a.fh"
 #else
+#ifdef FLUX_11B
+#include "uhdef_11b.fh"
+#else
+#ifdef FLUX_13
+#include "uhdef_13_uwfunc.fh"
+#else
 #include "beamntpl.h"
+#endif      
+#endif      
 #endif      
 #endif      
 #endif
@@ -65,12 +73,23 @@
       gipartFD=   giparttbl(iptr)
       gamom0FD=   gamom0tbl(iptr)
 #endif
-#if defined(FLUX_10C)||defined(FLUX_11A)
+#if defined(FLUX_10C)||defined(FLUX_11A)||defined(FLUX_11B)||defined(FLUX_13)
       nvtx0FD=    nvtx0tbl(iptr)
       gipartFD=   giparttbl(iptr)
       gamom0FD=   gamom0tbl(iptr)
 
       ngFD=       ngtbl(iptr)
+
+#if defined(FLUX_11B)||defined(FLUX_13)
+      if (ngFD.gt.ngFDMAX) then
+         ngFD = ngFDMAX
+      endif
+#endif
+
+#if defined(FLUX_13)
+         idExitFD =idExitFDtbl(iptr)
+         ngExitFD =ngExitFDtbl(iptr)
+#endif
 
       do 80 I=1,ngFD
          gpxFD(I)   =gpxtbl(I,iptr)
@@ -82,14 +101,16 @@
          gvzFD(I)   =gvztbl(I,iptr)
          gpidFD(I)  =gpidtbl(I,iptr)
          gmecFD(I)  =gmectbl(I,iptr)
-#ifdef FLUX_11A
+#if defined(FLUX_11A)||defined(FLUX_11B)||defined(FLUX_13)
          gmatFD(I)   =gmatFDtbl(I,iptr)
          gdistcFD(I) =gdistcFDtbl(I,iptr) 
          gdistalFD(I)=gdistalFDtbl(I,iptr)
          gdisttiFD(I)=gdisttiFDtbl(I,iptr)
          gdistfeFD(I)=gdistfeFDtbl(I,iptr)
 #endif
+
  80   continue
+
 
       EnuSKFD=    EnuSKtbl(iptr)
       normSKFD=   normSKtbl(iptr)
@@ -105,13 +126,17 @@
          xpi0FD(i) = xpi0tbl(i,iptr)    
          nnuFD(i)  = nnutbl(i,iptr)     
 
-#ifdef FLUX_10A
+#if defined(FLUX_10A)||defined(FLUX_11A)||defined(FLUX_11B)
          xsi0FD(i)=  xsi0tbl(i,iptr)
          nsi0FD(i)=  nsi0tbl(i,iptr)
          xsiFD(i)=   xsitbl(i,iptr)
+#endif
+#if defined(FLUX_10A)
          prvtxFD(i)= prvtxtbl(i,iptr)
          xgpi0FD(i)= xgpi0tbl(i,iptr)
          xgpiFD(i)=  xgpitbl(i,iptr)
+#endif
+#if defined(FLUX_10A)||defined(FLUX_11A)||defined(FLUX_11B)||defined(FLUX_13)
          gpos0FD(i)= gpos0tbl(i,iptr)
          gvec0FD(i)= gvec0tbl(i,iptr)
 #endif
@@ -119,7 +144,10 @@
          gpos0FD(I)=    gpos0tbl(i,iptr)
          gvec0FD(I)=    gvec0tbl(i,iptr)
 #endif         
-
+#if defined(FLUX_13)
+         posExitFD(I)   =posExitFDtbl(i,iptr)
+         momExitFD(I)   =momExitFDtbl(i,iptr)
+#endif
  90   continue
 
       return

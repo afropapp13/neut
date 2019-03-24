@@ -1,6 +1,6 @@
 ***********************************************************************
 *     ---------------------------------------------------
-      SUBROUTINE RSDT33(IMODE,INLEP,E,RETPMU,RETPPI,RETPNU)
+      SUBROUTINE RSDT33(IMODE,INLEP,E,RETPMU,RETPPI,RETPNU,IERR)
 *     ---------------------------------------------------
 *
 *     ( purpose )
@@ -69,6 +69,7 @@ C                    GV to CV3,CV4,CV5
 
       REAL SINTH,COSTH,SINPHI,COSPHI
       INTEGER*4 IDUMMY
+      INTEGER*4 IERR
 
 #include<rscons.h>
 #include <neutmodel.h>
@@ -143,6 +144,8 @@ C
       DATA NRR/0,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
      1     0,0,0/
 
+
+      IERR = 0
 
 C
 C     set CONSTANTS
@@ -261,7 +264,9 @@ C-
          write(*,*) "RSDT33: TOO MANY TRY/STOP..."
          write(*,*) "E=",E,"/IMODE=",IMODE,"/INLEP=",INLEP,
      $              "CRSSECT=",SIGMAX
-         STOP
+C         STOP
+         IERR = 1
+         RETURN
       ENDIF
 
       RNDSIG = RLU(IRSISED)*SIGMAX
@@ -294,7 +299,7 @@ C      Q2 = QMIN + RLU(IRSISED)*(QMAX-QMIN)
      $     (2 * XMN * E + XMN2)).LT.(-Q2) ) GOTO 11
 
       IF (((W2+XMN2-Q2)/(2*XMN)).LE.W) GOTO 11
-	  IF ((Q2-W2+XMN2+2*XMN*E)/(2*XMN).lt.XMLEP) GOTO 11
+      IF ((Q2-W2+XMN2+2*XMN*E)/(2*XMN).lt.XMLEP) GOTO 11
 
       XMLEP2 = XMLEP*XMLEP
       ELEPL=(2*E*XMN+XMN2+Q2-W2)/(2*XMN)

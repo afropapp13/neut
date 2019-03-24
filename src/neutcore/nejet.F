@@ -33,6 +33,7 @@
 #include "pypars.h"
 #include "ludat3.h"
 #include "necard.h"
+#include "ludat1.h"
 
 #include "vcwork.h"
 #include "posinnuc.h"
@@ -141,6 +142,13 @@ C         PDFSUP(1) = 7 ! PDF is set by neut.card
 *-----> USE GRV94(1000: nucleon)
          MSTP(51) = 1000*PDFGUP(1)+PDFSUP(1)
          
+      if (quiet.eq.2) then
+         if (MSTU(11).ne.95) then
+            open(UNIT=95,FILE='/dev/null')
+            MSTU(11)=95
+         endif
+      endif
+
 C#ifndef NO_GRV94CORR
 *     W^2 range allowed in DIS process(approximately cut)[GeV^2]
 *     [D=4.]

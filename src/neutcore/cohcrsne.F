@@ -34,6 +34,11 @@
       real     cohcrsnerein,cohcrsnekart,cohcrsneberger
       external cohcrsnerein,cohcrsnekart,cohcrsneberger
 
+      if ((numbndp+numbndn).le.1) then
+         cohcrsne = 0.
+         return
+      endif
+
       if(NECOHEPI.eq.0) then     ! Select Rein & Sehgal model
          COHCRSNE = COHCRSNEREIN(E,IPAR,IC)
       elseif(NECOHEPI.eq.1) then ! Select Kartavtsev et al. model

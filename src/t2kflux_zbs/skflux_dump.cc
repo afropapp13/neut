@@ -1,9 +1,32 @@
 #include <iostream>
 #include <TFile.h>
 #include <stdlib.h>
+#define MAIN
+#define NO_EXTERN_COMMON_POINTERS
+#include "t2kneut_sk.h"
 #include "t2kflux_sk.h"
+#ifdef FLUX_10A
+#include "uhdef.h"
+#else
+#ifdef FLUX_10C
+#include "uhdef_10c.h"
+#else
+#ifdef FLUX_11A
+#include "uhdef_11a.h"
+#else
+#ifdef FLUX_11B
+#include "uhdef_11b.h"
+#else
+#ifdef FLUX_13
+#include "uhdef_13_uwfunc.h"
+#else
+#include "beamntplC.h"
+#endif      
+#endif      
+#endif      
+#endif
+#endif      
 
-TRandom3 *global_tr3;
 
 using namespace std;
 
@@ -25,6 +48,9 @@ extern "C"{
 #else
   void f_setarg(int, char **);
 #endif
+
+  struct fxvcsk_common fxvcsk_;
+
 };
 
 struct PAWC{

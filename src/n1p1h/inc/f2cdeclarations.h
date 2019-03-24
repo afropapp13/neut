@@ -143,6 +143,11 @@ extern"C" {
     double  vPn[4];
     double  vPp[4];
   } fourvectors_;
+
+  extern struct{
+    double FFtype;
+  }fftype_;
+
 }
 
 #define SelectLepton(a) selectlepton_(&a)

@@ -350,7 +350,10 @@ C-----------------------------------------------------------------
   
  1000 continue
 
-      CALL RSDIST(IFLAG,IPNE(1),E,PNCEPZ(1),RTPLEP,RTPPI,RTPNC)
+      CALL RSDIST(IFLAG,IPNE(1),E,PNCEPZ(1),RTPLEP,RTPPI,RTPNC,IERR)
+      IF (ierr.ne.0) then
+         return
+      endif
 
 CCCC Comment out by Y.H. on Mar.17, 2003
 CCCC  --------- check pauli blocking ---------

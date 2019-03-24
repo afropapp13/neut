@@ -37,7 +37,7 @@ include ${NEUT_SRC}/n1p1h/inc/N1P1HVER.inc
 
 ## Programs
 INSTALL   = /usr/bin/install
-RM        = /bin/rm
+RM        = /bin/rm -rf
 FC        = gfortran
 CC        = gcc
 AR        = ar
@@ -50,7 +50,7 @@ FCOPTIONS = -fno-backslash -fno-automatic -fno-second-underscore \
 		    -ffixed-line-length-132 -fdollar-ok -fpic -fbounds-check \
 			-Wall -W -ffpe-trap=invalid,zero,overflow \
 			-DstrictF77 \
-			-DgFortran -Df2cFortran
+			-DgFortran -Df2cFortran 
 FCOPTFLAGS= -g
 
 ##C++ compiler related
@@ -134,9 +134,11 @@ GENROOTSO = env COPTFLAGS="${COPTIONS} ${COPTFLAGS}" \
 
 #################################################################
 clean:
-	${RM} -f *.o *.so *Dict.h *LinkDef.h *Dict.cc *.a lib/*.o lib/*.a
+	${RM} -f $(TARGETS) *.o *.so *Dict.h *LinkDef.h *Dict.cc \
+		  *.a lib/*.o lib/*.a
 
 veryclean:
-	${RM} -f *.o *.a
+	${RM} -f $(TARGETS) *.o *.so *Dict.h *LinkDef.h *Dict.cc \
+		  *.a lib/*.o lib/*.a *~ #*
 
 				

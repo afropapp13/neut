@@ -374,7 +374,6 @@ C Generic 'no match found'
      $       '(energy transfer too small) ***')
       GOTO 111
 
-
  111  DO 125 i=1,3
         PIN1(i)=0
         PIN2(i)=0
@@ -384,8 +383,9 @@ C Generic 'no match found'
       IERR=1
       RETURN
 
- 140  WRITE(6,141)
- 141  FORMAT(' NEMECHAD: HADRON KINEMATICS SUCCESSFULY FOUND ')
+C140  WRITE(6,141)
+C141  FORMAT(' NEMECHAD: HADRON KINEMATICS SUCCESSFULY FOUND ')
+ 140  CONTINUE
       IERR=0
       RETURN
 

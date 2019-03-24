@@ -66,6 +66,7 @@ bool N1p1h::ReadConfig(const char *dir){
     else if ( strncmp(item,"XMRHO",5) ==0 )  RPAxmrho = val;
     else if ( strncmp(item,"IREL",4) ==0 )   RPAirel = val;
     else if ( strncmp(item,"EBIND",5) ==0 )   Ebind = val;
+    //    else if ( strncmp(item,"FFTYPE",6) ==0 )   FFtype = val;
     
   } while( ! infile.eof() );
 
@@ -96,7 +97,8 @@ bool N1p1h::ReadConfig(const char *dir){
   RPAxmpi      = nievesqepar_.xnvrpaxmpi;
   RPAxmrho     = nievesqepar_.xnvrpaxmrho;
   RPAirel      = nievesqepar_.xnvrpairel;
-
+  //  FFtype       = nievesqepar_.fftype;
+  
 #endif
 
   card_params[param_names[0]]   = xmag;
@@ -126,7 +128,8 @@ bool N1p1h::ReadConfig(const char *dir){
   card_params[param_names[12]]  = RPAxmpi;
   card_params[param_names[13]]  = RPAxmrho;
   card_params[param_names[14]]  = RPAirel;
-  card_params[param_names[15]]  = 0.1;
+  card_params[param_names[15]]  = 0.;
+  //  card_params[param_names[16]]  = FFtype;
 
   if( !ApplyBindEnergy ) 
     std::cout << " Bind energy ignored " << std::endl; 
@@ -185,7 +188,8 @@ N1p1h::Initialize(std::string directory, bool d){
   RPAxmpi = 139.57;
   RPAxmrho = 770.0; 
   RPAirel  = 1;
-
+  //  FFtype = 1;
+ 
   Ebind=0;
   
   debug = d; 
@@ -195,6 +199,7 @@ N1p1h::Initialize(std::string directory, bool d){
 	 "#RPAfp0in:\0",   "#RPAfp0ex:\0","#RPAf:\0",   	 "#RPAfstar:\0",
 	 "#RPApilambda:\0","#RPAcr0:\0",  "#RPArholambda:\0","#RPAgp:\0",
 	 "#RPAxmpi:\0",    "#RPAxmrho:\0","#RPAirel:\0",     "#Enubin:\0"};
+	 //	 "#FFtype:\0"};
 
   for ( i = 0 ; i < N1P1H_CARD_PARAMS; i++ ){
 	snprintf(param_names[i],32,"%s",param_name_const[i]);
@@ -1478,6 +1483,7 @@ void N1p1h::GenerateHVectors(int id,int nuclei,double pnu[4],  double p[4][4], i
     intfactor4 *= 2;//sqrt(1.-xcos*xcos)*pi;
 
     R = 0.;
+    dP=0.;
     
     double vc = 0.; 
         

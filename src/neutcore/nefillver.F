@@ -31,11 +31,11 @@ C     Store in common block "NEUTVERSION"
       nucev = nucever
       nuccv = nuccver
 
-      print*, ''
-      print*, '======= Library version ======='
-      print*, 'NEUTCORE  :',corev
-      print*, 'NUCEFF    :',nucev
-      print*, 'NUCCORSPL :',nuccv
+C      print*, ''
+C      print*, '======= Library version ======='
+C      print*, 'NEUTCORE  :',corev
+C      print*, 'NUCEFF    :',nucev
+C      print*, 'NUCCORSPL :',nuccv
 
       return
       end

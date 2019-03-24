@@ -8,9 +8,10 @@ include ${NEUT_ROOT}/src/neutsmpl/config_neut.gmk
 ## For library
 SOBJS = neutctrl.so neutpart.so neutvect.so neutvtx.so \
         neutfsipart.so neutfsivert.so \
-	neutnucfsistep.so neutnucfsivert.so
+	neutnucfsistep.so neutnucfsivert.so \
+	neutrootTreeSingleton.so
 
-ROBJS = neutfill.o neutrootfortwrapper.o NeutRootHandlers.o 
+ROBJS = neutfill.o neutrootfortwrapper.o NeutRootHandlers.o
 
 OBJS  = ${ROBJS} ${SOBJS} 
 

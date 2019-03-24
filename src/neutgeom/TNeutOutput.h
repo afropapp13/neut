@@ -57,6 +57,8 @@ private:
   Int_t        fFormat;
   TDatabasePDG fPDGDatabase;
   
+  TString      CurrentFilename;
+
   // Neut Format
   /// The event number.
   int   fNev;

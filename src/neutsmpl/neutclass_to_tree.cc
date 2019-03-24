@@ -229,6 +229,9 @@ neutclass_to_tree(char *fname,char *fname_out)
   neut_tree->Branch("posinnuc",&posinnuc_.ibound,
 				 "ibound/I:posnuc[100][3]/F");
 
+  neut_tree->Branch("target",&neuttarget_.numbndn,
+					"numbndn/I:numbndp/I:numfrep/I:numatom/I");
+
   for ( nev = 0 ; nev < nevents ; nev++ ){
 
 	if ((nev % 10000) == 0){

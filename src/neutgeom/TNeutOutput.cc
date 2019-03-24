@@ -1,6 +1,14 @@
 #include "TNeutOutput.h"
 #include "TVector3.h"
 
+
+extern "C"
+{
+  int neutfill(const char * /* filename */, char * /* treename */,
+			   char * /* Vector Branch name */,
+			   char * /* Vertex Branch name */);
+}
+
 TNeutOutput::TNeutOutput(TString theFilename, Int_t format, Float_t fluxVersion){
   OpenFile(theFilename);
   SetOutputFormat(format);
@@ -8,6 +16,7 @@ TNeutOutput::TNeutOutput(TString theFilename, Int_t format, Float_t fluxVersion)
 }
 void TNeutOutput::OpenFile(TString theFilename){
   fOutputFile = new TFile(theFilename.Data(), "RECREATE");
+  CurrentFilename = theFilename;
 }
 
 void TNeutOutput::WriteTree(){
@@ -47,7 +56,7 @@ void TNeutOutput::InitTree(Float_t fluxVersion){
     fOutputTree->Branch("npi0"     ,fnpi0     , "npi0[3]/F" );
     fOutputTree->Branch("cospi0bm" ,&fcospi0bm, "cospi0bm/F");
     fOutputTree->Branch("ppi0"     ,&fppi0    , "ppi0/F"    );
-  } else if(fFormat == 1){
+  } else if((fFormat == 1)||(fFormat == 2)){
     std::cout << "in rootracker initialization" << std::endl;
 
     //"n" for neut
@@ -178,7 +187,9 @@ void TNeutOutput::InitTree(Float_t fluxVersion){
       fOutputTree->Branch("NuRand",        &fNuRand,           "NuRand/I"               );
       //      fOutputTree->Branch("NuRseed",        fNuRseed,          "NuRseed[2]/I"           );
     }
-
+	if (fFormat == 2){
+	  std::cout << "Store NEUTROOT tree, also." << std::endl;
+	}
   } else {
     std::cerr << "Unknown output format " << fFormat << std::endl;
   }
@@ -203,9 +214,13 @@ void TNeutOutput::FillTree(Int_t                eventNumber,
   if(fFormat == 0){
     ClearNeutTree(); 
     FillNeutTree(eventNumber, theNuVector, theNuVertex, theNuFinalState);
-  } else if(fFormat == 1){
+  } else if((fFormat == 1)||(fFormat == 2)){
     ClearRooTrackerTree();
     FillRooTrackerTree(eventNumber, theNuVector, theNuVertex, theNuFinalState);
+	if (fFormat ==2){
+	  neutfill(CurrentFilename.Data(),
+			   "neuttree\0","vectorbranch\0","vertexbranch\0");
+	}
   } else {
     std::cerr << "Unknown output format " << fFormat << std::endl;
   }

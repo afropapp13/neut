@@ -26,9 +26,21 @@
 #define FLXCOM  nusk_
 #define NDBMNTPLID HID_NUFD2
 #else
+#ifdef FLUX_11B
+#include "uhdef_11b.fh"
+#define FLXCOM  nusk_
+#define NDBMNTPLID HID_NUFD2
+#else
+#ifdef FLUX_13
+#include "uhdef_13_uwfunc.fh"
+#define FLXCOM  nusk_
+#define NDBMNTPLID HID_NUFD2
+#else
 #include "beamntpl.h"
 #define FLXCOM  fxvcsk_
 #define NDBMNTPLID HID_NUFD1
+#endif
+#endif      
 #endif      
 #endif      
 #endif
@@ -66,10 +78,6 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C--Fill interaction models
 
       call nefillmodel
-      
-      corev = NECORE_VERSION
-      nucev = NENUCE_VERSION
-      nuccv = NENUCC_VERSION
       
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC            
 

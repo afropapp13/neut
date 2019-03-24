@@ -43,13 +43,13 @@ GENROOTSO = env COPTFLAGS="${COPTFLAGS}" INCDIRS="${INCDIRS}" \
 all: event_rate genev
 
 event_rate: event_rate.o $(OBJS) 
-	$(FC) -O3 -o $@ event_rate.o -Xlinker -R`pwd`  $(OBJS) ${MOBJS} $(LIBS)
+	$(FC) -O1 -o $@ event_rate.o -Xlinker -R`pwd`  $(OBJS) ${MOBJS} $(LIBS)
 
 genev: genev.o $(OBJS)
-	$(FC) -O3 -o $@ genev.o -Xlinker -R`pwd`  $(OBJS) ${MOBJS} $(LIBS)
+	$(FC) -O1 -o $@ genev.o -Xlinker -R`pwd`  $(OBJS) ${MOBJS} $(LIBS)
 
 dumptotpau_nd280: dumptotpau_nd280.o $(OBJS)
-	$(FC) -O3 -o $@ dumptotpau_nd280.o -Xlinker -R`pwd` ${OBJS} ${MOBJS} $(LIBS)
+	$(FC) -O1 -o $@ dumptotpau_nd280.o -Xlinker -R`pwd` ${OBJS} ${MOBJS} $(LIBS)
 
 clean:
 	$(RM) -f *.o *~ ${OBJS} event_rate genev dumptotpau_nd280

@@ -17,8 +17,18 @@
 #include "uhdef_11a.h"
 #define FLXCOM  nusk_
 #else
+#ifdef FLUX_11B
+#include "uhdef_11b.h"
+#define FLXCOM  nusk_
+#else
+#ifdef FLUX_13
+#include "uhdef_13_uwfunc.h"
+#define FLXCOM  nusk_
+#else
 #include "beamntplC.h"
 #define FLXCOM  fxvcsk_
+#endif
+#endif
 #endif
 #endif
 #endif

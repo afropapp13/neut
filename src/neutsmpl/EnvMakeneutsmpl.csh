@@ -3,6 +3,7 @@
 setenv SOMEWHERE ${NEUT_ROOT}/src
 setenv MACHINE `${SOMEWHERE}/neutsmpl/bin/Machine`
 
+
 #setenv FC g77
 #setenv FC gfortran
 if (${?FC} == 0) then
@@ -18,6 +19,15 @@ else
 endif
 rm -f ${SOMEWHERE}/neutsmpl/config/site.def
 rm -f ${SOMEWHERE}/neutsmpl/config_neut.gmk
+
+${FC} -no-pie -v |& grep "unrecognized" > /dev/null
+
+if ($status == 1) then
+   setenv CONFIG_FILE ${SOMEWHERE}/neutsmpl/config_gfortran_nopie.gmk
+else
+   setenv CONFIG_FILE ${SOMEWHERE}/neutsmpl/config_gfortran.gmk
+endif
+
 if ($FC == "g77") then
     ln -s ${SOMEWHERE}/neutsmpl/config/site_g77.def \
 			${SOMEWHERE}/neutsmpl/config/site.def
@@ -26,7 +36,7 @@ if ($FC == "g77") then
 else
     ln -s ${SOMEWHERE}/neutsmpl/config/site_gfortran.def \
 			${SOMEWHERE}/neutsmpl/config/site.def
-    ln -s ${SOMEWHERE}/neutsmpl/config_gfortran.gmk \
+    ln -s ${CONFIG_FILE} \
 			${SOMEWHERE}/neutsmpl/config_neut.gmk
 endif
 

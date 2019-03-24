@@ -8,7 +8,6 @@
 #include "neutmodel.h"
 #include "necardbm.h"
 #include "nefillver.h"
-#include "beamntpl.h"
 
       REAL*4 POSI(3)
       REAL*4 DIR(3),GDIR(3)
@@ -39,11 +38,9 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
 C--Fill interaction models
 
+      call reset_signal
+
       call nefillmodel
-      
-      corev = NECORE_VERSION
-      nucev = NENUCE_VERSION
-      nuccv = NENUCC_VERSION
       
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC            
 

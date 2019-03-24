@@ -511,7 +511,7 @@ c        Jacobian = sqrt(sinTheta0**2 + gam*(cosTheta0**2) )
             eMax = 100 ! return to values later
           endif
           
-          write(*,*) modMomentum(p), Etilde
+C         write(*,*) modMomentum(p), Etilde
           if ((modMomentum(p) .gt. pMax) .or. (Etilde .gt. eMax))then
             isCorr = .TRUE.
             return 

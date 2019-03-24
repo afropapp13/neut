@@ -705,6 +705,8 @@ C       ENERGY OVER 1000GEV
       SLOPE = (SIGEND(2)-SIGEND(1))/(EEND(2)-EEND(1))
       ScalingFactor = (NUMATOM/12.) ! Scaling by A rule
       COHCRSNEBERGER = (SIGEND(1)+SLOPE*(E-EEND(1)))*ScalingFactor
-
+      if (cohcrsneberger.le.0) then
+         cohcrsneberger = 0
+      endif
       RETURN
       END

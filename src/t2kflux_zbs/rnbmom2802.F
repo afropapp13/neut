@@ -4,6 +4,7 @@
       
 C #include "beamntpl.h"
 #include "beamvectbl.h"
+#define IDFDET
 
       integer*4 idfdet,iparfx,iparbm,iptr
       real*4    pmom(3),pos(3)
@@ -20,8 +21,8 @@ C #include "beamntpl.h"
       integer*4    numntvars
       data         numntvars/30/
 
-      integer*4    maxntvars
-      parameter    (maxntvars=30)
+C      integer*4    maxntvars
+C      parameter    (maxntvars=30)
 
       real*8    rtry
       real*4    dum
@@ -102,11 +103,11 @@ C     $     normfvtbl(ipcond,ipos)/totnormtbl(ipcond)
 
  50   continue
       
-      write(*,'(A4,I8,A9,I8,A7,F10.8,A8,F10.8,A3,F10.8)') 
-     $     'ipos:',ipos,' / moved:',moved,' / try:',
-     $     rtry/totnormtbl(ipcond),' / norm:',
-     $     normfvtbl(ipcond,ipos-1)/totnormtbl(ipcond),' - ',
-     $     normfvtbl(ipcond,ipos)/totnormtbl(ipcond)
+C      write(*,'(A4,I8,A9,I8,A7,F10.8,A8,F10.8,A3,F10.8)') 
+C     $     'ipos:',ipos,' / moved:',moved,' / try:',
+C     $     rtry/totnormtbl(ipcond),' / norm:',
+C     $     normfvtbl(ipcond,ipos-1)/totnormtbl(ipcond),' - ',
+C     $     normfvtbl(ipcond,ipos)/totnormtbl(ipcond)
 
       pos(1)=xnutbl(iptr)
       pos(2)=ynutbl(iptr)
@@ -118,9 +119,9 @@ C     $     normfvtbl(ipcond,ipos)/totnormtbl(ipcond)
       
       if (idfdet.eq.0)  idfdet=idfdtbl(iptr)
       if (idfdet.ne.idfdtbl(iptr)) then
+#ifndef IDFDET
          write(*,*) 
      $        "rnbmom280: Det.ID is not the one in the flux table"
-#ifndef IDFDET
          stop
 #else
          goto 20

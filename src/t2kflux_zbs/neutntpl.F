@@ -65,7 +65,17 @@ C
 #ifdef FLUX_11A
 #include "uhdef_11a.fh"
 #else
+#ifdef FLUX_11B
+#include "uhdef_11b.fh"
+#else
+#ifdef FLUX_13
+#include "uhdef_13_uwfunc.fh"
+      character*900 nuFDtag
+      equivalence (nuFDtag, nuFDtags)
+#else
 #include "beamntpl.h"
+#endif      
+#endif      
 #endif      
 #endif      
 #endif
@@ -121,7 +131,7 @@ C
 #ifdef FLUX_10A
       call hbname(10,'nuinfo',enufd,nuFDtag2)
 #else
-#if defined(FLUX_10C)||defined(FLUX_11A)
+#if defined(FLUX_10C)||defined(FLUX_11A)||defined(FLUX_11B)||defined(FLUX_13)
       call hbname(10,'nuinfo',enufd,nuFDtag)
 #else
       call hbname(10,'nuinfo',enufd,'Enu,ppid:I,modef:I,ppi,xpi(3),
@@ -135,8 +145,8 @@ C      call hbname(10,'photons',nhits,'NHITS:I,POTOT:R')
       CALL HBNAME(10,'TARGINFO',NUMBNDN,
      $'NUMBNDN,NUMBNDP,NUMFREP,NUMATOM')
 
-      CALL HBNAME(10,'NEUTCRS',CRSENERGY,
-     $'CRSENERGY,TOTCRSNE,DIFCRSNE(8)')
+C      CALL HBNAME(10,'NEUTCRS',CRSENERGY,
+C     $'CRSENERGY,TOTCRSNE,DIFCRSNE(8)')
 
 C
 C --  READ VECTOR

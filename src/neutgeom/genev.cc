@@ -72,7 +72,7 @@
 // -o out.root output   root file name (default will have the form 
 //                      eventrate_filestem_n-m_+VOLUME-VOLUME.root
 //
-// -f neut/rootracker   format of output, neut (Deprecated) or rootracker
+// -f neut/rootracker   format of output, rootracker or rootracker + neut
 //
 // -m INTRATE           maximum interaction probability for vector
 //                      this is used to optimize the rejeciton method
@@ -436,8 +436,9 @@ int main(int argc, char *argv[]){
   TNeutOutput* theNeutOutput;
   if       (outputFileFormat == "neut"      ){
     //theNeutOutput = new TNeutOutput(outputFile.Data(), 0, theFluxFiles->getVersion());
-    std::cerr << "NEUT output format is no longer supported. Use rootracker format instead." << std::endl;
-    return -1;
+	//    std::cerr << "NEUT output format is no longer supported. Use rootracker format instead." << std::endl;
+	//    return -1;
+    theNeutOutput = new TNeutOutput(outputFile.Data(), 2, theFluxFiles->getVersion());
   } else if(outputFileFormat == "rootracker"){
     theNeutOutput = new TNeutOutput(outputFile.Data(), 1, theFluxFiles->getVersion());
   } else {

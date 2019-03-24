@@ -11,12 +11,22 @@
 #ifdef FLUX_11A
 #include "uhdef_11a.fh"
 #else
+#ifdef FLUX_11B
+#include "uhdef_11b.fh"
+#else
+#ifdef FLUX_13
+#include "uhdef_13_uwfunc.fh"
+#else
 #include "beamntpl.h"
+#endif
+#endif
 #endif
 #endif      
 #endif
 
 #include "beamvectbl.h"
+
+#define ngFDMAX 12
 
       INTEGER IDATA(500)
       REAL    RDATA(500)
@@ -75,7 +85,7 @@ C                                             in global coord. (z)
 C           +27 : I : ID of the front(near) detector
 
       ISEG=1
-#if defined(FLUX_10C)||defined(FLUX_11A)
+#if defined(FLUX_10C)||defined(FLUX_11A)||defined(FLUX_11B)||defined(FLUX_13)
       CALL KZGET0(CNAME,ISEG,NDATA,IDATA)
 #else
       CALL KZGET1(CNAME,ISEG,NDATA,IDATA)
@@ -87,14 +97,15 @@ C           +27 : I : ID of the front(near) detector
          STOP
       endif
 #else
-#if defined(FLUX_10C)||defined(FLUX_11A)
+#if defined(FLUX_10C)||defined(FLUX_11A)||defined(FLUX_11B)||defined(FLUX_13)
 #else
       if (NDATA.NE.27) THEN
          write(*,*) 'Length of the bank is different from 27(-07A)'
          STOP
       endif
+#endif
 #endif      
-#endif      
+
       ENUFD     = RDATA( 1)
       PPIDFD    = IDATA( 2)
       MODEFD    = IDATA( 3)
@@ -169,7 +180,7 @@ C           +27 : I : ID of the front(near) detector
       gpdghtFD  = IDATA(70)
       chainFD   = IDATA(71)
 #endif
-#if defined(FLUX_10C)||defined(FLUX_11A)
+#if defined(FLUX_10C)||defined(FLUX_11A)||defined(FLUX_11B)||defined(FLUX_13)
       nvtx0FD   = IDATA(28)
       gipartFD  = IDATA(29)
       gpos0FD(1)= RDATA(30)
@@ -183,6 +194,11 @@ C           +27 : I : ID of the front(near) detector
       normSKFD  = RDATA(38)
       anormFD   = RDATA(39)
       ngFD      = IDATA(40)
+#endif
+      if (ngFD.gt.ngFDMAX) then
+         ngFD = ngFDMAX
+      endif
+
       DO 100 I=1,ngFD
          gpxFD(I)   = RDATA(41+(I-1)*9)
          gpyFD(I)   = RDATA(42+(I-1)*9)
@@ -195,7 +211,7 @@ C           +27 : I : ID of the front(near) detector
          gmecFD(I)  = IDATA(49+(I-1)*9)
  100  continue
 
-#ifdef FLUX_11A
+#if defined(FLUX_11A)||defined(FLUX_11B)||defined(FLUX_13)
       IOFST = 50 + (I-1)*9
       DO 110 I=1,ngFD
          gmatFD(I)   = IDATA(IOFST  +(I-1)*5)
@@ -205,6 +221,18 @@ C           +27 : I : ID of the front(near) detector
          gdistfeFD(I)= RDATA(IOFST+4+(I-1)*5)
  110  continue
 #endif         
+
+#if defined(FLUX_13)
+      idExitFD    =IDATA(55+(ngFD-1)*9)
+      ngExitFD    =IDATA(56+(ngFD-1)*9)
+                   
+      posExitFD(1)=IDATA(57+(ngFD-1)*9)
+      posExitFD(2)=IDATA(58+(ngFD-1)*9)
+      posExitFD(3)=IDATA(59+(ngFD-1)*9)
+                   
+      momExitFD(1)=IDATA(60+(ngFD-1)*9)
+      momExitFD(2)=IDATA(61+(ngFD-1)*9)
+      momExitFD(3)=IDATA(62+(ngFD-1)*9)
 
 #endif
       

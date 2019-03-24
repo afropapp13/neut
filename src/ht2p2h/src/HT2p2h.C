@@ -555,7 +555,7 @@ int HT2p2h::GenerateHadronKinematics( int id, int nuclei, double frac, double q[
 
 
 
-double   HT2p2h::DoubleDifferential(int id,int nuclei,double Enu,double TLep,double xcos,bool pn) {
+double   HT2p2h::DoubleDifferential(int id,int nuclei,double Enu,double TLep,double xcos,bool pn ) {
  
   CheckNuclei_2(nuclei);  
   
@@ -613,7 +613,7 @@ double   HT2p2h::DoubleDifferential(int id,int nuclei,double Enu,double TLep,dou
     double qm2 = q[1]*q[1]+q[2]*q[2]+q[3]*q[3];
     double qm = sqrt(qm2); 
 
-    HadronTensor *tlc;
+    HadronTensor *tlc = NULL;
 
     if( !pn ) 
 	tlc = Tensor[nuclei];
@@ -829,7 +829,7 @@ double HT2p2h::GetFraction(int id, int nuclei,double Enu,double TLepton,double c
   
   if( pnCrossSection >= 0. )     fraction =  pnCrossSection/totalCrossSection;
   
-  //  std::cout << " FRACTION " << fraction << std::endl; 
+  //  std::cout << " FRACTION " << fraction << "  " << pnCrossSection << "  " <<  totalCrossSection <<  std::endl; 
   
   return fraction;
 }

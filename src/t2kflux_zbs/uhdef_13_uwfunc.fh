@@ -1,0 +1,120 @@
+*************************************************************************	 
+*
+* Prepared by Y. Hayato (
+*
+*   2018/09/23 using Ninja Flux file / paw uwfunc for ND
+*   2018/09/23 using jnubeam source code for SK
+*   2018/09/23 using orignal include file(uhdef) for detector geometry
+*
+*************************************************************************	 
+
+#define FDLOOP 1000
+#define MAX_FD 10
+#define ngFDMAX 12
+
+
+#define HID_VERSET 1000
+#define HID_NUSK 2000
+#define HID_NUFD0 3000
+#define HID_NUFD1 3001
+#define HID_NUFD2 3002
+#define HID_ENEDEP_TRGT 5000
+#define HID_ENEDEP_DGAS 5001
+#define HID_ENEDEP_DUMP 5004
+#define HID_ENEDEP_DV 5100
+#define HID_MUMON 8000
+
+      REAL*4 EnuFD,ppiFD,xpiFD(3),npiFD(3),cospibmFD,normFD,ppi0FD,
+     $     xpi0FD(3),npi0FD(3),cospi0bmFD,rFD,xnuFD,ynuFD,nnuFD(3),
+     $     gpos0FD(3),gvec0FD(3),gamom0FD,
+     $     gpxFD(12),gpyFD(12),gpzFD(12),gcosbmFD(12),gvxFD(12),
+     $     gvyFD(12),gvzFD(12),EnuSKFD,normSKFD,anormFD,
+     $     gdistcFD(12),gdistalFD(12),gdisttiFD(12),gdistfeFD(12),
+     $     posExitFD(3),momExitFD(3)
+      
+      INTEGER*4 ppidFD,modeFD,nvtx0FD,idFD,gipartFD,
+     $     ngFD,gpidFD(12),gmecFD(12),
+     $     gmatFD(12),
+     $     idExitFD,ngExitFD
+	 
+      REAL*4 DUMMYFD(16384)
+
+*
+      COMMON /nuFD/ EnuFD,ppidFD,modeFD,ppiFD,xpiFD,npiFD,
+     $     cospibmFD,normFD,nvtx0FD,ppi0FD,xpi0FD,npi0FD,
+     $     cospi0bmFD,rFD,xnuFD,ynuFD,nnuFD,idFD,
+     $     gipartFD,gpos0FD,gvec0FD,gamom0FD,
+     $     ngFD,gpxFD,gpyFD,gpzFD,gcosbmFD,gvxFD,gvyFD,
+     $     gvzFD,gpidFD,gmecFD,EnuSKFD,normSKFD,anormFD,
+     $     gmatFD,gdistcFD,gdistalFD,gdisttiFD,gdistfeFD,
+     $     idExitFD,posExitFD,momExitFD,ngExitFD,
+     $     DUMMYFD
+
+      character*60 nuFDtags(15)
+      data nuFDtags/
+     &     'Enu:R             ,ppid:I            ,modeFD:I          ,',
+     &     'ppi:R             ,xpi(3):R          ,npi(3):R          ,',
+     &     'cospibm:R         ,norm:R            ,nvtx0:I           ,',
+     &     'ppi0:R            ,xpi0(3):R         ,npi0(3):R         ,',
+     &     'cospi0bm:R        ,rnu:R             ,xnu:R             ,',
+     &     'ynu:R             ,nnu(3):R          ,idFD:I            ,',
+     &     'gipart[0,100]:I   ,gpos0(3):R        ,gvec0(3):R        ,',
+     &     'gamom0:R          ,                                      ',
+     &     'ng[0,12]:I        ,gpx(ng):R         ,gpy(ng):R         ,',
+     &     'gpz(ng):R         ,gcosbm(ng):R      ,gvx(ng):R         ,',
+     &     'gvy(ng):R         ,gvz(ng):R         ,gpid(ng):I        ,',
+     &     'gmec(ng):I        ,EnuSK:R           ,normSK:R          ,',
+     &     'anorm:R           ,                                      ',
+     $     'gmat(ng):I        ,gdistc(ng):R      ,gdistal(ng):R     ,',
+     $     'gdistti(ng):R     ,gdistfe(ng):R                         '/
+
+*************************************************************************	 
+
+      real*4 EnuSK, ppiSK, xpiSK(3), npiSK(3), cospibmSK, normSK
+      real*4 ppi0SK, xpi0SK(3), npi0SK(3), cospi0bmSK
+C     real*4 psi0SK, xsi0SK(3), nsi0SK(3)
+C	  real*4 cossi0bmSK, xsiSK(3)
+
+C      integer*4 modeSK, ppidSK, nvtx0SK, spidSK, pgenSK
+      integer*4 modeSK, ppidSK, nvtx0SK
+C      integer*4 smechSK, intgtSK, smedSK
+C      real*4 prvtxSK(3)
+C      integer*4 gppidSK
+C      real*4 xgpi0SK(3), xgpiSK(3), pgpi0SK
+C      integer*4 gpmechSK, gpmedSK, prmechSK, prmedSK
+C      integer*4 prdghtSK, sdghtSK, gpdghtSK, chainSK
+
+      integer*4 gipartSK
+      real*4 gpos0SK(3), gvec0SK(3), gamom0SK
+      real*4 posExitSK(3), momExitSK(3)
+      integer*4 idExitSK, ngExitSK
+c---  
+      integer*4 ngSK
+      real*4    gpxSK(12),gpySK(12),gpzSK(12),gcosbmSK(12)
+      real*4    gvxSK(12),gvySK(12),gvzSK(12)
+      integer*4 gpidSK(12),gmecSK(12),gmatSK(12)
+      real*4    gdistcSK(12),gdistalSK(12),
+     $          gdisttiSK(12),gdistfeSK(12)
+
+C---
+      REAL*4  DUMMYSK(16384)
+
+C---  10a default variables
+      common /nusk/ EnuSK, ppidSK, modeSK, ppiSK, xpiSK, npiSK, 
+     &     cospibmSK, normSK, nvtx0SK, ppi0SK, xpi0SK, npi0SK, 
+     &     cospi0bmSK, gipartSK, gpos0SK, gvec0SK, gamom0SK,
+     $     ngSK, gpxSK, gpySK, gpzSK, gcosbmSK,
+     &     gvxSK, gvySK, gvzSK, gpidSK, gmecSK,
+     $     gmatSK, gdistcSK, gdistalSK, 
+     &     gdisttiSK, gdistfeSK,
+     $     idExitSK, posExitSK, momExitSK, ngExitSK,
+     $     DUMMYSK
+
+*************************************************************************
+C     common variables for the Detector setting
+
+      integer NFD 
+      real*4 BXFD(MAX_FD), BYFD(MAX_FD) ! beam center at ZFD
+      real*4 XFD(MAX_FD), YFD(MAX_FD), ZFD(MAX_FD), HFD(MAX_FD), 
+     $       VFD(MAX_FD)
+      common /DEFFD/NFD, BXFD, BYFD, XFD, YFD, ZFD, HFD, VFD

@@ -1,7 +1,25 @@
-ifndef NEUT_ROOT
-      NEUT_ROOT = ../../
-endif
+export NEUT_ROOT = ../..
+
 include $(NEUT_ROOT)/src/neutsmpl/config_neut.gmk
+
+# Check the env. variables for CERNLIB
+ifndef CERN
+ $(error CERN is not set!)
+endif
+
+ifndef CERN_LEVEL
+ $(error CERN_LEVEL is not set!)
+endif
+
+# Check that we can find cernlib in shell
+ifeq "$(shell cernlib)" ""
+  $(error Looks like you havent set up CERNLIB, please fix this)
+  $(error I rely on being able to do cernlib in shell)
+endif
+
+ifndef ROOTSYS
+ $(error ROOTSYS is not set!)
+endif
 
 NEUT_SRC =  $(NEUT_ROOT)/src
 
@@ -15,43 +33,22 @@ CXXFLAGS  = `root-config --cflags`
 COPTFLAGS = -g -Wno-write-strings -fpermissive -fPIC
 
 
-COREDIR =	../neutcore/Linux_pc
-NUCEFFDIR =     ../nuceff/Linux_pc
-
-LIBDIRS =	-L../../lib/Linux_pc
-
-NEUTCOREVER	= 5.3.6
-INEUTCOREVER= 536
-NUCEFFVER   = 5.3.5
-INUCEFFVER  = 535
-NUCCORVER   = 5.3.5
-INUCCORVER  = 535
-PARTNUCKVER = 5.3.5
-IPARTNUCKVER= 535
-SKMCSVCVER  = 5.3.5
-ISKMCSVCVER = 535
-ZBSFNSVER   = 5.3.5
-IZBSFNSVER  = 535
-SPECFUNCVER = 5.3.5
-ISPECFUNCVER= 535
-RADCORRVER  = 5.3.5
-IRADCORRVER = 535
-
-FORTRANDEFINES += -DNECORE_VERSION=$(INEUTCOREVER)
-FORTRANDEFINES += -DNENUCE_VERSION=$(INUCEFFVER)
-FORTRANDEFINES += -DNENUCC_VERSION=$(INUCCORVER)
+LIBDIRS =	-L../../lib
 
 #MCLIB = ${LIBDIRS}   -lneutcore_${NEUTCOREVER} -lnuceff_${NUCEFFVER} \
 #		-lneutcore_${NEUTCOREVER} -lnuccorrspl_${NUCCORVER} \
 #		-lpartnuck_${PARTNUCKVER} -lskmcsvc_${SKMCSVCVER}
 
-MCLIB = ${LIBDIRS} -lnuceff_${NUCEFFVER} -lneutcore_${NEUTCOREVER} \
+NEUTLIBS := $(wildcard ${LIBDIRS}/neut*.so)
+MCLIB = ${LIBDIRS} ${NEUTLIBS}
+#MCLIB = ${LIBDIRS} -lnuceff_${NUCEFFVER} -lneutcore_${NEUTCOREVER} \
         -lskmcsvc_${SKMCSVCVER} -lnuccorrspl_${NUCCORVER} \
-		-lradcorr_${RADCORRVER}		
+	-lradcorr_${RADCORRVER}		
 
+# CERNLIB dependencies
 CLIBS = ${CERN}/${CERN_LEVEL}/lib/libjetset74.a \
-		${CERN}/${CERN_LEVEL}/lib/libpdflib804.a \
-		`cernlib jetset74 photos202 mathlib packlib kernlib`
+	${CERN}/${CERN_LEVEL}/lib/libpdflib804.a \
+	`cernlib jetset74 photos202 mathlib packlib kernlib`
 
 ROOTLIBS  = `root-config --libs`
 LIBS      = $(ROOTLIBS) ${MCLIB} ${CLIBS} -lstdc++
@@ -73,7 +70,7 @@ DllSuf                        = so
 PACKAGE_LIB                   = $(LIBNAME).$(DllSuf)
 PACKAGE_LIB_WITH_PATH         = $(NEUT_SRC)/reweight/$(LIBNAME).$(DllSuf)
 
-DICTIONARY                    = _ROOT_DICT_ReWeight
+#DICTIONARY                    = _ROOT_DICT_ReWeight
 ObjSuf                       := o
 PACKAGE_ALL_SOURCES          := $(wildcard *.cc)
 DICTGEN_HEADERS              := $(addsuffix .h, $(basename $(PACKAGE_ALL_SOURCES)))

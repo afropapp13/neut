@@ -1,6 +1,7 @@
 ***********************************************************************
 *     ---------------------------------------------------
-      SUBROUTINE RSDISTG(IMODE,INLEP,ENU,XINPPR,RETPMU,RETPGAM,RETPPR)
+      SUBROUTINE RSDISTG(IMODE,INLEP,ENU,XINPPR,RETPMU,RETPGAM,RETPPR,
+     $                   IERR)
 *     ---------------------------------------------------
 *
 *     ( purpose )
@@ -46,7 +47,10 @@
 
       INTEGER*4 I
 
+      INTEGER*4 IERR
+
 C---initialize valiables
+      IERR = 0
 
       XMLEP = 0.00000
       if ((IMODE.eq.1).or.(IMODE.eq.11))
@@ -98,7 +102,7 @@ C
         SINPHI=0.00000
       ENDIF
 
-      CALL RSDT33G(IMODE,INLEP,XPNU,TMPPMU,TMPPGAM,TMPPPR)
+      CALL RSDT33G(IMODE,INLEP,XPNU,TMPPMU,TMPPGAM,TMPPPR,IERR)
 
       CALL RS3DRT(TMPPMU,SINTH,COSTH,SINPHI,COSPHI)
       CALL RS3DRT(TMPPGAM,SINTH,COSTH,SINPHI,COSPHI)

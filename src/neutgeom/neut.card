@@ -10,7 +10,7 @@ C--------------------------------
 C
 C Particle Code ; EVCT-IDPT
 C
-EVCT-IDPT 14
+EVCT-IDPT -14
 C
 C--------------------------------
 C
@@ -294,7 +294,7 @@ C  Select Coherent pion model (Rein & Sehgal=0(default), Kartavtsev et al.=1
 CNEUT-COHEPI  0
 C
 C  CCQE Axial Mass (For simulation, must be set to: 1.01, 1.11, 1.21{default}. 1.31)
-CNEUT-MAQE 1.21
+NEUT-MAQE 1.05
 C
 C  CC1pi Axial Mass (For simulation, must be set to: 1.21{default}, 1.11)
 CNEUT-MASPI 1.21
@@ -327,7 +327,15 @@ C          : 4x1 : Full spectral function with dipole
 C          : 4x2 : Full spectral function with BBBA05
 C          : 4x3 : Full spectral function with BBBA07C
 C
-NEUT-MDLQE 402
+NEUT-MDLQE 2002
+C
+CNEUT-MDL2P2H
+C        2p2h implementation
+C		1 : Table
+C		2 : Hadronic tensor
+C
+NEUT-MDL2P2H 1
+C
 C
 C
 C RAND : random seed
@@ -342,3 +350,5 @@ C         1 : Print only interaction mode and neutrino energy
 C         2 : Prints almost nothing (except PYTHIA output)
 C
 NEUT-QUIET 2
+
+NEUT-CRSPATH '../crsdat'

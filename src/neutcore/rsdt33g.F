@@ -1,6 +1,6 @@
 ***********************************************************************
 *     ---------------------------------------------------
-      SUBROUTINE RSDT33G(IMODE,INLEP,E,RETPMU,RETPGAM,RETPNU)
+      SUBROUTINE RSDT33G(IMODE,INLEP,E,RETPMU,RETPGAM,RETPNU,IERR)
 *     ---------------------------------------------------
 *
 *     ( purpose )
@@ -111,6 +111,8 @@ C
 
       INTEGER I
 
+      INTEGER IERR
+
 C     function type
       
       REAL RLU
@@ -129,6 +131,8 @@ C
       DATA NRR/0,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
      1     0,0,0/
       
+
+      IERR = 0
 
 C      
 C     set CONSTANTS
@@ -246,7 +250,8 @@ C-
          write(*,*) "RSDT33: TOO MANY TRY/STOP..."
          write(*,*) "E=",E,"/IMODE=",IMODE,"/INLEP=",INLEP,
      $              "CRSSECT=",SIGMAX
-         STOP
+         IERR = 1
+         RETURN
       ENDIF
 
       RNDSIG = RLU(IRSISED)*SIGMAX

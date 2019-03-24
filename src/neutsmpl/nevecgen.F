@@ -35,12 +35,21 @@ C#include "mcgenpar.h"
 
       REAL POS(3),PMOM(3)
 
+      INTEGER*4 ICOUNTER
+      SAVE      ICOUNTER
+      DATA ICOUNTER/0/
+
       real*4    EVPIPROB
       external  EVPIPROB
 C
       IERR = 1
 C
-      write(*,*) '-----------------------------------------------------'
+C
+      ICOUNTER = ICOUNTER +1
+      if (QUIET.le.1) then
+        write(*,'(A6,I9)') 'Num.: ',ICOUNTER
+      endif
+
 C
 C --  CLEAR COMMONS
 C

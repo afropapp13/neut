@@ -11,8 +11,16 @@
 #ifdef FLUX_11A
 #include "uhdef_11a.fh"
 #else
+#ifdef FLUX_11B
+#include "uhdef_11b.fh"
+#else
+#ifdef FLUX_13
+#include "uhdef_13_uwfunc.fh"
+#else
 #include "beamntpl.h"
 #endif      
+#endif
+#endif
 #endif
 #endif
 
@@ -21,7 +29,7 @@
       EQUIVALENCE(IDATA(1),RDATA(1))
       CHARACTER*32 CNAME
 
-      integer*4 NWMAST,LSEGM,NSEGM,ierr,iseg,i
+      integer*4 NWMAST,LSEGM,NSEGM,ierr,iseg
 C
 C     -- MAKE EMB
 C
@@ -38,7 +46,7 @@ C-- Version
      $     '1F 2I 23F 3I 7F 2I 11F 2I 3F 2I 7F 8I',IERR)
       IDATA(1)=2
 #else
-#if defined(FLUX_10C)||defined(FLUX_11A)
+#if defined(FLUX_10C)||defined(FLUX_11A)||defined(FLUX_11B)||defined(FLUX_13)
       CALL KZBCR0(CNAME,IERR)
       IDATA(1)=3
 #else
@@ -50,7 +58,7 @@ C-- Version
 #endif
       IF (IERR.NE.0) GOTO 1000
 
-#if defined(FLUX_10C)||defined(FLUX_11A)
+#if defined(FLUX_10C)||defined(FLUX_11A)||defined(FLUX_11B)||defined(FLUX_13)
       CALL KZREP0(CNAME,0,'I',1,IDATA)
 #else
       CALL KZREP1(CNAME,0,NWMAST,IDATA)
@@ -171,7 +179,7 @@ C           +27 : I : ID of the front(near) detector
       IDATA(70)=gpdghtFD
       IDATA(71)=chainFD
 #endif
-#if defined(FLUX_10C)||defined(FLUX_11A)
+#if defined(FLUX_10C)||defined(FLUX_11A)||defined(FLUX_11B)
       IDATA(28)=nvtx0FD
       IDATA(29)=gipartFD
       RDATA(30)=gpos0FD(1)
@@ -185,6 +193,13 @@ C           +27 : I : ID of the front(near) detector
       RDATA(38)=normSKFD
       RDATA(39)=anormFD
       IDATA(40)=ngFD
+
+#ifdef FLUX_11B
+      if (ngFD.gt.ngFDMAX) then
+         ngFD = ngFDMAX
+      endif
+#endif
+
       DO 100 I=1,ngFD
          RDATA(41+(I-1)*9)=gpxFD(I)
          RDATA(42+(I-1)*9)=gpyFD(I)
@@ -195,17 +210,46 @@ C           +27 : I : ID of the front(near) detector
          RDATA(47+(I-1)*9)=gvzFD(I)
          IDATA(48+(I-1)*9)=gpidFD(I)
          IDATA(49+(I-1)*9)=gmecFD(I)
- 100  continue
+#if defined(FLUX_11A)||defined(FLUX_11B)
+         IDATA(50+(I-1)*9)=gmatFD(I)   
+         RDATA(51+(I-1)*9)=gdistcFD(I) 
+         RDATA(52+(I-1)*9)=gdistalFD(I)
+         RDATA(53+(I-1)*9)=gdisttiFD(I)
+         RDATA(54+(I-1)*9)=gdistfeFD(I)
 #endif
-      ISEG=1
+#endif
+ 100  continue
 
-#if defined(FLUX_10C)||defined(FLUX_11A)
+#if defined(FLUX_13)
+      IDATA(55+(ngFD-1)*9)=idExitFD
+      IDATA(56+(ngFD-1)*9)=ngExitFD
+
+      RDATA(57+(ngFD-1)*9)=posExitFD(1)
+      RDATA(58+(ngFD-1)*9)=posExitFD(2)
+      RDATA(59+(ngFD-1)*9)=posExitFD(3)
+
+      RDATA(60+(ngFD-1)*9)=momExitFD(1)
+      RDATA(61+(ngFD-1)*9)=momExitFD(2)
+      RDATA(62+(ngFD-1)*9)=momExitFD(3)
+#endif         
+      ISEG=1
+      
+#if defined(FLUX_10C)
       LSEGM = 49 + ngFD*9
+      CALL KZREP0(CNAME,ISEG,'F',LSEGM,IDATA)
+#else
+#if defined(FLUX_11A)||defined(FLUX_11B)
+      LSEGM = 54 + ngFD*9
+      CALL KZREP0(CNAME,ISEG,'F',LSEGM,IDATA)
+#else      
+#if defined(FLUX_13)
+      LSEGM = 49 + ngFD*9 +  8
       CALL KZREP0(CNAME,ISEG,'F',LSEGM,IDATA)
 #else
       CALL KZREP1(CNAME,ISEG,LSEGM,IDATA(1))
 #endif
-
+#endif
+#endif
 
       RETURN
 C     

@@ -20,6 +20,7 @@ C+       2011.10.27 ; Update of the excitation-energy region of the s-hole state
 C+       2014.06.24 : Change to Ankowski spectral factor 
 C+       2014.08.11 : Revise Ankowski spectral factor 
 C+       2017.11.22 ; move others from p1/2 to s1/2
+C+       2018.11.10 ; small bug above change
 
       implicit none
       
@@ -63,8 +64,9 @@ C
       integer max_shell
       parameter (max_shell = 3)
       real prob_shell(max_shell)
-C      data prob_shell/0.1055,0.3515,0.543/ ! s(1/2), p(3/2), the others
-      data prob_shell/0.543,0.3515,0.1055/ ! s(1/2), p(3/2), the others
+C      data prob_shell/0.1055,0.3515,0.543/ ! s(1/2), p(3/2), no gamma
+C      data prob_shell/0.543,0.3515,0.1055/ ! s(1/2), p(3/2), no gamma
+      data prob_shell/0.4905,0.3515,0.158/ ! s(1/2), p(3/2), no gamma
       
 C+ Description of p-shell proton hole modes
       integer pp_hole

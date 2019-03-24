@@ -12,6 +12,6 @@ end
 echo '}' >> $RFLIST
 cat $RFLIST
 echo $1
-./${MACHINE}/neutntpl
+./neutntpl
 mv genvec.nt $1
 \/bin/rm $RFLIST
