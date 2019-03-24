@@ -257,17 +257,44 @@ public:
     case ( kXSecTwkDial_MaRESshape     ) : return "MaRESshape";         break;
     case ( kXSecTwkDial_MvRES          ) : return "MvRES";              break;
 
+    case (  kXSecTwkDial_FFRES         ) : return "FFRES";              break;
+    case (  kXSecTwkDial_TypeRES       ) : return "TypeRES";            break;
+    case (  kXSecTwkDial_CA5RES        ) : return "CA5RES";             break;
+    case (  kXSecTwkDial_BgSclRES      ) : return "BgSclRES";           break;
+    case (  kXSecTwkDial_MaNFFRES      ) : return "MaNFFRES";           break;
+    case (  kXSecTwkDial_MvNFFRES      ) : return "MvNFFRES";           break;
+    case (  kXSecTwkDial_MaRSRES       ) : return "MaRSRES";            break;
+    case (  kXSecTwkDial_MvRSRES       ) : return "MvRSRES";            break;
+
     case ( kXSecTwkDial_NormCCRES        ) : return "NormCCRES";            break;
     case ( kXSecTwkDial_MaCCRESshape     ) : return "MaCCRESshape";         break;
       //case ( kXSecTwkDial_MvCCRESshape     ) : return "MvCCRESshape";         break;
     case ( kXSecTwkDial_MaCCRES          ) : return "MaCCRES";              break;
     case ( kXSecTwkDial_MvCCRES          ) : return "MvCCRES";              break;
 
+    case (  kXSecTwkDial_FFCCRES         ) : return "FFCCRES";              break;
+    case (  kXSecTwkDial_TypeCCRES       ) : return "TypeCCRES";            break;
+    case (  kXSecTwkDial_CA5CCRES        ) : return "CA5CCRES";             break;
+    case (  kXSecTwkDial_BgSclCCRES      ) : return "BgSclCCRES";           break;
+    case (  kXSecTwkDial_MaNFFCCRES      ) : return "MaNFFCCRES";           break;
+    case (  kXSecTwkDial_MvNFFCCRES      ) : return "MvNFFCCRES";           break;
+    case (  kXSecTwkDial_MaRSCCRES       ) : return "MaRSCCRES";            break;
+    case (  kXSecTwkDial_MvRSCCRES       ) : return "MvRSCCRES";            break;
+
     case ( kXSecTwkDial_NormNCRES        ) : return "NormNCRES";            break;
     case ( kXSecTwkDial_MaNCRESshape     ) : return "MaNCRESshape";         break;
       //case ( kXSecTwkDial_MvNCRESshape     ) : return "MvNCRESshape";         break;
     case ( kXSecTwkDial_MaNCRES          ) : return "MaNCRES";              break;
     case ( kXSecTwkDial_MvNCRES          ) : return "MvNCRES";              break;
+
+    case (  kXSecTwkDial_FFNCRES         ) : return "FFNCRES";              break;
+    case (  kXSecTwkDial_TypeNCRES       ) : return "TypeNCRES";            break;
+    case (  kXSecTwkDial_CA5NCRES        ) : return "CA5NCRES";             break;
+    case (  kXSecTwkDial_BgSclNCRES      ) : return "BgSclNCRES";           break;
+    case (  kXSecTwkDial_MaNFFNCRES      ) : return "MaNFFNCRES";           break;
+    case (  kXSecTwkDial_MvNFFNCRES      ) : return "MvNFFNCRES";           break;
+    case (  kXSecTwkDial_MaRSNCRES       ) : return "MaRSNCRES";            break;
+    case (  kXSecTwkDial_MvRSNCRES       ) : return "MvRSNCRES";            break;
 
     case ( kXSecTwkDial_NECOHEPI         ) : return "NECOHEPI";             break;
     case ( kXSecTwkDial_MaCOHpi          ) : return "MaCOHpi";              break;
@@ -366,11 +393,29 @@ public:
        kXSecTwkDial_MaRES,      
        kXSecTwkDial_MvRES,      
 
+       kXSecTwkDial_FFRES,
+       kXSecTwkDial_TypeRES,
+       kXSecTwkDial_CA5RES,
+       kXSecTwkDial_BgSclRES,
+       kXSecTwkDial_MaNFFRES,
+       kXSecTwkDial_MvNFFRES,
+       kXSecTwkDial_MaRSRES,
+       kXSecTwkDial_MvRSRES,
+
        kXSecTwkDial_NormCCRES,    
        kXSecTwkDial_MaCCRESshape, 
        //kXSecTwkDial_MvCCRESshape, 
        kXSecTwkDial_MaCCRES,      
        kXSecTwkDial_MvCCRES,      
+
+       kXSecTwkDial_FFCCRES,
+       kXSecTwkDial_TypeCCRES,
+       kXSecTwkDial_CA5CCRES,
+       kXSecTwkDial_BgSclCCRES,
+       kXSecTwkDial_MaNFFCCRES,
+       kXSecTwkDial_MvNFFCCRES,
+       kXSecTwkDial_MaRSCCRES,
+       kXSecTwkDial_MvRSCCRES,
 
        kXSecTwkDial_NormNCRES,    
        kXSecTwkDial_MaNCRESshape, 
@@ -378,6 +423,15 @@ public:
        kXSecTwkDial_MaNCRES,      
        kXSecTwkDial_MvNCRES, 
      
+       kXSecTwkDial_FFNCRES,
+       kXSecTwkDial_TypeNCRES,
+       kXSecTwkDial_CA5NCRES,
+       kXSecTwkDial_BgSclNCRES,
+       kXSecTwkDial_MaNFFNCRES,
+       kXSecTwkDial_MvNFFNCRES,
+       kXSecTwkDial_MaRSNCRES,
+       kXSecTwkDial_MvRSNCRES,
+
        kXSecTwkDial_NECOHEPI,
        kXSecTwkDial_MaCOHpi,      
        kXSecTwkDial_R0COHpi,    

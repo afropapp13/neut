@@ -25,10 +25,10 @@ COREDIR =	../neutcore/Linux_pc
 
 LIBDIRS =	-L${COREDIR}         -L../nuccorspl/Linux_pc \
 			-L../nuceff/Linux_pc -L../partnuck/Linux_pc \
-                      -L../skmcsvc/Linux_pc -L../specfunc/Linux_pc -L../specfunc
+                      -L../skmcsvc/Linux_pc -L../specfunc/Linux_pc -L../specfunc		-L../radcorr
 
-NEUTCOREVER	= 5.3.5
-INEUTCOREVER= 535
+NEUTCOREVER	= 5.3.6
+INEUTCOREVER= 536
 NUCEFFVER   = 5.3.5
 INUCEFFVER  = 535
 NUCCORVER   = 5.3.5
@@ -50,7 +50,7 @@ FORTRANDEFINES += -DNENUCC_VERSION=$(INUCCORVER)
 
 MCLIB = ${LIBDIRS}   -lneutcore_${NEUTCOREVER} -lnuceff_${NUCEFFVER} \
 		     -lneutcore_${NEUTCOREVER} -lnuccorrspl_${NUCCORVER} \
-                     -lpartnuck_${PARTNUCKVER} -lskmcsvc_${SKMCSVCVER} -lspecfunc_${SPECFUNCVER}
+                     -lpartnuck_${PARTNUCKVER} -lskmcsvc_${SKMCSVCVER} -lspecfunc_${SPECFUNCVER}  -lradcorr_${RADCORRVER}
 
 
 CLIBS = ${CERN}/${CERN_LEVEL}/lib/libjetset74.a \
@@ -111,3 +111,4 @@ dumptotpau_nd280: dumptotpau_nd280.o $(OBJS)
 
 clean:
 	$(RM) -f *.o *~ ${OBJS} event_rate genev dumptotpau_nd280
+:q!

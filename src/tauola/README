@@ -2,6 +2,20 @@ README for SK ATMPD Tauola directory.
 
 Please update if you change Tauola
 
+
+====================
+* Fix to tauola parent/child identification
+
+  Must initialize NP1 and NP2 in common block /TAUPOS/ both to 1 in subroutines DEKAY, DEXAY
+      
+  - By default tauola assumes tau+ is in position 3 and tau- is in position 4
+  - For SK, both are always in position 1.
+  - This mistake causes some particles to not be simulated.
+
+  Alex Himmel 10/28/2014
+====================
+
+
 * Updated to http://cern.ch/~wasm/public/TAUOLA-exp-11-10-2005.tar.gz
 on 2007/06/06 (CWW)
 

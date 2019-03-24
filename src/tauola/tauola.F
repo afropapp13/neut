@@ -133,8 +133,13 @@ C JAK=0 INCLUSIVE:  JAK=1,2,3,4,5,6,7,8
 C     ==================
 C       INITIALISATION OR REINITIALISATION
 C       first or second tau positions in HEPEVT as in KORALB/Z
-        NP1=3
-        NP2=4
+C=======Fix for Super-Kamiokande
+C       tau+ and tau- are always in position 1
+C        NP1=3
+C        NP2=4
+        NP1=1
+        NP2=1
+C============================== 
         KTOM=1
         IF (IWARM.EQ.1) X=5/(IWARM-1)
         IWARM=1
@@ -553,8 +558,13 @@ C     ==================
 
 C       INITIALISATION OR REINITIALISATION
 C       first or second tau positions in HEPEVT as in KORALB/Z
-        NP1=3
-        NP2=4
+C=======Fix for Super-Kamiokande
+C        NP1=3
+C        NP2=4
+        NP1=1
+        NP2=1
+C       For SK, tau+ and tau- are always in position 1
+C============================== 
         IWARM=1
         WRITE(IOUT, 7001) JAK1,JAK2
         NEVTOT=0

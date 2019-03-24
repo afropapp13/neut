@@ -118,6 +118,12 @@ C- original form factor
       DO 110 I=1,IEMAX
          IF (E.LT.ETBL(I)) THEN
             IF (I.NE.1) THEN
+               IF( (IMODE.lt. 4).or.
+     $            ((IMODE.gt.10).and.(IMODE.lt.14))) THEN
+                  IF (ETBL(I-1).eq.3.50) THEN
+                     ETBL(I-1) = 4.05
+                  endif
+               ENDIF                  
                SIGMA = (E-ETBL(I-1))/(ETBL(I)-ETBL(I-1))*
      $              (XNUCRS(IMODE,1,I)-XNUCRS(IMODE,1,I-1))
      $              +XNUCRS(IMODE,1,I-1)
@@ -137,7 +143,8 @@ C- original form factor
       SIGMA = SIGMA / 10.
       SIGMA3= SIGMA3/ 10.
 
-      IF((E.LT.3.92).and.((IMODE.lt.4).or.((IMODE.gt.10).and.(IMODE.
+C      IF((E.LT.3.92).and.((IMODE.lt.4).or.((IMODE.gt.10).and.(IMODE.
+      IF((E.LT.4.05).and.((IMODE.lt.4).or.((IMODE.gt.10).and.(IMODE.
      $     lt.14)))) THEN
 *        write(*,*) "RSTCTST: E<3.92GeV",E,SIGMA,SIGMA3
          SIGMA=0.

@@ -16,9 +16,11 @@
 *       1995.10.26 ; K.Kaneyuki
 *
 **********************************************************************
+#include "nework.h"
 #include "vcwork.h"
 #include "vcvrtx.h"
 #include "taucom.h"
+#include "posinnuc.h"
 #include "tahepevt.h"
 
       REAL DIR0(3),DIR1(3),DIR2(3),P(3)
@@ -89,6 +91,9 @@ C            write (*,*) "NHEP: ", nhep
                IPVC(NALL)=IDHEP(J)
 c               CALL MCMASS(IPVC(J),AMASVC(NALL))
                CALL MCMASS(IPVC(NALL),AMASVC(NALL))
+               POSNUC(1,NALL)=POSNUC(1,I)
+               POSNUC(2,NALL)=POSNUC(2,I)
+               POSNUC(3,NALL)=POSNUC(3,I)
 C
 C --           ROTATE EACH PARTICLE
 C               

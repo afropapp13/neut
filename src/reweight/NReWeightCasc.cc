@@ -254,7 +254,7 @@ double NReWeightCasc::CalcWeight()
   		   (TMath::Abs(fAbsTwkDial) > controls::kASmallNum) ||
   		   (TMath::Abs(fPiProdTwkDial) > controls::kASmallNum) ||
   		   (TMath::Abs(fCExLowTwkDial) > controls::kASmallNum) ||
-  		   (TMath::Abs(fCExHighTwkDial) > controls::kASmallNum) );
+  		   (TMath::Abs(fCExHighTwkDial) > controls::kASmallNum) ||
   		   (TMath::Abs(fAllTwkDial) > controls::kASmallNum) );
 
 

@@ -74,7 +74,8 @@ namespace rew   {
    double fCExHighCurr;    ///<
    double fInelHighCurr;    ///<
    double fAllCurr;    ///<
-     
+   double fAllDef;
+
    double fCExLowDef;    ///<
    double fInelLowDef;    ///<
    double fAbsDef;       ///<

@@ -58,7 +58,7 @@ XCOMM
 XCOMM
 
 LIBALIAS =  tauola
-VER = 2.0.1
+VER = 2.0.2
 
 LIBNAME = $(LIBALIAS)_$(VER)
 

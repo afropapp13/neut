@@ -75,7 +75,7 @@ C--
          endif
          
          if (mode.eq.41) then
-            fnrawcrs=APICRSNC*R1320NC*CRSNEUT(10)
+            fnrawcrs=APICRSNC*R1320NC
          endif
          
          if (mode.eq.51) then

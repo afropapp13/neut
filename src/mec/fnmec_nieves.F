@@ -106,6 +106,13 @@ C
 C-------------------------------------------------------------
       FNMEC_NIEVES=0.
 
+C
+C-- at this moment nutau is not supported
+C      
+      if ((abs(ipar).ne.12).and.(abs(ipar).ne.14)) then
+         return
+      endif
+
       lenpath = lenstr(crstblpath)      
 C     
 C     check is energy is within permissible range.

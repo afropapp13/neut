@@ -192,6 +192,8 @@ C   All cross-section files are read only once when ILOADQERPA = 0
  
        if (iloadqerpa.ne.0) goto 100
 C Open four files                
+         lenpath = lenstr(crstblpath)
+       
     	 DUMSTR1='RPA_corr_E-Q2_numu_c.dat' 
          IDTAG=1
          DUMSTR1=CRSTBLPATH(1:lenpath)//DUMSTR1

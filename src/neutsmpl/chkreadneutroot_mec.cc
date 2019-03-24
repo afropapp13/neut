@@ -9,7 +9,7 @@ chkreadneutroot()
   gSystem->Load("../neutclass/neutpart.so");
   gSystem->Load("../neutclass/neutfsipart.so");
   gSystem->Load("../neutclass/neutfsivert.so");
-  gSystem->Load("../neutclass/neutnucfsipart.so");
+  gSystem->Load("../neutclass/neutnucfsistep.so");
   gSystem->Load("../neutclass/neutnucfsivert.so");
   gSystem->Load("../neutclass/neutvect.so");
   
