@@ -38,6 +38,8 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
 C--Fill interaction models
 
+      call reset_signal
+
       call nefillmodel
       
       corev = NECORE_VERSION

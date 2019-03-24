@@ -20,14 +20,15 @@ FORTRANDEFINES += -DNENUCE_VERSION=$(INUCEFFVER)
 FORTRANDEFINES += -DNENUCC_VERSION=$(INUCCORVER) -g -O0 #-ffortran-bounds-check
 
 #FORTRANDEFINES += -DFLUX_10C
-FORTRANDEFINES += -DFLUX_11A
+#FORTRANDEFINES += -DFLUX_11A
+FORTRANDEFINES += -DFLUX_11B
 
 XCOMM ------------------------------------------------------
 XCOMM Define Object Files
 XCOMM ------------------------------------------------------
 
 OBJS  = necardbm.o necpjndfxcm.o nemkjndfx.o nerdnufxv.o rnbmom2802.o \
-	tauvect.o neopnufxv.o nerd1nufxv.o 
+	tauvect.o neopnufxv.o nerd1nufxv.o reset_signal_.o
 
 POBJS = ${COREDIR}/structm.o ${COREDIR}/pdfset.o ${COREDIR}/grv94di.o ${COREDIR}/grv98_lo.o
 
@@ -41,7 +42,7 @@ COREDIR =	../neutcore/Linux_pc
 LIBDIRS =	-L${COREDIR}            -L../nuccorspl/Linux_pc \
 			-L../nuceff/Linux_pc -L../partnuck/Linux_pc  \
 			-L../zbsfns/Linux_pc -L../skmcsvc/Linux_pc \
-			-L../specfunc/Linux_pc
+			-L../specfunc -L../radcorr
 
 MCLIB = ${LIBDIRS} -lneutcore_${NEUTCOREVER} -lspecfunc_${SPECFUNCVER} \
 		-lnuceff_${NUCEFFVER} -lneutcore_${NEUTCOREVER} \

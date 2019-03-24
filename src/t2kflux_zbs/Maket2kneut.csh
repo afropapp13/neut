@@ -32,9 +32,9 @@ cd ${SOMEWHERE}/t2kflux_zbs
 
 #############################################################################
 
-foreach datfile ($DATFILES)
-   ln -s ../crsdat/$datfile
-end
+#foreach datfile ($DATFILES)
+#   ln -s ../crsdat/$datfile
+#end
 
 #############################################################################
 echo "--------- COMPILING ZBSFNS LIBS --------- "

@@ -19,9 +19,15 @@
 #define FLXCOM  nusk_
 #define NDBMNTPLID HID_NUFD2
 #else
+#ifdef FLUX_11B
+#include "uhdef_11b.fh"
+#define FLXCOM  nusk_
+#define NDBMNTPLID HID_NUFD2
+#else
 #include "beamntpl.h"
 #define FLXCOM  fxvcsk_
 #define NDBMNTPLID HID_NUFD1
+#endif      
 #endif      
 #endif      
 #endif
@@ -200,7 +206,7 @@ C--------------
                   giparttbl(nptall)  =gipartFD
                   gamom0tbl(nptall)  =gamom0FD
 #endif
-#if defined(FLUX_10C)||defined(FLUX_11A)
+#if defined(FLUX_10C)||defined(FLUX_11A)||defined(FLUX_11B)
                   nvtx0tbl(nptall)   =nvtx0FD   
                   giparttbl(nptall)  =gipartFD  
                   gamom0tbl(nptall)  =gamom0FD  
@@ -208,6 +214,11 @@ C--------------
                   normSKtbl(nptall)  =normSKFD  
                   anormtbl(nptall)   =anormFD   
                   ngtbl(nptall)      =ngFD      
+#ifdef FLUX_11B
+      if (ngFD.gt.ngFDMAX) then
+         ngFD = ngFDMAX
+      endif
+#endif
       
                   DO 80 I=1,ngFD
                      gpxtbl(I,nptall)   = gpxFD(I)
@@ -249,7 +260,7 @@ C                 endif
                      gpos0tbl(i,nptall)   =gpos0FD(i)
                      gvec0tbl(i,nptall)   =gvec0FD(i)
 #endif
-#ifdef FLUX_11A
+#if defined(FLUX_11A)||defined(FLUX_11B)
                      gmatFDtbl(I,nptall)   =gmatFD(I)   
                      gdistcFDtbl(I,nptall) =gdistcFD(I) 
                      gdistalFDtbl(I,nptall)=gdistalFD(I)

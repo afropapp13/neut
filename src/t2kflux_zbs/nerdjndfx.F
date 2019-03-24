@@ -11,7 +11,11 @@
 #ifdef FLUX_11A
 #include "uhdef_11a.fh"
 #else
+#ifdef FLUX_11B
+#include "uhdef_11b.fh"
+#else
 #include "beamntpl.h"
+#endif
 #endif
 #endif      
 #endif
@@ -75,7 +79,7 @@ C                                             in global coord. (z)
 C           +27 : I : ID of the front(near) detector
 
       ISEG=1
-#if defined(FLUX_10C)||defined(FLUX_11A)
+#if defined(FLUX_10C)||defined(FLUX_11A)||defined(FLUX_11B)
       CALL KZGET0(CNAME,ISEG,NDATA,IDATA)
 #else
       CALL KZGET1(CNAME,ISEG,NDATA,IDATA)
@@ -87,7 +91,7 @@ C           +27 : I : ID of the front(near) detector
          STOP
       endif
 #else
-#if defined(FLUX_10C)||defined(FLUX_11A)
+#if defined(FLUX_10C)||defined(FLUX_11A)||defined(FLUX_11B)
 #else
       if (NDATA.NE.27) THEN
          write(*,*) 'Length of the bank is different from 27(-07A)'
@@ -169,7 +173,7 @@ C           +27 : I : ID of the front(near) detector
       gpdghtFD  = IDATA(70)
       chainFD   = IDATA(71)
 #endif
-#if defined(FLUX_10C)||defined(FLUX_11A)
+#if defined(FLUX_10C)||defined(FLUX_11A)||defined(FLUX_11B)
       nvtx0FD   = IDATA(28)
       gipartFD  = IDATA(29)
       gpos0FD(1)= RDATA(30)
@@ -183,6 +187,12 @@ C           +27 : I : ID of the front(near) detector
       normSKFD  = RDATA(38)
       anormFD   = RDATA(39)
       ngFD      = IDATA(40)
+#ifdef FLUX_11B
+      if (ngFD.gt.ngFDMAX) then
+         ngFD = ngFDMAX
+      endif
+#endif
+
       DO 100 I=1,ngFD
          gpxFD(I)   = RDATA(41+(I-1)*9)
          gpyFD(I)   = RDATA(42+(I-1)*9)
@@ -195,7 +205,7 @@ C           +27 : I : ID of the front(near) detector
          gmecFD(I)  = IDATA(49+(I-1)*9)
  100  continue
 
-#ifdef FLUX_11A
+#if defined(FLUX_11A)||defined(FLUX_11B)
       IOFST = 50 + (I-1)*9
       DO 110 I=1,ngFD
          gmatFD(I)   = IDATA(IOFST  +(I-1)*5)

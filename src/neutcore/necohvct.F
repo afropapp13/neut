@@ -286,8 +286,8 @@ C     PION MOMENTUM CALCULATION PART
          P5ABS = SQRT(ABS(EPI**2-PIMASS**2))
          
          ST = SQRT(ABS(1.-Z*Z))
-         CP = COS(PHI)
-         SP = SIN(PHI)
+         CP = COS(PHI+PSI)
+         SP = SIN(PHI+PSI)
          IF ( XYABS.EQ.0. ) THEN
             PNE(1,5) = P5ABS*ST*SP
             PNE(2,5) = P5ABS*ST*CP

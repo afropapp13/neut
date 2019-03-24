@@ -11,8 +11,12 @@
 #ifdef FLUX_11A
 #include "uhdef_11a.fh"
 #else
+#ifdef FLUX_11B
+#include "uhdef_11b.fh"
+#else
 #include "beamntpl.h"
 #endif      
+#endif
 #endif
 #endif
 
@@ -38,7 +42,7 @@ C-- Version
      $     '1F 2I 23F 3I 7F 2I 11F 2I 3F 2I 7F 8I',IERR)
       IDATA(1)=2
 #else
-#if defined(FLUX_10C)||defined(FLUX_11A)
+#if defined(FLUX_10C)||defined(FLUX_11A)||defined(FLUX_11B)
       CALL KZBCR0(CNAME,IERR)
       IDATA(1)=3
 #else
@@ -50,7 +54,7 @@ C-- Version
 #endif
       IF (IERR.NE.0) GOTO 1000
 
-#if defined(FLUX_10C)||defined(FLUX_11A)
+#if defined(FLUX_10C)||defined(FLUX_11A)||defined(FLUX_11B)
       CALL KZREP0(CNAME,0,'I',1,IDATA)
 #else
       CALL KZREP1(CNAME,0,NWMAST,IDATA)
@@ -171,7 +175,7 @@ C           +27 : I : ID of the front(near) detector
       IDATA(70)=gpdghtFD
       IDATA(71)=chainFD
 #endif
-#if defined(FLUX_10C)||defined(FLUX_11A)
+#if defined(FLUX_10C)||defined(FLUX_11A)||defined(FLUX_11B)
       IDATA(28)=nvtx0FD
       IDATA(29)=gipartFD
       RDATA(30)=gpos0FD(1)
@@ -185,6 +189,13 @@ C           +27 : I : ID of the front(near) detector
       RDATA(38)=normSKFD
       RDATA(39)=anormFD
       IDATA(40)=ngFD
+
+#ifdef FLUX_11B
+      if (ngFD.gt.ngFDMAX) then
+         ngFD = ngFDMAX
+      endif
+#endif
+
       DO 100 I=1,ngFD
          RDATA(41+(I-1)*9)=gpxFD(I)
          RDATA(42+(I-1)*9)=gpyFD(I)
@@ -199,7 +210,7 @@ C           +27 : I : ID of the front(near) detector
 #endif
       ISEG=1
 
-#if defined(FLUX_10C)||defined(FLUX_11A)
+#if defined(FLUX_10C)||defined(FLUX_11A)||defined(FLUX_11B)
       LSEGM = 49 + ngFD*9
       CALL KZREP0(CNAME,ISEG,'F',LSEGM,IDATA)
 #else

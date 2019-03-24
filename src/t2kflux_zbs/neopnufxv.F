@@ -14,8 +14,13 @@
 #include "uhdef_11a.fh"
 #define NDBMNTPLID 3002
 #else
+#ifdef FLUX_11B
+#include "uhdef_11b.fh"
+#define NDBMNTPLID 3002
+#else
 #include "beamntpl.h"
 #define NDBMNTPLID 3001
+#endif      
 #endif      
 #endif      
 #endif

@@ -25,8 +25,8 @@
 *                                Atomic number is given by "NUMATOM"
 *
 *     (Comment)
-*       THIS FUNCTION NEED FOR SUBROUTINE 'COHVCT' WHICH IS A MONTE-CALRO
-*       SUMILATION PROGRAM OF COHERENT PI0 PRODUCTION.
+*      THIS FUNCTION NEED FOR SUBROUTINE 'COHVCT' WHICH IS A MONTE-CALRO
+*      SUMILATION PROGRAM OF COHERENT PI0 PRODUCTION.
 *
 ************************************************************************
       IMPLICIT NONE
@@ -159,12 +159,13 @@ C     PCAC CORRECTION FACTOR
       corr = 1.-Q2min/(2.*(Q2+PIMASS**2.))
       corr = corr*corr + Y/4.*Q2min*(Q2-Q2min)/(Q2+PIMASS**2.)**2.   
 C      corr = corr*2*COS(THETACAB)**2
+      corr = corr*COS(THETACAB)**2
 C
 C--- cross-section became half for CC but to keep consistency 
 C    with the previously generated events
 C    also, dcohmxne uses 1/2 values for CC.
 C      
-      corr = corr*COS(THETACAB)**2
+C     corr = corr*COS(THETACAB)**2
       if(Y.lt.ymin.or.Y.gt.ymax.or.
      &     Q2.lt.Q2min.or.Q2.gt.Q2max) corr=0.
 C     **************************
@@ -182,20 +183,24 @@ C  Convert in unit of 10^-38 cm^2
       FRONT = FRONT*1.E-24*1.E+38
 
 C  COS ALPHA WITH LEPTON MASS
+      IF(E**2*(1-Y)**2-XLEPMASS**2 .eq.0) goto 100
       cosa = (2*E**2*(1-Y)-2*PRMASS*E*X*Y-XLEPMASS**2)/
      & (2*E*SQRT(ABS(E**2*(1-Y)**2-XLEPMASS**2))) 
+C      cosa = (-2*PRMASS*X*Y*E+(E*Y)**2+XLEPMASS**2-E**2)/
+C     & (2*E**2*Y) 
       IF(ABS(cosa).GT.1) goto 100
 
 C  Q WITH LEPTON MASS
       q = SQRT(ABS(2*E**2*(1-Y)*(1-SQRT(ABS(1-XLEPMASS**2/
-     & (E**2*(1-Y)**2)))*cosa)+(E*Y)**2)-XLEPMASS**2)  
+     & (E**2*(1-Y)**2)))*cosa)+(E*Y)**2-XLEPMASS**2) ) 
+C      q = SQRT(ABS(-E**2*(1+2*Y*cosa)+XLEPMASS**2))
       IF(ISNAN(q).OR.q.EQ.0) goto 100    
 
 C  u AND v AS DESCRIBED IN B&S PAPER
       u = (E*(2-Y)+q)/(2*E)
       v = (E*(2-Y)-q)/(2*E)
-      Jacobian = 2*E**2*Y**2*SQRT(1-(PIMASS/(E*Y))**2)*
-     & SQRT(1+2*PRMASS*X/(E*Y)) * 2*PRMASS*E*Y
+      Jacobian = 2*E**2*Y**2*SQRT(ABS(1-(PIMASS/(E*Y))**2))*
+     & SQRT(ABS(1+2*PRMASS*X/(E*Y))) * 2*PRMASS*E*Y
 
 C  FULL KINEMATIC FACTOR
       KIN = E*u*v*Jacobian/q
@@ -212,7 +217,7 @@ C  CALCULATE |t| WITH A SCALING
       ARG2=(1.-Z**2)*Y2MPE2*(2.*PRMASS/E)*X*Y
       ARG2=ARG2*(1.-Y*(1.+PRMASS*X/(2.*E)))
       ARG2=SQRT(ABS(ARG2))*COS(PHI)
-      t = 2*E**2*(ARG1+ARG2)*(ATOMN/12.)**(2/3)
+      t = 2*E**2*(ARG1+ARG2)
       
       IF(ISNAN(t)) goto 100  
 
@@ -221,7 +226,7 @@ C  PION-NEUCLEON INELASTIC CROSS SECTION SUBROUTINE (UNIT FM)
       IF (DSIGEL.LT.0.00) goto 100
 
 C  DIFFERENTIAL XS WITH A SCALING
-      DCOHNEBERGER = FRONT*KIN*DSIGEL*corr*(ATOMN/12.)**2
+      DCOHNEBERGER = FRONT*KIN*DSIGEL*corr*(ATOMN/12.)
     
 C      write(*,*) 'DCOHNER = ',DCOHNEBERGER
 C      write(*,*) '-------------------------------------------'

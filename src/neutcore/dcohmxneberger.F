@@ -71,7 +71,7 @@ C Values for E = 200 to 1000 GeV
          ENDIF
       ENDIF
 *     scaling factor is applied for other target than 12C
-      DCOHMXNEBERGER = SIGMAX(IE)*(float(NUMATOM)/12.)**(1./3.)
+      DCOHMXNEBERGER = SIGMAX(IE)*(float(NUMATOM)/12.)
 
       RETURN
       END
