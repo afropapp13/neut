@@ -1,4 +1,4 @@
-# neut
+# Neut
 <h2>When you found issues or bugs in the existing code</h2>
 Please do not commit to the master.</br>
 There is a branch for the next version and bug fix release.</br>
