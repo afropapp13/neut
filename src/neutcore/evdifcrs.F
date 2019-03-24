@@ -388,25 +388,28 @@ C         ENDIF
 
          ccnc = 1
 
-         if (IBOUND .eq. 1) then
-            if (mod(mdlqe,1000).ge.400 .and.
-     $           mod(mdlqe,1000).lt.500) then
-               if (NUMATOM.eq.16 .or. NUMATOM.eq.12 
-     $              .or. NUMATOM.eq.56) then
-CRT     write(*,*) "SF NUMATOM: ",NUMATOM
-                  evdifcrs
-     $                 = LH(k,kPrime,p,qTilde,IPAR,nc,nucPdg)
-               else
-CRT     write(*,*) "SF RFG NUMATOM: ",NUMATOM
-                  evdifcrs
-     $                 = qedifcrs(ipar, ccnc, e, elep, coslep)
-               endif
+         if (IBOUND .eq. 1) then                 
+            if ((mod(mdlqe,1000)/100 .EQ. 4) .AND. 
+     $          ((NUMATOM.eq.16) .or. 
+     $           (NUMATOM.eq.12) .or. 
+     $           (NUMATOM.eq.56)) ) then
+               evdifcrs
+     $              = LH(k,kPrime,p,qTilde,IPAR,nc,nucPdg, NUMATOM)
+            else if (((mod(mdlqe,1000)/100 .EQ. 6 ) .or.
+     $                (mod(mdlqe,1000)/100 .EQ. 7 )      ).AND.
+     &              ((NUMATOM .eq. 2) .or. (NUMATOM .eq.  3) .or.
+     &               (NUMATOM .eq. 4) .or. (NUMATOM .eq. 12) .or.
+     &               (NUMATOM .eq.16) .or. (NUMATOM .eq. 20) .or.
+     &               (NUMATOM .eq.27) .or. (NUMATOM .eq. 40) .or.
+     &               (NUMATOM .eq.56) .or. (NUMATOM .eq. 63) .or.
+     &               (NUMATOM .eq.64) .or. (NUMATOM .eq.208))) then
+               evdifcrs
+     $              = LH(k,kPrime,p,qTilde,IPAR,nc,nucPdg, NUMATOM)
             else
                evdifcrs
      $              = qedifcrs(ipar, ccnc, e, elep, coslep)
             endif
          else
-CRT            write(*,*) "Free proton CC"
             evdifcrs = dnelsq2(e,ipar,q2)
          endif
 c         if (mdlqe.lt.400) then
@@ -440,16 +443,22 @@ c     endif
       else if ((abs(modene).eq.51).or.(abs(modene).eq.52)) then
          ccnc   = 0
          if (IBOUND .eq. 1) then
-            if (mod(mdlqe,1000).ge.400 .and.
-     $           mod(mdlqe,1000).lt.500 ) then
-               if (NUMATOM.eq.16 .or. NUMATOM.eq.12 
-     $              .or. NUMATOM.eq.56) then
-                  evdifcrs
-     $                 = LH(k,kPrime,p,qTilde,IPAR,nc,nucPdg)
-               else
-                  evdifcrs
-     $                 = qedifcrs(ipar, ccnc, e, elep, coslep)
-               endif
+            if ((mod(mdlqe,1000)/100 .EQ. 100) .AND. 
+     $          ((NUMATOM.eq.16) .or. 
+     $           (NUMATOM.eq.12) .or. 
+     $           (NUMATOM.eq.56))) then
+               evdifcrs
+     $              = LH(k,kPrime,p,qTilde,IPAR,nc,nucPdg, NUMATOM)
+            else if ( ((mod(mdlqe,1000)/100 .EQ. 6 ).or.
+     $                 (mod(mdlqe,1000)/100 .EQ. 7 )    ) .AND.
+     &                ((NUMATOM .eq. 2) .or. (NUMATOM .eq.   3) .or.
+     &                 (NUMATOM .eq. 4) .or. (NUMATOM .eq.  12) .or.
+     &                 (NUMATOM .eq.16) .or. (NUMATOM .eq.  20) .or.
+     &                 (NUMATOM .eq.27) .or. (NUMATOM .eq.  40) .or.
+     &                 (NUMATOM .eq.56) .or. (NUMATOM .eq.  63) .or.
+     &                 (NUMATOM .eq.64) .or. (NUMATOM .eq. 208))) then
+               evdifcrs
+     $              = LH(k,kPrime,p,qTilde,IPAR,nc,nucPdg, NUMATOM)
             else
                evdifcrs
      $              = qedifcrs(ipar, ccnc, e, elep, coslep)

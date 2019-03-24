@@ -35,6 +35,8 @@
 *                                     default value for FZMU2 is 0.08     
 *       2013.10    ; P.Rodrigues & A.Bercellieadd 
 *                              new form facor for Rein&Sehgal 1pi
+*       2016.07    ; C. Bronner 
+*                    Hadron multiplicity model for multi-pi mode
 *
 ************************************************************************
       IMPLICIT NONE
@@ -80,16 +82,25 @@ C --  Initialize
       NENEFMODL = 1
       NENEFKINH = 1
       NEMODFLG = 0
-      CALL VZERO(28,CRSNEUT)
-      CALL VZERO(28,CRSNEUTB)
+      CALL VZERO(30,CRSNEUT)
+      CALL VZERO(30,CRSNEUTB)
       IRANDFLG = 0
-      NECOHEPI = 0
-      NEPDF   = 12
-      NEBODEK = 1
+      NECOHEPI = 2
+      NEDIFPI  = 0
+      NEPDF    = 12
+      NEBODEK  = 1
+      NEMULT   = 0
 
       XMAQE   = 1.21
 C      XMAQE   = 1.03
       XMVQE   = 0.84
+
+C-NCEL
+      XMANCEL  = 1.21
+
+C-- MEC
+      MDL2P2H = 2
+
 C      XMASPI  = 1.21
       XMARSRES = 1.21
       XMVRSRES = 0.84
@@ -108,8 +119,24 @@ C     For form factors for Rein-Seighal update
       fA1COH  = 0.0
       fb1COH  = 0.0 
 
-      MDLQE     = 22
+      MDLQE     = 2002
       MDLQEAF   = 1
+
+      NVQERFG        = 0
+      NVQEBIND       = 1
+
+      NVQERPA        = 1
+      XNVRPAFP0IN    = 0.33
+      XNVRPAPF0EX    = 0.45
+      XNVRPAFSTAR    = 2.13
+      XNVRPAF        = 1.
+      XNVRPAPILAMBDA = 1200.
+      XNVRPACR0      = 2.0
+      XNVRPARHOLAMBDA= 2500
+      XNVRPAGP       = 0.63
+      XNVRPAXMPI     = 139.57
+      XNVRPAXMRHO    = 777.0
+      XNVRPAIREL     = 1.
 
       NEABSPIEMIT = 1
       
@@ -117,10 +144,11 @@ C     For form factors for Rein-Seighal update
       PFMAX  =  0.225
 C      VNUINI = -0.027 ! defined below
       VNUFIN = -0.000
-      IFORMLEN= 1
+      IFORMLEN= 110 ! default ; skip CCQE/Elastic
       FZMU2 = 0.08
 
       NUSIM   = 1
+      NEFKINVER= 0
       QUIET = 0
       ITAUFLGCORE = 0           ! dummy
 
@@ -130,15 +158,15 @@ C      VNUINI = -0.027 ! defined below
       NUMATOM = 16
 
 C     Paramters of new model tuned to pi-scattering data
-      FEFQE   = 1.
-      FEFQEH  = 1.8
-      FEFINEL = 1.
-      FEFABS  = 1.1
+      FEFQE   = 1.069
+      FEFQEH  = 1.824
+      FEFINEL = 1.002
+      FEFABS  = 1.404
       FEFCOH  = 1.
       FEFQEHF = 1.
       FEFCOHF = 0.
-      FEFCX   = 1.
-      FEFCXH  = 1.8
+      FEFCX   = 0.697
+      FEFCXH  = 1.800
       FEFCXHF = 0.
       FEFCOUL = 0
       FEFALL  = 1.
@@ -165,6 +193,10 @@ C     RT: adding error parameter for FP(Q2=0)
       
 C     Radiative correction on/off ( default off )
       IRADCORR = 0
+
+C     RT: adding diffractive pion parameters
+      XMADIF = 1.1
+      NUCVOLDIF = 7.0
 
 C --- get card file name (1st argument of the program)
 
@@ -200,8 +232,10 @@ C -- extract NEUT card
       CALL FFKEY('KINH',NENEFKINH, 1,'INTEGER')
       CALL FFKEY('MODE',NEMODFLG, 1,'INTEGER')
       CALL FFKEY('COHEPI',NECOHEPI, 1,'INTEGER')
+      CALL FFKEY('DIFPI',NEDIFPI, 1,'INTEGER')
       CALL FFKEY('PDF',NEPDF, 1,'INTEGER')
       CALL FFKEY('BODEK',NEBODEK, 1,'INTEGER')
+      CALL FFKEY('MULT',NEMULT, 1,'INTEGER')
 
       CALL FFKEY('IFF',NEIFF, 1,'INTEGER')
       CALL FFKEY('NRTYPE',NENRTYPE, 1,'INTEGER')
@@ -217,6 +251,9 @@ C      CALL FFKEY('MVSPI' ,XMVSPI ,1,'REAL')
       CALL FFKEY('MVRSRES' ,XMVRSRES ,1,'REAL')
       CALL FFKEY('MVNFFRES' ,XMVNFFRES ,1,'REAL')
       CALL FFKEY('KAPP' ,KAPP ,1,'REAL')
+
+      CALL FFKEY('MANCEL' ,XMANCEL ,1,'REAL')
+
       CALL FFKEY('MACOH' ,XMACOH ,1,'REAL')
       CALL FFKEY('R0COH' ,RAD0NU ,1,'REAL')
       CALL FFKEY('fA1COH',fA1COH ,1,'REAL')
@@ -225,8 +262,27 @@ C      CALL FFKEY('MVSPI' ,XMVSPI ,1,'REAL')
       CALL FFKEY('MDLQE',MDLQE,1,'INTEGER')
       CALL FFKEY('MDLQEAF',MDLQEAF,1,'INTEGER')
 
-      CALL FFKEY('CRS' ,CRSNEUT ,28,'REAL')
-      CALL FFKEY('CRSB',CRSNEUTB,28,'REAL')
+      CALL FFKEY('NVQERFG',NVQERFG,1,'INTEGER')
+      CALL FFKEY('NVQEBIND',NVQEBIND,1,'INTEGER')
+
+      CALL FFKEY('NVQERPA',NVQERPA,1,'INTEGER')
+
+      CALL FFKEY('NVRPAFP0IN'    ,XNVRPAFP0IN,1,'INTEGER')
+      CALL FFKEY('NVRPAPF0EX'    ,XNVRPAPF0EX,1,'INTEGER')
+      CALL FFKEY('NVRPAFSTAR'    ,XNVRPAFSTAR,1,'INTEGER')    
+      CALL FFKEY('NVRPAF'        ,XNVRPAF,1,'INTEGER')        
+      CALL FFKEY('NVRPAPILAMBDA' ,XNVRPAPILAMBDA,1,'INTEGER')
+      CALL FFKEY('NVRPACR0'      ,XNVRPACR0,1,'INTEGER')      
+      CALL FFKEY('NVRPARHOLAMBDA',XNVRPARHOLAMBDA,1,'INTEGER')
+      CALL FFKEY('NVRPAGP'       ,XNVRPAGP,1,'INTEGER')
+      CALL FFKEY('NVRPAXMPI'     ,XNVRPAXMPI,1,'INTEGER')     
+      CALL FFKEY('NVRPAXMRHO'    ,XNVRPAXMRHO,1,'INTEGER')
+      CALL FFKEY('NVRPAIREL'     ,XNVRPAIREL,1,'INTEGER')
+
+      CALL FFKEY('MDL2P2H',MDL2P2H,1,'INTEGER')
+
+      CALL FFKEY('CRS' ,CRSNEUT ,30,'REAL')
+      CALL FFKEY('CRSB',CRSNEUTB,30,'REAL')
       CALL FFKEY('RAND',IRANDFLG,1,'INTEGER')
 
       CALL FFKEY('NUMBNDN',NUMBNDN,1,'INTEGER')
@@ -246,6 +302,9 @@ C      CALL FFKEY('MVSPI' ,XMVSPI ,1,'REAL')
       CALL FFKEY('FEFCXHF',FEFCXHF,1,'REAL')
       CALL FFKEY('FEFCOUL',FEFCOUL,1,'REAL')
       CALL FFKEY('FEFALL',FEFALL,1,'REAL')
+
+      CALL FFKEY('XMADIF',XMADIF,1,'REAL')
+      CALL FFKEY('NUCVOLDIF',NUCVOLDIF,1,'REAL')
 
       CALL FFKEY('IPILESSDCY',IPILESSDCY,1,'INTEGER')
       CALL FFKEY('RPILESSDCY',RPILESSDCY,1,'REAL')
@@ -292,6 +351,7 @@ C Set VNUINI here ( when PFSURF is fixed)
       CALL FFKEY('FZMU2',FZMU2,1,'REAL')
       CALL FFKEY('ABSPIEMIT',NEABSPIEMIT,1,'INTEGER')
       CALL FFKEY('NUSIM',NUSIM,1,'INTEGER')
+      CALL FFKEY('EFVER',NEFKINVER,1,'INTEGER')
       CALL FFKEY('IRADCORR',IRADCORR,1,'INTEGER')
       CALL FFKEY('QUIET',QUIET,1,'INTEGER')
 
@@ -333,11 +393,14 @@ C Set VNUINI here ( when PFSURF is fixed)
       WRITE(6,*) 'NECARD : KINH   = ',NENEFKINH
       WRITE(6,*) 'NECARD : MODE   = ',NEMODFLG
       WRITE(6,*) 'NECARD : COHEPI = ',NECOHEPI
+      WRITE(6,*) 'NECARD : DIFPI  = ',NEDIFPI
       WRITE(6,*) 'NECARD : PDF    = ',NEPDF
       WRITE(6,*) 'NECARD : BODEK  = ',NEBODEK
+      WRITE(6,*) 'NECARD : MULT   = ',NEMULT
       WRITE(6,*) 'NECARD : MDLQE  = ',MDLQE
       WRITE(6,*) 'NECARD : MDLQEAF= ',MDLQEAF
       WRITE(6,*) 'NECARD : MAQE   = ',XMAQE
+      WRITE(6,*) 'NECARD : MANCEL = ',XMANCEL
 C      WRITE(6,*) 'NECARD : MASPI  = ',XMASPI
       WRITE(6,*) 'NECARD : MARSRES = ',XMARSRES
       WRITE(6,*) 'NECARD : MANFFRES= ',XMANFFRES
@@ -351,6 +414,8 @@ C      WRITE(6,*) 'NECARD : MVSPI  = ',XMVSPI
       WRITE(6,*) 'NECARD : R0COH   = ',RAD0NU
       WRITE(6,*) 'NECARD : A1COHerr   = ',fA1COH
       WRITE(6,*) 'NECARD : b1COHerr   = ',fb1COH
+      WRITE(6,*) 'NECARD : XMADIF   = ',XMADIF
+      WRITE(6,*) 'NECARD : NUCVOLDIF   = ',NUCVOLDIF
 
       WRITE(6,*) 'NECARD : SCCFV     = ',SCCFV
       WRITE(6,*) 'NECARD : SCCFA     = ',SCCFA
@@ -361,11 +426,13 @@ C      WRITE(6,*) 'NECARD : MVSPI  = ',XMVSPI
          WRITE(6,*) 'NECARD : CRS  = ',CRSNEUT
          WRITE(6,*) 'NECARD : CRSB = ',CRSNEUTB
       ELSE
-         DO 10 I=1,28
+         DO 10 I=1,30
             CRSNEUT(I) = 1.0
             CRSNEUTB(I)= 1.0
  10      CONTINUE
       ENDIF
+
+      WRITE(6,*) 'NECARD : NUCEFF KINEMATICS VERSION  = ',NEFKINVER
 
       IF (IRANDFLG.eq.0) THEN
          write(6,*) "NECARD :Read RANDOM number from FILE"
@@ -421,12 +488,18 @@ C      ISPIMA = INT(XMASPI*100+0.5)
       IRSRESMA  = INT(XMARSRES*100+0.5)
       INFFRESMA = INT(XMANFFRES*100+0.5)
 
-      IF (IQEMA.ne.101 .and. IQEMA.ne.103 .and. IQEMA.ne.111 .and. 
-     &    IQEMA.ne.121 .and. IQEMA.ne.131 .and. IQEMA.ne.160 ) THEN
-         WRITE(6,*)
-     &    'NECARD error: MAQE must be 1.01, 1.03, 1.[1-3]1 or 1.60'
-         STOP
-      END IF
+      if (mod(MDLQE, 10000)/1000 .NE. 2) then
+         IF ( IQEMA.ne.101 .and. IQEMA.ne.103 .and. 
+     $        IQEMA.ne.105 .and. 
+     $        IQEMA.ne.111 .and. IQEMA.ne.121 .and.
+     &        IQEMA.ne.131 .and. IQEMA.ne.160 ) 
+     $        THEN
+            WRITE(6,*)
+     &           'NECARD error: MAQE must be 1.01, 1.03, 1.05',
+     $           ' 1.[1-3]1 or 1.60'
+            STOP
+         END IF
+      endif
 
 C      IF ( ISPIMA.ne.95 .and. ISPIMA.ne.101 .and. ISPIMA.ne.103. 
 C     $     .and. ISPIMA.ne.111 .and. ISPIMA.ne.121 ) THEN

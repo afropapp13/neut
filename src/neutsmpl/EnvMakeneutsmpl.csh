@@ -1,6 +1,6 @@
 #!/bin/csh
 
-setenv SOMEWHERE `pwd`/..
+setenv SOMEWHERE ${NEUT_ROOT}/src
 setenv MACHINE `${SOMEWHERE}/neutsmpl/bin/Machine`
 
 #setenv FC g77
@@ -31,7 +31,7 @@ else
 endif
 
 #setenv CERN /cern
-#setenv CERN /data3/T2K/panos/vector/CERNLIB
+#setenv CERN /usr/local/sklib_gcc4.8.5/cern
 if (${?CERN} == 0) then
 	echo "set environmental variable CERN"
 	exit 1
@@ -44,8 +44,10 @@ if (${?CERN_LEVEL} == 0) then
 	exit 1
 endif
 
-#setenv ROOTSYS /usr/local/sklib_g77/root
-#setenv ROOTSYS=/data3/T2K/nd280rep/stable/v10r11p17/ROOT/v5r30p02n01/Linux-x86_64
+setenv CERN_ROOT ${CERN}/${CERN_LEVEL}
+
+#setenv ROOTSYS /usr/local/root_v5.34.36
+#setenv ROOTSYS /usr/local/sklib_gcc4.8.5/root_v5.28.00h
 if (${?ROOTSYS} == 0) then
 	echo "set environmental variable ROOTSYS"
 	exit 1

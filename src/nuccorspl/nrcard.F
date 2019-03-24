@@ -29,7 +29,7 @@ C --  Initialize
 
       NUCRESCAT = 1
       XNUCFACT  = 1.
-      NUCRESFLG = 1
+      NUCRESFLG = 2
 
 C --- get card file name (1st argument of the program)
 

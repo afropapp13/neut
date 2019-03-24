@@ -25,29 +25,30 @@ extern "C"
   
   void nulltermstr(char *, int);
   
-  int loadflx_(int *, char *, char *, int *, int, int);
+  int loadflx_(int *, char *, char *, int *, 
+			   int, int);
 
   FUNCTION_RETURN rndenuevtrt_(float *);
-  
+
 }
 
 const char
 flavor_string[4][10] =
-{
-  "numu","numub","nue","nueb"
-};
+  {
+	"numu","numub","nue","nueb"
+  };
 
 const char
 flavor_title[4][20] =
-{
-  "#nu_{#mu}","#bar{#nu}_{#mu}","#nu_{e}","#bar{#nu}_{e}"
-};
+  {
+	"#nu_{#mu}","#bar{#nu}_{#mu}","#nu_{e}","#bar{#nu}_{e}"
+  };
 
 const int
 pidtbl[4] =
-{
-  14,-14,12,-12
-};
+  {
+	14,-14,12,-12
+  };
 
 Ufm2TH1dist EnuEvtrt;
 
@@ -63,16 +64,18 @@ nulltermstr(char *str, int len)
   }
 }
 
-int loadflx_(int *IDPTEVCT, char *filename, char *histname, int *inMeV, int fnlen, int hnlen)
+int loadflx_(int *IDPTEVCT, char *filename, char *histname, int *inMeV, 
+			 int fnlen, int hnlen)
 {
   int i;
   int pididx;
-	int nbins;//number of bins
+  int nbins;//number of bins
   Double_t *BEdgs;
   double EScl;
   double tcrs;
   float ebinctr;
   TH1D *hflxr, *hflx, *hrate;
+  TH1D *h_flux, *h_rate;
   char cPath[256];
   
   for (i=0; i<4; i++) {
@@ -116,7 +119,7 @@ int loadflx_(int *IDPTEVCT, char *filename, char *histname, int *inMeV, int fnle
     EScl=1.;
   }
   
-	nbins=hflxr->GetNbinsX();
+  nbins=hflxr->GetNbinsX();
   BEdgs = new Double_t [nbins+1];
   for (i=0; i<=nbins; i++) {
     BEdgs[i]=hflxr->GetBinLowEdge(i+1)*EScl;//Bin edges in GeV
@@ -129,7 +132,7 @@ int loadflx_(int *IDPTEVCT, char *filename, char *histname, int *inMeV, int fnle
   hflx->GetXaxis()->SetTitle("E_{#nu} (GeV)");
   hrate->GetXaxis()->SetTitle("E_{#nu} (GeV)");
   
-	for (i=1; i<=nbins; i++) {
+  for (i=1; i<=nbins; i++) {
     ebinctr=(float)(hflx->GetXaxis()->GetBinCenter(i));
     tcrs=fntotpau_(IDPTEVCT,&ebinctr);
     hflx->SetBinContent(i,hflxr->GetBinContent(i));
@@ -138,9 +141,15 @@ int loadflx_(int *IDPTEVCT, char *filename, char *histname, int *inMeV, int fnle
   
   EnuEvtrt.Init(hrate);//Initialize using event rate histogram
   
+  h_flux = (TH1D *)hflx->Clone("fluxhisto");
+  h_rate = (TH1D *)hrate->Clone("ratehisto");
+
   TFile ofile(Form("%s_o.root",histname), "RECREATE");
   hflx->Write();// Write histograms to file
   hrate->Write();
+  h_flux->Write();
+  h_rate->Write();
+
   ofile.Close();// Close the file
   
   delete [] BEdgs;

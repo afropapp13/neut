@@ -45,8 +45,10 @@
       REAL*4   FNELSPAN, E
       INTEGER  IPAR, INUC
 
-      REAL*4   FNELSPAU_SELECT, FNELSPAN_INTPOL, FNELSPAN_SF
-      EXTERNAL FNELSPAU_SELECT, FNELSPAN_INTPOL, FNELSPAN_SF
+      REAL*4   FNELSPAU_SELECT, FNELSPAN_INTPOL, FNELSPAN_SF, 
+     $     FNELSPAN_EFFSF
+      EXTERNAL FNELSPAU_SELECT, FNELSPAN_INTPOL, FNELSPAN_SF, 
+     $     FNELSPAN_EFFSF
 C
 C ++ CROSS SECTION RATIO OF NC AND CC (NC/CC) FOR NEUTRINO AND ANTI-NEU
 C
@@ -69,13 +71,26 @@ C
 
       NCELMODE = mod(MDLQE,100)/10
       if (mod(MDLQE, 1000)/100 .EQ. 4 ) then
-        NCELMODE = mod(mod(MDLQE, 1000),400)/10
+        NCELMODE = mod(mod(MDLQE, 1000),100)/10
+      else if (mod(MDLQE, 1000)/100 .EQ. 7 
+     $       .OR. mod(MDLQE, 1000)/100 .EQ. 6) then
+        NCELMODE = mod(mod(MDLQE, 1000),100)/10
       endif
 
-      if ((mod(MDLQE, 1000)/400 .EQ. 1) 
-     & .AND. (numbndp .eq. 6 .or. 
-     &    numbndp .eq. 8.or. numbndp .eq. 26)) then
+      if ((mod(MDLQE, 1000)/100 .EQ. 4) .and.
+     &    ((numbndp .eq. 6) .or. 
+     &     (numbndp .eq. 8).or. 
+     $     (numbndp .eq. 26))) then
          FNELSPAN=FNELSPAN_SF(E,IPTEMP,INUC)
+      else if ( ((mod(MDLQE, 1000)/100 .EQ. 6 ).or.
+     &           (mod(MDLQE, 1000)/100 .EQ. 7 )     ).and.
+     &          ((NUMATOM .eq.  2) .or. (NUMATOM .eq.  3) .or.
+     &           (NUMATOM .eq.  4) .or. (NUMATOM .eq. 12) .or.
+     &           (NUMATOM .eq. 16) .or. (NUMATOM .eq. 20) .or.
+     &           (NUMATOM .eq. 27) .or. (NUMATOM .eq. 40) .or.
+     &           (NUMATOM .eq. 56) .or. (NUMATOM .eq. 63) .or.
+     &           (NUMATOM .eq. 64) .or. (NUMATOM .eq. 208))) then
+         FNELSPAN=FNELSPAN_EFFSF(E,IPTEMP,INUC)
       else if (NCELMODE .eq. 0) then
          CRS=FNELSPAU_SELECT(E,IPTEMP)
          

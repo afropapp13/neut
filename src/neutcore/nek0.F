@@ -48,32 +48,38 @@ C      INTEGER  RNKIND,I,NVC2,J
 
       DO 10 I=1,NVC
 
-         IF ((ICRNVC(I).ne.0).and.(NVC2.lt.MAXVC)) then
+         IF (ICRNVC(I).ne.0) then
             IF (ABS(IPVC(I)).eq.311) then
-               KTYP = 310
-               RNKIND = RLU(DUMMY)
-               IF  (RNKIND.ge.0.5) KTYP = 130
-               
-               IFLGVC(I)=4
-               ICRNVC(I)=0
-               CALL UCOPY(POSVC,POSFVC(1,I),3)
-               IVTFVC(I)=1
-               
-               NVC2=NVC2+1
-               IPVC(NVC2)=KTYP
-               CALL UCOPY(PVC(1,I),PVC(1,NVC2),3)
-               IORGVC(NVC2)=I
-               IFLGVC(NVC2)=0
-               ICRNVC(NVC2)=1
-               CALL UCOPY(POSVC,POSIVC(1,NVC2),3)
-               IVTIVC(NVC2)=1
-               CALL MCMASS(IPVC(NVC2),AMASVC(NVC2))
-               
-C copy generated position
-               do 100 J=1,3
-                  POSNUC(J,NVC2) = POSNUC(J,I)
- 100           continue
-
+               if (NVC2.lt.MAXVC) then
+                  KTYP = 310
+                  RNKIND = RLU(DUMMY)
+                  IF  (RNKIND.ge.0.5) KTYP = 130
+                  
+                  IFLGVC(I)=4
+                  ICRNVC(I)=0
+                  CALL UCOPY(POSVC,POSFVC(1,I),3)
+                  IVTFVC(I)=1
+                  
+                  NVC2=NVC2+1
+                  IPVC(NVC2)=KTYP
+                  CALL UCOPY(PVC(1,I),PVC(1,NVC2),3)
+                  IORGVC(NVC2)=I
+                  IFLGVC(NVC2)=0
+                  ICRNVC(NVC2)=1
+                  CALL UCOPY(POSVC,POSIVC(1,NVC2),3)
+                  IVTIVC(NVC2)=1
+                  CALL MCMASS(IPVC(NVC2),AMASVC(NVC2))
+                  
+C     copy generated position
+                  do 100 J=1,3
+                     POSNUC(J,NVC2) = POSNUC(J,I)
+ 100              continue
+               else
+                  KTYP = 310
+                  RNKIND = RLU(DUMMY)
+                  IF  (RNKIND.ge.0.5) KTYP = 130
+                  IPVC(I) = KTYP
+               endif
             endif
          ENDIF
 

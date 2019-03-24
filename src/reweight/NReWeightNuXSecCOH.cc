@@ -72,21 +72,21 @@ void NReWeightNuXSecCOH::Init(void)
 
   // dial =1, reweight the default model (RS) with BS model
   // dial =0, do not change the model
-  fNECOHEPIDef = fortFns->NECOHEPIdef;
+  fNECOHEPIDef = 0;
   fNECOHEPICurr      = fNECOHEPIDef;
   fNECOHEPITwkDial   = 0; 
 
   fMaTwkDial   = 0; 
-  fMaDef       = fortFns->XMACOHdef;
+  fMaDef       = 0.; 
   fMaCurr      = fMaDef;
   fR0TwkDial   = 0.; 
-  fR0Def       = fortFns->RAD0NUdef;
+  fR0Def       = 0.; 
   fR0Curr      = fR0Def;
   fA1TwkDial   = 0.; 
-  fA1Def       = fortFns->fA1COHdef;
+  fA1Def       = 0.; 
   fA1Curr      = fA1Def;
   fb1TwkDial   = 0.; 
-  fb1Def       = fortFns->fb1COHdef;
+  fb1Def       = 0.; 
   fb1Curr      = fb1Def;
 }
 //_______________________________________________________________________________________
@@ -158,21 +158,29 @@ void NReWeightNuXSecCOH::Reconfigure(void)
   double fracerr_r0 = fracerr->OneSigmaErr(kXSecTwkDial_R0COHpi);
   double fracerr_a1 = fracerr->OneSigmaErr(kXSecTwkDial_fA1COHpi);
   double fracerr_b1 = fracerr->OneSigmaErr(kXSecTwkDial_fb1COHpi);
-
+  /*
   fMaCurr = fMaDef * (1. + fMaTwkDial * fracerr_ma);
   fR0Curr = fR0Def * (1. + fR0TwkDial * fracerr_r0);
   fA1Curr = fA1Def * (fA1TwkDial * fracerr_a1);
   fb1Curr = fb1Def * (fb1TwkDial * fracerr_b1);
+  */
+
+  fMaCurr = (1. + fMaTwkDial * fracerr_ma);
+  fR0Curr = (1. + fR0TwkDial * fracerr_r0);
+  fA1Curr = (fA1TwkDial * fracerr_a1);
+  fb1Curr = (fb1TwkDial * fracerr_b1);
 
   double fracerr_necohepi = fracerr->OneSigmaErr(kXSecTwkDial_NECOHEPI);
-  fNECOHEPICurr = int(fNECOHEPIDef + fNECOHEPITwkDial * fracerr_necohepi) ; 
+  //fNECOHEPICurr = int(fNECOHEPIDef + fNECOHEPITwkDial * fracerr_necohepi) ; 
+  fNECOHEPICurr = int(fNECOHEPITwkDial * fracerr_necohepi) ; 
 
+  /*
   fNECOHEPICurr = TMath::Max(0.,fNECOHEPICurr );
   fMaCurr = TMath::Max(0., fMaCurr  );
   fR0Curr = TMath::Max(0., fR0Curr  );
   fA1Curr = TMath::Max(0., fA1Curr  );
   fb1Curr = TMath::Max(0., fb1Curr  );
-
+  */
   }
 //_______________________________________________________________________________________
 double NReWeightNuXSecCOH::CalcWeight() 
@@ -214,11 +222,24 @@ double NReWeightNuXSecCOH::CalcWeight()
     cout << "NReWeightNuXSecCOH::CalcWeight() Warning: old_xsec==0, setting weight to 1" << endl;
     return 1;
   }
-  neutcoh_.necohepi = fNECOHEPICurr;
-  nemdls_.xmacoh = fMaCurr;
-  nemdls_.rad0nu = fR0Curr;
-  nemdls_.fa1coh = fA1Curr;
-  nemdls_.fb1coh = fb1Curr;
+
+  fNECOHEPIDef = neutcoh_.necohepi;
+  fMaDef = nemdls_.xmacoh;
+  fR0Def = nemdls_.rad0nu;
+  fA1Def = nemdls_.fa1coh;
+  fb1Def = nemdls_.fb1coh;
+
+  neutcoh_.necohepi = int(fNECOHEPICurr + fNECOHEPIDef);
+  nemdls_.xmacoh = fMaDef * fMaCurr;
+  nemdls_.rad0nu = fR0Def * fR0Curr;
+  nemdls_.fa1coh = fA1Def * fA1Curr;
+  nemdls_.fb1coh = fb1Def * fb1Curr;
+
+  fNECOHEPICurr = TMath::Max(0.,fNECOHEPICurr );
+  fMaCurr = TMath::Max(0., fMaCurr  );
+  fR0Curr = TMath::Max(0., fR0Curr  );
+  fA1Curr = TMath::Max(0., fA1Curr  );
+  fb1Curr = TMath::Max(0., fb1Curr  );//can argue this one isn't needed
 
   fortFns->Reconfigure();
 

@@ -60,29 +60,28 @@ namespace rew   {
    void   Init              (void);
 
    double fCExLowTwkDial;    ///<
-   double fInelLowTwkDial;    ///<
+   double fInelLowTwkDial;   ///<
    double fAbsTwkDial;       ///<
    double fPiProdTwkDial;    ///<
-   double fCExHighTwkDial;    ///<
-   double fInelHighTwkDial;    ///<
-   double fAllTwkDial;    ///<
-
-   double fCExLowCurr;    ///<
-   double fInelLowCurr;    ///<
-   double fAbsCurr;       ///<
-   double fPiProdCurr;    ///<
-   double fCExHighCurr;    ///<
-   double fInelHighCurr;    ///<
-   double fAllCurr;    ///<
-   double fAllDef;
-
-   double fCExLowDef;    ///<
-   double fInelLowDef;    ///<
-   double fAbsDef;       ///<
-   double fPiProdDef;    ///<
-   double fCExHighDef;    ///<
-   double fInelHighDef;    ///< 
-   double fAllHighDef;    ///<
+   double fCExHighTwkDial;   ///<
+   double fInelHighTwkDial;  ///<
+   double fAllTwkDial;       ///<
+   
+   double fCExLowCurr;       ///<
+   double fInelLowCurr;      ///<
+   double fAbsCurr;          ///<
+   double fPiProdCurr;       ///<
+   double fCExHighCurr;      ///<
+   double fInelHighCurr;     ///<
+   double fAllCurr;          ///<
+     
+   double fCExLowDef;        ///<
+   double fInelLowDef;       ///<
+   double fAbsDef;           ///<
+   double fPiProdDef;        ///<
+   double fCExHighDef;       ///<
+   double fInelHighDef;      ///< 
+   double fAllDef;           ///< 
 
    NFortFns * fortFns;
 

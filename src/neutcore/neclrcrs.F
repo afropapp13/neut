@@ -29,6 +29,7 @@
       CRSX = -1
       CRSY = -1
       CRSZ = -1
+      CRST = -1
       CRSPHI = -1
       
       TOTCRSNE = -1

@@ -33,6 +33,7 @@ c
 #include "neutparams.h"
 #include "nrnuclparam.h"
 #include "nrint.h"
+#include "nrcard.h"
 C     common /nucint/uin,chint,ein,pin(3),upin(3)
 C     real*4 uin,chint,ein,pin,upin
 #include "nrcms.h"
@@ -155,10 +156,27 @@ C     rmax is set by scaling to 16O (rmax=6. for Oxygen)
 
 C     Asmita R.:For MEC events fermi surface momentum is function of radial distance r (22-07-2013)
 C     while for other modes its read from card 
-      pfermi=NRPFSURF*1000. ! NRPFSURF is GeV units
-      if(abs(MODENE).EQ.2) then 
-        pfermi=EFFRMGAS(0,0,r)
-      end if
+C Change to local Fermi Gas ( 2017/04/03 )
+      if (nucresflg.eq.1) then
+         if (abs(MODENE).EQ.2) then 
+            if (r.ge.rmax) then
+               pfermi=EFFRMGAS(0,0,rmax)
+            else
+               pfermi=EFFRMGAS(0,0,r)
+            endif
+         else
+            pfermi=NRPFSURF*1000. ! NRPFSURF is GeV units
+         endif
+      else if (nucresflg.eq.2) then
+         if (r.ge.rmax) then
+            pfermi=EFFRMGAS(0,0,rmax)
+         else
+            pfermi=EFFRMGAS(0,0,r)
+         endif
+      else
+         write(*,*) 'Unknown NUCRESFLG ( expected 1 or 2 )',NUCRESFLG
+         STOP
+      endif
 
       if(pptot.lt.pfermi) then  !if it is below fermi sphere get out
          do j=1,4

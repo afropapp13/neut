@@ -35,7 +35,21 @@
       APN = float(NUMATOM)
       AP  = float(NUMBNDP)
 
-      if (NUMBNDP.eq.5) then ! 11B (estimate)
+      if (NUMBNDP.eq.1 .and. NUMBNDN.eq.0) then ! p
+         NRRMSRAD= 0.01
+         NRC     = 0.01
+         NRCNN   = 0.01
+         NRAF    = 0.01
+         NRWPARM = 0.00
+         NRDFACT = 1.0
+      else if (NUMBNDP.eq.0 .and. NUMBNDN.eq.1) then !n
+         NRRMSRAD= 0.01
+         NRC     = 0.01
+         NRCNN   = 0.01
+         NRAF    = 0.01
+         NRWPARM = 0.00
+         NRDFACT = 1.0
+      else if (NUMBNDP.eq.5) then ! 11B (estimate)
          NRRMSRAD= 2.42
          NRC     = 2.00
          NRCNN   = 2.00
@@ -112,6 +126,13 @@
          NRAF    = 0.62
          NRWPARM =-0.19
          NRDFACT = 1.0
+      else if (NUMBNDP.eq.19) then ! 39K
+         NRRMSRAD= 3.408
+         NRC     = 3.743
+         NRCNN   = 3.743
+         NRAF    = 0.585
+         NRWPARM =-0.201
+         NRDFACT = 1.0
       else if (NUMBNDP.eq.20) then ! 40Ca
          NRRMSRAD= 3.482
          NRC     = 3.766
@@ -125,6 +146,13 @@
          NRCNN   = 3.75
          NRAF    = 0.567
          NRWPARM = 0.0
+         NRDFACT = 1.0
+      else if (NUMBNDP.eq.25) then ! 55Mn (2pf)
+         NRRMSRAD= 3.68
+         NRC     = 3.89
+         NRCNN   = 3.89
+         NRAF    = 0.567
+         NRWPARM = 0.
          NRDFACT = 1.0
       else if (NUMBNDP.eq.26) then ! 56Fe
          NRRMSRAD= 3.787
@@ -224,6 +252,17 @@
          NRAF    = 0.468
          NRWPARM = 0.
          NRDFACT = 1.0
+      else if (NUMATOM .EQ. 2 .OR. NUMATOM .EQ. 3 .OR.
+     $        NUMATOM .EQ. 4 .OR. NUMATOM .EQ. 20) then
+         NRRMSRAD= 2.455
+         NRC     = 2.355
+         NRCNN   = 2.355
+         NRAF    = 0.5224
+         NRWPARM =-0.149
+         NRDFACT = 1.0
+
+         write(*,*) "Parameters not set in nrsettarg.F ", 
+     + "use C12 as default..."
       else
          print*, 'This target is not supported yet, see nrsettarg.F'
          stop

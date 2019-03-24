@@ -421,18 +421,19 @@ NeutVect::Dump()
   std::cout << "nucleon FSI    :" << NucScat  << "\n";
   std::cout << "FSI Xsec factor:" << NucFac   << "\n";
 
-  std::cout << "FSI LowE QE MFP Scaling          :" << NuceffFactorPIQE     << "\n";
-  std::cout << "FSI Hadron Production MFP Scaling:" << NuceffFactorPIInel	  << "\n";
-  std::cout << "FSI Absorption MFP Scaling       :" << NuceffFactorPIAbs 	  << "\n";
-  std::cout << "FSI HighE QE MFP Scaling         :" << NuceffFactorPIQEH 	  << "\n";
-  std::cout << "FSI LowE CX MFP Scaling          :" << NuceffFactorPICX 	  << "\n";
-  std::cout << "FSI HighE CX MFP Scaling         :" << NuceffFactorPICXH    << "\n";
-  std::cout << "FSI Forward Scatter MFP Scaling  :" << NuceffFactorPICoh	  << "\n";
+  std::cout << "nuceff Kinematics Ver.           :" << NuceffKinVersion    << "\n";
+
+  std::cout << "FSI LowE QE MFP Scaling          :" << NuceffFactorPIQE    << "\n";
+  std::cout << "FSI Hadron Production MFP Scaling:" << NuceffFactorPIInel  << "\n";
+  std::cout << "FSI Absorption MFP Scaling       :" << NuceffFactorPIAbs   << "\n";
+  std::cout << "FSI HighE QE MFP Scaling         :" << NuceffFactorPIQEH   << "\n";
+  std::cout << "FSI LowE CX MFP Scaling          :" << NuceffFactorPICX    << "\n";
+  std::cout << "FSI HighE CX MFP Scaling         :" << NuceffFactorPICXH   << "\n";
+  std::cout << "FSI Forward Scatter MFP Scaling  :" << NuceffFactorPICoh   << "\n";
   std::cout << "FSI HighE QE Kinematic Factor    :" << NuceffFactorPIQEHKin << "\n";
   std::cout << "FSI LowE QE Kinematic Factor     :" << NuceffFactorPIQELKin << "\n";
   std::cout << "FSI HighE CX Mix Factor          :" << NuceffFactorPICXKin  << "\n";
-  std::cout << "FSI Total Mean Free Path Factor  :" << NuceffFactorPIAll  << "\n";
-
+  std::cout << "FSI Total Mean Free Path Factor  :" << NuceffFactorPIAll    << "\n";
   
   std::cout << "Intr. mode     :" << Mode   << "\n";
   std::cout << "Total Xsec     :" << Totcrs   << " x 10^(-38) cm^2\n";

@@ -59,7 +59,7 @@ c  Randomize to make sure there is no bias
 
       call ranlux(xr,1)
       ixr = 6.*xr + 1.
-      write (77,*) ixr
+c      write (77,*) ixr
       j1  = iseq(1,ixr)
       j2  = iseq(2,ixr)
       j3  = iseq(3,ixr)

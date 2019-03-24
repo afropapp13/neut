@@ -25,28 +25,40 @@
 *       2016.02.28 ; C. Bronner 
 *                    Separate between interactions on protons and neutrons 
 *                    Fix relation between x and Q2 when Bodek-Yang corrections are used.
-*                    If Bodek-Yang is not used, keep the target mass corrections      
+*                    If Bodek-Yang is not used, keep the target mass corrections  
+*       2016.07.20 ; C. Bronner
+*                    Target mass corrections moved to PDF calculation (grv98_lo.F)    
 *     
 ************************************************************************
-#include "necard.h"
-      DATA PMASS/0.938/
+
       DATA MAXTRY/10000/
+      REAL *8 PMASS 
+      real*8 xmp,xmn
+      PARAMETER (xmp    = 0.93827231D0)
+      PARAMETER (xmn    = 0.93956563D0)
 C     
       IERR=0
       ITRY=0
+
+C     -- Check target nucleon code makes sense
+      IF(ITARG.NE.2112 .AND. ITARG.NE.2212)GO TO 1000
+
+C     Assign target mass       
+      IF (itarg.EQ.2112) THEN
+         PMASS=xmn
+      else
+         PMASS=xmp
+      endif
+
 C     
 C     Generate x and y using rnxy, and check it gives a W within desired range
       DO 100 ITRY=1,MAXTRY
          CALL RNXY(IPAR,E,X,Y,ITYPE,ITARG,IERRR)
          IF(IERRR.EQ.1)GO TO 1001
-         if(nebodek.eq.0) then
-            Q2=X*(2.*PMASS*Y*E+PMASS**2)
-         elseif(nebodek.eq.1) then
-            Q2=X*(2.*PMASS*Y*E)
-         endif
+         Q2=X*(2.*PMASS*Y*E)         
          XNEU=Y*E
          W2=-Q2+PMASS**2+2.*PMASS*XNEU
-         W=SQRT(W2)
+         W=SQRT(W2)      
          IF ( W.GT.1.3 .AND. W.LT.2.0 ) RETURN
  100  CONTINUE
 C     

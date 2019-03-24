@@ -33,6 +33,11 @@
 *                     1 : Neutrino Simulation   (default)
 *                     0 : Other (piscat, gampi)
 *
+*       NEFKINVER   : VERSION of pion nuclear effects kinematics
+*                     0 : Original model ( default )
+*                       :  some part uses measured momentum spectrum of proton
+*                     1 : New model ( completely LFG for pion )
+*
 *       NEMODFLG : ( NEUT-MODE ) Flag on Interaction mode on neutrino int.
 *                     0 : normal ( default )
 *                    -1 : input cross section by CRSNEUT
@@ -48,15 +53,18 @@
 *                           n = 22,42,43 : single eta production 
 *                           n = 23,44,45 : single  K  production 
 * 
-*       CRSNEUT(28)   : ( NEUT-CRS ) Multiplied factor to cross section
+*       CRSNEUT(30)   : ( NEUT-CRS ) Multiplied factor to cross section
 *                                    on each mode.   See nemodsel.F
-*       CRSNEUTB(28)  : ( NEUT-CRSB ) Multiplied factor to cross section
+*       CRSNEUTB(30)  : ( NEUT-CRSB ) Multiplied factor to cross section
 *                                    on each mode.   See nemodsel.F
 *
 *       NECOHEPI      : ( NEUT_COHEPI ) Select Coherent pi model
 *                            0 : Rein & Sehgal
 *                            1 : Kartavtsev 
 *                            2 : Berger & Sehgal
+*
+*       NEDIFPI      : ( NEUT_DIFPI ) Select Diffractive pi model
+*                            0 : Rein
 *
 *       NEPDF         : ( NEUT-Select Parton distribution function
 *                           n = 7 : GRV94
@@ -65,6 +73,11 @@
 *       NEBODEK       : ( NEUT- urn off/on Bodek-Yang correction
 *                       0 :   off
 *                       1 :   on 
+*
+*       NEMULT        : (Hadron multiplicity model for multi-pi mode)
+*                       0 :  old NEUT model
+*			1 :  fit of deuterium bubble-chamber data (hep-ph:1607.06558)
+*		        2 :  AGKY model (hep-ph:0904.4043 and Yang, T. et al. AIP Conf.Proc. 967 (2007) 269-275)
 *
 *       ITAUFLGCORE  : control Tau run mode(this is not set here)
 *
@@ -111,16 +124,23 @@ C
       REAL   CRSNEUT,CRSNEUTB
 
       COMMON/NEUTCARD/NEFRMFLG,NEPAUFLG,NENEFO16,NENEFMODL,NENEFMODH,
-     &                NENEFKINH,NEMODFLG,NESELMOD,CRSNEUT(28),
-     &                CRSNEUTB(28),ITAUFLGCORE,NUSIM,QUIET
-      INTEGER NEPDF, NEBODEK
-      COMMON/NEUTDIS/NEPDF,NEBODEK
+     &                NENEFKINH,NEMODFLG,NESELMOD,CRSNEUT(30),
+     &                CRSNEUTB(30),ITAUFLGCORE,NUSIM,QUIET
+
+      INTEGER NEFKINVER
+      COMMON/NUCEFFVER/NEFKINVER
+
+      INTEGER NEPDF, NEBODEK, NEMULT
+      COMMON/NEUTDIS/NEPDF,NEBODEK,NEMULT
 
       INTEGER NEIFF,   NENRTYPE
       REAL    RNECA5I, RNEBGSCL
       REAL    XMANFFRES,XMVNFFRES,XMARSRES,XMVRSRES
       COMMON/NEUT1PI/XMANFFRES,XMVNFFRES,XMARSRES,XMVRSRES,
      $               NEIFF,NENRTYPE,RNECA5I,RNEBGSCL
+
+      INTEGER NEDIFPI
+      COMMON/NEUTDIF/NEDIFPI
 
       INTEGER NECOHEPI
       COMMON/NEUTCOH/NECOHEPI

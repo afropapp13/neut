@@ -97,6 +97,8 @@ class NeutVect : public TObject {
   Int_t          NucScat;
   Float_t        NucFac;
 
+  Float_t        NuceffKinVersion;
+
   Float_t        NuceffFactorPIQE;
   Float_t        NuceffFactorPIInel;
   Float_t        NuceffFactorPIAbs;
@@ -222,7 +224,7 @@ class NeutVect : public TObject {
 
   TLorentzVector fZeroVect;  // !
   
-  ClassDef(NeutVect, 4)
+  ClassDef(NeutVect, 5)
 };
 
 #endif

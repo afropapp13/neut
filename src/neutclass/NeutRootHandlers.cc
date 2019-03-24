@@ -32,7 +32,8 @@ NeutRootHandlers::open(char *filename, char *opt)
   }
   gDirectory->pwd();
 
-  o = gDirectory->FindObject(filename);
+  //  o = gDirectory->FindObject(filename);
+  o = gROOT->GetListOfFiles()->FindObject(filename);
   if (o != NULL){
 	o->Print();
   }
@@ -83,7 +84,8 @@ NeutRootHandlers::write(char *filename)
   }
   gDirectory->pwd();
 
-  o = gDirectory->FindObject(filename);
+  //  o = gDirectory->FindObject(filename);
+  o = gROOT->GetListOfFiles()->FindObject(filename);
   if (o != NULL){
 	o->Print();
   }
@@ -93,7 +95,7 @@ NeutRootHandlers::write(char *filename)
 	  ((TFile *)o)->Write();
 	  return 0;
 	}else{
-	  std::cout << "Keyword " << filename 
+	  std::cout << "Keyword " << filename
 				<< " has been used but it is not TFile.\n";
 	  std::cout << "Current contents of " << filename << " are " << "\n";
 	  o->Print();
@@ -125,7 +127,8 @@ NeutRootHandlers::close(char *filename)
   }
   gDirectory->pwd();
 
-  o = gDirectory->FindObject(filename);
+  //  o = gDirectory->FindObject(filename);
+  o = gROOT->GetListOfFiles()->FindObject(filename);
   if (o != NULL){
 	o->Print();
   }
@@ -135,7 +138,7 @@ NeutRootHandlers::close(char *filename)
 	  ((TFile *)o)->Close();
 	  return 0;
 	}else{
-	  std::cout << "Keyword " << filename 
+	  std::cout << "Keyword " << filename
 				<< " has been used but it is not TFile.\n";
 	  std::cout << "Current contents of " << filename << " are " << "\n";
 	  o->Print();

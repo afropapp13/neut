@@ -210,6 +210,12 @@ void NSystUncertainty::SetDefaults(void)
   //this->SetUncertainty( kXSecTwkDial_RnubarnuCC,       0.05, 0.05);
   //this->SetUncertainty( kXSecTwkDial_DISNuclMod,     1.00, 1.00);
   this->SetUncertainty( kXSecTwkDial_NC,               0.30, 0.30);
+
+  this->SetUncertainty( kXSecTwkDial_FAxlCCQEAlpha,  1.0, 1.0 );
+  this->SetUncertainty( kXSecTwkDial_FAxlCCQEGamma,  1.0, 1.0 );
+  this->SetUncertainty( kXSecTwkDial_FAxlCCQEBeta,   1.0, 1.0 );
+  this->SetUncertainty( kXSecTwkDial_FAxlCCQETheta,  1.0, 1.0 );
+
   //this->SetUncertainty( kHadrAGKYTwkDial_xF1pi,      0.20, 0.20);
   //this->SetUncertainty( kHadrAGKYTwkDial_pT1pi,      0.03, 0.03);
   //this->SetUncertainty( kHadrNuclTwkDial_FormZone,   0.50, 0.50);
@@ -222,8 +228,7 @@ void NSystUncertainty::SetDefaults(void)
   this->SetUncertainty( kCascTwkDial_FrInelHigh_pi,    0.30, 0.30);
   this->SetUncertainty( kCascTwkDial_FrCExHigh_pi,     0.30, 0.30);
   this->SetUncertainty( kCascTwkDial_FrPiProd_pi,      0.50, 0.50);
-  this->SetUncertainty( kCascTwkDial_FrPiProd_pi,      0.50, 0.50);
-  this->SetUncertainty( kCascTwkDial_All_pi,      0.50, 0.50);
+  this->SetUncertainty( kCascTwkDial_All_pi,           0.50, 0.50);
   //this->SetUncertainty( kINukeTwkDial_MFP_N,         0.20, 0.20);
   //this->SetUncertainty( kINukeTwkDial_FrCEx_N,       0.50, 0.50);
   //this->SetUncertainty( kINukeTwkDial_FrElas_N,      0.30, 0.30);
@@ -235,7 +240,19 @@ void NSystUncertainty::SetDefaults(void)
   this->SetUncertainty( kSystNucl_CCQEFermiSurfMom,  0.15, 0.15);
   this->SetUncertainty( kSystNucl_CCQEBindingEnergy, 0.50, 0.50);
 
-
+  this->SetUncertainty( kXSecTwkDial_FAZExp_TCut      , 1.0, 1.0);
+  this->SetUncertainty( kXSecTwkDial_FAZExp_T0        , 1.0, 1.0);
+  this->SetUncertainty( kXSecTwkDial_FAZExp_A0        , 1.0, 1.0);
+  this->SetUncertainty( kXSecTwkDial_FAZExp_A1        , 1.0, 1.0);
+  this->SetUncertainty( kXSecTwkDial_FAZExp_A2        , 1.0, 1.0);
+  this->SetUncertainty( kXSecTwkDial_FAZExp_A3        , 1.0, 1.0);
+  this->SetUncertainty( kXSecTwkDial_FAZExp_A4        , 1.0, 1.0);
+  this->SetUncertainty( kXSecTwkDial_FAZExp_A5        , 1.0, 1.0);
+  this->SetUncertainty( kXSecTwkDial_FAZExp_A6        , 1.0, 1.0);
+  this->SetUncertainty( kXSecTwkDial_FAZExp_A7        , 1.0, 1.0);
+  this->SetUncertainty( kXSecTwkDial_FAZExp_A8        , 1.0, 1.0); 
+  this->SetUncertainty( kXSecTwkDial_FAZExp_A9        , 1.0, 1.0); 
+  
   //this->SetUncertainty( kRDcyTwkDial_BR1gamma,       0.50, 0.50);
   //this->SetUncertainty( kRDcyTwkDial_BR1eta,         0.50, 0.50);
   //this->SetUncertainty( kRDcyTwkDial_Theta_Delta2Npi,         0.50, 0.50);

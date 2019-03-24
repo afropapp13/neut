@@ -57,6 +57,8 @@ C          11 : NEU,P --> LEPTON-,P,PI+
 C          12 : NEU,N --> LEPTON-,P,PI0
 C          13 : NEU,N --> LEPTON-,N,PI+
 C
+C          15 : NEU,P --> LEPTON-,P,PI+  ( diffractive )
+C
 C          16 : NEU,O(16) --> LEPTON-,O(16),PI+
 C
 C               -- SINGLE GAMMA FROM DELTA RESONANCE --
@@ -89,6 +91,8 @@ C          31 : NEU,N --> NEU,N,PI0
 C          32 : NEU,P --> NEU,P,PI0
 C          33 : NEU,N --> NEU,P,PI-
 C          34 : NEU,P --> NEU,N,PI+
+C
+C          15 : NEU,P --> LEPTON-,P,PI0 ( diffractive )
 C
 C          36 : NEU,O(16) --> NEU,O(16),PI0
 C
@@ -130,6 +134,8 @@ C         -11 : NEUBAR,N --> LEPTON+,N,PI-
 C         -12 : NEUBAR,P --> LEPTON+,N,PI0
 C         -13 : NEUBAR,P --> LEPTON+,P,PI-
 C
+C         -15 : NEUBAR,P --> LEPTON+,P,PI-  ( diffractive )
+C
 C         -16 : NEUBAR,O(16) --> LEPTON+,O(16),PI-
 C
 C               -- SINGLE GAMMA FROM DELTA RESONANCE --
@@ -156,6 +162,8 @@ C         -31 : NEUBAR,N --> NEUBAR,N,PI0
 C         -32 : NEUBAR,P --> NEUBAR,P,PI0
 C         -33 : NEUBAR,N --> NEUBAR,P,PI-
 C         -34 : NEUBAR,P --> NEUBAR,N,PI+
+C
+C         -35 : NEUBAR,P --> LEPTON+,P,PI0  ( diffractive )
 C
 C         -36 : NEUBAR,O(16) --> NEUBAR,O(16),PI0
 C
@@ -216,11 +224,14 @@ C
       real*4   rsspicrs,rssetcrs,rsskcrs,rssgcrs
       external rsspicrs,rssetcrs,rsskcrs,rssgcrs
 
+      real*4   difcrsnerein
+      external difcrsnerein
+
       real*4   rlu
       external rlu
 
       integer*4 imode
-      PARAMETER (IMODE=29)
+      PARAMETER (IMODE=31)
       REAL*4    BUF(IMODE)
 
       integer*4 i
@@ -231,10 +242,10 @@ C      COMMON/FREPRO/IFREE
       INTEGER MODNEU(IMODE-1),MODNEUB(IMODE-1)
       DATA MODNEU /  1, 11, 12, 13, 21, 31, 32, 33, 34, 41,
      &              51, 51, 52, 16, 36, 22, 42, 43, 23, 44,
-     &              45,  0, 26, 46, 17, 38, 39, 2/
+     &              45,  0, 26, 46, 17, 38, 39, 2,  15, 35/
       DATA MODNEUB/ -1,-11,-12,-13,-21,-31,-32,-33,-34,-41,
      &              -1,-51,-51,-52,-16,-36,-22,-42,-43,-23,
-     &              -44,-45,-26,-46,-17,-38,-39, -2/
+     &              -44,-45,-26,-46,-17,-38,-39,-2,-15,-35/
 
       Real APICRSCC, APICRSNC, R1320CC, R1320NC
 
@@ -302,17 +313,20 @@ C                         (=0:NC,   NE.0:CC)   T.KAJITA 06-SEP-94
          BUF(26)=BUF(25)+RSSGCRS(E,IPAR,11)*RATN*CRSNEUT(26)
          BUF(27)=BUF(26)+RSSGCRS(E,IPAR,12)*RATP*CRSNEUT(27)
          BUF(28)=BUF(27)+FNMEC_SELECT(E,IPAR)*CRSNEUT(28)
+         BUF(29)=BUF(28)+DIFCRSNEREIN(E,IPAR,1)*RATFRE*CRSNEUT(29)
+         BUF(30)=BUF(29)+DIFCRSNEREIN(E,IPAR,0)*RATFRE*CRSNEUT(30)
 
-         TOTCRSNE = BUF(28)
+         TOTCRSNE = BUF(30)
 
- 10      RAN=RLU(DUM)*BUF(28)
-         DO 20 I=1,28
+ 10      RAN=RLU(DUM)*BUF(30)
+         DO 20 I=1,30
             IF (BUF(I).GE.RAN) THEN
                IF (NEMODFLG.NE.0 .AND. NEMODFLG.NE.-1 .AND.
      &             NEMODFLG.NE.ABS(MODNEU(I))) GOTO 10
                NEMODSEL=MODNEU(I)
 C              IF (I.EQ.11 .OR. I.EQ.14 .OR. I.EQ.15) IFREE=1
-              IF (I.EQ.11 .OR. I.EQ.14 .OR. I.EQ.15) IBOUND=0
+              IF (I.EQ.11 .OR. I.EQ.14 .OR. I.EQ.15 .OR. I.EQ.29
+     $              .OR. I.EQ.30 ) IBOUND=0
               IF (I.EQ.2 .OR. I.EQ.7 .OR. I.EQ.9 .OR. I.EQ.18 .OR.
      &         I.EQ.21 .OR. I.EQ.27) THEN
 C                  IF (RLU(DUM).LT.(RATFRE/RATP)) IFREE = 1
@@ -371,17 +385,20 @@ C                         (=0:NC,   NE.0:CC)   T.KAJITA 06-SEP-94
          BUF(26)=BUF(25)+RSSGCRS(E,IPAR,13)*RATN*CRSNEUTB(26)
          BUF(27)=BUF(26)+RSSGCRS(E,IPAR,14)*RATP*CRSNEUTB(27)
          BUF(28)=BUF(27)+FNMEC_SELECT(E,IPAR)*CRSNEUTB(28)  
+         BUF(29)=BUF(28)+DIFCRSNEREIN(E,IPAR,1)*RATFRE*CRSNEUTB(29)
+         BUF(30)=BUF(29)+DIFCRSNEREIN(E,IPAR,0)*RATFRE*CRSNEUTB(30)
 
-         TOTCRSNE = BUF(28)
+         TOTCRSNE = BUF(30)
 
- 110     RAN=RLU(DUM)*BUF(28)
-         DO 120 I=1,28
+ 110     RAN=RLU(DUM)*BUF(30)
+         DO 120 I=1,30
             IF (BUF(I).GE.RAN) THEN
                IF (NEMODFLG.NE.0 .AND. NEMODFLG.NE.-1 .AND.
      &             NEMODFLG.NE.ABS(MODNEUB(I))) GOTO 110
                NEMODSEL=MODNEUB(I)
 C               IF (I.EQ.1 .OR. I.EQ.12. OR. I.EQ.15 .OR. I.EQ.16)IFREE=1
-               IF (I.EQ.1 .OR. I.EQ.12. OR. I.EQ.15 .OR. I.EQ.16) THEN
+               IF (I.EQ.1 .OR. I.EQ.12. OR. I.EQ.15 .OR. I.EQ.16
+     $              .OR. I.eq.29 .OR. I.eq.30) THEN
                   IBOUND=0
                endif
                IF (I.EQ.3 .OR. I.EQ.4 .OR. I.EQ.7 .OR. I.EQ.9 .OR. 

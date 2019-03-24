@@ -210,6 +210,7 @@ neutfillvect(char *filename, char *treename, char *branchname)
   nv->NucScat = nucres_.nucrescat;
   nv->NucFac  = nucres_.xnucfact;
 
+  nv->NuceffKinVersion = nuceffver_.nefkinver;
 
   nv->NuceffFactorPIQE = neffpr_.fefqe;	  
   nv->NuceffFactorPIInel = neffpr_.fefinel;  

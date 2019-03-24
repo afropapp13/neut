@@ -1,0 +1,711 @@
+- Neut 5.4.0 Card options - ( 2017.07.09 )
+
+1) General 
+
+NEUT-CRSPATH
+        Cross-section data file pathname
+
+NEUT-RAND
+        Random seed handling
+        0 : Read RANDOM number from FILE 
+           ( specified by environment variable RANFILE )
+        1 : Generating RANDOM SEED from the time
+
+NEUT-QUIET
+        Reduce information print outs
+        1 : Less messages
+        0 : more messages
+
+NEUT-NUSIM  ( don't set in neutrino inteaction simulation )
+        Flag of neutrino simulation or not ( for nuclear effect study )
+        1: yes (default) 
+        0: no
+
+/////////////////////////////////////////////////////////////////////
+2) Interaction mode selection and cross-section weights
+
+NEUT-MODE
+        Neutrino intearction mode
+        0 : normal ( default )
+       -1 : input cross section scaled with CRSNEUT/CRSNEUTB
+        n : sellect one mode ( n > 0 )   See nemodsel.F
+        
+
+NEUT-CRS
+NEUT-CRSB
+        CRS is for cross-section weight of neutrino interactions
+        CRSB is for cross-section weight of anti-neutrino interactions
+        
+        1:     CC Q.E.         CC Q.E.( Free )
+        2-4:   CC 1pi          CC 1pi
+        5:     C DIS 1320     CC DIS 1.3 < W < 2.0
+        6-9:   NC 1pi          NC 1pi
+        10:    NC DIS 1320     NC DIS 1.3 < W < 2.0
+        11:    NC els          CC Q.E.( Bound )
+        12:    NC els          NC els
+        13:    NC els          NC els
+        14:    CC coherent     NC els
+        15:    NC coherent     CC coherent
+        16:    CC eta          NC coherent
+        17     NC eta          CC eta
+        18:    NC eta          NC eta
+        19:    CC K            NC eta
+        20     NC K            CC K
+        21:    NC K            NC K
+        22:    N/A             NC K
+        23:    CC DIS          CC DIS (W > 2.0)
+        24:    NC DIS          NC DIS (W > 2.0)
+        25:    CC 1 gamma      CC 1 gamma
+        26,27: NC 1 gamma      NC 1 gamma
+        28:    2p2h            2p2h
+        29:    CC Diffract. pi CC Diffract. pi
+        30:    NC Diffract. pi NC Diffract. pi
+
+/////////////////////////////////////////////////////////////////////
+3) Selection of nucleus and general control of interactions in nucleus
+
+NEUT-NUMBNDN
+        total number of neutron
+          (e.g. CH => 6, H2O => 8, Ar => 22, Fe => 30)  
+
+NEUT-NUMBNDP
+        total number of bound proton
+           (e.g. CH => 6, H2O => 8, Ar => 18, Fe => 26)
+           
+NEUT-NUMFREP
+        total number of free proton
+           (e.g. CH => 1, H2O => 2, Ar => 0, Fe => 0)
+        
+NEUT-NUMATOM
+        atomic number of atom heavier than hydrogen
+        should be sum of NUMBNDN and NUMBNDP
+           (e.g. CH => 12, H2O =>16, Ar => 40, Fe => 56)
+
+NEUT-FERM
+        Fermi motion on/off ( pion nuclear effects )
+        0 : On
+        1 : Off
+        
+NEUT-PAUL
+        Pauli-Blocking on/off ( CCQE / NCEL )
+        0 : On
+        1 : Off 
+
+NEUT-PFSURF
+        Fermi surface momentum ( in GeV/c )
+        If not specified, automatically set using type of nucleus
+
+NEUT-PFMAX
+        Maximum value of Fermi momentum ( in GeV/c )
+        If not specified, automatically set using type of nucleus
+        
+NEUT-VNUINI
+        Initial potential ( binding energy ) of a nucleon ( in GeV )
+        If not specified, automatically set using type of nucleus
+        
+NEUT-VNUFIN
+        Final potential of a nucleon ( in GeV )
+        ( usually set to 0 ) 
+
+NEUT-IFORMLEN
+        Hadron production formation zone flag
+        1   : on for all interactions
+        100 : On for multi-pi production and DIS 
+        110 : Off for CCQE/MEC/NCEL
+
+NEUT-FZMU2
+        Formation zone parameter
+        0.08 ( default )
+
+
+/////////////////////////////////////////////////////////////////////
+4) CCQE/NCEL/2p2h related
+
+NEUT-MDLQE    
+         CC Quasi-elastic / NC elastic model selection
+         ( Not all the combinations are supported )
+
+        Simple Fermi-Gas mdels
+         xxx1 : Smith-Moniz with dipole 
+         xxx2 : Smith-Moniz with BBBA05
+         xxx3 : Smith-Moniz with BBBA07
+
+         xx0x : NCEL cross-section scaling to CCQE
+         xx1x : NCEL cross-section scaling to Spectrum func. with Dipole
+         xx2x : NCEL cross-section scaling to Spectrum func. with BBBA05
+         xx3x : NCEL cross-section scaling to Spectrum func. with BBBA07
+
+        Transverse enhancement ( only for partial ) 
+         x1xx : CCQE with Transverse enhancement ( Bodek et al. )
+
+        Spectral functions ( CC & NC )
+         x4xx : Spectral function model ( Ankowski et al. )
+         x6xx : TEM spectral function
+         x7xx : Effective spectral function
+
+        RPA correcton on/off
+         1xxx : RPA correction ( Nieves et al. )
+                
+        Nieves 1p1h model 
+         2XxX : Nieves 1p1h ( X digits are ignored for now )
+
+NEUT-MVQE
+        Vector mass constant for CCQE
+        0.84
+
+NEUT-MAQE
+        Axial vector mass constant for CCQE
+		1.05 ( suggested value for Nieves 1p1h    )
+        1.21 ( default for Global Fermi Gas model )
+
+NEUT-MDLQEAF ( One has to specify consistent with MDLQE )
+         CC Quasi-elastic / NC elastic Axial vector form factor
+         ( Not all the combinations with MDLQE are supported )
+         1 : Dipole
+         2 : BBBA07
+         3 : 2 component Axial form factor
+         4 : 3 component Axial form factor
+         5 : Z-expansion Axial form factor
+
+NEUT-KAPP ( Smith-Moniz )
+        CCQE Kappa Factor
+        1.0 ( default )
+
+NEUT-PFSF ( Smith-Moniz )
+        CCQE/NCEL fermi momentum for spectral function model
+        -1 : set using # of bound protons ( default )
+        larger than 0 : Use the value
+        
+NEUT-FPQE ( Smith-Moniz )
+        CCQE/NCEL Scaling factor of pseudo scalar form contribution
+        1 : default
+
+NEUT-SCCFV ( Smith-Moniz )
+        CCQE/NCEL relative size of second class vector current
+        0 : default ( no second class vector current )
+
+NEUT-SCCFA ( Smith-Moniz )
+        CCQE/NCEL relative size of second class axial vector current
+        0 : default ( no second class axial vector current )
+
+NEUT-NVQERFG ( Nieves 1p1h ) <- not supported
+        Local Fermi Gas or Global Fermi Gas
+        0 : Local Fermi Gas
+        1 : Global Fermi Gas 
+
+NEUT-NVQEBIND ( Nieves 1p1h )
+        Apply binding energy or not
+        0 : Not apply
+        1 : Apply ( default )
+
+NEUT-NVQERPA ( Nieves 1p1h )
+        Apply RPA correction or not
+		0 : Not apply
+		1 : Apply ( default )
+
+NEUT-NVRPAFP0IN ( Nieves 1p1h )
+        RPA parameter ( Fp0in )
+		0.33
+
+NEUT-NVRPAPF0EX ( Nieves 1p1h )
+        RPA parameter ( Fp0ex )
+        0.45
+
+NEUT-NVRPAFSTAR ( Nieves 1p1h )
+        RPA parameter ( F* )
+        2.13
+
+NEUT-NVRPAF ( Nieves 1p1h )
+        RPA parameter ( AF )
+        1.
+
+NEUT-NVRPAPILAMBDA ( Nieves 1p1h )
+        RPA parameter ( \pi\Lambda )
+        1200.
+
+NEUT-NVRPACR0 ( Nieves 1p1h )
+        RPA parameter ( CR0 )
+        2.0
+
+NEUT-NVRPARHOLAMBDA ( Nieves 1p1h )
+        RPA parameter ( \rho\Lambda )
+        2500
+
+NEUT-NVRPAGP ( Nieves 1p1h )
+        RPA parameter ( G_P )
+        0.63
+
+NEUT-NVRPAXMPI ( Nieves 1p1h )
+        RPA parameter ( pion mass )
+		139.57
+
+NEUT-NVRPAXMRHO ( Nieves 1p1h )
+        RPA parameter ( rho mass )
+		777.0
+
+NEUT-NVRPAIREL ( Nieves 1p1h )
+        RPA parameter ( IREL )
+		1.
+
+NEUT-MDL2P2H
+        2p2h implementation
+		1 : Table
+		2 : Hadronic tensor
+
+/////////////////////////////////////////////////////////////////////
+5) single pion / meson / gamma production
+
+NEUT-MDLSPI
+		1: Rein-Sehgal based + Global Fermi Gas ( default )
+
+NEUT-IFF ( Rein-Sehgal )
+        Single Pion Production Form factor for single pi production
+        0: Rein-Seghal Model ( use MASPI, BGSCL, NRTYPE )
+        1: Graczyk and Sobczyk (default) ( use  MASPI, BGSCL, CA5 )
+
+NEUT-BGSCL ( Rein-Sehgal )
+        Single pion production nonresonant background scaling factor
+        1.3
+        
+NEUT-MARSRES ( Rein-Sehgal )
+        Axial vector mass constant of Rein-Sehgal model
+        Always used for single meson / gamma production other than pion.
+        For pion production, this will be used when IFF == 0
+        1.21 ( default )
+        
+NEUT-MVRSRES ( Rein-Sehgal )
+        Vector mass constant of Rein-Sehgal model
+        Always used for single meson / gamma production other than pion.
+        For pion production, this will be used when IFF == 0
+        0.84 ( default )
+
+NEUT-NRTYPE ( Rein-Sehgal )
+        Single meson / gamma production Rein-Seghal NRTYPE
+        0: Electro-production
+        1: Neutrino-Production (default)
+
+NEUT-CA5 ( Graczyk-Sobczyk )
+        Single pion production Graczyk and Sobczyk model CA5(0) 
+        1.01 ( default )
+        
+NEUT-MARNFFRES ( Graczyk-Sobczyk )
+        Axial vector mass constant of Graczyk-Sobczyk single pion production
+        This will be used when IFF == 1
+        0.95 ( default )
+        
+NEUT-MVNFFRES
+        Vector mass constant of Graczyk-Sobczyk single pion production
+        This will be used when IFF == 1
+        0.84 ( default )
+
+NEUT-IPILESSDCY
+        Switch of resonant Pion-less Delta Decay
+        0 : Off ( default )
+        1 : On
+        
+NEUT-RPILESSDCY
+        Fraction of resonant Pion-less Delta Decay
+        0.0 ( default )
+
+/////////////////////////////////////////////////////////////////////
+6) coherent and diffractive pi produciton 
+
+NEUT-COHEPI
+        Coherent pion model 
+        0 : Rein & Sehgal
+        1 : Kartavtsev et al. ( total cross-section scaling )
+        2 : Berger & Sehgal
+
+NEUT-MACOH ( total cross-section is not affected : reweight only )
+        Axial vector mass constant of Rein-Sehgal coherent pion production
+        1.0 ( default )
+
+NEUT-R0COH ( total cross-section is not affected : reweight only )
+        Coherent Pion Nuclear Radios (Default: 1.0 fm)
+        1.0 ( fm , default )
+        
+NEUT-fA1COH ( total cross-section is not affected : reweight only )
+        Coherent Pion fA1 correction factor 
+        0.0 ( default )
+
+NEUT-fb1COH ( total cross-section is not affected : reweight only )
+        Coherent Pion fB1 correction factor 
+        0.0 ( default )
+
+NEUT-DIFPI 
+        0 : Disable diffractive pion production mode
+		1 : Enable diffractive pion production mode
+		
+NEUT-XMADIF ( total cross-section is not affected : reweight only )
+        MA for Diffractive pion production
+		1.1 ( default )
+
+NEUT-NUCVOLDIF ( total cross-section is not affected : reweight only )
+        Diffractive pion production volume parameter 
+		7.0 ( default )
+
+/////////////////////////////////////////////////////////////////////
+7) multi-pi production / DIS
+
+NEUT-PDF
+        Selection of PDF ( for DIS/multi-pi modes )
+        7 : GRV94DI  ( obsolete )
+        12: GRV98_LO ( default )
+
+NEUT-BODEK
+        Bodek-Yang correction ( for DIS/multi-pi modes )
+        0 : Off
+        1 : On ( default )
+
+NEUT-MULT ( 1 and 2 are not recommended to use for production )
+       Hadron multiplicity model for multi-pi mode
+       	0 :  original NEUT model ( default )
+        1 :  fit of deuterium bubble-chamber data (hep-ph:1607.06558)
+        2 :  AGKY model (hep-ph:0904.4043 and Yang, T. et al. 
+                         AIP Conf.Proc. 967 (2007) 269-275)
+        
+/////////////////////////////////////////////////////////////////////
+8) Other interaction correction
+
+NEUT-IRADCORR
+        Radiation correction of outgoing lepton 
+        0 : off ( default )
+        1 : on
+
+
+/////////////////////////////////////////////////////////////////////
+9) Pion interaction in nucleus
+
+NEUT-NEFF
+        Simulate pion nucelar effect or not
+        0 : On
+        1 : Off
+        
+NEUT-EFVER
+        nucleon momentum distribution
+		0 : follow the experimental momentum distribution ( original )
+		1 : Simple Local Fermi-gas 
+
+NEUT-MODL
+        Pion nuclear effect low momentum pion mean free path models 
+        ( P < 500 Me/c )
+        0: p/n cross sections normalized to pion-deuteron (prior to 2011)
+        1: Actual p or n cross section used; Intermediate pion charge fixed;
+                    p/n density considered for non-isoscalar nuclei
+
+NEUT-MODH
+        Pion nuclear effect high momentum pion mean free path models 
+        ( P > 500 Me/c )
+        0: p/n cross sections normalized to pion-deuteron (prior to 2011)
+        1: Actual p or n cross section used; Intermediate pion charge fixed;
+                    p/n density considered for non-isoscalar nuclei
+
+NEUT-KINH   
+        Pion nuclear effect quasielastic scattering model 
+        for high momentum pion
+        ( P > 500 MeV / c )
+        0: Isotropic decay of some resonance (Deprecated, do not use)
+        1: SAID Phase shift analysis + Artificial Fwd. Scatter
+
+NEUT-FEFQE
+        Pion nuclear effect low momentum pion ( P < 500 MeV/c )
+        quasi-elastic scattering mean free scaling factor
+        1.069 ( default )
+        
+NEUT-FEFQEH
+        Pion nuclear effect high momentum pion ( P > 500 MeV/c )
+        quasi-elastic scattering mean free scaling factor
+        1.824 ( default )
+
+NEUT-FEFINEL
+        Pion nuclear effect high momentum pion ( P > 500 MeV/c )
+        hadron production mean free scaling factor
+        1.002 ( default )
+
+NEUT-FEFABS
+        Pion nuclear effect low momentum pion ( P < 500 MeV/c )
+        absorption mean free scaling factor
+        1.404 ( default )
+
+NEUT-FEFCOH
+        Pion nuclear effect high momentum pion ( P > 500 MeV/c )
+        forward scattering mean free scaling factor
+        1.0 ( default )
+
+NEUT-FEFQEHF
+        Pion nuclear effect high momentum pion ( P > 500 MeV/c )
+        Portion of QE scattering that has inelastic-like kinematics 
+        0. : all forward-like scattering
+        1. : Tune to pion scattering data, mix of quasielastic
+             and forward-like scattering ( default )
+
+NEUT-FEFCOHF
+        Pion nuclear effect low momentum pion ( P < 500 MeV/c )
+        Amount of forward scatter relative to quasi-elastic (p<500)
+        0  : Default
+        
+NEUT-FEFCX
+        Pion nuclear effect low momentum pion ( P < 500 MeV/c )
+        Factor to modify charge exchange amplitude
+        0.697 ( default )
+
+NEUT-FEFCXH
+        Pion nuclear effect high momentum pion ( P > 500 MeV/c )
+        Factor to modify charge exchange amplitude
+        1.800 ( default )
+
+NEUT-FEFCXHF
+        Pion nuclear effect high momentum pion ( P > 500 MeV/c )
+        Portion of QE scattering that has inelastic-like kinematics
+        1. ( default )
+
+NEUT-FEFCOUL
+        Pion nuclear effect high momentum pion
+        Pion trajectory modified by Coulomb field
+        0 : off  ( default )
+        1 : on
+        
+NEUT-FEFALL
+        Pion nuclear effect
+        overall scaling factor on mean free path
+        1. ( default )      
+
+NEUT-ABSPIEMIT
+        Nucleon emission after the absorption of pi ( nuclear effect )
+        1: on (default) 
+        0: off
+
+/////////////////////////////////////////////////////////////////////
+10) Nucleon interactions in nucleus
+
+NUCRES-RESCAT
+        Nucleon rescattering flag
+        0 : off
+        1 : on ( default )
+        
+NUCRES-FACT
+        Nucleon rescattering mean free path scaling factor
+        1. ( default )
+
+NUCRES-FRMGAS
+        1 : Global Fermi Gas ( except for 2p2h : always uses local fermi gas )
+		2 : Local Fermi Gas for all modes ( default )
+        
+/////////////////////////////////////////////////////////////////////
+11) Vector generation control
+
+EVCT-NEVT
+        Number of events to generate
+        
+EVCT-IDPT
+        Neutrino flavor
+        12 : electron neutrino
+        -12: electron anti-neutrino
+        14 : muon neutrino
+        -14: muon anti neutrino
+
+EVCT-MPOS
+        Vertex position flag ( in the detector )
+        1 : Fixed
+        2 : Randomly distribututes using RAD ( radius )
+        
+EVCT-POS(3)
+        Vertex position ( in the detector )
+        Used when MPOS == 1
+
+EVCT-RAD
+        Maximum radius of the vertex
+
+EVCT-MDIR
+        Neutrino direction flag
+        1 : Fixed
+        2 : Randomly distribututes
+        
+EVCT-DIR(3)
+        Neutrino direction
+        Used when MDIR == 1
+        
+EVCT-MPV
+        Neutrino energy flag
+        1 : Fixed  ( PEVCT(1) )
+        2 : Random ( Energy = [PV(1),PV(2)] )
+        3 : Flux histogram
+                 
+EVCT-PV(2)
+        Energy ( or energy range ) in MeV
+        Use oly PV(1) when MPV = 1
+        Flat distribution (1) when MPV = 1
+        
+EVCT-FILENM
+        File name of the neutrino flux histogram ( root )
+        Used when MPV = 3
+
+EVCT-HISTNM
+        flux histogram name
+        Used when MPV = 3
+
+EVCT-INMEV
+        flag for histograms in MeV or GeV
+        0 : GeV
+        1 : MeV
+///////////////////////////////////////////////////////////////////////////
+
+
+Neut Interaction mode codes
+   MODE > 0 : Neutrino
+   MODE < 0 : Anti neutrino
+
+   ABS(MODE) < 30 : Charged current
+   ABS(MODE) > 30 : Neutral current
+
+######### NEUTRINO MODE #########
+
+    ***** CHARGED CURRENT *****
+
+       -- ELASTIC --
+   1 : NEU,N --> LEPTON-,P
+
+   2 : NEU,N+X --> LEPTON-,P+X  (X=(N or P))
+       -- SINGLE PI FROM DELTA RESONANCE --
+  11 : NEU,P --> LEPTON-,P,PI+
+  12 : NEU,N --> LEPTON-,P,PI0
+  13 : NEU,N --> LEPTON-,N,PI+
+
+       -- DIFFRACTIVE PI PRODUCTION -- ( Rserved for future )
+  15 : NEUBAR,P -> LEPTON-,P,PI+
+
+       -- COHERENT PI PRODUCTION _--
+  16 : NEU,O(16) --> LEPTON-,O(16),PI+
+
+       -- SINGLE GAMMA FROM DELTA RESONANCE --
+  17 : NEU,N --> LEPTON-,P,GAMMA
+
+       -- SINGLE K : Strangeness violated mode -- ( Rserved for future )
+  18 : NEU,N --> LEPTON-,N,K+
+  19 : NEU,N --> LEPTON-,P,K0
+  20 : NEU,P --> LEPTON-,P,K+
+
+       -- MULTI PI (1.3 < W < 2.0 GeV) --
+  21 : NEU,(N OR P) --> LEPTON-,(N OR P),MULTI PI
+
+       -- SINGLE ETA FROM DELTA RESONANCE --
+  22 : NEU,N --> LEPTON-,P,ETA0
+
+       -- SINGLE K FROM DELTA RESONANCE --
+  23 : NEU,N --> LEPTON-,LAMBDA,K+
+
+       -- DEEP INELASTIC (2.0 GeV < W , JET set) --
+  26 : NEU,(N OR P) --> LEPTON-,(N OR P),MESONS
+
+    ***** NEUTAL CURRENT *****
+
+       -- SINGLE PI FROM DELTA RESONANCE --
+  31 : NEU,N --> NEU,N,PI0
+  32 : NEU,P --> NEU,P,PI0
+  33 : NEU,N --> NEU,P,PI-
+  34 : NEU,P --> NEU,N,PI+
+
+       -- DIFFRACTIVE PI PRODUCTION -- ( Rserved for future )
+  35 : NEU,P -> NEU,P,PI0
+
+       -- COHERENT PI PRODUCTION _--
+  36 : NEU,O(16) --> NEU,O(16),PI0
+
+       -- SINGLE GAMMA FROM DELTA RESONANCE --
+  38 : NEU,N --> NEU,N,GAMMA
+  39 : NEU,P --> NEU,P,GAMMA
+
+       -- MULTI PI (1.3 GeV < W < 2.0 GeV) --
+  41 : NEU,(N OR P) --> NEU,(N OR P),MULTI PI
+
+       -- SINGLE ETA FROM DELTA RESONANCE --
+  42 : NEU,N --> NEU,N,ETA0
+  43 : NEU,P --> NEU,P,ETA0
+
+       -- SINGLE  K  FROM DELTA RESONANCE --
+  44 : NEU,N --> NEU,LAMBDA,K0
+  45 : NEU,P --> NEU,LAMBDA,K+
+
+       -- DEEP INELASTIC (2.0 GeV < W , JET set) --
+  46 : NEU,(N OR P) --> NEU,(N OR P),MESONS
+
+       -- ELASTIC --
+  51 : NEU,P --> NEU,P
+  52 : NEU,N --> NEU,N
+
+
+######### ANTI NEUTRINO MODE #########
+
+    ***** CHARGED CURRENT *****
+
+       -- ELASTIC --
+  -1 : NEUBAR,P --> LEPTON+,N
+  -2 : NEU,P+X --> LEPTON-,N+X  (X=(N or P))
+
+       -- SINGLE PI FROM DELTA RESONANCE --
+ -11 : NEUBAR,N --> LEPTON+,N,PI-
+ -12 : NEUBAR,P --> LEPTON+,N,PI0
+ -13 : NEUBAR,P --> LEPTON+,P,PI-
+
+       -- DIFFRACTIVE PI PRODUCTION -- ( Rserved for future )
+ -15 : NEUBAR,P -> LEPTON+,P,PI-
+
+       -- COHERENT PI PRODUCTION _--
+ -16 : NEUBAR,O(16) --> LEPTON+,O(16),PI-
+
+       -- SINGLE GAMMA FROM DELTA RESONANCE --
+ -17 : NEUBAR,P --> LEPTON+,N,GAMMA
+
+       -- SINGLE K : Strangeness violated mode -- ( Rserved for future )
+ -18 : NEUBAR,P --> LEPTON+,P,K-
+ -19 : NEUBAR,P --> LEPTON+,N,K0
+ -20 : NEUBAR,N --> LEPTON+,N,K-
+
+       -- MULTI PI (W > 1.4 GEV) --
+ -21 : NEUBAR,(N OR P) --> LEPTON+,(N OR P),MULTI PI
+
+       -- SINGLE ETA FROM DELTA RESONANCE --
+ -22 : NEUBAR,P --> LEPTON+,N,ETA0
+
+       -- SINGLE  K FROM DELTA RESONANCE --
+ -23 : NEUBAR,P --> LEPTON+,LAMBDA,K0
+
+       -- DEEP INELASTIC (2.0 GeV < W , JET set) --
+ -26 : NEUBAR,(N OR P) --> LEPTON+,(N OR P),MESONS
+
+       ** NEUTAL CURRENT **
+
+       -- SINGLE PI FROM DELTA RESONANCE --
+ -31 : NEUBAR,N --> NEUBAR,N,PI0
+ -32 : NEUBAR,P --> NEUBAR,P,PI0
+ -33 : NEUBAR,N --> NEUBAR,P,PI-
+ -34 : NEUBAR,P --> NEUBAR,N,PI+
+
+       -- DIFFRACTIVE PI PRODUCTION -- ( Rserved for future )
+ -35 : NEUBAR,P -> NEUBAR,P,PI0
+
+       -- COHERENT PI PRODUCTION _--
+ -36 : NEUBAR,O(16) --> NEUBAR,O(16),PI0
+
+       -- SINGLE GAMMA FROM DELTA RESONANCE --
+ -38 : NEUBAR,N --> NEUBAR,N,GAMMA
+ -39 : NEUBAR,P --> NEUBAR,P,GAMMA
+
+       -- MULTI PI (W > 1.4 GEV) --
+ -41 : NEUBAR,(N OR P) --> NEUBAR,(N OR P),MULTI PI
+
+       -- SINGLE ETA FROM DELTA RESONANCE --
+ -42 : NEUBAR,N --> NEUBAR,N,ETA0
+ -43 : NEUBAR,P --> NEUBAR,P,ETA0
+
+       -- SINGLE  K  FROM DELTA RESONANCE --
+ -44 : NEUBAR,N --> NEUBAR,LAMBDA,K0
+ -45 : NEUBAR,P --> NEUBAR,LAMBDA,K+
+
+       -- DEEP INELASTIC (2.0 GeV < W , JET set) --
+ -46 : NEUBAR,(N OR P) --> NEUBAR,(N OR P),MESONS
+
+       -- ELASTIC --
+ -51 : NEUBAR,P --> NEUBAR,P
+ -52 : NEUBAR,N --> NEUBAR,N
+

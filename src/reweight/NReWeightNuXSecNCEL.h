@@ -82,37 +82,13 @@ namespace rew   {
    double fMaDef;        ///<
    double fMaCurr;       ///<
 
-   int fAxlFFTwkDial;    ///<
-   int fAxlFFDef;        ///<
-   int fAxlFFCurr;       ///<
+   float fAxlFFTwkDial;    ///<
+   float fAxlFFDef;        ///<
+   float fAxlFFCurr;       ///<
 
-   int fVecFFTwkDial;    ///<
-   int fVecFFDef;        ///<
-   int fVecFFCurr;       ///<
-
-   double fPfTwkDial;    ///<
-   double fPfDef;        ///<
-   double fPfCurr;       ///<
-
-   double fEbTwkDial;    ///<
-   double fEbDef;        ///<
-   double fEbCurr;       ///<
-
-   double fKapTwkDial;    ///<
-   double fKapDef;        ///<
-   double fKapCurr;       ///<
-
-   float fSCCVecTwkDial;    ///<
-   float fSCCVecDef;        ///<
-   float fSCCVecCurr;       ///<
-
-   float fSCCAxlTwkDial;    ///<
-   float fSCCAxlDef;        ///<
-   float fSCCAxlCurr;       ///<
-
-   double fPsFFTwkDial;    ///<
-   double fPsFFDef;        ///<
-   double fPsFFCurr;       ///<
+   float fVecFFTwkDial;    ///<
+   float fVecFFDef;        ///<
+   float fVecFFCurr;       ///<
 
    NFortFns * fortFns;
    NModeDefn modeDefn;

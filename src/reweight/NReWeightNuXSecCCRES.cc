@@ -83,37 +83,30 @@ void NReWeightNuXSecCCRES::Init(void)
   fMvTwkDial   = 0.; 
   fMvDef       = fortFns->XMVCCRESdef;
   fMvCurr      = fMvDef;
-
-  fMaTwkDial   = 0.; 
-  fMaDef       = 0;
-  fMaCurr      = fMaDef;
-  fMvTwkDial   = 0.; 
-  fMvDef       = 0;
-  fMvCurr      = fMvDef;
   */
   fMaNFFTwkDial   = 0.; 
-  fMaNFFDef       = fortFns->XMANFFRESdef;
+  fMaNFFDef       = 0.; 
   fMaNFFCurr      = fMaNFFDef;
   fMvNFFTwkDial   = 0.; 
-  fMvNFFDef       = fortFns->XMVNFFRESdef;
+  fMvNFFDef       = 0.; 
   fMvNFFCurr      = fMvNFFDef;
   fMaRSTwkDial   = 0.; 
-  fMaRSDef       = fortFns->XMARSRESdef;
+  fMaRSDef       = 0.; 
   fMaRSCurr      = fMaRSDef;
   fMvRSTwkDial   = 0.; 
-  fMvRSDef       = fortFns->XMVRSRESdef;
+  fMvRSDef       = 0.; 
   fMvRSCurr      = fMvRSDef;
   fCA5TwkDial   = 0.; 
-  fCA5Def       = fortFns->RNECA5Idef;
+  fCA5Def       = 0.; 
   fCA5Curr      = fCA5Def;
   fBgSclTwkDial   = 0.; 
-  fBgSclDef       = fortFns->RNEBGSCLdef;
+  fBgSclDef       = 0.; 
   fBgSclCurr      = fBgSclDef;
   fIFFTwkDial   = 0; 
-  fIFFDef       = fortFns->NEIFFdef;
+  fIFFDef       = 0.; 
   fIFFCurr      = fIFFDef;
   fNRTypeTwkDial   = 0; 
-  fNRTypeDef       = fortFns->NENRTYPEdef;
+  fNRTypeDef       = 0.; 
   fNRTypeCurr      = fNRTypeDef;
 
 
@@ -271,8 +264,8 @@ void NReWeightNuXSecCCRES::Reconfigure(void)
   if(fMode==kModeMaMv) {   
      double fracerr_ma = fracerr->OneSigmaErr(kXSecTwkDial_MaCCRES);
      double fracerr_mv = fracerr->OneSigmaErr(kXSecTwkDial_MvCCRES);
-     fMaCurr = fMaDef * (1. + fMaTwkDial * fracerr_ma);
-     fMvCurr = fMvDef * (1. + fMvTwkDial * fracerr_mv);
+     fMaCurr = (1. + fMaTwkDial * fracerr_ma);
+     fMvCurr = (1. + fMvTwkDial * fracerr_mv);
   }
 
   else if(fMode==kModeNormAndMaShape) { 
@@ -288,37 +281,38 @@ void NReWeightNuXSecCCRES::Reconfigure(void)
 
      double fracerr_nffma = fracerr->OneSigmaErr(kXSecTwkDial_MaNFFCCRES);
      double fracerr_nffmv = fracerr->OneSigmaErr(kXSecTwkDial_MvNFFCCRES);
-     fMaNFFCurr = fMaNFFDef * (1. + fMaNFFTwkDial * fracerr_nffma);
-     fMvNFFCurr = fMvNFFDef * (1. + fMvNFFTwkDial * fracerr_nffmv);
+     fMaNFFCurr = (1. + fMaNFFTwkDial * fracerr_nffma);
+     fMvNFFCurr = (1. + fMvNFFTwkDial * fracerr_nffmv);
 
      double fracerr_rsma = fracerr->OneSigmaErr(kXSecTwkDial_MaRSCCRES);
      double fracerr_rsmv = fracerr->OneSigmaErr(kXSecTwkDial_MvRSCCRES);
-     fMaRSCurr = fMaRSDef * (1. + fMaRSTwkDial * fracerr_rsma);
-     fMvRSCurr = fMvRSDef * (1. + fMvRSTwkDial * fracerr_rsmv);
+     fMaRSCurr = (1. + fMaRSTwkDial * fracerr_rsma);
+     fMvRSCurr = (1. + fMvRSTwkDial * fracerr_rsmv);
 
      double fracerr_ca5 = fracerr->OneSigmaErr(kXSecTwkDial_CA5CCRES);
      double fracerr_bgscl = fracerr->OneSigmaErr(kXSecTwkDial_BgSclCCRES);
-     fCA5Curr = fCA5Def * (1. + fCA5TwkDial * fracerr_ca5);
-     fBgSclCurr = fBgSclDef * (1. + fBgSclTwkDial * fracerr_bgscl);
+     fCA5Curr = (1. + fCA5TwkDial * fracerr_ca5);
+     fBgSclCurr = (1. + fBgSclTwkDial * fracerr_bgscl);
 
      double fracerr_iff = fracerr->OneSigmaErr(kXSecTwkDial_FFCCRES);
-     fIFFCurr = int(fIFFDef + fracerr_iff * fIFFTwkDial);
+     fIFFCurr = int(fracerr_iff * fIFFTwkDial);
 
      double fracerr_type = fracerr->OneSigmaErr(kXSecTwkDial_TypeCCRES); 
-     fNRTypeCurr = int(fNRTypeDef + fracerr_type * fNRTypeTwkDial);
+     fNRTypeCurr = int(fracerr_type * fNRTypeTwkDial);
      //fIFFCurr   = TMath::Max(0, fIFFTwkDial  );
      //fNRTypeCurr   = TMath::Max(0, fNRTypeTwkDial  );
-     fIFFCurr = TMath::Max(0, fIFFCurr);
-  fNormCurr = TMath::Max(0., fNormCurr);
-  fMaCurr   = TMath::Max(0., fMaCurr  );
-  fMvCurr   = TMath::Max(0., fMvCurr  );
-  fMaNFFCurr   = TMath::Max(0., fMaNFFCurr  );
-  fMvNFFCurr   = TMath::Max(0., fMvNFFCurr  );
-  fMaRSCurr   = TMath::Max(0., fMaRSCurr  );
-  fMvRSCurr   = TMath::Max(0., fMvRSCurr  );
-  fCA5Curr   = TMath::Max(0., fCA5Curr  );
-  fBgSclCurr   = TMath::Max(0., fBgSclCurr  );
-
+     /*
+     fIFFCurr = TMath::Max(-1, fIFFCurr);
+  fNormCurr = TMath::Max(-1., fNormCurr);
+  fMaCurr   = TMath::Max(-1., fMaCurr  );
+  fMvCurr   = TMath::Max(-1., fMvCurr  );
+  fMaNFFCurr   = TMath::Max(-1., fMaNFFCurr  );
+  fMvNFFCurr   = TMath::Max(-1., fMvNFFCurr  );
+  fMaRSCurr   = TMath::Max(-1., fMaRSCurr  );
+  fMvRSCurr   = TMath::Max(-1., fMvRSCurr  );
+  fCA5Curr   = TMath::Max(-1., fCA5Curr  );
+  fBgSclCurr   = TMath::Max(-1., fBgSclCurr  );
+     */
 }
 //_______________________________________________________________________________________
 double NReWeightNuXSecCCRES::CalcWeight() 
@@ -409,14 +403,23 @@ double NReWeightNuXSecCCRES::CalcWeightMaMv()
 
   //nemdls_.xmaspi = fMaCurr;
   //nemdls_.xmvspi = fMvCurr;
-  neut1pi_.xmanffres = fMaNFFCurr;
-  neut1pi_.xmvnffres = fMvNFFCurr;
-  neut1pi_.xmarsres = fMaRSCurr;
-  neut1pi_.xmvrsres = fMvRSCurr;
-  neut1pi_.neiff    = fIFFCurr;
-  neut1pi_.nenrtype = fNRTypeCurr;
-  neut1pi_.rneca5i  = fCA5Curr;
-  neut1pi_.rnebgscl = fBgSclCurr;
+  fMaNFFDef = neut1pi_.xmanffres;
+  fMvNFFDef = neut1pi_.xmvnffres;
+  fMaRSDef = neut1pi_.xmarsres;
+  fMvRSDef = neut1pi_.xmvrsres;
+  fIFFDef = neut1pi_.neiff;
+  fNRTypeDef = neut1pi_.nenrtype;
+  fCA5Def = neut1pi_.rneca5i;
+  fBgSclDef = neut1pi_.rnebgscl;
+
+  neut1pi_.xmanffres = TMath::Max(0.,fMaNFFCurr * fMaNFFDef);
+  neut1pi_.xmvnffres = TMath::Max(0.,fMvNFFCurr * fMvNFFDef);
+  neut1pi_.xmarsres = TMath::Max(0.,fMaRSCurr * fMaRSDef);
+  neut1pi_.xmvrsres = TMath::Max(0.,fMvRSCurr * fMvRSDef);
+  neut1pi_.neiff    = TMath::Max(0,fIFFCurr + fIFFDef);
+  neut1pi_.nenrtype = TMath::Max(0,fNRTypeCurr + fNRTypeDef);
+  neut1pi_.rneca5i  = TMath::Max(0.,fCA5Curr * fCA5Def);
+  neut1pi_.rnebgscl = TMath::Max(0.,fBgSclCurr * fBgSclDef);
 
   fortFns->Reconfigure();
 

@@ -19,17 +19,11 @@
 #define FLXCOM  nusk_
 #define NDBMNTPLID HID_NUFD2
 #else
-#ifdef FLUX_11B
-#include "uhdef_11b.fh"
-#define FLXCOM  nusk_
-#define NDBMNTPLID HID_NUFD2
-#else
 #include "beamntpl.h"
 #define FLXCOM  fxvcsk_
 #define NDBMNTPLID HID_NUFD1
 #endif
 #endif      
-#endif
 #endif
 
 #include "detectordefs.h"

@@ -127,10 +127,15 @@ C --      ELASTIC PROCESS IN O16
 C
 
 C --      Use spectral function
-           IF (mod(MDLQE, 1000) / 100 .EQ. 4) then
-               CALL SFEVENT(IPAR,E,DIRNEU,IERR,.TRUE.,mode,first)
+           IF (mod(MDLQE, 10000)/1000 .EQ. 2) then
+              call ne_1p1h_n(ipar,mode,e,dirneu,ierr)
+           else IF (mod(MDLQE, 1000) / 100 .EQ. 4) then
+              CALL SFEVENT(IPAR,E,DIRNEU,IERR,.TRUE.,mode,first)
+           ELSE IF ( (mod(MDLQE, 1000) / 100 .EQ. 6).or.
+     $               (mod(MDLQE, 1000) / 100 .EQ. 7) ) then
+              CALL EFFSFEVENT(IPAR,E,DIRNEU,IERR,.TRUE.,mode,first)
            ELSE
-               CALL NEELSVCP(IPAR,E,DIRNEU,IERR)
+              CALL NEELSVCP(IPAR,E,DIRNEU,IERR)
            ENDIF
 
 C
@@ -157,7 +162,14 @@ C --     Error if proton is free
 C
 C --      MEC PROCESS
 C               
-               CALL NEMECVCP(IPAR,E,DIRNEU,IERR)
+               if (MDL2P2H.eq.2) then 
+                  call ne_2p2h_ht(ipar,0,E,dirneu,ierr) 
+               else if (MDL2P2H.eq.1) THEN
+                  CALL NEMECVCP(IPAR,E,DIRNEU,IERR)
+               else
+                  write(*,*) 'Unknown MDL2P2H value ',MDL2P2H
+                  stop
+               endif
                
                IF(IERR.EQ.0)GO TO 1000
                WRITE(6,630)MODE,E
@@ -176,8 +188,24 @@ C
 C
 C  -- COHERENT PI PRODUCTION - T.KAJITA AND K.OKUMURA 06-SEP-94---
 C
-               CALL NECOHVCT(IPAR,E,MODE,DIRNEU)
+               CALL NECOHVCT(IPAR,E,MODE,DIRNEU,IERR)
+               IF (IERR.ne.0) then
+                  WRITE(6,650)MODE,E
+ 650              FORMAT(' *** WARNING *** KINEMATICAL ERROR',
+     &                 ' AT NECOHVCT (MODE,E) ',I3,G15.7)
+                  goto 10
+               endif
                GOTO 1000
+C     
+C     --           DIFFRACTIVE PION PROCESS(resonance -> nucleon + gamma)
+C     
+            ELSEIF ( MODABS.EQ.15 .OR. MODABS.EQ.35 ) THEN
+               IF (IBOUND.EQ.0) THEN
+                  CALL NEDIFVCT(IPAR,E,MODE,DIRNEU)
+                  GOTO 1000
+               ELSE
+                  GOTO 10
+               ENDIF
 C     
 C --           SINGLE PION PROCESS(resonance -> nucleon + gamma)
 C     
@@ -224,9 +252,11 @@ C --           N.C. ELASTIC PROCESS IN O16
 
                if (mod(MDLQE, 1000) / 100 .EQ. 4) then
 c               use spectral function               
-                 CALL SFEVENT(IPAR,E,DIRNEU,IERR,.TRUE.,mode,first)
+                  CALL SFEVENT(IPAR,E,DIRNEU,IERR,.TRUE.,mode,first)
+               else if (mod(MDLQE, 1000) / 100 .EQ. 6) then
+                  CALL EFFSFEVENT(IPAR,E,DIRNEU,IERR,.TRUE.,mode,first)
                else
-                 CALL NEELSVNP(IPAR,E,DIRNEU,IERR,MODE)
+                  CALL NEELSVNP(IPAR,E,DIRNEU,IERR,MODE)
                endif
 C
 C --           SAVE INTERACTION POSITION IN NUCEI
@@ -302,13 +332,23 @@ C                    3: lepton
 C
 C Position of nucleons different for MEC events. Set fshadpos to loop from correct position
 C Position of lepton and initial state nucleon is set in nemechad for MEC events, skip to 900 
+
          IF(MODABS.eq.2) THEN
            fshadpos=5
-         goto 900
+           goto 900
          ELSE 
            fshadpos=4
          ENDIF
 
+CC-- if position has been set already,
+         if ( ( posnuc(1,1) .ge. -9998 ) .or.
+     $        ( posnuc(2,1) .ge. -9998 ) .or.
+     $        ( posnuc(3,1) .ge. -9998 )) THEN
+            xpos(1)=posnuc(1,1)
+            xpos(2)=posnuc(2,1)
+            xpos(3)=posnuc(3,1)
+            goto 900
+         endif
 
          DO 1010 J=1,3
             PMOMM(J) = 0.

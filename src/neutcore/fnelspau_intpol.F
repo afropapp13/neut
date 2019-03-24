@@ -61,7 +61,8 @@ C       2009.01.19 ; Y.Hayato  - PF table change from XX0 to XX5
       INTEGER LUN
       DATA LUN/80/
 
-      INTEGER I,II,J,JJ,IDUM,ILOADQECRS,ILOADSFQECRS,IQEMA
+      INTEGER I,II,J,JJ,IDUM,ILOADQECRS,ILOADSFQECRS,
+     $     ILOADEFFSFQECRS,IQEMA
       REAL RDUM
       CHARACTER*1024 DUMSTR
       integer*4      LENSTR
@@ -71,6 +72,8 @@ C       2009.01.19 ; Y.Hayato  - PF table change from XX0 to XX5
       DATA ILOADQECRS/0/
       SAVE ILOADSFQECRS
       DATA ILOADSFQECRS/0/
+      SAVE ILOADEFFSFQECRS
+      DATA ILOADEFFSFQECRS/0/
 
       INTEGER*4 IDTAG
       SAVE      IDTAG
@@ -84,22 +87,27 @@ C       2009.01.19 ; Y.Hayato  - PF table change from XX0 to XX5
 
       REAL CRSLE1(210),CRSLE2(210),CRSLE3(210),CRSLE4(210)
       REAL CRSLE5(210),CRSLE6(210),CRSLE7(210),CRSLE8(210)
-      REAL CRSLE9(210)
+      REAL CRSLE9(210),CRSLE10(210),CRSLE11(210),CRSLE12(210)
+
       REAL CRSRE1(210),CRSRE2(210),CRSRE3(210),CRSRE4(210)
       REAL CRSRE5(210),CRSRE6(210),CRSRE7(210),CRSRE8(210)
-      REAL CRSRE9(210)
+      REAL CRSRE9(210),CRSRE10(210),CRSRE11(210),CRSRE12(210)
+
       REAL CRSLM1(210),CRSLM2(210),CRSLM3(210),CRSLM4(210)
       REAL CRSLM5(210),CRSLM6(210),CRSLM7(210),CRSLM8(210)
-      REAL CRSLM9(210)
+      REAL CRSLM9(210),CRSLM10(210),CRSLM11(210),CRSLM12(210)
+
       REAL CRSRM1(210),CRSRM2(210),CRSRM3(210),CRSRM4(210)
       REAL CRSRM5(210),CRSRM6(210),CRSRM7(210),CRSRM8(210)
-      REAL CRSRM9(210)
+      REAL CRSRM9(210),CRSRM10(210),CRSRM11(210),CRSRM12(210)
+
       REAL CRSLT1(210),CRSLT2(210),CRSLT3(210),CRSLT4(210)
       REAL CRSLT5(210),CRSLT6(210),CRSLT7(210),CRSLT8(210)
-      REAL CRSLT9(210)
+      REAL CRSLT9(210),CRSLT10(210),CRSLT11(210),CRSLT12(210)
+
       REAL CRSRT1(210),CRSRT2(210),CRSRT3(210),CRSRT4(210)
       REAL CRSRT5(210),CRSRT6(210),CRSRT7(210),CRSRT8(210)
-      REAL CRSRT9(210)
+      REAL CRSRT9(210),CRSRT10(210),CRSRT11(210),CRSRT12(210)
 
 C     Enu for e/mu-nu
       REAL EE(210) ,EE1(50) ,EE2(50) ,EE3(50) ,EE4(50), EE5(10)
@@ -207,6 +215,15 @@ C
      &    numbndp .eq. 8 .or. numbndp .eq. 26)) then
 c      if (mod(MDLQE, 1000)/100 .EQ. 4) then
         if (iloadsfqecrs.ne.0) goto 300
+      else if (((mod(MDLQE, 1000)/100 .EQ. 6 ).or.
+     &          (mod(MDLQE, 1000)/100 .EQ. 7 )    ).AND. 
+     &         ((NUMATOM .eq.  2) .or. (NUMATOM .eq.   3) .or.
+     &          (NUMATOM .eq.  4) .or. (NUMATOM .eq.  12) .or.
+     &          (NUMATOM .eq. 16) .or. (NUMATOM .eq.  20) .or.
+     &          (NUMATOM .eq. 27) .or. (NUMATOM .eq.  40) .or.
+     &          (NUMATOM .eq. 56) .or. (NUMATOM .eq.  63) .or.
+     &          (NUMATOM .eq. 64) .or. (NUMATOM .eq. 208))) then
+         if (iloadeffsfqecrs.ne.0) goto 600
       else
         if (iloadqecrs.ne.0) goto 100
       endif
@@ -216,8 +233,10 @@ c      if (mod(MDLQE, 1000)/100 .EQ. 4) then
 *******  Spectral function implementation *****
 * A.Furmanski - 2013
 *
-      if (mod(MDLQE, 1000)/100 .EQ. 4 .AND. (numbndp .eq. 6 .or. 
-     &    numbndp .eq. 8 .or. numbndp .eq. 26)) then
+      if ( (mod(MDLQE, 1000)/100 .EQ. 4) .AND. 
+     $     ((numbndp .eq. 6) .or. 
+     &      (numbndp .eq. 8) .or. 
+     $      (numbndp .eq.26)     )) then
 c       if (mod(MDLQE, 1000)/100 .EQ. 4) then
 c ----- load xsec table required
         DUMSTR = 'qelSfData/totXsec/'
@@ -259,6 +278,81 @@ c ----- CRSLE1 is re-used here for storing cross-section values for SF implement
         write (*,*) "cross section table for sf loaded"
         iloadsfqecrs = 1
 300     continue        
+
+*******  Effective SF implementation *****
+* C. Wilkinson 2014
+*
+      else if (( (mod(MDLQE, 1000)/100 .EQ. 6 ).or.
+     &           (mod(MDLQE, 1000)/100 .EQ. 7 )    ).AND. 
+     &         ( (NUMATOM .eq.  2 ).or. (NUMATOM .eq.   3) .or.
+     &           (NUMATOM .eq.  4 ).or. (NUMATOM .eq.  12) .or.
+     &           (NUMATOM .eq. 16 ).or. (NUMATOM .eq.  20) .or.
+     &           (NUMATOM .eq. 27 ).or. (NUMATOM .eq.  40) .or.
+     &           (NUMATOM .eq. 56 ).or. (NUMATOM .eq.  63) .or.
+     &           (NUMATOM .eq. 64 ).or. (NUMATOM .eq. 208))) then
+
+c ----- load xsec table required
+        if (mod(MDLQE, 1000)/100 .EQ. 7) then
+           DUMSTR = 'qelSfData/temSFTotXsec/'
+        else
+           DUMSTR = 'qelSfData/effSFTotXsec/'
+        endif
+         
+        if (IPAR .EQ. 14) then
+           DUMSTR=DUMSTR(1:23) // '+14'
+        else if (IPAR .EQ. -14) then
+           DUMSTR=DUMSTR(1:23) // '-14'
+        else if (IPAR .EQ. 12) then
+          DUMSTR=DUMSTR(1:23) // '+12'
+        else if (IPAR .EQ. -12) then
+          DUMSTR=DUMSTR(1:23) // '-12'
+        else if (IPAR .EQ. 16) then
+          DUMSTR=DUMSTR(1:23) // '+16'
+        else if (IPAR .EQ. -16) then
+          DUMSTR=DUMSTR(1:23) // '-16'
+        endif
+        
+        if (NUMATOM .EQ. 2) then
+          DUMSTR=DUMSTR(1:26) // '_1000010020'
+        else if (NUMATOM .EQ. 3) then
+           DUMSTR=DUMSTR(1:26) // '_1000020030'
+        else if (NUMATOM .EQ. 4) then
+           DUMSTR=DUMSTR(1:26) // '_1000020040'
+        else if (NUMATOM .EQ. 12) then
+          DUMSTR=DUMSTR(1:26) // '_1000060120'
+        else if (NUMATOM .EQ. 16) then
+          DUMSTR=DUMSTR(1:26) // '_1000080160'
+        else if (NUMATOM .EQ. 20) then
+          DUMSTR=DUMSTR(1:26) // '_1000100200'
+        else if (NUMATOM .EQ. 27) then
+          DUMSTR=DUMSTR(1:26) // '_1000130270'
+        else if (NUMATOM .EQ. 40) then
+          DUMSTR=DUMSTR(1:26) // '_1000180400'
+        else if (NUMATOM .EQ. 56) then
+          DUMSTR=DUMSTR(1:26) // '_1000260560'
+        else if (NUMATOM .EQ. 63) then
+          DUMSTR=DUMSTR(1:26) // '_1000290630'
+        else if (NUMATOM .EQ. 64) then
+          DUMSTR=DUMSTR(1:26) // '_1000300640'
+        else if (NUMATOM .EQ. 208) then
+          DUMSTR=DUMSTR(1:26) // '_1000822080'
+        endif
+        
+        DUMSTR=DUMSTR(1:37) // '_cc.csv'
+        DUMSTR=CRSTBLPATH(1:lenpath)//DUMSTR
+        open(LUN, file=DUMSTR, status="old")
+
+c ----- RDUM here represents the number of entries in the cross-section table
+c ----- note - values of EE can be overwritten here if the binning of tables changes in the future
+c ----- CRSLE1 is re-used here for storing cross-section values for SF implementation
+        read(LUN,*) RDUM
+        do i = 1, RDUM
+          read(LUN,*) PFDUM(1), CRSLE1(i)
+        enddo
+        close(LUN)
+        write (*,*) "CCQE table for the Effective SF loaded"
+        iloadeffsfqecrs = 1
+600     continue        
 
 c ----- find energy wanted and interpolate to get value of total xsec
         ii = 0
@@ -315,6 +409,10 @@ C
          DUMSTR = DUMSTR(1:17) // 'ma1.03'
          print*, 'Loading Cross section table for QE : MA=1.03'
          IDTAG=103
+      else if (IQEMA.eq.105) then
+         DUMSTR = DUMSTR(1:17) // 'ma1.05'
+         print*, 'Loading Cross section table for QE : MA=1.05'
+         IDTAG=105
       else if (IQEMA.eq.111) then
          DUMSTR = DUMSTR(1:17) // 'ma1.11'
          print*, 'Loading Cross section table for QE : MA=1.11'
@@ -368,9 +466,9 @@ C
       do i = 1,1090
          if(i.le.210) then ! nue
             read(LUN,*) IDUM,RDUM,
-     &           CRSLE1(i),CRSLE2(i),CRSLE3(i),CRSLE4(i),
-     &           CRSLE5(i),CRSLE6(i),CRSLE7(i),CRSLE8(i),CRSLE9(i)
-C            print*, 'debug:CRSLE1',i,CRSLE1(i),CRSLE2(i),CRSLE3(i)
+     &           CRSLE1(i),CRSLE2(i),CRSLE3(i),CRSLE4(i),CRSLE5(i),
+     &           CRSLE6(i),CRSLE7(i),CRSLE8(i),CRSLE9(i)!,CRSLE10(i)!,
+C     &           CRSLE11(i),CRSLE12(i)
             
             if ( abs(RDUM-EE(I)).gt.0.001 ) then
                write(*,*) 'Cross-section table seems to be corrupted.'
@@ -380,9 +478,9 @@ C            print*, 'debug:CRSLE1',i,CRSLE1(i),CRSLE2(i),CRSLE3(i)
          elseif(i.gt.210 .and. i.le.420) then ! nue-bar
             read(LUN,*) IDUM,RDUM,
      &           CRSRE1(i-210),CRSRE2(i-210),CRSRE3(i-210),
-     $           CRSRE4(i-210),CRSRE5(i-210),CRSRE6(i-210),
-     $           CRSRE7(i-210),CRSRE8(i-210),CRSRE9(i-210)
-C            print*, 'debug:CRSRE1',i,CRSRE1(i),CRSRE2(i),CRSRE3(i)
+     &           CRSRE4(i-210),CRSRE5(i-210),CRSRE6(i-210),
+     &           CRSRE7(i-210),CRSRE8(i-210),CRSRE9(i-210)!,
+C     &           CRSRE10(i-210) !,CRSRE11(i-210),CRSRE12(i-210)
 
             if ( abs(RDUM-EE(I-210)).gt.0.001 ) then
                write(*,*) 'Cross-section table seems to be corrupted.'
@@ -392,9 +490,9 @@ C            print*, 'debug:CRSRE1',i,CRSRE1(i),CRSRE2(i),CRSRE3(i)
          elseif(i.gt.420 .and. i.le.630) then ! numu
             read(LUN,*) IDUM,RDUM,
      &           CRSLM1(i-420),CRSLM2(i-420),CRSLM3(i-420),
-     $           CRSLM4(i-420),CRSLM5(i-420),CRSLM6(i-420),
-     $           CRSLM7(i-420),CRSLM8(i-420),CRSLM9(i-420)
-C            print*, 'debug:CRSLM1',i,CRSLM1(i),CRSLM2(i),CRSLM3(i)
+     &           CRSLM4(i-420),CRSLM5(i-420),CRSLM6(i-420),
+     &           CRSLM7(i-420),CRSLM8(i-420),CRSLM9(i-420)!,
+C     &           CRSLM10(i-420)!,CRSLM11(i-420),CRSLM12(i-420)
 
             if ( abs(RDUM-EE(I-420)).gt.0.001 ) then
                write(*,*) 'Cross-section table seems to be corrupted.'
@@ -404,9 +502,9 @@ C            print*, 'debug:CRSLM1',i,CRSLM1(i),CRSLM2(i),CRSLM3(i)
          elseif(i.gt.630 .and. i.le.840) then ! numu-bar
             read(LUN,*) IDUM,RDUM,
      &           CRSRM1(i-630),CRSRM2(i-630),CRSRM3(i-630),
-     $           CRSRM4(i-630),CRSRM5(i-630),CRSRM6(i-630),
-     $           CRSRM7(i-630),CRSRM8(i-630),CRSRM9(i-630)
-C            print*, 'debug:CRSRM1',i,CRSRM1(i),CRSRM2(i),CRSRM3(i)
+     &           CRSRM4(i-630),CRSRM5(i-630),CRSRM6(i-630),
+     &           CRSRM7(i-630),CRSRM8(i-630),CRSRM9(i-630)!,
+C     &           CRSRM10(i-630)!,CRSRM11(i-630),CRSRM12(i-630)
 
             if ( abs(RDUM-EE(I-630)).gt.0.001 ) then
                write(*,*) 'Cross-section table seems to be corrupted.'
@@ -416,9 +514,9 @@ C            print*, 'debug:CRSRM1',i,CRSRM1(i),CRSRM2(i),CRSRM3(i)
          elseif(i.gt.840 .and. i.le.965) then ! nutau
             read(LUN,*) IDUM,RDUM,
      &           CRSLT1(i-840),CRSLT2(i-840),CRSLT3(i-840),
-     $           CRSLT4(i-840),CRSLT5(i-840),CRSLT6(i-840),
-     $           CRSLT7(i-840),CRSLT8(i-840),CRSLT9(i-840)
-C            print*, 'debug:CRSLT1',i,CRSLT1(i),CRSLT2(i),CRSLT3(i)
+     &           CRSLT4(i-840),CRSLT5(i-840),CRSLT6(i-840),
+     &           CRSLT7(i-840),CRSLT8(i-840),CRSLT9(i-840)!,
+C     &           CRSLT10(i-840)!,CRSLT11(i-840),CRSLT12(i-840)
 
             if ( abs(RDUM-ET(I-840)).gt.0.001 ) then
                write(*,*) 'Cross-section table seems to be corrupted.'
@@ -428,9 +526,9 @@ C            print*, 'debug:CRSLT1',i,CRSLT1(i),CRSLT2(i),CRSLT3(i)
          elseif(i.gt.965 .and. i.le.1090) then ! nutau-bar
             read(LUN,*) IDUM,RDUM,
      &           CRSRT1(i-965),CRSRT2(i-965),CRSRT3(i-965),
-     $           CRSRT4(i-965),CRSRT5(i-965),CRSRT6(i-965),
-     $           CRSRT7(i-965),CRSRT8(i-965),CRSRT9(i-965)
-C            print*, 'debug:CRSRT1',i,CRSRT1(i),CRSRT2(i),CRSRT3(i)
+     &           CRSRT4(i-965),CRSRT5(i-965),CRSRT6(i-965),
+     &           CRSRT7(i-965),CRSRT8(i-965),CRSRT9(i-965)!,
+C     &           CRSRT10(i-965)!,CRSRT11(i-965),CRSRT12(i-965)
 
             if ( abs(RDUM-ET(I-965)).gt.0.001 ) then
                write(*,*) 'Cross-section table seems to be corrupted.'
@@ -451,6 +549,10 @@ C            print*, 'debug:CRSRT1',i,CRSRT1(i),CRSRT2(i),CRSRT3(i)
          CRSRFGLE(7,i)=CRSLE7(i)
          CRSRFGLE(8,i)=CRSLE8(i)
          CRSRFGLE(9,i)=CRSLE9(i)
+C         CRSRFGLE(10,i)=CRSLE10(i)
+C         CRSRFGLE(11,i)=CRSLE11(i)
+C         CRSRFGLE(12,i)=CRSLE12(i)
+
 *     nue-bar
          CRSRFGRE(1,i)=CRSRE1(i)
          CRSRFGRE(2,i)=CRSRE2(i)
@@ -461,6 +563,10 @@ C            print*, 'debug:CRSRT1',i,CRSRT1(i),CRSRT2(i),CRSRT3(i)
          CRSRFGRE(7,i)=CRSRE7(i)
          CRSRFGRE(8,i)=CRSRE8(i)
          CRSRFGRE(9,i)=CRSRE9(i)
+C         CRSRFGRE(10,i)=CRSRE10(i)
+C         CRSRFGRE(11,i)=CRSRE11(i)
+C         CRSRFGRE(12,i)=CRSRE12(i)
+
 *     numu
          CRSRFGLM(1,i)=CRSLM1(i)
          CRSRFGLM(2,i)=CRSLM2(i)
@@ -471,6 +577,10 @@ C            print*, 'debug:CRSRT1',i,CRSRT1(i),CRSRT2(i),CRSRT3(i)
          CRSRFGLM(7,i)=CRSLM7(i)
          CRSRFGLM(8,i)=CRSLM8(i)
          CRSRFGLM(9,i)=CRSLM9(i)
+C         CRSRFGLM(10,i)=CRSLM10(i)
+C         CRSRFGLM(11,i)=CRSLM11(i)
+C         CRSRFGLM(12,i)=CRSLM12(i)
+
 *     numu-bar
          CRSRFGRM(1,i)=CRSRM1(i)
          CRSRFGRM(2,i)=CRSRM2(i)
@@ -481,6 +591,10 @@ C            print*, 'debug:CRSRT1',i,CRSRT1(i),CRSRT2(i),CRSRT3(i)
          CRSRFGRM(7,i)=CRSRM7(i)
          CRSRFGRM(8,i)=CRSRM8(i)
          CRSRFGRM(9,i)=CRSRM9(i)
+C         CRSRFGRM(10,i)=CRSRM10(i)
+C         CRSRFGRM(11,i)=CRSRM11(i)
+C         CRSRFGRM(12,i)=CRSRM12(i)
+
       enddo
       do i=1,125
 *     nutau
@@ -493,6 +607,10 @@ C            print*, 'debug:CRSRT1',i,CRSRT1(i),CRSRT2(i),CRSRT3(i)
          CRSRFGLT(7,i)=CRSLT7(i)
          CRSRFGLT(8,i)=CRSLT8(i)
          CRSRFGLT(9,i)=CRSLT9(i)
+C         CRSRFGLT(10,i)=CRSLT10(i)
+C         CRSRFGLT(11,i)=CRSLT11(i)
+C         CRSRFGLT(12,i)=CRSLT12(i)
+
 *     nutau-bar
          CRSRFGRT(1,i)=CRSRT1(i)
          CRSRFGRT(2,i)=CRSRT2(i)
@@ -503,6 +621,9 @@ C            print*, 'debug:CRSRT1',i,CRSRT1(i),CRSRT2(i),CRSRT3(i)
          CRSRFGRT(7,i)=CRSRT7(i)
          CRSRFGRT(8,i)=CRSRT8(i)
          CRSRFGRT(9,i)=CRSRT9(i)
+C         CRSRFGRT(10,i)=CRSRT10(i)
+C         CRSRFGRT(11,i)=CRSRT11(i)
+C         CRSRFGRT(12,i)=CRSRT12(i)
       enddo
 
       close(LUN)

@@ -2,14 +2,15 @@ c subroutine that contracts the leptonic and free hadronic tensors
       
 c      include "fourVector.F"
 
-      double precision function LH(k,kPrime,p,qTilde,IPAR,nc,nucPdg)
+      double precision function LH(k,kPrime,p,qTilde,IPAR,nc,nucPdg, 
+     $     NUMATOM)
         implicit none
 #include "../neutcore/neutmodel.h"
 #include "../neutcore/rscons.h"
 c#define __GFORTRAN__
 c ----- neutrino pdg, nucleon pdg, nc logical flag        
         integer IPAR
-        integer nucPdg
+        integer nucPdg, NUMATOM
         logical nc
         double precision k(4), kPrime(4), p(4), qTilde(4)
         double precision leptonMass, inNucleonMass, outNucleonMass
@@ -20,9 +21,12 @@ c ----- neutrino pdg, nucleon pdg, nc logical flag
         real*8 q2
         common /ff/ gep, gmp, gen, gmn, BBBA5, BBBA7
         double precision h1, h2, h3, h4, h5
-        double precision tau
+        double precision tau, temVal
         double precision f1, f2, fa, fp, fv3, fa3
-        double precision CalcFa, CalcFp, GM, GE
+        double precision CalcFp, GM, GE
+
+        double precision ELAXFF
+        external ELAXFF
 
         double precision term1, term2, term3, term4, term5
 
@@ -43,9 +47,9 @@ c ----- sgn is negative for an incoming neutron - applies to NC events only
 c ----- decide here whether to use dipole, or BBBA fits for form factors
         BBBA5 = .FALSE.
         BBBA7 = .FALSE.
-        if (mod(mod(MDLQE, 1000),400) .EQ. 2) then
+        if (mod(mod(MDLQE, 1000),100) .EQ. 2) then
           BBBA5 = .TRUE.
-        else if (mod(mod(MDLQE, 1000),400) .EQ. 3) then
+        else if (mod(mod(MDLQE, 1000),100) .EQ. 3) then
           BBBA7 = .TRUE.
         else
           BBBA5 = .FALSE.
@@ -112,13 +116,24 @@ c          write (*,*) gep, gmp, gen, gmn
         
         tau = -1 * dotProduct( qTilde, qTilde )/(4 * outNucleonMass**2)
 
+C     Transverse enhancement -- Modify the magnetic FFs
+        if (mod(MDLQE, 1000)/100 .EQ. 7 .AND. NUMATOM .GT. 11) then
+           temVal = sqrt(1 + 5.19*q2*EXP(-q2/0.376))
+           gmp = gmp*temVal
+           gmn = gmn*temVal
+        endif
 
 c form factors
         f1 = (GE(qTilde,nc,sgn) + tau * GM(qTilde,nc,sgn))/(1 + tau)
         
         f2 = ( GM(qTilde,nc,sgn) - GE(qTilde,nc,sgn) ) / (1 + tau)
 
-        fa = CalcFa(qTilde,nc,sgn)
+#ifdef __GFORTRAN__
+        q2 = real(-dotProduct(qTilde, qTilde)/1000000.0,8)
+#else
+        q2 = dble(-dotProduct(qTilde, qTilde)/1000000.0)
+#endif  
+        fa = ELAXFF(q2,nc,sgn)
 
 c RT:Allow for error term on fp as well for this form factor        
         fp = FPQE * CalcFp(qTilde,nc,sgn)
@@ -177,46 +192,6 @@ c        LH = 0
       return
       end
 
-c function to calculate Axial form factor
-      double precision function CalcFA(q,nc,sgn)
-        implicit none
-#include "../neutcore/necard.h"
-#include "../neutcore/neutmodel.h"
-        logical BBBA5, BBBA7
-        real*8 gep, gmp, gen, gmn
-        real fabbba07
-        common /ff/ gep, gmp, gen, gmn, BBBA5, BBBA7
-        logical nc
-        integer sgn
-        
-        double precision q(4)
-        double precision dotProduct
-        double precision MA, gA, q2
-
-        external dotProduct, fabbba07
-
-c ----- read in value of MA (and convert units)
-c        MA = 1000 * dble(XMAQE)
-        MA = dble(XMAQE)
-c        MA = 1000
-        
-        gA = -1.2673
-        q2 = dotProduct(q, q)
-
-        CalcFA = gA / (( 1 -( q2 /( MA**2 ) ) )**2)
-
-        if (BBBA7 .EQV. .TRUE.)then
-c          CalcFA = fabbba07(-q2/1000000.0)
-          CalcFA = fabbba07(-q2)
-        endif
-
-        if (nc .EQV. .TRUE.) then
-          CalcFA = sgn*(0.5 * CalcFA)
-        endif
-
-        return
-        end
-
 c pseudo-scalar form factor
       double precision function CalcFP(q,nc,sgn)
         implicit none
@@ -225,9 +200,9 @@ c pseudo-scalar form factor
         logical nc
         integer sgn
         double precision protonMass, PiMass2, q2
-        double precision dotProduct, CalcFA
+        double precision dotProduct, ELAXFF
 
-        external dotProduct
+        external dotProduct, ELAXFF
 
         call MCMASSGV(2212, dummy)
         protonMass = dble(dummy)
@@ -235,7 +210,7 @@ c pseudo-scalar form factor
         piMass2 = dble(dummy)**2
         q2 = dotProduct(q, q)
 
-        CalcFP = CalcFA(q,nc,sgn)*(protonMass**2) * 2.0/(PiMass2 - q2)
+        CalcFP = ELAXFF(q,nc,sgn)*(protonMass**2) * 2.0/(PiMass2 - q2)
 
         if (nc .EQV. .TRUE.)then
           CalcFP = 0

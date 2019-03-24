@@ -20,6 +20,7 @@
   //FUNCTION_RETURN bbba05_(double* Q2,double* GPE,double* GPM,double* GNE,double* GNM);
   double bbba05_(double* Q2,double* GPE,double* GPM,double* GNE,double* GNM);
   double bbba07_(double* Q2,double* GPE,double* GPM,double* GNE,double* GNM);
+
 //}
 
 /*
@@ -53,6 +54,9 @@ extern struct neuttarget_common {
 */
 
 extern double faBBBA07(const double);
+extern double fa2COMP(const double);
+extern double fa3COMP(const double);
+extern double faZEXP(const double);
 
 double
 qedifcrs_(int *ip, int *ccnc, float *energy, float *elep, float *coslep)
@@ -188,18 +192,30 @@ qedifcrs_(int *ip, int *ccnc, float *energy, float *elep, float *coslep)
   F1 = (FGE + Q2*FGM/(XMNc*XMNc)/4.) / (1. + Q2/(XMNc*XMNc)/4.);
   F2 = 0.5*(FGE-FGM)/XMNc/(1.+Q2/(XMNc*XMNc)/4.);
 
-  if (FF_model == 1) {
-    printf("qedifcrs: axial dipole FF_model = %d\n",FF_model);
+  if (FF_model == 1 || FF_model == 0) {
+    //    printf("qedifcrs: axial dipole FF_model = %d\n",FF_model);
     // FA = -1.232*pow(1.+Q2/(Maxial*Maxial), -2.);
     FA = -1.267*pow(1.+Q2/((Maxial)*(Maxial)), -2.);
   } else if (FF_model == 2) {
-    printf("qedifcrs: bbba07 BBBA07 FF_model = %d\n",FF_model);
+    //    printf("qedifcrs: bbba07 BBBA07 FF_model = %d\n",FF_model);
     // FA = faBBBA07(Q2/1.e+6);
     FA = faBBBA07(Q2);
-  }else{
+  } else if (FF_model == 3){
+    //    printf("qedifcrs: 2 component FF_model = %d\n", FF_model);
+    FA = fa2COMP(Q2);
+  } else if (FF_model == 4){
+    //    printf("qedifcrs: 3 component FF_model = %d\n", FF_model);
+    FA = fa3COMP(Q2);
+  } else if (FF_model == 5){
+    //printf("qedifcrs: Z Expansation FF_model = %d\n", FF_model);
+    FA = faZEXP(Q2);
+  } else {
     printf("qedifcrs: Unknown FF_model = %d\n",FF_model);
     exit(1);
   }
+
+  //printf("qedifcrs: FA = %f\n",FA);
+  
   //FP = 2.*XMNc*FA/(Q2 + 139.57*139.57);
   FP = fperr * 2.*XMNc*FA/(Q2 + 0.13957*0.13957); 
 
@@ -225,7 +241,10 @@ qedifcrs_(int *ip, int *ccnc, float *energy, float *elep, float *coslep)
   T8 = 2.*XMNc*XMNc*FA*(F1- 2.*XMNc*F2);
 
   //--- B parameters
-  if (Q == 0.) return 0.;
+  //  if (Q == 0.){
+  //    printf("returning 0 because Q == 0.");
+  //    return 0.;
+  //  }
 
   C = -WEF/Q;
   D = Q2EF/(2.*Q*XMNc);
@@ -239,7 +258,17 @@ qedifcrs_(int *ip, int *ccnc, float *energy, float *elep, float *coslep)
 	EL = fmax(S1, S2);
   }
 
-  if (WEF < 0. || EU < EL) return 0.;
+  //  if (WEF < 0. || EU < EL){
+  //
+  //    if (WEF < 0.)
+  //      printf("returning 0 because WEF < 0\n");
+
+  //    if ( EU < EL)
+  //      printf("return 0 because EU < EL\n");
+  //    
+  //    return 0.;
+
+  //  }
 
   B0 = X0*(EU - EL+AP*log((EU-(Ebind))/(EL-(Ebind)))
 		   +BP*log((EU-(Ebind)+W)/(EL-(Ebind)+W)));

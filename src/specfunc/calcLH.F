@@ -2,12 +2,13 @@ c subroutine that contracts the leptonic and free hadronic tensors
       
 c      include "fourVector.F"
 
-      double precision function LH(k,kPrime,p,qTilde,IPAR,nc,nucPdg)
+      double precision function LH(k,kPrime,p,qTilde,IPAR,nc,nucPdg,
+     $     NUMATOM)
         implicit none
 #include "../neutcore/neutmodel.h"
 c ----- neutrino pdg, nucleon pdg, nc logical flag        
         integer IPAR
-        integer nucPdg
+        integer nucPdg, NUMATOM
         logical nc
         double precision k(4), kPrime(4), p(4), qTilde(4)
         double precision leptonMass, inNucleonMass, outNucleonMass
@@ -18,7 +19,7 @@ c ----- neutrino pdg, nucleon pdg, nc logical flag
         real*8 q2
         common /ff/ gep, gmp, gen, gmn, BBBA5, BBBA7, BBBA7af
         double precision h1, h2, h3, h4, h5
-        double precision tau
+        double precision tau, temVal
         double precision f1, f2, fa, fp, fv3, fa3
         double precision CalcFa, CalcFp, GM, GE
 
@@ -43,9 +44,10 @@ c ----- decide here whether to use dipole, or BBBA fits for form factors
         BBBA5 = .FALSE.
         BBBA7 = .FALSE.
         BBBA7af = .FALSE.
-        if (mod(mod(MDLQE, 1000),400) .EQ. 2) then
+        if (mod(mod(MDLQE, 1000),100) .EQ. 2) then
+
           BBBA5 = .TRUE.
-        else if (mod(mod(MDLQE, 1000),400) .EQ. 3) then
+        else if (mod(mod(MDLQE, 1000),100) .EQ. 3) then
           BBBA7 = .TRUE.
         else
           BBBA5 = .FALSE.
@@ -87,6 +89,12 @@ c          write (*,*) gep, gmp, gen, gmn
         
         tau = -1 * dotProduct( qTilde, qTilde )/(4 * outNucleonMass**2)
 
+C     Transverse enhancement -- Modify the magnetic FFs
+        if (mod(MDLQE, 1000)/100 .EQ. 7 .AND. NUMATOM .GT. 11) then
+           temVal = sqrt(1 + 5.19*q2*EXP(-q2/0.376))
+           gmp = gmp*temVal
+           gmn = gmn*temVal
+        endif
 
 c form factors
         f1 = (GE(qTilde,nc,sgn) + tau * GM(qTilde,nc,sgn))/(1 + tau)
@@ -159,19 +167,22 @@ c function to calculate Axial form factor
 #include "../neutcore/neutmodel.h"
         logical BBBA5, BBBA7, BBBA7af
         real*8 gep, gmp, gen, gmn
-        real fabbba07
+        real*8 fabbba07, q2
         common /ff/ gep, gmp, gen, gmn, BBBA5, BBBA7, BBBA7af
         logical nc
         integer sgn
         
         double precision q(4)
         double precision dotProduct
-        double precision MA, gA, q2
+        double precision MA, gA
 
         external dotProduct, fabbba07
 
 c ----- read in value of MA (and convert units)
         MA = 1000 * dble(XMAQE)
+        if ( nc .eqv. .true. ) then
+           MA = 1000 * dble(XMANCEL)
+        endif
 c        MA = 1000
         
         gA = -1.2673
@@ -181,11 +192,11 @@ c        MA = 1000
 
         if (BBBA7af .EQV. .TRUE.)then
            write(*,*) "BBBA7 axial FF"
-          CalcFA = fabbba07(-q2/1000000.0)
+           CalcFA = fabbba07(-q2)
         endif
 
         if (nc .EQV. .TRUE.) then
-          CalcFA = sgn*(0.5 * CalcFA)
+           CalcFA = sgn*(0.5 * CalcFA)
         endif
 
         return

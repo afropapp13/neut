@@ -1,4 +1,5 @@
 
+#include "nefillverC.h"
 #include "necardC.h"
 #include "neutmodelC.h"
 #include "neutparamsC.h"
@@ -45,6 +46,7 @@ namespace rew   {
   static FUNCTION_RETURN evpiprob();
   static void  nesetfgparams();
   static void  nefillmodel();
+  static void  zexpconfig();
   
   static void print_nework();
   static void print_neutcrs();

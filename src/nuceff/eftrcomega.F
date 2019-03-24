@@ -130,7 +130,7 @@ C      fpid(3):   final state particle ID(as PDG code)
 C      nump: number of particles at final state
 C-------------------------------------------------------------------
  900  continue
-      call efkinom(type,p,pf,fpid,pn,nump)
+      call efkinom(type,p,pf,fpid,pn,nump,distance)
       
 *      print *,'efkinom: ',type,fpid,pf
 

@@ -74,12 +74,21 @@ CCCC  DATA TM/1.7842/     MODIFICATION  K.Kaneyuki 2-FEB-95
 C      DATA TM/1.7842/
       DATA PIM/0.13957/
 
+      REAL*8 ELAXFF
+      EXTERNAL ELAXFF
+      
       INTEGER QEMODE
+      INTEGER SGN
+      LOGICAL NC
 
+      NC=.false.
+      
       if (IPAR.GT.0) THEN
          PM = XMNE
+         SGN = 1
       else
          PM = XMP
+         SGN = -1
       endif
       AVMASS = XMAQE
       VVMASS = XMVQE
@@ -132,14 +141,7 @@ C      FA=-1.23/(1.-SQ2/AVMASS**2)**2
       F3V = SCCFV*(-1.) /(1.-SQ2/VVMASS**2)**2
 
 
-      if (MDLQEAF.eq.1) then
-         FA=-1.267/(1.-SQ2/AVMASS**2)**2
-      else if (MDLQEAF.eq.2) then
-         FA=faBBBA07(q2)
-      else
-         write(*,*) 'Invalid CCQE mode specified by MDLQEAF',MDLQEAF
-         stop
-      endif
+      FA = ELAXFF( Q2, NC, SGN  )
       FP=FPQE*2.*(PM**2)*FA/(-SQ2+PIM**2)
       F3A = SCCFA * FA 
      

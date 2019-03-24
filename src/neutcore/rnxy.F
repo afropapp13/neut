@@ -26,18 +26,31 @@
 *                    No longer average over neutron and proton xsec, use xsec from the right target nucleon
 *                    Fix definition of x and xmax when Bodek-Yang corrections are used.
 *                    If Bodek-Yang is not used, keep the target mass corrections  
+*       2016.05.16 ; C. Bronner
+*                    Add a 10% safety factor on the max xsec found in the grid search
+*       2016.07.20 ; C. Bronner
+*                    Target mass corrections moved to PDF calculation (grv98_lo.F)
 *
 ************************************************************************
-#include "necard.h"
-      DATA PMASS/0.938/
+      REAL *8 PMASS     
       REAL*8 DNDXDY
       EXTERNAL DNDXDY
       REAL*8 EE,XX,YY
       integer ierr
+      real*8 xmp,xmn
+      PARAMETER (xmp    = 0.93827231D0)
+      PARAMETER (xmn    = 0.93956563D0)
 C     
       IERR=0
 C     -- Check target nucleon code makes sense
       IF(ITARG.NE.2112 .AND. ITARG.NE.2212)GO TO 1000
+
+C CB  Assign target mass       
+      IF (itarg.EQ.2112) THEN
+         PMASS=xmn
+      else
+         PMASS=xmp
+      endif
 C     
 C     -- FIRST FIND MAXIMUM VALUE
 C     Do a grid scan in x and y to find the maximum of the double differential cross section in x and y
@@ -49,17 +62,9 @@ C     If this maximum is >0, will be used as upper bound to generate x and y usi
          DO 110 J=1,21
 C            X=FLOAT(J-1)*0.05
             X=FLOAT(J-1)*0.05+0.00000001
-            if(nebodek.eq.0) then
-               XMAX=4.*E**2*(1-Y)/(PMASS**2+2.*PMASS*Y*E)
-            elseif(nebodek.eq.1) then
-               XMAX=4.*E**2*(1-Y)/(2.*PMASS*Y*E)
-            endif
+            XMAX=4.*E**2*(1-Y)/(2.*PMASS*Y*E)           
             IF(X.GE.XMAX)GO TO 110
-            if(nebodek.eq.0) then
-               XMAX=2.*Y*E/(2.*Y*E+PMASS)
-            elseif(nebodek.eq.1) then
-               XMAX=1.
-            endif
+            XMAX=1.        
             IF(X.GE.XMAX)GO TO 110
             
             XX = X
@@ -71,22 +76,18 @@ C            X=FLOAT(J-1)*0.05
   110    CONTINUE
   100 CONTINUE
       IF(XYMAX.EQ.0.)GO TO 1000
-      
+
+C     Adding a safety factor in case real maximum is missed in the grid search      
+      XYMAX=XYMAX*1.1
+
+
 C     -- GIVE RANDOM X AND Y
 C     Generate x and y using acceptance-rejection sampling, based on the value of the double differential cross-section in x and y
   200 Y=RLU(IDUM)
       X=RLU(IDUM)
-      if(nebodek.eq.0) then
-         XMAX=4.*E**2*(1-Y)/(PMASS**2+2.*PMASS*Y*E)
-      elseif(nebodek.eq.1) then
-         XMAX=4.*E**2*(1-Y)/(2.*PMASS*Y*E)
-      endif
+      XMAX=4.*E**2*(1-Y)/(2.*PMASS*Y*E)
       IF(X.GE.XMAX)GO TO 200
-      if(nebodek.eq.0) then
-         XMAX=2.*Y*E/(2.*Y*E+PMASS)
-      elseif(nebodek.eq.1) then
-         XMAX=1
-      endif
+      XMAX=1
       IF(X.GE.XMAX)GO TO 200
 
 

@@ -57,21 +57,21 @@ void NReWeightCasc::Init(void)
 {
   fortFns = NFortFns::Instance();
 
-  fInelLowDef  = fortFns->FEFQEdef   ;   
-  fInelHighDef = fortFns->FEFQEHdef  ;  
-  fPiProdDef   = fortFns->FEFINELdef ;      
-  fAbsDef      = fortFns->FEFABSdef  ;   
-  fCExLowDef   = fortFns->FEFCXdef   ;  
-  fCExHighDef  = fortFns->FEFCXHdef  ; 
-  fAllDef  = fortFns->FEFALLdef  ; 
-
+  fInelLowDef  = 0.;
+  fInelHighDef = 0.;
+  fPiProdDef   = 0.;
+  fAbsDef      = 0.;
+  fCExLowDef   = 0.;
+  fCExHighDef  = 0.;
+  fAllDef      = 0.;
+  
   fInelLowCurr  = fInelLowDef  ;   
   fInelHighCurr = fInelHighDef ;  
   fPiProdCurr   = fPiProdDef   ;      
   fAbsCurr      = fAbsDef      ;   
   fCExLowCurr   = fCExLowDef   ;  
   fCExHighCurr  = fCExHighDef  ; 
-  fAllCurr      = fAllDef  ; 
+  fAllCurr      = fAllDef  ;
 
   // For 1-sigma change
   fInelLowTwkDial  = 0;   
@@ -82,7 +82,6 @@ void NReWeightCasc::Init(void)
   fCExHighTwkDial  = 0; 
   fAllTwkDial      = 0; 
 
-
   // For absolute change
   //fInelLowTwkDial  = fInelLowDef ;   
   //fInelHighTwkDial = fInelHighDef; 
@@ -90,7 +89,6 @@ void NReWeightCasc::Init(void)
   //fAbsTwkDial      = fAbsDef     ; 
   //fCExLowTwkDial   = fCExLowDef  ; 
   //fCExHighTwkDial  = fCExHighDef ; 
-
 }
 //_______________________________________________________________________________________
 bool NReWeightCasc::IsHandled(NSyst_t syst)
@@ -199,7 +197,7 @@ void NReWeightCasc::Reconfigure(void)
   int    sign_InelLowtwk = utils::rew::Sign(fInelLowTwkDial);
   double fracerr_InelLow = fracerr->OneSigmaErr(kCascTwkDial_FrInelLow_pi, sign_InelLowtwk);
   fInelLowCurr = fInelLowDef * (1. + fInelLowTwkDial * fracerr_InelLow);
-  fInelLowCurr   = TMath::Max(0., fInelLowCurr  );
+  fInelLowCurr = TMath::Max(0., fInelLowCurr  );
   
   int    sign_InelHightwk = utils::rew::Sign(fInelHighTwkDial);
   double fracerr_InelHigh = fracerr->OneSigmaErr(kCascTwkDial_FrInelHigh_pi, sign_InelHightwk);
@@ -208,7 +206,7 @@ void NReWeightCasc::Reconfigure(void)
   
   int    sign_PiProdtwk = utils::rew::Sign(fPiProdTwkDial);
   double fracerr_PiProd = fracerr->OneSigmaErr(kCascTwkDial_FrPiProd_pi, sign_PiProdtwk);
-  fPiProdCurr = fPiProdDef * (1. + fPiProdTwkDial * fracerr_PiProd);
+  fPiProdDef * (1. + fPiProdTwkDial * fracerr_PiProd);
   fPiProdCurr   = TMath::Max(0., fPiProdCurr  );
   
   int    sign_Abstwk = utils::rew::Sign(fAbsTwkDial);
@@ -219,11 +217,11 @@ void NReWeightCasc::Reconfigure(void)
   int    sign_CExLowtwk = utils::rew::Sign(fCExLowTwkDial);
   double fracerr_CExLow = fracerr->OneSigmaErr(kCascTwkDial_FrCExLow_pi, sign_CExLowtwk);
   fCExLowCurr = fCExLowDef * (1. + fCExLowTwkDial * fracerr_CExLow);
-  fCExLowCurr   = TMath::Max(0., fCExLowCurr  );
-  
+  fCExLowCurr   = TMath::Max(0., fCExLowCurr  );  
+
   int    sign_CExHightwk = utils::rew::Sign(fCExHighTwkDial);
   double fracerr_CExHigh = fracerr->OneSigmaErr(kCascTwkDial_FrCExHigh_pi, sign_CExHightwk);
-  fCExHighCurr = fCExHighDef * (1. + fCExHighTwkDial * fracerr_CExHigh);
+  fCExHighDef * (1. + fCExHighTwkDial * fracerr_CExHigh);
   fCExHighCurr   = TMath::Max(0., fCExHighCurr  );
 
   int    sign_Alltwk = utils::rew::Sign(fAllTwkDial);
@@ -250,12 +248,12 @@ double NReWeightCasc::CalcWeight()
 { 
   // For 1-sigma change
   bool tweaked = ( (TMath::Abs(fInelLowTwkDial) > controls::kASmallNum) ||
-  		   (TMath::Abs(fInelHighTwkDial) > controls::kASmallNum) ||
-  		   (TMath::Abs(fAbsTwkDial) > controls::kASmallNum) ||
-  		   (TMath::Abs(fPiProdTwkDial) > controls::kASmallNum) ||
-  		   (TMath::Abs(fCExLowTwkDial) > controls::kASmallNum) ||
-  		   (TMath::Abs(fCExHighTwkDial) > controls::kASmallNum) ||
-  		   (TMath::Abs(fAllTwkDial) > controls::kASmallNum) );
+				   (TMath::Abs(fInelHighTwkDial) > controls::kASmallNum) ||
+				   (TMath::Abs(fAbsTwkDial) > controls::kASmallNum) ||
+				   (TMath::Abs(fPiProdTwkDial) > controls::kASmallNum) ||
+				   (TMath::Abs(fCExLowTwkDial) > controls::kASmallNum) ||
+				   (TMath::Abs(fCExHighTwkDial) > controls::kASmallNum)||
+				   (TMath::Abs(fAllTwkDial) > controls::kASmallNum) );
 
 
   //cout << fInelLowCurr << " " <<  fInelLowDef    << endl;
@@ -287,6 +285,8 @@ double NReWeightCasc::CalcWeight()
   if (posinnuc_.ibound == 0) return 1;
   
   float old_xsec;
+
+  //cout << "NReWeightCasc FsiProb = " << fsihist_.fsiprob << endl;
 
   // Assume FSIPROB <= 0 if not filled properly
   // Currently in ND280 MCP4 only (set in ${T2KREWEIGHT}/src/T2KNeutUtils.cxx)
@@ -327,13 +327,21 @@ double NReWeightCasc::CalcWeight()
   }
 #endif
 
-  neffpr_.fefqe   = (float)fInelLowCurr;
-  neffpr_.fefqeh  = (float)fInelHighCurr;
-  neffpr_.fefinel = (float)fPiProdCurr;
-  neffpr_.fefabs  = (float)fAbsCurr;
-  neffpr_.fefcx   = (float)fCExLowCurr;
-  neffpr_.fefcxh  = (float)fCExHighCurr;  
-  neffpr_.fefall  = (float)fAllCurr;  
+  fInelLowDef = neffpr_.fefqe;
+  fInelHighDef= neffpr_.fefqeh;
+  fPiProdDef  = neffpr_.fefinel;
+  fAbsDef     = neffpr_.fefabs;
+  fCExLowDef  = neffpr_.fefcx;
+  fCExHighDef = neffpr_.fefcxh;
+  fAllDef     = neffpr_.fefall;
+
+  neffpr_.fefqe   = TMath::Max(float(0.),float(fInelLowCurr*fInelLowCurr));
+  neffpr_.fefqeh  = TMath::Max(float(0.),float(fInelHighCurr*fInelHighCurr));
+  neffpr_.fefinel = TMath::Max(float(0.),float(fPiProdCurr*fPiProdCurr));
+  neffpr_.fefabs  = TMath::Max(float(0.),float(fAbsCurr*fAbsCurr));
+  neffpr_.fefcx   = TMath::Max(float(0.),float(fCExLowCurr*fCExLowCurr));
+  neffpr_.fefcxh  = TMath::Max(float(0.),float(fCExHighCurr*fCExHighCurr));  
+  //  neffpr_.feffall = TMath::Max(float(0.),float(fAllCurr*fAllCurr));  
 
   fortFns->Reconfigure();
 

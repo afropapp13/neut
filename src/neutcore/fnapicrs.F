@@ -585,10 +585,10 @@ C     ADD  ( 1.3 < W < 2.0 GeV , with N(pi)>=2 )
       ADDCRS=C13NE(1)+(C13NE(2)-C13NE(1))*
      &     (E-EBIN)/0.1
       FNAPICRS=FNAPICRS+ADDCRS
-      IF (FNAPICRS.GT.1.0E-5) then
+      IF (FNAPICRS.GT.1.0E-4) then
          R1320= ADDCRS/FNAPICRS
       else
-         adcrs = 0.
+         addcrs = 0.
          fnapicrs = 0.
       endif
       GO TO 330

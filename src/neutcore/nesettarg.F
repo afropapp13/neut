@@ -14,7 +14,8 @@
 *
 *     ( creation date and author )
 *      2007.11.05 ; G. Mitsuka
-*      2008.11.07 ; R. Tacik    added additional nuclei
+*     2008.11.07 ; R. Tacik    added additional nuclei
+*     2016.08.05 ; P. Stowell  added free nucleons
 *     
 *     ( comment )
 *      Charge density parameters refer
@@ -26,7 +27,21 @@
 #include "necard.h"
 #include "efpion.h"
 
-      if (NUMBNDP.eq.5) then ! 11B (estimate)
+      if (NUMBNDP.eq.1 .and. NUMBNDN.eq.0) then !p
+         RMSRAD= 0.01
+         C     = 0.01
+         CNN   = 0.01
+         AF    = 0.01
+         WPARM = 0.00
+         DFACT = 1.0
+      else if (NUMBNDP.eq.0 .and. NUMBNDN.eq.1) then !n
+         RMSRAD= 0.01
+         C     = 0.01
+         CNN   = 0.01
+         AF    = 0.01
+         WPARM = 0.00
+         DFACT = 1.0
+      else if (NUMBNDP.eq.5) then ! 11B (estimate)
          RMSRAD= 2.42
          C     = 2.00
          CNN   = 2.00
@@ -103,6 +118,13 @@
          AF    = 0.62
          WPARM =-0.19
          DFACT = 1.0
+      else if (NUMBNDP.eq.19) then ! 39K
+         RMSRAD= 3.408
+         C     = 3.743
+         CNN   = 3.743
+         AF    = 0.585
+         WPARM =-0.201
+         DFACT = 1.0
       else if (NUMBNDP.eq.20) then ! 40Ca
          RMSRAD= 3.482
          C     = 3.766
@@ -116,6 +138,13 @@
          CNN   = 3.75
          AF    = 0.567
          WPARM = 0.0
+         DFACT = 1.0
+      else if (NUMBNDP.eq.25) then ! 55Mn (2pf)
+         RMSRAD= 3.68
+         C     = 3.89
+         CNN   = 3.89
+         AF    = 0.567
+         WPARM = 0.
          DFACT = 1.0
       else if (NUMBNDP.eq.26) then ! 56Fe
          RMSRAD= 3.787
@@ -215,6 +244,16 @@
          AF    = 0.468
          WPARM = 0.
          DFACT = 1.0
+      else if (NUMATOM .EQ. 2 .OR. NUMATOM .EQ. 3 .OR.
+     $        NUMATOM .EQ. 4 .OR. NUMATOM .EQ. 20) then
+         RMSRAD= 2.455
+         C     = 2.355
+         CNN   = 2.355
+         AF    = 0.5224
+         WPARM =-0.149
+         DFACT = 1.0
+         write(*,*) "Parameters not set in nesettarg.F 
+     $        - only valid for Effective SF"
       else
          print*, 'This target is not supported yet, see nesettarg.F'
          stop

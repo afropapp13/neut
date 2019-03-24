@@ -1,8 +1,10 @@
 #ifndef _NEUTROOTHANDLERS_H_
 #define _NEUTROOTHANDLERS_H_
 
+#include <TROOT.h>
 #include <TFile.h>
 #include <TTree.h>
+#include <TSystem.h>
 
 extern "C"
 {

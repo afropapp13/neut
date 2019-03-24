@@ -64,6 +64,9 @@ typedef enum ENSyst {
   kXSecTwkDial_VecFFCCQE_out,  ///< tweak the MDLQE used to calculate the output. Use in conjunction with kXSecTwkDial_VecFFCCQE for all possibilities.
   //kXSecTwkDial_VecFFCCQEshape,    ///< tweak elastic nucleon form factors (BBA/default -> dipole) - shape only effect of dsigma(CCQE)/dQ2
 
+  // Axial FF Dials
+  kXSecTwkDial_AxlDipToAlt, ///< Dial for RW to Axial Alt Model (default/dipole -> Alt) (DUPLICATE!)
+  
   kXSecTwkDial_SCCVecQE,    ///< tweak vector 2nd class current FF
   kXSecTwkDial_SCCAxlQE,    ///< tweak axial 2nd class current FF
   kXSecTwkDial_PsFF,    ///< tweak pseudoscalar FF at Q2=0
@@ -154,7 +157,28 @@ typedef enum ENSyst {
   //
   kXSecTwkDial_NC,                ///< tweak the inclusive NC normalization
 
+  // Form Factor Dials
+  kXSecTwkDial_FAxlCCQEAlpha,   ///< 2 Component Alpha
+  kXSecTwkDial_FAxlCCQEGamma,   ///< 2 Component Gamma
+  kXSecTwkDial_FAxlCCQEBeta,    ///< 3 Component Beta
+  kXSecTwkDial_FAxlCCQETheta,   ///< 3 Component Theta
 
+  // Z-Exp Terms
+  kXSecTwkDial_FAZExp_NTerms,  ///< N Coeff in ZExp
+  kXSecTwkDial_FAZExp_TCut,    
+  kXSecTwkDial_FAZExp_T0,
+  kXSecTwkDial_FAZExp_Q4Cut,
+  kXSecTwkDial_FAZExp_A0,
+  kXSecTwkDial_FAZExp_A1,
+  kXSecTwkDial_FAZExp_A2,
+  kXSecTwkDial_FAZExp_A3,
+  kXSecTwkDial_FAZExp_A4,
+  kXSecTwkDial_FAZExp_A5,
+  kXSecTwkDial_FAZExp_A6,
+  kXSecTwkDial_FAZExp_A7,
+  kXSecTwkDial_FAZExp_A8,
+  kXSecTwkDial_FAZExp_A9,
+  
   //
   // Hadronization (free nucleon target)
   // 
@@ -184,7 +208,7 @@ typedef enum ENSyst {
   kCascTwkDial_FrInelHigh_pi,  ///< tweak inelastic (QE in NEUT) probability for high energy pions
   kCascTwkDial_FrCExHigh_pi,   ///< tweak charge exchange probability for high energy pions	    
   kCascTwkDial_FrPiProd_pi,    ///< tweak pion (hadron) production (inelastic in NEUT) probability for pions
-  kCascTwkDial_All_pi,    ///< tweak mean free path for pions
+  kCascTwkDial_All_pi,         ///< tweak mean free path for pions
 
   kINukeTwkDial_MFP_N,       ///< tweak mean free path for nucleons
   //kINukeTwkDial_FrCEx_N,     ///< tweak charge exchange probability for nucleons, for given total rescattering probability
@@ -247,6 +271,9 @@ public:
     case ( kXSecTwkDial_VecFFCCQE     ) : return "VecFFCCQE";       break;
     case ( kXSecTwkDial_VecFFCCQE_out ) : return "VecFFCCQE_out";   break;
       //case ( kXSecTwkDial_VecFFCCQEshape   ) : return "VecFFCCQEshape";       break;
+
+    case ( kXSecTwkDial_AxlDipToAlt ) : return "AxlDipToAlt"; break;
+            
     case ( kXSecTwkDial_SCCVecQE   ) : return "SCCVecQE";       break;
     case ( kXSecTwkDial_SCCAxlQE   ) : return "SCCAxlQE";       break;
     case ( kXSecTwkDial_PsFF   ) : return "PsFF";       break;
@@ -257,44 +284,17 @@ public:
     case ( kXSecTwkDial_MaRESshape     ) : return "MaRESshape";         break;
     case ( kXSecTwkDial_MvRES          ) : return "MvRES";              break;
 
-    case (  kXSecTwkDial_FFRES         ) : return "FFRES";              break;
-    case (  kXSecTwkDial_TypeRES       ) : return "TypeRES";            break;
-    case (  kXSecTwkDial_CA5RES        ) : return "CA5RES";             break;
-    case (  kXSecTwkDial_BgSclRES      ) : return "BgSclRES";           break;
-    case (  kXSecTwkDial_MaNFFRES      ) : return "MaNFFRES";           break;
-    case (  kXSecTwkDial_MvNFFRES      ) : return "MvNFFRES";           break;
-    case (  kXSecTwkDial_MaRSRES       ) : return "MaRSRES";            break;
-    case (  kXSecTwkDial_MvRSRES       ) : return "MvRSRES";            break;
-
     case ( kXSecTwkDial_NormCCRES        ) : return "NormCCRES";            break;
     case ( kXSecTwkDial_MaCCRESshape     ) : return "MaCCRESshape";         break;
       //case ( kXSecTwkDial_MvCCRESshape     ) : return "MvCCRESshape";         break;
     case ( kXSecTwkDial_MaCCRES          ) : return "MaCCRES";              break;
     case ( kXSecTwkDial_MvCCRES          ) : return "MvCCRES";              break;
 
-    case (  kXSecTwkDial_FFCCRES         ) : return "FFCCRES";              break;
-    case (  kXSecTwkDial_TypeCCRES       ) : return "TypeCCRES";            break;
-    case (  kXSecTwkDial_CA5CCRES        ) : return "CA5CCRES";             break;
-    case (  kXSecTwkDial_BgSclCCRES      ) : return "BgSclCCRES";           break;
-    case (  kXSecTwkDial_MaNFFCCRES      ) : return "MaNFFCCRES";           break;
-    case (  kXSecTwkDial_MvNFFCCRES      ) : return "MvNFFCCRES";           break;
-    case (  kXSecTwkDial_MaRSCCRES       ) : return "MaRSCCRES";            break;
-    case (  kXSecTwkDial_MvRSCCRES       ) : return "MvRSCCRES";            break;
-
     case ( kXSecTwkDial_NormNCRES        ) : return "NormNCRES";            break;
     case ( kXSecTwkDial_MaNCRESshape     ) : return "MaNCRESshape";         break;
       //case ( kXSecTwkDial_MvNCRESshape     ) : return "MvNCRESshape";         break;
     case ( kXSecTwkDial_MaNCRES          ) : return "MaNCRES";              break;
     case ( kXSecTwkDial_MvNCRES          ) : return "MvNCRES";              break;
-
-    case (  kXSecTwkDial_FFNCRES         ) : return "FFNCRES";              break;
-    case (  kXSecTwkDial_TypeNCRES       ) : return "TypeNCRES";            break;
-    case (  kXSecTwkDial_CA5NCRES        ) : return "CA5NCRES";             break;
-    case (  kXSecTwkDial_BgSclNCRES      ) : return "BgSclNCRES";           break;
-    case (  kXSecTwkDial_MaNFFNCRES      ) : return "MaNFFNCRES";           break;
-    case (  kXSecTwkDial_MvNFFNCRES      ) : return "MvNFFNCRES";           break;
-    case (  kXSecTwkDial_MaRSNCRES       ) : return "MaRSNCRES";            break;
-    case (  kXSecTwkDial_MvRSNCRES       ) : return "MvRSNCRES";            break;
 
     case ( kXSecTwkDial_NECOHEPI         ) : return "NECOHEPI";             break;
     case ( kXSecTwkDial_MaCOHpi          ) : return "MaCOHpi";              break;
@@ -331,6 +331,27 @@ public:
       //case ( kXSecTwkDial_RnubarnuCC       ) : return "RnubarnuCC";           break;
       //case ( kXSecTwkDial_DISNuclMod       ) : return "DISNuclMod";           break;
     case ( kXSecTwkDial_NC                 ) : return "NC";            break;
+
+    case ( kXSecTwkDial_FAxlCCQEAlpha     ) : return "FAAxlQEAlpha"; break;
+    case ( kXSecTwkDial_FAxlCCQEGamma     ) : return "FAAxlQEGamma"; break;
+    case ( kXSecTwkDial_FAxlCCQEBeta      ) : return "FAAxlQEBeta";  break;
+    case ( kXSecTwkDial_FAxlCCQETheta     ) : return "FAAxlQETheta"; break;
+
+    case ( kXSecTwkDial_FAZExp_NTerms    ) : return "FAZExp_NTerms"; break;
+    case ( kXSecTwkDial_FAZExp_TCut      ) : return "FAZExp_TCut";  break;
+    case ( kXSecTwkDial_FAZExp_T0        ) : return "FAZExp_T0";    break;
+    case ( kXSecTwkDial_FAZExp_Q4Cut     ) : return "FAZExp_Q4Cut"; break;
+    case ( kXSecTwkDial_FAZExp_A0        ) : return "FAZExp_A0";    break;
+    case ( kXSecTwkDial_FAZExp_A1        ) : return "FAZExp_A1";  break;
+    case ( kXSecTwkDial_FAZExp_A2        ) : return "FAZExp_A2";  break;
+    case ( kXSecTwkDial_FAZExp_A3        ) : return "FAZExp_A3";  break;
+    case ( kXSecTwkDial_FAZExp_A4        ) : return "FAZExp_A4";  break;
+    case ( kXSecTwkDial_FAZExp_A5        ) : return "FAZExp_A5";  break;
+    case ( kXSecTwkDial_FAZExp_A6        ) : return "FAZExp_A6";  break;
+    case ( kXSecTwkDial_FAZExp_A7        ) : return "FAZExp_A7";  break;
+    case ( kXSecTwkDial_FAZExp_A8        ) : return "FAZExp_A8";  break;
+    case ( kXSecTwkDial_FAZExp_A9        ) : return "FAZExp_A9";  break;
+	      
       //case ( kHadrAGKYTwkDial_xF1pi        ) : return "AGKYxF1pi";            break;
       //case ( kHadrAGKYTwkDial_pT1pi        ) : return "AGKYpT1pi";            break;
       //case ( kHadrNuclTwkDial_FormZone     ) : return "FormZone";             break;
@@ -340,7 +361,6 @@ public:
     case ( kCascTwkDial_FrInelHigh_pi      ) : return "FrInelHigh_pi";        break;
     case ( kCascTwkDial_FrCExHigh_pi       ) : return "FrCExHigh_pi";         break;
     case ( kCascTwkDial_FrPiProd_pi        ) : return "FrPiProd_pi";          break;
-    case ( kCascTwkDial_All_pi             ) : return "All_pi";          break;
       //case ( kINukeTwkDial_MFP_N           ) : return "MFP_N";                break;
       //case ( kINukeTwkDial_FrCEx_N         ) : return "FrCEx_N";              break;
       //case ( kINukeTwkDial_FrElas_N        ) : return "FrElas_N";             break;
@@ -383,6 +403,9 @@ public:
        kXSecTwkDial_AxlFFCCQE,
        kXSecTwkDial_VecFFCCQE,
        kXSecTwkDial_VecFFCCQE_out,
+
+       kXSecTwkDial_AxlDipToAlt,
+       
        //kXSecTwkDial_VecFFCCQEshape,
        kXSecTwkDial_SCCVecQE,
        kXSecTwkDial_SCCAxlQE,
@@ -393,29 +416,11 @@ public:
        kXSecTwkDial_MaRES,      
        kXSecTwkDial_MvRES,      
 
-       kXSecTwkDial_FFRES,
-       kXSecTwkDial_TypeRES,
-       kXSecTwkDial_CA5RES,
-       kXSecTwkDial_BgSclRES,
-       kXSecTwkDial_MaNFFRES,
-       kXSecTwkDial_MvNFFRES,
-       kXSecTwkDial_MaRSRES,
-       kXSecTwkDial_MvRSRES,
-
        kXSecTwkDial_NormCCRES,    
        kXSecTwkDial_MaCCRESshape, 
        //kXSecTwkDial_MvCCRESshape, 
        kXSecTwkDial_MaCCRES,      
        kXSecTwkDial_MvCCRES,      
-
-       kXSecTwkDial_FFCCRES,
-       kXSecTwkDial_TypeCCRES,
-       kXSecTwkDial_CA5CCRES,
-       kXSecTwkDial_BgSclCCRES,
-       kXSecTwkDial_MaNFFCCRES,
-       kXSecTwkDial_MvNFFCCRES,
-       kXSecTwkDial_MaRSCCRES,
-       kXSecTwkDial_MvRSCCRES,
 
        kXSecTwkDial_NormNCRES,    
        kXSecTwkDial_MaNCRESshape, 
@@ -423,15 +428,6 @@ public:
        kXSecTwkDial_MaNCRES,      
        kXSecTwkDial_MvNCRES, 
      
-       kXSecTwkDial_FFNCRES,
-       kXSecTwkDial_TypeNCRES,
-       kXSecTwkDial_CA5NCRES,
-       kXSecTwkDial_BgSclNCRES,
-       kXSecTwkDial_MaNFFNCRES,
-       kXSecTwkDial_MvNFFNCRES,
-       kXSecTwkDial_MaRSNCRES,
-       kXSecTwkDial_MvRSNCRES,
-
        kXSecTwkDial_NECOHEPI,
        kXSecTwkDial_MaCOHpi,      
        kXSecTwkDial_R0COHpi,    
@@ -467,6 +463,28 @@ public:
        //kXSecTwkDial_RnubarnuCC,   
        //kXSecTwkDial_DISNuclMod, 
        kXSecTwkDial_NC,
+
+       kXSecTwkDial_FAxlCCQEAlpha,
+       kXSecTwkDial_FAxlCCQEGamma,
+       kXSecTwkDial_FAxlCCQEBeta,
+       kXSecTwkDial_FAxlCCQETheta,
+
+       // Z-Exp Terms
+       kXSecTwkDial_FAZExp_NTerms,
+       kXSecTwkDial_FAZExp_TCut,
+       kXSecTwkDial_FAZExp_T0,
+       kXSecTwkDial_FAZExp_Q4Cut,
+       kXSecTwkDial_FAZExp_A0,
+       kXSecTwkDial_FAZExp_A1,
+       kXSecTwkDial_FAZExp_A2,
+       kXSecTwkDial_FAZExp_A3,
+       kXSecTwkDial_FAZExp_A4,
+       kXSecTwkDial_FAZExp_A5,
+       kXSecTwkDial_FAZExp_A6,
+       kXSecTwkDial_FAZExp_A7,
+       kXSecTwkDial_FAZExp_A8,
+       kXSecTwkDial_FAZExp_A9,
+       
        //kHadrAGKYTwkDial_xF1pi,    
        //kHadrAGKYTwkDial_pT1pi,    
        //kHadrNuclTwkDial_FormZone, 

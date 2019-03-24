@@ -48,13 +48,20 @@
       
       INTEGER*4 IPTEMP,I
 
+      REAL*4 XMAQE_TMP
+
       IPTEMP=0
       IF(IPAR.EQ. 12 .OR. IPAR.EQ. 14 .OR. IPAR.EQ. 16) IPTEMP=12
       IF(IPAR.EQ.-12 .OR. IPAR.EQ.-14 .OR. IPAR.EQ.-16) IPTEMP=-12
       IF(IPTEMP.EQ.0) RETURN
 
       if ( mod(MDLQE,100)/10.eq.0 ) then
+         XMAQE_TMP =XMAQE
+C- tentatively set MAQE to NCEL's value
+         XMAQE = XMANCEL
          CALL NEELSVCP(IPTEMP,E,DNEUT,IERR)
+C- restore original value
+         XMAQE = XMAQE_TMP
          
          MODENE=MODE
          IF (ABS(MODE).EQ.51) THEN

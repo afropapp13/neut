@@ -117,9 +117,9 @@ C**** The nuclear center of mass parameters.
       logical prot
       common /nuccms/rhon,pfermi,unucl,ecms2,up4cms,beta,prot
       common /nuchad/ihap,nel,ncx
-#include "hadron.cdk"
-#include "nucnewprd.cdk"
-#include "partnucint.cdk"
+#include "hadron.h"
+#include "nucnewprd.h"
+#include "partnucint.h"
 C**** The mc step, and the nuclear maximum radius.
       real step, rmax
       parameter (step=.2, rmax=6.)
@@ -424,7 +424,7 @@ C   UNITS ARE IN FERMIS
       subroutine nucnuc(idec)
       common/nucint/uin,chint,ein,pin(3),upin(3)
       common/nuccms/rhon,pfermi,unucl,ecms2,up4cms(3),beta(3),prot
-#include "nucnewprd.cdk"
+#include "nucnewprd.h"
       common/nuchad/ihap,nel(2)
       logical prot
 
@@ -563,10 +563,10 @@ C   UNITS ARE IN FERMIS
       subroutine nucpion(ides)
       common /nucint/uin,chint,ein,pin(3),upin(3)
       common /nuccms/ rhon,pfermi,unucl,ecms2,up4cms(3),beta(3),prot
-#include "nucnewprd.cdk"
+#include "nucnewprd.h"
       common /nuchad/ ihap,nel,ncx
-#include "hadron.cdk"
-#include "partnucint.cdk"      
+#include "hadron.h"
+#include "partnucint.h"      
       dimension xabs(21),xpeln(126),xpelp(126),xpelm(126),xpchx(126),
      $     xspp(117),xspn(117),xspm(117),
      $     dang(5,21,4)
@@ -1820,7 +1820,7 @@ C     Find a starting point inside the nucleus for the hadron.
       common /nucint/uin,chint,ein,pin(3),upin(3)
       common /nuccms/ rhon,pfermi,unucl,ecms2,up4cms(3),beta(3),prot
       common /nuchad/ihap,nel,ncx
-#include "hadron.cdk"
+#include "hadron.h"
       logical prot
       dimension pout1l(3),poutel(3),rv(3)
       parameter (upi=139.6,  step=0.2)
@@ -2034,8 +2034,8 @@ C**** The step size for this simulation in fermi.  Usually this is .2 fm.
 C**** The data about the interaction particle
       real uin, chint, ein, pin(3), upin(3)
       common /nucint/uin,chint,ein,pin,upin
-#include "nucnewprd.cdk"
-#include "masses.cdk"
+#include "nucnewprd.h"
+#include "masses.h"
 C**** The nuclear center of mass parameters.
       real up4cms(3), beta(3)
       logical prot
@@ -2907,7 +2907,7 @@ C**** The energy bins and the coefficients.
 
       subroutine printinttype
       common /nucint/uin,chint,ein,pin(3),upin(3)
-#include "partnucint.cdk"
+#include "partnucint.h"
       real chint
       if(pninttype.eq.1) then
          write (6,'('' % interaction '',i8,'' absorbtion'')')pninttype

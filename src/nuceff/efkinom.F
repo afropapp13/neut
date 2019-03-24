@@ -1,5 +1,5 @@
 * ==========================================================
-      subroutine efkinom(type,p,pf,fpid,pn,nump)
+      subroutine efkinom(type,p,pf,fpid,pn,nump,radius)
 * ----------------------------------------------------------
 *
 * calcurate kinematics for each process
@@ -14,6 +14,7 @@
 *        6: omN - sigmaN(pipiN)
 *        7: decay
 *     p(3): momentum vector of omega
+C     radius: position ( in Fermi )
 *
 *  [output]
 *     type: decay branch(only for decay)
@@ -28,12 +29,15 @@
 * ==========================================================
       implicit none
 
+#include "necard.h"
+
 * --- function
       real rlu,dummy,random
       
 * ---- argument (input)
       integer type
       real p(3)
+      real radius
 
 * ---- argument (output)
       integer nump,fpid(3)
@@ -86,7 +90,14 @@
 * and get invariant mass & cms momentum
 * ----------------------------------------
       if(type.lt.7) then
-         call rnferm(momferm,dum)
+         IF (nefkinver.eq.0) THEN
+            call rnferm(momferm,dum)
+         else IF (NEFKINVER.eq.1) THEN
+            CALL EFRNMOM(radius,momferm)
+         else
+            write(*,*) 'Invalid NEFKINVER =',NEFKINVER
+            stop
+         endif
          call rndir(nucdir)
          tote=sqrt(nucmass**2+momferm**2)+
      &        sqrt(ommass**2+p(1)**2+p(2)**2+p(3)**2)

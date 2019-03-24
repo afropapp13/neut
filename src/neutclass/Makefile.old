@@ -1,18 +1,17 @@
-ROOTINC = -I`root-config --incdir`
-NEUTINC = -I../neutcore -I../nuccorspl -I../skmcsvc 
-CLASSDIR = ../neutclass
-CLASSINC= -I${CLASSDIR}
-INCDIRS = ${ROOTINC} ${NEUTINC} ${CLASSINC}
+## Check default NEUT_ROOT directory
+ifndef NEUT_ROOT
+      NEUT_ROOT = ../../
+endif
 
-CXXFLAGS  = `root-config --cflags`
-COPTFLAGS = -g
+include ${NEUT_ROOT}/src/neutsmpl/config_neut.gmk
 
-COREDIR =	../neutcore/Linux_pc
+LIBBASE	= skmcsvc
+LIBNAME = ${LIBBASE}_$(SKMCSVCVER)
 
-FINCDIRS  = -I../neutcore -I../skmcsvc
-FOPTFLAGS = -g -fno-backslash -fno-automatic -finit-local-zero \
-	       -fno-second-underscore -fugly-complex -ffixed-line-length-132 \
-	       -fno-globals -fdollar-ok
+## For library
+OBJS = fourVector.o calcLH.o selectSfValues.o buildSf.o maxDiff.o \
+	   readXsecData.o sfevent.o selectEffSFValues.o effsfevent.o  \
+	   buildEffSf.o effSFMaxDiff.o readEffSFXsecData.o
 
 SOBJS = ${CLASSDIR}/neutctrl.so ${CLASSDIR}/neutpart.so \
 		${CLASSDIR}/neutvect.so ${CLASSDIR}/neutvtx.so \
@@ -27,25 +26,5 @@ OBJS  = ${ROBJS} ${SOBJS}
 
 .SUFFIXES:	.so
 
-GENROOTSO = env COPTFLAGS="${COPTFLAGS}" INCDIRS="${INCDIRS}" \
-			./gen_root_so.sh
-
-.cc.o:
-	$(CXX) -c $(COPTFLAGS) $(CXXFLAGS) $(INCDIRS) -o $@ $<
-
-.cc.so:
-	$(GENROOTSO) $(basename $<)
-
-.F.o:
-	$(FC) -c $(FOPTFLAGS) $(FINCDIRS) -o $@ $<
-
 all: $(OBJS)
-
-clean:
-	$(RM) -f *.so *.o *~ *LinkDef.h *Dict.* ${OBJS} chkfort
-
-chkfort: chkfort.o $(OBJS) 
-	g77 -o $@ chkfort.o -Xlinker -R`pwd`  $(OBJS) $(LIBS)
-
-
 

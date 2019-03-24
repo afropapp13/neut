@@ -55,6 +55,9 @@
 *     2010.09    ; P. de Perio
 *     Initialize FSI history vars (NVERT,NVCVERT)
 *     
+*     2017.11.24 ; Y. Hayato
+*     Not to simulate re-interaction of K with momentum larger than 10 GeV.
+*      
 **********************************************************************
       IMPLICIT NONE
 
@@ -307,7 +310,29 @@ C     CALL EFTRCETA(X_FORM,PIN,NSCAT,NDIS,PO1,PO2,KIN1,KIN2)
             ENDDO
             CALL EFTRCETA(X,PIN,NSCAT,NDIS,NABS,NABS2,PO1,PO2,KIN1,KIN2)
 
-            IF (NDIS.EQ.0) CALL UCOPY(PO1,PVC(1,I),3)             
+            IF (NDIS.EQ.0) then
+               if (NSCAT.GT.0) THEN
+                  IF (NVC2.LT.MAXVC) THEN
+                     NVC2 = NVC2+1
+                     IFLGVC(I)=8
+                     ICRNVC(I)=0
+
+                     IPVC(NVC2)=IPVC(I)
+                     IORGVC(NVC2)=I
+                     IFLGVC(NVC2)=0
+                     ICRNVC(NVC2)=1
+                     IVTIVC(NVC2)=1
+                     CALL UCOPY(PO1,PVC(1,NVC2),3)
+                     CALL MCMASS(IPVC(NVC2),AMASVC(NVC2))
+                     DO J=1,3
+C--   escaped from nucleus
+                        POSNUC(J,NVC2)=9999.
+                     enddo
+                  else
+                     CALL UCOPY(PO1,PVC(1,I),3)                     
+                  endif
+               endif
+            endif 
 CCCC  ------------    change to pi    -----------------
             IF (NDIS.ge.1) then
                IFLGVC(I)=3
@@ -373,18 +398,48 @@ cccc  --  K+:321 K-:-321 K0:311 KL:130 KS:310  --
             CALL UCOPY(PVC(1,I),PIN,3)
             KIN = IPVC(I)
 C     C FORMATION ZONES
-C     PABS=SQRT(PIN(1)**2+PIN(2)**2+PIN(3)**2)
+            PABS=SQRT(PIN(1)**2+PIN(2)**2+PIN(3)**2)
 C     FORMLENGTH=PABS/1000./MU2/FM2GEV
 C     RNFORMLENGTH=-1.*FORMLENGTH*LOG(RLU(IDUM))
 C     DO J=1,3
 C     X_FORM(J)=X(J)+(PIN(J)/PABS)*RNFORMLENGTH
 C     END DO
 
+C-- skip K with momentum > 10GeV ( 2017/11/24 )
+            if (PABS.gt.10000) then
+               goto 1000
+            endif
+
             DO J=1,3
                X(J)=POSNUC(J,I)
             ENDDO
             CALL EFTRCKA(PIN,KIN,POUT,KO,X) 
-            CALL UCOPY(POUT,PVC(1,I),3)   
+
+            IF (KIN.EQ.KO) then
+               if ((( abs(pin(1)-pout(1)) ).gt.0.01 ).or.
+     $             (( abs(pin(2)-pout(2)) ).gt.0.01 ).or.
+     $             (( abs(pin(3)-pout(3)) ).gt.0.01 )) THEN
+                  IF (NVC2.LT.MAXVC) THEN
+                     NVC2 = NVC2+1
+                     IFLGVC(I)=8
+                     ICRNVC(I)=0
+                     CALL UCOPY(POSVC,POSFVC(1,I),3)                     
+                     IPVC(NVC2)=IPVC(I)
+                     IORGVC(NVC2)=I
+                     IFLGVC(NVC2)=0
+                     ICRNVC(NVC2)=1
+                     IVTIVC(NVC2)=1
+                     CALL UCOPY(POUT,PVC(1,NVC2),3)
+                     CALL UCOPY(POSVC,POSIVC(1,NVC2),3)                     
+                     CALL MCMASS(IPVC(NVC2),AMASVC(NVC2))
+                     DO J=1,3
+                        POSNUC(J,NVC2)=9999.
+                     enddo
+                  else
+                     CALL UCOPY(POUT,PVC(1,I),3)                     
+                  endif
+               endif
+            endif
 ccc   --------     charge exchange ----------------
             IF (KIN.NE.KO) then
 

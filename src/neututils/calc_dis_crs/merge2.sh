@@ -1,3 +1,5 @@
+#!/bin/csh
+
 foreach i ( 12 14 -12 -14 16 -16 )
 
   paste 2112.$i.dat 2212.$i.dat > 2x12.$i.dat

@@ -48,6 +48,14 @@ C             1 ; Kartavtsev et al.
       MDLCOH   = NECOHEPI
       MODELCOH = MDLCOH
 
+C
+C-- Diffractive pion
+C  MODELDIF = 0 ; Rein&Sehgal w/ lepton mass corr.
+C  MDLDIF =   0 ; Rein&Sehgal w/ lepton mass corr.
+C
+      MDLDIF   = NEDIFPI
+      MODELDIF = MDLDIF
+
 C---------------------------------------------------------------------
 C-- Model for QE
 C

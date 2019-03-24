@@ -71,12 +71,27 @@ c      DATA CONST/1.76D-1/
       REAL*8 AAA,BBB,CCC,SMU
       REAL*8 F3A,F3V
 
+      REAL*8 ELAXFF
+      EXTERNAL ELAXFF
+      
+      INTEGER SGN
+      LOGICAL NC
+      
       INTEGER NCELMODE
 
-      AVMASS = XMAQE
+      AVMASS = XMANCEL
       VVMASS = XMVQE
      
-      AM = 0.             
+      AM = 0.
+
+C --  Setup info for FA CALC      
+      NC = .true.
+C      if (SGN.lt.0) then
+         SGN = -1
+C      else
+C         SGN = 1
+C      endif
+      
 C-------
       EE=E
       Q2T1=FNNCQ2MIN(EE,ITARG)
@@ -124,17 +139,8 @@ C      FA=-0.5*1.23/(1.-SQ2/AVMASS**2)**2
 
 C      FA=0.5*1.267/(1.-SQ2/AVMASS**2)**2
 
-      if (MDLQEAF.eq.1) then
-         FA=0.5*1.267/(1.-SQ2/AVMASS**2)**2
-      else if (MDLQEAF.eq.2) then
-         FA=faBBBA07(q2)
-         FA = -0.5 * FA
-      else
-         write(*,*) 'Invalid CCQE mode specified by MDLQEAF',MDLQEAF
-         stop
-      endif
-
-
+      FA=ELAXFF(Q2, NC, SGN)
+      
 C-- Proton, flip sign
       if (ITARG.eq.2212) then
          FA=-1. * FA

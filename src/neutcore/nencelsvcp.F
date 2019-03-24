@@ -56,6 +56,8 @@ C      external  rlu,fnnucl
 
       REAL*4 PNOUT(3)
 
+      IERR = 0
+      
       IF (IPAR.EQ. 12) II=1
 
       IF (IPAR.EQ. 14) II=2

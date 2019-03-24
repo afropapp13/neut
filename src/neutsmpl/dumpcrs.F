@@ -15,14 +15,14 @@ C#include "nesolact.h"
       DATA IPRTBL/  14, 12, -14, -12 /
 
       INTEGER*4  MODE,IMODE
-      INTEGER*4  MODNEU(28), MODNEUB(28)
+      INTEGER*4  MODNEU(30), MODNEUB(30)
 
       DATA MODNEU /  1, 11, 12, 13, 21, 31, 32, 33, 34, 41,
      &              51, 51, 52, 16, 36, 22, 42, 43, 23, 44,
-     &              45,  0, 26, 46, 17, 38, 39,  2/
+     &              45,  0, 26, 46, 17, 38, 39,  2, 15, 35/
       DATA MODNEUB/ -1,-11,-12,-13,-21,-31,-32,-33,-34,-41,
      &              -1,-51,-51,-52,-16,-36,-22,-42,-43,-23,
-     &              -44,-45,-26,-46,-17,-38,-39,-2/
+     &              -44,-45,-26,-46,-17,-38,-39,-2,-15,-35/
 
 
       integer i,j
@@ -35,7 +35,7 @@ C      REAL*4   R1314
       EXTERNAL FNrawcrs,fntotpau
       REAL*4   FNrawcrs,fntotpau
 
-      REAL*4   TCRS(29)
+      REAL*4   TCRS(31)
           
       character*80 FILENAME
       FILENAME='dumpcrs.tbl'
@@ -68,7 +68,7 @@ C      REAL*4   R1314
 
          DO 30 J=0,189
             
-            DO 20 IMODE=1,28
+            DO 20 IMODE=1,30
                if (j.le.99) then
                   ENERGY=real(J)*0.1+0.05
                else
@@ -84,7 +84,7 @@ C      REAL*4   R1314
                TCRS(IMODE) = FNRAWCRS(IPAR,MODE,ENERGY)
  20         continue
             
-            tcrs(29) = fntotpau(ipar,energy)
+            tcrs(31) = fntotpau(ipar,energy)
             
             write(10,'(I4,F7.3,29F10.6)')
      $           ipar,energy,
@@ -93,7 +93,8 @@ C      REAL*4   R1314
      $           tcrs(11),tcrs(12),tcrs(13),tcrs(14),tcrs(15),
      $           tcrs(16),tcrs(17),tcrs(18),tcrs(19),tcrs(20),
      $           tcrs(21),tcrs(22),tcrs(23),tcrs(24),tcrs(25),
-     $           tcrs(26),tcrs(27),tcrs(28),tcrs(29)
+     $           tcrs(26),tcrs(27),tcrs(28),tcrs(29),tcrs(30),
+     $           tcrs(31)
             
  30      continue
  60   continue

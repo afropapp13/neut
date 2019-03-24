@@ -13,11 +13,7 @@
 #ifdef FLUX_11A
 #include "uhdef_11a.fh"
 #else
-#ifdef FLUX_11B
-#include "uhdef_11b.fh"
-#else
 #include "beamntpl.h"
-#endif      
 #endif      
 #endif      
 #endif
@@ -69,18 +65,12 @@
       gipartFD=   giparttbl(iptr)
       gamom0FD=   gamom0tbl(iptr)
 #endif
-#if defined(FLUX_10C)||defined(FLUX_11A)||defined(FLUX_11B)
+#if defined(FLUX_10C)||defined(FLUX_11A)
       nvtx0FD=    nvtx0tbl(iptr)
       gipartFD=   giparttbl(iptr)
       gamom0FD=   gamom0tbl(iptr)
 
       ngFD=       ngtbl(iptr)
-
-#ifdef FLUX_11B
-      if (ngFD.gt.ngFDMAX) then
-         ngFD = ngFDMAX
-      endif
-#endif
 
       do 80 I=1,ngFD
          gpxFD(I)   =gpxtbl(I,iptr)
@@ -92,7 +82,7 @@
          gvzFD(I)   =gvztbl(I,iptr)
          gpidFD(I)  =gpidtbl(I,iptr)
          gmecFD(I)  =gmectbl(I,iptr)
-#if defined(FLUX_11A)||defined(FLUX_11B)
+#ifdef FLUX_11A
          gmatFD(I)   =gmatFDtbl(I,iptr)
          gdistcFD(I) =gdistcFDtbl(I,iptr) 
          gdistalFD(I)=gdistalFDtbl(I,iptr)

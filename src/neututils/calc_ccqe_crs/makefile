@@ -7,14 +7,6 @@ ifndef NEUT_ROOT
 endif
 include $(NEUT_ROOT)/src/neutsmpl/config_neut.gmk
 
-FFLAGS      = ${FOPTFLAGS} ${FCOPTIONS} $(FCFLAGS)
-
-%.o : %.cc
-	$(CXX) $(CXXFLAGS) -c $*.cc
-
-.F.o:
-	$(FC) -c $(FFLAGS) $(INCDIRS) -o $@ $<
-
 LIBOBJS = SetParameters.o bbba07.o CrossSection.o clenshaw_curtis.o bbba05.o Initialize.o # bbba07_vec.o
 LIB = librecipes.a
 $(LIB): $(LIBOBJS)
@@ -23,7 +15,7 @@ lib: $(LIB)
 
 
 main: main.o trapfpe.o librecipes.a 
-	g77 $(CXXFLAGS) -o main main.o trapfpe.o -lm $(LIB) -lstdc++
+	$(FC) $(CXXFLAGS) -o main main.o trapfpe.o -lm $(LIB) -lstdc++
 #	g++ $(CXXFLAGS) -o main main.o -lm $(LIB) -lg2c
 
 TO_CLEAN_FILES += $(LIB) main

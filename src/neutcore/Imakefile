@@ -1,5 +1,5 @@
-NEUTCOREVER	= 5.3.6
-INEUTCOREVER= 536
+NEUTCOREVER	= 5.4.0
+INEUTCOREVER= 540
 NUCEFFVER   = 5.3.5
 INUCEFFVER  = 535
 NUCCORVER   = 5.3.5
@@ -22,7 +22,7 @@ LIBBASE	= neutcore
 #endif
 
 LIBALIAS = $(LIBBASE)$(TAG)
-LIBNAME = $(LIBALIAS)_$(NEUTCOREVER)
+LIBFNAME = lib$(LIBALIAS)_$(NEUTCOREVER).a
 
 FORTRANDEFINES += -DNECOREVER=$(INEUTCOREVER)
 
@@ -34,10 +34,10 @@ OBJ =	dnela.o fnelscrn.o fnelscrs.o dnelsq2.o fnq2max.o  \
 		fnq2min.o fnncq2max.o fnncq2min.o neelsvct.o rnelq2.o rnrot.o \
 		rnazi.o neelsspf.o dnels.o fnelspf.o neelsvcp.o fvfrmgev.o \
 		neelslvc.o nechadir.o fnnpot.o fnelsint.o fnelspau_select.o \
-                nemecvcp.o nemeclpv.o fnmec_select.o fnmec_nieves.o nemechad.o \
-                fnelspan_intpol.o neranbll2.o fnels_rpascl.o fnels_erpascl.o\
-                fnelspau_sf.o fnelspan_sf.o fnelspau_intpol.o fntotpau.o \
-		bbba05.o LH.o fourVector.o\
+        nemecvcp.o nemeclpv.o fnmec_select.o fnmec_nieves.o nemechad.o \
+        fnelspan_intpol.o neranbll2.o fnels_rpascl.o fnels_erpascl.o\
+        fnelspau_sf.o fnelspan_sf.o fnelspau_intpol.o fntotpau.o \
+		bbba05.o LH.o fourVector.o fnelspau_effsf.o fnelspan_effsf.o \
 		fnncelscrs.o dnncela.o dnncelsq2.o \
 		nencelsvnt.o rnncelq2.o dnncelsq2.o \
 		nencelsvnp.o nencelslpv.o nencelsspff.o \
@@ -51,7 +51,8 @@ OBJ =	dnela.o fnelscrn.o fnelscrs.o dnelsq2.o fnq2max.o  \
 		fnrworld.o \
 		grv94di.o grv98_lo.o pdfset.o structm.o \
 		nesettarg.o nrsettarg.o nesetfgparams.o \
-        bbba07.o ddifcrs.o evdifcrs.o qedifcrs.o cohma.o necrsmode.o
+        bbba07.o ddifcrs.o evdifcrs.o qedifcrs.o cohma.o necrsmode.o elaxff.o \
+	fa3comp.o fazexp.o
 
 RSO =	rs3drt.o rsasum.o rsdcrs.o rsclfm.o  rsdist.o rsifl1.o rsifl2.o \
 		rsifl3.o rsifl4.o rsifl5.o rsifl6.o rsifl7.o rslzbt.o rsrotvec.o \

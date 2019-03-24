@@ -15,6 +15,10 @@ C-- external cross-section functions
       external fnelscrs,fnelscrn,fnelspau_select,fnelspan,cohcrsne
       real*4   rsspicrs,rssetcrs,rsskcrs,rssgcrs,fnapicrs,fnmec_select
       external rsspicrs,rssetcrs,rsskcrs,rssgcrs,fnapicrs,fnmec_select
+      real*4   difcrsnerein
+      external difcrsnerein
+
+
 
 C-- temporary variables for DIS
       REAL*4 APICRSCC,APICRSNC,R1320CC,R1320NC
@@ -96,6 +100,14 @@ C--
             fnrawcrs=COHCRSNE(E,IPAR,0)
          endif
          
+         if (mode.eq.15) then
+            fnrawcrs=DIFCRSNEREIN(E,IPAR,1)
+         endif
+         
+         if (mode.eq.35) then
+            fnrawcrs=DIFCRSNEREIN(E,IPAR,0)
+         endif
+         
          if (mode.eq.22) then
             fnrawcrs=RSSETCRS(E,IPAR,1)
          endif
@@ -168,7 +180,7 @@ C---------------------------------------------------------------------
          endif
          
          if (mode.eq.-21) then
-            fnrawcrs = APICRSCC*R1320CC*CRSNEUTB(5)
+            fnrawcrs = APICRSCC*R1320CC
          endif
 
          if (mode.eq.-31) then
@@ -209,6 +221,14 @@ C---------------------------------------------------------------------
             fnrawcrs = COHCRSNE(E,IPAR,0) /H2O
          endif
 
+         if (mode.eq.-15) then
+            fnrawcrs=DIFCRSNEREIN(E,IPAR,1)
+         endif
+         
+         if (mode.eq.-35) then
+            fnrawcrs=DIFCRSNEREIN(E,IPAR,0)
+         endif
+         
          if (mode.eq.-22) then
             fnrawcrs = RSSETCRS(E,IPAR,2)
          endif

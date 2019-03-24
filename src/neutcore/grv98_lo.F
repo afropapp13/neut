@@ -57,8 +57,19 @@ C      SUBROUTINE GRV98PA (ISET, X, Q2, UV, DV, US, DS, SS, GL)
 *   GRIDS:   1. grv98lo.grid, 2. grv98nlm.grid, 3. grv98nld.grid,   *
 *            (1+1809 lines with 6 columns, 4 significant figures)   *
 *                                                                   *
-*******************************************************i*************
+********************************************************************
+*Modifications
+*   2006.08.?? ; G.Mitsuka
+*                Add Bodek-Yang corrections 
 *
+*   2016.03.11 ; C. Bronner
+*                Use parameters for Bodek-Yang corrections to be able
+*                to use different versions of the corrections
+*
+*   2016.07.20 ; C. Bronner
+*                Target mass corrections for the case when BY is not
+*                used
+********************************************************************
 #include "pdf804/impdp.inc"
 #include "pdf804/w50516.inc"      
 #include "necard.h"
@@ -71,8 +82,11 @@ C      COMMON / INTINIP / IINIP
       SAVE XUVF, XDVF, XDEF, XUDF, XSF, XGF, NA, ARRF
        DATA ZEROD/0.D0/
        REAL DURATIO, K_val, K_sea, M, Mf
+       REAL K_val_u, K_val_d, K_sea_u, K_sea_d
+       REAL BY_A, BY_B, BY_C_val1_d, BY_C_val1_u, BY_C_val2_d
+       REAL BY_C_val2_u, BY_C_sea_d, BY_C_sea_u
        PARAMETER (M=0.93827231) !(Mass of Proton(in GeV))
-       PARAMETER (Mf=0.0) !(Quark mass in final stete(in GeV))
+       PARAMETER (Mf=0.0) !(Quark mass in final state(in GeV))
 *
 * ..BJORKEN-X AND Q**2 VALUES OF THE GRID :
        DATA QS / 0.8E0, 
@@ -3983,67 +3997,68 @@ C
      +   .9779E-05,  .3050E-06,  .0000E+00,  .0000E+00,  .0000E+00,
      +   .0000E+00 /
 C
-C     -----> Bodek Correction(G.Mitsuka Aug'06)
-        if(NEBODEK.eq.1) then
+        if(NEBODEK.eq.1) then  ! -----> Bodek Correction
            if(first) print *, '>>>> GRV98LO with Bodek corr.'
-           X  = DX*(DQ**2 + 0.223 + Mf**2)/(0.5*DQ**2*
-     &          (1. + sqrt(1. + (2.*M*DX)**2/DQ**2)) + 0.419*DX)
+    
+*       Set Bodek-Yang parameters
+*    Parameters from arXiv:hep-ex/0301036 (default for NEUT 5.3.4)
+C           BY_A=0.419
+C           BY_B=0.223
+C           BY_C_val1_d=0.544
+C           BY_C_val1_u=0.544
+C           BY_C_val2_d=0.431
+C           BY_C_val2_u=0.431
+C           BY_C_sea_d=0.380
+C           BY_C_sea_u=0.380
+
+*    Updated parameters from arXiv:hep-ex/0508007
+           BY_A=0.538
+           BY_B=0.305
+           BY_C_val1_d=0.202
+           BY_C_val1_u=0.291
+           BY_C_val2_d=0.255
+           BY_C_val2_u=0.189
+           BY_C_sea_d=0.621
+           BY_C_sea_u=0.363
+
+
+*       Compute scaling variable           
+           X  = DX*(DQ**2 + BY_B + Mf**2)/(0.5*DQ**2*
+     &          (1. + sqrt(1. + (2.*M*DX)**2/DQ**2)) + BY_A*DX)
+
            Q  = DQ
            Q2 = DQ*DQ
-           K_val = (1. - 1./(1. + Q2/0.71)**4)*(Q2 + 0.431)/(Q2 + 0.544)
-           K_sea = Q2/(Q2 + 0.380)
+
+*       Compute correction factors
+           K_val_u = (1. - 1./(1. + Q2/0.71)**4)*(Q2 +BY_C_val2_u )/
+     &          (Q2 + BY_C_val1_u)
+           K_val_d = (1. - 1./(1. + Q2/0.71)**4)*(Q2 +BY_C_val2_d )/
+     &          (Q2 + BY_C_val1_d)
+           K_sea_u = Q2/(Q2 + BY_C_sea_u)
+           K_sea_d = Q2/(Q2 + BY_C_sea_d)
+           
+
+*       GRV98 PDF only valid for Q2>0.8
            IF(Q2.lt.0.8) then
               Q2=0.8
               Q=sqrt(Q2) 
            endif
+
+*       Correction factor for ratio of u and d quarks
            DURATIO = -0.00817 + 0.0506*DX + 0.0798*DX**2
-        else if(NEBODEK.eq.0) then           
+    
+        else if(NEBODEK.eq.0) then  ! ----> don't use Bodek-Yang corrections         
            if(first) print *, '>>>> GRV98LO original'
-           X  = DX
+*      Use Nachtmann variable in the non Bodek-Yang case
+           X  = 2.*DX/(1. + sqrt(1. + (2.*M*DX)**2/DQ**2))
            Q  = DQ
            Q2 = DQ*DQ
         endif
 *
-* ..CHECK OF X AND Q2 VALUES : 
-C      IF ( (X.LT.0.99D-9) .OR. (X.GT.1.D0) ) THEN
-C         WRITE(6,91) 
-C  91     FORMAT (2X,'PARTON INTERPOLATION: X OUT OF RANGE')
-C         STOP
-C      ENDIF
-C      IF ( (Q2.LT.0.799) .OR. (Q2.GT.1.01E6) ) THEN
-C         WRITE(6,92) 
-C  92     FORMAT (2X,'PARTON INTERPOLATION: Q2 OUT OF RANGE')
-C         STOP
-C      ENDIF
+
       IF (IINIP .NE. 0) GOTO 16
-*
-* ..INITIALIZATION, IF REQUIRED :
-*
-*    SELECTION AND READING OF THE GRID : 
-*    (COMMENT: FIRST NUMBER IN THE FIRST LINE OF THE GRID)
-C      IF (ISET .EQ. 1) THEN
-C        OPEN (11,FILE='grv98lo.grid',STATUS='old')   ! 7.332E-05
-C      ELSE IF (ISET .EQ. 2) THEN
-C        OPEN (11,FILE='grv98nlm.grid',STATUS='old')  ! 1.015E-04
-C      ELSE IF (ISET .EQ. 3) THEN
-C        OPEN (11,FILE='grv98nld.grid',STATUS='old')  ! 1.238E-04
-C      ELSE
-C        WRITE(6,93)
-C  93    FORMAT (2X,'NO OR INVALID PARTON SET CHOICE')
-C        STOP
-C      END IF
-C
       IINIP = 1
-C
-C      READ(11,89) LINE
-C  89  FORMAT(A80)
-C      DO 15 M = 1, NX-1 
-C      DO 15 N = 1, NQ
-C      READ(11,90) PARTON(1,N,M), PARTON(2,N,M), PARTON(3,N,M), 
-C     1            PARTON(4,N,M), PARTON(5,N,M), PARTON(6,N,M) 
-C  90  FORMAT (6(1PE10.3))
-C  15  CONTINUE
-C      CLOSE(11)
+
 *
 * ...ARRAYS FOR THE INTERPOLATION SUBROUTINE :
       DO 10 IQ = 1, NQ
@@ -4079,68 +4094,44 @@ C      CLOSE(11)
   16  CONTINUE
 *
 * ..INTERPOLATION :
-      ! ---> Modified GRV98_LO
-      if(NEBODEK.eq.1) then         
-         XT(1) =  LOG(X)
-         XT(2) =  LOG(Q2)
-         X1 = 1.- X
-         XV = X**0.5
-         XS = X**(-0.2)
-         UV = DBFINT(NARG,XT,NA,ARRF,XUVF) * X1**3 * XV
-         DV = DBFINT(NARG,XT,NA,ARRF,XDVF) * X1**4 * XV
-         ! --> Corrected d/u ratio only for valence quarks
+      XT(1) =  LOG(X)
+      XT(2) =  LOG(Q2)
+      X1 = 1.- X
+      XV = X**0.5
+      XS = X**(-0.2)
+      UV = DBFINT(NARG,XT,NA,ARRF,XUVF) * X1**3 * XV
+      DV = DBFINT(NARG,XT,NA,ARRF,XDVF) * X1**4 * XV
+      if(NEBODEK.eq.1) then     ! --> Corrected d/u ratio only for valence quarks
          DUV=UV/(1. + DURATIO*UV/(UV+DV))
          DDV=(DV + UV*DURATIO)/(1. + DURATIO*UV/(UV+DV))
-         ! <--
-         DE = DBFINT(NARG,XT,NA,ARRF,XDEF) * X1**7 * XV
-         UD = DBFINT(NARG,XT,NA,ARRF,XUDF) * X1**7 * XS
-         IF (DE. GT. UD) DE = ZEROD
-         US = 0.5 * (UD - DE)
-         DUSEA = US
-         DS = 0.5 * (UD + DE)
-         DDSEA = DS
-         SS = DBFINT(NARG,XT,NA,ARRF,XSF)  * X1**7 * XS
-         DSTR = SS
-         DCHM = ZEROD
-         DBOT = ZEROD
-         DTOP = ZEROD
-         GL = DBFINT(NARG,XT,NA,ARRF,XGF)  * X1**5 * XS 
-         DGL = GL
-         ! --> Scaling factor for valence quarks
-         DUV = DUV*K_val
-         DDV = DDV*K_val
-         ! --> Scaling factor for sea quarks
-         DUSEA = DUSEA*K_sea
-         DDSEA = DDSEA*K_sea
-         DSTR = DSTR*K_sea
-      ! <---
-      ! ---> Original GRV98_LO
-      else if(NEBODEK.eq.0) then
-         XT(1) =  LOG(X)
-         XT(2) =  LOG(Q2)
-         X1 = 1.- X
-         XV = X**0.5
-         XS = X**(-0.2)
-         UV = DBFINT(NARG,XT,NA,ARRF,XUVF) * X1**3 * XV
+      else
          DUV = UV
-         DV = DBFINT(NARG,XT,NA,ARRF,XDVF) * X1**4 * XV
          DDV = DV
-         DE = DBFINT(NARG,XT,NA,ARRF,XDEF) * X1**7 * XV
-         UD = DBFINT(NARG,XT,NA,ARRF,XUDF) * X1**7 * XS
-         IF (DE. GT. UD) DE = ZEROD
-         US = 0.5 * (UD - DE)
-         DUSEA = US
-         DS = 0.5 * (UD + DE)
-         DDSEA = DS
-         SS = DBFINT(NARG,XT,NA,ARRF,XSF)  * X1**7 * XS
-         DSTR = SS
-         DCHM = ZEROD
-         DBOT = ZEROD
-         DTOP = ZEROD
-         GL = DBFINT(NARG,XT,NA,ARRF,XGF)  * X1**5 * XS 
-         DGL = GL
+      endif        
+      DE = DBFINT(NARG,XT,NA,ARRF,XDEF) * X1**7 * XV
+      UD = DBFINT(NARG,XT,NA,ARRF,XUDF) * X1**7 * XS
+      IF (DE. GT. UD) DE = ZEROD
+      US = 0.5 * (UD - DE)
+      DUSEA = US
+      DS = 0.5 * (UD + DE)
+      DDSEA = DS
+      SS = DBFINT(NARG,XT,NA,ARRF,XSF)  * X1**7 * XS
+      DSTR = SS
+      DCHM = ZEROD
+      DBOT = ZEROD
+      DTOP = ZEROD
+      GL = DBFINT(NARG,XT,NA,ARRF,XGF)  * X1**5 * XS 
+      DGL = GL
+      if(NEBODEK.eq.1) then ! --> Apply the Bodek-Yang K factors
+*     Scaling factor for valence quarks
+         DUV = DUV*K_val_u
+         DDV = DDV*K_val_d
+*     Scaling factor for sea quarks
+         DUSEA = DUSEA*K_sea_u
+         DDSEA = DDSEA*K_sea_d
+         DSTR = DSTR*K_sea_d
       endif
-      ! <---
-*
+      
+*     
  60   RETURN
       END

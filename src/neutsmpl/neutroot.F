@@ -24,8 +24,8 @@ C#include <f77/f77_floatingpoint.h>
       REAL*4    fntotpau
       external  fntotpau
 
-      INTEGER*4 loadflx
-      external  loadflx
+      INTEGER*4 loadflx,neutfillnorm
+      external  loadflx,neutfillnorm
 
       REAL*4    RLU
       external  RLU
@@ -56,8 +56,10 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
       integer*4 rootopen,rootwrite,rootclose
       external rootopen,rootwrite,rootclose
 
-      integer*4 neutfill,neutfilldsdq2
-      external  neutfill,neutfilldsdq2
+      integer*4 neutfill
+      external  neutfill
+
+      real*8    flux_integ, rate_integ
 
       integer*4   iret
 
@@ -86,6 +88,8 @@ C--open file
          stop
       endif
 
+      call trapfpe
+
 C--Read flux histogram from ROOT file
       if (MPVEVCT.eq.3) then
          iret = loadflx(IDPTEVCT,FILENMEVCT,HISTNMEVCT,INMEVEVCT)
@@ -93,6 +97,9 @@ C--Read flux histogram from ROOT file
             write(*,*) 'Failed in reading flux histogram.'
             stop
          endif
+      else
+         flux_integ = nevtevct
+         rate_integ = nevtevct
       endif
 
 C--Main loop

@@ -6,6 +6,11 @@
 
 using namespace std;
 
+#include "neutmodelC.h"
+
+struct neutmodel_common neutmodel_;
+struct nemdls_common    nemdls_;
+
 int main(int argc, char *argv[]) {
 
   int iEnergy;

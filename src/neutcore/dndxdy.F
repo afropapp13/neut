@@ -23,9 +23,13 @@
 *
 *     (Creation Date and Author)
 *     ????.??.?? ; Previous versions
+*     2006.08.?? ; G.Mitsuka
+*                  Add Bodek-Yang corrections 
 *     2016.02.29 ; C. Bronner
 *                  Fix definition of x when Bodek-Yang corrections are used.
 *                  If Bodek-Yang is not used, keep the target mass corrections
+*     2016.07.20 ; C. Bronner
+*                  Target mass corrections moved to PDF calculation (grv98_lo.F)
 ************************************************************************
       implicit none
 #include "necard.h"
@@ -56,7 +60,6 @@
       real*8 a,b
       real*8 ymax,xmax
       real*8 rtt,qsmx
-      real*8 effq2
       real cost
       real plep,elep
 
@@ -102,7 +105,7 @@ C     Check that the value of y leaves enough energy to produce the lepton
       RETURN
       END IF
 
-C     Check value of x is not too large
+C     Check value of y is not too large
 *     momentum of outgoing lepton
       RTT=E*E*(1.-Y)**2-AMLEP**2
       IF(RTT.LT.0.) THEN
@@ -118,32 +121,22 @@ C     Check value of x is not too large
       END IF
 
 *     X maximum
-      if(nebodek.eq.0) then
-         XMAX=QSMX/(AM**2+2.*AM*Y*E)
-      elseif(nebodek.eq.1) then
-         XMAX=QSMX/(2.*AM*Y*E)
-      endif
+      XMAX=QSMX/(2.*AM*Y*E)
       IF(X.GE.XMAX) THEN
-*      PRINT *,' ***** X > Q2MAX/(M**2+2MYE) *****',X,Y
+*      PRINT *,' ***** X > Q2MAX/(2MYE) *****',X,Y
       RETURN
       END IF
 
-      if(nebodek.eq.0) then
-         XMAX=2.*Y*E/(2.*Y*E+AM)
-      elseif(nebodek.eq.1) then
-         XMAX=1
-      endif
+      
+      XMAX=1      
       IF(X.GE.XMAX) THEN
-*      PRINT *,' ****** W < 0.938GEV ******',X,Y
+*      PRINT *,' ****** X>1 ******',X,Y
       RETURN
       END IF
 
 C     Check those values of x and y give meaningful lepton kinematics
-      if(nebodek.eq.0) then
-         Q2=X*(2.*AM*Y*E+AM**2)
-      elseif(nebodek.eq.1) then
-         Q2=X*(2.*AM*Y*E)
-      endif
+      Q2=X*(2.*AM*Y*E)
+      
       ELEP=E-Y*E
       PLEP=ELEP**2-AMLEP**2
 
@@ -165,13 +158,14 @@ C     Formula taken from C.H. Albright and C. Jarlskog, Nucl. Phys B84, 467 (197
       Q2=2.D0*am*e*y*x
       if(nebodek.eq.0) then
 !     --> Original
+*        Factors in front of the structure functions
          COR1=(AMLEP**2)*Y/(4.*am*E*(X+1.E-30))-am*X*Y/(2.*E)
          COR1=COR1-(AMLEP**2)/(4.*E*E)-(AMLEP**2)/(2.*am*E*(X+1.E-30))
          COR2=-(AMLEP**2)/(4.*am*E*(X+1.E-30))
          
          corw=(AMW2/(AMW2+Q2))**2
-
-         call structg(ip,it,e,x,y,f2,xf3,u,d)
+*        Get structure functions
+         call structg(ip,it,itype,e,x,y,f2,xf3)
 
          A=(1.-Y+Y**2/2.+COR1)*f2
          B=Y*(1-Y/2.+COR2)*xf3
@@ -188,37 +182,19 @@ C     Formula taken from C.H. Albright and C. Jarlskog, Nucl. Phys B84, 467 (197
      &        - (AMLEP**2)/(2.*am*E*(X+1.E-30))
          COEFF2_2 = ( Y**2/2. + (Y*AMLEP**2)/(4.*am*E*(X+1.E-30)) )*
      &        (1. + (4.*(am**2)*x**2)/Q2)/(1. + R)
-C CB         Use an effective Q2 as evolution of PDF is frozen at 0.8 GeV
-C CB         if(Q2.ge.0.8) then
-C CB            effq2=Q2
-C CB         else
-C CB            effq2=0.8
-C CB         endif
-C CB         COEFF2_2 = ( Y**2/2. + (Y*AMLEP**2)/(4.*am*E*(X+1.E-30)) )*
-C CB     &        (1. + (4.*(am**2)*x**2)/effq2)/(1. + R)
+
          COEFF2 = COEFF2_1 + COEFF2_2
          
          COR2=-(AMLEP**2)/(4.*am*E*(X+1.E-30))
          
          corw=(AMW2/(AMW2+Q2))**2
-
-         call structg(ip,it,e,x,y,f2,xf3,u,d)
+*        Get structure functions
+         call structg(ip,it,itype,e,x,y,f2,xf3)
 
          A=COEFF2*f2
          B=Y*(1-Y/2.+COR2)*xf3
       endif
 
-C      COR1=(AMLEP**2)*Y/(4.*am*E*(X+1.E-30))-am*X*Y/(2.*E)
-C      COR1=COR1-(AMLEP**2)/(4.*E*E)-(AMLEP**2)/(2.*am*E*(X+1.E-30))
-C      COR2=-(AMLEP**2)/(4.*am*E*(X+1.E-30))
-
-C      Q2=2.D0*am*e*y*x
-C      corw=(AMW2/(AMW2+Q2))**2
-
-C      call structg(ip,it,e,x,y,f2,xf3,u,d)
-
-C      A=(1.-Y+Y**2/2.+COR1)*f2
-C      B=Y*(1-Y/2.+COR2)*xf3
 
       IF(IP.EQ. 12.OR.IP.EQ. 14.OR.IP.EQ. 16)
      & DNDXDY=CONST*E*(A+B)*corw

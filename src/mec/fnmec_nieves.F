@@ -78,6 +78,7 @@ C     Enu for e/mu-nu
       REAL*4    ADUM(3)
 
       INTEGER*4 NEN
+
       NEN=92
 C     
 C     --  ENERGY OF ELECTRON/MUON NEUTRIN

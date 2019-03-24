@@ -66,6 +66,14 @@ C      COMMON /SAVXIN/INO16
       IHAD = IPNE(2)
 
  300  CONTINUE
+
+      if ((ntry.gt.3000).or.(ntry1.gt.3000)) then
+         write(*,*) 'nejet: Too many retry : ntry=',ntry, 
+     $              ' ntry1=',ntry1,' : Gave up'
+         IERR = 2
+         goto 601
+      endif
+         
       DO I=1,3
          PNEU(I) = PNE(I,1)
          PHAD(I) = PNE(I,2)
@@ -179,15 +187,21 @@ C#endif
          ENDIF
       ENDDO
 *           Check COSTH
+      if (((P(1,4)-P(1,5)).le.0).or.((P(FF,4)-P(FF,5)).le.0)) THEN
+         ntry = ntry + 1
+         if (ntry.gt.1000) then
+            goto 300
+         endif
+         goto 100
+      endif
+
       if ( (SQRT(P(1,4)**2-P(1,5)**2)*SQRT(P(FF,4)**2-P(FF,5)**2))
      $    .ge.1.e-7) then
-
+         ntry = ntry + 1
          COSTH = (P(1,1)*P(FF,1)+P(1,2)*P(FF,2)+P(1,3)*P(FF,3))/
      &        (SQRT(P(1,4)**2-P(1,5)**2)*SQRT(P(FF,4)**2-P(FF,5)**2))
-
-         IF(ntry.gt.1000) goto 400
+         IF(ntry.gt.1000) goto 300
          IF(COSTH.LT.-0.75) THEN
-            ntry1=ntry1+1
             If (mod(ntry1,100).eq.0) then
                print *, 'nejet: retry ',ntry1,' times to get COSTH>-0.75 '
                print *, '     : E,mode=',ineu,mode
@@ -304,9 +318,9 @@ C               CALL RNFERM(PFABS,IWAVE)
             PNE(2,2)=DIRN(2)*PFABS
             PNE(3,2)=DIRN(3)*PFABS
             IF (ntry.eq.1000) THEN
-		IF(WPY.GT.(2.0-0.05*Real(ntry/1000))) THEN
-                   GOTO 600		
-		ENDIF	
+               IF(WPY.GT.(2.0-0.05*Real(ntry/1000))) THEN
+                  GOTO 600
+               ENDIF
             ENDIF
             IF (ntry.eq.10000) THEN ! Give up this mode.
                IERR = 2

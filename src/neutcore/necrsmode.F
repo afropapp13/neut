@@ -34,7 +34,7 @@
 
       if (mode.ne.0) then
          NEMODFLG=-1
-         do i=1,28
+         do i=1,30
             CRSNEUT(I) = 0
             CRSNEUTB(I)= 0
          end do
@@ -51,6 +51,8 @@ C     Neutrino
                CRSNEUT(3) = 1.
             else if (mode.eq.13) then
                CRSNEUT(4) = 1.
+            else if (mode.eq.15) then
+               CRSNEUT(29) = 1.
             else if (mode.eq.16) then
                CRSNEUT(14) = 1.
             else if (mode.eq.17) then
@@ -71,6 +73,8 @@ C     Neutrino
                CRSNEUT(8) = 1.
             else if (mode.eq.34) then
                CRSNEUT(9) = 1.
+            else if (mode.eq.35) then
+               CRSNEUT(30) = 1.
             else if (mode.eq.36) then
                CRSNEUT(15) = 1.
             else if (mode.eq.38) then
@@ -112,6 +116,8 @@ C     Anti-neutrino
                CRSNEUTB(3) = 1.
             else if (mode.eq.13) then
                CRSNEUTB(4) = 1.
+            else if (mode.eq.15) then
+               CRSNEUTB(29) = 1.
             else if (mode.eq.16) then
                CRSNEUTB(15) = 1.
             else if (mode.eq.17) then
@@ -132,6 +138,8 @@ C     Anti-neutrino
                CRSNEUTB(8) = 1.
             else if (mode.eq.34) then
                CRSNEUTB(9) = 1.
+            else if (mode.eq.35) then
+               CRSNEUTB(30) = 1.
             else if (mode.eq.36) then
                CRSNEUTB(16) = 1.
             else if (mode.eq.38) then
@@ -162,7 +170,7 @@ C     Anti-neutrino
          endif
       else
          NEMODFLG=0
-         do i=1,28
+         do i=1,30
             CRSNEUT(I) = 1.
             CRSNEUTB(I)= 1.
          end do

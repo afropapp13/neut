@@ -47,7 +47,7 @@ c ----- first 2 indices nucleon(C,O,Fe,-,-,-,-,-,-) IPAR(nue,nuebar,numu,numuba,
 c ----- energies doesn't need a nucleon index (nc don't need neutrino index)
 c ----- nc has 2 neutrino types, (neutrino/anti)
 c ----- nc array second index is proton(1)/neutron(2)
-        double precision energiescc(6, 210), diffXsecscc(9, 6, 210)! nucleus, pdg
+        double precision energiescc(6, 210), diffXsecscc(9, 6, 210) ! nucleus, pdg
         double precision energiesnc(200), diffXsecsnc(2,2,9,200)! pdg, nucleon, nucleus
         common / diffXsecArrayscc / energiescc, diffXsecscc 
         common / diffXsecArraysnc / energiesnc, diffXsecsnc 

@@ -95,6 +95,9 @@ C  FOR TAU NEUTRINO
       ENDIF
 
  500  RSSETCRS=SIGMA
+      if (RSSETCRS.le.1.e-4) then
+         RSSETCRS=0.
+      endif
 
       RETURN
 

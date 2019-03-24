@@ -101,6 +101,13 @@ C-- Not use formation zone
             ENDIF
          END DO
           
+         r = sqrt(xpos(1)**2+xpos(2)**2+xpos(3)**2)
+         if ( r.gt.rmax ) then
+            DO J=1,3
+               xpos(j)=xpos(j)/r*rmax
+            enddo
+         endif
+
          RETURN
 
       else

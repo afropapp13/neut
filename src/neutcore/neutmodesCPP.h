@@ -6,7 +6,7 @@ char  nuName[4][6]  = {"numu","nue","numub","nueb"};
 int     nuID[4]    = {14,12,-14,-12};
 
 
-const int kNneutModes = 27;
+const int kNneutModes = 29;
 
 int neutModeID[kNneutModes] = {
 
@@ -16,6 +16,7 @@ int neutModeID[kNneutModes] = {
   11,
   12,
   13,
+  15,
   16,
   17,
   21,
@@ -26,6 +27,7 @@ int neutModeID[kNneutModes] = {
   32,
   33,
   34,
+  35,
   36,
   38,
   39,
@@ -48,6 +50,7 @@ char neutModeName[kNneutModes][7] = {
   "ccppip",
   "ccppi0",
   "ccnpip",
+  "ccdif",
   "cccoh", 
   "ccgam", 
   "ccmpi", 
@@ -58,6 +61,7 @@ char neutModeName[kNneutModes][7] = {
   "ncppi0",
   "ncppim",
   "ncnpip",
+  "ncdif",
   "nccoh", 
   "ncngam",
   "ncpgam",
@@ -79,6 +83,7 @@ enum neutModeEnum {
   ccppip,
   ccppi0,
   ccnpip,
+  ccdif, 
   cccoh, 
   ccgam, 
   ccmpi, 
@@ -89,6 +94,7 @@ enum neutModeEnum {
   ncppi0,
   ncppim,
   ncnpip,
+  ncdif, 
   nccoh, 
   ncngam,
   ncpgam,
@@ -110,6 +116,7 @@ char neutModeTitle[kNneutModes][75] = {
   "CC 1#pi: #nu_{l} p #rightarrow l^{-} p #pi^{+}",			   
   "CC 1#pi: #nu_{l} n #rightarrow l^{-} p #pi^{0}",			   
   "CC 1#pi: #nu_{l} n #rightarrow l^{-} n #pi^{+}",			   
+  "CC Diffractive-#pi: #nu_{l} p #rightarrow l^{-} p #pi^{+}",
   "CC coherent-#pi: #nu_{l} ^{16}O #rightarrow l^{-} ^{16}O #pi^{+}",	   
   "1#gamma from #Delta: #nu_{l} n #rightarrow l^{-} p #gamma",		   
   "CC (1.3 < W < 2 GeV): #nu_{l} N #rightarrow l^{-} N' multi-#pi",	   
@@ -120,6 +127,7 @@ char neutModeTitle[kNneutModes][75] = {
   "NC 1#pi: #nu_{l} p #rightarrow #nu_{l} p #pi^{0}",			   
   "NC 1#pi: #nu_{l} n #rightarrow #nu_{l} p #pi^{-}",			   
   "NC 1#pi: #nu_{l} p #rightarrow #nu_{l} n #pi^{+}",			   
+  "NC Diffractive-#pi: #nu_{l} p #rightarrow #nu_{l} p #pi^{0}",
   "NC coherent-#pi: #nu_{l} ^{16}O #rightarrow #nu_{l} ^{16}O #pi^{0}",	   
   "1#gamma from #Delta: #nu_{l} n #rightarrow #nu_{l} n #gamma",		   
   "1#gamma from #Delta: #nu_{l} p #rightarrow #nu_{l} p #gamma",		   

@@ -31,6 +31,7 @@ C              PIN0(3)-- MOM. OF P OR N,      VIN0(3)-- VEL. OF P OR N.
 C              PIN1(3)-- MOM. OF MESON,           "
 C              PIN2(3)-- MOM. OF NEUTRINO         "
 C           * VREL -- RELATIVE VELOCITY
+#include "necard.h"
 #include "vcwork.h"
 #include "vcvrtx.h"
 #include "neutparams.h"
@@ -44,6 +45,7 @@ C           * VREL -- RELATIVE VELOCITY
        real apn,ap
        REAL PFCUT
 
+       real radius
 C     APN and AP are not used now in eftrace.F(i.e. dummy number)
        DATA APN/16./
        DATA AP/8./
@@ -89,7 +91,14 @@ CC   eta loop
       endif
 
 C +  FERMI MOMENTUM OF TARGET NUCLEON
-      call RNFERM(PFERM,dummy1)
+      IF (NEFKINVER.eq.0) THEN
+         call rnferm(pferm,dum)
+      else IF (NEFKINVER.eq.1) THEN
+         CALL EFRNMOM(abspos,pferm)
+      else
+         write(*,*) 'Invalid NEFKINVER =',NEFKINVER
+         stop
+      endif
       CALL RNDIR(DIRTMP)
       VPABS=SQRT(PFERM**2/(PFERM**2+PRMAS**2))
       DO 41 I=1,3
@@ -153,6 +162,8 @@ C       + BOOST OF PN & PM1 TO LAB.SYS.
          PNABS= SQRT( PN(1)**2 + PN(2)**2 + PN(3)**2 )
 C       + MOM. OF NUCLEON IS GREATER THAN 
 C         THE FERMI ENERGY (260MEV/C FOR 16O)?
+         radius = sqrt(posm(1)**2+posm(1)**2+posm(2)**2+posm(3)**2)
+         PFCUT = effrmgas(dum1,dum2,radius)
          If(PNABS.LT.PFCUT) then
          print *,'PAULI BLOCKING'
          GO TO 555

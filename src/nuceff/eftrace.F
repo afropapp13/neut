@@ -216,14 +216,25 @@ C     Store initial particle direction and momentum prior to Coulomb corrections
       end do
       INITABSP = ABSP
 
+  100 X(1)=X(1)+DIR(1)*DXXY
+      X(2)=X(2)+DIR(2)*DXXY
+      X(3)=X(3)+DIR(3)*DXXY
+      DL=SQRT(X(1)**2+X(2)**2+X(3)**2)
 C
 C-- not necessary to consider fermi motion for lower energy:
 C-- momentum is "incoming pion relative to the Oxygen.
 C
 C M.Ishitsuka 2005.03.16 ; Consider Fermi motion
 C
-
-      CALL RNFERM(MOMFERM,DUM)
+      radius = DL
+      IF (NEFKINVER.eq.0) THEN
+         call rnferm(momferm,dum)
+      else IF (NEFKINVER.eq.1) THEN
+         CALL EFRNMOM(radius,momferm)
+      else
+         write(*,*) 'Invalid NEFKINVER =',NEFKINVER
+         stop
+      endif
       CALL RNDIR(NUCDIR)
       TOTENUCL=SQRT(AMNUCL**2+MOMFERM**2)
       DO I=1,3
@@ -239,11 +250,10 @@ C
       CALL MCVECBST(PBST,AMPI,INVNUCDIR,GAMMANUCL)
       ABSPBST=SQRT(PBST(1)**2+PBST(2)**2+PBST(3)**2)
 
-
-  100 X(1)=X(1)+DIR(1)*DXXY
-      X(2)=X(2)+DIR(2)*DXXY
-      X(3)=X(3)+DIR(3)*DXXY
-      DL=SQRT(X(1)**2+X(2)**2+X(3)**2)
+C  100 X(1)=X(1)+DIR(1)*DXXY
+C      X(2)=X(2)+DIR(2)*DXXY
+C      X(3)=X(3)+DIR(3)*DXXY
+C      DL=SQRT(X(1)**2+X(2)**2+X(3)**2)
 
 C      write(*,*) "EFTRACE(): ",X(1), X(2), X(3), DL
 

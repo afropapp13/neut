@@ -51,7 +51,7 @@ C      external  rlu,fnnucl
       INTEGER ICRN(4)/ 0, 0, 1, 1/
 
       REAL*4 PNOUT(3)
-
+      IERR = 0
 C
       IF (abs(mode).eq.51) then
          ITARG = 2212

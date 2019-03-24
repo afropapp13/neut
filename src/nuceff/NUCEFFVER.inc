@@ -1,0 +1,3 @@
+NUCEFFVER   = 5.4.0
+INUCEFFVER  = 540
+

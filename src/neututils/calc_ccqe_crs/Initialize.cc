@@ -26,8 +26,8 @@ void CrossSection::Initialize(double xamass){
   //NUSIG = 1;      // Neutrino(1)/Anti-neutrino(-1)
   kappa = 1.0;    // kappa factor for pauli blocking effect(see PRL,100.032301)
 //  FF_model = 1;   // Axial  form factor (0:dipole, 1:BBBA07)
-  A_FF_model = 1;   // Axial  form factor (0:dipole, 1:BBBA07)
-  V_FF_model = 2;   // Vector form factor (0:dipole, 1:BBBA05, 2: BBBA07)
+  A_FF_model = 0;   // Axial  form factor (0:dipole, 1:BBBA07)
+  V_FF_model = 1;   // Vector form factor (0:dipole, 1:BBBA05, 2: BBBA07)
 //  V_FF_model = 0;   // Vector form factor (0:dipole, 1:BBBA05)
   Trans_Corr = 0; // Transverse correction ( 0: default, 1: Corrected )
 

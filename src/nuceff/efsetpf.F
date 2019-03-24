@@ -110,7 +110,15 @@ C
             CALL EFCALAMP(SK,GK,PPI,radius)
             CALL EFPFCOST(PF,PPI,SK,GK,EV,GM,NMODE,MODE,AMP,radius)
             DO 160 K=1,NMODE
-  160       XMAP(I+1,J,K)=AMP(K)*EFFRMMOM(PFABS)
+               IF (NEFKINVER.eq.0) THEN
+                  XMAP(I+1,J,K)=AMP(K)*EFFRMMOM(PFABS)
+               else IF (NEFKINVER.eq.1) THEN
+                  XMAP(I+1,J,K)=AMP(K)*EFFRMMOM_L(radius,PFABS)
+               else
+                  write(*,*) 'Invalid NEFKINVER = ',NEFKINVER
+                  stop
+               endif
+ 160        CONTINUE
   130    CONTINUE
   120 CONTINUE
 C     -- SELECT MODE

@@ -102,6 +102,10 @@ C  FOR TAU NEUTRINO
       ENDIF
 
  500  RSSPICRS=SIGMA
+C- add limit ( below 1e-42 is set to 0 ) : 2017/3/25 Hayato
+      if (rsspicrs.le.1.e-4) then
+         rsspicrs = +0.e0
+      endif
 
       RETURN
 

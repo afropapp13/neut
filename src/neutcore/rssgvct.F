@@ -140,6 +140,8 @@ C      write(*,*) "S=",(TMPEEE+XMN)**2-TMPEEE**2
 C----------------------------------------------------------------
 
 C-Check IF sigma < 1.e-43 then re-calculate fermi-momentum 
+C-- Change to 1.e-42 ( 2017/3/25 )
+C
       TMPSIG=RSSGCRS(TMPEEE,IPAR,IMOD)
 
 C-Protect against infinite loop when neutrino energy is very small
@@ -149,7 +151,8 @@ C-Protect against infinite loop when neutrino energy is very small
          RETURN
       end if
 
-      IF (TMPSIG.le.1.e-5) GO TO 1500
+C-- Change from 1.e-5 to 1.e-4 ( 2017/3/25: Hayato )
+      IF (TMPSIG.le.1.e-4) GO TO 1500
 
 C--- initialize/set some commons
       IORGNE(1)=0

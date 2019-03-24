@@ -94,7 +94,9 @@ C  FOR TAU NEUTRINO
       ENDIF
 
  500  RSSKCRS=SIGMA
-
+      if (RSSKCRS.le.1.e-4) then
+         RSSKCRS = 0.
+      endif
       RETURN
 
  999  WRITE(*,*)

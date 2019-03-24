@@ -194,7 +194,11 @@ C  Q WITH LEPTON MASS
       q = SQRT(ABS(2*E**2*(1-Y)*(1-SQRT(ABS(1-XLEPMASS**2/
      & (E**2*(1-Y)**2)))*cosa)+(E*Y)**2-XLEPMASS**2) ) 
 C      q = SQRT(ABS(-E**2*(1+2*Y*cosa)+XLEPMASS**2))
-      IF(ISNAN(q).OR.q.EQ.0) goto 100    
+#ifdef __GFORTRAN__
+      IF(ISNAN(q).OR.q.EQ.0) goto 100
+#else
+      IF((q.ne.q).OR.q.EQ.0) goto 100
+#endif      
 
 C  u AND v AS DESCRIBED IN B&S PAPER
       u = (E*(2-Y)+q)/(2*E)
@@ -219,7 +223,11 @@ C  CALCULATE |t| WITH A SCALING
       ARG2=SQRT(ABS(ARG2))*COS(PHI)
       t = 2*E**2*(ARG1+ARG2)
       
+#ifdef __GFORTRAN__
       IF(ISNAN(t)) goto 100  
+#else
+      IF(t.ne.t) goto 100
+#endif      
 
 C  PION-NEUCLEON INELASTIC CROSS SECTION SUBROUTINE (UNIT FM)
       CALL NECROSEL(EPIKIN,t,DSIGEL)     

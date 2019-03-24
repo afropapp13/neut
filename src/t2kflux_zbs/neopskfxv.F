@@ -11,11 +11,7 @@
 #ifdef FLUX_11A
 #include "uhdef_11a.fh"
 #else
-#ifdef FLUX_11B
-#include "uhdef_11b.fh"
-#else
 #include "beamntpl.h"
-#endif      
 #endif      
 #endif
 #endif      

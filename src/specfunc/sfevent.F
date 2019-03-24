@@ -76,7 +76,6 @@ C ----- common block for dealing with spectral function selection
 C ----- terms in the cross-section
         double precision initialTerm, volumeTerm, jacobian, crossSection
         double precision tableMax
-
 C ----- when calculating tables or total cross-sections
         double precision mean, maxValue
         double precision maxValueNC(2), meanNC(2)
@@ -347,7 +346,7 @@ c ----- for nc events there is no cabibbo mixing to worry about
      &               * Jacobian(kPrime, kPrimeCom, pPrime, comVel)
 
         crossSection = initialTerm*volumeTerm *
-     &  LH(k, kPrime, p, qTilde, IPAR, nc,tmp_IPNE(2))
+     &  LH(k, kPrime, p, qTilde, IPAR, nc,tmp_IPNE(2), NUMATOM)
 
 c ----- turn cross-sections into per-nucleon cross-sections in cm^2
         crossSection = crossSection * 3.89E-22
@@ -386,8 +385,6 @@ c sent straight here if event is impossible
      &                  (dble(N_tries)*dble(NUMBNDP))
             meanNC(2) = meanNC(2) *dble(NUMATOM) /
      &                  (dble(N_tries)*dble(NUMBNDN))
-c            write (*,*) meanNC(1), meanNC(2), mean
-c            write (*,*) "max = ",maxValueNC(1), maxValueNC(2)
             E = E / 1000.0 ! turn back into GeV for the rest of neut
             return
           endif

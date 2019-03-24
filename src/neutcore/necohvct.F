@@ -1,6 +1,6 @@
 ************************************************************************
 *     ----------------------------------------
-      SUBROUTINE NECOHVCT(IPAR,ENEU,IMODE,DIR)
+      SUBROUTINE NECOHVCT(IPAR,ENEU,IMODE,DIR,IERR)
 *     ----------------------------------------
 *
 *     (Purpose)
@@ -13,6 +13,7 @@
 *                +-16 : C.C.
 *                +-36 : N.C.
 *       DIR(3): INCIDENT NEUTRINO DIRECTION
+*       IERR  : ERROR STATUS ( non 0 : error )
 *
 *     (Output)
 *
@@ -26,7 +27,7 @@
 ************************************************************************
       IMPLICIT NONE
       
-      integer*4 IPAR,IMODE
+      integer*4 IPAR,IMODE,IERR
       real*4    ENEU
       REAL*4    DIR(3)
 
@@ -84,7 +85,7 @@ C
       real*4    f,fmax,fvalue,ymin,ymax,x,y,z,phi,psi
       real*4    e2,p3abs,w,sa,sp,cp,st,xyabs,epi,p5abs
 
-      integer*4 i
+      integer*4 i,ntry
 
 C     !---> Statements and initialization for Kartavtsev model
       integer num,num1,num2
@@ -103,6 +104,8 @@ C     INPUT DATA
 C
 C      INO16=0
       IBOUND=0
+      IERR = 0
+      NTRY = 0
 
       MODENE = IMODE
       NUMNE = 5
@@ -159,6 +162,11 @@ C============================
       if(NECOHEPI.eq.0) then
          FMAX = DCOHMXNEREIN(ENEU)
  10      CONTINUE
+         NTRY = NTRY + 1
+         IF (NTRY.gt.500000) THEN
+            IERR = 1
+            goto 999
+         endif
          YMIN = PIMASS/ENEU
          X = XMIN+(XMAX-XMIN)*RLU(DUMMY)
          YMAX = 1./(1.+PRMASS*X/(2.*ENEU))
@@ -232,6 +240,11 @@ C============================
       elseif(NECOHEPI.eq.2) then
          FMAX = DCOHMXNEBERGER(ENEU)
  12      CONTINUE
+         NTRY = NTRY + 1
+         IF (NTRY.gt.500000) THEN
+            IERR = 1
+            goto 999
+         endif
          YMIN = PIMASS/ENEU
          X = XMIN+(XMAX-XMIN)*RLU(DUMMY)
          YMAX = 1./(1.+PRMASS*X/(2.*ENEU))
@@ -441,5 +454,6 @@ C
          ICRNNE(I)=ICRN(I)
  100  CONTINUE
       
+ 999  CONTINUE
       RETURN
       END

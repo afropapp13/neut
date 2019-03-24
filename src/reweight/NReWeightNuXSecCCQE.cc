@@ -83,20 +83,20 @@ void NReWeightNuXSecCCQE::Init(void)
   fNormCurr    = fNormDef;
 
   fMaTwkDial   = 0.; 
-  fMaDef       = fortFns->XMAQEdef;
+  fMaDef       = 0.;
   fMaCurr      = fMaDef;
 
   fAxlFFTwkDial   = 0.; 
-  fAxlFFDef       = fortFns->MDLQEAFdef;
+  fAxlFFDef       = 0.;
   fAxlFFCurr      = fAxlFFDef;
 
-  fVecFFDef       = fortFns->MDLQEdef;
+  fVecFFDef       = 0.;
   fVecFFCurr      = fVecFFDef;
-  fVecFFTwkDial   = 0;
+  fVecFFTwkDial   = 0.;
 
-  fVecFFOutDef     = fortFns->MDLQEdef; 
+  fVecFFOutDef     = 0.;
   fVecFFOutCurr    = fVecFFOutDef;
-  fVecFFOutTwkDial = 0;
+  fVecFFOutTwkDial = 0.;
 
   fPfTwkDial   = 0.; 
   fPfDef       = 0;  // Set in nesetfgparms.F  
@@ -107,7 +107,7 @@ void NReWeightNuXSecCCQE::Init(void)
   fEbCurr      = fEbDef;
 
   fKapTwkDial   = 0.; 
-  fKapDef       = fortFns->KAPPdef;
+  fKapDef       = 0.;
   fKapCurr      = fKapDef;
  
   fSCCVecTwkDial  = 0;
@@ -121,6 +121,61 @@ void NReWeightNuXSecCCQE::Init(void)
   fPsFFTwkDial  = 0;
   fPsFFDef      = fortFns->FPQEdef;
   fPsFFCurr     = fPsFFDef;
+
+  // Alternative Form Factors
+  fAltMDLQEAF = 1; // Default - Dipole
+
+  // 2/3 Comp
+  fTwk_3CompAlpha  = 0.0;
+  fDef_3CompAlpha  = 0.95;
+  fCurr_3CompAlpha = fDef_3CompAlpha;
+  fErr_3CompAlpha  = 0.0;
+
+  fTwk_3CompGamma  = 0.0;
+  fDef_3CompGamma  = 0.515;
+  fCurr_3CompGamma = fDef_3CompGamma;
+  fErr_3CompGamma  = 0.0;
+  
+  fTwk_3CompBeta  = 0.0;
+  fDef_3CompBeta  = 2.0;
+  fCurr_3CompBeta = fDef_3CompBeta;
+  fErr_3CompBeta  = 0.0;
+
+  fTwk_3CompTheta  = 0.0;
+  fDef_3CompTheta  = -0.15;
+  fCurr_3CompTheta = fDef_3CompTheta;
+  fErr_3CompTheta  = 0.0;
+
+  // Z expansion
+  kMaxZExpA = 10;
+    
+  fDef_ZExp_NTerms  = 4;
+  fCurr_ZExp_NTerms = fDef_ZExp_NTerms;
+  fDef_ZExp_Q4Cut   = 1;
+  fCurr_ZExp_Q4Cut  = fDef_ZExp_Q4Cut;
+		   
+  fTwk_ZExp_TCut  = 0.0;
+  fDef_ZExp_TCut  = 0.1764;
+  fCurr_ZExp_TCut = fDef_ZExp_TCut;
+  fErr_ZExp_TCut  = 0.0;
+
+  fTwk_ZExp_T0  = 0.0;
+  fDef_ZExp_T0  = -0.28; 
+  fCurr_ZExp_T0 = fDef_ZExp_T0;
+  fErr_ZExp_T0  = 0.0;
+
+  for (int i = 0; i < kMaxZExpA; i++){
+    fTwk_ZExp_ATerms[i]  = 0.0;
+    fDef_ZExp_ATerms[i]  = 1.0;
+    fCurr_ZExp_ATerms[i] = 1.0;
+    fErr_ZExp_ATerms[i]  = 0.0;
+  }
+
+  // Set 4 Starting  ZExp Terms
+  fDef_ZExp_ATerms[1] =  2.3;
+  fDef_ZExp_ATerms[2] = -0.6;
+  fDef_ZExp_ATerms[3] = -3.8;
+  fDef_ZExp_ATerms[4] =  2.3;
 }
 //_______________________________________________________________________________________
 bool NReWeightNuXSecCCQE::IsHandled(NSyst_t syst)
@@ -161,9 +216,38 @@ bool NReWeightNuXSecCCQE::IsHandled(NSyst_t syst)
   case ( kXSecTwkDial_SCCVecQE ) :
   case ( kXSecTwkDial_SCCAxlQE ) :
   case ( kXSecTwkDial_PsFF ) :
-    handle = true;  
+    handle = true;
+
+  case ( kXSecTwkDial_AxlDipToAlt ) :
+    handle = true;
   break;
 
+  // 2/3 Comp
+  case ( kXSecTwkDial_FAxlCCQEAlpha ) :
+  case ( kXSecTwkDial_FAxlCCQEGamma ) :
+  case ( kXSecTwkDial_FAxlCCQEBeta  ) :
+  case ( kXSecTwkDial_FAxlCCQETheta ) :
+    handle = true;
+    break;
+
+    // ZExp
+  case (kXSecTwkDial_FAZExp_NTerms) :
+  case (kXSecTwkDial_FAZExp_TCut) :
+  case (kXSecTwkDial_FAZExp_T0 ) : 
+  case (kXSecTwkDial_FAZExp_Q4Cut ) : 
+  case (kXSecTwkDial_FAZExp_A0 ) : 
+  case (kXSecTwkDial_FAZExp_A1 ) : 
+  case (kXSecTwkDial_FAZExp_A2 ) : 
+  case (kXSecTwkDial_FAZExp_A3 ) : 
+  case (kXSecTwkDial_FAZExp_A4 ) : 
+  case (kXSecTwkDial_FAZExp_A5 ) : 
+  case (kXSecTwkDial_FAZExp_A6 ) : 
+  case (kXSecTwkDial_FAZExp_A7 ) : 
+  case (kXSecTwkDial_FAZExp_A8 ) : 
+  case (kXSecTwkDial_FAZExp_A9 ) : 
+    handle = true;
+  break;
+  
   default:
     handle = false;
     break;
@@ -220,9 +304,52 @@ void NReWeightNuXSecCCQE::SetSystematic(NSyst_t syst, double twk_dial)
   case ( kXSecTwkDial_PsFF ) :
     fPsFFTwkDial = twk_dial;
     break;
+
+  case ( kXSecTwkDial_AxlDipToAlt ) :
+    fAltMDLQEAF = twk_dial;
+    break;
+
+  case ( kXSecTwkDial_FAxlCCQEAlpha ) :
+    fTwk_3CompAlpha = twk_dial;
+    break;
+  case ( kXSecTwkDial_FAxlCCQEGamma ) :
+    fTwk_3CompGamma = twk_dial;
+    break;
+  case ( kXSecTwkDial_FAxlCCQETheta ) :
+    fTwk_3CompTheta = twk_dial;
+    break;
+  case ( kXSecTwkDial_FAxlCCQEBeta ) :
+    fTwk_3CompBeta = twk_dial;
+    break;
+    
+
+  // ZExp Info Fill IN
+  case (kXSecTwkDial_FAZExp_NTerms) :
+    fCurr_ZExp_NTerms = twk_dial;
+    break;
+  case (kXSecTwkDial_FAZExp_Q4Cut ) :
+    fCurr_ZExp_Q4Cut = twk_dial;
+    break;
+  case (kXSecTwkDial_FAZExp_TCut) :
+    fTwk_ZExp_TCut = twk_dial;
+    break;
+  case (kXSecTwkDial_FAZExp_T0 ) :
+    fTwk_ZExp_T0 = twk_dial;
+    break;
+      
   default:
     break;
   }
+
+  // Fill 10 ZExp ATerms in loop
+  int zexpenum = (int) kXSecTwkDial_FAZExp_A0;
+  for (int i = 0; i < kMaxZExpA; i++){
+    if ( syst == zexpenum + i ){
+      fTwk_ZExp_ATerms[i] = twk_dial;
+      break;
+    }
+  }
+  
 }
 //_______________________________________________________________________________________
 void NReWeightNuXSecCCQE::Reset(void)
@@ -260,6 +387,37 @@ void NReWeightNuXSecCCQE::Reset(void)
   fPsFFTwkDial = 0.;
   fPsFFCurr = fPsFFDef;
 
+  // Alt FF
+  fAltMDLQEAF = 1;
+  
+  fTwk_3CompAlpha  = 0.0;
+  fCurr_3CompAlpha = fDef_3CompAlpha;
+
+  fTwk_3CompGamma  = 0.0;
+  fCurr_3CompGamma = fDef_3CompGamma;
+
+  fTwk_3CompBeta  = 0.0;
+  fCurr_3CompBeta = fDef_3CompBeta;
+
+  fTwk_3CompTheta  = 0.0;
+  fCurr_3CompTheta = fDef_3CompTheta;
+
+  // ZEXP
+  // Z expansion
+  fCurr_ZExp_NTerms = fDef_ZExp_NTerms;
+  fCurr_ZExp_Q4Cut  = fDef_ZExp_Q4Cut;
+
+  fTwk_ZExp_TCut  = 0.0;
+  fCurr_ZExp_TCut = fDef_ZExp_TCut;
+
+  fTwk_ZExp_T0  = 0.0;
+  fCurr_ZExp_T0 = fDef_ZExp_T0;
+
+  for (int i = 0; i < kMaxZExpA; i++){
+    fTwk_ZExp_ATerms[i]  = 0.0;
+    fCurr_ZExp_ATerms[i] = fDef_ZExp_ATerms[i];
+  }
+  
   this->Reconfigure();
 }
 //_______________________________________________________________________________________
@@ -270,17 +428,18 @@ void NReWeightNuXSecCCQE::Reconfigure(void)
   if(fMode==kModeMa) {   
     int    sign_matwk = utils::rew::Sign(fMaTwkDial);
     double fracerr_ma = fracerr->OneSigmaErr(kXSecTwkDial_MaCCQE, sign_matwk);
-    fMaCurr = fMaDef * (1. + fMaTwkDial * fracerr_ma);
+    //fMaCurr = fMaDef * (1. + fMaTwkDial * fracerr_ma);
+    fMaCurr = (1. + fMaTwkDial * fracerr_ma);
   }
   else if(fMode==kModeNormAndMaShape) {
     int    sign_mashtwk = utils::rew::Sign(fMaTwkDial  );
     double fracerr_mash = fracerr->OneSigmaErr(kXSecTwkDial_MaCCQEshape, sign_mashtwk);
-    fMaCurr   = fMaDef * (1. + fMaTwkDial   * fracerr_mash);
+    fMaCurr   = (1. + fMaTwkDial   * fracerr_mash);
   }
   else if(fMode==kMode1overMa2) {
     int    sign_mashtwk = utils::rew::Sign(fMaTwkDial  );
     double fracerr_mash = fracerr->OneSigmaErr(kXSecTwkDial_1overMaCCQE2, sign_mashtwk);
-    fMaCurr   = fMaDef / sqrt(1. + fMaTwkDial   * fracerr_mash);
+    fMaCurr   = 1. / sqrt(1. + fMaTwkDial   * fracerr_mash);
   }
 
   //else
@@ -293,18 +452,29 @@ void NReWeightNuXSecCCQE::Reconfigure(void)
   fNormCurr = TMath::Max(0., fNormCurr);
   fMaCurr   = TMath::Max(0., fMaCurr  );
 
-  fAxlFFCurr = TMath::Max(0,fAxlFFTwkDial);
+  int    sign_affshtwk = utils::rew::Sign(fAxlFFTwkDial  );
+  double fracerr_affsh = fracerr->OneSigmaErr(kXSecTwkDial_AxlFFCCQE, sign_affshtwk);
+  fAxlFFCurr   = (1. + fAxlFFTwkDial   * fracerr_affsh);
 
-  // If this dial has been tweaked, if changes the default in NFortFns.cc
+  int    sign_vffshtwk = utils::rew::Sign(fVecFFTwkDial  );
+  double fracerr_vffsh = fracerr->OneSigmaErr(kXSecTwkDial_VecFFCCQE, sign_vffshtwk);
+  fVecFFCurr   = (1. + fVecFFTwkDial   * fracerr_vffsh);
+
+  int    sign_vffoshtwk = utils::rew::Sign(fVecFFOutTwkDial  );
+  double fracerr_vffosh = fracerr->OneSigmaErr(kXSecTwkDial_VecFFCCQE_out, sign_vffoshtwk);
+  fVecFFOutCurr   = (1. + fVecFFOutTwkDial   * fracerr_vffosh);
+
+  /*
   if (fVecFFTwkDial) fVecFFCurr = fVecFFTwkDial;
   if (fVecFFCurr != fVecFFDef) fortFns->SetMCDefaultVal(kXSecTwkDial_VecFFCCQE, fVecFFCurr);
   
   if (fVecFFOutTwkDial) fVecFFOutCurr = fVecFFOutTwkDial;
   else fVecFFOutCurr = fVecFFCurr;
+  */
 
   int    sign_kaptwk = utils::rew::Sign(fKapTwkDial);
   double fracerr_kap = fracerr->OneSigmaErr(kSystNucl_CCQEPauliSupViaKF,    sign_kaptwk);
-  fKapCurr = fKapDef * (1. + fKapTwkDial * fracerr_kap);
+  fKapCurr = (1. + fKapTwkDial * fracerr_kap);
   fKapCurr = TMath::Max(0., fKapCurr);
 
   int    sign_pftwk = utils::rew::Sign(fPfTwkDial);
@@ -323,16 +493,62 @@ void NReWeightNuXSecCCQE::Reconfigure(void)
 
   int sign_sccvec = utils::rew::Sign(fSCCVecTwkDial);
   double fracerr_sccvec = fracerr->OneSigmaErr(kXSecTwkDial_SCCVecQE, sign_sccvec);
-  fSCCVecCurr = fSCCVecDef + fSCCVecTwkDial * fracerr_sccvec;//RT: not sure if this is correct just yet....
+  fSCCVecCurr = fSCCVecDef + fSCCVecTwkDial * fracerr_sccvec;
 
   int sign_sccaxl = utils::rew::Sign(fSCCAxlTwkDial);
   double fracerr_sccaxl = fracerr->OneSigmaErr(kXSecTwkDial_SCCAxlQE, sign_sccaxl);
-  fSCCAxlCurr = fSCCAxlDef + fSCCAxlTwkDial * fracerr_sccaxl;//RT: not sure if this is correct just yet....
+  fSCCAxlCurr = fSCCAxlDef + fSCCAxlTwkDial * fracerr_sccaxl;
 
   int sign_psff = utils::rew::Sign(fPsFFTwkDial);
   double fracerr_psff = fracerr->OneSigmaErr(kXSecTwkDial_PsFF, sign_psff);
-  fPsFFCurr = fPsFFDef * (1. + fPsFFTwkDial * fracerr_psff);//RT: not sure if this is correct just yet....
+  fPsFFCurr = fPsFFDef * (1. + fPsFFTwkDial * fracerr_psff);
 
+  // Make sure MDLQEAF is set correctly
+  if (fAltMDLQEAF == 0) fAltMDLQEAF = 1;
+  if (fAltMDLQEAF > 5) {
+    cout << "ERROR: MDLQEAF can only go between 1 and 5" << endl;
+    cout << "1. Dipole, 2. BBBA07, 3. 2 Comp, 4. 3 Comp. 5. Z Exp." << endl;
+    throw;
+  }
+
+  // Set 2/3 Comp Values
+  int sign_3compalpha = utils::rew::Sign(fTwk_3CompAlpha);
+  fErr_3CompAlpha = fracerr->OneSigmaErr(kXSecTwkDial_FAxlCCQEAlpha, sign_3compalpha);
+  fCurr_3CompAlpha = fDef_3CompAlpha * ( 1. + fTwk_3CompAlpha * fErr_3CompAlpha );
+
+  int sign_3compgamma = utils::rew::Sign(fTwk_3CompGamma);
+  fErr_3CompGamma = fracerr->OneSigmaErr(kXSecTwkDial_FAxlCCQEGamma, sign_3compgamma);
+  fCurr_3CompGamma = fDef_3CompGamma * ( 1. + fTwk_3CompGamma * fErr_3CompGamma );
+
+  int sign_3compbeta = utils::rew::Sign(fTwk_3CompBeta);
+  fErr_3CompBeta = fracerr->OneSigmaErr(kXSecTwkDial_FAxlCCQEBeta, sign_3compbeta);
+  fCurr_3CompBeta = fDef_3CompBeta * ( 1. + fTwk_3CompBeta * fErr_3CompBeta );
+
+  int sign_3comptheta = utils::rew::Sign(fTwk_3CompTheta);
+  fErr_3CompTheta = fracerr->OneSigmaErr(kXSecTwkDial_FAxlCCQETheta, sign_3comptheta);
+  fCurr_3CompTheta = fDef_3CompTheta * ( 1. + fTwk_3CompTheta * fErr_3CompTheta );
+
+  // Set Z Expansion Values
+  // TCut
+  fErr_ZExp_TCut  = fracerr->OneSigmaErr( kXSecTwkDial_FAZExp_TCut,
+					  utils::rew::Sign(fTwk_ZExp_TCut) );
+  fCurr_ZExp_TCut = fDef_ZExp_TCut * ( 1.0 + fTwk_ZExp_TCut * fErr_ZExp_TCut );
+
+  // T0
+  fErr_ZExp_T0  = fracerr->OneSigmaErr( kXSecTwkDial_FAZExp_T0,
+					  utils::rew::Sign(fTwk_ZExp_T0) );
+  fCurr_ZExp_T0 = fDef_ZExp_T0 * ( 1.0 + fTwk_ZExp_T0 * fErr_ZExp_T0 );
+  
+  // A Terms
+  int zexpenum = (int) kXSecTwkDial_FAZExp_A0;
+  for (int i = 0; i < kMaxZExpA; i++){
+    fErr_ZExp_ATerms[i] = fracerr->OneSigmaErr( zexpenum + i,
+						utils::rew::Sign(fTwk_ZExp_ATerms[i]) );
+    fCurr_ZExp_ATerms[i]
+      = fDef_ZExp_ATerms[i] * ( 1.0 + fTwk_ZExp_ATerms[i] * fErr_ZExp_ATerms[i] );    
+  }
+  
+  
 }
 //_______________________________________________________________________________________
 double NReWeightNuXSecCCQE::CalcWeight() 
@@ -397,11 +613,13 @@ double NReWeightNuXSecCCQE::CalcWeightMa()
 		  TMath::Abs(fVecFFOutTwkDial) > controls::kASmallNum ||
 		  TMath::Abs(fSCCVecTwkDial) > controls::kASmallNum ||
 		  TMath::Abs(fSCCAxlTwkDial) > controls::kASmallNum ||
-		  TMath::Abs(fPsFFTwkDial) > controls::kASmallNum
+		  TMath::Abs(fPsFFTwkDial) > controls::kASmallNum ||
+		  (fAltMDLQEAF > 1)
 		  );
   
   if(!tweaked) return 1.0;
 
+  
   fortFns->SetDefaults();
   fortFns->Reconfigure();
 
@@ -409,6 +627,9 @@ double NReWeightNuXSecCCQE::CalcWeightMa()
   fortFns->print_allevent();
   fortFns->print_allparams();
 #endif
+
+  // Double Check Dipole -> Alternative is set.
+  if (fAltMDLQEAF > 1) nemdls_.mdlqeaf = 1;
   
   float old_xsec     = fortFns->evdifcrs();
   //float old_xsec   = event.DiffXSec();
@@ -418,26 +639,89 @@ double NReWeightNuXSecCCQE::CalcWeightMa()
   if (nemdls_.mdlqe == 402) old_xsec *= 1E-23;
 
   if (old_xsec==0) {
-    //cout << "NReWeightNuXSecCCQE::CalcWeightMa() Warning: old_xsec==0, setting weight to 1" << endl;
+    cout << "NReWeightNuXSecCCQE::CalcWeightMa() Warning: old_xsec==0, setting weight to 1" << endl;
     return 1;
   }
   
-  nemdls_.xmaqe = fMaCurr;
-  nemdls_.kapp  = fKapCurr;
+  //nemdls_.xmaqe = fMaCurr;//RT: comment out since now common block
+  //nemdls_.kapp  = fKapCurr;//should be passing this info through
+  fMaDef = nemdls_.xmaqe;
+  nemdls_.xmaqe = fMaDef * fMaCurr;
 
+  fKapDef = nemdls_.kapp;
+  nemdls_.kapp = fKapDef * fKapCurr;
+
+  // FUNCTION SHOULD
+  // - Take dipole cross-section to start
+  // - Then calculate weights for other models.
+  
 // MDLQE    : CC Quasi-elastic / NC elastic model
 //          : x1 : Smith-Moniz for CC
 //          : x2 : Smith-Moniz for CC with BBBA05
 //          : 0x : Scaling to CCQE     ( same as 5.0.x )
 //          : 1x : Scaling to Spectrum func. with Dipole (prior to v5.1.2)
 //          : 2x : Scaling to Spectrum func. with BBBA05 (default from v5.1.2)
+/*
   if (fAxlFFCurr) nemdls_.mdlqeaf = fAxlFFCurr;
-  if (fVecFFOutCurr != fVecFFCurr) nemdls_.mdlqe = fVecFFOutCurr;
+*/
+  fVecFFDef = nemdls_.mdlqe;
+  //fVecFFCurr = fVecFFDef;
+  fAxlFFDef = nemdls_.mdlqeaf;
+  //fAxlFFCurr = TMath::Max(0.,fAxlFFTwkDial);
+
+  // If this dial has been tweaked, if changes the default in NFortFns.cc
+  nemdls_.mdlqeaf = fAxlFFDef * fAxlFFCurr;
+  nemdls_.mdlqe = fVecFFDef * fVecFFCurr;
+
+  //if (fVecFFOutCurr != fVecFFCurr) nemdls_.mdlqe = fVecFFOutCurr;
 
   if (fSCCVecCurr) nemdls_.sccfv = fSCCVecCurr;
   if (fSCCAxlCurr) nemdls_.sccfa = fSCCAxlCurr;
   if (fPsFFCurr) nemdls_.fpqe = fPsFFCurr;
 
+  // Dipole to alternative RW Functions
+  if (fAltMDLQEAF > 1) {
+    //    std::cout << "Changing MDLQEAF " << fAltMDLQEAF << std::endl;
+    nemdls_.mdlqeaf = fAltMDLQEAF;
+  }
+
+  // 2 Component
+  if (fAltMDLQEAF == 3){
+    nemdls_.axffalpha = fCurr_3CompAlpha;
+    nemdls_.axffgamma = fCurr_3CompGamma;
+  }
+
+  // 3 Component
+  if (fAltMDLQEAF == 4){
+    nemdls_.axffalpha = fCurr_3CompAlpha;
+    nemdls_.axffgamma = fCurr_3CompGamma;
+    nemdls_.axfftheta = fCurr_3CompTheta;
+    nemdls_.axffbeta  = fCurr_3CompBeta;
+  }
+
+  // Z Expansion
+  // Calling zexpconfig handled in NFortFns
+  if (fAltMDLQEAF == 5){
+
+    nemdls_.axzexpnt = fCurr_ZExp_NTerms;
+    nemdls_.axzexpq4 = fCurr_ZExp_Q4Cut;
+
+    nemdls_.axzexptc = fCurr_ZExp_TCut;
+    nemdls_.axzexpt0 = fCurr_ZExp_T0;
+
+    nemdls_.axzexpa0 = fCurr_ZExp_ATerms[0];
+    nemdls_.axzexpa1 = fCurr_ZExp_ATerms[1];
+    nemdls_.axzexpa2 = fCurr_ZExp_ATerms[2];
+    nemdls_.axzexpa3 = fCurr_ZExp_ATerms[3];
+    nemdls_.axzexpa4 = fCurr_ZExp_ATerms[4];
+    nemdls_.axzexpa5 = fCurr_ZExp_ATerms[5];
+    nemdls_.axzexpa6 = fCurr_ZExp_ATerms[6];
+    nemdls_.axzexpa7 = fCurr_ZExp_ATerms[7];
+    nemdls_.axzexpa8 = fCurr_ZExp_ATerms[8];
+    nemdls_.axzexpa9 = fCurr_ZExp_ATerms[9];
+    
+  }
+  
   fortFns->Reconfigure();
 
   // Grab FG parameters after they've been set via nesetgfparams depending on target nucleus

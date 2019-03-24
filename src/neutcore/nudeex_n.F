@@ -19,6 +19,8 @@ C+       2011.09.25 ; Update of spectroscopic factors by K.Ueno
 C+       2011.10.27 ; Update of the excitation-energy region of the s-hole state by K.Ueno
 C+       2014.06.24 ; Changing p3/2 factor to Ankowski value (0.3515) by Huang
 C+       2014.08.11 : Revise Ankowski spectral factor      
+C+       2017.11.22 ; move others from p1/2 to s1/2
+
       implicit none
       
       integer maxout
@@ -61,7 +63,8 @@ C
       integer max_shell
       parameter (max_shell = 3)
       real prob_shell(max_shell)
-      data prob_shell/0.1055,0.3515,0.543/ ! s(1/2), p(3/2), the others
+C      data prob_shell/0.1055,0.3515,0.543/ ! s(1/2), p(3/2), the others
+      data prob_shell/0.543,0.3515,0.1055/ ! s(1/2), p(3/2), the others
             
 C+ Description of p-shell neutron hole modes
       integer pn_hole

@@ -52,7 +52,17 @@ C      endif
       endif
       IZ = NUMBNDP
 
-      if (IZ.EQ.5) then        ! Boron
+      if (NUMBNDP.eq.1 .and. NUMBNDN.eq.0) then !1p
+         PFSURF = 0.001
+         PFMAX  = 0.001
+         VNUINI =-0.001
+         VNUFIN = 0.0
+      else if (NUMBNDP.eq.0 .and. NUMBNDN.eq.1) then !1n
+         PFSURF = 0.000
+         PFMAX  = 0.000
+         VNUINI =-0.001
+         VNUFIN = 0.0
+      else if (IZ.EQ.5) then        ! Boron
          PFSURF = 0.200
          PFMAX  = 0.200
          VNUINI =-0.020
@@ -107,6 +117,11 @@ C      endif
          PFMAX  = 0.237
          VNUINI =-0.030
          VNUFIN = 0.0
+      else if (IZ.EQ.19) then  ! Potassium
+         PFSURF = 0.239
+         PFMAX  = 0.239
+         VNUINI =-0.030
+         VNUFIN = 0.0
       else if (IZ.EQ.20) then  ! Calcium
          PFSURF = 0.241
          PFMAX  = 0.241
@@ -116,6 +131,11 @@ C      endif
          PFSURF = 0.243
          PFMAX  = 0.243
          VNUINI =-0.031
+         VNUFIN = 0.0
+      else if (IZ.EQ.25) then  ! Manganese
+         PFSURF = 0.250
+         PFMAX  = 0.250
+         VNUINI =-0.033
          VNUFIN = 0.0
       else if (IZ.EQ.26) then  ! Iron
          PFSURF = 0.250
@@ -187,6 +207,10 @@ C      endif
          PFMAX  = 0.245
          VNUINI =-0.044
          VNUFIN = 0.0
+      else if (NUMATOM .EQ. 2 .OR. NUMATOM .EQ. 3 .OR.
+     $        NUMATOM .EQ. 4 .OR. NUMATOM .EQ. 20) then
+         write(*,*) "Parameters not set in nesetfgparams.F 
+     $- only valid for Effective SF"
       else
          print*, 'This target, IZ=',IZ,' is not supported yet, see nesetfgparams.F'
          stop

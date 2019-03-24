@@ -17,7 +17,8 @@ C     INCLUDE FILE NEUTCRS
 C-- TOTCRSNE : Total cross-section
 C-- DIFCRSNE : Differential cross-section
 
-      REAL*4 CRSENERGY, CRSX, CRSY, CRSZ, CRSPHI, CRSQ2
+      REAL*4 CRSENERGY, CRSX, CRSY, CRSZ, CRSPHI, CRSQ2, CRST
       REAL*4 TOTCRSNE,DIFCRSNE(8)
       COMMON /NEUTCRSCOM/CRSENERGY,TOTCRSNE,DIFCRSNE,
-     $                   CRSX,CRSY,CRSZ,CRSPHI,CRSQ2
+     $                   CRSX,CRSY,CRSZ,CRSPHI,CRSQ2, 
+     $                   CRST

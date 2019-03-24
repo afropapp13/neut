@@ -186,7 +186,7 @@ C
 
       lenpath = lenstr(crstblpath)
 
-      if (mod(MDLQE, 1000)/400 .EQ. 1) then
+      if (mod(MDLQE, 1000)/100 .EQ. 4) then
 C
 C - Spectral function mode
 C
@@ -301,7 +301,7 @@ C     print*, 'debug:CRSSFRT1',i,CRSSFRT(1,i),CRSSFRT2(i),CRSSFRT(3,i)
          endif
       enddo
       
-      write (*,*) "cross section table for sf loaded"
+      write (*,*) "CCQE cross section table for sf loaded"
       iloadsfqecrs = 1
 
  300  continue        

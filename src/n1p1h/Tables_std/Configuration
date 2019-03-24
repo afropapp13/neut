@@ -1,0 +1,26 @@
+#
+# GENERAL SETTINGS
+#
+MA      1.05 
+IRPA    1 
+RFG     0 
+BIND    1
+#
+# RPA Parameters	
+#
+FP0IN     0.33 
+FP0EX     0.45
+F         1.0 
+FSTAR     2.13 
+PILAMBDA  1200.
+CR0       2.0 
+RHOLAMBDA 2500. 
+GP        0.63 
+XMPI      139.57 
+XMRHO     770.0 
+IREL      1
+#
+#Nucleus excited state (GeV) 
+#seek value in chemical property of the element
+#
+Ebind     0

@@ -154,12 +154,18 @@ C     -- SET NUCLEON MOMENTUM AND DIRECTION in lab frame
       DIR(3) = 0.
       
       if(NUMATOM.gt.1) then
- 200     CALL RNFERM(PF,IDUM)
+         IF (NEFKINVER.eq.0) THEN
+ 200        CALL RNFERM(PF,IDUM)
          
 C     Should this depend on target nucleus size?
-         FSURF=EFFRMGAS(16.,8.,radius)
-         IF(PF.GT.FSURF)GO TO 200
-
+            FSURF=EFFRMGAS(16.,8.,radius)
+            IF(PF.GT.FSURF)GO TO 200
+         else IF (NEFKINVER.eq.1) THEN
+            CALL EFRNMOM(radius,PF)
+         else
+            write(*,*) 'Invalid NEFKINVER =',NEFKINVER
+            stop
+         endif
          CALL RNDIR(DIR)
       end if
 

@@ -37,7 +37,8 @@ C       2011.03.03 ; Y.Hayato  - For neutral current
       INTEGER LUN(4)
       DATA LUN/80,81,82,83/
 
-      INTEGER I,II,J,JJ,IDUM,ILOADELCRS,ILOADSFELCRS,IQEMA
+      INTEGER I,II,J,JJ,IDUM,ILOADELCRS,ILOADSFELCRS,
+     $     ILOADEFFSFELCRS,INCELMA
       REAL RDUM
       CHARACTER*1024 DUMSTR
       integer*4      LENSTR
@@ -47,6 +48,8 @@ C       2011.03.03 ; Y.Hayato  - For neutral current
       DATA ILOADELCRS/0/
       SAVE ILOADSFELCRS
       DATA ILOADSFELCRS/0/
+      SAVE ILOADEFFSFELCRS
+      DATA ILOADEFFSFELCRS/0/
 
       INTEGER*4 IDTAG
       SAVE      IDTAG
@@ -140,11 +143,18 @@ C
 
        if (mod(MDLQE, 1000)/100 .EQ. 4 .AND. (numbndp .eq. 6 .or. 
      &    numbndp .eq. 8 .or. numbndp .eq. 26)) then
-c      if (mod(MDLQE, 1000)/100 .EQ. 4) then
-        if (iloadsfelcrs.ne.0) goto 300
-      else
-        if (iloadelcrs.ne.0) goto 100
-      endif
+          if (iloadsfelcrs.ne.0) goto 300
+       else if (((mod(MDLQE, 1000)/100 .EQ. 6 ).or.
+     &           (mod(MDLQE, 1000)/100 .EQ. 7 )) .AND. 
+     &          ((NUMATOM .eq.  2) .or. (NUMATOM .eq.   3) .or.
+     &           (NUMATOM .eq.  4) .or. (NUMATOM .eq.  12) .or.
+     &           (NUMATOM .eq. 16) .or. (NUMATOM .eq.  20) .or.
+     &           (NUMATOM .eq. 27) .or. (NUMATOM .eq.  40) .or.
+     &           (NUMATOM .eq. 56) .or. (NUMATOM .eq.  63) .or.
+     &           (NUMATOM .eq. 64) .or. (NUMATOM .eq. 208))) then
+          if (iloadeffsfelcrs.ne.0) goto 600
+          if (iloadelcrs.ne.0) goto 100
+       endif
 
 *******  Spectral function implementation *****
 * A.Furmanski - 2013
@@ -192,6 +202,80 @@ c ----- CRSSEC is re-used here for storing cross-section values for SF implement
 c        write (*,*) "cross section table for sf loaded"
 
 300     continue
+*******  Effective SF implementation *****
+* C. Wilkinson 2014
+*
+      else if ( ((mod(MDLQE, 1000)/100 .EQ. 6 ).or.
+     &           (mod(MDLQE, 1000)/100 .EQ. 7 )) .AND. 
+     &          ((NUMATOM .eq.  2) .or. (NUMATOM .eq.   3) .or.
+     &           (NUMATOM .eq.  4) .or. (NUMATOM .eq.  12) .or.
+     &           (NUMATOM .eq. 16) .or. (NUMATOM .eq.  20) .or.
+     &           (NUMATOM .eq. 27) .or. (NUMATOM .eq.  40) .or.
+     &           (NUMATOM .eq. 56) .or. (NUMATOM .eq.  63) .or.
+     &           (NUMATOM .eq. 64) .or. (NUMATOM .eq. 208))) then
+
+c ----- load xsec table required
+        if (mod(MDLQE, 1000)/100 .EQ. 7) then
+           DUMSTR = 'qelSfData/temSFTotXsec/'
+        else
+           DUMSTR = 'qelSfData/effSFTotXsec/'
+        endif
+        if (IPAR .EQ. 14) then
+           DUMSTR=DUMSTR(1:23) // '+14'
+        else if (IPAR .EQ. -14) then
+           DUMSTR=DUMSTR(1:23) // '-14'
+        else if (IPAR .EQ. 12) then
+          DUMSTR=DUMSTR(1:23) // '+12'
+        else if (IPAR .EQ. -12) then
+          DUMSTR=DUMSTR(1:23) // '-12'
+        else if (IPAR .EQ. 16) then
+          DUMSTR=DUMSTR(1:23) // '+16'
+        else if (IPAR .EQ. -16) then
+          DUMSTR=DUMSTR(1:23) // '-16'
+        endif
+        
+        if (NUMATOM .EQ. 2) then
+          DUMSTR=DUMSTR(1:26) // '_1000010020'
+        else if (NUMATOM .EQ. 3) then
+           DUMSTR=DUMSTR(1:26) // '_1000020030'
+        else if (NUMATOM .EQ. 4) then
+           DUMSTR=DUMSTR(1:26) // '_1000020040'
+        else if (NUMATOM .EQ. 12) then
+          DUMSTR=DUMSTR(1:26) // '_1000060120'
+        else if (NUMATOM .EQ. 16) then
+          DUMSTR=DUMSTR(1:26) // '_1000080160'
+        else if (NUMATOM .EQ. 20) then
+          DUMSTR=DUMSTR(1:26) // '_1000100200'
+        else if (NUMATOM .EQ. 27) then
+          DUMSTR=DUMSTR(1:26) // '_1000130270'
+        else if (NUMATOM .EQ. 40) then
+          DUMSTR=DUMSTR(1:26) // '_1000180400'
+        else if (NUMATOM .EQ. 56) then
+          DUMSTR=DUMSTR(1:26) // '_1000260560'
+        else if (NUMATOM .EQ. 63) then
+          DUMSTR=DUMSTR(1:26) // '_1000290630'
+        else if (NUMATOM .EQ. 64) then
+          DUMSTR=DUMSTR(1:26) // '_1000300640'
+        else if (NUMATOM .EQ. 208) then
+          DUMSTR=DUMSTR(1:26) // '_1000822080'
+        endif
+        
+        DUMSTR=DUMSTR(1:37) // '_nc.csv'
+        DUMSTR=CRSTBLPATH(1:lenpath)//DUMSTR
+        open(LUN(1), file=DUMSTR, status="old")
+c        write (*,*) "reading cross section table for sf"
+c ----- RDUM here represents the number of entries in the cross-section table
+c ----- note - values of EE can be overwritten here if the binning of tables changes in the future
+c ----- CRSSEC is re-used here for storing cross-section values for SF implementation
+        read(LUN(1),*) RDUM
+        do i = 1, RDUM
+          read(LUN(1),*) EE(i), CRSSEC(i)
+        enddo
+        close(LUN(1))
+        write (*,*) "FNELSPAN_INTPOL.F: ",
+     $       "Cross section table for the Effective SF loaded"
+        iloadeffsfelcrs = 1
+600     continue      
 
 c ----- find energy wanted and interpolate to get value of total xsec
         ii = 0
@@ -227,7 +311,10 @@ C
       if (iloadelcrs.ne.0) goto 100
       NCELMODE = mod(MDLQE,100)/10
       if (mod(MDLQE, 1000)/100 .eq. 4) then
-      NCELMODE = mod(mod(MDLQE, 1000),400)
+      NCELMODE = mod(mod(MDLQE, 1000),100)
+      else if (mod(MDLQE, 1000)/100 .eq. 6 
+     $     .OR. mod(MDLQE, 1000)/100 .eq. 7) then
+      NCELMODE = mod(mod(MDLQE, 1000),100)
       endif
 
 
@@ -246,24 +333,24 @@ C
          stop
       endif
 
-      IQEMA = INT(XMAQE*100+0.5)
-c      IDTAG = IQEMA
-      IDTAG = INT(XMAQE*100-0.5)
+      INCELMA = INT(XMANCEL*100+0.5)
+c      IDTAG = INCELMA
+      IDTAG = INT(XMANCEL*100-0.5)
 
-      if (IQEMA.eq.101) then
+      if (INCELMA.eq.101) then
          IDX_MA=1
          write (*,*) ' --- NC MA : 1.01'
-      else if (IQEMA.eq.111) then
+      else if (INCELMA.eq.111) then
          IDX_MA=2
          write (*,*) ' --- NC MA : 1.11'
-      else if (IQEMA.eq.121) then
+      else if (INCELMA.eq.121) then
          IDX_MA=3
          write (*,*) ' --- NC MA : 1.21'
-      else if (IQEMA.eq.131) then
+      else if (INCELMA.eq.131) then
          IDX_MA=4
          write (*,*) ' --- NC MA : 1.31'
       else
-         write(*,*) 'Invalid MA for QE was specified ',XMAQE
+         write(*,*) 'Invalid MA for NCEL was specified ',XMANCEL
          stop
       endif
 
@@ -294,7 +381,8 @@ C-- skip 2 lines
          if (IDDUM.ne.IDTAG) then
             write(*,*) 'This NCEL file is not compatible.(Model)',
      $           fname_crsdat(I)
-          write (*,*)"file: ",IDDUM,", code: ",IDTAG,", xmaqe= ",XMAQE
+          write (*,*)"file: ",IDDUM,", code: ",IDTAG,", 
+     $           xmancql= ",XMANCEL
             stop
          endif
 
@@ -311,18 +399,20 @@ C-- skip 2 lines
       do i = 1,200
          do J=1,2
             read(LUN(J),*) IDUM,RDUM,
-     &           CRSRFGELNU(J,1,i),CRSRFGELNU(J,2,i),CRSRFGELNU(J,3,i),
-     &           CRSRFGELNU(J,4,i),CRSRFGELNU(J,5,i),CRSRFGELNU(J,6,i),
-     $           CRSRFGELNU(J,7,i),CRSRFGELNU(J,8,i),CRSRFGELNU(J,9,i)
+     &          CRSRFGELNU(J,1,i),CRSRFGELNU(J,2,i),CRSRFGELNU(J,3,i),
+     &         CRSRFGELNU(J,4,i),CRSRFGELNU(J,5,i),CRSRFGELNU(J,6,i),
+     &          CRSRFGELNU(J,7,i),CRSRFGELNU(J,8,i),CRSRFGELNU(J,9,i)!,
+C     &          CRSRFGELNU(J,10,i)!,CRSRFGELNU(J,11,i),CRSRFGELNU(J,12,i)
             if ( abs(RDUM-EE(I)).gt.0.001 ) then
                write(*,*) 'Cross-section table seems to be corrupted.'
                stop
             endif
 
             read(LUN(2+J),*) IDUM,RDUM,
-     &           CRSRFGELAN(J,1,i),CRSRFGELAN(J,2,i),CRSRFGELAN(J,3,i),
-     &           CRSRFGELAN(J,4,i),CRSRFGELAN(J,5,i),CRSRFGELAN(J,6,i),
-     $           CRSRFGELAN(J,7,i),CRSRFGELAN(J,8,i),CRSRFGELAN(J,9,i)
+     &          CRSRFGELAN(J,1,i),CRSRFGELAN(J,2,i),CRSRFGELAN(J,3,i),
+     &          CRSRFGELAN(J,4,i),CRSRFGELAN(J,5,i),CRSRFGELAN(J,6,i),
+     &          CRSRFGELAN(J,7,i),CRSRFGELAN(J,8,i),CRSRFGELAN(J,9,i)!,
+C     &          CRSRFGELAN(J,10,i)!,CRSRFGELAN(J,11,i),CRSRFGELAN(J,12,i)
             
             if ( abs(RDUM-EE(I)).gt.0.001 ) then
                write(*,*) 'Cross-section table seems to be corrupted.'

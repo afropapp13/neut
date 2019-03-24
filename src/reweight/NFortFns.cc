@@ -7,6 +7,7 @@ extern "C" {
   FUNCTION_RETURN evpiprob_();
   void  nesetfgparams_();
   void  nefillmodel_();
+  void  zexpconfig_();
 }
   
 using namespace neut;
@@ -36,14 +37,14 @@ NFortFns * NFortFns::Instance()
     fInstance = new NFortFns;
   
     // Default Parameters Used in MC Generation
+	/*
     fInstance->XMAQEdef   = 1.21;
     fInstance->XMVQEdef   = 0.84;
     fInstance->KAPPdef    = 1.0;
 
-	/*
     fInstance->XMASPIdef  = 1.21;
     fInstance->XMVSPIdef  = 0.84;
-	*/
+
     fInstance->XMARESdef  = 1.21;
     fInstance->XMVRESdef  = 0.84;
 
@@ -78,6 +79,15 @@ NFortFns * NFortFns::Instance()
     fInstance->FEFCXdef   = 1.0;
     fInstance->FEFCXHdef  = 1.8;
     fInstance->FEFALLdef  = 1.0;
+	*/
+
+    //These two kept for historical reasons
+    fInstance->XMARESdef  = 1.21;
+    fInstance->XMVRESdef  = 0.84;
+
+    //All below can not be found in NEUT ROOT file at moment
+    fInstance->NEPDFdef     = 12;
+    fInstance->NEBODEKdef   = 1;
 
     fInstance->SCCFVdef = 0.0;
     fInstance->SCCFAdef = 0.0;
@@ -93,10 +103,12 @@ FUNCTION_RETURN NFortFns::evdifcrs()      {  return evdifcrs_(); }
 FUNCTION_RETURN NFortFns::evpiprob()      {  return evpiprob_(); }
 void  NFortFns::nesetfgparams() { nesetfgparams_(); }
 void  NFortFns::nefillmodel()   { nefillmodel_(); }
+void  NFortFns::zexpconfig() { zexpconfig(); }
 
 void NFortFns::Reconfigure() {
   nefillmodel_();
   nesetfgparams_();
+  if (nemdls_.mdlqeaf == 5) zexpconfig_();
 }
 
 void NFortFns::SetMCDefaultVal(NSyst_t syst, double val) {
@@ -213,6 +225,11 @@ void NFortFns::SetMCDefaultVal(NSyst_t syst, double val) {
 void NFortFns::SetDefaults() {
   // Documentation: See neutmodel.h and necard.h 
 
+  /*
+  nemdls_.sccfv = SCCFVdef;
+  nemdls_.sccfa = SCCFAdef;
+  nemdls_.fpqe = FPQEdef;
+
   nemdls_.mdlqeaf = MDLQEAFdef;
   nemdls_.mdlqe = MDLQEdef;
   // Should be 0 as the default model is 0 (Rein and Sehgal)
@@ -221,10 +238,6 @@ void NFortFns::SetDefaults() {
   nemdls_.xmaqe = XMAQEdef;
   nemdls_.xmvqe = XMVQEdef;
   nemdls_.kapp  = KAPPdef;
-
-  nemdls_.sccfv = SCCFVdef;
-  nemdls_.sccfa = SCCFAdef;
-  nemdls_.fpqe = FPQEdef;
 
   //  nemdls_.xmaspi = XMASPIdef;
   //  nemdls_.xmvspi = XMVSPIdef;
@@ -252,18 +265,17 @@ void NFortFns::SetDefaults() {
   nemdls_.fa1coh = fA1COHdef;
   nemdls_.fb1coh = fb1COHdef;
 
-  neutdis_.nepdf = NEPDFdef;
-  neutdis_.nebodek = NEBODEKdef;
-
   // Fixed parameters
   neutcard_.nefrmflg  = 0;
   neutcard_.nepauflg  = 0;
   neutcard_.nenefo16  = 0;
   neutcard_.nemodflg  = 0;
+
   neutcard_.nenefmodl = 1;
   neutcard_.nenefmodh = 1;
   neutcard_.nenefkinh = 1;
   neutpiabs_.neabspiemit = 1;
+
 
   //if (MCID==piscat)
   //neutcard_.nusim = 0;
@@ -292,6 +304,22 @@ void NFortFns::SetDefaults() {
   neffpr_.fefqehf = 1;
   neffpr_.fefcxhf = 0;
   neffpr_.fefcohf = 0;
+  */
+
+  //defaults that still need to be passed through
+  neutdis_.nepdf = NEPDFdef;
+  neutdis_.nebodek = NEBODEKdef;
+
+  nemdls_.sccfv = SCCFVdef;
+  nemdls_.sccfa = SCCFAdef;
+  nemdls_.fpqe = FPQEdef;
+
+  neutcard_.nenefmodl = 1;
+  neutcard_.nenefmodh = 1;
+  neutcard_.nenefkinh = 1;
+  neutpiabs_.neabspiemit = 1;
+
+  neutcard_.nusim = 1;
 }
 
 void NFortFns::print_fsihist() {

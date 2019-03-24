@@ -1,5 +1,5 @@
 void
-chkreadneutroot()
+chkreadneutroot(char *fname)
 {
 
   Int_t i, j;
@@ -17,7 +17,7 @@ chkreadneutroot()
   NeutVtx *nvtx;
   NeutVect *nvect;
 
-  TFile f("neutvect.root");
+  TFile f(fname);
   tn = (TTree *)(f.Get("neuttree"));
 
   nvtx = new NeutVtx();

@@ -61,20 +61,22 @@ C---
  220  IDIV=IDIV*2
 
  230  CONTINUE
-         ISTAU2 = (ITIME/2)+(IPID*IDIV)*(-1**MOD(IPID,2))*(-1)
-         ISTAU2 = MOD(ISTAU2,65536*1024)
-         IF (ISTAU2.gt.0) goto 240
-         IDIV = IDIV/2
-      goto 230
+      ISTAU2=0
+C         ISTAU2 = (ITIME/2)+(IPID*IDIV)*(-1**MOD(IPID,2))*(-1)
+C         ISTAU2 = MOD(ISTAU2,65536*1024)
+C         IF (ISTAU2.gt.0) goto 240
+C         IDIV = IDIV/2
+C      goto 230
 
  240  IDIV=IDIV*4
 
  250  CONTINUE
-         ISTAU3 = (ITIME/4)+(IPID*IDIV)*(-1**MOD(IPID,2))*(-1)
-         ISTAU3 = MOD(ISTAU3,10)
-         IF (ISTAU3.gt.0) goto 300
-         IDIV = IDIV/2
-      goto 250
+      ISTAU3=0
+C         ISTAU3 = (ITIME/4)+(IPID*IDIV)*(-1**MOD(IPID,2))*(-1)
+C         ISTAU3 = MOD(ISTAU3,10)
+C         IF (ISTAU3.gt.0) goto 300
+C         IDIV = IDIV/2
+C      goto 250
 
 
  300  CALL RMARIN(istau1,istau2,istau3)

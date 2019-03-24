@@ -1,4 +1,136 @@
+ifndef NEUT_ROOT
+      NEUT_ROOT = ../
+endif
+
+# Check the env. variables for CERNLIB
+ifndef CERN
+  $(error CERN is not set!)
+endif
+
+ifndef CERN_LEVEL
+  $(error CERN_LEVEL is not set!)
+endif
+
+CERN_ROOT=${CERN}/${CERN_LEVEL}
+# Check that we can find cernlib in shell
+ifeq "$(shell cernlib)" ""
+  $(error Looks like you havent set up CERNLIB, please fix this)
+  $(error I rely on being able to do cernlib in shell)
+endif
+
+## 
+NEUT_SRC = ${NEUT_ROOT}/src
+
+## Version numbers
+include ${NEUT_SRC}/neutcore/NEUTCOREVER.inc
+include ${NEUT_SRC}/nuccorspl/NUCCORVER.inc
+include ${NEUT_SRC}/nuceff/NUCEFFVER.inc
+include ${NEUT_SRC}/partnuck/PARTNUCKVER.inc
+include ${NEUT_SRC}/radcorr/RADCORRVER.inc
+include ${NEUT_SRC}/skmcsvc/SKMCSVCVER.inc
+include ${NEUT_SRC}/specfunc/SPECFUNCVER.inc
+include ${NEUT_SRC}/tauola/TAUOLAVER.inc
+include ${NEUT_SRC}/zbsfns/ZBSFNSVER.inc
+
+include ${NEUT_SRC}/ht2p2h/inc/HT2P2HVER.inc
+include ${NEUT_SRC}/n1p1h/inc/N1P1HVER.inc
+
+## Programs
+INSTALL   = /usr/bin/install
+RM        = /bin/rm
+FC        = g77
+CC        = gcc
+AR        = ar
+RANLIB    = ranlib
+CXX       = g++
+FH2H      = ${NEUT_ROOT}/src/neutsmpl/bin/fh2h.pl
+
 FC = g77
 FCOPTIONS = -fno-backslash -fno-automatic -finit-local-zero -fno-second-underscore -fugly-complex -ffixed-line-length-132 -fno-globals -fdollar-ok -fpic -ffortran-bounds-check
 ALLDEFINES += -Df2cFortran 
 
+##C++ compiler related
+CXXOPTIONS  = `root-config --cflags` -Dg77
+CXXOPTFLAGS = -g -Wno-write-strings -fpermissive
+
+##C  compiler related
+COPTIONS    = `root-config --cflags` -Dg77
+COPTFLAGS   = -g -Wno-write-strings -fpermissive
+
+##ROOT related
+ROOTINCDIR  = -I`root-config --incdir`
+ROOTLIBS    = `root-config --libs` -lstdc++
+
+##CERNLIB related
+CERNINCDIR  = -I$(CERN_ROOT)/include
+CERNLIBS    = `cernlib jetset74 pdflib804 photos202 mathlib packlib kernlib`
+
+## NEUT includes & liraries
+NEUTINCDIR  = -I${NEUT_ROOT}/include 
+
+NEUTLIBDIR  = ${NEUT_ROOT}/lib
+NEUTCOREDIR = ${NEUT_SRC}/neutcore
+NEUTCLASSDIR= ${NEUT_SRC}/neutclass
+
+NEUTDISOBJS = ${NEUTCOREDIR}/structm.o ${NEUTCOREDIR}/pdfset.o \
+			  ${NEUTCOREDIR}/grv94di.o  ${NEUTCOREDIR}/grv98_lo.o
+
+NEUTCLSOBJS = ${NEUTCLASSDIR}/neutctrl.so    ${NEUTCLASSDIR}/neutpart.so \
+			  ${NEUTCLASSDIR}/neutvect.so    ${NEUTCLASSDIR}/neutvtx.so \
+		      ${NEUTCLASSDIR}/neutfsipart.so ${NEUTCLASSDIR}/neutfsivert.so \
+			  ${NEUTCLASSDIR}/neutnucfsistep.so \
+			  ${NEUTCLASSDIR}/neutnucfsivert.so \
+			  ${NEUTCLASSDIR}/neutfill.o \
+			  ${NEUTCLASSDIR}/neutrootfortwrapper.o \
+			  ${NEUTCLASSDIR}/NeutRootHandlers.o
+
+NEUTLIBS    = ${NEUTDISOBJS} ${NEUTCLSOBJS} \
+			  -L${NEUTLIBDIR} \
+			  -lneutcore_${NEUTCOREVER} -lspecfunc_${SPECFUNCVER} \
+			  -lnuccorspl_${NUCCORVER} \
+			  -lnuceff_${NUCEFFVER} \
+			  -lneutcore_${NEUTCOREVER} \
+			  -lpartnuck_${PARTNUCKVER} -lskmcsvc_${SKMCSVCVER} \
+			  -lN1p1h_${N1P1HVER}       -lHT2p2h_${HT2P2HVER}     \
+		      -lradcorr_${RADCORRVER}   \
+	          ${ROOTLIBS} ${CERNLIBS}
+
+NEUTSKLIBS  = ${NEUTLIBS} \
+			  -lzbsfns_${ZBSVNS_VER}
+
+#################################################################
+.SUFFIXES: .so
+
+GENROOTSO = env COPTFLAGS="${COPTIONS} ${COPTFLAGS}" \
+		    INCDIRS="${NEUTINCDIR} ${ROOTINC} ${CERNINC}" \
+			${NEUT_SRC}/neutsmpl/bin/gen_root_so.sh
+
+.F.o:
+	$(FC) $(DEFS) -c $(FCOPTFLAGS) $(FCOPTIONS) $(FCFLAGS) \
+		   $(NEUTINCDIR) $(ROOTINCDIR) $(CERNINCDIR) -o $@ $<
+
+.f.o:
+	$(FC) $(DEFS) -c $(FCOPTFLAGS) $(FCOPTIONS) $(FCFLAGS) \
+		   $(NEUTINCDIR) $(ROOTINCDIR) $(CERNINCDIR) -o $@ $<
+
+.c.o:
+	$(CC)  -c -D$(FC) $(CXXOPTFLAGS) $(CXXOPTIONS) $(CXXFLAGS) \
+		   $(NEUTINCDIR) $(ROOTINC) $(CERNINC) -o $@ $<
+
+.cc.o:
+	$(CXX) -c -D$(FC) $(CXXOPTFLAGS) $(CXXOPTIONS) $(CXXFLAGS) \
+		   $(NEUTINCDIR) $(ROOTINC) $(CERNINC) -o $@ $<
+
+.cxx.o:
+	$(CXX) -c -D$(FC) $(CXXOPTFLAGS) $(CXXOPTIONS) $(CXXFLAGS) \
+		   $(NEUTINCDIR) $(ROOTINC) $(CERNINC) -o $@ $<
+
+.cc.so:
+	$(GENROOTSO) $(basename $<)
+
+#################################################################
+clean:
+	${RM} -f *.o *.so *Dict.h *LinkDef.h *Dict.cc *.a lib/*.o lib/*.a
+
+veryclean:
+	${RM} -f *.o *.a

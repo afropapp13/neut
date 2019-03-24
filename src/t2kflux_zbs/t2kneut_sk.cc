@@ -6,6 +6,8 @@
 
 #define MAIN
 #include "t2kneut_sk.h"
+#define STATIC_COMMON_POINTERS
+
 #include "t2kflux_sk.h"
 
 #include "skheadC.h"
