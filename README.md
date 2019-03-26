@@ -11,6 +11,6 @@ Make a new directory under src for your new model.</br>
 Try to minimize the changes in the existing part.</br>
 
 <h2>Contact</h2><br>
-Hayato-san: <hayato@icrr.u-tokyo.ac.jp><br>
-Luke Pickering: <picker24@msu.edu><br>
-Clarence Wret: <c.wret@rochester.edu><br>
+Hayato-san: hayato@icrr.u-tokyo.ac.jp<br>
+Luke Pickering: picker24@msu.edu<br>
+Clarence Wret: c.wret@rochester.edu<br>
