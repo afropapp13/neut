@@ -41,6 +41,7 @@ endif
 ####################################################################
 
 INCS = inc/nieves1p1h.fh
+$(shell mkdir -p lib)
 
 all: lib/lib${LIBNAME}.a 
 

@@ -3,6 +3,8 @@ all: bin/Test
 include ${NEUT_ROOT}/src/neutsmpl/config_neut.gmk
 
 LIBNAME=HT2p2h_$(HT2P2HVER)
+$(shell mkdir -p lib)
+$(shell mkdir -p bin)
 
 #CFLAGS = -pthread -stdlib=libc++ -std=c++11 -m64 -I/Applications/root-6.04.00/include -Iinc
 #LDFLAGS =-L/Applications/root-6.04.00/lib -lCore -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lpthread -Wl,-rpath,/Applications/root-6.04.00/lib -stdlib=libc++ -lm -ldl

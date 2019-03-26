@@ -1,4 +1,6 @@
-export NEUT_ROOT = ../..
+ifndef NEUT_ROOT
+  NEUT_ROOT = ../..
+endif
 
 include $(NEUT_ROOT)/src/neutsmpl/config_neut.gmk
 
@@ -23,45 +25,50 @@ endif
 
 NEUT_SRC =  $(NEUT_ROOT)/src
 
-ROOTINC = -I`root-config --incdir`
-NEUTINC = -I../neutcore -I../nuccorspl -I../skmcsvc -I../nuceff -I../../include -I./ -I../neutclass
+ROOTINC = -I$(shell root-config --incdir)
+NEUTINC = -I../neutcore -I../nuccorspl -I../skmcsvc -I../nuceff -I../../include -I./ -I../neutclass -I../specfunc
 INCDIRS = ${ROOTINC} ${NEUTINC}
 
-FCOPTIONS = -g
+FCOPTIONS = -g -O2 -march=native -Wall
 
-CXXFLAGS  = `root-config --cflags`
-COPTFLAGS = -g -Wno-write-strings -fpermissive -fPIC
+CXXFLAGS  = $(shell root-config --cflags)
+COPTFLAGS = -g -O2 -march=native -Wall -Wno-write-strings -fpermissive -fPIC
 
 
-LIBDIRS =	-L../../lib
+LIBDIRS = $(NEUT_ROOT)/lib
 
 #MCLIB = ${LIBDIRS}   -lneutcore_${NEUTCOREVER} -lnuceff_${NUCEFFVER} \
 #		-lneutcore_${NEUTCOREVER} -lnuccorrspl_${NUCCORVER} \
 #		-lpartnuck_${PARTNUCKVER} -lskmcsvc_${SKMCSVCVER}
 
-NEUTLIBS := $(wildcard ${LIBDIRS}/neut*.so)
-MCLIB = ${LIBDIRS} ${NEUTLIBS}
+#$(info ${LIBDIRS})
+#MCLIB = -L$(NEUT_ROOT)/lib -Wl,--start-group $(patsubst ${LIBDIRS}/lib%.a,-l%,$(wildcard ${LIBDIRS}/lib*.a)) -Wl,--end-group
+#NEUTLIBS = $(patsubst ${LIBDIRS}/%,%,$(wildcard ${LIBDIRS}/lib*.a))
+#NEUTLIBS = $(wildcard ${LIBDIRS}/lib*.a)
+#$(info ${NEUTLIBS})
+#MCLIB = -L$(LIBDIRS) ${NEUTLIBS}
 #MCLIB = ${LIBDIRS} -lnuceff_${NUCEFFVER} -lneutcore_${NEUTCOREVER} \
-        -lskmcsvc_${SKMCSVCVER} -lnuccorrspl_${NUCCORVER} \
-	-lradcorr_${RADCORRVER}		
+#        -lskmcsvc_${SKMCSVCVER} -lnuccorrspl_${NUCCORVER} \
+#	-lradcorr_${RADCORRVER}		
 
 # CERNLIB dependencies
 CLIBS = ${CERN}/${CERN_LEVEL}/lib/libjetset74.a \
 	${CERN}/${CERN_LEVEL}/lib/libpdflib804.a \
-	`cernlib jetset74 photos202 mathlib packlib kernlib`
+	$(shell cernlib jetset74 photos202 mathlib packlib kernlib)
 
-ROOTLIBS  = `root-config --libs`
-LIBS      = $(ROOTLIBS) ${MCLIB} ${CLIBS} -lstdc++
+ROOTLIBS  = $(shell root-config --libs)
+LIBS      = ${ROOTLIBS} ${MCLIB} ${CLIBS} -lstdc++ -lgfortran
+#LIBS      = $(ROOTLIBS) -lstdc++
 
 LDOPTFLAGS= -g
 
-FINCDIRS  = ${NEUTINC}
+#FINCDIRS  = ${NEUTINC}
 
-POBJS = ${COREDIR}/structm.o ${COREDIR}/pdfset.o ${COREDIR}/grv94di.o \
-		${COREDIR}/grv98_lo.o
-MOBJS =
+#POBJS = ${COREDIR}/structm.o ${COREDIR}/pdfset.o ${COREDIR}/grv94di.o \
+		#${COREDIR}/grv98_lo.o
+#MOBJS =
 
-OBJS  = ${MOBJS} ${ROBJS} ${SOBJS} ${POBJS}
+#OBJS  = ${MOBJS} ${ROBJS} ${SOBJS} ${POBJS}
 
 # For ROOT shared library
 PACKAGE                       = ReWeight
@@ -70,7 +77,7 @@ DllSuf                        = so
 PACKAGE_LIB                   = $(LIBNAME).$(DllSuf)
 PACKAGE_LIB_WITH_PATH         = $(NEUT_SRC)/reweight/$(LIBNAME).$(DllSuf)
 
-#DICTIONARY                    = _ROOT_DICT_ReWeight
+DICTIONARY                    = _ROOT_DICT_ReWeight
 ObjSuf                       := o
 PACKAGE_ALL_SOURCES          := $(wildcard *.cc)
 DICTGEN_HEADERS              := $(addsuffix .h, $(basename $(PACKAGE_ALL_SOURCES)))
@@ -127,5 +134,5 @@ clean:
 
 lib: $(LIB_DEPEND)
 	@echo "[package: $(PACKAGE)] Generating shared library ..."
-	$(SOCMD) $(SOFLAGS) $(SOMINF) $(PACKAGE_ALL_OBJECTS) $(MCLIB) $(EXTRA_EXT_LIBS) $(OutPutOpt) $(PACKAGE_LIB_WITH_PATH)
+	$(SOCMD) $(SOFLAGS) $(SOMINF) $(PACKAGE_ALL_OBJECTS) $(LIBS) $(EXTRA_EXT_LIBS) $(OutPutOpt) $(PACKAGE_LIB_WITH_PATH)
 

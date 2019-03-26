@@ -39,6 +39,7 @@ include ${NEUT_SRC}/n1p1h/inc/N1P1HVER.inc
 INSTALL   = /usr/bin/install
 RM        = /bin/rm -rf
 FC        = gfortran
+MKDIR     = mkdir -p
 CC        = gcc
 AR        = ar
 RANLIB    = ranlib
@@ -47,18 +48,18 @@ FH2H      = ${NEUT_ROOT}/src/neutsmpl/bin/fh2h.pl
 
 ##Fortran compiler related
 FCOPTIONS = -fno-backslash -fno-automatic -fno-second-underscore \
-		    -ffixed-line-length-132 -fdollar-ok -fpic -fbounds-check \
+		    -ffixed-line-length-132 -fdollar-ok -fPIC -fbounds-check \
 			-Wall -W -ffpe-trap=invalid,zero,overflow \
 			-DstrictF77 \
 			-DgFortran -Df2cFortran 
 FCOPTFLAGS= -g
 
 ##C++ compiler related
-CXXOPTIONS  = `root-config --cflags` -DgFortran 
+CXXOPTIONS  = `root-config --cflags` -DgFortran  -fPIC
 CXXOPTFLAGS = -g -Wno-write-strings -fpermissive
 
 ##C  compiler related
-COPTIONS    = `root-config --cflags` -DgFortran 
+COPTIONS    = `root-config --cflags` -DgFortran  -fPIC
 COPTFLAGS   = -g -Wno-write-strings -fpermissive
 
 ##ROOT related
