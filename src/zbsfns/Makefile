@@ -13,7 +13,7 @@ LIBNAME = $(LIBBASE)_$(ZBSFNSVER)
 
 OBJS = nemknebk.o  nemkmodelbk.o vcmkvc.o vcmkvx.o \
        nemknetarg.o nerdnetarg.o nemkfsibk.o nemkcrsbk.o \
-       nemknucfsibk.o nerdnucfsibk.o \
+       nemknucfsibk.o nerdnucfsibk.o nemktaubk.o \
        nerdnebk.o vcrdvccm.o vcrdvc.o vcrdvx.o \
        nerdnetarg.o nerdfsibk.o nerdcrsbk.o vcmkdetgm.o \
        vcclfsicm.o 

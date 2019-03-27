@@ -4,13 +4,16 @@ C     in Neut.  Included energy, polarization decay mode
 C     
 C     First Added 2004/04/04 C.W. Walter
       
-      COMMON / TAUMC  / TAUMOM, TAUDCY, TAUDIR, POLTAU
-      
-      REAL    TAUMOM            ! Momentum of Tau in GeV/c
-      REAL    TAUDIR(3)         ! Direction of Tau
-      INTEGER TAUDCY            ! Decay mode
-      REAL    POLTAU(3)         ! Polarization of Tau
-      
+#include "taumc_com.h"
+C-- now in taumc_com.h
+C      COMMON / TAUMC  / TAUMOM, TAUDCY, TAUDIR, POLTAU
+C      
+C      REAL    TAUMOM            ! Momentum of Tau in GeV/c
+C      REAL    TAUDIR(3)         ! Direction of Tau
+C      INTEGER TAUDCY            ! Decay mode
+C      REAL    POLTAU(3)         ! Polarization of Tau
+C-- end here      
+C
 C     The info below is for using this common in a PAW ntuple bank.
 
       CHARACTER*60 TAUMCTAGS(1)
