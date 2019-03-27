@@ -14,11 +14,14 @@ OBJ =	tauola.o formf.o choice.o dcdmas.o lunpik.o tralo4.o pkorb.o \
         tainicom.o tainidcy.o tainimas.o tainipar.o tapricom.o \
         taudecay.o tauvect.o tacard.o  \
 		filhep.o taurdf.o \
-        nemktaubk.o taupol.o mrst2002.o
+        taupol.o mrst2002.o
 
 OBJS = $(OBJ)
 
-INCS = taucom.h taumc.h
+FCINCS = taucom.h  taumc_com.h
+CINCS  = taucomC.h taumc_comC.h
+FINCS  = taumc.h
+INCS   = ${FCINCS} ${FINCS} ${CINCS}
 
 all: lib${LIBNAME}.a
 
@@ -27,6 +30,7 @@ lib${LIBNAME}.a: ${OBJS}
 	${RANLIB} $@
 
 install.include: ${INCS}
+	for i in ${FCINCS} ;do ${FH2H} $$i > `echo $$i | sed "s/\.h$$/C.h/"`; done
 	${INSTALL} -d -m 0755 ${NEUT_ROOT}/include
 	${INSTALL} -m 0644 ${INCS} ${NEUT_ROOT}/include
 
