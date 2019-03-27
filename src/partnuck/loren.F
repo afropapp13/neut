@@ -28,7 +28,7 @@ C  N = number of decay products.
 C  K = -1, (if K=+1 then def of P and Q are switched)
 C
 C***********************************************
-C   @(#)loren.f	1.1 modified on 12/7/92
+C   @(#)loren.f 1.1 modified on 12/7/92
       SUBROUTINE LOREN(C,P,Q,N,K)
       DIMENSION C(4),P(4,N),Q(4,N)
       S=0.
@@ -36,7 +36,7 @@ C   @(#)loren.f	1.1 modified on 12/7/92
          S=S+C(I)**2
       end do
 
-      IF(S.EQ.0.)GO TO	100
+      IF(S.EQ.0.)GO TO  100
       S=C(4)**2-S
       W=SQRT(S)
       Z=W+C(4)

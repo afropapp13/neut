@@ -1,19 +1,19 @@
 *     -----------------------------------------------------
-      SUBROUTINE EFTRANS(TMX,XX,XIN,XOUT,MODE)      
+      SUBROUTINE EFTRANS(TMX,XX,XIN,XOUT,MODE)
 *     -----------------------------------------------------
-*     
-*     ( purpose )
-C         TRANSFORMATION  ----- ROTATION + TRASLATION --------*       
 *
-*     ( input ) 
+*     ( purpose )
+C         TRANSFORMATION  ----- ROTATION + TRASLATION --------*
+*
+*     ( input )
 C         TMX(3,3) : ROTATION MATRIX
 C         XX(3)    : TRANSLATION
 C         XIN(3)   : INPUT VECTOR
 C         MODE     : 1: ROT + TRA
 C                    0: ROT
-*     ( output ) 
+*     ( output )
 C         XOUT(3)  : OUTPUT VECTOR
-C     
+C
 C*********************************************************************
       DIMENSION TMX(3,3),XX(3),XIN(3),XOUT(3),XTR(3)
       IF(MODE.EQ.1) THEN

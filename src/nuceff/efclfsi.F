@@ -1,13 +1,13 @@
-C     
+C
       SUBROUTINE EFCLFSI
-C     
+C
 C     ( purpose )
 C       Clear common FSIHIST
 C
-C     ( input ) 
+C     ( input )
 C       none
 C
-C     ( output ) 
+C     ( output )
 C       COMMON /FSIHIST/
 C
 C

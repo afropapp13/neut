@@ -1,14 +1,14 @@
 *     -----------------------------------------------------
-      FUNCTION EFFRMMOM(PF)      
+      FUNCTION EFFRMMOM(PF)
 *     -----------------------------------------------------
-*     
+*
 *     ( purpose )
 *        PROBABILITY TO NUCLEON TO TAKE FERMI MOMENTUM PF
 *
-*     ( input ) 
+*     ( input )
 *        PF     : fermi momentum of nucleon(MeV)
 *
-*     ( output ) 
+*     ( output )
 *       effrmmom: probability to take PF
 *
 

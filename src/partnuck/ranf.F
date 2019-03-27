@@ -2,14 +2,14 @@
 *     -------------------
       FUNCTION RANF()
 *     -------------------
-*     
+*
 *     ( purpose )
 *       random number for kaon tracking
 *
-*     ( input ) 
+*     ( input )
 *       IDUMMY : DUMMY INPUT
 *
-*     ( output ) 
+*     ( output )
 *       RANF : (0,1) rundum number using RLU
 *
 *     ( creation date and author )

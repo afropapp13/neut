@@ -1,17 +1,17 @@
 *     -----------------------------------------------------
-      SUBROUTINE EFPNCRSH(PAIMOM,NQPAI,NQN,SIGTOT,RSIGEL,IERROR)      
+      SUBROUTINE EFPNCRSH(PAIMOM,NQPAI,NQN,SIGTOT,RSIGEL,IERROR)
 *     -----------------------------------------------------
-*     
+*
 *     ( purpose )
 C        CROSS SECTION OF PAI-N INTERACTION AT HIGH ENERGIES (>800MEV).
 C                    T.KAJITA  25-JUN-88
 *
-*     ( input ) 
+*     ( input )
 C           PAIMOM : MOMENTUM OF PION IN MEV/C
 C           NQPAI  : CHARGE OF PION  <=== NO MEANING AT PRESENT
 C           NQN    : CHARGE OF NUCLEON<=== NO MEANING AT PRESENT
 *
-*     ( output ) 
+*     ( output )
 C           SIGTOT : TOTAL CROSS SECTIONIN MB.
 C           RSIGEL : (ELASTIC CROSS SECTION) / (TOTAL CROSS SECTION)
 C           IERROR : ERROR CODE  =0 -- NO ERROR
@@ -25,8 +25,8 @@ C           SIGMA(PAI(-)-N) IS SAME AS SIGMA(PAI(+)-P)
 C           SIGMA(PAI(+)-N) AND SIGMA(PAI(0)-N) ARE SAME AS SIGMA(PAI(-)-P)
 C
 C   2008/03 Added cross sections for 340 & 450 MeV/c (nishino)
-C        
-C     
+C
+C
 C
       IMPLICIT NONE
       REAL PAIMOM, SIGTOT, RSIGEL
@@ -37,45 +37,45 @@ C
       REAL PMEV,STPPMD, STPPP, STPMP, SEPPP, SEPMP
       DIMENSION PMEV(16), STPPMD(16), STPPP(16), STPMP(16),
      &     SEPPP(16), SEPMP(16)
-C     
+C
 C     -- PION MOMENTUM IN MEV/C
-      DATA PMEV  /  340.,  450.,  500.,   600.,   700.,   800.,   
+      DATA PMEV  /  340.,  450.,  500.,   600.,   700.,   800.,
      $     900.,  1000.,  1200., 1500.,  2000.,  3000.,  5000.,
      $     10000., 20000., 50000./
-C     
+C
 C     -- TOTAL CROSS SECTION PAI(+/-)-DEUT.
       DATA STPPMD/ 180.,  55.,   60.,    52.,   58.0,   56.0,
      $     62.0,   77.0, 68.0, 74.0,   65.0,   60.0,   56.0,
      $     50.0,   48.0,   47.0 /
-C     
+C
 C     -- TOTAL CROSS SECTION PAI(+)-P
-      DATA STPPP / 134.,  48.,  35.,    20.,    17.0,   16.0, 
+      DATA STPPP / 134.,  48.,  35.,    20.,    17.0,   16.0,
      $     20.0,   25.0, 28.0,  40.0,   29.0,   29.0,   26.0,
      $     25.0,   24.0,   24.0  /
-C     
+C
 C     -- TOTAL CROSS SECTION PAI(-)-P
-      DATA STPMP /   49., 26.,   27.,    30.,   49.0,   40.0,   
-     $     40.0,   57.0,  37.0, 36.0,   36.0,   32.0,   29.0,   
+      DATA STPMP /   49., 26.,   27.,    30.,   49.0,   40.0,
+     $     40.0,   57.0,  37.0, 36.0,   36.0,   32.0,   29.0,
      $     27.0,   25.0,   24.0  /
-C     
+C
 C     -- ELASTIC CROSS SECTION PAI(+)-P
-      DATA SEPPP /   134., 46. , 35.,    20.,   13.0,    9.0,    
-     $     8.2,   12.0,   14.0, 18.0,   10.0,    7.8,    5.7,    
+      DATA SEPPP /   134., 46. , 35.,    20.,   13.0,    9.0,
+     $     8.2,   12.0,   14.0, 18.0,   10.0,    7.8,    5.7,
      $     4.8,    4.0,    3.3  /
-C     
+C
 C     -- ELASTIC CROSS SECTION PAI(-)-P
-      DATA SEPMP / 17.,  10.,   10.,    13.,   28.0,   16.0,   
+      DATA SEPMP / 17.,  10.,   10.,    13.,   28.0,   16.0,
      $     16.0,   25.0, 15.0, 12.0,    9.5,    7.5,    6.0,
      $     4.6,    4.0,    3.4/
-C     
-C     
-C     
+C
+C
+C
       RSIGEL=0.
       SIGTOT=0.
       IERROR=1
       IF(PAIMOM.LT.340.)RETURN
       IERROR=0
-C     
+C
       DO 10 IE=2,16
          IF(PMEV(IE).GT.PAIMOM) THEN
             IEH=IE
@@ -90,8 +90,8 @@ C
       DEH=0.
       DEL= ABS (PMEV(IEH)-PMEV(IEL))
    11 CONTINUE
-C     
-C     
+C
+C
       SIGTOT = ( DEL*STPPMD(IEH) + DEH*STPPMD(IEL) ) / ( DEL+DEH ) / 2.
       IF(NQPAI.EQ.0) THEN
          STSUM = ( DEL*STPMP(IEH) + DEH*STPMP(IEL) ) / ( DEL+DEH )
@@ -110,7 +110,7 @@ C
 CCCC  PRINT *,' PAIMOM SIGTOT STSUM SESUM',PAIMOM,SIGTOT,STSUM,SESUM
       RSIGEL=SESUM/STSUM
 CCCC  PRINT *,' RSIGEL',RSIGEL
-C     
-C     
+C
+C
       RETURN
       END

@@ -1,21 +1,21 @@
 *     -----------------------------------------------------
-      FUNCTION EFQEPATH(PPI,RIN)      
+      FUNCTION EFQEPATH(PPI,RIN)
 *     -----------------------------------------------------
-*     
+*
 *     ( purpose )
 *       GIVE INELASTIC SCATTER MEAN FREE PATH **(-1)
 *
-*     ( input ) 
+*     ( input )
 *       PPI   : PION MOMENTUM(MeV/c)
 *       r     : radius
 *
-*     ( output ) 
+*     ( output )
 *       QEPATH : REACTION MEAN FREE PATH **(-1)  UNIT (/FERMI)
 *
 *     ( Creation Date and Author )
 *       2007.11.05 ; G.Mitsuka - add support other target than 16O
 *                                using efconv2roxy function
-C     
+C
 
       IMPLICIT NONE
 
@@ -31,7 +31,7 @@ C
       integer*4 i,j
 
       REAL*4 REFF
-      
+
       REAL*4    PATH(8,13),PPITBL(13)
       REAL*4    OPATH(18)
       DATA PPITBL/  0.,180.,200.,225.,250.,275.,300.,325.,350.,
@@ -56,7 +56,7 @@ C
 
       DATA OPATH/.881,.752,.666,.612,.578,.570,.571,.580,.590,
      $           .600,.600,.600,.610,.610,.619,.638,.667,.696/
-      
+
       EFQEPATH = 0.
 
       REFF=RIN
@@ -90,7 +90,7 @@ C
          write(*,*) 'efqepath: Error :P(PI) > 850.MeV)'
          return
       endif
-         
+
       I=INT((PPI-425.)/25.)+1
 
       DO 120 J=1,15
@@ -112,6 +112,6 @@ C
       EFQEPATH = RATIO*(PATH1 + (PATH2-PATH1)*DIFFP)
 
       RETURN
-      
+
       END
 

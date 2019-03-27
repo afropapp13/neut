@@ -1,5 +1,5 @@
 C***************************************************
-C     @(#)masses.cdk	1.2 modified on 12/30/92
+C     @(#)masses.cdk    1.2 modified on 12/30/92
 C     The particle masses
 C     PROTON    - AMP
 C     NEUTRON   - AMN

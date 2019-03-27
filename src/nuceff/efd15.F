@@ -1,14 +1,14 @@
 *     -----------------------------------------------------
-      COMPLEX FUNCTION EFD15(Q)      
+      COMPLEX FUNCTION EFD15(Q)
 *     -----------------------------------------------------
-*     
+*
 *     ( purpose )
 *       OBTAIN PHASE SHIFT OF D15 WAVE IN PI-N SCATTERING
 *
-*     ( input ) 
+*     ( input )
 *        Q      : relative momentum in C-M system
 *
-*     ( output ) 
+*     ( output )
 *        EFD15  : (EXP(2*I*DELTA)-1)/2I/Q
 
       COMPLEX I

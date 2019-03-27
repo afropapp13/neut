@@ -1,14 +1,14 @@
 *     -----------------------------------------------------
-      COMPLEX FUNCTION EFD13(Q)      
+      COMPLEX FUNCTION EFD13(Q)
 *     -----------------------------------------------------
-*     
+*
 *     ( purpose )
 *       OBTAIN PHASE SHIFT OF D13 WAVE IN PI-N SCATTERING
 *
-*     ( input ) 
+*     ( input )
 *          Q   : RELATIVE MOMENTUM IN C-M SYSTEM
 *
-*     ( output ) 
+*     ( output )
 *         EFD13:  (EXP(2*I*DELTA)-1)/2I/Q
 
 
@@ -24,12 +24,12 @@ C     PUT VALUE
       GAMMA=125.0
       OMG0=1525.0
       Q0=459.0
-C     
+C
       OMG=SQRT(Q**2+AMPI**2)+SQRT(Q**2+AMN**2)
       IF(OMG.NE.OMG0) GO TO 1
       EFD13=I/Q
       GO TO 2
-C     
+C
     1 TAND=BB+CC+DD+X*GAMMA*OMG0/(OMG0*OMG0-OMG*OMG)*(Q/Q0)**5
       EFD13=(1.0+I*TAND)/(1.0-I*TAND)
       EFD13=-(EFD13-1.0)/2.0*I/Q

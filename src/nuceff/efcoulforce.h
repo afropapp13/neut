@@ -1,4 +1,4 @@
-      
+
 C     Parameters defined in src/neututils/calc_nuc_dens
 
       integer nNuclei, nRadPoints, nNucleiPar, nRadPointsPar

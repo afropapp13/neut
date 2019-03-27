@@ -1,16 +1,16 @@
 *     -----------------------------------------------------
-      FUNCTION EFGAMMN(GK,COST)      
+      FUNCTION EFGAMMN(GK,COST)
 *     -----------------------------------------------------
-*     
+*
 *     ( purpose )
 *        RETURN DIFFERENCIAL CROSS SECTION OF
 *            GAMMA,N ---> PI-,P
 *
-*     ( input ) 
+*     ( input )
 *        GK     : GAMMA ENERGY(MEV)
 *        COST   : COS(THETA)
-*      
-*     ( output ) 
+*
+*     ( output )
 *        GAMMN  : differential cross-section(mb/sr)
 C
 C -- REFERENCES

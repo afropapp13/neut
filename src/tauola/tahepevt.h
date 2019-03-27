@@ -22,7 +22,7 @@ C     this is the hepevt class in old style. No d_h_ class pre-name
      $      vhep(4,nmxhep)    ! vertex [mm]
 * ----------------------------------------------------------------------
       LOGICAL qedrad
-      COMMON /phoqed/ 
+      COMMON /phoqed/
      $     qedrad(nmxhep)    ! Photos flag
 * ----------------------------------------------------------------------
       SAVE hepevt,phoqed

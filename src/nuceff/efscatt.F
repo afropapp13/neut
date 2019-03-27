@@ -1,17 +1,17 @@
 *     -----------------------------------------------------
-      SUBROUTINE EFSCATT(IP,PPI,PNUC,MODE,IPF,PPIF,INUCF,PNUCF,radius)      
+      SUBROUTINE EFSCATT(IP,PPI,PNUC,MODE,IPF,PPIF,INUCF,PNUCF,radius)
 *     -----------------------------------------------------
-*     
+*
 *     ( purpose )
 *       SET SCATTERING PION MOMENTUM
 *
-*     ( input ) 
+*     ( input )
 C         IP   : INITIAL PION KIND
 C         PPI  : INITIAL PION MOMENTUM IN LAB. SYSTEM(MeV)
 C         PNUC : INITIAL NUCLEON MOMENTUM(MeV)
 C         MODE : INTERACTION MODE
-*       
-*     ( output ) 
+*
+*     ( output )
 C         IPF  : FINAL PION KIND
 C         PPIF : FINAL PION MOMENTUM(MeV)
 c         PNUCF: FINAL NUCLEON MOMENTUM
@@ -24,7 +24,7 @@ C         2009.12.09: Added ejected nucleon - P. de Perio
       DIMENSION PPI(3),PNUC(3),PPIF(3),PNUCF(3)
       DIMENSION SK(3),SKD(3),GK(3),EV(3),XMAP(11,11)
       DATA AMN/939./,AMPI/139./
-C     
+C
 C     -- CALCULATE PI-N RELATIVE MOMENTUM IN C-M SYSTEM  I.E. SK(3)
       GK(1)=PNUC(1)+PPI(1)
       GK(2)=PNUC(2)+PPI(2)
@@ -50,7 +50,7 @@ C     -- CALCULATE AMPLITUDE OF PHASE-SHIFT
       CALL EFCALAMP(SK,GK,PPI,radius)
 C     -- MAKE COS(THETA)-PHI AMPLITUDE MAP
       CALL EFMAKMAP(PNUC,PPI,SK,GK,EV,GM,MODE,XMAP,radius)
-C     
+C
       XMAX=0.
       DO 300 I=1,11
          DO 310 J=1,11
@@ -79,7 +79,7 @@ C      HIT=XMAX*RNDM(DUM)
       DAT2=(1.-DCO)*XMAP(NC,NP+1)+DCO*XMAP(NC+1,NP+1)
       DISTRI=(1.-DPH)*DAT1+DPH*DAT2
       IF(HIT.GT.DISTRI)GO TO 320
-C     
+C
       CALL NECHADIR(COST,PHI,SK,PPIF)
       EV(1)=-EV(1)
       EV(2)=-EV(2)

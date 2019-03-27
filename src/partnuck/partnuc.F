@@ -68,7 +68,7 @@ C #define cosd(x) (cos((x)*0.01745))
 
 
 C**************************************************************8
-C     @(#)partnuc.f	1.8 modified on 1/28/93
+C     @(#)partnuc.f     1.8 modified on 1/28/93
 C
 #define JPION 0
 #define JETA 1
@@ -95,13 +95,13 @@ C**** The Number of output particles.
       integer no
 C**** The output energy, momentum, mass, and charge.
       real eo(20),po(3,20),uo(20),cho(20)
-C**** The starting point for the hadron.  This is an output variable for 
+C**** The starting point for the hadron.  This is an output variable for
 C     icont equal 0 and an input variable if icont is 1.
       real start(3)
 C**** The final position of the hadron.  This is used to restart a new
 C     hadron from the stopping point after a decay.
       real decp(3)
-C**** The starting point for each hadron in the stack.  This should be 
+C**** The starting point for each hadron in the stack.  This should be
 C     zero unless icont is 1
       real stpt(3,20)
 C**** The density mode of the model
@@ -138,7 +138,7 @@ C**** Make sure there are hadrons to track.
          call flush(6)
          return
       end if
-        
+
 C**** Generate a starting position.
       call nucstp(start,icont,imode)
 
@@ -167,7 +167,7 @@ C**** Generate a starting position.
             pin(i2)=pi(i2,i1)*1000.
             pinss=pinss+pin(i2)**2
          end do
-         
+
          jpar=-1
          if(abs(uin-137.).lt.5.)jpar=JPION !pion
          if(abs(uin-549.).lt.5.)jpar=JETA !eta
@@ -176,13 +176,13 @@ C**** Generate a starting position.
          if(abs(uin-495.).lt.5) jpar=JKAON !kaon
          if(jpar.lt.JPION)go to 99
          if(jpar.eq.JNUCLEON.and.ein.lt.1100.)go to 99
-         
+
          pinm=sqrt(pinss)
          do i2=1,3
             upin(i2)=pin(i2)/pinm
          end do
          loop=0
-         
+
 C initialize storing which interactions happened.
             do i2=1,100
                pninter(i2,i1) = 0
@@ -193,8 +193,8 @@ C initialize storing which interactions happened.
 
 c****         write(6,'('' % tracking '',i3,i3,5f8.1,f5.1)')i1,jpar,
 c****     $        ein,pin(1),pin(2),pin(3),uin,chint
-         
- 200     continue		!****start tracking***********
+
+ 200     continue               !****start tracking***********
 
          r=0
          do i2=1,3
@@ -204,7 +204,7 @@ c****     $        ein,pin(1),pin(2),pin(3),uin,chint
          r=sqrt(r)
 
          stepnum = stepnum + 1
-         
+
 C**** Check if the hadron is still inside the nucleus.
          if(imode.eq.1)then
             if(iin.eq.0.and.r.gt.rmax)then
@@ -226,7 +226,7 @@ C**** Check if the hadron is still inside the nucleus.
             end if
             go to 99
          end if
-         
+
          call nucfermi(r)
 
          pninttype=0
@@ -277,7 +277,7 @@ C**** Check if the hadron is still inside the nucleus.
             end if
             go to 200
          end if
-         
+
  99      continue               ! Come here to finish particle
          do i2=1,3
             decp(i2)=xtr(i2)
@@ -290,7 +290,7 @@ C**** Check if the hadron is still inside the nucleus.
          write (6,*)'Loop end: ',i1,stepnum,pninttype,chint,uin
 #endif
       enddo                     ! Finish loop over particles
-      
+
       ni=nx
       call flush(6)
       return
@@ -304,13 +304,13 @@ C ****************************************************************
       common /nuccms/ rhon,pfermi,unucl,ecms2,up4cms(3),beta(3),prot
       logical prot
       dimension rec(3),p4cms(3)
-      
+
       parameter (toten2=931.**2)
       parameter (rbin=.2, rmin=0., rmax=6., nbin=(rmax-rmin)/rbin)
 
       common /nucpart/prat
       data prat/0.5/
-      
+
 c     decide if interaction is on proton (prot=.true.) or neutron (.false.)
       if(ranf().lt.prat)then
          prot=.true.
@@ -322,15 +322,15 @@ C     INCLUDE 0.1 FACTOR is TO CHANGE FROM MB TO FMSQ (cms is in fm!)
       call nuchis(r-rmin,rbin,30,irlo,irhi,rrem)
       RHON=(RHOTAB(IRHI)*RREM+RHOTAB(IRLO)*(1.0-RREM))*0.1
       RHONF=RHON/PNORM
-      
+
 C     FERMI MOMENTUM AT THIS VALUE OF R
       PFERMI=270.0*((RHONF*10.)**0.3333)
-      IF(PFERMI.LE.0.0)	PFERMI=1.0
-      
+      IF(PFERMI.LE.0.0) PFERMI=1.0
+
       AREC=PFERMI*ranf()**0.3333
       call ranve(arec,rec,2.,-1.)
       unucl=sqrt(toten2-arec**2)
-      
+
 C     ENERGY AND 3 MOMENTUM PARTS OF CMS 4 MOMENTUM
       E4CMS=EIN+931.
       DO i2=1,3
@@ -343,7 +343,7 @@ C     ENERGY AND 3 MOMENTUM PARTS OF CMS 4 MOMENTUM
       END DO
 C     SQUARE OF CMS ENERGY
       ECMS2=E4CMS**2-p4cmsm**2
-      
+
       return
       end
 
@@ -371,14 +371,14 @@ C One time initialization
       dimension probm(30),probd(30)
 
 
-C   DOVER ET AL	DISTRIBUTION
+C   DOVER ET AL DISTRIBUTION
       DATA PROBD/
      1 0.0,0.2,4.7,20.2,67.6,186.2,384.2,802.4,1409.0,2285.8
      1 ,3264.0,3913.1,4665.6,4901.0,4170.9,4050.0,2973.6,1976.8,1296.0,985.5
      1 ,704.0,370.4,232.3,177.7,80.6,35.7,20.0,10.0,5.0,2.5/
 
 
-C   SET	UP MATTER DISTRIBUTION IN NUCLEUS
+C   SET UP MATTER DISTRIBUTION IN NUCLEUS
 C   UNITS ARE IN FERMIS
       PROBS=0.0
       RBIN=0.2
@@ -418,7 +418,7 @@ C   UNITS ARE IN FERMIS
       pn=sqrt(eout**2-am**2)
       pm=sqrt(edum**2-bm2)
       return
-      end	
+      end
 
 
       subroutine nucnuc(idec)
@@ -431,7 +431,7 @@ C   UNITS ARE IN FERMIS
       parameter (step=0.2, fac=1e-2, amn=939., amn2=amn**2)
 
       dimension xspp(158),xspn(158),xdpp(130),xdpn(130)
-      data xspp/     
+      data xspp/
      $     13.,  26.,  50.,  90., 126., 175., 235., 300., 380., 480.,
      $     585., 710., 860.,1035.,1242.,1436.,1580.,1695.,1785.,1866.,
      $     1937.,2000.,2050.,2090.,2128.,2160.,2188.,2208.,2228.,2240.,
@@ -449,7 +449,7 @@ C   UNITS ARE IN FERMIS
      $     1335.,1324.,1315.,1305.,1295.,1285.,1275.,1265.,1257.,1245.,
      $     1237.,1228.,1218.,1208.,1198.,1188.,1178.,1169./
 
-      data xspn/     
+      data xspn/
      $     18.,  28.,  48.,  75., 117., 159., 208., 270., 340., 440.,
      $     560., 720., 910.,1060.,1170.,1260.,1325.,1375.,1390.,1396.,
      $     1397.,1396.,1393.,1390.,1385.,1382.,1380.,1376.,1372.,1366.,
@@ -467,7 +467,7 @@ C   UNITS ARE IN FERMIS
      $     740., 735., 730., 722., 720., 715., 710., 705., 698., 694.,
      $     690., 683., 680., 675., 670., 662., 660., 653./
 
-      data xdpp/     
+      data xdpp/
      $     0.,   1.,   2.,   3.,   4.,   5.,   6.,   7.,   8.,   8.,
      $     9.,   9.,  11.,  16.,  21.,  38.,  60.,  90., 112., 130.,
      $     146., 160., 177., 190., 200., 215., 228., 240., 252., 265.,
@@ -482,7 +482,7 @@ C   UNITS ARE IN FERMIS
      $     1496.,1510.,1525.,1540.,1558.,1573.,1588.,1600.,1620.,1637.,
      $     1652.,1670.,1682.,1700.,1718.,1731.,1748.,1762.,1780.,1798./
 
-      data xdpn/     
+      data xdpn/
      $     0.,  40.,  80., 128., 170., 230., 300., 370., 450., 520.,
      $     560., 600., 630., 660., 690., 715., 740., 760., 785., 805.,
      $     828., 850., 870., 888., 908., 928., 943., 962., 980., 998.,
@@ -566,7 +566,7 @@ C   UNITS ARE IN FERMIS
 #include "nucnewprd.h"
       common /nuchad/ ihap,nel,ncx
 #include "hadron.h"
-#include "partnucint.h"      
+#include "partnucint.h"
       dimension xabs(21),xpeln(126),xpelp(126),xpelm(126),xpchx(126),
      $     xspp(117),xspn(117),xspm(117),
      $     dang(5,21,4)
@@ -587,7 +587,7 @@ C   UNITS ARE IN FERMIS
       dimension gm1(4),gm3(4)
       data gm1/0.,0.66667,-0.4714,0.33333/
       data gm3/1.,0.33333, 0.4714,0.66667/
-      
+
       data phs11/
      $     0.,   4.93, 6.51, 7.46, 8.08, 8.50, 8.79, 9.00, 9.17, 9.33,
      $     9.49, 9.69, 9.93,10.23,10.61,11.06,11.62,12.28,13.05,13.93,
@@ -624,10 +624,10 @@ C   UNITS ARE IN FERMIS
      $     0.  , 0.00, 0.02, 0.06, 0.12, 0.20, 0.30, 0.42, 0.57, 0.73,
      $     0.91, 1.10, 1.31, 1.52, 1.73, 1.95, 2.16, 2.36, 2.54, 2.71,
      $     2.85/
-      
-C     PARTIAL AND	TOTAL CROSS SECTIONS (*100 mb)
+
+C     PARTIAL AND       TOTAL CROSS SECTIONS (*100 mb)
 c     pi0-p elastic
-      data xpeln/     
+      data xpeln/
      $     0.,  90., 258., 745.,1575.,2760.,4240.,6190.,7900.,8930.,
      $     7430.,6480.,5540.,4633.,3725.,2985.,2490.,2160.,1908.,1743.,
      $     1565.,1465.,1380.,1300.,1260.,1228.,1200.,1200.,1205.,1235.,
@@ -641,7 +641,7 @@ c     pi0-p elastic
      $     835., 820., 810., 800., 790., 800., 780., 775., 770., 765.,
      $     765., 750., 740., 740., 740., 738., 735., 730., 725., 725.,
      $     725., 715., 710., 710., 710., 710./
-      
+
 c     pi-p charge exchange
       data xpchx/
      $     390., 480., 620., 875.,1240.,1675.,2200.,3100.,4350.,4460.,
@@ -657,7 +657,7 @@ c     pi-p charge exchange
      $     52.,  51.,  50.,  50.,  50.,  50.,  50.,  49.,  48.,  47.,
      $     46.,  44.,  42.,  39.,  37.,  35.,  34.,  33.,  32.,  31.,
      $     29.,  27.,  25.,  24.,  24.,  23./
-      
+
 c     pi-p elastic
       data xpelm/
      $     125., 150., 175., 245., 380., 600., 970.,1500.,2140.,2310.,
@@ -673,7 +673,7 @@ c     pi-p elastic
      $     765., 760., 759., 757., 756., 755., 750., 745., 740., 735.,
      $     730., 728., 725., 725., 724., 723., 722., 722., 722., 721.,
      $     720., 715., 710., 710., 710., 710./
-      
+
 c     pi+p elastic
       data xpelp/
      $     180., 400., 990.,2170.,4000.,6580.,9680.,13920.,18000.,20000.,
@@ -689,7 +689,7 @@ c     pi+p elastic
      $     960., 940., 930., 920., 900., 898., 890., 880., 870., 860.,
      $     840., 830., 820., 810., 800., 795., 785., 780., 775., 765.,
      $     760., 755., 750., 745., 740., 735./
-      
+
 c     pi+p single pi production
       data xspp/
      $     0.,   0.,   1.,   3.,   5.,   9.,  13.,  21.,  30.,  41.,
@@ -704,7 +704,7 @@ c     pi+p single pi production
      $     1960.,1980.,2000.,2018.,2038.,2058.,2080.,2098.,2119.,2139.,
      $     2158.,2180.,2198.,2215.,2235.,2252.,2270.,2278.,2286.,2295.,
      $     2300.,2305.,2313.,2319.,2321.,2325.,2330./
-      
+
 c     pi0p single pi production
       data xspn/
      $     0.,   0.,   1.,   8.,  23.,  42.,  69., 100., 135., 175.,
@@ -719,7 +719,7 @@ c     pi0p single pi production
      $     2290.,2305.,2319.,2332.,2348.,2360.,2372.,2388.,2400.,2412.,
      $     2425.,2438.,2448.,2458.,2468.,2475.,2485.,2488.,2490.,2489.,
      $     2488.,2485.,2482.,2479.,2475.,2470.,2465./
-      
+
 c     pi-p single pi production
       data xspm/
      $     0.,   5.,  10.,  20.,  39.,  68., 110., 160., 230., 305.,
@@ -734,13 +734,13 @@ c     pi-p single pi production
      $     2622.,2630.,2643.,2650.,2659.,2665.,2670.,2679.,2685.,2692.,
      $     2698.,2700.,2703.,2705.,2702.,2701.,2700.,2692.,2688.,2679.,
      $     2671.,2660.,2651.,2640.,2628.,2613.,2600./
-      
-C     PI DEUTERON	ABSORPTION (in mb (without factor 100))
+
+C     PI DEUTERON       ABSORPTION (in mb (without factor 100))
       DATA XABS/
      $     2., 3., 5.,12.,18.,27.,37.,50.,60.,45.,
      $     30.,20., 10.,5.,3.,2.,2.,1.,1.,1.,0./
-      
-      
+
+
 C *** one time initialization
       if(called.eq.0)then
          called=1
@@ -762,35 +762,35 @@ C *** one time initialization
             pc=pl/sqrt(1.+2*el/amn+(upi/amn)**2)/197.329
             pk=pc**2
             call nuchis(tl,20.,21,ilo,ihi,erem)
-            
+
             s11=phs11(ihi)*erem+phs11(ilo)*(1.-erem)
             s31=phs31(ihi)*erem+phs31(ilo)*(1.-erem)
-            
+
             p11=php11(ihi)*erem+php11(ilo)*(1.-erem)
             p13=php13(ihi)*erem+php13(ilo)*(1.-erem)
             p31=php31(ihi)*erem+php31(ilo)*(1.-erem)
             p33=php33(ihi)*erem+php33(ilo)*(1.-erem)
-            
+
             ep11=pep11(ihi)*erem+pep11(ilo)*(1.-erem)
             d13=phd13(ihi)*erem+phd13(ilo)*(1.-erem)
             d15=phd15(ihi)*erem+phd15(ilo)*(1.-erem)
-            
+
             w01=      (sind(s31)**2+sind(p31-p33)**2) !*g3**2
-            
+
             w02= (sind(s11)**2-sind(s31-s11)**2-3/2.*sind(s31)**2
      $           -ep11*(sind(p31-p11)**2-sind(p33-p11)**2)
      $           +sind(p31-p13)**2-sind(p33-p13)**2
      $           +sind(s31-d13)**2+3/2.*sind(s31-d15)**2
      $           -sind(d13)**2-3/2.*sind(d15)**2) !*g1*g3
-            
+
             w03=(-3/2.*sind(s11)**2+ep11*sind(p11-p13)**2+(ep11-1)**2/4.
      $           +sind(s11-d13)**2+3/2.*sind(s11-d15)**2
      $           -3/2.*sind(d13-d15)**2+3/2.*sind(d13)**2
      $           +9/4.*sind(d15)**2) !*g1**2
-            
+
             w11=2*(  sind(s31)*sind(p31)*cosd(s31-p31)
      $           +2*sind(s31)*sind(p33)*cosd(s31-p33)) !*g3**2
-            
+
             w12=(ep11*(sind(p11)**2-sind(s31-p11)**2)
      $           +sind(p31)**2-sind(s11-p31)**2
      $           +2*(sind(p33)**2+sind(p13)**2-sind(s31-p13)**2
@@ -799,34 +799,34 @@ C *** one time initialization
      $           +(-2*sind(p31-d13)**2+9/2.*sind(p31-d15)**2-5/2.*sind(p31)**2
      $           +5*sind(p33-d13)**2-5*sind(p33)**2-3*sind(d13)**2
      $           -9/2.*sind(d15)**2) !*g1*g3
-            
+
             w13=(ep11*(sind(p11)**2-sind(s11-p11)**2)
      $           +2*(sind(p13)**2-sind(s11-p13)**2)+3*sind(s11)**2
      $           +ep11*(-2*sind(p11-d13)**2+9/2.*sind(p11-d15)**2
      $           -5/2.*sind(p11)**2)
      $           +5*sind(p13-d13)**2-5*sind(p13)**2-3*sind(d13)**2
      $           -9/2.*sind(d15)**2) !*g1**2
-            
+
             w21=3*(sind(p33)**2+2*sind(p31)*sind(p33)*cosd(p31-p33)) !*g3**2
-            
+
             w22=     +3*(ep11*(sind(p11)**2-sind(p33-p11)**2)
      $           +    2*(sind(p13)**2+sind(p33)**2)+sind(p31)**2
      $           -      (sind(p33-p13)**2+sind(p31-p13)**2)
      $           -sind(s31-d13)**2-3/2.*sind(s31-d15)**2+5/2.*sind(s31)**2
      $           +sind(d13)**2+3/2.*sind(d15)**2) !*g1*g3
-            
+
             w23=   +  3*(2*sind(p13)**2+ep11*(sind(p11)**2-sind(p11-p13)**2)
      $           -sind(s11-d13)**2-3/2.*sind(s11-d15)**2+5/2.*sind(s11)**2
      $           +6*sind(d13-d15)**2-4*sind(d13)**2-6*sind(d15)**2) !*g1**2
-            
+
             w32=(-15/2.*sind(p31-d15)**2+15/2.*sind(p31)**2-9*sind(p33-d13)**2
      $           -6*sind(p33-d15)**2+15*sind(p33)**2+9*sind(d13)**2
      $           +27/2.*sind(d15)**2) !*g1*g3
-            
+
             w33= +(15/2.*ep11*(-sind(p11-d15)**2+sind(p11)**2)
      $           -9*sind(p13-d13)**2-6*sind(p13-d15)**2+15*sind(p13)**2
      $           +9*sind(d13)**2+27/2.*sind(d15)**2) !*g1**2
-            
+
             w43= 45/2.*(sind(d13)**2-sind(d13-d15)**2)+135/4.*sind(d15)**2 !*g1**2
             do i2=1,4
                g1=gm1(i2)
@@ -839,7 +839,7 @@ C *** one time initialization
                dang(5,i3,i2)=(                    w43*g1**2)/pk
             end do
          end do
-         
+
 #if defined(VMS) &&    !defined(USE_TEXT_FILE)
          OPEN(UNIT=33, FILE='/u/sbd0v3/fgoebel/nucang.dat', STATUS='OLD',
      $        readonly,shared)
@@ -856,17 +856,17 @@ c     $    file='sys$usrdevice:[gajewski.dat]nucang.dat')
 c     do i1=1,428
 c     read(33,rec=i1)(angdata(i2,i1),i2=1,51)
 c     end do
-#else 
+#else
 C     open(33,status='old',form='unformatted',
 C     $    recl=51,readonly,shared,convert='vaxd',
 C     $    file='~/dat/nucang.dat')
 c     read(33)angdata
 #endif
          close(33)
-         
+
       end if
 C***** End one time initialization
-      
+
       if(ides.eq.10)then
          notuj=.true.
       else
@@ -880,29 +880,29 @@ C     MAGNITUDE OF CMS MOMENTUM
          GO TO 200
       endif
       PCMSM=SQRT((ECMS2-(UPI-UNUCL)**2)*(ECMS2-(UPI+UNUCL)**2)/(4.0*ECMS2))
-      
-C     EQUIVALENT PION	ENERGY FOR STATIONARY TARGET
+
+C     EQUIVALENT PION   ENERGY FOR STATIONARY TARGET
       EINEQ=(ECMS2-UNUCL**2-UPI**2)/(2.0*UNUCL)
       IF(EINEQ.LT.UPI) then
          pninttype=0
          GO TO 200
       endif
       t=eineq-upi
-      
+
 C     ABSORPTION CROSS SECTION WEIGHTED BY RATIO OF LOCAL
 C     NUCLEON DENSITY TO DEUTERON DENSITY.AT THIS STAGE RHON
 C     CONTAINS 0.1 FACTOR FOR UNITS.THE RHOD FACTOR ADJUSTMENT
 C     THROUGH PUTTING THE "DEUTERON RADIUS" AT 9.5 TAKES THIS INTO
 C     ACCOUNT.PUTTING IN THE 0.1 FACTOR INTO RHOD IMPLIES THAT 9.5
 C     CORRESPONDS TO A SO CALLED "QUASI DEUTERON" RADIUS OF 4.4 FM.
-      
+
       call nuchis(t,20.,21,ilo,ihi,erem)
 c      PPABS=(XABS(ihi)*erem+xabs(ilo)*(1.-erem))*0.5*RHON/RHOD
       PPABS=(XABS(ihi)*erem+xabs(ilo)*(1.-erem))
-      
+
       call nuchis(t,20.,126,ilo,ihi,erem)
       call nuchis(t-180.,20.,117,ilo1,ihi1,erem1)
-      
+
       ichint=chint
       if(ichint)1,2,3
  1    continue                  !pi-
@@ -939,7 +939,7 @@ c      PPABS=(XABS(ihi)*erem+xabs(ilo)*(1.-erem))*0.5*RHON/RHOD
       end if
  4    continue
       if(ecms2.lt.1488400.)psp=0.
-      
+
       PTOT=PPEL+PPCHX+PPABS+psp
       junk=ptot                         ! just used to print later
 
@@ -953,7 +953,7 @@ C********HERE WE NEED TO NORMALIZE
          go to 200
       endif
       DIST=-LOG(XR)/ptot
-      
+
 C********IF NOTHING HAPPENS
       IF(STEP.LT.DIST) then
          pnintttype=0
@@ -980,12 +980,12 @@ C********IS IT ABSORBED BY DI NUCLEON?
       PSUM=PPABS
       IF(YR.Le.PSUM) THEN
          pninttype=1
-	 if(notuj)IABS=IABS+1
+         if(notuj)IABS=IABS+1
          Uin=1.e-2
          CHINT=0.0
-	 ihap=1
-	 ides=0
-	 go to 200
+         ihap=1
+         ides=0
+         go to 200
       END IF
 c*********does pion produce an additional pion ?
       psum=psum+psp
@@ -993,7 +993,7 @@ c*********does pion produce an additional pion ?
          pninttype=2
          go to 300
       endif
-      
+
 C*********DOES  PION SCATTER OFF  FERMI NUCLEON?
       PSUM=PSUM+PPEL
       IF(YR.LT.PSUM) THEN
@@ -1005,16 +1005,16 @@ C*********PION CHARGE EXCHANGE ON FERMI NUCLEON
          IPATH=1
          ka=3
       END IF
-      
-      
+
+
 C*********COME HERE FOR PI-P KINEMATICS WITH FERMI MOTION
  104  CONTINUE
-      
+
       if(t.le.400.)then
          do k=1,5
             aa(k)=dang(k,ihi,ka)*erem+dang(k,ilo,ka)*(1-erem)
          end do
-         
+
          DO K=1,18
             angb=(k-1)*10.+5.
             cab=cosd(angb)
@@ -1025,7 +1025,7 @@ C*********COME HERE FOR PI-P KINEMATICS WITH FERMI MOTION
             ANGLD(K)=sind(ANGB)*(aa(1)+ang)
          END DO
          CALL CFD(ANGLDI,NANGL,ANGLD)
-         
+
 C     DO SCATTERING IN CMS
          xXR=ranf()
          ANG=PRBIN(ANGLDI,NANGL,0.,10.,xXR)
@@ -1036,15 +1036,15 @@ C     DO SCATTERING IN CMS
          krec2=krec1-ilo2+ihi2
          if(krec1.ne.krecsav)then
             krecsav=krec1
-            
+
             do k=1,51
                b1(k)=angdata(k,krec1)
                b2(k)=angdata(k,krec2)
             end do
-            
+
 c     read(33,rec=krec1)b1
 c     read(33,rec=krec2)b2
-            
+
             do k=1,51
                b3(k)=b1(k)*erem2+b2(k)*(1-erem2)
             end do
@@ -1056,7 +1056,7 @@ c     read(33,rec=krec2)b2
       PHI=-1
       CALL CONE(UP4CMS,UPOUTC,CANGL,PHI)
       call nuckin(upoutc,pcmsm,upi,pout2lm,pout1l,pout1lm,eout1l)
-      
+
       IF(POUT2LM.LT.PFERMI) then
          pninttype=0
          GO TO 200
@@ -1067,7 +1067,7 @@ c     read(33,rec=krec2)b2
          UPIN(i2)=PIN(i2)/POUT1LM
       END DO
       EIN=EOUT1L
-      
+
       IF(IPATH.ne.0)THEN
          if(chint.eq.0.)then
             IF(ranf().LT.0.5) THEN
@@ -1083,9 +1083,9 @@ c     read(33,rec=krec2)b2
          nel=1
       END IF
       ihap=1
-      
+
  200  return
-      
+
  300  continue                  !pion production
       call nucpiprd(eineq,ka,piso,chiso,uiso)
       pout2lm=sqrt(piso(4,1)**2-amn2)
@@ -1109,23 +1109,23 @@ c     read(33,rec=krec2)b2
       end do
       go to 200
       end
-      
+
       subroutine nucpiprd(e,ka,piso,chiso,uiso)
       dimension piso(4,3),chiso(3),uiso(3)
-c     
-c	ka=      1 pi+ p, pi- n  ??? I FUCKED THIS DOCUMENTATION UP - CDM
-c	         2 pi+ n, pi- p
-c	         3 pi0 p, pi0 n
+c
+c       ka=      1 pi+ p, pi- n  ??? I FUCKED THIS DOCUMENTATION UP - CDM
+c                2 pi+ n, pi- p
+c                3 pi0 p, pi0 n
 c
       common /nuccms/rhon,pfermi,unucl,ecms2,up4cms(3),beta(3),prot
       logical prot
-      
+
       dimension fripn(117),fmxsp(117),pnmi(101)
       dimension pcfsl1(117),pcfsl2(117),pnfsl1(117),pnfsl2(117)
-      
+
       dimension dldir(3),pdl(4),pdldec(4,3),rc(5)
       parameter (upi=139.6, amnucl=939.,upo=134.9)
-      data fripn/    
+      data fripn/
      $    3.,  14.,  39.,  90., 181., 326., 540., 838.,1236.,1726.,
      $ 2259.,2732.,3135.,3484.,3784.,4036.,4242.,4410.,4549.,4669.,
      $ 4775.,4869.,4952.,5025.,5092.,5152.,5207.,5258.,5305.,5348.,
@@ -1139,7 +1139,7 @@ c
      $ 9250.,9298.,9346.,9393.,9440.,9487.,9534.,9581.,9628.,9674.,
      $ 9721.,9767.,9814.,9860.,9907.,9954.,10000./
 
-      data fmxsp/    
+      data fmxsp/
      $   53., 106., 150., 192., 233., 275., 318., 360., 403., 447.,
      $  491., 536., 581., 627., 672., 718., 765., 811., 858., 905.,
      $  953.,1000.,1048.,1096.,1144.,1192.,1240.,1288.,1336.,1385.,
@@ -1153,7 +1153,7 @@ c
      $ 4844.,4892.,4940.,4989.,5037.,5085.,5134.,5182.,5230.,5278.,
      $ 5327.,5375.,5423.,5471.,5519.,5568.,5616./
 
-      data pnmi/     
+      data pnmi/
      $ 1078.6,1134.,1149.,1159.,1166.,1173.,1178.,1183.,1188.,1192.,
      $ 1195.,1199.,1203.,1206.,1208.,1211.,1214.,1217.,1220.,1222.,
      $ 1225.,1227.,1230.,1233.,1236.,1238.,1241.,1244.,1247.,1251.,
@@ -1166,7 +1166,7 @@ c
      $ 2112.,2129.,2146.,2163.,2180.,2197.,2215.,2232.,2249.,2265.,
      $ 2282./
 
-      data pcfsl1/   
+      data pcfsl1/
      $ 9000.,1800.,  56.,1430.,4860.,6480.,7079.,7263.,7425.,7455.,
      $ 7268.,7104.,6772.,6363.,5685.,4962.,4709.,3776.,3904.,5056.,
      $ 5131.,4892.,4933.,4781.,4417.,3887.,3309.,3140.,3507.,4142.,
@@ -1180,7 +1180,7 @@ c
      $ 7335.,7358.,7389.,7420.,7444.,7481.,7505.,7522.,7547.,7565.,
      $ 7595.,7612.,7627.,7650.,7665.,7687.,7759./
 
-      data pcfsl2/   
+      data pcfsl2/
      $ 11000.,6200.,4926.,5820.,8100.,9190.,9605.,9721.,9825.,9838.,
      $ 9703.,9576.,9333.,9045.,8574.,8079.,7898.,7268.,7367.,8186.,
      $ 8232.,8045.,8044.,7886.,7560.,7113.,6613.,6431.,6665.,7124.,
@@ -1194,7 +1194,7 @@ c
      $ 9089.,9098.,9112.,9127.,9135.,9153.,9162.,9168.,9180.,9186.,
      $ 9201.,9208.,9211.,9220.,9225.,9234.,9276./
 
-      data pnfsl1/   
+      data pnfsl1/
      $ 7000.,   0.,   0.,   0.,2146.,4013.,4700.,4934.,5134.,5181.,
      $ 4979.,4820.,4484.,4062.,3366.,2619.,2392.,1426.,1499.,2559.,
      $ 2658.,2496.,2642.,2676.,2588.,2389.,2236.,2300.,2621.,3042.,
@@ -1208,7 +1208,7 @@ c
      $ 5768.,5789.,5816.,5842.,5865.,5896.,5917.,5933.,5953.,5970.,
      $ 5994.,6008.,6023.,6043.,6055.,6074.,6127./
 
-      data pnfsl2/   
+      data pnfsl2/
      $ 13000.,   0.,   0.,   0.,4996.,7858.,8937.,9253.,9533.,9571.,
      $ 9221.,8905.,8307.,7607.,6483.,5310.,4920.,3441.,3606.,5405.,
      $ 5537.,5177.,5284.,5125.,4714.,4141.,3621.,3559.,4019.,4729.,
@@ -1236,9 +1236,9 @@ c
       pdlt=sqrt(pd2)
       phs=(w-ed)*ed*pdlt/w
       if(ranf().gt.phs/phsm)go to 1
-      
+
       if(ka.eq.1)then           !pi+p,pi-n
-         if(ranf().gt.0.75)then	!backward 25%
+         if(ranf().gt.0.75)then !backward 25%
             cdl=-0.9999995
          else                   !isotropic 75%
             cdl=2*ranf()-1
@@ -1248,7 +1248,7 @@ c
             cdl=-0.9999995      !e>500 -backward 20%
             if(t.lt.500.)cdl=-cdl !e<500 -forward  20%
          else
-            cdl=2*ranf()-1	!isotropic 80%
+            cdl=2*ranf()-1      !isotropic 80%
          end if
       end if
       call cone(up4cms,dldir,cdl,-1.)
@@ -1279,32 +1279,32 @@ c     ********* distribute charges ******
  101     continue
          if(prot)then           !pi+p
             go to (102,103,104)k
- 102        chiso(1)=0		!pi+pi+n
+ 102        chiso(1)=0          !pi+pi+n
             chiso(2)=1
             chiso(3)=1
             go to 105
- 103        chiso(1)=1		!pi+pi0p
+ 103        chiso(1)=1          !pi+pi0p
             chiso(2)=0
             uiso(2) = upo
             chiso(3)=1
             go to 105
- 104        chiso(1)=1		!pi0pi+p
+ 104        chiso(1)=1          !pi0pi+p
             chiso(2)=1
             chiso(3)=0
             uiso(3) = upo
  105        continue
          else                   !pi-n
             go to (106,107,108)k
- 106        chiso(1)=1		!pi-pi-p
+ 106        chiso(1)=1          !pi-pi-p
             chiso(2)=-1
             chiso(3)=-1
             go to 109
- 107        chiso(1)=0		!pi-pi0n
+ 107        chiso(1)=0          !pi-pi0n
             chiso(2)=0
             uiso(2) = upo
             chiso(3)=-1
             go to 109
- 108        chiso(1)=0		!pi0pi-n
+ 108        chiso(1)=0          !pi0pi-n
             chiso(2)=-1
             chiso(3)=0
             uiso(3) = upo
@@ -1327,25 +1327,25 @@ c     ********* distribute charges ******
  201     continue
          if(prot)then           !pi-p
             go to (202,203,204,205,206)k
- 202        chiso(1)=0		!pi+pi-n
+ 202        chiso(1)=0          !pi+pi-n
             chiso(2)=-1
             chiso(3)=1
             go to 208
- 203        chiso(1)=0		!pi-pi+n
+ 203        chiso(1)=0          !pi-pi+n
             chiso(2)=1
             chiso(3)=-1
             go to 208
- 204        chiso(1)=1		!pi0pi-p
+ 204        chiso(1)=1          !pi0pi-p
             chiso(2)=-1
             chiso(3)=0
             uiso(3) = upo
             go to 208
- 205        chiso(1)=1		!pi-pi0p
+ 205        chiso(1)=1          !pi-pi0p
             chiso(2)=0
             uiso(2) = upo
             chiso(3)=-1
             go to 208
- 206        chiso(1)=0		!pi0pi0n
+ 206        chiso(1)=0          !pi0pi0n
             chiso(2)=0
             uiso(2) = upo
             chiso(3)=0
@@ -1353,25 +1353,25 @@ c     ********* distribute charges ******
  208        continue
          else                   !pi+n
             go to (212,213,214,215,216)k
- 212        chiso(1)=1		!pi-pi+p
+ 212        chiso(1)=1          !pi-pi+p
             chiso(2)=1
             chiso(3)=-1
             go to 218
- 213        chiso(1)=1		!pi+pi-p
+ 213        chiso(1)=1          !pi+pi-p
             chiso(2)=-1
             chiso(3)=1
             go to 218
- 214        chiso(1)=0		!pi0pi+n
+ 214        chiso(1)=0          !pi0pi+n
             chiso(2)=1
             chiso(3)=0
             uiso(3) = upo
             go to 218
- 215        chiso(1)=0		!pi+pi0n
+ 215        chiso(1)=0          !pi+pi0n
             chiso(2)=0
             uiso(2) = upo
             chiso(3)=1
             go to 218
- 216        chiso(1)=1		!pi0pi0p
+ 216        chiso(1)=1          !pi0pi0p
             chiso(2)=0
             uiso(2) = upo
             chiso(3)=0
@@ -1395,25 +1395,25 @@ c     ********* distribute charges ******
  301     continue
          if(prot)then           !pi0p
             go to (302,303,304,305,306)k
- 302        chiso(1)=1		!pi+pi-p
+ 302        chiso(1)=1          !pi+pi-p
             chiso(2)=-1
             chiso(3)=1
             go to 308
- 303        chiso(1)=1		!pi-pi+p
+ 303        chiso(1)=1          !pi-pi+p
             chiso(2)=1
             chiso(3)=-1
             go to 308
- 304        chiso(1)=0		!pi+pi0n
+ 304        chiso(1)=0          !pi+pi0n
             chiso(2)=0
             uiso(2) = upo
             chiso(3)=1
             go to 308
- 305        chiso(1)=0		!pi0pi+n
+ 305        chiso(1)=0          !pi0pi+n
             chiso(2)=1
             chiso(3)=0
             uiso(3) = upo
             go to 308
- 306        chiso(1)=1		!pi0pi0p
+ 306        chiso(1)=1          !pi0pi0p
             chiso(2)=0
             uiso(2) = upo
             chiso(3)=0
@@ -1421,25 +1421,25 @@ c     ********* distribute charges ******
  308        continue
          else                   !pi0n
             go to (312,313,314,315,316)k
- 312        chiso(1)=0		!pi-pi+n
+ 312        chiso(1)=0          !pi-pi+n
             chiso(2)=1
             chiso(3)=-1
             go to 318
- 313        chiso(1)=0		!pi+pi-n
+ 313        chiso(1)=0          !pi+pi-n
             chiso(2)=-1
             chiso(3)=1
             go to 318
- 314        chiso(1)=1		!pi-pi0p
+ 314        chiso(1)=1          !pi-pi0p
             chiso(2)=0
             uiso(2) = upo
             chiso(3)=-1
             go to 318
- 315        chiso(1)=1		!pi0pi-p
+ 315        chiso(1)=1          !pi0pi-p
             chiso(2)=-1
             chiso(3)=0
             uiso(3) = upo
             go to 318
- 316        chiso(1)=0		!pi0pi0n
+ 316        chiso(1)=0          !pi0pi0n
             chiso(2)=0
             uiso(2) = upo
             chiso(3)=0
@@ -1452,17 +1452,17 @@ c     ********* distribute charges ******
 
       subroutine nucprd(no,e,ka,piso,chiso,uiso)
       dimension piso(4,4),chiso(4),uiso(4)
-c     ka=	0	primary neutron
-c               1	primary proton
+c     ka=       0       primary neutron
+c               1       primary proton
       common /nuccms/rhon,pfermi,unucl,ecms2,up4cms(3),beta(3),prot
       logical prot
-      
+
       dimension dldir(3),pdl(4),pdldec(4,4)
-      
+
       parameter (upi=139.6, amnucl=939., am2n2=4*amnucl**2)
-      
+
       dimension frinn(161),fmxsm(161),dmin(101),fmxdn(130),fsln(176)
-      data frinn/    
+      data frinn/
      $     2.,   7.,  16.,  30.,  52.,  86., 134., 201., 290., 406.,
      $     551., 727., 945.,1204.,1502.,1832.,2179.,2510.,2806.,3075.,
      $     3321.,3546.,3751.,3935.,4100.,4246.,4374.,4486.,4585.,4674.,
@@ -1480,8 +1480,8 @@ c               1	primary proton
      $     9277.,9314.,9351.,9388.,9424.,9461.,9497.,9534.,9570.,9606.,
      $     9642.,9678.,9714.,9750.,9786.,9821.,9857.,9893.,9929.,9964.,
      $     10000./
-      
-      data fmxsm/    
+
+      data fmxsm/
      $     341., 598., 776., 923.,1052.,1168.,1276.,1377.,1472.,1563.,
      $     1651.,1735.,1816.,1896.,1973.,2048.,2122.,2194.,2265.,2335.,
      $     2404.,2471.,2538.,2604.,2669.,2733.,2797.,2860.,2922.,2984.,
@@ -1500,7 +1500,7 @@ c               1	primary proton
      $     9263.,9312.,9360.,9409.,9458.,9506.,9555.,9604.,9652.,9701.,
      $     9749./
 
-      data dmin/     
+      data dmin/
      $     1078.6,1133.,1148.,1158.,1166.,1172.,1178.,1183.,1187.,1191.,
      $     1195.,1198.,1202.,1205.,1208.,1211.,1213.,1216.,1219.,1221.,
      $     1224.,1226.,1229.,1231.,1234.,1236.,1239.,1242.,1245.,1248.,
@@ -1512,8 +1512,8 @@ c               1	primary proton
      $     1935.,1947.,1960.,1973.,1986.,2000.,2014.,2029.,2044.,2059.,
      $     2075.,2091.,2107.,2124.,2140.,2157.,2174.,2190.,2207.,2224.,
      $     2240./
-      
-      data fmxdn/    
+
+      data fmxdn/
      $     2221.,2297.,2373.,2446.,2519.,2590.,2660.,2730.,2798.,2865.,
      $     2932.,2998.,3063.,3128.,3192.,3255.,3318.,3380.,3442.,3504.,
      $     3565.,3625.,3685.,3745.,3804.,3863.,3922.,3981.,4039.,4096.,
@@ -1527,8 +1527,8 @@ c               1	primary proton
      $     7841.,7891.,7941.,7991.,8041.,8091.,8141.,8191.,8241.,8291.,
      $     8341.,8390.,8440.,8490.,8539.,8589.,8639.,8688.,8738.,8787.,
      $     8837.,8886.,8936.,8985.,9035.,9084.,9133.,9183.,9232.,9281./
-      
-      data fsln/     
+
+      data fsln/
      $     5050.,5050.,5050.,5050.,5050.,5050.,5050.,5050.,5050.,5050.,
      $     5050.,5050.,5050.,5050.,5050.,5050.,5050.,5050.,5050.,5050.,
      $     5050.,5050.,5050.,5050.,5050.,5050.,5050.,5050.,5050.,5050.,
@@ -1547,7 +1547,7 @@ c               1	primary proton
      $     6416.,6417.,6422.,6427.,6431.,6436.,6439.,6445.,6451.,6455.,
      $     6462.,6462.,6467.,6473.,6476.,6480.,6485.,6489.,6495.,6499.,
      $     6500.,6507.,6510.,6515.,6518.,6525./
-      
+
       iraz=0
       w=sqrt(ecms2)
       tt=e-amnucl
@@ -1570,11 +1570,11 @@ c               1	primary proton
  1    call nuchis(t-300.,20.,161,ilo,ihi,erem)
       rf1=(frinn(ihi)*erem+frinn(ilo)*(1-erem))*1e-4
       phsm=(fmxsm(ihi)*erem+fmxsm(ilo)*(1-erem))*100.
-      
+
  2    rf=rf1*ranf()
       call nuchis(rf*100,1.,101,ilo1,ihi1,erem1)
       amd1=dmin(ihi1)*erem1+dmin(ilo1)*(1-erem1)
-      
+
       if(no.eq.1)then
 c     ******** single production ***********
          ed=(amd1**2+ecms2-amnucl**2)/2/w
@@ -1583,7 +1583,7 @@ c     ******** single production ***********
          pdlt=sqrt(pd2)
          phs=(w-ed)*ed*pdlt/w
          if(ranf().gt.phs/phsm)go to 2
-         
+
          if(tt.lt.500.)then
             aiso=1.
          else if(tt.lt.1000.)then
@@ -1679,7 +1679,7 @@ c     ****************** end of single production ****************
                rf1=rf2
                go to 2
             end if
-            
+
             cdl=-.9999995
             if(ranf().lt.0.5)cdl=-cdl
             call cone(up4cms,dldir,cdl,-1.0)
@@ -1701,7 +1701,7 @@ c     ****************** end of single production ****************
             uiso(2) = upi
             uiso(3) = amnucl
             uiso(4) = upi
-            rpi=ranf()			
+            rpi=ranf()
             rnu=ranf()
             if((ka-ka1).eq.0)then !p-p n-n
                if(rpi.lt.0.6)then
@@ -1792,7 +1792,7 @@ C     Find a starting point inside the nucleus for the hadron.
       dimension start(3)
       common /nucdis/ probmi(31),probdi(31),rhotab(30),pnorm
       parameter ( rbin=.2, rmin=0, rmax=5.99, nbin=30)
-      
+
       if(icont.eq.1)then
          do i1=1,3
             start(i1)=0
@@ -1824,7 +1824,7 @@ C     Find a starting point inside the nucleus for the hadron.
       logical prot
       dimension pout1l(3),poutel(3),rv(3)
       parameter (upi=139.6,  step=0.2)
-      
+
       real xeta(20),xome(20)
 C     PARTIAL AND TOTAL CROSS SECTIONS
 C     PI-P TO ETA+N CROSS SECTION (MB) AT 20*20MEV/C VALUES
@@ -1832,21 +1832,21 @@ C     OF THE CMS MOM. OF THE ETA
       DATA XETA/
      $     0.,.1,.25,.55,1.,1.25,1.4,1.6,1.7,1.75,
      $     1.8,1.8,1.75,1.7,1.6,1.4,1.3,1.15,1.0,.9/
-C     PI-P TO OME+N CROSS	SECTION	(MB) AT	20*20MEV/C VALUES
+C     PI-P TO OME+N CROSS       SECTION (MB) AT 20*20MEV/C VALUES
 C     OF THE CMS MOM. OF THE OME
       DATA XOME/
      $     0.,.1,.15,.28,.45,.65,.90,1.05,1.20,1.35,
      $     1.5,1.65,1.8,1.95,2.1,2.25,2.4,2.55,2.7,2.85/
-      
-      
+
+
       ides=1
       IF(ECMS2.LE.(UPI+UNUCL)**2) GO TO 200
       IF(ECMS2.LE.(uin+unucl)**2) GO TO 200
-      
+
       PCMSM2=SQRT((ECMS2-(UPI-UNUCL)**2)*(ECMS2-(UPI+UNUCL)**2)/(4.0*ECMS2))
       PCMSM1=SQRT((ECMS2-(UIn-UNUCL)**2)*(ECMS2-(UIn+UNUCL)**2)/(4.0*ECMS2))
       pinm=sqrt(pin(1)**2+pin(2)**2+pin(3)**2)
-      
+
       call nuchis(pcmsm1,20.,20,ilo,ihi,prem)
       if(jpar.eq.JETA)then
          PINT=1.5/.71*
@@ -1871,18 +1871,18 @@ C     OF THE CMS MOM. OF THE OME
       else
          print *, 'Not a vector meson', jpar
       end if
-      
+
       FINCH=0.6666*pint
 C     RHON FACTOR ALREADY IN
-      
+
       XR=ranf()+1.e-6
       YR=ranf()*ptot
       DIST=-LOG(XR)/ptot
-      
+
 C**********IFNOTHING HAPPENS
       IF(STEP.LT.DIST)GO TO 200
 C**********IFSOMETHING HAPPENS
-c     
+c
 C**********DOESIT DECAY?
       FSUM=pDEC
       IF(YR.LT.FSUM)THEN
@@ -1890,15 +1890,15 @@ C**********DOESIT DECAY?
          IDEC=IDEC+1
          GO TO 99
       END IF
-      
+
 C     VECTOR MESON MUST HAVE INTERACTED
-      
+
       call ranve(1.,rv,2.,-1.)
-      
-C****************DOES VECTOR	MESON ELASTICALLY SCATTER?
+
+C****************DOES VECTOR    MESON ELASTICALLY SCATTER?
       FSUM=FSUM+pELA
       IF(YR.LT.FSUM)THEN
-         
+
          call nuckin(rv,pcmsm1,uin,poutnlm,poutel,poutelm,eoutel)
          IF(POUTNLM.LT.PFERMI) go to 200
          DO i2=1,3
@@ -1906,13 +1906,13 @@ C****************DOES VECTOR	MESON ELASTICALLY SCATTER?
             UPIN(i2)=PIN(i2)/POUTELM
          END DO
          EIN=EOUTEL
-	 ihap=1
-	 nel=1
+         ihap=1
+         nel=1
          GO TO 200
       END IF
-      
+
 C****************VECTOR MESON MAKES A PION*********
-      
+
       call nuckin(rv,pcmsm2,upi,pout2lm,pout1l,pout1lm,eout1l)
       IF(POUT2LM.LT.PFERMI)GO TO 200
       ihap=1
@@ -1972,10 +1972,10 @@ C     to originate from a nucleon inside the nucleus.
       parameter (w=-.05, c=2.61, z=.513, d=.102, g=2.76, e=.35)
       RO=(1+W*(R/C)**2)/(1+EXP((R-C)/Z))
       IF(R.EQ.0)THEN
-	 DRO=1
+         DRO=1
       ELSE
-	 GR=G*R
-	 DRO=SIN(GR)/GR
+         GR=G*R
+         DRO=SIN(GR)/GR
       END IF
       DRO=DRO*D*EXP(-(E*R)**2)
       ROXY=RO-DRO
@@ -2012,7 +2012,7 @@ C (To read this comment, please add 1 grain, salt. -bviren)
 
 C****************************************************
 C   Handle kaon nucleon interactions in the range 1.5-2Gev Center of Mass
-C     Energy.  This is only set up to handle K+N->m+b where m is a meson and 
+C     Energy.  This is only set up to handle K+N->m+b where m is a meson and
 C     b is a baryon.
 C**** The charge of the kaon controls if it is a k+ k0 k0b or a k-
 C     k+ > 0.9
@@ -2143,9 +2143,9 @@ C**** Turn the partial wave amplitudes in to total cross sections.
       do i1 = 1,ncross
          call nuckcrs(PKaon,tab(1,i1),cross(i1))
       enddo
-      
-C**** Convert the cross sections into free paths and find the one that is 
-C     the shortest.  
+
+C**** Convert the cross sections into free paths and find the one that is
+C     the shortest.
       free = 99999999.9
       ifree = 0
       do i1 = 1,ncross
@@ -2200,7 +2200,7 @@ C**** This is a K0bar
             Mmes = amko
             Qbar = 1.0
             Mbar = amp
-         else 
+         else
 C**** This is a Kminus
             Qmes = -1.0
             Mmes = amkc
@@ -2226,7 +2226,7 @@ C**** This is a K0bar
             Mmes = amko
             Qbar = 0.0
             Mbar = amn
-         else 
+         else
 C**** This is a Kminus
             Qmes = -1.0
             Mmes = amkc
@@ -2252,7 +2252,7 @@ C**** This is a K0bar
             Mmes = amkc
             Qbar = 1.0
             Mbar = amp
-         else 
+         else
 C**** This is a Kminus
             Qmes = -0.1
             Mmes = amko
@@ -2317,7 +2317,7 @@ C**** The number of energy bins.
 C**** The energy bins and the coefficients.
       real energy(nenr)
       complex coeffs(8,nenr)
-      
+
 C**** Do a simple minded search for the correct energy bin.  If this runs
 C     too slow then here is where to speed it up.
       if (enr.le.energy(1)) then
@@ -2333,7 +2333,7 @@ C     too slow then here is where to speed it up.
          enddo
          low = low - 1
          frac = (enr-energy(low))/(energy(low+1)-energy(low))
-      endif 
+      endif
 
 C**** Do a simple linear interpolation between the bins.
       do i1 = 1,8
@@ -2390,9 +2390,9 @@ C**** Find the differential cross section at ncrs different grid points.
          call nucdcrs(PKaon,tab,r1,Dcrs(i1))
       enddo
 
-C**** Sum the cross section to get the total.  Notice that this is not 
+C**** Sum the cross section to get the total.  Notice that this is not
 C     normalized to the total cross section, but it doesn't matter since
-C     we have already decided that this interaction is taking place and 
+C     we have already decided that this interaction is taking place and
 C     are just generating the angular distribution.
       do i1 = 2,ncrs
          Dcrs(i1) = Dcrs(i1) + Dcrs(i1-1)
@@ -2405,7 +2405,7 @@ C**** Find the cosine
          i1 = i1 + 1
       enddo
 
-C**** Find the fractional diffenence from the cosine point found and the 
+C**** Find the fractional diffenence from the cosine point found and the
 C     one wanted.
       r1 = r1 - Dcrs(i1)
       if (i1.eq.1) then
@@ -2466,24 +2466,24 @@ c     integer and -1<x<1.
       else
          pmmp1 = x*1.*pmm
          if (l.eq.1) then
-	    plgndr = pmmp1
+            plgndr = pmmp1
          else
-	    do ll = 2,l
+            do ll = 2,l
                pll = (x*(2*ll-l)*pmmp1-(ll-1)*pmm)/(ll)
                pmm = pmmp1
                pmmp1 = pll
-	    enddo
-	    plgndr = pll
+            enddo
+            plgndr = pll
          endif
       endif
-      
+
       return
       end
 
 C**** Return the complex legendre coefficients for center of mass energy enr.
 C     B.R.Martin and M.K.Pidcock, Nuc.Phys. B126 (1977) 266-284
 C     B.R.Martin and M.K.Pidcock, Nuc.Phys. B126 (1977) 285-297
-C        Kbar-N Interactions in the Resonance Region. (I) Analysis of data 
+C        Kbar-N Interactions in the Resonance Region. (I) Analysis of data
 C             and (II) Amplitudes
       subroutine nucknkn0(enr,tab)
       implicit none
@@ -2579,7 +2579,7 @@ C**** The energy bins and the coefficients.
      $     ( 0.018, 0.041),(-0.226, 0.123),( 0.012, 0.034),( 0.099, 0.061),
      $     (-0.108, 0.618),(-0.225, 0.542),(-0.010, 0.329),(-0.021, 0.280),
      $     ( 0.019, 0.040),(-0.226, 0.120),( 0.005, 0.040),( 0.110, 0.103) /
-      
+
       call nucclxint(enr,tab,energy,coeffs,nenr)
 
       return
@@ -2588,7 +2588,7 @@ C**** The energy bins and the coefficients.
 C**** Return the complex legendre coefficients for center of mass energy enr.
 C     B.R.Martin and M.K.Pidcock, Nuc.Phys. B126 (1977) 266-284
 C     B.R.Martin and M.K.Pidcock, Nuc.Phys. B126 (1977) 285-297
-C        Kbar-N Interactions in the Resonance Region. (I) Analysis of data 
+C        Kbar-N Interactions in the Resonance Region. (I) Analysis of data
 C             and (II) Amplitudes
       subroutine nucknkn1(enr,tab)
       implicit none
@@ -2655,17 +2655,17 @@ C**** The energy bins and the coefficients.
      $     (-0.031, 0.086),(-0.027, 0.065),( 0.118, 0.119),( 0.013, 0.096),
      $     (-0.268, 0.511),(-0.232, 0.188),( 0.001, 0.087),( 0.023, 0.113),
      $     (-0.015, 0.109),(-0.034, 0.055),( 0.112, 0.154),(-0.019, 0.094) /
-      
+
       call nucclxint(enr,tab,energy,coeffs,nenr)
 
       return
       end
 
 C**** Return the complex legendre coefficients for center of mass energy enr.
-C     Hyslop, et al. Phys. Rev. D, Vol. 46, No. 3, 1 August 1992 
+C     Hyslop, et al. Phys. Rev. D, Vol. 46, No. 3, 1 August 1992
 C     p.961
 C     Partial-wave analysis of K+-nucleon scattering
-C     
+C
       subroutine nucknknp0(enr,tab)
       implicit none
 C**** The energy to get the coefficients for.
@@ -2712,17 +2712,17 @@ C**** The energy bins and the coefficients.
      $     (-0.134460, 0.018419), (0.121057, 0.015908),
      $     (0.022856, 0.000523), (0.003840, 0.000015),
      $     (-0.016054, 0.000258), (0.012391, 0.000154),
-     $     (-0.300768, 0.100577), (0.493321, 0.426624), 
+     $     (-0.300768, 0.100577), (0.493321, 0.426624),
      $     (-0.139160, 0.019756), (0.116973, 0.017229),
      $     (0.013263, 0.000176), (0.007505, 0.000056),
      $     (-0.019891, 0.000396), (0.013437, 0.000181),
      $     (-0.310847, 0.108370), (0.497259, 0.515279),
      $     (-0.141003, 0.020294), (0.115293, 0.021244),
-     $     (0.002094, 0.000004), (0.012216, 0.000149), 
+     $     (0.002094, 0.000004), (0.012216, 0.000149),
      $     (-0.023728, 0.000563), (0.013082, 0.000421),
      $     (-0.315067, 0.111757), (0.487246, 0.589953),
      $     (-0.140836, 0.020245), (0.120756, 0.031046),
-     $     (-0.009599, 0.000092), (0.018138, 0.000579), 
+     $     (-0.009599, 0.000092), (0.018138, 0.000579),
      $     (-0.027214, 0.000741), (0.012036, 0.000395),
      $     (-0.314389, 0.111207), (0.468636, 0.652087),
      $     (-0.139160, 0.019756), (0.136501, 0.049592),
@@ -2776,17 +2776,17 @@ C**** The energy bins and the coefficients.
      $     (-0.085964, 0.007445), (0.082437, 0.244160),
      $     (-0.030524, 0.000933), (0.169685, 0.119596),
      $     (-0.058682, 0.003456), (0.035554, 0.098458) /
-      
+
       call nucclxint(enr,tab,energy,coeffs,nenr)
 
       return
       end
 
 C**** Return the complex legendre coefficients for center of mass energy enr.
-C     Hyslop, et al. Phys. Rev. D, Vol. 46, No. 3, 1 August 1992 
+C     Hyslop, et al. Phys. Rev. D, Vol. 46, No. 3, 1 August 1992
 C     p.961
 C     Partial-wave analysis of K+-nucleon scattering
-C     
+C
       subroutine nucknknp1(enr,tab)
       implicit none
 C**** The energy to get the coefficients for.
@@ -2897,7 +2897,7 @@ C**** The energy bins and the coefficients.
      $     (0.074901, 0.216910),(-0.145683, 0.096235),
      $     (0.021207, 0.021931),(-0.052639, 0.033653),
      $     (0.031411, 0.003499),(-0.019339, 0.009973) /
-      
+
       call nucclxint(enr,tab,energy,coeffs,nenr)
 
       return

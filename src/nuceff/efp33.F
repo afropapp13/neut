@@ -1,14 +1,14 @@
 *     -----------------------------------------------------
       COMPLEX FUNCTION EFP33(Q)
 *     -----------------------------------------------------
-*     
+*
 *     ( purpose )
 *       OBTAIN PHASE SHIFT OF P33 WAVE IN PI-N SCATTERING
 *
-*     ( input ) 
+*     ( input )
 *           Q   : Relative momentum in C-M system(MeV)
 *
-*     ( output ) 
+*     ( output )
 *        EFP33  : (EXP(2*I*DELTA)-1)/2I/Q**3
 
       COMPLEX I

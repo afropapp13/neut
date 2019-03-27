@@ -2,17 +2,17 @@
 *     ------------------------------------------------
       SUBROUTINE NEAPIVCT(IPAR,JMOD0,ENEUT,DIRNEU,IERR)
 *     ------------------------------------------------
-*     
+*
 *     ( purpose )
 *       VECTOR GENERATION FOR MULTI PION PRODUCTION
 *
-*     ( input ) 
+*     ( input )
 *       IPAR    : PARICLE CODE
 *       JMOD0   : INTERACTION MODE
 *       ENEUT   : ENERGY OF NEUTRINO ( GEV )
 *       DIRNEU(3) : NEUTRINO DIRECTION
 *
-*     ( output ) 
+*     ( output )
 *       IERR    : ERROR CODE
 *       COMMON NEWORK
 *
@@ -27,13 +27,13 @@
 *       1988.10.18 ; T.KAJITA  FERMI MOTION OF NUCLEON IS INCLUDED
 *       1995.02.25 ; K.Kaneyuki for S.K.
 *                    APIVCT -> NEAPIVCT
-*	1995.10.29 ; K.Knaeyuki BUG FIX 
+*       1995.10.29 ; K.Knaeyuki BUG FIX
 *       1997.12.12 ; Y.Hayato   To use IFREE to determine FREE or BOUND.
-*       1999.08.03 ; M.Shiozawa modify procedure for re-calculate 
+*       1999.08.03 ; M.Shiozawa modify procedure for re-calculate
 *                    the pion multiplicity
 *       2006.06.12 ; Y.Hayato   Not to use IFREE nor INO16
-*                               use IBOUND                     
-*       2007.11.05 ; G.Mitsuka  p/n ratio is calculated 
+*                               use IBOUND
+*       2007.11.05 ; G.Mitsuka  p/n ratio is calculated
 *                               using target information
 *       2007.11.10 ; T.Tanaka   add upmu mode
 *       2008.02.18 ; G.Mitsuka  Bug fix
@@ -76,11 +76,11 @@
 #include "posinnuc.h"
 
 
-      REAL *4 PMASS  
+      REAL *4 PMASS
       real*4 xmp,xmn
       PARAMETER (xmp    = 0.93827231)
       PARAMETER (xmn    = 0.93956563)
-      
+
       real*4 PNRAT(3)
       real*4 PXSEC, NXSEC, R1320P, R1320N
       integer*4 MAXERR
@@ -105,17 +105,17 @@
 
       real*4 NUCMASS,W2Max
 
-     
+
       real*4 adzazd
 
 *************************************************************************
-*     Following functions don't  seem to be built in the library if they 
-*     are not called somewhere in neutcore, so put a random call to them 
+*     Following functions don't  seem to be built in the library if they
+*     are not called somewhere in neutcore, so put a random call to them
 *     here so that nuceff can be built.
 *     Should be fixed, but not sure how, it was not needed in 5.3.4 - CB
       CALL FNPKNO(2,1.5)
       adzazd=FNGAMFCT(1.5)
-*************************************************************************    
+*************************************************************************
 
       E=ENEUT
       IERR=0
@@ -123,8 +123,8 @@
 
 *     Determine if interactions occur on proton or neutron
 *     For this compute ratio of cross-sections on each nucleon
-      
-C  Determine whether interaction is CC or NC      
+
+C  Determine whether interaction is CC or NC
       ITYPE=1
       IF(IABS(JMOD0).EQ.41.or.IABS(JMOD0).EQ.46)ITYPE=0
 
@@ -148,9 +148,9 @@ C     Free hydrogen target should always be a proton
          RATIO=float(NUMBNDP+NUMFREP)*PXSEC/(float(NUMBNDN)*NXSEC+
      &         float(NUMBNDP+NUMFREP)*PXSEC)
       endif
-      
 
-C     FRFREE --- FREE PROTON/TOTAL PROTON     08-OCT-88 
+
+C     FRFREE --- FREE PROTON/TOTAL PROTON     08-OCT-88
       FRFREE  =float(NUMFREP)/float(NUMBNDP+NUMFREP)
 
 #ifdef UPMU_RCK
@@ -169,13 +169,13 @@ C
       IF(RAN.LT.RATIO)IPNE(2)=2212
       IFLGNE(2)=-1
 
-C   Assign target mass       
+C   Assign target mass
       IF (IPNE(2).EQ.2112) THEN
          PMASS=xmn
       else
          PMASS=xmp
       endif
-    
+
 C   Determine if interaction occurs on free or bound proton
       IBOUND = 1
       RAN=RLU(DUM)
@@ -193,7 +193,7 @@ C   Determine outgoing lepton/neutrino
       ELSE IF(IABS(JMOD0).EQ.41.or.IABS(JMOD0).EQ.46) THEN
          IPNE(3)=IPAR
          IORGNE(3)=1
-	 IFLGNE(3)=2
+         IFLGNE(3)=2
       ENDIF
 C
 C -- SET NEUTRINO DIRECTION AND TARGET MOMENTUM
@@ -207,7 +207,7 @@ C
 C -- CONSIDER FERMI MOTION OF NUCLEON T.KAJITA  18-NOV-88 ------------
 
  96   PFABS=0.
-C    Generate Fermi momentum for target nucleon      
+C    Generate Fermi momentum for target nucleon
       IF (IBOUND.EQ.1 .AND. ABS(IPAR).NE.16) THEN
          CALL nefrmmom(PFABS,IWAVE)
          PFABS=PFABS*1.0E-3
@@ -216,8 +216,8 @@ C    Generate Fermi momentum for target nucleon
       PNE(1,2)=DIRN(1)*PFABS
       PNE(2,2)=DIRN(2)*PFABS
       PNE(3,2)=DIRN(3)*PFABS
-      
-C    Neutrino is boosted to the rest frame of the target nucleon 
+
+C    Neutrino is boosted to the rest frame of the target nucleon
       ENUCL=SQRT(PFABS**2+PMASS**2)
       BETA=PFABS/ENUCL
       GM=1./SQRT(1.-BETA**2)
@@ -242,7 +242,7 @@ C    Neutrino is boosted to the rest frame of the target nucleon
       E=ENSTOP
 
 
-C  Interaction mode 
+C  Interaction mode
 C     -- IWMODE=0 -> W<2.0GeV  => multi-pi mode
 C     -- IWMODE=1 -> W>2.0GeV  => PYTHIA
       If (abs(JMOD0).eq.21.or.abs(JMOD0).eq.41) then
@@ -253,7 +253,7 @@ C     -- IWMODE=1 -> W>2.0GeV  => PYTHIA
          ! To avoid infinite loops
          CALL MCMASSGV(2112,NUCMASS)
          W2Max = NUCMASS**2. + 2.*NUCMASS*ENEUT ! (GeV^2)
-         if (W2Max.le.2.0**2) then            
+         if (W2Max.le.2.0**2) then
             write(*,*),'Error in neapivct, Mode=',JMOD0,
      $           ' Enu=',ENEUT,' W=',sqrt(W2Max),'< 2.0GeV'
             goto 1000
@@ -261,7 +261,7 @@ C     -- IWMODE=1 -> W>2.0GeV  => PYTHIA
       Endif
 
       iwmult=0    !--- counter to avoid regenerating W forever
-  250 iwmult=iwmult+1 
+  250 iwmult=iwmult+1
       iec=0
   200 CONTINUE
       IERRR = 0
@@ -276,7 +276,7 @@ C     Added by M.Eto on 14/Feb/1998
          GOTO 5050
 C  Rest of the program is multi-pi mode
       ELSE
-C  Generate X and Y to have 1.3 GeV < W < 2.0 GeV        
+C  Generate X and Y to have 1.3 GeV < W < 2.0 GeV
          CALL RNW1320(IPAR,E,X,Y,W,ITYPE,IPNE(2),IERRR)
       END IF
 C-----------------------------------------------------------------------
@@ -340,7 +340,7 @@ C === NEXT LINE WAS ADDED BY M.N ON 9-AUG-88
 *  Multi-pi mode is only for events with at least two pions, one
 *  particle production is handled by resonant modes.
 *  If less than 2 pions, regenerate W, and not just the multiplicity
-*  this is to take into account the dependance of multiplicity on W      
+*  this is to take into account the dependance of multiplicity on W
       IF(MULP.ge.2 ) GO TO 225
       IF(IWMULT.LT.100)GO TO 250
 
@@ -360,8 +360,8 @@ C
 
 C
 C -- SET MOMENTUM OF EACH HADRON
-C        
- 
+C
+
 *     Total mass of the hadronic system
       TOTMAS=0.
       DO 300 I=1,MUL
@@ -369,30 +369,30 @@ C
          AM(I)=AM(I)*1.0E-3
          TOTMAS=TOTMAS+AM(I)
  300  CONTINUE
-C     CB     Check W is enough to create the hadronic system         
+C     CB     Check W is enough to create the hadronic system
       IF(TOTMAS.LT.W)GO TO 400
 C     CB     If not, first try to regenerate the multiplicity for this W
       IF(idummy.lt.100)GO TO 240
 C     CB     If proper multiplicity cannot be generated, rethrow W
       IEC=IEC+1
       IF(IEC.LT.MAXERR)GO TO 200
-      
+
       IERR=1
       RETURN
 
 400   CONTINUE
 
-C     
+C
 C     -- VECTOR GENERATION BY PHASE SPACE
 C
- 
+
 * Generate by phase space in the rest frame of hadronic system
       CALL VCPHSVCT(W,AM,MUL,PPHA,IERRP)
       IF(IERRP.EQ.0)GO TO 410
       IERR=1
       RETURN
 
-* Boost back to experimental frame     
+* Boost back to experimental frame
  410  DO 310 I=1,MUL
          DO 320 J=1,3
             PBUF(J)=PPHA(J,I)
@@ -404,7 +404,7 @@ C
  330     CONTINUE
  310  CONTINUE
 
-C     
+C
 C     09-NOV-85 T.KAJITA
 C     -- CHECK THE FORWARD AND BACKWARD PION MULTIPLICITY
  4000 NFPI=0

@@ -1,16 +1,16 @@
 *     -----------------------------------------------------
-      SUBROUTINE EFSETPF(IP,PPI,PFSEL,MODSEL,radius)      
+      SUBROUTINE EFSETPF(IP,PPI,PFSEL,MODSEL,radius)
 *     -----------------------------------------------------
-*     
+*
 *     ( purpose )
 *       SET NUCLEON MOMENTUM AND INTERACTION MODE
 *
-*     ( input ) 
+*     ( input )
 C         IP     : IITIAL PION KIND
 C         PPI    : INITIAL PION MOMENTUM IN LAB. SYSTEM(MeV)
 C         radius : radius(fm)
 *
-*     ( output ) 
+*     ( output )
 C         PFSEL  : NUCLEON MOMENTUM IN LAB. SYSTEM(MeV)
 C         MODSEL : INTEACTION MODE (SEE FUNCTION FSQUAR)
 *
@@ -41,14 +41,14 @@ C     pi-
       PNRAT(2,3) = float(NUMBNDN)/float(NUMATOM)
       PNRAT(3,3) = float(NUMBNDP)/float(NUMATOM)
       PNRAT(4,3) = 0.
-C     
+C
       IERR=0
-C     
+C
       IF(IP.EQ.211)GO TO 10
       IF(IP.EQ.111)GO TO 20
       IF(IP.EQ.-211)GO TO 30
       RETURN
-C     
+C
    10 NMODE=3
       MODE(1)=1
       MODE(2)=2
@@ -74,7 +74,7 @@ C     -- MAKE NUCLEON MOMENTUM AND NUC-PI OPENING ANGLE MAP
             XMAP(1,J,K)=0.
             XMAP(7,J,K)=0.
   110 CONTINUE
-C     
+C
       DO 120 I=1,5
          PFABS=FLOAT(I)*50.
          DO 130 J=1,6
@@ -146,7 +146,7 @@ C     -- SELECT FERMI MOMENTUM AND SCATTERING ANGLE
          PFSEL(3)=0
          return
       endif
-      
+
       XMAX=0.
       DO 300 I=2,6
          DO 310 J=1,6
@@ -181,9 +181,9 @@ C      HIT=XMAX*RNDM(DUM)
       PFSEL(2)=PFABS*SINT
       PFSEL(3)=0.
       RETURN
-C     
+C
 C     -- ERROR RETURN
-C     
+C
  9000 WRITE(6,900)HIT,SUMMAP,PPI,radius
   900 FORMAT(' ??? WARNING AT SETPF ??? HIT=',G15.7/
      &                 ' SUMMAP=',4G15.7,'  PPI=',3G15.7,

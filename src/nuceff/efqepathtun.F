@@ -1,21 +1,21 @@
 *     -----------------------------------------------------
-      FUNCTION EFQEPATHTUN(PPI,RIN)      
+      FUNCTION EFQEPATHTUN(PPI,RIN)
 *     -----------------------------------------------------
-*     
+*
 *     ( purpose )
 *       GIVE INELASTIC SCATTER MEAN FREE PATH **(-1)
 *
-*     ( input ) 
+*     ( input )
 *       PPI   : PION MOMENUTM(MeV/c)
 *       r     : radius
 *
-*     ( output ) 
+*     ( output )
 *       EFQEPATHTUN : REACTION MEAN FREE PATH **(-1)  UNIT (/FERMI)
 *
 *     ( Creation Date and Author )
 *       2007.11.05 ; G.Mitsuka - add support other target than 16O
 *                                using efconv2roxy function
-C     
+C
 C       2010.06.28 ; P. de Perio - Tuned to pion scattering data
 C                                - Extended to 10 GeV/c
 
@@ -33,7 +33,7 @@ C                                - Extended to 10 GeV/c
       integer*4 i,j
 
       REAL*4 REFF
-      
+
       REAL*4    PATH(8,19),PPITBL(19)
       REAL*4    OPATH(18)
       DATA PPITBL/  0.,110.,180.,200.,225.,250.,280.,300.,325.,350.,
@@ -57,7 +57,7 @@ C                                - Extended to 10 GeV/c
      $  6.92E-01,6.88E-01,6.26E-01,3.80E-01,1.10E-01,1.51E-02,
      $     1.22E-03,7.40E-05,
 
-      
+
      $  7.16E-01,7.13E-01,6.53E-01,3.88E-01,1.03E-01,1.22E-02,
      $     8.78E-04,5.15E-05,
      $  7.43E-01,7.39E-01,6.75E-01,3.85E-01,8.92E-02,9.08E-03,
@@ -83,7 +83,7 @@ C                                - Extended to 10 GeV/c
 
       DATA OPATH/.881,.752,.666,.612,.578,.570,.571,.580,.590,
      $           .600,.600,.600,.610,.610,.619,.638,.667,.696/
-      
+
       EFQEPATHTUN = 0.
 
       REFF=RIN
@@ -113,9 +113,9 @@ C                                - Extended to 10 GeV/c
       EFQEPATHTUN = (PATH1+(PATH2-PATH1)*DIFFR)
 
       RETURN
-         
 
-C     Weird extrapolation 
+
+C     Weird extrapolation
  100  I=INT((PPI-425.)/25.)+1
 
       DO 120 J=1,15

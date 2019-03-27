@@ -111,7 +111,7 @@ C
         do i=1,3
           x(i)=x(i)*size
         end do
-        return  
+        return
         end
 
         subroutine ranvector3body(x,r)

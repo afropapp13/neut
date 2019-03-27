@@ -20,8 +20,8 @@
 
       WRITE(6,*) 'TAUNPI'
       DO 20 I=1,4
-	WRITE(6,*)CBRNPI(I),(AMAS(J,I),J=1,6),
-     &            (KPI(J,I),J=1,6),MULT(I)          
+        WRITE(6,*)CBRNPI(I),(AMAS(J,I),J=1,6),
+     &            (KPI(J,I),J=1,6),MULT(I)
  20   CONTINUE
       WRITE(6,*)
 
@@ -55,7 +55,7 @@
          WRITE(6,*) (IDFFIN(J,I),J=1,9)
          WRITE(6,'(I6,2X,31A)') MULPIK(I),NAMES(I)
  30   CONTINUE
-      
+
       RETURN
       END
-       
+

@@ -1,17 +1,17 @@
 *     -----------------------------------------------------
-      FUNCTION EFGAMMP(GK,COST)      
+      FUNCTION EFGAMMP(GK,COST)
 *     -----------------------------------------------------
-*     
+*
 *     ( purpose )
 *       RETURN DIFFERENCIAL CROSS SECTION OF
 C          GAMMA,P ---> PI+,N
 C                     M.NAKAHATA 19-OCT-85
-C		   For PI+ data Y.Hayato 16-Mar-94
+C                  For PI+ data Y.Hayato 16-Mar-94
 *
-*     ( input ) 
+*     ( input )
 *          GK   : gamma energy(MEV)
 *         COST  : COS(THETA)
-*     ( output ) 
+*     ( output )
 *       EFGAMMP : DIFFERANCIAL CROSS SECTION (MICRO BARN/STR.)
 *
 C

@@ -12,11 +12,11 @@ c       2) pi+ n -> pi+ n , pi- p -> pi- p
 c       3) pi+ n -> pi0 p , pi- p -> pi0 n
 c       4) pi0 p -> pi0 p , pi0 n -> pi0 n
 c
-*     ( input ) 
-*       ireaction : see above  
+*     ( input )
+*       ireaction : see above
 *       tpi       : pion energy in lab frame (MeV)
 *
-*     ( output ) 
+*     ( output )
 *       dsg       : differential cross section
 *       ierr      : error flag
 *
@@ -25,18 +25,18 @@ c
 *       2010-06: P.de Perio - Add IERR flag
 
       implicit none
-      
+
       integer ireaction, j, ierr
 
       real sind, cosd
       external sind, cosd
-      
+
       real tpi
       real as11(2),as31(2)
       real ap11(2),ap13(2),ap31(2),ap33(2)
       real ad13(2),ad33(2),ad15(2),ad35(2)
 
-C      real xs11,xs31,xp11,xp31,xp13,xp33,xd13,xd33,xd15,xd35   
+C      real xs11,xs31,xp11,xp31,xp13,xp33,xd13,xd33,xd15,xd35
 C      common /phases/ xs11,xs31,xp11,xp31,xp13,xp33,xd13,xd33,xd15,xd35
 C      real as(2),app(2),apm(2),adp(2),adm(2)
 C      common /amps/   as,app,apm,adp,adm
@@ -46,17 +46,17 @@ C      common /amps/   as,app,apm,adp,adm
       ierr = 0
 
       call efdsgps(tpi,ierr)
-      
+
       if(ierr.ne.0) then
          return
       end if
 
       AS11(1) = sind(xs11)*cosd(xs11)
       AS11(2) = sind(xs11)**2
-      
+
       AS31(1) = sind(xs31)*cosd(xs31)
       AS31(2) = sind(xs31)**2
-      
+
       AP11(1) = sind(xp11)*cosd(xp11)
       AP11(2) = sind(xp11)**2
 
@@ -68,19 +68,19 @@ C      common /amps/   as,app,apm,adp,adm
 
       AP33(1) = sind(xp33)*cosd(xp33)
       AP33(2) = sind(xp33)**2
-      
+
       AD13(1) = sind(xd13)*cosd(xd13)
       AD13(2) = sind(xd13)**2
-      
+
       AD33(1) = sind(xd33)*cosd(xd33)
       AD33(2) = sind(xd33)**2
-      
+
       AD15(1) = sind(xd15)*cosd(xd15)
       AD15(2) = sind(xd15)**2
-      
+
       AD35(1) = sind(xd35)*cosd(xd35)
       AD35(2) = sind(xd35)**2
-      
+
       if (ireaction.eq.1) then
          do j = 1, 2
             AS(J)  = AS31(J)
@@ -114,6 +114,6 @@ C      common /amps/   as,app,apm,adp,adm
             ADM(J) = ( 2.*AD33(J) + AD13(J) ) / 3.
          end do
       end if
-     
+
       return
       end

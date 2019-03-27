@@ -1,20 +1,20 @@
 *     -----------------------------------------------------
-      SUBROUTINE EVSETPF(IP,PPI,radius,INTMOD,PROB)      
+      SUBROUTINE EVSETPF(IP,PPI,radius,INTMOD,PROB)
 *     -----------------------------------------------------
-*     
+*
 *     ( purpose )
-*       Calculate probability of CX or non-CX interaction 
+*       Calculate probability of CX or non-CX interaction
 *       for evpiprob.F.
 *       Note: Must be kept in sync with efsetpf.F
 *
-*     ( input ) 
+*     ( input )
 C         IP     : IITIAL PION KIND
 C         PPI    : INITIAL PION MOMENTUM IN LAB. SYSTEM(MeV)
 C         radius : radius(fm)
 C         INTMOD : INTEACTION MODE = 4(CX) or 8(non-CX)
 C
-*     ( output ) 
-C         PROB   : Probability 
+*     ( output )
+C         PROB   : Probability
 *
 *     ( Creation Date and Author )
 *       2007.11.05 ; G.Mitsuka - add weight of #of nucleon
@@ -45,15 +45,15 @@ C     pi-
       PNRAT(2,3) = float(NUMBNDN)/float(NUMATOM)
       PNRAT(3,3) = float(NUMBNDP)/float(NUMATOM)
       PNRAT(4,3) = 0.
-C     
+C
       IERR=0
       PROB=1
-C     
+C
       IF(IP.EQ.211)GO TO 10
       IF(IP.EQ.111)GO TO 20
       IF(IP.EQ.-211)GO TO 30
       RETURN
-C     
+C
    10 NMODE=3
       MODE(1)=1
       MODE(2)=2
@@ -79,7 +79,7 @@ C     -- MAKE NUCLEON MOMENTUM AND NUC-PI OPENING ANGLE MAP
             XMAP(1,J,K)=0.
             XMAP(7,J,K)=0.
   110 CONTINUE
-C     
+C
       DO 120 I=1,5
          PFABS=FLOAT(I)*50.
          DO 130 J=1,6

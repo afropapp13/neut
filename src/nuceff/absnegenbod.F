@@ -27,7 +27,7 @@ c     Modified to use ranlux instead of grndm
 c       2009.11.04 ; R. Tacik
 
       implicit none
-      
+
       logical ierr
 
 #include "absgeninout.h"
@@ -56,7 +56,7 @@ C     FFQ(N)=PI * (TWOPI)**(N-2) / (N-2)FACTORIAL
 
       INTEGER*4 KNT
       REAL*4    TWOPI
-      
+
       DATA KNT,TWOPI/0,6.2831853073/
 
       integer*4 i,j,jk,ir,ndx
@@ -94,19 +94,19 @@ C        INITIALIZATION
          TM     = TM + EM(I)
          SM(I)  = TM
       end do
-      
+
 C        CONSTANTS DEPENDING ON TECM
 
       TECMTM = TECM - TM
       IF (TECMTM.LE.0.0) GO TO 1000
       EMM(NT) = TECM
       if (KGENEV.GT.1) then
-         
+
 C-- FERMI ENERGY DEPENDENCE FOR CROSS SECTION
 
          WTMAXQ = TECMTM**NTM2*FFQ(NT) / TECM
       else
-      
+
 C   CONSTANT CROSS SECTION AS FUNCTION OF TECM
 
          EMMAX = TECMTM + EM(1)
@@ -119,9 +119,9 @@ C   CONSTANT CROSS SECTION AS FUNCTION OF TECM
          end do
          WTMAXQ = 1.0 / WTMAX
       end if
-      
+
 C     CALCULATION OF WT BASED ON EFFECTIVE MASSES EMM
-      
+
 C--   FILL RNO WITH 3*NT-4 RANDOM NUMBERS,
 C--   OF WHICH THE FIRST NT-2 ARE ORDERED.
 
@@ -140,7 +140,7 @@ C--   OF WHICH THE FIRST NT-2 ARE ORDERED.
          PD(I) = ABSNEPDK(EMM(I+1),EMM(I),EM(I+1))
          WT    = WT*PD(I)
       end do
-      
+
 C--       COMPLETE SPECIFICATION OF EVENT (RAUBOLD-LYNCH METHOD)
 
       PCM(1,1) = 0.0
@@ -181,9 +181,9 @@ C--       COMPLETE SPECIFICATION OF EVENT (RAUBOLD-LYNCH METHOD)
       end do
 
       RETURN
-      
+
 C          ERROR RETURNS
-      
+
  1000 WRITE (6,1100)
       GO TO 1050
  1001 WRITE (6,1101)

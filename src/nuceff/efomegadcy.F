@@ -43,12 +43,12 @@ C OUTPUT
 
       INTEGER I,K
       INTEGER IDUM
-      
+
 C  calculate the direction and gamma of omega meson
       PABS = SQRT(POMEGA(1)**2+POMEGA(2)**2+POMEGA(3)**2)
       BETA = SQRT(PABS**2/(MASSOMEGA**2+PABS**2))
       GAM = GAMFCT(BETA)
-      
+
       IF (PABS.LE.0.) PABS=0.0001
       DO I=1,3
          DIROMEGA(I) = POMEGA(I)/PABS
@@ -56,7 +56,7 @@ C  calculate the direction and gamma of omega meson
 
 C determine the decay mode
       RNBRANCH = RLU(IDUM)
-      SUMBRANCH = BRANCH(1) + BRANCH(2) + BRANCH(3) 
+      SUMBRANCH = BRANCH(1) + BRANCH(2) + BRANCH(3)
       IF(RNBRANCH .LE. BRANCH(1)/SUMBRANCH) THEN
 CC pi+ , pi-, pi0, 3 body decay
          MULDCY = 3

@@ -14,10 +14,10 @@
 *               PIN1(3)  final momentum of meson 1
 *               PIN2(3)  final momentum of meson 2
 *               KIN1,KIN2   kind of mesons 221:  eta
-*                                          211:  pi+ 
+*                                          211:  pi+
 *                                         -211:  pi-
 *                                          111:  pi0
-*                                         
+*
 *     (Creation Date and Author)
 *     2007.11.05 ; G.Mitsuka - add PFCUT for pauli blocking
 *     2010.05    ; P.de Perio - Modified to work with nucleon ejection
@@ -51,7 +51,7 @@ C     APN and AP are not used now in eftrace.F(i.e. dummy number)
        DATA AP/8./
 C     PFCUT is set by the scaling to 16O(225MeV/c)
        PFCUT = 260.*(PFSURF*1000./225.) ! PFSURF is GeV unit
-       
+
       STEP=0.07
 C    STEP OF CALCULATION (FM)
       PRMAS= 940.
@@ -81,11 +81,11 @@ C
       DIR1(I)=PIN1(I)/P1ABS
       VIN1(I)=DIR1(I)*V1ABS
    10 CONTINUE
-      
+
    30 CONTINUE
 CC   eta loop
       nstep = nstep + 1
-      if (nstep.gt.10000) then 
+      if (nstep.gt.10000) then
       print *,'TOO MANY STEPS'
       return
       endif
@@ -160,7 +160,7 @@ C                  GAMMA FACTOR
 C       + BOOST OF PN & PM1 TO LAB.SYS.
          CALL MCVECBST(PN,PRMAS,DIRRS,GAM)
          PNABS= SQRT( PN(1)**2 + PN(2)**2 + PN(3)**2 )
-C       + MOM. OF NUCLEON IS GREATER THAN 
+C       + MOM. OF NUCLEON IS GREATER THAN
 C         THE FERMI ENERGY (260MEV/C FOR 16O)?
          radius = sqrt(posm(1)**2+posm(1)**2+posm(2)**2+posm(3)**2)
          PFCUT = effrmgas(dum1,dum2,radius)
@@ -186,21 +186,21 @@ c         write(98,*) pm1(1),pm1(2),pm1(3)
 c         write(98,*) pm2(1),pm2(2),pm2(3)
 
 
-C         CHECK WHETHER ETA DISAPPEAR OR NOT    
+C         CHECK WHETHER ETA DISAPPEAR OR NOT
 
 C           IF DISAPPEAR -> CALCULATE NUC EFF. OF PI
 C          What is happening here? (-Patrick)
           if (NDIS.ge.1) then
             print *,'ETA changes to pion IN O16'
-            CALL EFTRACE(APN,AP,KIN1,POSM,PM1,NABS,NEL,NINEL,KFI,PIN1) 
+            CALL EFTRACE(APN,AP,KIN1,POSM,PM1,NABS,NEL,NINEL,KFI,PIN1)
             if (NABS.ne.0) then
                KIN1 = KFI
             endif
             if (NDIS.ge.2) then
-               call EFTRACE(APN,AP,KIN2,POSM,PM2,NABS2,NEL,NINEL,KFI,PIN2) 
+               call EFTRACE(APN,AP,KIN2,POSM,PM2,NABS2,NEL,NINEL,KFI,PIN2)
                if (NABS2.ne.0) then
                   KIN2 = KFI
-               endif                  
+               endif
             endif
             return
           endif
@@ -220,7 +220,7 @@ C (2)NO INT. --> GO TO NEXT STEP
          IF ( ABSPOS.GT.3.) GO TO 1000
          GO TO 30
 
-C      escape 
+C      escape
  1000 continue
 C
 C

@@ -2,14 +2,14 @@
 *     ------------------
       SUBROUTINE nrintr
 *     ------------------
-*     
+*
 *     ( purpose )
 *       CONSIDER NUCLEAR EFFECT FOR EACH nucleon
 *
-*     ( input ) 
+*     ( input )
 *       COMMON VCWORK
 *
-*     ( output ) 
+*     ( output )
 *       COMMON VCWORK
 *
 *     ( creation date and author )
@@ -38,7 +38,7 @@
       REAL*4    PIN(3),POUT(3)
 C      integer*4 npartl,ipint,ipiori,looppi
 C      real*4    pint,xint
-C      
+C
 C      COMMON /PIINTH/ NPARTL,IPINT(50),PINT(3,50),XINT(3,50),IPIORI(50),
 C     &     LOOPPI
 
@@ -68,17 +68,17 @@ C
          return
       endif
 
-      if (ibound.ne.1) then 
+      if (ibound.ne.1) then
          return
       endif
 
-C     
+C
 C     ++ ADDED BY M.N ON 23-OCT-88
-C     
+C
       NPARTL=0
-C     
+C
 C     Check Free or not
-C      
+C
       IF  ((PVC(1,2)**2+PVC(2,2)**2+PVC(3,2)**2).lt.1.e-5) THEN
          return
       endif
@@ -96,10 +96,10 @@ C
       NVC2=NVC
       DO 1000 I=3,NVC
 
-         
+
 CCCC ------ Skip unnecessary particles
          IF (ICRNVC(I).eq.0)  goto 1000
- 
+
 CCCC ------  for protons and neutrons   W. Gajewski 3-25-2001
 C         IF (ABS(IPVC(I)).EQ.2212 .OR. IPVC(I).EQ.2112) THEN
          IF (IPVC(I).EQ.2212 .OR. IPVC(I).EQ.2112) THEN
@@ -136,7 +136,7 @@ C     $                 ',',pvc(3,invc),')'
          END IF
 
  1000 CONTINUE
-C     
+C
 C     ++ ADDED BY W. Gajewski (3-29-2001)
 C     -- RE-CONSIDER PION INTERACTION FOR PIONS PRODUCED IN N-N INT.
 C     IN 16O
@@ -167,7 +167,7 @@ CCCC ------- for PION ----------
             NZIG = NEL+NINEL
 C
 C --        ABSORPTION
-C            
+C
 C            IF (KFI.EQ.100000) THEN
             IF (NABS.EQ.0) THEN
                IF (NPARTL.GT.0) THEN
@@ -178,9 +178,9 @@ C            IF (KFI.EQ.100000) THEN
                ICRNVC(I)=0
                CALL UCOPY(POSVC,POSFVC(1,I),3)
                IVTFVC(I)=1
-C     
+C
 C --        CHARGE EXCHANGE and scattering
-C               
+C
 C            ELSE IF (KIN.NE.KFI) THEN
             ELSE IF ((KIN.NE.KFI).or.(NZIG.gt.0)) THEN
                IF (KIN.NE.KFI) THEN
@@ -190,7 +190,7 @@ C            ELSE IF (KIN.NE.KFI) THEN
                      IFLGVC(I)=7
                   ELSE IF (NINEL.gt.0) THEN
                      IFLGVC(I)=8
-                  ELSE 
+                  ELSE
                      IFLGVC(I)=9
                   ENDIF
                ENDIF
@@ -213,14 +213,14 @@ C            ELSE IF (KIN.NE.KFI) THEN
                ENDIF
 C
 C --        OTHER CASE (Momentum can change if Coulomb correction is on)
-C               
+C
             ELSE IF (FEFCOUL.eq.0) then
 C               CALL UCOPY(POUT,PVC(1,I),3)
                DO J=1,3
                   if (POUT(J).ne.PVC(J,I)) then
-                     write(*,*) 
+                     write(*,*)
      $                    'NRINTR: Momentum changed without interaction'
-                     write(*,*) 
+                     write(*,*)
      $                    'NRINTR: Mode=',modene
                      stop
                   endif
@@ -252,7 +252,7 @@ C               CALL UCOPY(POUT,PVC(1,I),3)
      $           ':E=',EOLD,
      $           ':(',pvc(1,I),',',pvc(2,I),',',pvc(3,I),')'
             P2NEW=(EOLD-25.)**2-AMASS**2
-            if (p2new.le.0) then 
+            if (p2new.le.0) then
                p2new=0
             endif
             do 300 JJ=1,3
@@ -265,8 +265,8 @@ C               CALL UCOPY(POUT,PVC(1,I),3)
          endif
  200  continue
 #endif
-C     
-C     
+C
+C
       RETURN
       END
 

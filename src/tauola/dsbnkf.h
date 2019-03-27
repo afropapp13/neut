@@ -3,7 +3,7 @@
 *     INCLUDE 'dsbnkf.h'
 *     ------------------
 *
-*     Flags for disk-writing of individual banks  
+*     Flags for disk-writing of individual banks
 *     and logical unit numbers for inputs and outputs
 *
 *     (Creation Date and Author)
@@ -12,7 +12,7 @@
 ************************************************************************
 
       INTEGER  NBNKDS, LIN, LOUT, IFLGV
-      
+
       COMMON /DSBANK/ NBNKDS(6)
       LOGICAL IMCPHI, IMCRI, IMCRAI, IMCTQI, ITQI, ITQAI
       COMMON/INBANK/ IMCPHI, IMCRI, IMCRAI, IMCTQI, ITQI, ITQAI

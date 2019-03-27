@@ -3,16 +3,16 @@
 *     -----------------------------------------------------
       real function efconv2roxy(rr)
 *     -----------------------------------------------------
-*     
+*
 *     ( purpose )
 *       Convert r(target) into r(16O) by assuming
 *       rho(r(target)) = rho(r(16O))
 *
-*     ( input ) 
+*     ( input )
 *       rr       : radius(fm)
 *       NUMATOM  : atomic number(from efpion.h)
 *
-*     ( output ) 
+*     ( output )
 *       efconv2roxy : converted radius
 *
 *     (Creation Date and Author)

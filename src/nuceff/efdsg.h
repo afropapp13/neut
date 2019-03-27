@@ -1,5 +1,5 @@
 
-      real xs11,xs31,xp11,xp31,xp13,xp33,xd13,xd33,xd15,xd35   
+      real xs11,xs31,xp11,xp31,xp13,xp33,xd13,xd33,xd15,xd35
       common /phases/ xs11,xs31,xp11,xp31,xp13,xp33,xd13,xd33,xd15,xd35
 
 C      real s11(134),s31(134)

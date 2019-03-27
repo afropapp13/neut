@@ -1,12 +1,12 @@
 *     -----------------------------------------------------
-      SUBROUTINE EFHADPRO(PAIMOM,XPOS,NQPAI,NQN,NUCDIR,GAMMANUCL,IERROR)      
+      SUBROUTINE EFHADPRO(PAIMOM,XPOS,NQPAI,NQN,NUCDIR,GAMMANUCL,IERROR)
 *     -----------------------------------------------------
-*     
+*
 *     ( purpose )
 C         MULTI-PION PRODUCTION IN PAI-N INTERACTION
 C                    T.KAJTIA  27-JUN-88
 *
-*     ( input ) 
+*     ( input )
 C           PAIMOM(3)  : MOMENTUM OF PION IN MEV/C
 C           NQPAI  : CHARGE OF PION
 C           NQN    : CHARGE OF NUCLEON
@@ -14,7 +14,7 @@ C           NUCDIR(3) : DIRECTION OF TARGET NUCLEON
 C           GAMMANUCL : GAMMA OF TARGET NUCLEON (USED TO BOOST
 C                       TO ORIGINAL EXP. SYSTEM)
 *
-*     ( output ) 
+*     ( output )
 C           COMMON/PIINTH/
 C
 C     ( Updating record )

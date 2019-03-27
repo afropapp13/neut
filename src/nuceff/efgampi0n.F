@@ -1,16 +1,16 @@
 *     -----------------------------------------------------
       FUNCTION efgampi0n(GK,COST)
 *     -----------------------------------------------------
-*     
+*
 *     ( purpose )
 *       RETURN DIFFERENTIAL CROSS SECTION OF
 C          GAMMA,n ---> pi0n
 *
-*     ( input ) 
+*     ( input )
 *          GK   : gamma energy(MEV)
 *         COST  : COS(THETA_CM)
 *
-*     ( output ) 
+*     ( output )
 *       efgampi0n : DIFFERENTIAL CROSS SECTION (MICRO BARN/STR.)
 *
 C
@@ -40,7 +40,7 @@ C
      &0.25,0.30,0.35,0.40,0.45,0.50,0.55,0.60,
      &0.65,0.70,0.75,0.80,0.85,0.90,0.95,1.00/
 
-      DATA CRS/ 
+      DATA CRS/
 
 C    Egam = 144
      &0,

@@ -4,7 +4,7 @@
       pi = acos(-1.)
       sind = sin(x*pi/180.)
       end
-      
+
       function cosd(x)
       real x, pi
       pi = acos(-1.)
@@ -16,7 +16,7 @@
       pi = acos(-1.)
       acosd = 180.*acos(x)/pi
       end
-      
+
       function atand(x)
       real x, pi
       pi = acos(-1.)

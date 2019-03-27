@@ -6,13 +6,13 @@ c     1   primary proton
 c     no=     1       elastic
 c     2       single pi production
 c     3       double pi production
-c     
+c
       integer no,ka
       real*4 e                  !proton energy in resting target
 
 #include "nrcms.h"
 C     common /nuccms/rhon,pfermi,unucl,ecms2,up4cms(3),beta(3),prot
-C     real*4 rhon,pfermi,unucl,ecms2 
+C     real*4 rhon,pfermi,unucl,ecms2
 C     real*4 up4cms,beta
 C     logical prot
 
@@ -20,7 +20,7 @@ C     logical prot
 
 C     the data as in MECC7 and GCALOR  (BERTINI's)
 
-      data frinn/    
+      data frinn/
      1     2.,   7.,  16.,  30.,  52.,  86., 134., 201., 290., 406.,
      2     551., 727., 945.,1204.,1502.,1832.,2179.,2510.,2806.,3075.,
      3     3321.,3546.,3751.,3935.,4100.,4246.,4374.,4486.,4585.,4674.,
@@ -39,7 +39,7 @@ C     the data as in MECC7 and GCALOR  (BERTINI's)
      7     9642.,9678.,9714.,9750.,9786.,9821.,9857.,9893.,9929.,9964.,
      8     10000./
 
-      data fmxsm/    
+      data fmxsm/
      1     341., 598., 776., 923.,1052.,1168.,1276.,1377.,1472.,1563.,
      2     1651.,1735.,1816.,1896.,1973.,2048.,2122.,2194.,2265.,2335.,
      3     2404.,2471.,2538.,2604.,2669.,2733.,2797.,2860.,2922.,2984.,
@@ -58,7 +58,7 @@ C     the data as in MECC7 and GCALOR  (BERTINI's)
      7     9263.,9312.,9360.,9409.,9458.,9506.,9555.,9604.,9652.,9701.,
      8     9749./
 
-      data dmin/     
+      data dmin/
      1     1078.6,1133.,1148.,1158.,1166.,1172.,1178.,1183.,1187.,1191.,
      2     1195.,1198.,1202.,1205.,1208.,1211.,1213.,1216.,1219.,1221.,
      3     1224.,1226.,1229.,1231.,1234.,1236.,1239.,1242.,1245.,1248.,
@@ -71,7 +71,7 @@ C     the data as in MECC7 and GCALOR  (BERTINI's)
      1     2075.,2091.,2107.,2124.,2140.,2157.,2174.,2190.,2207.,2224.,
      2     2240./
 
-      data fmxdn/    
+      data fmxdn/
      1     2221.,2297.,2373.,2446.,2519.,2590.,2660.,2730.,2798.,2865.,
      2     2932.,2998.,3063.,3128.,3192.,3255.,3318.,3380.,3442.,3504.,
      3     3565.,3625.,3685.,3745.,3804.,3863.,3922.,3981.,4039.,4096.,
@@ -86,7 +86,7 @@ C     the data as in MECC7 and GCALOR  (BERTINI's)
      3     8341.,8390.,8440.,8490.,8539.,8589.,8639.,8688.,8738.,8787.,
      4     8837.,8886.,8936.,8985.,9035.,9084.,9133.,9183.,9232.,9281./
 
-      data fsln/     
+      data fsln/
      1     5050.,5050.,5050.,5050.,5050.,5050.,5050.,5050.,5050.,5050.,
      2     5050.,5050.,5050.,5050.,5050.,5050.,5050.,5050.,5050.,5050.,
      3     5050.,5050.,5050.,5050.,5050.,5050.,5050.,5050.,5050.,5050.,
@@ -271,7 +271,7 @@ c     ****************** end of single production ****************
                rf1=rf2
                go to 2
             end if
-            
+
             cdl=-.9999995
             if(ranf().lt.0.5)cdl=-cdl
             call nrcone(up4cms,dldir,cdl,-1.)
@@ -289,7 +289,7 @@ c     ****************** end of single production ****************
                call nrllor(piso(1,i),piso(4,i),
      $              pdldec(1,i),pdldec(4,i),beta)
             end do
-            rpi=ranf()			
+            rpi=ranf()
             rnu=ranf()
             if((ka-ka1).eq.0)then !p-p n-n
                if(rpi.lt.0.6)then

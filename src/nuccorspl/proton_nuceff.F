@@ -1,4 +1,4 @@
-C     
+C
 C     TEST PROGRAM TO READ VECTOR
 C
       IMPLICIT NONE
@@ -43,7 +43,7 @@ C
 
 
 C
-C Initialize 
+C Initialize
 C
       CALL NECARD
       CALL NECARDVC
@@ -89,7 +89,7 @@ C
 
          IEVENT=I
 
-C -- initialize random seed everytime         
+C -- initialize random seed everytime
          IF (i.eq.1) then
              CNAME='MCHEAD'
              CALL KZBLOC(CNAME,LBANK)
@@ -111,7 +111,7 @@ C -- initialize random seed everytime
                 CALL RLUXGO(3,idata(8),idata(9),idata(10))
              endif
          endif
-         
+
          CALL VCRDVCCM
          CALL KZBDEL('MCVECT')
 C-- make bank for the backup ( MCVECTBF )
@@ -139,4 +139,4 @@ C-- make bank for the backup ( MCVECTBF )
 
       STOP
       END
-     
+

@@ -1,15 +1,15 @@
 *     -----------------------------------------------------
       FUNCTION efgampi0pt(GK)
 *     -----------------------------------------------------
-*     
+*
 *     ( purpose )
 *       RETURN TOTAL CROSS SECTION OF
 C          GAMMA,p ---> pi0p
 *
-*     ( input ) 
+*     ( input )
 *          GK   : gamma energy(MEV)
 *
-*     ( output ) 
+*     ( output )
 *       efgampi0pt : TOTAL CROSS SECTION (MICRO BARN/STR.)
 *
 C

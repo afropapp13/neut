@@ -2,21 +2,21 @@
 *     ------------------------
       SUBROUTINE NEMKTAUBK
 *     ------------------------
-*     
+*
 *     ( purpose )
 *       Create TAU MC bank
 *
-*     ( input ) 
+*     ( input )
 *       COMMON /TAUMC/
 *
-*     ( output ) 
+*     ( output )
 *       TAU MC BANK
 *
 *     ( creation date and author )
 *       2004.04.27 ; First version by C. Walter
 *
 ***********************************************************************
-#include "taumc.h"      
+#include "taumc.h"
 
       INTEGER IDATA(100)
       REAL    RDATA(100)
@@ -49,15 +49,15 @@ C
       NSEGM=0
       LSEGM=0
 
-      CALL KZBCR1(CNAME,LMAST,'4F 1I 3F',NSEGM,LSEGM,'',IERR)      
+      CALL KZBCR1(CNAME,LMAST,'4F 1I 3F',NSEGM,LSEGM,'',IERR)
       IF (IERR.NE.0) GOTO 1000
-      CALL KZREP1(CNAME,0,LMAST,IDATA(1))      
+      CALL KZREP1(CNAME,0,LMAST,IDATA(1))
 
       RETURN
 
-C     
+C
 C     ++ ERROR MESSAGE
-C     
+C
  1000 WRITE(6,900)
   900 FORMAT(' *** ERROR *** ( BANK CREATION IN NEMKTAUBK )')
       RETURN

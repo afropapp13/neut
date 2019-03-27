@@ -2,17 +2,17 @@
       SUBROUTINE EFPNCRSH_PNSEP(PAIMOM,NQPAI,NQN,
      $                    SIGEL,SIGINEL,SIGCX,IERROR)
 *     -----------------------------------------------------
-* 
+*
 *     ( purpose )
 C        CROSS SECTION OF PAI-N INTERACTION AT HIGH ENERGIES (>800MEV).
 C                    T.KAJITA  25-JUN-88
 *
-*     ( input ) 
+*     ( input )
 C           PAIMOM : MOMENTUM OF PION IN MEV/C
 C           NQPAI  : CHARGE OF PION
 C           NQN    : CHARGE OF NUCLEON
 *
-*     ( output ) 
+*     ( output )
 C           SIGEL : (QUASI)ELASTIC CROSS SECTION IN MB.
 C           SIGINEL : INELASTIC CROSS SECTION IN MB
 C           SIGCX : CHARGE EXCHANGE CROSS SECTION IN MB
@@ -26,11 +26,11 @@ C           SIGMA(PAI(-)-n) IS SAME AS SIGMA(PAI(+)-p)
 C           SIGMA(PAI(+)-n) IS SAME AS SIGMA(PAI(-)-p)
 C
 C   2010/06 Output Elastic, Inelastic, CX cross sections
-C           Use SAID PWA of free pion-nucleon cross sections 
+C           Use SAID PWA of free pion-nucleon cross sections
 C             (http://gwdac.phys.gwu.edu/analysis/pin_analysis.html)
 C                         - P.de Perio
-C        
-C     
+C
+C
 C
       IMPLICIT NONE
       REAL PAIMOM,SIGTOTP,SIGTOTN,SIGEL,SIGINEL,SIGCX
@@ -41,9 +41,9 @@ C
       REAL PMEV,SEPPP,SIPPP,SEPMP,SIPMP,SCPMP
       DIMENSION PMEV(121),SEPPP(121),SIPPP(121)
       DIMENSION SEPMP(121),SIPMP(121),SCPMP(121)
-C     
+C
 C     -- PION MOMENTUM IN MEV/C
-      DATA PMEV  / 
+      DATA PMEV  /
      $     20,30,40,50,60,70,80,
      $     90,100,110,120,130,140,150,
      $     160,170,180,190,200,210,220,
@@ -62,7 +62,7 @@ C     -- PION MOMENTUM IN MEV/C
      $     2345,2375,2400,2660,2920,3180,3440,
      $     3700,3960,4220,4480,4740,5000,10000,
      $     20000,50000/
-C     
+C
 C     -- QE Scatter CROSS SECTION pip-P
       DATA SEPPP /
      $     1.02,1.28,1.51,1.79,2.17,2.68,3.37,
@@ -83,7 +83,7 @@ C     -- QE Scatter CROSS SECTION pip-P
      $     8.21,8.19,8.79,8.55,8.01,7.5,7.14,
      $     6.92,6.63,6.3,6.02,5.8,5.63,4.75,
      $     3.5,3.29/
-C     
+C
 C     -- Inelastic CROSS SECTION pip-P
       DATA SIPPP /
      $     0,0,0,0,0,0,0,
@@ -104,7 +104,7 @@ C     -- Inelastic CROSS SECTION pip-P
      $     21.5,21.7,21.8,22.3,21.7,21.3,21.2,
      $     21.1,21.2,21.1,21.4,21,20.9,20.1,
      $     20.1,19.8/
-C     
+C
 C     -- QE Scatter CROSS SECTION pim-P
       DATA SEPMP /
      $     2.57,2.3,2.13,2.01,1.91,1.83,1.77,
@@ -125,7 +125,7 @@ C     -- QE Scatter CROSS SECTION pim-P
      $     8.76,8.69,8.62,8.06,7.7,7.35,7.05,
      $     6.8,6.53,6.23,5.97,5.75,5.57,4.7,
      $     4.2,3.45/
-C     
+C
 C     -- Inelastic CROSS SECTION pim-P
       DATA SIPMP /
      $     0.00129,0.00257,0.00467,0.00731,0.0107,0.0147,0.0195,
@@ -146,7 +146,7 @@ C     -- Inelastic CROSS SECTION pim-P
      $     25.4,25.2,25,24.4,24.5,24,24.5,
      $     24.2,24,23.8,24.1,23.6,23.5,22.1,
      $     20.8,20.6/
-C     
+C
 C     -- Single CX CROSS SECTION pim-P
       DATA SCPMP /
      $     5.76,4.97,4.63,4.49,4.45,4.5,4.64,
@@ -167,16 +167,16 @@ C     -- Single CX CROSS SECTION pim-P
      $     0.616,0.592,0.556,0.459,0.371,0.278,0.213,
      $     0.163,0.133,0.11,0.0913,0.0778,0.0685,0.00685,
      $     0.000685,0/
-C     
-C     
-C     
+C
+C
+C
       SIGINEL=0.
       SIGEL=0.
       SIGCX=0.
       IERROR=1
       IF(PAIMOM.LT.20.)RETURN
       IERROR=0
-C     
+C
       DO 10 IE=2,121
          IF(PMEV(IE).GT.PAIMOM) THEN
             IEH=IE
@@ -191,8 +191,8 @@ C
       DEH=0.
       DEL= ABS (PMEV(IEH)-PMEV(IEL))
    11 CONTINUE
-C     
-C     
+C
+C
       IF(NQPAI.EQ.0) THEN
          SIGEL = ( (DEL*SEPMP(IEH) + DEH*SEPMP(IEL)) +
      $  (DEL*SEPPP(IEH) + DEH*SEPPP(IEL)) ) / (DEL+DEH)/2
@@ -239,7 +239,7 @@ C      SIGTOTN = SIGELN+SIGINELN+SIGCXN
          STOP
       ENDIF
 
-C     
-C     
+C
+C
       RETURN
       END

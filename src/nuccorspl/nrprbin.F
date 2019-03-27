@@ -1,5 +1,5 @@
-      real FUNCTION	nrPRBIN(YI,N,XMIN,XSTEP,YR)
-      
+      real FUNCTION     nrPRBIN(YI,N,XMIN,XSTEP,YR)
+
       implicit none
       real*4 YI(*),XMIN,XSTEP,YR,fr
 
@@ -7,7 +7,7 @@
       MIN=1
       MAX=N+1
       GO TO 3
- 1    IF((MAX-MIN).EQ.1) GO TO	5
+ 1    IF((MAX-MIN).EQ.1) GO TO  5
       IF(YI(M)-YR) 2,6,4
  2    MIN=M
  3    M=(MAX+MIN)/2

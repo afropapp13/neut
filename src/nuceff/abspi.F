@@ -15,7 +15,7 @@ c
 c     ( creation date and author )
 c       2009.11.04 ; R. Tacik
 C
-C       2009.12.09 ; P. de Perio 
+C       2009.12.09 ; P. de Perio
 C                    - Added argument to accept slot of pion in vcwork
 C                    - Added flags for outgoing nucleons
 C
@@ -79,9 +79,9 @@ C      common /labEandP/ lpdg,EandP
 C      common /cmnucleons/ p1cm,p2cm,p3cm,p4cm
 C      common /labnucleons/ npdg,p1lab,p2lab,p3lab,p4lab
 
- 
+
 c  ivc'th particle got absorbed
-      
+
 C      write(*,*) 'PVC(i,ivc)=(', pvc(1,ivc), pvc(2,ivc), pvc(3,ivc),ivc, ')'
 
       pi = acos(-1.)
@@ -176,7 +176,7 @@ c  Fill vcwork
       end if
 
       ipvc(nvc+1)  = npdg(1)
-      icrnvc(nvc+1) = 1 
+      icrnvc(nvc+1) = 1
       ivtivc(nvc+1) = 1
       iorgvc(nvc+1) = ivc
       pvc(1,nvc+1) = p1lab(2)*1000.
@@ -185,7 +185,7 @@ c  Fill vcwork
       posnuc(1,nvc+1) = posnuc(1,ivc)
       posnuc(2,nvc+1) = posnuc(2,ivc)
       posnuc(3,nvc+1) = posnuc(3,ivc)
-      iflgvc(nvc+1) = 0 
+      iflgvc(nvc+1) = 0
       CALL MCMASS(IPVC(NVC+1),AMASVC(NVC+1))
 
       ipvc(nvc+2)  = npdg(2)
@@ -198,7 +198,7 @@ c  Fill vcwork
       posnuc(1,nvc+2) = posnuc(1,ivc)
       posnuc(2,nvc+2) = posnuc(2,ivc)
       posnuc(3,nvc+2) = posnuc(3,ivc)
-      iflgvc(nvc+2) = 0 
+      iflgvc(nvc+2) = 0
       CALL MCMASS(IPVC(NVC+2),AMASVC(NVC+2))
 
       nvc = nvc + 2
@@ -279,7 +279,7 @@ c     pi0
          end if
 
 c     pi-
-      else if (ipvc(ivc).eq.-211) then 
+      else if (ipvc(ivc).eq.-211) then
          if (rndm(1).lt.0.25) then
             npdg(1) = 2112
             npdg(2) = 2112
@@ -299,9 +299,9 @@ c  Fill vcwork
       if (nvc.GT.(maxvc-3)) then
          nvc = maxvc - 3
       end if
-      
+
       ipvc(nvc+1)  = npdg(1)
-      icrnvc(nvc+1) = 1 
+      icrnvc(nvc+1) = 1
       ivtivc(nvc+1) = 1
       iorgvc(nvc+1) = ivc
       pvc(1,nvc+1) = p1lab(2)*1000.
@@ -310,11 +310,11 @@ c  Fill vcwork
       posnuc(1,nvc+1) = posnuc(1,ivc)
       posnuc(2,nvc+1) = posnuc(2,ivc)
       posnuc(3,nvc+1) = posnuc(3,ivc)
-      iflgvc(nvc+1) = 0 
+      iflgvc(nvc+1) = 0
       CALL MCMASS(IPVC(NVC+1),AMASVC(NVC+1))
 
       ipvc(nvc+2)  = npdg(2)
-      icrnvc(nvc+2) = 1 
+      icrnvc(nvc+2) = 1
       ivtivc(nvc+2) = 1
       iorgvc(nvc+2) = ivc
       pvc(1,nvc+2) = p2lab(2)*1000.
@@ -323,11 +323,11 @@ c  Fill vcwork
       posnuc(1,nvc+2) = posnuc(1,ivc)
       posnuc(2,nvc+2) = posnuc(2,ivc)
       posnuc(3,nvc+2) = posnuc(3,ivc)
-      iflgvc(nvc+2) = 0 
+      iflgvc(nvc+2) = 0
       CALL MCMASS(IPVC(NVC+2),AMASVC(NVC+2))
 
       ipvc(nvc+3)  = npdg(3)
-      icrnvc(nvc+3) = 1 
+      icrnvc(nvc+3) = 1
       ivtivc(nvc+3) = 1
       iorgvc(nvc+3) = ivc
       pvc(1,nvc+3) = p3lab(2)*1000.
@@ -336,7 +336,7 @@ c  Fill vcwork
       posnuc(1,nvc+3) = posnuc(1,ivc)
       posnuc(2,nvc+3) = posnuc(2,ivc)
       posnuc(3,nvc+3) = posnuc(3,ivc)
-      iflgvc(nvc+3) = 0 
+      iflgvc(nvc+3) = 0
       CALL MCMASS(IPVC(NVC+3),AMASVC(NVC+3))
 
       nvc = nvc + 3
@@ -456,7 +456,7 @@ c  Fill vcwork
       end if
 
       ipvc(nvc+1)  = npdg(1)
-      icrnvc(nvc+1) = 1 
+      icrnvc(nvc+1) = 1
       ivtivc(nvc+1) = 1
       iorgvc(nvc+1) = ivc
       pvc(1,nvc+1) = p1lab(2)*1000.
@@ -465,11 +465,11 @@ c  Fill vcwork
       posnuc(1,nvc+1) = posnuc(1,ivc)
       posnuc(2,nvc+1) = posnuc(2,ivc)
       posnuc(3,nvc+1) = posnuc(3,ivc)
-      iflgvc(nvc+1) = 0 
+      iflgvc(nvc+1) = 0
       CALL MCMASS(IPVC(NVC+1),AMASVC(NVC+1))
 
       ipvc(nvc+2)  = npdg(2)
-      icrnvc(nvc+2) = 1 
+      icrnvc(nvc+2) = 1
       ivtivc(nvc+2) = 1
       iorgvc(nvc+2) = ivc
       pvc(1,nvc+2) = p2lab(2)*1000.
@@ -478,11 +478,11 @@ c  Fill vcwork
       posnuc(1,nvc+2) = posnuc(1,ivc)
       posnuc(2,nvc+2) = posnuc(2,ivc)
       posnuc(3,nvc+2) = posnuc(3,ivc)
-      iflgvc(nvc+2) = 0 
+      iflgvc(nvc+2) = 0
       CALL MCMASS(IPVC(NVC+2),AMASVC(NVC+2))
 
       ipvc(nvc+3)  = npdg(3)
-      icrnvc(nvc+3) = 1 
+      icrnvc(nvc+3) = 1
       ivtivc(nvc+3) = 1
       iorgvc(nvc+3) = ivc
       pvc(1,nvc+3) = p3lab(2)*1000.
@@ -491,11 +491,11 @@ c  Fill vcwork
       posnuc(1,nvc+3) = posnuc(1,ivc)
       posnuc(2,nvc+3) = posnuc(2,ivc)
       posnuc(3,nvc+3) = posnuc(3,ivc)
-      iflgvc(nvc+3) = 0 
+      iflgvc(nvc+3) = 0
       CALL MCMASS(IPVC(NVC+3),AMASVC(NVC+3))
 
       ipvc(nvc+4)  = npdg(4)
-      icrnvc(nvc+4) = 1 
+      icrnvc(nvc+4) = 1
       ivtivc(nvc+4) = 1
       iorgvc(nvc+4) = ivc
       pvc(1,nvc+4) = p4lab(2)*1000.
@@ -504,7 +504,7 @@ c  Fill vcwork
       posnuc(1,nvc+4) = posnuc(1,ivc)
       posnuc(2,nvc+4) = posnuc(2,ivc)
       posnuc(3,nvc+4) = posnuc(3,ivc)
-      iflgvc(nvc+4) = 0 
+      iflgvc(nvc+4) = 0
       CALL MCMASS(IPVC(NVC+4),AMASVC(NVC+4))
 
       nvc = nvc + 4

@@ -1,29 +1,29 @@
 *     -----------------------------------------------------
-      FUNCTION EVPIPROB()      
+      FUNCTION EVPIPROB()
 *     -----------------------------------------------------
-*     
+*
 *     ( purpose )
 C        Calculate probability of pion final state interaction event.
 C        MUST BE KEPT SYNCHRONIZED WITH eftrace.F
 *
-*     ( input ) 
+*     ( input )
 c        FSIHIST common block
 c        NEFFPR common block
 *
-*     ( output ) 
+*     ( output )
 C        Probability of the event
 C
 C     ( Updating record )
 C         2010.09.28 ; P.de Perio
 C                        - Creation
-C         2010.10.13 ; Add condition to escape infinite loop 
+C         2010.10.13 ; Add condition to escape infinite loop
 c
 C
 
 C#define DEBUG
 
       implicit none
-      
+
       REAL*4 EVPIPROB,PROB
 
       REAL PPI(3)
@@ -42,7 +42,7 @@ C#define DEBUG
       REAL AMPI,PCUT
       DATA AMPI/139./
       DATA PCUT/500./
-      
+
       REAL DL,ABSP,ABSPBST,DXXY,RMAX, dt
       INTEGER NQN,NQPAI,NECHARGE,IP
       REAL PESC,PINEL,PCOH,PABS,PQE,PCX
@@ -89,11 +89,11 @@ C               IF(RLU(IDUM).LT.(float(NUMBNDP)/float(NUMATOM))) NQN=1
 C     -- Load integrated density table for Coulomb force
          call loadIntDensTable
 
-C     Get index in nucleusZ array for Coulomb force 
+C     Get index in nucleusZ array for Coulomb force
          do iNuc = 1, nNuclei
             if (nucZ(iNuc).eq.NUMBNDP) exit
          end do
-         
+
          if (iNuc.eq.nNuclei) then
             write(*,*) "EFTRACE Error: Unimplemented Z value = ",NUMBNDP
             stop
@@ -121,7 +121,7 @@ C     Check particle type
          END IF
 
 C     SKDETSIM implemention of NEUT cascade uses same FSI common block to
-C     store elastic interactions on free hydrogen and nucleus so skip these 
+C     store elastic interactions on free hydrogen and nucleus so skip these
 C     vertices here
          IF (IFLGVERT(IVERTI(J)).ge.100) then
 C            write(*,*) "EVPIPROB: Skipping non-eftrace interaction flag = ",IFLGVERT(IVERTI(J))
@@ -143,7 +143,7 @@ C     For high-energy start with neutron target and alternate each step
          NQN=1
 
 C     -- NOW TRACE
-C     
+C
  100     X(1)=X(1)+DIR(1)*DXXY
          X(2)=X(2)+DIR(2)*DXXY
          X(3)=X(3)+DIR(3)*DXXY
@@ -195,29 +195,29 @@ C     So let's calculate escape probability for high and low energy
 C     models and use the weighted (by MODFRAC) sum
          IF (NENEFMODL.EQ.1) THEN
 
-C           Intermediate step 
+C           Intermediate step
             IF (POSDIFF .ge. (DXXY*DXXYFACTOR)**2) THEN
                CALL EFPQEAB(ABSP,DL,DXXY,PESCL,PQE,PABS,PCOH)
-               
+
                CALL EFPQEABH(ABSPBST,DL,DXXY,NQPAI,0,PESCHN,
      &              PQE,PINEL,PCOH,PCX)
                CALL EFPQEABH(ABSPBST,DL,DXXY,NQPAI,1,PESCHP,
      &              PQE,PINEL,PCOH,PCX)
 
                PESCH = NUCFRAC*PESCHP + (1-NUCFRAC)*PESCHN
-               
+
                PESC = (1-MODFRAC)*PESCL + MODFRAC*PESCH
-               
+
                EVPIPROB = EVPIPROB * PESC
 
 #ifdef DEBUG
                if (EVPIPROB.le.0) write(*,*) "EVPIPROB: 1. ", J, IP, ABSP
 #endif
-               
+
                if (VERBOSE.eq.3) write (*,*) "Esc. step (blend) = ",EVPIPROB
 
                GO TO 4000
-C           Vertex step               
+C           Vertex step
             ELSE
                IF (IFLGVERT(IVERTF(J)).ge.10) then
                   goto 300
@@ -226,23 +226,23 @@ C           Vertex step
                END IF
 
             END IF
-            
+
 
          ELSE IF (NENEFMODL.EQ.0 .and. ABSP.LE.PCUT) then
 
-C     However, when comparing probabilities, let's pick one model for 
+C     However, when comparing probabilities, let's pick one model for
 C     the current particle (low energy if the final vertex was a low
-C     energy interaction). ERROR: Does not conserve unitarity in 
+C     energy interaction). ERROR: Does not conserve unitarity in
 C     transition region:
 c           (NENEFMODL.EQ.1 .and. ABSP.LE.PCUT .and.
 c      $     IFLGVERT(IVERTF(J)).LT.10) then
 
 C     Or the following which does conserve unitarity, but we lose smoothness
 C     $        (NENEFMODL.EQ.1 .and. ABSP.LE.450) ) then
-       
+
  200        CALL EFPQEAB(ABSP,DL,DXXY,PESC,PQE,PABS,PCOH)
 
-C           Intermediate step 
+C           Intermediate step
             IF (POSDIFF .ge. (DXXY*DXXYFACTOR)**2) THEN
                EVPIPROB = EVPIPROB * PESC
 
@@ -253,13 +253,13 @@ C           Intermediate step
                if (VERBOSE.eq.3) write (*,*) "Esc. step (lowe) = ",EVPIPROB
 
                GO TO 4000
-C           Vertex step               
-            else               
+C           Vertex step
+            else
                IF (IFLGVERT(IVERTF(J)).eq.-1) then
                   EVPIPROB = EVPIPROB * PESC
                ELSE IF (IFLGVERT(IVERTF(J)).eq.3) then
                   EVPIPROB = EVPIPROB * PABS
-               ELSE IF (IFLGVERT(IVERTF(J)).eq.4 .or. 
+               ELSE IF (IFLGVERT(IVERTF(J)).eq.4 .or.
      &                  IFLGVERT(IVERTF(J)).eq.8) then
 
                   EVPIPROB = EVPIPROB * PQE
@@ -274,7 +274,7 @@ C           Charge exchange probability determined within QE channel
 #endif
 
                   CALL EVSETPF(IP,PPI,DL,IFLGVERT(IVERTF(J)),PROB)
- 
+
                   EVPIPROB = EVPIPROB * PROB
 
 #ifdef DEBUG
@@ -302,16 +302,16 @@ C              Should be a high energy calculation
 
                GO TO 10
             end if
- 
-               
 
-C     
+
+
+C
 C++   HIGH MOMENTUM ( P > PCUT (500MEV/C) )
          ELSE
 
 C           Charge of pion
  300        NQPAI=NECHARGE(IP)
-C     
+C
 C---  In Nucleus (not free protons i.e. hydrogens)
 C
 
@@ -330,10 +330,10 @@ C           Weight probabilities by nucleon density
                PINEL = NUCFRAC*PINELP + (1-NUCFRAC)*PINELN
                PCOH = NUCFRAC*PCOHP + (1-NUCFRAC)*PCOHN
                PCX = NUCFRAC*PCXP + (1-NUCFRAC)*PCXN
-               
-               goto 320 
 
-C           Some interaction               
+               goto 320
+
+C           Some interaction
             ELSE
 
 c              Charge exchange vertex step (select appropriate nucleon charge
@@ -357,8 +357,8 @@ C              non-CX interaction
                endif
 
             END IF
-            
-C           Intermediate step 
+
+C           Intermediate step
  320        IF (POSDIFF .ge. (DXXY*DXXYFACTOR)**2) THEN
                EVPIPROB = EVPIPROB * PESC
 
@@ -368,7 +368,7 @@ C           Intermediate step
                if (VERBOSE.eq.3) write (*,*) "Esc. step (hie) = ",EVPIPROB
 
                GO TO 4000
-C     Vertex step               
+C     Vertex step
             else
                IF (IFLGVERT(IVERTF(J)).eq.-1) then
                   EVPIPROB = EVPIPROB * PESC
@@ -387,7 +387,7 @@ C              Should be a low energy calculation
                ELSE IF (IFLGVERT(IVERTF(J)).lt.10) then
                   goto 200
 
-               ELSE 
+               ELSE
                   write(*,*) "EVPIPROB: Unknown hi interaction mode =",
      &                 IFLGVERT(IVERTF(J))
                end if
@@ -397,12 +397,12 @@ C              Should be a low energy calculation
 #endif
                if (VERBOSE.eq.3) write (*,*) "Int. step (hie) = ",
      &                           IFLGVERT(IVERTF(J)),EVPIPROB
-               
+
                GO TO 10
             end if
 
          end if
-         
+
  10   end do
 
       goto 5000
@@ -420,7 +420,7 @@ C     See neututils/calc_nuc_dens/coulomb_factor.xls
          end do
 
          CALL EFCOULFORCE(P,IP,X,DL,dt,iNuc)
-                  
+
          ABSP=SQRT(P(1)**2+P(2)**2+P(3)**2)
          IF(ABSP.GT.0.001) then
             DIR(1)=P(1)/ABSP
@@ -433,17 +433,17 @@ C     See neututils/calc_nuc_dens/coulomb_factor.xls
             DIR(3)=0.0
          end if
       end if
-      
+
       goto 100
-      
- 5000 if (EVPIPROB .le. 0) then 
+
+ 5000 if (EVPIPROB .le. 0) then
          write(*,*) "Warning: EVPIPROB<=0 (",EVPIPROB, "), returning 1"
          EVPIPROB=1
       else if (EVPIPROB .ne. EVPIPROB) then
          write(*,*) "Warning: EVPIPROB=NaN (",EVPIPROB, "), returning 1"
          EVPIPROB=1
       end if
-      
+
       FSIPROB = EVPIPROB
 
       RETURN

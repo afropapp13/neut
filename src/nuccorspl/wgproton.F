@@ -39,8 +39,8 @@ C      integer ido(20)
       no=0
 
       call nrprton ( anuc,     !A of the nucleus =16 for Oxygen
-     $     stpi,		!current point inside nucleus
-     $     pi,idmc,	        !4momentum in GeV,id (should be p or n)
+     $     stpi,                !current point inside nucleus
+     $     pi,idmc,             !4momentum in GeV,id (should be p or n)
      $     po,ido,stpo,no,      !the same for outgoing, creat point,#of track
      $     imode,icont)
 
@@ -92,7 +92,7 @@ C--- interaction
          ICRNVC(itrack)=0
          IVTFVC(itrack)=1
       end if
-      
+
       if (no.eq.1) then
          if (ido(1).eq.ipvc(itrack)) then
             IFLGVC(itrack)=8
@@ -108,7 +108,7 @@ c     put the rest of outgoing tracks on stack (pions first)
             IF (nvc2.ge.MAXVC-1) then
                write(*,*) 'wgproton: Too many particles..(1)'
                write(*,*) 'wgproton: Stop storing some of them.'
-               goto 1000 
+               goto 1000
             endif
             nvc2 = nvc2 +1
             IPVC(NVC2)=ido(i)
@@ -124,7 +124,7 @@ C            CALL UCOPY(stpo(1,i),POSIVC(1,NVC2),3)
       end do
 
       do i=1,no
-C         if(  i.ne.itpmax .and.         !track not used 
+C         if(  i.ne.itpmax .and.         !track not used
 C     &        ido(i).gt.1000 .and.      !now nucleons
 C     &        po(4,i).gt.pcut) then     !can exit nucleus ?
          if(  ido(i).gt.1000 .and.      !now nucleons
@@ -132,7 +132,7 @@ C     &        po(4,i).gt.pcut) then     !can exit nucleus ?
             IF (nvc2.ge.MAXVC-1) then
                write(*,*) 'wgproton: Too many particles..(2)'
                write(*,*) 'wgproton: Stop storing some of them.'
-               goto 1000 
+               goto 1000
             endif
             nvc2 = nvc2 +1
             IPVC(NVC2)=ido(i)           !track id

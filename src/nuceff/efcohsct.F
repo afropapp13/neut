@@ -8,18 +8,18 @@
 *     ( purpose )
 *       SIMULATE COHERENT SCATTERING
 *
-*     ( input ) 
+*     ( input )
 *       PPI  : INITIAL PION MOMENTUM
 *
-*     ( output ) 
+*     ( output )
 *       POUT : FINAL PION MOMENTUM
-C     
+C
 #include "necard.h"
 
       DIMENSION PPI(3),POUT(3),SK(3),PF(3),GK(3),EV(3)
       DATA AMN/939./,AMPI/139./
       DATA Q0/200./
-C     
+C
 
 C      WRITE(*,*) "EFCOHSCT: THIS SUBROUTINE IS OBSOLETE!"
 
@@ -32,7 +32,7 @@ C      WRITE(*,*) "EFCOHSCT: THIS SUBROUTINE IS OBSOLETE!"
          PF(2) = 0
          PF(3) = 0
       end if
-C     
+C
       PF(1)=PFABS*PF(1)
       PF(2)=PFABS*PF(2)
       PF(3)=PFABS*PF(3)
@@ -56,7 +56,7 @@ C
       SK(2)=PPI(2)
       SK(3)=PPI(3)
       CALL MCVECBST(SK,AMPI,EV,GM)
-C     
+C
       SKABS2=SK(1)**2+SK(2)**2+SK(3)**2
 C  200 RAN=RNDM(DUM)
   200 RAN=RLU(IDUM)
@@ -74,7 +74,7 @@ C      PHI=RNDM(DUM)*6.2831852
       EV(2)=-EV(2)
       EV(3)=-EV(3)
       CALL MCVECBST(POUT,AMPI,EV,GM)
-C     
+C
 C     To do: Knock out the nucleon (maybe) -Patrick
 C
       RETURN

@@ -1,17 +1,17 @@
 *     -----------------------------------------------------
-      SUBROUTINE EFCALAMP(SK,GK,PPI,radius)      
+      SUBROUTINE EFCALAMP(SK,GK,PPI,radius)
 *     -----------------------------------------------------
-*     
+*
 *     ( purpose )
 *       CALCULATE AMPLITUDE OF EACH PHASE
 *
-*     ( input ) 
+*     ( input )
 *       SK       : RELATIVE MOMENTUM VECTOR IN C-M SYSTEM
 *       GK       : PI-N TOTAL MOMENTUM IN LAB. SYSTEM
 *       PPI      : PION MOMENTUM IN LAB. SYSTEM
 *       radius   : RADIUS
 *
-*     ( output ) 
+*     ( output )
 *       COMMON/PSHIFT/FS1,FS3,FP1,FP3,GP1,GP3,FD1,GD1
 *       amplitude of each phase
 
@@ -22,7 +22,7 @@
       COMPLEX EFD15
       COMPLEX BP11,BP13,BP31,BP33,BD13,BD15
       COMMON/PSHIFT/FS1,FS3,FP1,FP3,GP1,GP3,FD1,GD1
-C     
+C
       Q=SQRT(SK(1)**2+SK(2)**2+SK(3)**2)
       FS1=EFS11MC(SK,GK,PPI,radius)
       FS3=EFS31MC(SK,GK,PPI,radius)

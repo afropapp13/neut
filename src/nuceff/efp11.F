@@ -1,14 +1,14 @@
 *     -----------------------------------------------------
-      COMPLEX FUNCTION EFP11(Q)      
+      COMPLEX FUNCTION EFP11(Q)
 *     -----------------------------------------------------
-*     
+*
 *     ( purpose )
 *       OBTAIN PHASE SHIFT OF P11 WAVE IN PI-N SCATTERING
 *
-*     ( input ) 
+*     ( input )
 *           Q   : Relative momentum in C-M system(MeV)
 *
-*     ( output ) 
+*     ( output )
 *        EFP11  : (EXP(2*I*DELTA)-1)/2I/Q**3
 
       COMPLEX I

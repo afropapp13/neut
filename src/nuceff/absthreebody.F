@@ -15,7 +15,7 @@ C      real p1lab(4),p2lab(4),p3lab(4),p4lab(4)
 
 C      integer lpdg,npdg(4)
 
-#include "absneject.h"      
+#include "absneject.h"
 
 C      common /labEandP/ lpdg,EandP
 C      common /cmnucleons/ p1cm,p2cm,p3cm,p4cm

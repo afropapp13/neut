@@ -14,7 +14,7 @@ c     ( output )
 c       pout(4)  four vector (E,px,py,pz) finaal frame
 c
       implicit none
-      
+
       real*4 beta(3),pin(4),pout(4)
 
       real*4 bx,by,bz,b2,g,gm1

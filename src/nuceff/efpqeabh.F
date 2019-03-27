@@ -1,19 +1,19 @@
 *     -----------------------------------------------------
       SUBROUTINE EFPQEABH(PAIMOM,DL,DXXY,NQPAI,NQN,PESC,PQE,PINEL,
-     $                    PCOH,PCX)      
+     $                    PCOH,PCX)
 *     -----------------------------------------------------
-C     
+C
 *     ( purpose )
 *       GIVE INTERACTION PROBABILITY OF PION AT HIGH ENERGIES
 *
-*     ( input ) 
+*     ( input )
 C         PAIMOM: PION MOMENTUM (MEV/C)
 C         DL    : LENGTH FROM CENTER OF NUCLEI AND PION POSITION(FERMI)
 C         DXXY  : UNIT CALCULATE LENGTH (FERMI)
 C         NQPAI : CHARGE OF PION
 C         NQN   : CHARGE OF NUCLEON
-*               : 
-*     ( output ) 
+*               :
+*     ( output )
 C         PESC  : ESCAPE PROBABILITY
 C         PQE   : ELASTIC SCATTERING PROBABILITY
 C         PINEL : INELASTIC PROBABILITY
@@ -24,11 +24,11 @@ C         PCX   : Charge exchange prob.
 *     2007.11.05 ; G.Mitsuka - add conversion with atomic number
 *
 *     2010.06.15 ; P.de Perio -  Change to get FACCOH from card (FEFQEHF)
-*                             - Nucleon knockout for nu-interaction and 
+*                             - Nucleon knockout for nu-interaction and
 *                               not pi-scattering or photoproduction
-C     
+C
 
-C     
+C
 #include "nework.h"
 #include "necard.h"
 #include "neutparams.h"
@@ -38,15 +38,15 @@ C      COMMON /NVECT/ IMOD,LVECT,IP(20),P(3,20)
       DATA PRBINT/0.4/
       REAL DENOMINATOR
       REAL*4 PROBSUM
-C     
+C
       PESC=1.
       PQE=0.
       PINEL=0.
       PCOH=0.
       PCX=0.
       IF(DL.GT.CC2)RETURN
-C     
-C     
+C
+C
 CC      XGOOUT=FLOAT(LVECT-4-1)*PRBINT
       XGOOUT=FLOAT(NUMNE-4-1)*PRBINT
 C     NUMBER OF PROTONS EXPECTED TO GO OUT OF 16O AFTER NUCLEAR
@@ -62,7 +62,7 @@ C     100.33 assumes that target is 16O
       END IF
 
 C     NUCLEAR DENSITY AT THE CENTER OF 16O
-C     
+C
       RHO=EFABRHO(DL)
 
 
@@ -93,7 +93,7 @@ C     CALCULATE PROBABILITY OF EACH PROCESS
 
 C     Re-set DXXY using CC2
 C      DXXY=CC2/100.
-C     
+C
 C     Scale parameters
       PQE  =PQE*FEFQEH*FEFALL
       PINEL=PINEL*FEFINEL*FEFALL

@@ -71,7 +71,7 @@ C     integer inot,itrans,idec,ine1,ine2,iel,iabs,icx
 !       pptrack(4,*) to nrstack.h - initial 4-momentum of nucleon in track
 !       ntrack to nrstack.h - number of tracks
 !       ihap to nrhad.h - ??
-!       nel(3) to nrhad.h - ?? 
+!       nel(3) to nrhad.h - ??
 !       itrans to nrhadr.h - ??
 !
 
@@ -155,10 +155,10 @@ C     rmax is set by scaling to 16O (rmax=6. for Oxygen)
       pptot = sqrt(pptot)
 
 C     Asmita R.:For MEC events fermi surface momentum is function of radial distance r (22-07-2013)
-C     while for other modes its read from card 
+C     while for other modes its read from card
 C Change to local Fermi Gas ( 2017/04/03 )
       if (nucresflg.eq.1) then
-         if (abs(MODENE).EQ.2) then 
+         if (abs(MODENE).EQ.2) then
             if (r.ge.rmax) then
                pfermi=EFFRMGAS(0,0,rmax)
             else
@@ -287,7 +287,7 @@ c!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 C      if(ecms2.lt.(2*amn)**2) goto 200  ! kinematically impossible / test is done inside nrnuc!
 
       call nrnuc(ides)          ! make interaction
-      
+
       if(ides.ge.10) then       ! Paulu blocked interaction: save to fsi history stack
         if(NFnvert.lt.maxnucleonvert.and.NFnstep.lt.maxnucleonstep) then
           NFnvert = NFnvert+1                                   ! increase number of vertices
@@ -331,7 +331,7 @@ C      if(ecms2.lt.(2*amn)**2) goto 200  ! kinematically impossible / test is do
       end if
 
 c!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      
+
 
 c!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -451,6 +451,6 @@ C      no = no + 1
       if(no.lt.20) goto 300    !-------^ take next from the stack
 
  100  continue
-      
+
       return
       end

@@ -1,21 +1,21 @@
 C     ------------------------------------------------------------------
 
       REAL*8 FUNCTION DDIFCRS(ENU,CO,ELEP,ITYPE)
-C     
-C     CALCULATE DIFRENTIAL CROS SECTION 
+C
+C     CALCULATE DIFRENTIAL CROS SECTION
 C     DSIGMA/DCO/DELEP
 C     nu + Nuclear -> lepton + X
-C     
+C
 C     INPUT
 C     ENU  : NEUTRINO ENERGY
 C     CO   : COSINE OF SCATTERING ANGLE
 C     ELEP : LEPTON ENERGY
 C     ITYPE: e-(anti)neutrino  -> +(-)12, mu-(anti)neutrino -> +(-)14
-C     
+C
 C     OUTPUT
 C     DDIFCRS : DIFFERENTIAL CROSS SECTION [ fm^2/MeV]
-C     
-C     
+C
+C
 
       IMPLICIT  NONE
 
@@ -24,20 +24,20 @@ C
 #include "neutparams.h"
 #include "neutmodel.h"
 
-C     
+C
 C     ARGS
-C     
+C
       REAL*4 ENU,CO,ELEP
       INTEGER ITYPE
-C     
+C
 C     PARAMETERS
-C     
+C
       REAL*8 ALPHA, PI, HC,GF,XMN,DMN
       REAL*8 B,COSB2,PF,EBI,EBF
       INTEGER NUC
-C     
+C
 C     PARAMETERS
-C     
+C
       PARAMETER  (
      &     ALPHA=1.D0/137.036D0, ! fine structure const
      &     PI=3.1415926D0,      ! Pi
@@ -46,7 +46,7 @@ C
      &     B=1.76D0,            ! ??? FM
      &     COSB2=.9494D0,       ! cosine of cabibo angle
      &     XMN=939.6D0,         ! nucleon mass [MeV]
-     &     DMN = 0.D0           ! dfference between init. & final 
+     &     DMN = 0.D0           ! dfference between init. & final
 C     &     NUC = 8              ! number of proton or neutron
      &     )
 
@@ -54,10 +54,10 @@ C     &   PF = 225.D0,            ! Fermi momentum
 C     &   EBI = 27.D0,            ! binding energy of initial state
 C     &   EBF = 0.D0,             ! binding energy of final state
 
-C     
-C     
+C
+C
 C     LOCAL VARS
-C     
+C
       REAL*8 W,Q,Q2,PLEP,WEF,QVEC2,AP,BP,Q2EF,XM
       REAL*8 FGE,FGM,F1,F2,FA,FP
       REAL*8 T1,T2,TA,TB,T8
@@ -95,20 +95,20 @@ C     ! NUC=Z OR N OF THE TARGET
 
       DDIFCRS = 0.D0
       IF(ELEP.LE.XM) RETURN
-C     
-C     
+C
+C
 C     KINEMATIC VARS
-C     
+C
 
       W=ENU-ELEP
       if (w.le.0.D0) return
       PLEP=DSQRT(ELEP**2-XM**2)
-      EU=DSQRT(PF**2+XMN**2)	 
+      EU=DSQRT(PF**2+XMN**2)
       WEF=W+EBF-EBI
       AP=EBI*(1.D0+EBF/W)
       BP=EBF*(1.D0-EBI/W)
-C      Q  = DSQRT(ENU**2+PLEP**2-2*ENU*PLEP*CO) 
-      DBLQ2=(ENU**2+PLEP**2-2*ENU*PLEP*CO) 
+C      Q  = DSQRT(ENU**2+PLEP**2-2*ENU*PLEP*CO)
+      DBLQ2=(ENU**2+PLEP**2-2*ENU*PLEP*CO)
       if ((DBLQ2.lt.0.).and.(DBLQ2.ge.-1.e-7)) THEN
          DBLQ2=0.
       endif
@@ -116,10 +116,10 @@ C      Q  = DSQRT(ENU**2+PLEP**2-2*ENU*PLEP*CO)
       QVEC2=Q**2
       Q2 = Q**2 - W**2
       Q2EF=Q**2-WEF**2  - DMN
-C     
-C     
-C     FORM FACTORS 
-C     
+C
+C
+C     FORM FACTORS
+C
 
 
       FGE = (1.D0+Q2/7.1D5)**(-2)
@@ -165,22 +165,22 @@ C     FA=-1.232D0*(1+Q2/1010.D0**2)**(-2)
 C     PV***
 C     FP=2*XMN/XRED*FA/(Q2+139.57**2)
       FP=2*XMN*FA/(Q2+139.57D0**2)
-      
-C     
-C     
+
+C
+C
 C     T'S
-C     
+C
       T1=.5D0*Q2*(F1- 2.D0*XMN*F2)**2+(2.D0*XMN**2+.5D0*Q2)*FA**2
       T2=2.D0*XMN**2*(F1**2+Q2*F2**2+FA**2)
-      TA=XMN**2*(2.D0*XMN*F1*F2+ (.5D0*Q2-2.D0*XMN**2)*F2**2 
+      TA=XMN**2*(2.D0*XMN*F1*F2+ (.5D0*Q2-2.D0*XMN**2)*F2**2
      >     -2.D0*XMN*FA*FP + .5D0*Q2*FP**2)
       TB=-.5D0*T2
       T8=2.D0*XMN**2*FA*(F1- 2.D0*XMN*F2)
 
-C     
-C     
+C
+C
 C     B'S etc
-C     
+C
 
       if (q.eq.0.d0) return
 
@@ -190,8 +190,8 @@ C
       IF(WEF.GT.0) THEN
 C         DBLS=(1.D0-C**2+D**2)
 C         if ((DBLS).le.0.D0) DBLS=0.D0
-         S1=XMN*(C*D+DSQRT(1.D0-C**2+D**2))/(1.D0-C**2)	
-C         S1=XMN*(C*D+DSQRT(DBLS))/(1.D0-C**2)	
+         S1=XMN*(C*D+DSQRT(1.D0-C**2+D**2))/(1.D0-C**2)
+C         S1=XMN*(C*D+DSQRT(DBLS))/(1.D0-C**2)
          S2=EU-WEF
          EL=MAX(S1,S2)
       ENDIF
@@ -211,10 +211,10 @@ C         S1=XMN*(C*D+DSQRT(DBLS))/(1.D0-C**2)
      >     (EU-EL)+(EBI-W)**2*DLOG((
      >     EU-EBI+W)/(EL-EBI+W))))
 
-C     
-C     
+C
+C
 C     A'S
-C     
+C
       A1=B0
       A2=B2-B0
       A3=C**2*B2+2.D0*C*D*B1+D**2*B0
@@ -223,29 +223,29 @@ C
       A6=C*B1+D*B0
       A7=B1-EBI/XMN*B0
 
-C     
-C     
+C
+C
 C     W'S
-C     
+C
       W1=A1*T1+.5D0*(A2- A3)*T2
       W2=(A4+2*W/Q*A5+W**2/(Q**2)*A3+.5D0*Q2/(Q**2)
      >     *(A2-A3))*T2
       WA=1.D0/(Q**2)*(1.5D0*A3-.5D0*A2)*T2
      >     +1.D0/XMN**2*A1*TA
      >     +2.D0/(XMN*Q)*A6*TB
-      WB=1.D0/XMN* (A7+W/Q*A6)*TB 
-     >     + W/(Q**2)*(1.5D0*A3-.5D0*A2+Q/W*A5)*T2 
+      WB=1.D0/XMN* (A7+W/Q*A6)*TB
+     >     + W/(Q**2)*(1.5D0*A3-.5D0*A2+Q/W*A5)*T2
       W8=NUSIG/XMN*(A7+W/Q*A6)*T8
 
-C     
-C     
+C
+C
 C     CROSS SECTION
-C     
+C
       COX=PLEP/ELEP*CO
       DSIG=COSB2*(GF*HC)**2*ELEP*PLEP/PI *.5D0 *
      >     (W2*(1.D0+COX)+(2.D0*W1+XM**2*WA)*(1.D0-COX)
-     >     -2.D0*W8*(ENU+ELEP)*(1.D0-COX) 
-     >     +(WB+W8)*2.D0*XM**2/ELEP ) 
+     >     -2.D0*W8*(ENU+ELEP)*(1.D0-COX)
+     >     +(WB+W8)*2.D0*XM**2/ELEP )
       DDIFCRS = DSIG
       RETURN
       END

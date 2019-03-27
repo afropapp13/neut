@@ -2,15 +2,15 @@
 *     -----------------------------------------------------
       FUNCTION EFABPATHTUN(PPI,RIN)
 *     -----------------------------------------------------
-*     
+*
 *     ( purpose )
 *       GIVE ABSORPTION MEAN FREE PATH **(-1)
 *
-*     ( input ) 
+*     ( input )
 *       PPI      : Momentum of pion(MeV/c)
 *       R        : radius(fm)
 *
-*     ( output ) 
+*     ( output )
 *       efabpathtun : absorption mean free path**(-1) (fm ** (-1))
 *
 *     ( Creation Date and Author )
@@ -78,7 +78,7 @@ C                                - Extended to 2 GeV/c
       parameter (RMSRADOXY = 2.730)
 
       EFABPATHTUN=0.
-      
+
       IF (PPI.GE.500) RETURN
 
       Reff=Rin

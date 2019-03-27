@@ -1,14 +1,14 @@
 *     -----------------------------------------------------
       COMPLEX FUNCTION EFS31(Q)
 *     -----------------------------------------------------
-*     
+*
 *     ( purpose )
 *       OBTAIN PHASE SHIFT OF S31 WAVE IN PI-N SCATTERING
 *
-*     ( input ) 
+*     ( input )
 *           Q   : Relative momentum in C-M system(MeV)
 *
-*     ( output ) 
+*     ( output )
 *        EFS31  : (EXP(2*I*DELTA)-1)/2I/Q**3
 C
       COMPLEX I

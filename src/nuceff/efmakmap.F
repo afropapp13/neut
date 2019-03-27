@@ -1,11 +1,11 @@
 *     -----------------------------------------------------
-      SUBROUTINE EFMAKMAP(PF,PPI,SK,GK,EVP,GM,MODE,XMAP,radius)      
+      SUBROUTINE EFMAKMAP(PF,PPI,SK,GK,EVP,GM,MODE,XMAP,radius)
 *     -----------------------------------------------------
-*     
+*
 *     ( purpose )
 *       MAKE MAP OF SCATTERING ANGLE (2 DIMENSIONAL OF THETA AND PHI)
 *
-*     ( input ) 
+*     ( input )
 C          PF    : NUCLEON MOMENTUM IN LAB. SYSTEM(MeV)
 C          PPI   : PION MOMENTUM IN LAB. SYSTEM(MeV)
 C          SK    : PI-N RELATIVE MOMENTUM IN C-M SYSTEM(MeV)
@@ -14,23 +14,23 @@ C          EVP   : BOOST DIRECTION OF LAB. ---> C-M SYSTEM(MeV)
 C          GM    : BOOST GAMMA
 C          MODE  : INTERACTION MODE (SEE FUNCTION FSQUAR)
 *          radius: radius (fm)
-*     ( output ) 
+*     ( output )
 C          XMAP  : THETA PHI MAP OF SCATTERING
 
       DIMENSION PF(3),PPI(3),SK(3),SKD(3),GK(3),EVP(3),EVM(3),PPF(3)
       DIMENSION XMAP(11,11)
       DATA AMN/939.0/
       DATA MESH/10/
-C     
+C
       DO 10 I=1,11
          DO 10 J=1,11
    10 XMAP(I,J)=0.
-C     
+C
       FSURF=EFFRMGAS(16.,8.,radius)
       EVM(1)=-EVP(1)
       EVM(2)=-EVP(2)
       EVM(3)=-EVP(3)
-C     
+C
       DCOST=2./FLOAT(MESH)
       DPHI=6.283185/FLOAT(MESH)
       DO 100 I=1,MESH+1
@@ -49,9 +49,9 @@ C     - BOOST BACK SKD
             XMAP(I,J)=EFFSQUAR(MODE,SK,SKD,GK)
   200    CONTINUE
   100 CONTINUE
-C     
+C
       DO 300 I=1,MESH+1
   300 XMAP(I,MESH+1)=XMAP(I,1)
-C     
+C
       RETURN
       END

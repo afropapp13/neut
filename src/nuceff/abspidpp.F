@@ -26,7 +26,7 @@ c-------------------------------------------------------------
       real*8 sig
       real*8 w1,w2,w4
       REAL*8 ARG
-      
+
 
 #include "abspidpp.h"
 C      common /pi_energy/ tpid
@@ -42,7 +42,7 @@ C      common /pi_energy/ tpid
       f   = 0.38d-3
       mpi = 139.57d0
       md  = 1875.63d0
-      
+
       g12 = g1*g1
       g22 = g2*g2
 
@@ -67,13 +67,13 @@ C      common /pi_energy/ tpid
 C      write(*,*)'mpi=',mpi,'md=',md,'tpid=',tpid
 
       s   = mpi**2 + md**2 + 2.*(tpid+mpi)*md
-     
+
 C      write(*,*)'s=',s
 
       ss  = sqrt(s)
 
 C      write(*,*)'ss=',ss
-      
+
       wpi = (s+mpi**2-md**2)/(2.*ss)
 
 C      write(*,*)'wpi=',wpi

@@ -1,11 +1,11 @@
 *     -----------------------------------------------------
-      FUNCTION EFFSQUAR(MODE,SK,SKD,GK)      
+      FUNCTION EFFSQUAR(MODE,SK,SKD,GK)
 *     -----------------------------------------------------
-*     
+*
 *     ( purpose )
 *        CALCULATE !F!**2  -- SCATTERING RATE
 *
-*     ( input ) 
+*     ( input )
 *      MODE :   INTERACTION MODE
 *            =1    PI+,P ---> PI+,P
 *            =2    PI+,N ---> PI+,N
@@ -22,7 +22,7 @@
 *       GK   :   PI-N TOTAL MOMENTUM IN LAB. SYSTEM(MEV)
 *
 *
-*     ( output ) 
+*     ( output )
 *       EFFSQUAR :   !F!**2
 *
 *     ( update )

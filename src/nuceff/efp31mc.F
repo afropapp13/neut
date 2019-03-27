@@ -1,28 +1,28 @@
 *     -----------------------------------------------------
       COMPLEX FUNCTION EFP31MC(SK,GK,PPI,radius)
 *     -----------------------------------------------------
-*     
+*
 *     ( purpose )
 *       OBTAIN MEDIUM CORRECTED PHASE SHIFT OF P31 WAVE IN PI-N SCATTERING
 *
-*     ( input ) 
+*     ( input )
 C           SK    : RELATIVE MOMENTUM VECTOR IN C-M SYSTEM(MeV)
 C           GK    : PI-N TOTAL MOMENTUM IN LAB. SYSTEM(MeV)
 C           PPI   : PION MOMENTUM IN LAB. SYSTEM(MeV)
 C           radius: radius(fm)
 *
-*     ( output ) 
+*     ( output )
 *           P31MC :MEDIUM CORRECTED PHASE SHIFT AMPLITUDE
 C
       COMPLEX I,EFP31,P31DAT,CTEMP,CTEMP1,CTEMP2
       DIMENSION SK(3),GK(3),PPI(3)
       DATA AMPI/139.0/,AMN/939.0/
       DATA MESH/50/
-C     
+C
       I=(0.0,1.0)
-C     
+C
 C     == CALCULATE PARAMETER
-C     
+C
       SKABS=SQRT(SK(1)**2+SK(2)**2+SK(3)**2)
       GKABS=SQRT(GK(1)**2+GK(2)**2+GK(3)**2)
       PPIABS=SQRT(PPI(1)**2+PPI(2)**2+PPI(3)**2)
@@ -37,9 +37,9 @@ C
       ALPH=2.*AMN*(E+AMN+SQRT(2.*AMN*E+AMN**2+AMPI**2))
       ALPH=SQRT(ALPH)
       IF(GZIK.LT.PF)GO TO 1000
-C     
+C
 C     ++ INTEGRATE FOR THE CASE OF (PF < GZI*K)
-C     
+C
       SMIN=GZIK-PF
       SMAX=GZIK+PF
       IF(SMIN.LT.BETA .AND. BETA.LT.SMAX)GO TO 200
@@ -55,9 +55,9 @@ C
       P31DAT=EFP31(SKABS)
       EFP31MC=P31DAT/(1.-2.*P31DAT/3.141593*C*CTEMP)
       RETURN
-C     
+C
 C--FORTHE CASE OF INCLUDING POLE
-C     
+C
   200 DK=(SMAX-SMIN)/FLOAT(MESH)
       NL=INT((BETA-SMIN)/DK)
       NH=INT((SMAX-BETA)/DK)
@@ -76,10 +76,10 @@ C
          CTEMP1=CTEMP1+CTEMP2
          CTEMP=CTEMP+CTEMP1
   210 CONTINUE
-C     
+C
       IF(NL.EQ.NH)GO TO 290
   220 IF(NL.LT.NH)GO TO 240
-      
+
       DO 230 J=NNUM+1,NL
          SEK=BETA-(FLOAT(J)-0.5)*DK
          G0=1./((E-SEK**2/2./AMN)**2-SEK**2-AMPI**2)
@@ -87,14 +87,14 @@ C
          CTEMP=CTEMP+SEK**4*Q0*G0
   230 CONTINUE
       GO TO 290
-C     
+C
   240 DO 250 J=NNUM+1,NH
          SEK=BETA+(FLOAT(J)-0.5)*DK
          G0=1./((E-SEK**2/2./AMN)**2-SEK**2-AMPI**2)
          Q0=(PF**2-(GZIK-SEK)**2)/4./GZIK/SEK
          CTEMP=CTEMP+SEK**4*Q0*G0
   250 CONTINUE
-C     
+C
   290 CTEMP=CTEMP*DK
 C     -- ADD POLE TERM
       SEK=BETA
@@ -104,9 +104,9 @@ C     -- ADD POLE TERM
       P31DAT=EFP31(SKABS)
       EFP31MC=P31DAT/(1.-2.*P31DAT/3.141593*C*CTEMP)
       RETURN
-C     
+C
 C     -- FOR THE CASE OF (PF > GZI*GK)
-C     
+C
  1000 SMIN=0.
       SMAX=GZIK+PF
       IF(SMIN.LT.BETA .AND. BETA.LT.SMAX)GO TO 1200
@@ -123,9 +123,9 @@ C
       P31DAT=EFP31(SKABS)
       EFP31MC=P31DAT/(1.-2.*P31DAT/3.141593*C*CTEMP)
       RETURN
-C     
+C
 C--FORTHE CASE OF INCLUDING POLE
-C     
+C
  1200 DK=(SMAX-SMIN)/FLOAT(MESH)
       NL=INT((BETA-SMIN)/DK)
       NH=INT((SMAX-BETA)/DK)
@@ -146,10 +146,10 @@ C
          CTEMP1=CTEMP1+CTEMP2
          CTEMP=CTEMP+CTEMP1
  1210 CONTINUE
-C     
+C
       IF(NL.EQ.NH)GO TO 1290
  1220 IF(NL.LT.NH)GO TO 1240
-      
+
       DO 1230 J=NNUM+1,NL
          SEK=BETA-(FLOAT(J)-0.5)*DK
          G0=1./((E-SEK**2/2./AMN)**2-SEK**2-AMPI**2)
@@ -158,7 +158,7 @@ C
          CTEMP=CTEMP+SEK**4*Q0*G0
  1230 CONTINUE
       GO TO 1290
-C     
+C
  1240 DO 1250 J=NNUM+1,NH
          SEK=BETA+(FLOAT(J)-0.5)*DK
          G0=1./((E-SEK**2/2./AMN)**2-SEK**2-AMPI**2)
@@ -166,7 +166,7 @@ C
          IF((PF-GZIK).LT.SEK)Q0=(PF**2-(GZIK-SEK)**2)/4./GZIK/SEK
          CTEMP=CTEMP+SEK**4*Q0*G0
  1250 CONTINUE
-C     
+C
  1290 CTEMP=CTEMP*DK
 C     -- ADD POLE TERM
       SEK=BETA

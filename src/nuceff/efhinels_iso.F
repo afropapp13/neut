@@ -1,16 +1,16 @@
 *     -----------------------------------------------------
-      SUBROUTINE EFHINELS_ISO(IP,PIN,IPF,PFI,NQN,radius,ireaction)      
+      SUBROUTINE EFHINELS_ISO(IP,PIN,IPF,PFI,NQN,radius,ireaction)
 *     -----------------------------------------------------
-*     
+*
 *     ( purpose )
 *       CALCULATE INELASTIC SCATTERING at high momentum
 *
-*     ( input ) 
+*     ( input )
 C          IP   : INITIAL KIND OF PION
 C          PIN  : INITIAL PION MOMENTUM(MeV)
 C          NQN  : TARGET NUCLEON CHARGE
 *
-*     ( output ) 
+*     ( output )
 C          PFI  : FINAL PION MOMENTUM
 C          PNO  : FINAL NUCLEON MOMENTUM
 *
@@ -43,7 +43,7 @@ C---  Initialize
 
       if (NQN.eq.1) then
          INUC = 2212
-      else 
+      else
          INUC = 2112
       end if
       INUCF=INUC
@@ -63,7 +63,7 @@ C     -- SET NUCLEON MOMENTUM AND DIRECTION in lab frame
       if (NEFRMFLG.EQ.0) then
          IF (NEFKINVER.eq.0) THEN
  200        CALL RNFERM(PF,IDUM)
-         
+
 C     Should this depend on target nucleus size?
             FSURF=EFFRMGAS(16.,8.,radius)
             IF(PF.GT.FSURF)GO TO 200
@@ -78,13 +78,13 @@ C     Should this depend on target nucleus size?
 
       PNUC(1) = DIR(1)*PF
       PNUC(2) = DIR(2)*PF
-      PNUC(3) = DIR(3)*PF 
+      PNUC(3) = DIR(3)*PF
 
       TOTENUCL=SQRT(AMN**2+PF**2)
       TOTEPI=SQRT(AMPI**2+PIN(1)**2+PIN(2)**2+PIN(3)**2)
 
 C     Generate W mass
-      W = sqrt( AMN**2 + AMPI**2 + 2*(TOTENUCL*TOTEPI - 
+      W = sqrt( AMN**2 + AMPI**2 + 2*(TOTENUCL*TOTEPI -
      &     (PIN(1)*PNUC(1)+PIN(2)*PNUC(2)+PIN(3)*PNUC(3)) ) )
 
 c     Isotropic decay in CM frame
@@ -99,13 +99,13 @@ c     Isotropic decay in CM frame
       PFI(3)=PCM(3,2)
 
 C     Boost from C.M. frame into lab frame
-      ABSCM = SQRT((PIN(1)+PNUC(1))**2+(PIN(2)+PNUC(2))**2 
+      ABSCM = SQRT((PIN(1)+PNUC(1))**2+(PIN(2)+PNUC(2))**2
      &     + (PIN(3)+PNUC(3))**2)
       BETA = ABSCM/(TOTENUCL+TOTEPI)
       GAMMA = GAMFCT(BETA)
       BSTVEC(1) = (PIN(1)+PNUC(1))/ABSCM
       BSTVEC(2) = (PIN(2)+PNUC(2))/ABSCM
-      BSTVEC(3) = (PIN(3)+PNUC(3))/ABSCM  
+      BSTVEC(3) = (PIN(3)+PNUC(3))/ABSCM
 
       CALL MCVECBST(PNO,AMN,BSTVEC,GAMMA)
       CALL MCVECBST(PFI,AMPI,BSTVEC,GAMMA)

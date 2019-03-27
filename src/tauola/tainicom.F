@@ -2,14 +2,14 @@
 *     -------------------
       SUBROUTINE TAINICOM
 *     -------------------
-*     
+*
 *     ( purpose )
 *       set initial parameter for tauola
 *
-*     ( input ) 
+*     ( input )
 *       none
 *
-*     ( output ) 
+*     ( output )
 *       COMMON  /DECPAR/ /PARMAS/ /TAUBRA/ /TAUNPI/ /JAKI/ /IDFC/
 *               /INOUT/ /IDPART/ /TAURAD/ /QEDPRM/ /TAUKLE/
 *
@@ -24,19 +24,19 @@ C
 C     READ CARD
 C
       CALL TACARD
-C      
+C
 C     COMMON /PARMAS/
 C
       CALL TAINIMAS
-C      
+C
 C     COMMON /DECPAR/,/QEDPAR/
 C
       CALL TAINIPAR
-C      
+C
 C     COMMON  /TAUBRA/,/DECPAR/,/TAUKLE/
 C
       CALL TAINIDCY
 
       RETURN
       END
-      
+

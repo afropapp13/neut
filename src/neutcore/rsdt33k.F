@@ -10,7 +10,7 @@
 *       imode       : interaction mode
 *       inlep       : kind of incoming neutrino
 *       e           : energy of incoming neutrino
-*     
+*
 *     ( output )
 *       retpmu(3)    : momentum of outgoing lepton
 *       retpk(3)    : momentum of outgoing K
@@ -35,20 +35,20 @@
 *                 Berger and Sehgal, hep-ph/0709.4378
 *
 *       ----------- IFLAG means Interaction mode ----------
-*         
+*
 *       IFLAG < 10 -> neutrino
 *       IFLAG > 10 -> anti neutrino
-*     
+*
 *       IFLAG = 1:'CHARGED CURRENT, nu N ->l-  LAMBDA K+'
 *       IFLAG = 2:'NEUTRAL CURRENT, nu P ->nu LAMBDA K+'
 *       IFLAG = 3:'NEUTRAL CURRENT, nu N ->nu LAMBDA K0'
 *       IFLAG = 11:'CHARGED CURRENT, nubar P ->l+  LAMBDA K0'
 *       IFLAG = 12:'NEUTRAL CURRENT, nubar N ->nu LAMBDA K0'
 *       IFLAG = 13:'NEUTRAL CURRENT, nubar P ->nu LAMBDA K+'
-*     
+*
 *
 ***********************************************************************
-      
+
       IMPLICIT NONE
 
       INTEGER  INFLPCK
@@ -56,21 +56,21 @@
       INTEGER IMODE,INLEP
       REAL E
       REAL RETPMU(3),RETPK(3),RETPLMD(3)
-      
+
       REAL SINTH,COSTH,SINPHI,COSPHI
       INTEGER*4 IDUMMY
-      
+
       INTEGER IERR
 #include<rscons.h>
 
       INTEGER IRSISED
 C      COMMON /RSRNDM/IRSISED
-      
+
 c     Duplicate definition in COMMON /RSCONS/
 c      REAL PI,OMEG,XW,EPSI
-      
+
       INTEGER IPP(31),NRR(31)
-      
+
       INTEGER IFLAG,IQ2
       REAL WMIN,QMAX,SMAX,W2,W,Q2,DQ2
 c     E is already declared as argument.
@@ -81,43 +81,43 @@ C      REAL BR,FBWNO,XE,FFV,FFA
 
       REAL XMLEP,QMIN,ELEPL,APLEPL,XMLEP2
 
-C      
+C
       REAL PNEUCM,XCONS,PTAUA,PTAUA2
 
 C
-      
+
       REAL RESSGN(31)
       DATA RESSGN/1.,-1.,-1.,-1.,-1.,1.,1.,1.,-1.,-1.,1.,1.,1.,1.,1.,
      $     1.,1.,1.,1.,1.,1.,1.,-1.,-1.,1.,1.,1.,1.,1.,1.,1. /
-      
+
       REAL RNDSIG,DSIGMX,DSIGMXP,DSIGMXM,DSIG3,DSIG3P,DSIG3M
       REAL TMPSIG,TMPSIGP,TMPSIGM,SIGMAX,JUNK,UU
       INTEGER Lambda(2), iOrg
-      
+
       REAL TMPPMU(3),TMPPK(3),TMPPNU(3)
 
       INTEGER I
 
 C     function type
-      
+
       REAL RLU
       EXTERNAL RLU
 
       REAL PHI,THETA,PHILEP
-      
-      
+
+
 C
-      
+
       DATA IPP/3,5,5,1,1,1,1,1,5,5,5,5,5,3,3,3,7,7,3,3,3,3,3,7,7,3,7,7,
      1     1,1,3/
       DATA NRR/0,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
      1     0,0,0/
-      
+
       IERR = 0
 
-C      
+C
 C     set CONSTANTS
-C      
+C
       XMLEP = 0.00000
       if ((IMODE.le.1).or.((IMODE.gt.10).and.(IMODE.le.11)))
      $     then
@@ -127,15 +127,15 @@ C
       endif
 
       WMIN = XMLAMD+XMKAON
-      
+
       PNEUCM=sqrt(E*E*XMN2/(XMN2+2*E*XMN))
-      
+
       SMAX = (2 * XMN * E) + XMN2
 
-      
+
  3    CONTINUE
 
-C      
+C
 C     set iflag
 C
       IFLAG = IMODE
@@ -160,15 +160,15 @@ C
          Lambda(2) =  1
       endif
 
-C      
+C
 C     get maxmimum of differential cross-section
-C      
-      
+C
+
       SIGMAX=0.
 
       W=1.7
       XCONS =SMAX-XMLEP**2-W**2
-      
+
       PTAUA2=( (XCONS**2-4*(XMLEP**2)*(W**2))
      $        /(4*XCONS+4*W**2+4*XMLEP**2))
 
@@ -183,10 +183,10 @@ C         DQ2 = -1.*QMAX/100.
 
       PTAUA =  sqrt(PTAUA2)
       PNEUCM=  sqrt(E*E*XMN2/(XMN2+2*E*XMN))
-      QMIN  =  XMLEP**2 
+      QMIN  =  XMLEP**2
      $       - 2*PNEUCM*sqrt(PTAUA**2+XMLEP**2)
      $       + 2*PNEUCM*PTAUA
-      QMAX  =  XMLEP**2 
+      QMAX  =  XMLEP**2
      $       - 2*PNEUCM*sqrt(PTAUA**2+XMLEP**2)
      $       - 2*PTAUA*PNEUCM
 
@@ -196,7 +196,7 @@ C         DQ2 = -1.*QMAX/100.
       DO 5 IQ2=0,100
          Q2 = Q2 + DQ2
 
-C     Lepton currents are no longer conserved 
+C     Lepton currents are no longer conserved
 C      due to the helicity of final state lepton
          CALL RSDCRSK(IMODE,iOrg,Lambda(1),XMLEP,E,Q2,1.7,TMPSIGP,JUNK)
          CALL RSDCRSK(IMODE,iOrg,Lambda(2),XMLEP,E,Q2,1.7,TMPSIGM,JUNK)
@@ -244,24 +244,24 @@ C      endif
       XCONS=SMAX-XMLEP**2-W**2
       PTAUA2=( (XCONS**2-4*(XMLEP**2)*(W**2))
      $     /(4*XCONS+4*W**2+4*XMLEP**2))
-      
+
       IF (PTAUA2.lt.0) GO TO 11
       PTAUA = sqrt(PTAUA2)
-C      QMIN  =  XMLEP**2 
+C      QMIN  =  XMLEP**2
 C     $      - 2*PNEUCM*sqrt(PTAUA**2+XMLEP**2)
 C     $      + 2*PNEUCM*PTAUA
-C      QMAX  =  XMLEP**2 
+C      QMAX  =  XMLEP**2
 C     $      - 2*PNEUCM*sqrt(PTAUA**2+XMLEP**2)
 C     $      - 2*PTAUA*PNEUCM
 
 C      Q2 = QMIN + RLU(IRSISED)*(QMAX-QMIN)
 
-      W2 = W*W 
+      W2 = W*W
       IF ( ((2 * XMN * E) * (2 * XMN * E + XMN2 - W2) /
      $     (2 * XMN * E + XMN2)).LT.(-Q2) ) GOTO 11
-      
+
       IF (((W2+XMN2-Q2)/(2*XMN)).LE.W) GOTO 11
-	  IF ((Q2-W2+XMN2+2*XMN*E)/(2*XMN).lt.XMLEP) GOTO 11
+          IF ((Q2-W2+XMN2+2*XMN*E)/(2*XMN).lt.XMLEP) GOTO 11
 
       XMLEP2 = XMLEP*XMLEP
       ELEPL=(2*E*XMN+XMN2+Q2-W2)/(2*XMN)
@@ -273,7 +273,7 @@ C      Q2 = QMIN + RLU(IRSISED)*(QMAX-QMIN)
      $     GOTO 11
 
 ccc event occurs or not
-C     Lepton currents are no longer conserved 
+C     Lepton currents are no longer conserved
 C      due to the helicity of final state lepton
       CALL RSDCRSK(IMODE,iOrg,Lambda(1),XMLEP,E,Q2,W,DSIGMXP,DSIG3P)
       CALL RSDCRSK(IMODE,iOrg,Lambda(2),XMLEP,E,Q2,W,DSIGMXM,DSIG3M)
@@ -283,18 +283,18 @@ C      due to the helicity of final state lepton
 
 
       IF (DSIGMX.LT.RNDSIG) GOTO 11
-      
+
 
 C
 C     main
-C      
+C
 
-C     -------------------------------------------------------                  
+C     -------------------------------------------------------
 C     NOW  W  AND  E  ARE FIXED
 C     Q2MAX = 2.*MN*E*(2.*MN*E+MN2-W2)/(2.*MN*E+MN2)
 C     -------------------------------------------------------
-      
-      
+
+
 C     generate angle of Pion in ADLER FRAME randomly
 
       THETA = ACOS(1.-RLU(IRSISED)*2.)
@@ -302,9 +302,9 @@ C     generate angle of Pion in ADLER FRAME randomly
 
 C      write(210,*) theta * 180 / 3.14,cos(theta)
 C      call HF1(10,cos(theta),1.)
-      
+
       CALL RSLZBTK(E,Q2,W,XMLEP,THETA,PHI,TMPPMU,TMPPK,TMPPNU)
-      
+
 C      write(211,*) ((PmuLx*PpiLx+PmuLy*PpiLy+PmuLz*PpiLz)/
 C     $     (PmuL*PpiL))
 
@@ -320,7 +320,7 @@ C- Add 98/03/01
       CALL RS3DRT(TMPPMU,SINTH,COSTH,SINPHI,COSPHI)
       CALL RS3DRT(TMPPK,SINTH,COSTH,SINPHI,COSPHI)
       CALL RS3DRT(TMPPNU,SINTH,COSTH,SINPHI,COSPHI)
-      
+
       DO 80 I=1,3
          RETPMU(I) = TMPPMU(I)
          RETPK(I) = TMPPK(I)
@@ -328,16 +328,5 @@ C- Add 98/03/01
  80   CONTINUE
  1000 continue
        return
-      
+
       END
-      
-      
-      
-      
-      
-      
-
-
-
-
-

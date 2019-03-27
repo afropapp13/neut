@@ -1,14 +1,14 @@
 *     -----------------------------------------------------
-      FUNCTION EFGAMMNT(E)      
+      FUNCTION EFGAMMNT(E)
 *     -----------------------------------------------------
-*     
+*
 *     ( purpose )
 *       photo single pion production total cross-section
 *        (gamma + n -> p + pi-)
-*     ( input ) 
+*     ( input )
 *       E       : energy of gamma(MeV)
 *
-*     ( output ) 
+*     ( output )
 *       EFGAMMNT: total cross-section (mb)
 
 
@@ -44,4 +44,4 @@
 
       RETURN
       END
-      
+
