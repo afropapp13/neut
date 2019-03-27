@@ -29,7 +29,7 @@ lib${LIBNAME}.a: ${OBJS}
 	${AR}     rv $@ ${OBJS}
 	${RANLIB} $@
 
-install.include: ${INCS}
+install.include: ${FCINCS} ${INCS}
 	for i in ${FCINCS} ;do ${FH2H} $$i > `echo $$i | sed "s/\.h$$/C.h/"`; done
 	${INSTALL} -d -m 0755 ${NEUT_ROOT}/include
 	${INSTALL} -m 0644 ${INCS} ${NEUT_ROOT}/include
