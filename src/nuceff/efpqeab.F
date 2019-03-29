@@ -1,16 +1,16 @@
 *     ------------------------------------------------------
-      SUBROUTINE EFPQEAB(PPI,DL,DXXY,PESC,PQE,PABS,PCOH)      
+      SUBROUTINE EFPQEAB(PPI,DL,DXXY,PESC,PQE,PABS,PCOH)
 *     ------------------------------------------------------
-*     
+*
 *     ( purpose )
 *       GIVE INTERACTION PROBABILITY OF PION
 *
-*     ( input ) 
+*     ( input )
 C        PPI    : PION MOMENTUM
 C        DL     : LENGTH FROM CENTER OF NUCLEI AND PION POSITION(FERMI)
 C        DXXY   : UNIT CALCULATE LENGTH (FERMI)
 *
-*     ( output ) 
+*     ( output )
 C        PESC  : ESCAPE PROBABILITY
 C        PQE   : QUASI-ELASTIC SCATTERING PROBABILITY
 C        PABS  : ABSORPTION PROBABILITY
@@ -22,7 +22,7 @@ C
 #include<efpion.h>
 #include "neutparams.h"
 #include "necard.h"
-C     
+C
       REAL*4 DLFTBQ(7),DLFTBA(7),RRTBL(7)
       DATA DLFTBQ/1.0,0.999,0.972,1.02,1.47,3.08,3.08/
       DATA DLFTBA/1.0,0.977,0.917,0.826,0.818,1.11,0.758/
@@ -49,7 +49,7 @@ C     Scale parameters
       PQE =PQE*FEFQE*FEFALL
       PABS=PABS*FEFABS*FEFALL
 
-      
+
       PROBSUM=PQE+PABS+PCOH
       IF (PROBSUM.gt.1.) then
          PQE =PQE/PROBSUM

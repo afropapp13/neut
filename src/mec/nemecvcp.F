@@ -9,21 +9,21 @@
 *     (Input)
 *       IPAR   : NEUTRINO TYPE
 *                  12 : NEU-E
-*                 -12 : NEU-E-BAR            
+*                 -12 : NEU-E-BAR
 *                  14 : NEU-MU
-*                 -14 : NEU-MU-BAR            
+*                 -14 : NEU-MU-BAR
 *                  16 : NEU-TAU
 *                 -16 : NEU-TAU-BAR
 *       ENE    : NEUTRINO ENERGY ( GEV )
 *       DNEUT(3) : DIRECTION OF NEUTRINO
-*     
+*
 *     (Output)
-*       IERR    : ERROR CODE      
+*       IERR    : ERROR CODE
 *       COMMON /NEWORK/
 *
 *     (Creation Date and Author)
 *       2013.02.26 ; P.Sinclair (based on NEELSVCP)
-*     
+*
 ************************************************************************
       IMPLICIT NONE
 
@@ -40,7 +40,7 @@
       real*4    efinal,p4out,amlep
 
       integer*4 ierr,icall,ierr2,ierr3,iii,i,j
-      
+
       real*4    rlu,fnnpot
       external  rlu,fnnpot
 
@@ -61,18 +61,18 @@ C Energy and 3-momentum transfer from lepton to hadronic system
       REAL*4 Q0, Q3(3)
 
       IPMODE(1)=IPAR
-      IF (IPAR.GT.0) THEN 
+      IF (IPAR.GT.0) THEN
         IPMODE(4)=IPAR-1
-      ELSE  
+      ELSE
         IPMODE(4)=IPAR+1
       ENDIF
 
 C For the time being, return an error if the incoming neutrino is not a numu
-      IF ((ABS(IPAR).NE.14).AND.(ABS(IPAR).NE.12)) GOTO 800 
+      IF ((ABS(IPAR).NE.14).AND.(ABS(IPAR).NE.12)) GOTO 800
 
-C      
+C
 C --  SET INITIAL NEUTRINO DIRECTION TO X-AXIS
-C      
+C
       COST=DNEUT(3)
       THETA=ACOS(COST)
       IF (DNEUT(1).EQ.0. .AND. DNEUT(2).EQ.0.) THEN
@@ -83,7 +83,7 @@ C
 
 C
 C --  Set final lepton momentum, then try to find a pair of initial state nucleon momenta which will allow the event
-C     
+C
        IERR3=-1
        COUNTER=0
        DO WHILE ((IERR3.ne.0).and.(COUNTER.lt.20))
@@ -105,7 +105,7 @@ C     -- BACK TO INITIAL COORDINATE
 C     - RANDOM ROTATION AROUND X-AXIS
 C
             ETA=RLU(DUM)*6.283185
-            DO 20 III=1,5   
+            DO 20 III=1,5
                IF (III.EQ.1) THEN
                   PBUF0(1)=PLEP(1)
                   PBUF0(2)=PLEP(2)
@@ -132,13 +132,13 @@ C
                PBUF1(3)=SIN(ETA)*PBUF0(2)+COS(ETA)*PBUF0(3)
 C
 C     - THETA ROTATION
-C         
+C
                PBUF2(1)=SIN(THETA)*PBUF1(1)-COS(THETA)*PBUF1(3)
                PBUF2(2)=PBUF1(2)
                PBUF2(3)=COS(THETA)*PBUF1(1)+SIN(THETA)*PBUF1(3)
 C
 C     - PHI ROTATION
-C         
+C
                PBUF0(1)=COS(PHI)*PBUF2(1)-SIN(PHI)*PBUF2(2)
                PBUF0(2)=SIN(PHI)*PBUF2(1)+COS(PHI)*PBUF2(2)
                PBUF0(3)=PBUF2(3)
@@ -164,9 +164,9 @@ C
                   PN2(3)=PBUF0(3)
                ENDIF
  20         CONTINUE
-C     
+C
 C     -- NOW STORE VECTOR
-C     
+C
             IF ( IPAR.GT.0 ) MODENE= 2
             IF ( IPAR.LT.0 ) MODENE=-2
             NUMNE = 6
@@ -176,17 +176,17 @@ C
                IFLGNE(I)=IFLG(I)
                ICRNNE(I)=ICRN(I)
                DO 40 J=1,3
-                  IF (I.EQ.1) THEN 
+                  IF (I.EQ.1) THEN
                     PNE(J,I)=E*DNEUT(J)
-                  ELSE IF (I.EQ.2) THEN 
+                  ELSE IF (I.EQ.2) THEN
                     PNE(J,I)=PF1(J)
-                  ELSE IF (I.EQ.3) THEN 
+                  ELSE IF (I.EQ.3) THEN
                     PNE(J,I)=PF2(J)
-                  ELSE IF (I.EQ.4) THEN 
+                  ELSE IF (I.EQ.4) THEN
                     PNE(J,I)=PLEP(J)
-                  ELSE IF (I.EQ.5) THEN 
+                  ELSE IF (I.EQ.5) THEN
                     PNE(J,I)=PN1(J)
-                  ELSE IF (I.EQ.6) THEN 
+                  ELSE IF (I.EQ.6) THEN
                     PNE(J,I)=PN2(J)
                   ENDIF
  40            CONTINUE
@@ -207,14 +207,14 @@ C
             ABSPNNC2 =sqrt(PNE(1,6)**2+PNE(2,6)**2+PNE(3,6)**2)
 
 C
-C --        NORMAL ENDING            
-C            
+C --        NORMAL ENDING
+C
             if (QUIET.eq.0) then
-            write(*,'(A10,F12.5,A1,F12.5,A1,F12.5,A1,F12.5)') 
+            write(*,'(A10,F12.5,A1,F12.5,A1,F12.5,A1,F12.5)')
      $           'INLEP =(',PNE(1,1),',',PNE(2,1),',',PNE(3,1),')'
-            write(*,'(A10,F12.5,A1,F12.5,A1,F12.5,A1,F12.5)') 
+            write(*,'(A10,F12.5,A1,F12.5,A1,F12.5,A1,F12.5)')
      $           'INNUC1 =(',PNE(1,2),',',PNE(2,2),',',PNE(3,2),')'
-            write(*,'(A10,F12.5,A1,F12.5,A1,F12.5,A1,F12.5)') 
+            write(*,'(A10,F12.5,A1,F12.5,A1,F12.5,A1,F12.5)')
      $           'INNUC2 =(',PNE(1,3),',',PNE(2,3),',',PNE(3,3),')'
             endif
             PINNUC1=sqrt(PNE(1,2)**2+PNE(2,2)**2+PNE(3,2)**2)
@@ -232,21 +232,21 @@ C P4in = (Sum of 4-vectors of all initial particles)^2
      $             +(PNE(3,1)+PNE(3,2)+PNE(3,3) )**2 )
 
             if (QUIET.eq.0) then
-            write(*,'(A10,F12.5,A1,F12.5,A1,F12.5,A1,F12.5)') 
+            write(*,'(A10,F12.5,A1,F12.5,A1,F12.5,A1,F12.5)')
      $           'OUTLEP=(',PNE(1,4),',',PNE(2,4),',',PNE(3,4),')'
             endif
             EOUTL =sqrt(PNE(1,4)**2+PNE(2,4)**2+PNE(3,4)**2
      $             +AMLEP**2)
 
             if (QUIET.eq.0) then
-            write(*,'(A10,F12.5,A1,F12.5,A1,F12.5,A1,F12.5)') 
+            write(*,'(A10,F12.5,A1,F12.5,A1,F12.5,A1,F12.5)')
      $           'OUTNUC1=(',PNE(1,5),',',PNE(2,5),',',PNE(3,5),')'
             endif
             EOUTP1 =sqrt(PNE(1,5)**2+PNE(2,5)**2+PNE(3,5)**2
      $             +MASSOUT1**2)
-            
+
             if (QUIET.eq.0) then
-            write(*,'(A10,F12.5,A1,F12.5,A1,F12.5,A1,F12.5)') 
+            write(*,'(A10,F12.5,A1,F12.5,A1,F12.5,A1,F12.5)')
      $           'OUTNUC2=(',PNE(1,6),',',PNE(2,6),',',PNE(3,6),')'
             endif
             EOUTP2 =sqrt(PNE(1,6)**2+PNE(2,6)**2+PNE(3,6)**2
@@ -259,23 +259,23 @@ C P4in = (Sum of 4-vectors of all initial particles)^2
      $             +(PNE(3,4)+PNE(3,5)+PNE(3,6) )**2 )
 
             if (QUIET.eq.0) then
-            write(*,'(A10,F12.5,A10,F12.5)') 
+            write(*,'(A10,F12.5,A10,F12.5)')
      $           'Ein : ',Einit*1000., 'Eout : ',EFINAL*1000.
 
-            write(*,'(A10,F12.5,A10,F12.5,A10,F12.5)') 
-     $         'Ediff : ',(Einit-Efinal)*1000., 
+            write(*,'(A10,F12.5,A10,F12.5,A10,F12.5)')
+     $         'Ediff : ',(Einit-Efinal)*1000.,
      $         'VnuclD1:' ,(FNNPOT(2,ABSPNNC1)-FNNPOT(1,PINNUC1))*1000.,
      $         'VnuclD2:' ,(FNNPOT(2,ABSPNNC2)-FNNPOT(1,PINNUC2))*1000.
 
-            write(*,'(A10,F12.5,A10,F12.5)') 
+            write(*,'(A10,F12.5,A10,F12.5)')
      $           'P4in : ',P4in, 'P4out : ',P4out
             endif
 
             IERR=0
             RETURN
-C     
+C
 C --   ERROR RETURN
-C     
+C
  900  WRITE(6,901)
  901  FORMAT(' *** ERROR AT NEMECVCP (NO GOOD LEPTON KINEMATICS) ***')
       IERR=1

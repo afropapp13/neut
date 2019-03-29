@@ -38,7 +38,7 @@
 #include "vcwork.h"
 #include "posinnuc.h"
       INTEGER MODE, IERR
-      REAL W 
+      REAL W
       INTEGER LUCOMP
       INTEGER INEU, IHAD
 C      INTEGER FF,INO16
@@ -69,12 +69,12 @@ C      COMMON /SAVXIN/INO16
  300  CONTINUE
 
       if ((ntry.gt.3000).or.(ntry1.gt.3000)) then
-         write(*,*) 'nejet: Too many retry : ntry=',ntry, 
+         write(*,*) 'nejet: Too many retry : ntry=',ntry,
      $              ' ntry1=',ntry1,' : Gave up'
          IERR = 2
          goto 601
       endif
-         
+
       DO I=1,3
          PNEU(I) = PNE(I,1)
          PHAD(I) = PNE(I,2)
@@ -141,7 +141,7 @@ C         PDFSUP(1) = 7 ! PDF is set by neut.card
          PDFSUP(1) = NEPDF
 *-----> USE GRV94(1000: nucleon)
          MSTP(51) = 1000*PDFGUP(1)+PDFSUP(1)
-         
+
       if (quiet.eq.2) then
          if (MSTU(11).ne.95) then
             open(UNIT=95,FILE='/dev/null')
@@ -172,7 +172,7 @@ C#endif
       ENDDO
 
       CALL PYINIT('USER', CHNEU, CHHAD, DUMMY)
-      
+
 *------------------------------------------*
 *     Generate events till W > 2.0 GeV     *
 *------------------------------------------*
@@ -182,7 +182,7 @@ C#endif
 *      CALL LULIST(1)
       NCCC = -1
       DO I=3,N
-*     Check type of lepton in final state      
+*     Check type of lepton in final state
          IF (NCCC.EQ.-1 .AND. K(I,1).EQ.1) THEN
             ITYP = IABS(K(I,2))
             IF (ITYP.EQ.11 .OR. ITYP.EQ.13 .OR. ITYP.EQ.15) THEN ! CC
@@ -231,7 +231,7 @@ C                  CALL RNFERM(PFABS,IWAVE)
          ENDIF
       endif
 
-*        Check interaction mode     
+*        Check interaction mode
  400  IMODE = IABS(MODE)
       IF (((IMODE.EQ.26) .AND. NCCC.EQ.0)
      +     .OR. ((IMODE.EQ.46) .AND. NCCC.EQ.1)) THEN
@@ -244,7 +244,7 @@ C                  CALL RNFERM(PFABS,IWAVE)
 *--------------------------*
 
       NUMNE = 2     ! There have been 2 particles in initial state
-      DO I=1,N 
+      DO I=1,N
          IF (K(I,1).EQ.1) THEN          ! If final state
             NUMNE = NUMNE + 1
             IPNE(NUMNE) = K(I,2)
@@ -260,7 +260,7 @@ C                  CALL RNFERM(PFABS,IWAVE)
 *     Move nucleon in final state into IPNE(4) and PNE(I,4)     *
 *---------------------------------------------------------------*
 
-      IF (IPNE(4).LT.1000) THEN          ! If not baryon 
+      IF (IPNE(4).LT.1000) THEN          ! If not baryon
          DO I=5,NUMNE
             IF (IPNE(I).GT.1000) THEN
                ITMP1 = IPNE(4)
@@ -284,7 +284,7 @@ C                  CALL RNFERM(PFABS,IWAVE)
  200  CONTINUE
 
       DO I=4,NUMNE
-         ICRNNE(I) = 1 
+         ICRNNE(I) = 1
          IF((IPNE(I).EQ.12).OR.(IPNE(I).EQ.14).OR.(IPNE(I).EQ.16)) THEN
             ICRNNE(I) = 0
          ENDIF

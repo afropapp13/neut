@@ -1,18 +1,18 @@
 *     -----------------------------------------------------
-      SUBROUTINE EFPNMLTP(PAIMOM,NQPAI,NQN,XMULTP,IERROR)      
+      SUBROUTINE EFPNMLTP(PAIMOM,NQPAI,NQN,XMULTP,IERROR)
 *     -----------------------------------------------------
-*     
+*
 *     ( purpose )
 C        MEAN XMULTPLICITY OF (PAI+NUCLEON) IN
 C        PI-N INTERACTION AT HIGH ENERGIES (>800MEV).
 C                    T.KAJITA  27-JUN-88
 *
-*     ( input ) 
+*     ( input )
 C           PAIMOM : MOMENTUM OF PION IN MEV/C ( SHOULD BE > 800MEV)
 C           NQPAI  : CHARGE OF PION     <=== NO MEANING AT PRESENT
 C           NQN    : CHARGE OF NUCLEON  <=== NO MEANING AT PRESENT
 C
-*     ( output ) 
+*     ( output )
 C           XMULTP : MEAN MULTIPLICITY OF (PAI+N)
 C           IERROR : =0 NO ERROR   =1 ERROR IN (NQPAI+NQN) OR PAIMOM
 *
@@ -34,8 +34,8 @@ C
          RETURN
       END IF
 
-*     IF(PAIMOM.LT.500.) THEN 
-      IF(PAIMOM.LT.340.) THEN 
+*     IF(PAIMOM.LT.500.) THEN
+      IF(PAIMOM.LT.340.) THEN
          IERROR=1
          RETURN
       END IF

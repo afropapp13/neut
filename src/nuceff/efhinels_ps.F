@@ -1,16 +1,16 @@
 *     -----------------------------------------------------
       SUBROUTINE EFHINELS_PS(IP,PIN,IPF,PFI,NQN,radius,ireaction)
 *     -----------------------------------------------------
-*     
+*
 *     ( purpose )
 *       CALCULATE INELASTIC SCATTERING at high momentum
 *
-*     ( input ) 
+*     ( input )
 C          IP   : INITIAL KIND OF PION
 C          PIN  : INITIAL PION MOMENTUM(MeV)
 C          NQN  : TARGET NUCLEON CHARGE
 *
-*     ( output ) 
+*     ( output )
 C          IPF  : FINAL KIND OF PION
 C          PFI  : FINAL PION MOMENTUM
 *
@@ -69,7 +69,7 @@ C---  Initialize
 
       if (NQN.eq.1) then
          INUC = 2212
-      else 
+      else
          INUC = 2112
       end if
       INUCF=INUC
@@ -78,11 +78,11 @@ C---  Initialize
 
 C---  Charge exchange
       IF (ireaction.eq.3) THEN
-         
+
          CALL EFHINELSCX(IP,INUC,IPF,INUCF)
-         
-C---  Set reaction mode (see efdsg.F) if not charge exchange     
-      ELSE 
+
+C---  Set reaction mode (see efdsg.F) if not charge exchange
+      ELSE
          NQPAI=NECHARGE(IP)
          IF(NQPAI.EQ.0) THEN
             ireaction=4
@@ -95,7 +95,7 @@ C---  Set reaction mode (see efdsg.F) if not charge exchange
             RETURN
          ENDIF
       END IF
-      
+
 
 
 
@@ -108,18 +108,18 @@ C      write(*,*) "EFHINELS Before:", PIN(1), PIN(2), PIN(3), sqrt(AMPI**2+PINAB
 C     TPI <= 5 MeV: no scatter
       IF (tpi.le.5) THEN
          RETURN
-         
+
 C     TPI >= 2000 MeV: Forward scattering with no nucleon ejection
       ELSE IF (tpi.ge.2000) THEN
  10      CALL EFCOHSCT(PIN,PFI)
          RETURN
-         
+
 C     400 < TPI < 2000 MeV:
 C     Mix between PWA and Forward Scatter (since insufficient heavy
 C     resonances included in efdsgps.F).
 C     Fraction is quadratic from 0-100% between 400 and 2000 MeV.
       ELSE IF (400.lt.tpi .and. tpi.lt.2000) THEN
-         
+
          FRAC = (-3.771790E-005*tpi**2 + 0.153023*tpi - 55.1743)/100.
 
 c        Forward scattering with no nucleon ejection
@@ -152,11 +152,11 @@ C     -- SET NUCLEON MOMENTUM AND DIRECTION in lab frame
       DIR(1) = 0.
       DIR(2) = 0.
       DIR(3) = 0.
-      
+
       if(NUMATOM.gt.1) then
          IF (NEFKINVER.eq.0) THEN
  200        CALL RNFERM(PF,IDUM)
-         
+
 C     Should this depend on target nucleus size?
             FSURF=EFFRMGAS(16.,8.,radius)
             IF(PF.GT.FSURF)GO TO 200
@@ -171,7 +171,7 @@ C     Should this depend on target nucleus size?
 
       PNUC(1) = DIR(1)*PF
       PNUC(2) = DIR(2)*PF
-      PNUC(3) = DIR(3)*PF 
+      PNUC(3) = DIR(3)*PF
 
 C     Boost pion to nucleon rest frame
       TOTENUCL=SQRT(AMN**2+PF**2)
@@ -209,15 +209,15 @@ C     Find maximum of the diff. xsec. at this energy.
       maxDcrs = 0.
 
       DO 100 I=1,180
-         
-         if (thet_dsg.GT.180)  thet_dsg=180         
+
+         if (thet_dsg.GT.180)  thet_dsg=180
 
          CALL EFDSG(ireaction,tpi,thet_dsg,dsg,ierr)
          if ( ierr .ne. 0 ) goto 10
 
 C         CALL HF1(4,thet_dsg,dsg)  ! Debug
 
-C     Cross section returned is normalized to solid angle: 
+C     Cross section returned is normalized to solid angle:
 C     i.e. 2*pi*sin(theta)*dtheta
          dsg = sin(3.14159*thet_dsg/180.)*dsg
 
@@ -229,32 +229,32 @@ C         thet_dsg = thet_dsg + I  ! bug in < v5.1.4
  100  CONTINUE
 
 C      write(*,*) "MAX dsg = ", maxDcrs
-    
+
 
 C     If something wrong
       if (maxDcrs.LE.0.) then
-         WRITE(6,*)  "Error efhinels_ps: max DSG <= 0" 
+         WRITE(6,*)  "Error efhinels_ps: max DSG <= 0"
          STOP
       endif
 
 C     Calculate pion momentum in C.M. frame
       if (NUMATOM.eq.1) then
-         s = AMPI**2 + AMN**2 
+         s = AMPI**2 + AMN**2
      $        + 2*TOTEPI*AMN
 
 C     Consider binding energy in nucleus
       else
-         s = AMPI**2 + (AMN+VNUINI*1000)**2 
+         s = AMPI**2 + (AMN+VNUINI*1000)**2
      $        + 2*TOTEPI*(AMN+VNUINI*1000)
       end if
 
       NUMERATOR = s**2 - 2*s*(AMN**2+AMPI**2)
-     &               + AMN**4 + AMPI**4 
+     &               + AMN**4 + AMPI**4
      &               - 2*(AMN**2)*(AMPI**2)
 
 C     Threshold for reaction
       if (NUMERATOR.LT.0) THEN
-         WRITE(6,*)  "Error efhinels_ps: Below threshold for reaction" 
+         WRITE(6,*)  "Error efhinels_ps: Below threshold for reaction"
          STOP
       ENDIF
 
@@ -262,7 +262,7 @@ C     Threshold for reaction
 
 C     Determine direction of pion/eta
  201  thet_dsg=180*RLU(IDUM)
-            
+
 C     Get differential cross section
       CALL EFDSG(ireaction,tpi,thet_dsg,dsg,ierr)
       if ( ierr .ne. 0 ) goto 10
@@ -301,8 +301,8 @@ C      CALL HF1(4,thet_dsg,1./sin(thet_dsg/180.*3.14159))  ! Debug
 C      CALL HF1(4,thet_dsg,1.) ! Debug
 C      thet_dsg_cm = thet_dsg
 
-C     Boost from C.M. frame into (x-axis) lab frame 
-      ABSCM = SQRT((PPI(1)+PNUC(1))**2+(PPI(2)+PNUC(2))**2 
+C     Boost from C.M. frame into (x-axis) lab frame
+      ABSCM = SQRT((PPI(1)+PNUC(1))**2+(PPI(2)+PNUC(2))**2
      &     + (PPI(3)+PNUC(3))**2)
 
       PPIABS=SQRT(PPI(1)**2+PPI(2)**2+PPI(3)**2)
@@ -311,7 +311,7 @@ C     Boost from C.M. frame into (x-axis) lab frame
       GAMMA = GAMFCT(BETA)
       BSTVEC(1) = (PPI(1)+PNUC(1))/ABSCM
       BSTVEC(2) = (PPI(2)+PNUC(2))/ABSCM
-      BSTVEC(3) = (PPI(3)+PNUC(3))/ABSCM  
+      BSTVEC(3) = (PPI(3)+PNUC(3))/ABSCM
 
       CALL MCVECBST(PNO,AMN,BSTVEC,GAMMA)
       CALL MCVECBST(PFI,AMPI,BSTVEC,GAMMA)
@@ -326,7 +326,7 @@ C      CALL HF1(1,thet_dsg,1.) ! Debug
 C      write(50,*) thet_dsg_cm, thet_dsg
 
 C     Pauli-blocking
-      if (NEPAUFLG.EQ.0 .and. NUMATOM.gt.1) then 
+      if (NEPAUFLG.EQ.0 .and. NUMATOM.gt.1) then
          PNOABS = SQRT(PNO(1)**2+PNO(2)**2+PNO(3)**2)
          IF(PNOABS.LT.FSURF)GO TO 200
       END IF
@@ -342,7 +342,7 @@ C     - PHI ROTATION
       PFI(1)=COS(PHI)*PBUF2(1)-SIN(PHI)*PBUF2(2)
       PFI(2)=SIN(PHI)*PBUF2(1)+COS(PHI)*PBUF2(2)
       PFI(3)=PBUF2(3)
-      
+
 
 C     - THETA ROTATION NUCLEON
       PBUF2(1)=SIN(THETA)*PNO(1)-COS(THETA)*PNO(3)
@@ -374,7 +374,7 @@ C     Do not store if stack is full (save one spot for pion)
 C      if (nvc.GE.maxvc-1) then
 C         return
 C      end if
-C      
+C
 C      ipvc(nvc+1)  = INUCF
 C      icrnvc(nvc+1) = 1
 C      iflgvc(nvc+1) = 0

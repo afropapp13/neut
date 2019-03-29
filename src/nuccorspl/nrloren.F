@@ -9,7 +9,7 @@
       S=0.
       DO 1 I=1,3
  1    S=S+C(I)**2
-      IF(S.EQ.0.)GO TO	100
+      IF(S.EQ.0.)GO TO 100
       S=C(4)**2-S
       W=SQRT(S)
       Z=W+C(4)

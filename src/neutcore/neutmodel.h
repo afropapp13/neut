@@ -10,7 +10,7 @@ C          = X2X ; NC : BBBA05 calculation
 C
 C          = 0XX ; ALL; No correction on GM form factor
 C          = 1XX ; ALL; Correction on GM form factor ( Bodek et al )
-C          
+C
 C          *** 4XX, 6XX and 7XX ignores the 1st and 2nd digits ***
 C
 C          = 4XX ; ALL; Use SF nuclear model for kinematics
@@ -36,7 +36,7 @@ C
 C-- MA value of NCEL
 C  XMANCEL
 C
-C-- Nieves CCQE flags 
+C-- Nieves CCQE flags
 C
 C-- Use Bidning energy or not
 C
@@ -46,11 +46,11 @@ C
 C-- RFG or not
 C
 C  NVQERFG = 0 ; default : ( not used )
-C               
+C
 C-- Turn on / off RPA
 C  NVQERPA =1 ; With RPA correction
 C  NVQERPA =0 ; Without RPA correction
-C                 
+C
 C-- RPA correction parameters
 C  NVRPAFP0IN     = 0.33
 C  NVRPAPF0EX     = 0.45
@@ -63,7 +63,7 @@ C  NVRPAGP        = 0.63
 C  NVRPAXMPI      = 139.57
 C  NVRPAXMRHO     = 770.0
 C  NVRPAIREL      = 1.
-C  
+C
 C-- FermiMomentum used in SF model only (for pauli blocking)
 C-- (if user doesn't define, uses default for nucleus)
 C  PFSF
@@ -91,7 +91,7 @@ C
 C-- Coherent pion
 C  MDLCOH = 0 ; Rein&Sehgal w/ lepton mass corr.
 C           1 ; Kartavtsev et al.
-C           2 ; Berger&Sehgal	
+C           2 ; Berger&Sehgal
 C
 C  XMACOH  (Default = 1.0)
 C  RAD0NU  (Default = 1 fm)
@@ -129,8 +129,8 @@ C  NUCVOLDIF  (Default = 7 GeV^-2)
 
       REAL*4    XMANCEL
 
-      
-	  COMMON /NEUTMODEL/MODELDIS,MODELCOH,MODELDIF
+
+          COMMON /NEUTMODEL/MODELDIS,MODELCOH,MODELDIF
       COMMON /NEMDLS/MDLQE,MDLSPI,MDLDIS,MDLCOH,MDLDIF,
      $               MDLQEAF,XMAQE,XMASPI,XMVQE,XMVSPI,
      $               KAPP,XMACOH,RAD0NU,fA1COH,fb1COH,
@@ -141,10 +141,10 @@ C  NUCVOLDIF  (Default = 7 GeV^-2)
      $               AXFFALPHA, AXFFGAMMA,
      $               AXFFTHETA, AXFFBETA,
      $               AXZEXPQ4, AXZEXPNT,
-     $               AXZEXPT0, AXZEXPTC,         
-     $               AXZEXPA0,AXZEXPA1,AXZEXPA2, 
-     $               AXZEXPA3,AXZEXPA4,AXZEXPA5, 
-     $               AXZEXPA6,AXZEXPA7,AXZEXPA8, 
+     $               AXZEXPT0, AXZEXPTC,
+     $               AXZEXPA0,AXZEXPA1,AXZEXPA2,
+     $               AXZEXPA3,AXZEXPA4,AXZEXPA5,
+     $               AXZEXPA6,AXZEXPA7,AXZEXPA8,
      $               AXZEXPA9,
      $               MDL2P2H,
      $               XMANCEL

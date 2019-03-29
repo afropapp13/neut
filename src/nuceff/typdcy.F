@@ -3,7 +3,7 @@ C
       SUBROUTINE TYPDCY(RMASS,AMN,AMM1,AMM2,PN,PM1,PM2,NDIS,KIN1,KIN2)
 C
 C   DETERMINE THE FOLLOWING KINEMATICS DECAYED FROM N(1440,1535,1710)
-C                --> modified to consider only N(1535) 
+C                --> modified to consider only N(1535)
 C
 C         AMN : NUCLEON MASS, AMM1 : MESON MASS(1), AMM2 : MESON MASS(2)
 C         PN  :   "     MOM., PM1  :   "   MOM.(1), PM2  :   "   MOM.(2)
@@ -47,7 +47,7 @@ C I) N+ETA
       AMM2=140.
       KIN1 = 221
       kIN2 = 0
-      NDIS = 0      
+      NDIS = 0
       CALL DCY2BD(RMASS, AMN, AMM1, P1)
       CALL RNDIR(DIR)
       DO 510 K=1,3
@@ -65,7 +65,7 @@ C I) N+PAI
  1000 AMN=939.
       AMM1=140.
       AMM2=140.
-      NDIS = 1      
+      NDIS = 1
       KIN2 = 0
       CALL DCY2BD(RMASS, AMN, AMM1, P1)
       CALL RNDIR(DIR)
@@ -87,7 +87,7 @@ C II) DELTA+PAI
  2000 AMN=939.
       AMM1=140.
       AMM2=140.
-      NDIS = 2      
+      NDIS = 2
  2020 DEMASS=RSMASS(RMASS,1232.,AMM2,115.)
       IF ( DEMASS.LE.(AMN+AMM1+1.) ) GO TO 2020
       IF ( DEMASS.GE.(RMASS-AMM1-1.) ) GO TO 2020
@@ -115,7 +115,7 @@ C
       CALL MCVECBST(PM1, AMM1, DRTEMP, GAM)
       CALL MCVECBST(PN, AMN, DRTEMP, GAM)
 
-cccc particle ID      
+cccc particle ID
 
 C      rnkind = rndm(dum)*9.0
       rnkind = RLU(idum)*9.0
@@ -143,7 +143,7 @@ C III) N+RHO
  3000 AMN=939.
       AMM1=140.
       AMM2=140.
-      NDIS = 3      
+      NDIS = 3
  3020 RHMASS=RSMASS(RMASS,769.,AMN,154.)
       IF ( RHMASS.LT.(AMM1+AMM2+1.) ) GO TO 3020
       IF ( RHMASS.GT.(RMASS-AMN-1.) ) GO TO 3020

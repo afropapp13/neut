@@ -15,11 +15,11 @@ C
 C************************************************
 
 C*****************************************************
-C     @(#)ranve.f	1.1 modified on 12/7/92
+C     @(#)ranve.f       1.1 modified on 12/7/92
        SUBROUTINE RANVE(VR,V,Q1,Q2)
 C
 C  ASSIGNS TO V(3) A RANDOM VECTOR OF LENGTH VR
-	DIMENSION V(3)
+        DIMENSION V(3)
        CT=Q1
        PHI=Q2
        IF(abs(CT).GT.1.0)CT=2.*ranf()-1.

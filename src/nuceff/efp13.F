@@ -1,16 +1,16 @@
 *     -----------------------------------------------------
       COMPLEX FUNCTION EFP13(Q)
 *     -----------------------------------------------------
-*     
+*
 *     ( purpose )
 *       OBTAIN PHASE SHIFT OF P13 WAVE IN PI-N SCATTERING
 *
-*     ( input ) 
+*     ( input )
 *           Q   : Relative momentum in C-M system(MeV)
 *
-*     ( output ) 
+*     ( output )
 *        EFP13  : (EXP(2*I*DELTA)-1)/2I/Q**3
-      
+
       COMPLEX I
       I=(0.0,1.0)
 C  PUT VALUE

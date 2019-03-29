@@ -1,20 +1,20 @@
 *     -----------------------------------------------------
-      SUBROUTINE EFVERTRA(PMOM,TMX)      
+      SUBROUTINE EFVERTRA(PMOM,TMX)
 *     -----------------------------------------------------
-*     
+*
 *     ( purpose )
 C        FROM ( 0, 0, 0 ) TO (PX,PY,PZ) ROTATION MATRIX
 *
-*     ( input ) 
+*     ( input )
 *       PMOM    : input matrix(momentum of particle)
 *
-*     ( output ) 
+*     ( output )
 *       TMX     : roration matrix
 *
-C     
+C
 C     5-OCT-87
 C     PRD. BY SATO,N
-C     
+C
 C******************************************************************
       DIMENSION PMOM(3),TMX(3,3)
       DATA PI/3.1415/
@@ -51,7 +51,7 @@ C------------
       SINP=SIN(PHI)
       COST=COS(THETA)
       SINT=SIN(THETA)
-C---  
+C---
       TMX(1,1)=COSP*COST
       TMX(1,2)=-SINP
       TMX(1,3)=COSP*SINT

@@ -36,9 +36,9 @@ C
 C************************************************
 
 C****************************************************
-C   @(#)lloren.f	1.1 modified on 12/7/92 
+C   @(#)lloren.f        1.1 modified on 12/7/92
       SUBROUTINE lLOREN(PPRIME,EPRIME,P,E,BETA)
-      DIMENSION	PPRIME(3),P(3),BETA(3)
+      DIMENSION PPRIME(3),P(3),BETA(3)
       BSQ=0.
       BDP=0.
       DO I=1,3

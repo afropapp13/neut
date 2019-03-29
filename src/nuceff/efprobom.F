@@ -4,7 +4,7 @@ C==================================================================
 C
 C     determine what process will happen.
 C
-C     input: 
+C     input:
 C         absp - absolute momentum                          [MeV/c^2]
 C         distance - distance from center of nucleus        [fm]
 C         step - trace step                                 [fm]
@@ -12,18 +12,18 @@ C     output:
 C         type - process ID which will happen hereafter.
 C
 C--------------------------------------------------------------------
-C    Note: 
-C       this routine uses aproximation as 1-exp(-Ax)=Ax for each 
+C    Note:
+C       this routine uses aproximation as 1-exp(-Ax)=Ax for each
 C       process, so value "step" supposed to be very small.
 C--------------------------------------------------------------------
       implicit none
 C - function
-      real efabrho,rlu,efxsctom    
+      real efabrho,rlu,efxsctom
 
 C - argument input
-      real absp,distance,step  
+      real absp,distance,step
 
-C - argument output 
+C - argument output
       integer type
 
 C - misc variables
@@ -57,7 +57,7 @@ C - misc variables
 
 *===== play a dise
       random=rlu(dum)
-      
+
       do i=1,7
          sumrand=0
          do j=1,i
@@ -69,7 +69,7 @@ C - misc variables
          endif
       enddo
 
-***** nothing 
+***** nothing
       type=8
 
  999  continue
@@ -77,7 +77,7 @@ C - misc variables
       return
       end
 
-      
+
 
 
 

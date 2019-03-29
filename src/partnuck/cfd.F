@@ -14,10 +14,10 @@ C  analysis software.
 C
 C************************************************
 
-#define VERSION "@(#)cfd.f	1.1 modified on 12/7/92"
+#define VERSION "@(#)cfd.f      1.1 modified on 12/7/92"
 C******************************
-C  Convert the probablity distribution Y into a cumulative probablity 
-C     distribution YI.  Y does not need to be normalized.  YI will be 
+C  Convert the probablity distribution Y into a cumulative probablity
+C     distribution YI.  Y does not need to be normalized.  YI will be
 C     normalized correctly.
       SUBROUTINE CFD(YI,N,Y)
       INTEGER N

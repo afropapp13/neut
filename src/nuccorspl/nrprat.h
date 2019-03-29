@@ -1,5 +1,5 @@
       common /nrpart/prat
-	  real*4 prat
-	  
-	  
-	  
+          real*4 prat
+
+
+

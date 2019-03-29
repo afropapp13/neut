@@ -1,14 +1,14 @@
 *     -----------------------------------------------------
-      FUNCTION EFABSRAT(TPI)      
+      FUNCTION EFABSRAT(TPI)
 *     -----------------------------------------------------
-*     
+*
 *     ( purpose )
 *       GIVE ABSORPTION RATIO OF TOTAL REACTION
 *
-*     ( input ) 
+*     ( input )
 *       TPI     : kinetic energy of pion
 *
-*     ( output ) 
+*     ( output )
 *       efabsrat: absorption ratio of total reaction
 
 

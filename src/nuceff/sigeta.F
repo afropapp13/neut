@@ -21,15 +21,15 @@ C        T.KAJITA   22-OCT-85  MODIFICATION
 C        J.KAMEDA   08-DEC-97  MODIFICATION
 C          consider only N(1540)
 C        J.KAMEDA   20-FEB-98  MODIFICATION
-C          add N(1650) 
-C        
+C          add N(1650)
+C
       REAL K
 C
-      
+
       PAI=3.14
       K=PCMS/197.
-      sig1 = 0.     
-      sig2 = 0.     
+      sig1 = 0.
+      sig2 = 0.
       sig  = 0.
 
 C

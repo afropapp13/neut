@@ -8,7 +8,7 @@ C     common/nucint/uin,chint,ein,pin(3),upin(3)
 #include "nrcms.h"
 C     common/nuccms/rhon,pfermi,unucl,ecms2,up4cms(3),beta(3),prot
 C     logical prot
-#include "nrnewprd.h"        
+#include "nrnewprd.h"
 C     common/nucnewprd/piso(4,4),chiso(4)
 #include "nrhad.h"
 C     common/nuchad/ihap,nel(3)
@@ -59,7 +59,7 @@ c     p-n elastic
      $     1260.,1250.,1240.,1230.,1220.,1210.,1200./
 
 c     p-p single pi production
-      data xspp/     
+      data xspp/
      $     13.,  26.,  50.,  90., 126., 175., 235., 300., 380., 480.,
      $     585., 710., 860.,1035.,1242.,1436.,1580.,1695.,1785.,1866.,
      $     1937.,2000.,2050.,2090.,2128.,2160.,2188.,2208.,2228.,2240.,
@@ -78,7 +78,7 @@ c     p-p single pi production
      $     1237.,1228.,1218.,1208.,1198.,1188.,1178.,1169./
 
 c     p-n single pi production
-      data xspn/     
+      data xspn/
      $     18.,  28.,  48.,  75., 117., 159., 208., 270., 340., 440.,
      $     560., 720., 910.,1060.,1170.,1260.,1325.,1375.,1390.,1396.,
      $     1397.,1396.,1393.,1390.,1385.,1382.,1380.,1376.,1372.,1366.,
@@ -97,7 +97,7 @@ c     p-n single pi production
      $     690., 683., 680., 675., 670., 662., 660., 653./
 
 c     p-p double pi production
-      data xdpp/     
+      data xdpp/
      $     0.,   1.,   2.,   3.,   4.,   5.,   6.,   7.,   8.,   8.,
      $     9.,   9.,  11.,  16.,  21.,  38.,  60.,  90., 112., 130.,
      $     146., 160., 177., 190., 200., 215., 228., 240., 252., 265.,
@@ -113,7 +113,7 @@ c     p-p double pi production
      $     1652.,1670.,1682.,1700.,1718.,1731.,1748.,1762.,1780.,1798./
 
 c     p-n double pi production
-      data xdpn/     
+      data xdpn/
      $     0.,  40.,  80., 128., 170., 230., 300., 370., 450., 520.,
      $     560., 600., 630., 660., 690., 715., 740., 760., 785., 805.,
      $     828., 850., 870., 888., 908., 928., 943., 962., 980., 998.,
@@ -129,37 +129,37 @@ c     p-n double pi production
      $     2225.,2240.,2257.,2270.,2286.,2300.,2315.,2330.,2342.,2360./
       real*4    step,fac,amn,amn2
       parameter (step=0.2, fac=1e-2, amn=939., amn2=amn**2)
-      
+
       real*4    ampi
       parameter (ampi=139.6)
-      
+
       integer*4 idec
-      
+
       real*4    eineq,ekin,psp,pdp,erem1,erem2,ptot,xr,yr,dist,p1,p2
       real*4    erem,pel
-      
+
       integer*4 ka,ichint,ilo,ihi,ilo1,ihi1,ilo2,ihi2,iqq
-      
+
       real*4    ranf
       external  ranf
-      
+
       real*4 A,B,C
       common /martindebug/  ptot,A,B,C
-      
-      
+
+
       idec=1
       if(ecms2.le.(2.*amn)**2) goto 200         ! check if kinematically possible
-      
+
       eineq=(ecms2-unucl**2-amn**2)/(2*unucl) ! unucl at rest
       ekin = eineq - amn
-      
+
       if(prot)then
          ka=1
       else
          ka=0
       end if
       ichint=chint
-      
+
       if( ekin  .lt. 360. .or.
      $     ecms2 .lt. (amn+amn+ampi)**2 ) then
          psp = 0.
@@ -170,8 +170,8 @@ c     p-n double pi production
          else
             pel = xepn(ihi)*erem + xepn(ilo)*(1-erem)
          end if
-      else if( ekin .lt. 920. .or. 
-     $     ecms2 .lt. (amn+amn+ampi+ampi)**2 ) then   
+      else if( ekin .lt. 920. .or.
+     $     ecms2 .lt. (amn+amn+ampi+ampi)**2 ) then
          pdp = 0.
          call nrhis(ekin,20.,176,ilo,ihi,erem)
          call nrhis(ekin-360.,20.,158,ilo1,ihi1,erem1)
@@ -206,7 +206,7 @@ c     p-n double pi production
       ptot=ptot*rhon
       dist=-log(xr)/ptot
       if(step.lt.dist) goto 200 ! no interaction
-      
+
       if(yr.le.pel) then
          iqq=1                  !elastic
       else if(yr.le.pel+psp) then
@@ -214,10 +214,10 @@ c     p-n double pi production
       else
          iqq=3                  !double production
       end if
-      
+
 c     make kinematics and final state
-      call nrprd(iqq,eineq,ichint,piso,chiso) 
-      
+      call nrprd(iqq,eineq,ichint,piso,chiso)
+
       ! check for Pauli blocking
       p1=sqrt(piso(1,1)**2+piso(2,1)**2+piso(3,1)**2)
       p2=sqrt(piso(1,3)**2+piso(2,3)**2+piso(3,3)**2)
@@ -225,12 +225,12 @@ c     make kinematics and final state
         idec=10+iqq             ! return code for interaction that would have taken place, needed for reweighting systematics
         goto 200
       end if
-      
+
       idec=-iqq                 !tell what took place
-      
+
       ihap=1                    !make some bookkeep
       nel(iqq)=nel(iqq)+1
-      
+
  200  return
       end
-      
+

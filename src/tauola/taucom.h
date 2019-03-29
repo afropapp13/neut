@@ -1,8 +1,8 @@
 C
-C     COMMON BLOCK WHICH ARE USED IN TAUOLA 
+C     COMMON BLOCK WHICH ARE USED IN TAUOLA
 C
       REAL GFERMI, GV, GA, CCABIB, SCABIB, GAMEL
-      
+
       COMMON /DECPAR/ GFERMI,GV,GA,CCABIB,SCABIB,GAMEL
 C
 C     GFERMI : Fermi coupling.  G=1.16637E-5 (GeV^-2)
@@ -11,10 +11,10 @@ C     GA     : Tau axial coupling. GA=-1 in the standard model
 C     CCABIB : Cosine of Cabibbo angle
 C     SCABIB : Sine of Cabibo angle
 C     GAMEL  : Branching ratio for tau -> neu neu_bar e
-C      
+C
       REAL AMTAU, AMNUTA, AMEL, AMNUE, AMMU, AMNUMU, AMPIZ, AMPI, AMRO,
      &   GAMRO, AMA1, GAMA1, AMK, AMKZ, AMKST, GAMKST
-      
+
       COMMON /PARMAS/ AMTAU,AMNUTA,AMEL,AMNUE,AMMU,AMNUMU,
      &                AMPIZ,AMPI,AMRO,GAMRO,AMA1,GAMA1,
      &                AMK,AMKZ,AMKST,GAMKST
@@ -36,21 +36,21 @@ C     AMK    : K+- mass
 C     AMKZ   : K0 mass
 C     AMKST  : K* mass
 C     GAMKST : K* width
-C      
+C
       REAL    GAMPRT
       INTEGER JLIST, NCHAN
-      
+
       COMMON /TAUBRA/ GAMPRT(30),JLIST(30),NCHAN
 C
 C     NCHAN  : Number of decay channels. At present NCHAN=8. The channels
 C              appropriately ordered are: e neu neu-b, mu neu nue-b, pi neu,
-C              rho neu, a1 neu, K neu, K* neu, N pi neu.      
+C              rho neu, a1 neu, K neu, K* neu, N pi neu.
 C     JLIST(I)  : Number of the decay channel according to the above list.
-C                 If decay modes are ordered as above JLIST(I)=I      
+C                 If decay modes are ordered as above JLIST(I)=I
 C     GAMPRT(I) : Branching ratio for the JLIST(I) decay mode. Arbitary units.
 C                 These parameters define actual proportion of decays in the
 C                 sample to be generated.
-C      
+C
       REAL    CBRNPI, AMAS
       INTEGER KPI, MULT
       COMMON /TAUNPI/ CBRNPI(4),AMAS(6,4),KPI(6,4),MULT(4)
@@ -60,10 +60,10 @@ C                 final states relative to the total multipion branching ratio.
 C     AMAS(J,I) : Mass of the J-th pi for the I-th type of multipion final
 C                 states
 C     KPI(J,I)  : Type of the J-th pi for the I-th type of multipion final
-C                 states. KPI(J,I)=-17,17,23,0 denote respectively pi of 
+C                 states. KPI(J,I)=-17,17,23,0 denote respectively pi of
 C                 same/opposite charge as the mother tau, pi0 and no pi at all
 C     MULT(I)   : Multiplicity of the I-th type of multipion decay mode.
-C      
+C
       INTEGER JAK1, JAK2, JAKP, JAKM, KTOM
       COMMON /JAKI/   JAK1,JAK2,JAKP,JAKM,KTOM
 C
@@ -72,27 +72,27 @@ C              previous table.
 C              JAK1 = 0 denotes inclusive tau decay,
 C              JAK1=-1 no decay at all.
 C     JAK2   : The same as JAK1 but for tau -
-C     JAKP   : Internal variable, does not require initialization.      
-C     JAKM   : Internal variable, does not require initialization.      
+C     JAKP   : Internal variable, does not require initialization.
+C     JAKM   : Internal variable, does not require initialization.
 C     KTOM   : Internal variable, does not require initialization.
-C      
+C
       INTEGER IDFF
       COMMON /IDFC/   IDFF
 C
 C     IDFF   : Lund indentifier for tau+, should be set to IDFF=-15
-C      
+C
       INTEGER INUT, IOUT
       COMMON /INOUT/  INUT,IOUT
 C
 C     INUT   : LUN for input ( dummy )
 C     IOUT   : LUN for output
-C      
+C
       INTEGER IA1
       COMMON /IDPART/ IA1
 C
 C     Lund type identifier for a1
-C      
-      
+C
+
       INTEGER ITDKRC
       REAL*8            XK0DEC
       COMMON / TAURAD / XK0DEC,ITDKRC
@@ -133,10 +133,10 @@ C
       COMMON /TAUBMC/ GAMPMC(30),GAMPER(30),NEVDEC(30)
 C
 C     This COMMON is output
-C  
+C
 C     NEVDEC(I) : Number of generated decays for the I-th channel.
 C     GAMPMC(I) : Branching ratio for the i-th decay mode.
 C     GAMPER(I) : Relative statistical error for the branching ratio
 C                 calculated in the Monte Carlo out of the actual
 C                 matrix element in the generator.
-C  
+C

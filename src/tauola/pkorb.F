@@ -71,7 +71,7 @@ C masses (needed in dist/inimas, formf/form*, etc)
         PARM(1,20) = 1.402000   ! K1B+
         PARM(1,21) = 1.465000   ! RHOPP+
         PARM(1,22) = 1.700000   ! RHOPPP+
-	
+
 C widths (needed in dist/inimas, formf/form*, etc)
         PARM(2, 1) = 0.          ! TAU
         PARM(2, 2) = 0.          ! NUTA
@@ -96,7 +96,7 @@ C widths (needed in dist/inimas, formf/form*, etc)
         PARM(2,21) = 0.310       ! RHOPP+
         PARM(2,22) = 0.235       ! RHOPPP+
 
-C Now store mixing parameters for 2pi and 4pi FFs 
+C Now store mixing parameters for 2pi and 4pi FFs
 C needed in tauola/fpik, tauola/bwigs, formf/form* , formf/curr :
 
         PARM(3,15) = -0.145
@@ -166,7 +166,7 @@ CCC        IF (IPLIST(2,282).EQ.5) THEN
 C The 4pi models are the most complicated in TAUOLA.
 C If the user has not modified any parameters of the 4pi model,
 C we can use the WTMAX determined with many trials.
-        IF (ABS(PARM(3,31)-0.0000).GT.0.0001 .OR. 
+        IF (ABS(PARM(3,31)-0.0000).GT.0.0001 .OR.
      1      ABS(PARM(3,32)-0.1242).GT.0.0001 .OR.
      1      ABS(PARM(3,33)-0.1604).GT.0.0001 .OR.
      1      ABS(PARM(3,34)-0.2711).GT.0.0001 .OR.
@@ -176,7 +176,7 @@ C we can use the WTMAX determined with many trials.
            PARM(3,38) = 6.9673671E-14
         END IF
 
-        IF (ABS(PARM(3,36)-0.0000).GT.0.0001 .OR. 
+        IF (ABS(PARM(3,36)-0.0000).GT.0.0001 .OR.
      1      ABS(PARM(3,37)-1.0000).GT.0.0001 ) THEN
            PARM(3,39) = -1.
         ELSE
@@ -232,9 +232,9 @@ C C-G coefficients for K1- -> CG1 * |K- pi0> + CG2 * |K0bar pi->
         CG1 = -SQRT(2./3.)
         CG2 =  SQRT(1./3.)
 C and the resulting amplitudes (times normalized FF):
-        PARM(3,81) = C1270*A1270_KSPI*CG1  ! K1270 -> K*0B pi- 
-        PARM(3,82) = C1402*A1402_KSPI*CG1  ! K1402 -> K*0B pi- 
-        PARM(3,83) = C1270*A1270_KRHO*CG1  ! K1270 -> K0B rho- 
+        PARM(3,81) = C1270*A1270_KSPI*CG1  ! K1270 -> K*0B pi-
+        PARM(3,82) = C1402*A1402_KSPI*CG1  ! K1402 -> K*0B pi-
+        PARM(3,83) = C1270*A1270_KRHO*CG1  ! K1270 -> K0B rho-
         PARM(3,84) = C1402*A1402_KRHO*CG1  ! K1402 -> K0B rho-
         PARM(3,85) = C1270*A1270_KSPI*CG2  ! K1270 -> K*- pi0
         PARM(3,86) = C1402*A1402_KSPI*CG2  ! K1402 -> K*- pi0
@@ -249,7 +249,7 @@ C and the resulting amplitudes (times normalized FF):
          R = PARM(IF1,IF2)
 
 CAJW 4/4/94  Better to decide on A1 br now, avoid DADMAA/DPHSAA problem.
-        IF (IF1.EQ.4.AND.JAK1.EQ.5) THEN 
+        IF (IF1.EQ.4.AND.JAK1.EQ.5) THEN
           IF (IF2.EQ.11) THEN
 C Return the BR used in the last call:
              R = BRA1
@@ -258,7 +258,7 @@ C Return the BR used in the last call:
             CALL RANMAR(RRR,1)
             IF (RRR(1).LT.BRA1) THEN
               R = 1.     ! 3pi
-            ELSE 
+            ELSE
               R = 0.     ! pi-2pi0
             END IF
             BRA1 = R
@@ -272,7 +272,7 @@ C Return the BR used in the last call:
             CALL RANMAR(RRR,1)
             IF (RRR(1).LT.BRKS) THEN
               R = 1.     ! K0 pi-
-            ELSE 
+            ELSE
               R = 0.     ! K- pi0
             END IF
             BRKS = R

@@ -12,7 +12,7 @@
 *
 *     (Output)
 *       FEMTO :  PION-NEUCLEON INELASTIC CROSS SECTION (UNIT FM)
-*     
+*
 *     (Creation Date and Author)
 *       1994.08.30 ; G.DION & K.Okumura
 *       1996.02.05 ; K.Kaneyuki   CROSIN -> NECROSIN
@@ -49,7 +49,7 @@
          RETURN
       ENDIF
 
-      DO 10 I=1,10	
+      DO 10 I=1,10
          ITEMP(I)  = SIGN(1., EPI0 - EPI0XC(I+1) )
  10   CONTINUE
 

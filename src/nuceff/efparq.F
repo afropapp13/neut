@@ -1,20 +1,20 @@
 *     -----------------------------------------------------
-      SUBROUTINE EFPARQ(IPART,Q)      
+      SUBROUTINE EFPARQ(IPART,Q)
 *     -----------------------------------------------------
-*     
+*
 *     ( purpose )
 C       CHARGE OF THE PARTICLE
-*       
-*     ( input ) 
+*
+*     ( input )
 C       IPART:  PARTICLE # OF GEANT ASIGNMENT
 *
-*     ( output ) 
+*     ( output )
 C         Q  :  CHARGE OF THE PARTICLE( FOR EXAMPLE ELECTRON= -1
 C     PROTON = +1     )
 *
-C     
+C
 C     5-OCT-87   PRD. BY SATO,N
-C     
+C
 C**********************************************************************
 
       DIMENSION CHAR(48)

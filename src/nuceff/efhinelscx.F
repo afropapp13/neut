@@ -1,15 +1,15 @@
 *     -----------------------------------------------------
-      SUBROUTINE EFHINELSCX(IP,INUC,IPF,INF)      
+      SUBROUTINE EFHINELSCX(IP,INUC,IPF,INF)
 *     -----------------------------------------------------
-*     
+*
 *     ( purpose )
 *       Charge exchange for high energy in(quasi)elastic scattering
 *
-*     ( input ) 
+*     ( input )
 C          IP   : INITIAL KIND OF PION
 C          IN   : TARGET NUCLEON TYPE
 *
-*     ( output ) 
+*     ( output )
 C          IPF  : FINAL KIND OF PION
 C          INF  : FINAL NUCLEON TYPE
 *
@@ -28,11 +28,11 @@ C
             INF=2112
             IPF=111
          ELSE
-            WRITE(6,*) "Warning in efhinels: Illegal High energy 
+            WRITE(6,*) "Warning in efhinels: Illegal High energy
      $CX, pi=",IP,"IN=",INUC
-            
+
          END IF
-         
+
       ELSE IF (IP.eq.111) THEN
          IF (INUC.eq.2212) THEN
             IPF=211
@@ -41,14 +41,14 @@ C
             IPF=-211
             INF=2212
          ELSE
-            WRITE(6,*) "Warning efhinels: Undefined nucleon 
+            WRITE(6,*) "Warning efhinels: Undefined nucleon
      $for H.E. CX"
          END IF
-         
+
       ELSE
-         WRITE(6,*) "Warning efhinels: Undefined pion type in HE.CX" 
+         WRITE(6,*) "Warning efhinels: Undefined pion type in HE.CX"
          RETURN
-         
+
       END IF
 
       RETURN

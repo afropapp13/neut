@@ -1,15 +1,15 @@
 *     -----------------------------------------------------
-      FUNCTION EFFRMMOM_L(RADIUS,PMOM)      
+      FUNCTION EFFRMMOM_L(RADIUS,PMOM)
 *     -----------------------------------------------------
-*     
+*
 *     ( purpose )
 *        PROBABILITY TO NUCLEON TO TAKE FERMI MOMENTUM PF for Local Fermigas
 *
-*     ( input ) 
+*     ( input )
 *        RADIUS  : radius   (in fermi)
 *        PMOM    : momentum (in MeV)
 *
-*     ( output ) 
+*     ( output )
 *       effrmmom_L: probability to take PF
 *
       REAL*4 EFFRMMOM_L
@@ -29,6 +29,6 @@
       else
          EFFRMMOM_L = (3*(PMOM**2))/(PFMAX**3)
       endif
-      
+
       RETURN
       END

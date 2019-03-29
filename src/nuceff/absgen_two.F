@@ -1,5 +1,5 @@
 c ---------------------------------------------------------------
-   
+
       subroutine absgen_two(tpir,ct)
 
       implicit none

@@ -1,4 +1,4 @@
-C**** 
+C****
 C**** $Log: not supported by cvs2svn $
 C**** Revision 1.6  1998/03/13 16:11:09  cmauger
 C**** Uses 2/3 for k/kbar ratio when the input particle type is a klong or
@@ -32,8 +32,8 @@ C**** in O16.  To include this file, please link to the following libs:
 C****  -lnuceff -limbwest -lkinem -lska `cernlib mathlib phtools`
 C****
 c**** A subroutine for the old-onsite MC to call partnuc from IMBWest
-c**** 
-c****     
+c****
+c****
       subroutine eftrcka(pin,kin,pout,kout,x)
       implicit none
       real pin(3), pout(3), x(3)
@@ -52,13 +52,13 @@ C**** The number of input particles.
       integer ni
 C**** The output energy, momentum, mass, and charge.
       real eo(20),po(3,20),uo(20),cho(20)
-C**** The starting point for the hadron.  This is an output variable for 
+C**** The starting point for the hadron.  This is an output variable for
 C     icont equal 0 and an input variable if icont is 1.
       real start(3)
 C**** The final position of the hadron.  This is used to restart a new
 C     hadron from the stopping point after a decay.
       real decp(3)
-C**** The starting point for each hadron in the stack.  This should be 
+C**** The starting point for each hadron in the stack.  This should be
 C     zero unless icont is 1
       real stpt(3,20)
 C**** The density mode of the model
@@ -84,9 +84,9 @@ c**** kzero mass is 0.497672
 
       oldkin = kin
 c**** Convert from kshort and klong to kzero and kzerobar
-c**** klong 
-C**** the value of 2/3 is from the ratio of kplus/kminus 
-C**** production given by jetset it should be replaced by 
+c**** klong
+C**** the value of 2/3 is from the ratio of kplus/kminus
+C**** production given by jetset it should be replaced by
 C**** an energy dependent value to do it correctly
       if(oldkin.eq.310) then
          if(ranf().le.0.667) then
@@ -138,9 +138,9 @@ c**** this calls a subroutine in IMBWest
      $                     eo,po,uo,cho,
      $                     start,decp,
      $                     imode,icont)
-c**** 
+c****
 c**** Set output momentum
-C**** 
+C****
       pout(1) = po(1,1)
       pout(2) = po(2,1)
       pout(3) = po(3,1)
@@ -153,7 +153,7 @@ c**** Check to see if there was an interaction
          lsflag = 1
       endif
 
-c**** output particles      
+c**** output particles
 C**** kplus
       if(cho(1).gt.0.9) then
          newkin = 321
@@ -177,7 +177,7 @@ c**** CHARGED KAON OUTPUT
 
 C**** NEUTRAL KAON OUTPUT
 
-c**** kaon came in neutral and didn't interact in 
+c**** kaon came in neutral and didn't interact in
 c**** the nucleus
       else if(newkin.eq.oldkin.and.lsflag.eq.1.and.kin.ne.oldkin) then
          kout = kin
@@ -188,5 +188,5 @@ c**** the incoming kaon interacted
       else
          kout = 130
       endif
-      return  
+      return
       end

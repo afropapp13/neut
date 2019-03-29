@@ -1,14 +1,14 @@
       subroutine mrst2002(x,q,mode,upv,dnv,usea,dsea,str,chm,bot,glu)
 C***************************************************************C
-C								C
+C                                                               C
 C  This is a package for the new MRST 2002 updated NLO and      C
-C  NNLO parton distributions.                                   C 
+C  NNLO parton distributions.                                   C
 C  Reference: A.D. Martin, R.G. Roberts, W.J. Stirling and      C
 C  R.S. Thorne, hep-ph/0211080                                  C
 C                                                               C
 C  There are 2 pdf sets corresponding to mode = 1, 2            C
 C                                                               C
-C  Mode=1 gives the NLO set with alpha_s(M_Z,NLO) = 0.1197      C  
+C  Mode=1 gives the NLO set with alpha_s(M_Z,NLO) = 0.1197      C
 C  This set reads a grid whose first number is 0.00949          C
 C                                                               C
 C  Mode=2 gives the NNLO set with alpha_s(M_Z,NNLO) = 0.1154    C
@@ -23,10 +23,10 @@ C***************************************************************C
       if(q2.lt.qsqmin.or.q2.gt.qsqmax) print 99,q2
       if(x.lt.xmin.or.x.gt.xmax)       print 98,x
           if(mode.eq.1) then
-        call mrst1(x,q2,upv,dnv,usea,dsea,str,chm,bot,glu) 
+        call mrst1(x,q2,upv,dnv,usea,dsea,str,chm,bot,glu)
       elseif(mode.eq.2) then
-        call mrst2(x,q2,upv,dnv,usea,dsea,str,chm,bot,glu) 
-      endif 
+        call mrst2(x,q2,upv,dnv,usea,dsea,str,chm,bot,glu)
+      endif
   99  format('  WARNING:  Q^2 VALUE IS OUT OF RANGE   ','q2= ',e10.5)
   98  format('  WARNING:   X  VALUE IS OUT OF RANGE   ','x= ',e10.5)
       return
@@ -43,13 +43,13 @@ C     .f6(nx,nq),f7(nx,nq),f8(nx,nq),fc(nx,nqc),fb(nx,nqb)
      .ccc(nx,nqc,4,4),ccb(nx,nqb,4,4)
       real*8 xxl(nx),qql(nq),qqlc(nqc),qqlb(nqb)
       data xx/1d-5,2d-5,4d-5,6d-5,8d-5,
-     .	      1d-4,2d-4,4d-4,6d-4,8d-4,
-     .	      1d-3,2d-3,4d-3,6d-3,8d-3,
-     .	      1d-2,1.4d-2,2d-2,3d-2,4d-2,6d-2,8d-2,
-     .	   .1d0,.125d0,.15d0,.175d0,.2d0,.225d0,.25d0,.275d0,
-     .	   .3d0,.325d0,.35d0,.375d0,.4d0,.425d0,.45d0,.475d0,
-     .	   .5d0,.525d0,.55d0,.575d0,.6d0,.65d0,.7d0,.75d0,
-     .	   .8d0,.9d0,1d0/
+     .        1d-4,2d-4,4d-4,6d-4,8d-4,
+     .        1d-3,2d-3,4d-3,6d-3,8d-3,
+     .        1d-2,1.4d-2,2d-2,3d-2,4d-2,6d-2,8d-2,
+     .     .1d0,.125d0,.15d0,.175d0,.2d0,.225d0,.25d0,.275d0,
+     .     .3d0,.325d0,.35d0,.375d0,.4d0,.425d0,.45d0,.475d0,
+     .     .5d0,.525d0,.55d0,.575d0,.6d0,.65d0,.7d0,.75d0,
+     .     .8d0,.9d0,1d0/
       data qq/1.25d0,1.5d0,2d0,2.5d0,3.2d0,4d0,5d0,6.4d0,8d0,1d1,
      .        1.2d1,1.8d1,2.6d1,4d1,6.4d1,1d2,
      .        1.6d2,2.4d2,4d2,6.4d2,1d3,1.8d3,3.2d3,5.6d3,1d4,
@@ -65,7 +65,7 @@ C     .f6(nx,nq),f7(nx,nq),f8(nx,nq),fc(nx,nqc),fb(nx,nqb)
         do 20 n=1,nx-1
         do 20 m=1,nq
         read(33,50)f1(n,m),f2(n,m),f3(n,m),f4(n,m),
-     .		  f5(n,m),f7(n,m),f6(n,m),f8(n,m)
+     .            f5(n,m),f7(n,m),f6(n,m),f8(n,m)
 c notation: 1=uval 2=val 3=glue 4=usea 5=chm 6=str 7=btm 8=dsea
   20  continue
       do 40 m=1,nq
@@ -114,7 +114,7 @@ c notation: 1=uval 2=val 3=glue 4=usea 5=chm 6=str 7=btm 8=dsea
 
       init=1
    10 continue
-      
+
       xlog=dlog(x)
       qsqlog=dlog(qsq)
 
@@ -126,12 +126,12 @@ c notation: 1=uval 2=val 3=glue 4=usea 5=chm 6=str 7=btm 8=dsea
       call jeppe2(xlog,qsqlog,nx,nq,xxl,qql,cc8,dsea)
 
       chm=0.d0
-      if(qsq.gt.emc2) then 
+      if(qsq.gt.emc2) then
       call jeppe2(xlog,qsqlog,nx,nqc,xxl,qqlc,ccc,chm)
       endif
 
       bot=0.d0
-      if(qsq.gt.emb2) then 
+      if(qsq.gt.emb2) then
       call jeppe2(xlog,qsqlog,nx,nqb,xxl,qqlb,ccb,bot)
       endif
 
@@ -152,13 +152,13 @@ C     .f6(nx,nq),f7(nx,nq),f8(nx,nq),fc(nx,nqc),fb(nx,nqb)
      .ccc(nx,nqc,4,4),ccb(nx,nqb,4,4)
       real*8 xxl(nx),qql(nq),qqlc(nqc),qqlb(nqb)
       data xx/1d-5,2d-5,4d-5,6d-5,8d-5,
-     .	      1d-4,2d-4,4d-4,6d-4,8d-4,
-     .	      1d-3,2d-3,4d-3,6d-3,8d-3,
-     .	      1d-2,1.4d-2,2d-2,3d-2,4d-2,6d-2,8d-2,
-     .	   .1d0,.125d0,.15d0,.175d0,.2d0,.225d0,.25d0,.275d0,
-     .	   .3d0,.325d0,.35d0,.375d0,.4d0,.425d0,.45d0,.475d0,
-     .	   .5d0,.525d0,.55d0,.575d0,.6d0,.65d0,.7d0,.75d0,
-     .	   .8d0,.9d0,1d0/
+     .        1d-4,2d-4,4d-4,6d-4,8d-4,
+     .        1d-3,2d-3,4d-3,6d-3,8d-3,
+     .        1d-2,1.4d-2,2d-2,3d-2,4d-2,6d-2,8d-2,
+     .     .1d0,.125d0,.15d0,.175d0,.2d0,.225d0,.25d0,.275d0,
+     .     .3d0,.325d0,.35d0,.375d0,.4d0,.425d0,.45d0,.475d0,
+     .     .5d0,.525d0,.55d0,.575d0,.6d0,.65d0,.7d0,.75d0,
+     .     .8d0,.9d0,1d0/
       data qq/1.25d0,1.5d0,2d0,2.5d0,3.2d0,4d0,5d0,6.4d0,8d0,1d1,
      .        1.2d1,1.8d1,2.6d1,4d1,6.4d1,1d2,
      .        1.6d2,2.4d2,4d2,6.4d2,1d3,1.8d3,3.2d3,5.6d3,1d4,
@@ -174,7 +174,7 @@ C     .f6(nx,nq),f7(nx,nq),f8(nx,nq),fc(nx,nqc),fb(nx,nqb)
         do 20 n=1,nx-1
         do 20 m=1,nq
         read(33,50)f1(n,m),f2(n,m),f3(n,m),f4(n,m),
-     .		  f5(n,m),f7(n,m),f6(n,m),f8(n,m)
+     .            f5(n,m),f7(n,m),f6(n,m),f8(n,m)
 c notation: 1=uval 2=val 3=glue 4=usea 5=chm 6=str 7=btm 8=dsea
   20  continue
       do 40 m=1,nq
@@ -223,7 +223,7 @@ c notation: 1=uval 2=val 3=glue 4=usea 5=chm 6=str 7=btm 8=dsea
 
       init=1
    10 continue
-      
+
       xlog=dlog(x)
       qsqlog=dlog(qsq)
 
@@ -235,12 +235,12 @@ c notation: 1=uval 2=val 3=glue 4=usea 5=chm 6=str 7=btm 8=dsea
       call jeppe2(xlog,qsqlog,nx,nq,xxl,qql,cc8,dsea)
 
       chm=0.d0
-      if(qsq.gt.emc2) then 
+      if(qsq.gt.emc2) then
       call jeppe2(xlog,qsqlog,nx,nqc,xxl,qqlc,ccc,chm)
       endif
 
       bot=0.d0
-      if(qsq.gt.emb2) then 
+      if(qsq.gt.emb2) then
       call jeppe2(xlog,qsqlog,nx,nqb,xxl,qqlb,ccb,bot)
       endif
 
@@ -257,21 +257,21 @@ c notation: 1=uval 2=val 3=glue 4=usea 5=chm 6=str 7=btm 8=dsea
      xcl(16),cc(nx,my,4,4),iwt(16,16)
 
       data iwt/1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-     x		  0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,
-     x		  -3,0,0,3,0,0,0,0,-2,0,0,-1,0,0,0,0,
-     x		  2,0,0,-2,0,0,0,0,1,0,0,1,0,0,0,0,
-     x		  0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,
-     x		  0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,
-     x		  0,0,0,0,-3,0,0,3,0,0,0,0,-2,0,0,-1,
-     x		  0,0,0,0,2,0,0,-2,0,0,0,0,1,0,0,1,
-     x		  -3,3,0,0,-2,-1,0,0,0,0,0,0,0,0,0,0,
-     x		  0,0,0,0,0,0,0,0,-3,3,0,0,-2,-1,0,0,
-     x		  9,-9,9,-9,6,3,-3,-6,6,-6,-3,3,4,2,1,2,
-     x		  -6,6,-6,6,-4,-2,2,4,-3,3,3,-3,-2,-1,-1,-2,
-     x		  2,-2,0,0,1,1,0,0,0,0,0,0,0,0,0,0,
-     x		  0,0,0,0,0,0,0,0,2,-2,0,0,1,1,0,0,
-     x		  -6,6,-6,6,-3,-3,3,3,-4,4,2,-2,-2,-2,-1,-1,
-     x		  4,-4,4,-4,2,2,-2,-2,2,-2,-2,2,1,1,1,1/
+     x            0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,
+     x            -3,0,0,3,0,0,0,0,-2,0,0,-1,0,0,0,0,
+     x            2,0,0,-2,0,0,0,0,1,0,0,1,0,0,0,0,
+     x            0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,
+     x            0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,
+     x            0,0,0,0,-3,0,0,3,0,0,0,0,-2,0,0,-1,
+     x            0,0,0,0,2,0,0,-2,0,0,0,0,1,0,0,1,
+     x            -3,3,0,0,-2,-1,0,0,0,0,0,0,0,0,0,0,
+     x            0,0,0,0,0,0,0,0,-3,3,0,0,-2,-1,0,0,
+     x            9,-9,9,-9,6,3,-3,-6,6,-6,-3,3,4,2,1,2,
+     x            -6,6,-6,6,-4,-2,2,4,-3,3,3,-3,-2,-1,-1,-2,
+     x            2,-2,0,0,1,1,0,0,0,0,0,0,0,0,0,0,
+     x            0,0,0,0,0,0,0,0,2,-2,0,0,1,1,0,0,
+     x            -6,6,-6,6,-3,-3,3,3,-4,4,2,-2,-2,-2,-1,-1,
+     x            4,-4,4,-4,2,2,-2,-2,2,-2,-2,2,1,1,1,1/
 
 
       do 42 m=1,my
@@ -361,7 +361,7 @@ c notation: 1=uval 2=val 3=glue 4=usea 5=chm 6=str 7=btm 8=dsea
 
       subroutine jeppe2(x,y,nx,my,xx,yy,cc,z)
       implicit real*8(a-h,o-z)
-      dimension xx(nx),yy(my),cc(nx,my,4,4)      
+      dimension xx(nx),yy(my),cc(nx,my,4,4)
 
       n=locx(xx,nx,x)
       m=locx(yy,my,y)
@@ -384,8 +384,8 @@ c notation: 1=uval 2=val 3=glue 4=usea 5=chm 6=str 7=btm 8=dsea
       locx=1
       return
       endif
-      if(x.ge.xx(nx)) then 
-      locx=nx-1  
+      if(x.ge.xx(nx)) then
+      locx=nx-1
       return
       endif
       ju=nx+1

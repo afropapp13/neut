@@ -2,14 +2,14 @@
 *     ------------------
       SUBROUTINE TAUVECT
 *     ------------------
-*     
+*
 *     ( purpose )
 *       execute tau decay and make vector
 *
-*     ( input ) 
+*     ( input )
 *       COMMON VCWORK, VCVRTX
 *
-*     ( output ) 
+*     ( output )
 *       COMMON VCWORK, VCVRTX
 *
 *     ( creation date and author )
@@ -36,7 +36,7 @@ C
 C --        EXECUTE TAU DECAY ( TAUOLA Vr.2.6 )
 C
 C           ( DIRECTION OF TAU = Z FRAME )
-C            
+C
             CALL TAUDECAY(IPVC(I),PVC(1,I))
 
 C
@@ -46,7 +46,7 @@ C
 
 C
 C --        FILL COMMON OF TAU
-C            
+C
             IF (NHEP.LE.1) RETURN
             IFLGVC(I) = 1
             ICRNVC(I) = 0
@@ -54,7 +54,7 @@ C
             IVTFVC(I) = IVTIVC(I)
 C
 C --        DETERMINE TAU DIRECTION
-C            
+C
             CALL UCOPY(PVC(1,I),DIR0,3)
             DIRABS=SQRT(DIR0(1)**2+DIR0(2)**2+DIR0(3)**2)
             IF (DIRABS.LT.1.0E-5) THEN
@@ -96,7 +96,7 @@ c               CALL MCMASS(IPVC(J),AMASVC(NALL))
                POSNUC(3,NALL)=POSNUC(3,I)
 C
 C --           ROTATE EACH PARTICLE
-C               
+C
                CALL VZERO(DIR1,3)
                CALL VZERO(DIR2,3)
                P(1)=PHEP(1,J)*1.0E+3
@@ -120,10 +120,10 @@ C
                PVC(3,NALL)=PABS*DIR2(3)
 C
 C --           FILL PARAMETERS
-C               
+C
 
                IF (JMOHEP(1,J).EQ.1) IORGVC(NALL)=I
-c -- tau decay products: 
+c -- tau decay products:
 c               IF (JMOHEP(1,J).NE.1) IORGVC(NALL)=NALL2+JMOHEP(1,J)-1
                IF (JMOHEP(1,J).NE.1) IORGVC(NALL) = 15
 
@@ -138,8 +138,8 @@ c -- Fix JDAHEP bug
                IF (ABS(IPVC(NALL)).EQ.211) IFLGVC(NALL)=0  ! pi+/-
                IF (ABS(IPVC(NALL)).EQ.111) IFLGVC(NALL)=0  ! pi0
                IF (ABS(IPVC(NALL)).EQ.321) IFLGVC(NALL)=0  ! K+/-
-               
-               
+
+
                ICRNVC(NALL)=0
                IF (IFLGVC(NALL).EQ.0) ICRNVC(NALL)=1
                CALL UCOPY(POSFVC(1,I),POSIVC(1,NALL),3)
@@ -154,7 +154,7 @@ C
 C
 C               write (*,*) "TAU: IPVC: ", nall, " Particle: ", ipvc(nall),
 C     &         " Flag: ", iflgvc(nall), " Track: ", icrnvc(nall),
-C     &         " Iorg: ", iorgvc(nall), " JDAHEP: ", JDAHEP(1,NALL), JDAHEP(2,NALL) 
+C     &         " Iorg: ", iorgvc(nall), " JDAHEP: ", JDAHEP(1,NALL), JDAHEP(2,NALL)
 
 
  20         CONTINUE

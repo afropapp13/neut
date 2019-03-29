@@ -1,9 +1,9 @@
       subroutine NRSETXPOS
 
       implicit none
-      
+
 #include "nrnuclparam.h"
-      
+
       integer*4 ino16
       real*4    xin
       COMMON /SAVXIN/INO16,XIN(3)
@@ -16,11 +16,11 @@
       EQUIVALENCE (IDATA(1),RDATA(1))
 
       real*4  X(3)
-      
+
 C
 C     -- SET INTERACTION POSITION
-C      
-      
+C
+
       CNAME='NUCPOS'
       CALL KZBLOC(CNAME,LBANK)
       IF (LBANK.eq.0) then

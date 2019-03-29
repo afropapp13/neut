@@ -18,13 +18,13 @@ C
 C************************************************
 
 C*****************************************************
-C  @(#)prbin.f	1.1 modified on 12/7/92
-       FUNCTION	PRBIN(YI,N,XMIN,XSTEP,YR)
+C  @(#)prbin.f  1.1 modified on 12/7/92
+       FUNCTION PRBIN(YI,N,XMIN,XSTEP,YR)
        DIMENSION YI(N+1)
        MIN=1
        MAX=N+1
        GO TO 3
-    1  IF((MAX-MIN).EQ.1) GO TO	5
+    1  IF((MAX-MIN).EQ.1) GO TO 5
        IF(YI(M)-YR) 2,6,4
     2  MIN=M
     3  M=(MAX+MIN)/2

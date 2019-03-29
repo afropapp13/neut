@@ -8,13 +8,13 @@
 *
 *     (Input)
 *       RADIUS: in fm
-*     
+*
 *     (Output)
 *       PFMEV : Fermi momentum in MeV/c <- different from FVFRMGEV
 *
 *     (Creation Date and Author)
 *       2017.05.27 ; Y.Hayato
-*     
+*
 ************************************************************************
       IMPLICIT NONE
       REAL*4     RADIUS,PFMEV

@@ -409,7 +409,7 @@ C -----------------------------------------------
      & /(1+BETA+DELTA)
       RETURN
       END
- 
+
       FUNCTION FORM3(MNUM,QQ,S1,SDWA)
 C     ==================================================================
 C     formfactorfor F3 for 3 scalar final state
@@ -621,7 +621,7 @@ C     R. Fisher, J. Wess and F. Wagner Z. Phys C3 (1980) 313
 C     R. Decker Z. Phys C36 (1987) 487.
 C     M. Gell-Mann, D. Sharp, W. Wagner Phys. Rev. Lett 8 (1962) 261.
 C     ==================================================================
- 
+
       COMMON / PARMAS / AMTAU,AMNUTA,AMEL,AMNUE,AMMU,AMNUMU
      *                 ,AMPIZ,AMPI,AMRO,GAMRO,AMA1,GAMA1
      *                 ,AMK,AMKZ,AMKST,GAMKST
@@ -860,7 +860,7 @@ c                    print *, 'here is curinf'
      . /,   ' *************************************************** ',
      . /,   '   YOU ARE USING THE 4 PION DECAY MODE FORM FACTORS    ',
      . /,   '   WHICH HAVE BEEN DESCRIBED IN:',
-     . /,   '   R. DECKER, M. FINKEMEIER, P. HEILIGER AND H.H. JONSSON',	
+     . /,   '   R. DECKER, M. FINKEMEIER, P. HEILIGER AND H.H. JONSSON',
      . /,   '   "TAU DECAYS INTO FOUR PIONS" ',
      . /,   '   UNIVERSITAET KARLSRUHE PREPRINT TTP 94-13 (1994);',
      . /,   '                    LNF-94/066(IR); HEP-PH/9410260  ',
@@ -901,8 +901,8 @@ C
       BETA1  = 0.08
       ROM2   = 1.70
       ROG2   = 0.235
-      BETA2  = -0.0075				
-      END						
+      BETA2  = -0.0075
+      END
       COMPLEX FUNCTION BWIGA1(QA)
 C     ================================================================
 C     breit-wigner enhancement of a1
@@ -911,12 +911,12 @@ C     ================================================================
       COMMON / PARMAS/ AMTAU,AMNUTA,AMEL,AMNUE,AMMU,AMNUMU,
      %                 AMPIZ,AMPI,AMRO,GAMRO,AMA1,GAMA1,
      %                 AMK,AMKZ,AMKST,GAMKST
- 
+
 C
       REAL*4           AMTAU,AMNUTA,AMEL,AMNUE,AMMU,AMNUMU,
      %                 AMPIZ,AMPI,AMRO,GAMRO,AMA1,GAMA1,
      %                 AMK,AMKZ,AMKST,GAMKST
- 
+
       WIGNER(A,B,C)=CMPLX(1.0,0.0)/CMPLX(A-B**2,B*C)
       GAMAX=GAMA1*GFUN(QA)/GFUN(AMA1**2)
       BWIGA1=-AMA1**2*WIGNER(QA,AMA1,GAMAX)
@@ -957,7 +957,7 @@ C ------------ PARAMETERS --------------------
       ENDIF
 C -----------------------------------------------
       S=W**2
-c	       print *,'rom2,rog2 =',rom2,rog2
+c              print *,'rom2,rog2 =',rom2,rog2
       FRHO4=(BWIGM(S,ROM,ROG,XM1,XM2)+BETA1*BWIGM(S,ROM1,ROG1,XM1,XM2)
      & +BETA2*BWIGM(S,ROM2,ROG2,XM1,XM2))
      & /(1+BETA1+BETA2)
@@ -973,7 +973,7 @@ C     R. Fisher, J. Wess and F. Wagner Z. Phys C3 (1980) 313
 C     R. Decker Z. Phys C36 (1987) 487.
 C     M. Gell-Mann, D. Sharp, W. Wagner Phys. Rev. Lett 8 (1962) 261.
 C     ==================================================================
- 
+
       COMMON /TAU4PI/ GOMEGA,GAMMA1,GAMMA2,ROM1,ROG1,BETA1,
      .                ROM2,ROG2,BETA2
       REAL*4          GOMEGA,GAMMA1,GAMMA2,ROM1,ROG1,BETA1,
@@ -992,34 +992,34 @@ C
       COMPLEX BWIGN,FRHO4
       COMPLEX BWIGEPS,BWIGA1
       COMPLEX HCOMP1(4),HCOMP2(4),HCOMP3(4),HCOMP4(4)
- 
+
       COMPLEX T243,T213,T143,T123,T341,T342
       COMPLEX T124,T134,T214,T234,T314,T324
       COMPLEX S2413,S2314,S1423,S1324,S34
       COMPLEX S2431,S3421
       COMPLEX BRACK1,BRACK2,BRACK3,BRACK4A,BRACK4B,BRACK4
- 
+
       REAL QMP1,QMP2,QMP3,QMP4
       REAL PS43,PS41,PS42,PS34,PS14,PS13,PS24,PS23
       REAL PS21,PS31
- 
+
       REAL PD243,PD241,PD213,PD143,PD142
       REAL PD123,PD341,PD342,PD413,PD423
       REAL PD124,PD134,PD214,PD234,PD314,PD324
       REAL QP1,QP2,QP3,QP4
- 
+
       REAL PA(4),PB(4)
       REAL AA(4,4),PP(4,4)
       DATA PI /3.141592653589793238462643/
       DATA  FPI /93.3E-3/
-      DATA INIT /0/	
+      DATA INIT /0/
       BWIGN(A,XM,XG)=1.0/CMPLX(A-XM**2,XM*XG)
 C
       IF (INIT.EQ.0) THEN
-	CALL CURINI
-	CALL CURINF
-	INIT = 1
-      ENDIF	        	
+        CALL CURINI
+        CALL CURINF
+        INIT = 1
+      ENDIF
 C
 C --- MASSES AND CONSTANTS
       G1=12.924
@@ -1052,134 +1052,134 @@ C ===================================================================
 C PI- PI- P0 PI+ CASE                                            ====
 C ===================================================================
        QQ=PAA(4)**2-PAA(3)**2-PAA(2)**2-PAA(1)**2
- 
+
 C FIRST DEFINITION OF SCALAR PRODUCTS OF MOMENTUM VECTORS
- 
+
 C DEFINE (Q-PI)**2 AS QPI:
- 
+
       QMP1=(PIM2(4)+PIM3(4)+PIM4(4))**2-(PIM2(3)+PIM3(3)+PIM4(3))**2
      %   -(PIM2(2)+PIM3(2)+PIM4(2))**2-(PIM2(1)+PIM3(1)+PIM4(1))**2
- 
+
       QMP2=(PIM1(4)+PIM3(4)+PIM4(4))**2-(PIM1(3)+PIM3(3)+PIM4(3))**2
      %   -(PIM1(2)+PIM3(2)+PIM4(2))**2-(PIM1(1)+PIM3(1)+PIM4(1))**2
- 
+
       QMP3=(PIM1(4)+PIM2(4)+PIM4(4))**2-(PIM1(3)+PIM2(3)+PIM4(3))**2
      %   -(PIM1(2)+PIM2(2)+PIM4(2))**2-(PIM1(1)+PIM2(1)+PIM4(1))**2
- 
+
       QMP4=(PIM1(4)+PIM2(4)+PIM3(4))**2-(PIM1(3)+PIM2(3)+PIM3(3))**2
      %   -(PIM1(2)+PIM2(2)+PIM3(2))**2-(PIM1(1)+PIM2(1)+PIM3(1))**2
- 
- 
+
+
 C DEFINE (PI+PK)**2 AS PSIK:
- 
+
       PS43=(PIM4(4)+PIM3(4))**2-(PIM4(3)+PIM3(3))**2
      %    -(PIM4(2)+PIM3(2))**2-(PIM4(1)+PIM3(1))**2
- 
+
       PS41=(PIM4(4)+PIM1(4))**2-(PIM4(3)+PIM1(3))**2
      %    -(PIM4(2)+PIM1(2))**2-(PIM4(1)+PIM1(1))**2
- 
+
       PS42=(PIM4(4)+PIM2(4))**2-(PIM4(3)+PIM2(3))**2
      %    -(PIM4(2)+PIM2(2))**2-(PIM4(1)+PIM2(1))**2
- 
+
       PS34=PS43
- 
+
       PS14=PS41
- 
+
       PS13=(PIM1(4)+PIM3(4))**2-(PIM1(3)+PIM3(3))**2
      %    -(PIM1(2)+PIM3(2))**2-(PIM1(1)+PIM3(1))**2
- 
+
       PS24=PS42
- 
+
       PS23=(PIM2(4)+PIM3(4))**2-(PIM2(3)+PIM3(3))**2
      %    -(PIM2(2)+PIM3(2))**2-(PIM2(1)+PIM3(1))**2
- 
+
       PD243=PIM2(4)*(PIM4(4)-PIM3(4))-PIM2(3)*(PIM4(3)-PIM3(3))
      %     -PIM2(2)*(PIM4(2)-PIM3(2))-PIM2(1)*(PIM4(1)-PIM3(1))
- 
+
       PD241=PIM2(4)*(PIM4(4)-PIM1(4))-PIM2(3)*(PIM4(3)-PIM1(3))
      %     -PIM2(2)*(PIM4(2)-PIM1(2))-PIM2(1)*(PIM4(1)-PIM1(1))
- 
+
       PD213=PIM2(4)*(PIM1(4)-PIM3(4))-PIM2(3)*(PIM1(3)-PIM3(3))
      %     -PIM2(2)*(PIM1(2)-PIM3(2))-PIM2(1)*(PIM1(1)-PIM3(1))
- 
+
       PD143=PIM1(4)*(PIM4(4)-PIM3(4))-PIM1(3)*(PIM4(3)-PIM3(3))
      %     -PIM1(2)*(PIM4(2)-PIM3(2))-PIM1(1)*(PIM4(1)-PIM3(1))
- 
+
       PD142=PIM1(4)*(PIM4(4)-PIM2(4))-PIM1(3)*(PIM4(3)-PIM2(3))
      %     -PIM1(2)*(PIM4(2)-PIM2(2))-PIM1(1)*(PIM4(1)-PIM2(1))
- 
+
       PD123=PIM1(4)*(PIM2(4)-PIM3(4))-PIM1(3)*(PIM2(3)-PIM3(3))
      %     -PIM1(2)*(PIM2(2)-PIM3(2))-PIM1(1)*(PIM2(1)-PIM3(1))
- 
+
       PD341=PIM3(4)*(PIM4(4)-PIM1(4))-PIM3(3)*(PIM4(3)-PIM1(3))
      %     -PIM3(2)*(PIM4(2)-PIM1(2))-PIM3(1)*(PIM4(1)-PIM1(1))
- 
+
       PD342=PIM3(4)*(PIM4(4)-PIM2(4))-PIM3(3)*(PIM4(3)-PIM2(3))
      %     -PIM3(2)*(PIM4(2)-PIM2(2))-PIM3(1)*(PIM4(1)-PIM2(1))
- 
+
       PD413=PIM4(4)*(PIM1(4)-PIM3(4))-PIM4(3)*(PIM1(3)-PIM3(3))
      %     -PIM4(2)*(PIM1(2)-PIM3(2))-PIM4(1)*(PIM1(1)-PIM3(1))
- 
+
       PD423=PIM4(4)*(PIM2(4)-PIM3(4))-PIM4(3)*(PIM2(3)-PIM3(3))
      %     -PIM4(2)*(PIM2(2)-PIM3(2))-PIM4(1)*(PIM2(1)-PIM3(1))
- 
+
 C DEFINE Q*PI = QPI:
- 
+
       QP1=PIM1(4)*(PIM1(4)+PIM2(4)+PIM3(4)+PIM4(4))
      %   -PIM1(3)*(PIM1(3)+PIM2(3)+PIM3(3)+PIM4(3))
      %   -PIM1(2)*(PIM1(2)+PIM2(2)+PIM3(2)+PIM4(2))
      %   -PIM1(1)*(PIM1(1)+PIM2(1)+PIM3(1)+PIM4(1))
- 
+
       QP2=PIM2(4)*(PIM1(4)+PIM2(4)+PIM3(4)+PIM4(4))
      %   -PIM2(3)*(PIM1(3)+PIM2(3)+PIM3(3)+PIM4(3))
      %   -PIM2(2)*(PIM1(2)+PIM2(2)+PIM3(2)+PIM4(2))
      %   -PIM2(1)*(PIM1(1)+PIM2(1)+PIM3(1)+PIM4(1))
- 
+
       QP3=PIM3(4)*(PIM1(4)+PIM2(4)+PIM3(4)+PIM4(4))
      %   -PIM3(3)*(PIM1(3)+PIM2(3)+PIM3(3)+PIM4(3))
      %   -PIM3(2)*(PIM1(2)+PIM2(2)+PIM3(2)+PIM4(2))
      %   -PIM3(1)*(PIM1(1)+PIM2(1)+PIM3(1)+PIM4(1))
- 
+
       QP4=PIM4(4)*(PIM1(4)+PIM2(4)+PIM3(4)+PIM4(4))
      %   -PIM4(3)*(PIM1(3)+PIM2(3)+PIM3(3)+PIM4(3))
      %   -PIM4(2)*(PIM1(2)+PIM2(2)+PIM3(2)+PIM4(2))
      %   -PIM4(1)*(PIM1(1)+PIM2(1)+PIM3(1)+PIM4(1))
- 
- 
- 
+
+
+
 C DEFINE T(PI;PJ,PK)= TIJK:
- 
+
       T243=BWIGA1(QMP2)*FPIKM(SQRT(PS43),AMPI,AMPI)*GAMMA1
       T213=BWIGA1(QMP2)*FPIKM(SQRT(PS13),AMPI,AMPI)*GAMMA1
       T143=BWIGA1(QMP1)*FPIKM(SQRT(PS43),AMPI,AMPI)*GAMMA1
       T123=BWIGA1(QMP1)*FPIKM(SQRT(PS23),AMPI,AMPI)*GAMMA1
       T341=BWIGA1(QMP3)*FPIKM(SQRT(PS41),AMPI,AMPI)*GAMMA1
       T342=BWIGA1(QMP3)*FPIKM(SQRT(PS42),AMPI,AMPI)*GAMMA1
- 
+
 C DEFINE S(I,J;K,L)= SIJKL:
- 
+
       S2413=FRHO4(SQRT(PS24),AMPI,AMPI)*GAMMA2
       S2314=FRHO4(SQRT(PS23),AMPI,AMPI)*BWIGEPS(PS14)*GAMMA2
       S1423=FRHO4(SQRT(PS14),AMPI,AMPI)*GAMMA2
       S1324=FRHO4(SQRT(PS13),AMPI,AMPI)*BWIGEPS(PS24)*GAMMA2
       S34=FRHO4(SQRT(PS34),AMPI,AMPI)*GAMMA2
- 
+
 C DEFINITION OF AMPLITUDE, FIRST THE [] BRACKETS:
- 
+
       BRACK1=2.*T143+2.*T243+T123+T213
      %    +T341*(PD241/QMP3-1.)+T342*(PD142/QMP3-1.)
      %    +3./4.*(S1423+S2413-S2314-S1324)-3.*S34
- 
+
       BRACK2=2.*T143*PD243/QMP1+3.*T213
      %    +T123*(2.*PD423/QMP1+1.)+T341*(PD241/QMP3+3.)
      %    +T342*(PD142/QMP3+1.)
      %    -3./4.*(S2314+3.*S1324+3.*S1423+S2413)
- 
+
       BRACK3=2.*T243*PD143/QMP2+3.*T123
      %    +T213*(2.*PD413/QMP2+1.)+T341*(PD241/QMP3+1.)
      %    +T342*(PD142/QMP3+3.)
      %    -3./4.*(3.*S2314+S1324+S1423+3.*S2413)
- 
+
       BRACK4A=2.*T143*(PD243/QQ*(QP1/QMP1+1.)+PD143/QQ)
      %     +2.*T243*(PD143/QQ*(QP2/QMP2+1.)+PD243/QQ)
      %     +T123+T213
@@ -1189,32 +1189,32 @@ C DEFINITION OF AMPLITUDE, FIRST THE [] BRACKETS:
      %           -2.*PD341/QQ)
      %     +T342*(PD142/QMP3+1.-2.*PD142/QQ*(QP3/QMP3+1.)
      %           -2.*PD342/QQ)
- 
+
       BRACK4B=-3./4.*(S2314*(2.*(QP2-QP3)/QQ+1.)
      %             +S1324*(2.*(QP1-QP3)/QQ+1.)
      %             +S1423*(2.*(QP1-QP4)/QQ+1.)
      %             +S2413*(2.*(QP2-QP4)/QQ+1.)
      %             +4.*S34*(QP4-QP3)/QQ)
- 
+
       BRACK4=BRACK4A+BRACK4B
- 
+
       DO 208 K=1,4
- 
+
       HCOMP1(K)=(PIM3(K)-PIM4(K))*BRACK1
       HCOMP2(K)=PIM1(K)*BRACK2
       HCOMP3(K)=PIM2(K)*BRACK3
       HCOMP4(K)=(PIM1(K)+PIM2(K)+PIM3(K)+PIM4(K))*BRACK4
- 
+
  208  CONTINUE
- 
+
       DO 209 I=1,4
- 
+
       HADCUR(I)=HCOMP1(I)-HCOMP2(I)-HCOMP3(I)+HCOMP4(I)
       HADCUR(I)=-COEF1*FRHO4(SQRT(QQ),AMPI,AMPI)*HADCUR(I)
- 
+
  209  CONTINUE
- 
- 
+
+
 C --- END OF THE NON OMEGA CURRENT (3 POSSIBILITIES)
  201   CONTINUE
 C
@@ -1270,121 +1270,121 @@ C ===================================================================
 C PI0 PI0 P0 PI- CASE                                            ====
 C ===================================================================
        QQ=PAA(4)**2-PAA(3)**2-PAA(2)**2-PAA(1)**2
- 
- 
+
+
 C FIRST DEFINITION OF SCALAR PRODUCTS OF MOMENTUM VECTORS
- 
+
 C DEFINE (Q-PI)**2 AS QPI:
- 
+
       QMP1=(PIM2(4)+PIM3(4)+PIM4(4))**2-(PIM2(3)+PIM3(3)+PIM4(3))**2
      %   -(PIM2(2)+PIM3(2)+PIM4(2))**2-(PIM2(1)+PIM3(1)+PIM4(1))**2
- 
+
       QMP2=(PIM1(4)+PIM3(4)+PIM4(4))**2-(PIM1(3)+PIM3(3)+PIM4(3))**2
      %   -(PIM1(2)+PIM3(2)+PIM4(2))**2-(PIM1(1)+PIM3(1)+PIM4(1))**2
- 
+
       QMP3=(PIM1(4)+PIM2(4)+PIM4(4))**2-(PIM1(3)+PIM2(3)+PIM4(3))**2
      %   -(PIM1(2)+PIM2(2)+PIM4(2))**2-(PIM1(1)+PIM2(1)+PIM4(1))**2
- 
+
       QMP4=(PIM1(4)+PIM2(4)+PIM3(4))**2-(PIM1(3)+PIM2(3)+PIM3(3))**2
      %   -(PIM1(2)+PIM2(2)+PIM3(2))**2-(PIM1(1)+PIM2(1)+PIM3(1))**2
- 
- 
+
+
 C DEFINE (PI+PK)**2 AS PSIK:
- 
+
       PS14=(PIM1(4)+PIM4(4))**2-(PIM1(3)+PIM4(3))**2
      %    -(PIM1(2)+PIM4(2))**2-(PIM1(1)+PIM4(1))**2
- 
+
       PS21=(PIM2(4)+PIM1(4))**2-(PIM2(3)+PIM1(3))**2
      %    -(PIM2(2)+PIM1(2))**2-(PIM2(1)+PIM1(1))**2
- 
+
       PS23=(PIM2(4)+PIM3(4))**2-(PIM2(3)+PIM3(3))**2
      %    -(PIM2(2)+PIM3(2))**2-(PIM2(1)+PIM3(1))**2
- 
+
       PS24=(PIM2(4)+PIM4(4))**2-(PIM2(3)+PIM4(3))**2
      %    -(PIM2(2)+PIM4(2))**2-(PIM2(1)+PIM4(1))**2
- 
+
       PS31=(PIM3(4)+PIM1(4))**2-(PIM3(3)+PIM1(3))**2
      %    -(PIM3(2)+PIM1(2))**2-(PIM3(1)+PIM1(1))**2
- 
+
       PS34=(PIM3(4)+PIM4(4))**2-(PIM3(3)+PIM4(3))**2
      %    -(PIM3(2)+PIM4(2))**2-(PIM3(1)+PIM4(1))**2
- 
- 
- 
+
+
+
       PD324=PIM3(4)*(PIM2(4)-PIM4(4))-PIM3(3)*(PIM2(3)-PIM4(3))
      %     -PIM3(2)*(PIM2(2)-PIM4(2))-PIM3(1)*(PIM2(1)-PIM4(1))
- 
+
       PD314=PIM3(4)*(PIM1(4)-PIM4(4))-PIM3(3)*(PIM1(3)-PIM4(3))
      %     -PIM3(2)*(PIM1(2)-PIM4(2))-PIM3(1)*(PIM1(1)-PIM4(1))
- 
+
       PD234=PIM2(4)*(PIM3(4)-PIM4(4))-PIM2(3)*(PIM3(3)-PIM4(3))
      %     -PIM2(2)*(PIM3(2)-PIM4(2))-PIM2(1)*(PIM3(1)-PIM4(1))
- 
+
       PD214=PIM2(4)*(PIM1(4)-PIM4(4))-PIM2(3)*(PIM1(3)-PIM4(3))
      %     -PIM2(2)*(PIM1(2)-PIM4(2))-PIM2(1)*(PIM1(1)-PIM4(1))
- 
+
       PD134=PIM1(4)*(PIM3(4)-PIM4(4))-PIM1(3)*(PIM3(3)-PIM4(3))
      %     -PIM1(2)*(PIM3(2)-PIM4(2))-PIM1(1)*(PIM3(1)-PIM4(1))
- 
+
       PD124=PIM1(4)*(PIM2(4)-PIM4(4))-PIM1(3)*(PIM2(3)-PIM4(3))
      %     -PIM1(2)*(PIM2(2)-PIM4(2))-PIM1(1)*(PIM2(1)-PIM4(1))
- 
+
 C DEFINE Q*PI = QPI:
- 
+
       QP1=PIM1(4)*(PIM1(4)+PIM2(4)+PIM3(4)+PIM4(4))
      %   -PIM1(3)*(PIM1(3)+PIM2(3)+PIM3(3)+PIM4(3))
      %   -PIM1(2)*(PIM1(2)+PIM2(2)+PIM3(2)+PIM4(2))
      %   -PIM1(1)*(PIM1(1)+PIM2(1)+PIM3(1)+PIM4(1))
- 
+
       QP2=PIM2(4)*(PIM1(4)+PIM2(4)+PIM3(4)+PIM4(4))
      %   -PIM2(3)*(PIM1(3)+PIM2(3)+PIM3(3)+PIM4(3))
      %   -PIM2(2)*(PIM1(2)+PIM2(2)+PIM3(2)+PIM4(2))
      %   -PIM2(1)*(PIM1(1)+PIM2(1)+PIM3(1)+PIM4(1))
- 
+
       QP3=PIM3(4)*(PIM1(4)+PIM2(4)+PIM3(4)+PIM4(4))
      %   -PIM3(3)*(PIM1(3)+PIM2(3)+PIM3(3)+PIM4(3))
      %   -PIM3(2)*(PIM1(2)+PIM2(2)+PIM3(2)+PIM4(2))
      %   -PIM3(1)*(PIM1(1)+PIM2(1)+PIM3(1)+PIM4(1))
- 
+
       QP4=PIM4(4)*(PIM1(4)+PIM2(4)+PIM3(4)+PIM4(4))
      %   -PIM4(3)*(PIM1(3)+PIM2(3)+PIM3(3)+PIM4(3))
      %   -PIM4(2)*(PIM1(2)+PIM2(2)+PIM3(2)+PIM4(2))
      %   -PIM4(1)*(PIM1(1)+PIM2(1)+PIM3(1)+PIM4(1))
- 
- 
+
+
 C DEFINE T(PI;PJ,PK)= TIJK:
- 
+
       T324=BWIGA1(QMP3)*FPIKM(SQRT(PS24),AMPI,AMPI)*GAMMA1
       T314=BWIGA1(QMP3)*FPIKM(SQRT(PS14),AMPI,AMPI)*GAMMA1
       T234=BWIGA1(QMP2)*FPIKM(SQRT(PS34),AMPI,AMPI)*GAMMA1
       T214=BWIGA1(QMP2)*FPIKM(SQRT(PS14),AMPI,AMPI)*GAMMA1
       T134=BWIGA1(QMP1)*FPIKM(SQRT(PS34),AMPI,AMPI)*GAMMA1
       T124=BWIGA1(QMP1)*FPIKM(SQRT(PS24),AMPI,AMPI)*GAMMA1
- 
+
 C DEFINE S(I,J;K,L)= SIJKL:
- 
+
       S1423=FRHO4(SQRT(PS14),AMPI,AMPI)*BWIGEPS(PS23)*GAMMA2
       S2431=FRHO4(SQRT(PS24),AMPI,AMPI)*BWIGEPS(PS31)*GAMMA2
       S3421=FRHO4(SQRT(PS34),AMPI,AMPI)*BWIGEPS(PS21)*GAMMA2
- 
- 
+
+
 C DEFINITION OF AMPLITUDE, FIRST THE [] BRACKETS:
- 
+
       BRACK1=T234+T324+2.*T314+T134+2.*T214+T124
      %    +T134*PD234/QMP1+T124*PD324/QMP1
      %    -3./2.*(S3421+S2431+2.*S1423)
- 
- 
+
+
       BRACK2=T234*(1.+2.*PD134/QMP2)+3.*T324+3.*T124
      %    +T134*(1.-PD234/QMP1)+2.*T214*PD314/QMP2
      %    -T124*PD324/QMP1
      %    -3./2.*(S3421+3.*S2431)
- 
+
       BRACK3=T324*(1.+2.*PD124/QMP3)+3.*T234+3.*T134
      %    +T124*(1.-PD324/QMP1)+2.*T314*PD214/QMP3
      %    -T134*PD234/QMP1
      %    -3./2.*(3.*S3421+S2431)
- 
+
       BRACK4A=2.*T234*(1./2.+PD134/QQ*(QP2/QMP2+1.)+PD234/QQ)
      %     +2.*T324*(1./2.+PD124/QQ*(QP3/QMP3+1.)+PD324/QQ)
      %     +2.*T134*(1./2.+PD234/QQ*(QP1/QMP1+1.)
@@ -1393,30 +1393,30 @@ C DEFINITION OF AMPLITUDE, FIRST THE [] BRACKETS:
      %              -1./2.*PD324/QMP1+PD124/QQ)
      %     +2.*T214*(PD314/QQ*(QP2/QMP2+1.)+PD214/QQ)
      %     +2.*T314*(PD214/QQ*(QP3/QMP3+1.)+PD314/QQ)
- 
+
       BRACK4B=-3./2.*(S3421*(2.*(QP3-QP4)/QQ+1.)
      %             +S2431*(2.*(QP2-QP4)/QQ+1.)
      %             +S1423*2.*(QP1-QP4)/QQ)
- 
- 
+
+
       BRACK4=BRACK4A+BRACK4B
- 
+
       DO 308 K=1,4
- 
+
       HCOMP1(K)=(PIM1(K)-PIM4(K))*BRACK1
       HCOMP2(K)=PIM2(K)*BRACK2
       HCOMP3(K)=PIM3(K)*BRACK3
       HCOMP4(K)=(PIM1(K)+PIM2(K)+PIM3(K)+PIM4(K))*BRACK4
- 
+
  308  CONTINUE
- 
+
       DO 309 I=1,4
- 
+
       HADCUR(I)=HCOMP1(I)+HCOMP2(I)+HCOMP3(I)-HCOMP4(I)
       HADCUR(I)=COEF1*FRHO4(SQRT(QQ),AMPI,AMPI)*HADCUR(I)
- 
+
  309  CONTINUE
- 
+
  101   CONTINUE
       ENDIF
 C M. Finkemeier et al. END

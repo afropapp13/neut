@@ -1,14 +1,14 @@
 *     -----------------------------------------------------
       COMPLEX FUNCTION EFS11(Q)
 *     -----------------------------------------------------
-*     
+*
 *     ( purpose )
 *       OBTAIN PHASE SHIFT OF S11 WAVE IN PI-N SCATTERING
 *
-*     ( input ) 
+*     ( input )
 *           Q   : Relative momentum in C-M system(MeV)
 *
-*     ( output ) 
+*     ( output )
 *        EFS11  : (EXP(2*I*DELTA)-1)/2I/Q**3
 
       COMPLEX I

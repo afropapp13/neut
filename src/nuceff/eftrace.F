@@ -1,11 +1,11 @@
 *     -----------------------------------------------------
       SUBROUTINE EFTRACE(APN,AP,KIN,XIN,PIN,NABS,NEL,NINEL,KFI,PFI)
 *     -----------------------------------------------------
-*     
+*
 *     ( purpose )
 C        TRACE PION ZIGZAG PATH TO OUTSIDE OF NUCLEI OR TO ABSORPTION
 *
-*     ( input ) 
+*     ( input )
 C         KIN  : PARTICLE KIND OF INITIAL PION
 C                KIN= 211   PI+
 C                KIN= 111   PI0
@@ -15,7 +15,7 @@ C         PIN  : INITIAL MOMENTUM OF PION  (MEV)
 C         APN  : # OF NUCLEONS  (DUMMY)
 C         AP   : # OF PROTONS   (DUMMY)
 *
-*     ( output ) 
+*     ( output )
 C          KFI : PARTICLE KIND OF FINAL PION
 C                KFI=+211  PI+
 C                KFI= 111  PI0
@@ -29,17 +29,17 @@ C         PFI  : FINAL MOMENTUM OF PION  (MEV)
 C
 C     ( Updating record )
 C         2005.03.16 ; M.Ishitsuka
-C                        Change to lower the boundary energy of scattering 
+C                        Change to lower the boundary energy of scattering
 C                        850 -> 500 MeV
 C         2010.06    ; P.de Perio
 C                        - Save absorbed pi momentum for nucleon ejection
 C                        - Add inelastic scattering for p>500 MeV/c
-C                        - Separate NZIG scatter counter into NEL elastic 
+C                        - Separate NZIG scatter counter into NEL elastic
 C                          and NINEL inelastic counters
-C                        - Choose nucleon type depending on nuclear 
+C                        - Choose nucleon type depending on nuclear
 C                          density for that nucleon (p>500)
-C                        - Add model for high momentum (p>500): 
-C                            Distinguish between p/n cross sections and 
+C                        - Add model for high momentum (p>500):
+C                            Distinguish between p/n cross sections and
 C                            separate charge exchange
 C                        - Use charge of current pion at high momentum
 C                          instead of initial pion:
@@ -53,7 +53,7 @@ C                        - Store intermediate vertex and particle info
 C
 C        2010.10     ;   - Fix bug: decrement FSIHIST vertex and part. info
 C                                   when EFHADPRO fails
-C                        - Move scaling parameters into probbility calculating 
+C                        - Move scaling parameters into probbility calculating
 C                          functions
 C
 c
@@ -72,7 +72,7 @@ C#define DEBUG
       DATA AMPI/139./
       DATA AMNUCL/939./
       DATA PCUT/500./
-      
+
       INTEGER I, iNuc
       REAL APN,AP,HIT
       REAL RADIUS,DL,INITABSP,ABSP,DXXY,RMAX,dt
@@ -111,7 +111,7 @@ C
 C-- Always copy PIN to PFI
       CALL UCOPY(PIN,PFI,3)
 
-      IF ( (ABS(KIN).NE.211.AND.KIN.NE.111) 
+      IF ( (ABS(KIN).NE.211.AND.KIN.NE.111)
      $     .or. NENEFO16.NE.0 ) THEN
 C         KIN=KFI
          KFI=KIN
@@ -162,16 +162,16 @@ C     Initialize FSI history
 
 #ifdef DEBUG
          write (*,*) "epsilon = ", epsilon
-         
+
          DO IVERT=1,NVERT
-            write (*,*) "Vertex ", IVERT, ": ", 
-     &           ABS(X(1)-POSVERT(1,IVERT)), 
-     &           ABS(X(2)-POSVERT(2,IVERT)), 
+            write (*,*) "Vertex ", IVERT, ": ",
+     &           ABS(X(1)-POSVERT(1,IVERT)),
+     &           ABS(X(2)-POSVERT(2,IVERT)),
      &           ABS(X(3)-POSVERT(3,IVERT)),
      &           IFLGVERT(IVERT)
          end do
 
-         write(*,*) "eftrace.F: Warning no parent vertex for 
+         write(*,*) "eftrace.F: Warning no parent vertex for
      $ particle at ", X(1), X(2), X(3)
 #endif
 
@@ -184,11 +184,11 @@ C     Initialize FSI history
 C     -- Load integrated density table for Coulomb force
          call loadIntDensTable
 
-C     Get index in nucleusZ array for Coulomb force 
+C     Get index in nucleusZ array for Coulomb force
          do iNuc = 1, nNuclei
             if (nucZ(iNuc).eq.NUMBNDP) exit
          end do
-         
+
          if (iNuc.gt.nNuclei) then
             write(*,*) "EFTRACE Error: Unimplemented Z value = ",NUMBNDP
             stop
@@ -197,7 +197,7 @@ C     Get index in nucleusZ array for Coulomb force
 
 
 C     -- NOW TRACE
-C     
+C
    10 ABSP=SQRT(P(1)**2+P(2)**2+P(3)**2)
       IF(ABSP.GT.0.001) GO TO 14
       ABSP=  0.001
@@ -205,7 +205,7 @@ C
       DIR(2)=0.0
       DIR(3)=0.0
 C     T.KAJITA 12-NOV-85   FOR AVOIDING ZERO DIVIDE
-C     
+C
    14 DIR(1)=P(1)/ABSP
       DIR(2)=P(2)/ABSP
       DIR(3)=P(3)/ABSP
@@ -258,7 +258,7 @@ C      DL=SQRT(X(1)**2+X(2)**2+X(3)**2)
 C      write(*,*) "EFTRACE(): ",X(1), X(2), X(3), DL
 
       IF(DL.GE.RMAX)GO TO 1000
-   
+
 C     For smooth transition between energy regions
       MODFRAC = (ABSP - 400)/100.
 
@@ -266,7 +266,7 @@ C++   LOW MOMENTUM ( P < PCUT (500MEV/C) )
       IF( (NENEFMODL.EQ.0 .and. ABSP.LE.PCUT) .or.
      $    (NENEFMODL.EQ.1 .and. RLU(IDUM).GE.MODFRAC) ) THEN
 C     $    (NENEFMODL.EQ.1 .and. ABSP.LE.450) ) THEN
-        
+
          CALL EFPQEAB(ABSP,DL,DXXY,PESC,PQE,PABS,PCOH)
 
          HIT=RLU(IDUM)
@@ -281,7 +281,7 @@ C        No interaction in this step
 C        ABSORPTION
          IF(HIT.LT.(PESC+PABS)) then
             LTABS=LTABS+1
-            
+
             CALL FSIFILLVERT(X,3)
             CALL FSIFILLPART(INITDIR,INITABSP,ABSPBST,IP,CURRVERT,NVERT)
 
@@ -303,10 +303,10 @@ C        QUASI-ELASTIC SCATTER
 
          GO TO 2010
 
-C     
+C
 C++   HIGH MOMENTUM ( P > PCUT (500MEV/C) )
       ELSE
-         
+
 C        This is a bug in previous official versions
          IF (NENEFMODH.EQ.0) THEN
             NQPAI=NECHARGE(KIN)
@@ -337,7 +337,7 @@ C--   Here use ABSPBST (for consistency)
 
 C        No interaction in this step
          IF(HIT.LT.PESC) GO TO 4000
-         
+
 C        Quasi-elastic scatter
          IF(HIT.LT.(PESC+PQE)) then
             CALL FSIFILLVERT(X,80)
@@ -361,9 +361,9 @@ C        Charge exchange
 
             GO TO 2020
          end if
-C     
+C
 C     -- INTERACTION WHICH MULTIPLIES THE NUMBER OF PARTICLE
-C     
+C
          CALL EFHADPRO(PBST,X,NQPAI,NQN,NUCDIR,GAMMANUCL,IERROR)
 
 C        Error: Revert FSIHIST common block
@@ -376,11 +376,11 @@ C        Error: Revert FSIHIST common block
 
          GO TO 2000
       END IF
-C     
-C     
-C     
+C
+C
+C
 C     -- INELASTIC SCTTERING (p < 500)
- 2010 radius = DL 
+ 2010 radius = DL
       CALL EFINELS(IP,P,IPF,PSCAT,radius)
 
 C     Error in EFINELS = no interaction
@@ -388,18 +388,18 @@ C     Error in EFINELS = no interaction
 
 #ifdef DEBUG
          write(*,*) "EFINELS Error: CURRVERT = ", CURRVERT
-#endif         
+#endif
          go to 4000
 
       else
 
-C     Charge-exchange occured 
+C     Charge-exchange occured
          IF (IP.NE.IPF) then
             CALL FSIFILLVERT(X,4)
 
          else
             CALL FSIFILLVERT(X,8)
-            
+
          end if
 
          CALL FSIFILLPART(INITDIR,INITABSP,ABSPBST,IP,CURRVERT,NVERT)
@@ -413,7 +413,7 @@ C     Charge-exchange occured
 
          GO TO 10
 
-      end if      
+      end if
 
 
 C     -- CHARGE EXCHANGE (p > 500)
@@ -432,9 +432,9 @@ C     -- INELASTIC SCTTERING (p > 500)
       P(3)=PSCAT(3)
       NINEL=NINEL+1
       GO TO 10
-C     
+C
 C     -- PION ESCAPED
-C     
+C
  1000 CALL FSIFILLVERT(X,-1)
 
 C     Store escaped particle info
@@ -449,18 +449,18 @@ C     Store escaped particle info
       PFI(3)=P(3)
       NABS=-1
       RETURN
-C     
+C
 C     -- PION ABSORBED
-C     
+C
  2000 KFI=IP
       PFI(1)=P(1)
       PFI(2)=P(2)
       PFI(3)=P(3)
       NABS=0
       RETURN
-C     
+C
 C     -- COHERENT SCATTERING
-C     
+C
  3000 CALL EFCOHSCT(PBST,PSCAT)
       CALL MCVECBST(PSCAT,AMPI,NUCDIR,GAMMANUCL)
       P(1)=PSCAT(1)
@@ -478,7 +478,7 @@ C     See neututils/calc_nuc_dens/coulomb_factor.xls
          dt = DXXY / sqrt(1 - 1/((AMPI**2+ABSP**2)/AMPI))
 
          CALL EFCOULFORCE(P,IP,X,DL,dt,iNuc)
-                  
+
          ABSP=SQRT(P(1)**2+P(2)**2+P(3)**2)
          IF(ABSP.GT.0.001) then
             DIR(1)=P(1)/ABSP
@@ -491,8 +491,8 @@ C     See neututils/calc_nuc_dens/coulomb_factor.xls
             DIR(3)=0.0
          end if
       end if
-      
+
       go to 100
-      
+
       END
-      
+

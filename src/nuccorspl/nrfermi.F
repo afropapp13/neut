@@ -18,7 +18,7 @@ C      logical prot
 #include "nrprat.h"
 C      common /nrpart/prat
 #include "nrnuclparam.h"
-#include "neutparams.h" 
+#include "neutparams.h"
 #include "nework.h"
 #include "nrcard.h"
 C      dimension rec(3),p4cms(3)
@@ -41,7 +41,7 @@ C      dimension rec(3),p4cms(3)
       parameter (RMSRADOXY = 2.730)
 
        REAL effrmgas
-       
+
 
 
 C     SET PARAMETER FOR EACH TARGET NUCLEI
@@ -60,7 +60,7 @@ C     while for other modes its read from card
 C      pfermi=NRPFSURF*1000. ! NRPFSURF is GeV unit
 C Change to local Fermi Gas ( 2017/04/03 )
       if (nucresflg.eq.1) then
-         if (abs(MODENE).EQ.2) then 
+         if (abs(MODENE).EQ.2) then
             if (r.ge.rmax) then
                pfermi=EFFRMGAS(0,0,rmax)
             else
@@ -79,7 +79,7 @@ C Change to local Fermi Gas ( 2017/04/03 )
          write(*,*) 'Unknown NUCRESFLG ( expected 1 or 2 )',NUCRESFLG
          STOP
       endif
-     
+
 c     decide if interaction is on proton (prot=.true.) or neutron (.false.)
       if(ranf().lt.prat)then
          prot=.true.

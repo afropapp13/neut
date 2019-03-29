@@ -72,7 +72,7 @@ c      write (77,*) ixr
       p2cm(1) = pcm(4,j2)
       p2cm(2) = pcm(1,j2)
       p2cm(3) = pcm(2,j2)
-      p2cm(4) = pcm(3,j2)     
+      p2cm(4) = pcm(3,j2)
 
       p3cm(1) = pcm(4,j3)
       p3cm(2) = pcm(1,j3)

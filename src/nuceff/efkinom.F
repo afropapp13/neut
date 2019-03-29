@@ -33,7 +33,7 @@ C     radius: position ( in Fermi )
 
 * --- function
       real rlu,dummy,random
-      
+
 * ---- argument (input)
       integer type
       real p(3)
@@ -50,11 +50,11 @@ C     radius: position ( in Fermi )
 
       real rate_otoh
       data rate_otoh/0.5/
-      
+
       real nucmass,ommass,pimass,pizmass,rhomass,sigmass
       data nucmass,ommass,pimass,pizmass,rhomass,sigmass
      &     /938.,782.,140.,135.,770.,780./
-      
+
 * ---- for N-body kinematics(vcphsvct)
       integer nbody,ierr
       real winv,amass(10),pmom(3,10),beta(3),absbeta,tote,gamma
@@ -86,7 +86,7 @@ C     radius: position ( in Fermi )
       enddo
 
 * ----------------------------------------
-* get fermi momentum of nucleon 
+* get fermi momentum of nucleon
 * and get invariant mass & cms momentum
 * ----------------------------------------
       if(type.lt.7) then
@@ -107,7 +107,7 @@ C     radius: position ( in Fermi )
          enddo
          absbeta=sqrt(beta(1)**2+beta(2)**2+beta(3)**2)
          gamma=fngamfct(absbeta)
-            
+
          do i=1,3
             ubeta(i)=beta(i)/absbeta
          enddo
@@ -121,10 +121,10 @@ C     radius: position ( in Fermi )
       if(type.eq.5)goto 15 ! omN --> omN
       if(type.eq.6)goto 16 ! omN --> sigmaN
       if(type.eq.7)goto 17 ! om --> decay
-      
+
       nump=0
       type=-10
-      
+
       goto 999
 
 * *****  omN --> piN
@@ -142,16 +142,16 @@ C     radius: position ( in Fermi )
       else
          fpid(1)=-211
       endif
-      
+
       do i=1,3
          pf(i,1)=pmom(i,1)
          pn(i)=pmom(i,2)
       enddo
       call mcvecbst(pf(1,1),pimass,ubeta,gamma)
       call mcvecbst(pn,nucmass,ubeta,gamma)
-      
+
       goto 999
-      
+
 * *****  omN --> rhoN
  12   continue
 
@@ -206,7 +206,7 @@ C     radius: position ( in Fermi )
 
       nump=3
 
-*----- interaction part(omN --> rhopiN) 
+*----- interaction part(omN --> rhopiN)
       winv=invmass
       nbody=3
       amass(1)=rhomass
@@ -288,7 +288,7 @@ C     radius: position ( in Fermi )
       call mcvecbst(pf(1,1),pimass,ubeta,gamma)
       call mcvecbst(pf(1,2),pimass,ubeta,gamma)
       call mcvecbst(pn,nucmass,ubeta,gamma)
-      
+
       fpid(1)=211
       fpid(2)=-211
 
@@ -310,7 +310,7 @@ C     radius: position ( in Fermi )
          pf(i,1)=sqrt(p(1)**2+p(2)**2+p(3)**2)*tmpdir(i)
          pn(i)=p(i)+pni(i)-pf(i,1)
       enddo
-      
+
       fpid(1)=223
 
       goto 999
@@ -361,7 +361,7 @@ C     radius: position ( in Fermi )
 * *****  om --> decay
  17   continue
 
-* deribe lorentz factor 
+* deribe lorentz factor
       do i=1,3
          beta(i)=p(i)/
      &        sqrt(ommass**2+p(1)**2+p(2)**2+p(3)**2)
@@ -378,7 +378,7 @@ C     radius: position ( in Fermi )
          imode=1
       else if(random .lt. bratio(1)+bratio(2)) then
          imode=2
-      else 
+      else
          imode=3
       endif
 
@@ -387,7 +387,7 @@ C     radius: position ( in Fermi )
          id_decay(i)=decayid(i,imode)
          call mcmass(id_decay(i),amass(i))
       enddo
-      
+
       call vcphsvct(ommass,amass,nbodyom(imode),decaymom,ierr)
 
       do i=1,nbodyom(imode)
@@ -396,9 +396,9 @@ C     radius: position ( in Fermi )
          do j=1,3
             pf(j,i)=decaymom(j,i)
          enddo
-      enddo    
+      enddo
 
-      nump=nbodyom(imode)      
+      nump=nbodyom(imode)
       type=10+imode
 
 *--------------------------

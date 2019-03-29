@@ -28,7 +28,7 @@ C --  Initialize
       ITAPOL = 0
       CALL VZERO(3,TAPOL)
       CALL VZERO(3,ITAURNDM)
-      
+
 C --- get card file name (1st argument of the program)
 
       WRITE(6,*)

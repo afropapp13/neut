@@ -1,16 +1,16 @@
 *     -----------------------------------------------------
-      SUBROUTINE EFINELS(IP,PIN,IPF,PFI,radius)      
+      SUBROUTINE EFINELS(IP,PIN,IPF,PFI,radius)
 *     -----------------------------------------------------
-*     
+*
 *     ( purpose )
 *       CALCULATE INELASTIC SCATTERING
 *
-*     ( input ) 
+*     ( input )
 C          IP   : INITIAL KIND OF PION
 C          PIN  : INITIAL PION MOMENTUM(MeV)
-C          r    : radius(fm)      
+C          r    : radius(fm)
 *
-*     ( output ) 
+*     ( output )
 C          IPF  : FINAL KIND OF PION
 C          PFI  : FINAL PION MOMENTUM
 *
@@ -26,7 +26,7 @@ C#include "efpiinth.h"
       COMMON/EFLAG/IERR
       INTEGER*4 INUCF
       DIMENSION PNUCF(3)
-C     
+C
 C     -- SET PION DIRECTION TO X-AXIS
       PPI(1)=SQRT(PIN(1)**2+PIN(2)**2+PIN(3)**2)
       PPI(2)=0.
@@ -59,7 +59,7 @@ C     - PHI ROTATION
       PFI(1)=COS(PHI)*PBUF2(1)-SIN(PHI)*PBUF2(2)
       PFI(2)=SIN(PHI)*PBUF2(1)+COS(PHI)*PBUF2(2)
       PFI(3)=PBUF2(3)
-      
+
 
 C     ROTATE NUCLEON VECTOR
       PBUF1(1)=PNUCF(1)
@@ -84,7 +84,7 @@ C     Do not store if stack is full (save one spot for pion)
 C      if (nvc.GE.maxvc-1) then
 C         return
 C      end if
-C      
+C
 C      ipvc(nvc+1)  = INUCF
 C      icrnvc(nvc+1) = 1
 C      iflgvc(nvc+1) = 0
@@ -99,9 +99,9 @@ C
 C      nvc = nvc + 1
 
       RETURN
-C     
+C
 C     -- ERROR RETURN (CAN NOT SCATTER)
-C     
+C
  9000 IPF=IP
       PFI(1)=PIN(1)
       PFI(2)=PIN(2)

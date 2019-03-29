@@ -1,18 +1,18 @@
 *     -----------------------------------------------------
       FUNCTION EFGAMMPT(E)
 *     -----------------------------------------------------
-*     
+*
 *     ( purpose )
 *       photo single pion production total cross-section
 *        (gamma + p -> n + pi+)
 *
-*     ( input ) 
+*     ( input )
 *       E       : energy of gamma(MeV)
 *
-*     ( output ) 
+*     ( output )
 *       EFGAMMPT: total cross-section (mb)
 *
-      
+
       IMPLICIT NONE
       REAL EFGAMMPT
       REAL E
@@ -24,7 +24,7 @@
       DATA ETABLE/250,270.,290.,310.,330.,350.,370.,390.,410.,
      $            430,450.,470.,515.,565.,590.,640.,690./
       DATA CRSTBL/156.5,203.2,231.3,251.9,241.7,203.7,178.8,
-     $            139.1,124.9,115.3,109.4,103.3, 93.7, 95.0, 
+     $            139.1,124.9,115.3,109.4,103.3, 93.7, 95.0,
      $             93.6,99.7,111.7/
 
       IF ((E.LT.ETABLE(1)).OR.(E.GT.ETABLE(16))) THEN
@@ -45,4 +45,4 @@
 
       RETURN
       END
-      
+

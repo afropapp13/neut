@@ -28,7 +28,7 @@ C      integer*4 np,kgenev
 
       logical ierr
 
-#include "absneject.h"      
+#include "absneject.h"
 C      common /labEandP/ lpdg,EandP
 C      common /cmnucleons/ p1cm,p2cm,p3cm,p4cm
 C      common /labnucleons/ npdg,p1lab,p2lab,p3lab,p4lab
@@ -80,7 +80,7 @@ c  Randomize to make sure there is no bias
       p2cm(1) = pcm(4,j2)
       p2cm(2) = pcm(1,j2)
       p2cm(3) = pcm(2,j2)
-      p2cm(4) = pcm(3,j2)     
+      p2cm(4) = pcm(3,j2)
 
       p3cm(1) = pcm(4,j3)
       p3cm(2) = pcm(1,j3)

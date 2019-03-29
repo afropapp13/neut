@@ -33,7 +33,7 @@ C --  Initialize
 
 C --- get card file name (1st argument of the program)
 
-      WRITE(6,*) 
+      WRITE(6,*)
       IF (IARGC() .GE. 1) THEN
          CALL GETARG(1, FCARD)
       ELSE

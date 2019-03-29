@@ -1,18 +1,18 @@
 *     -----------------------------------------------------
-      FUNCTION EFABRHO(R)      
+      FUNCTION EFABRHO(R)
 *     -----------------------------------------------------
-*     
+*
 *     ( purpose )
 *       FUNCTION TO GIVE NUCLEAR DENSITY (UNIT : AT CENTER OF NULEI -- 1)
 *
-*     ( input ) 
+*     ( input )
 *       r       : radius(fm)
 *
-*     ( output ) 
+*     ( output )
 *       efabrho : normalized nucelar density
 *
 *     (Creation Date and Author)
-*     2007.11.05 ; G.Mitsuka - change EFABRHO formula to 
+*     2007.11.05 ; G.Mitsuka - change EFABRHO formula to
 *                  3-parameter fermi model
 C
 

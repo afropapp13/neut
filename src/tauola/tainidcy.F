@@ -2,14 +2,14 @@
 *     -------------------
       SUBROUTINE TAINIDCY
 *     -------------------
-*     
+*
 *     ( purpose )
 *       set decay for tauola
 *
-*     ( input ) 
+*     ( input )
 *       none
 *
-*     ( output ) 
+*     ( output )
 *       COMMON  /TAUBRA/,/DECPAR/,/TAUKLE/,/JAKI/
 *
 *     ( creation date and author )
@@ -30,29 +30,29 @@ C                 ET,P-,P0   P-,P0,GM
 C                  9, 1, 2  , 1, 2, 8
 C
       DIMENSION NOPIK(6,NMODE),NPIK(NMODE)
-CAM   outgoing multiplicity and flavors of multi-pion /multi-K modes    
-      DATA   NPIK  /                4,                    4,  
+CAM   outgoing multiplicity and flavors of multi-pion /multi-K modes
+      DATA   NPIK  /                4,                    4,
      1                              5,                    5,
      2                              6,                    6,
-     3                              3,                    3,            
-     4                              3,                    3,            
-     5                              3,                    3,            
-     6                              3,                    3,  
-     7                              2                         /         
-      DATA  NOPIK / -1,-1, 1, 2, 0, 0,     2, 2, 2,-1, 0, 0,  
-     1              -1,-1, 1, 2, 2, 0,    -1,-1,-1, 1, 1, 0,  
-     2              -1,-1,-1, 1, 1, 2,    -1,-1, 1, 2, 2, 2, 
-     3              -3,-1, 3, 0, 0, 0,    -4,-1, 4, 0, 0, 0,  
-     4              -3, 2,-4, 0, 0, 0,     2, 2,-3, 0, 0, 0,  
-     5              -3,-1, 1, 0, 0, 0,    -1, 4, 2, 0, 0, 0,  
+     3                              3,                    3,
+     4                              3,                    3,
+     5                              3,                    3,
+     6                              3,                    3,
+     7                              2                         /
+      DATA  NOPIK / -1,-1, 1, 2, 0, 0,     2, 2, 2,-1, 0, 0,
+     1              -1,-1, 1, 2, 2, 0,    -1,-1,-1, 1, 1, 0,
+     2              -1,-1,-1, 1, 1, 2,    -1,-1, 1, 2, 2, 2,
+     3              -3,-1, 3, 0, 0, 0,    -4,-1, 4, 0, 0, 0,
+     4              -3, 2,-4, 0, 0, 0,     2, 2,-3, 0, 0, 0,
+     5              -3,-1, 1, 0, 0, 0,    -1, 4, 2, 0, 0, 0,
      6               9,-1, 2, 0, 0, 0,    -1, 2, 8, 0, 0, 0,
      7              -3, 4, 0, 0, 0, 0                         /
 
 C      REAL BRANCH(22)
 C      DATA BRANCH/17.93, 17.58, 11.6, 24.0, 14.1,
-C     &             0.67,  1.2 , 
+C     &             0.67,  1.2 ,
 
-C     
+C
 C     COMMON /TAUBRA/,/DECOMP/
 C
 
@@ -62,18 +62,18 @@ C
             JLIST(I) = I
             IF (ITAMODE.EQ.0) THEN
 
-C     Taken from ATLAS software 
+C     Taken from ATLAS software
 C     http://atlas.web.cern.ch/Atlas/GROUPS/SOFTWARE/OO/dist/
 C     5.3.0/Generators/Tauola_i/Tauola_i-00-00-10/src/tauini.F
 C
 C     Branching rations acc to:
-C     C. Caso et al, The European Physical Journal C3 (1998) 1 
-C     and 1999 off-year partial update for the 2000 edition available on 
-C     the PDG WWW pages (URL: http://pdg.lbl.gov/). 
+C     C. Caso et al, The European Physical Journal C3 (1998) 1
+C     and 1999 off-year partial update for the 2000 edition available on
+C     the PDG WWW pages (URL: http://pdg.lbl.gov/).
                IF(I.EQ. 1) GAMPRT(I) = 0.17810 ! e nu nu~
                IF(I.EQ. 2) GAMPRT(I) = 0.17370 ! mu nu nu~
                IF(I.EQ. 3) GAMPRT(I) = 0.11080 ! pi- nu
-               IF(I.EQ. 4) GAMPRT(I) = 0.25840 ! rho 
+               IF(I.EQ. 4) GAMPRT(I) = 0.25840 ! rho
                IF(I.EQ. 5) GAMPRT(I) = 0.18250 ! A1
                IF(I.EQ. 6) GAMPRT(I) = 0.00710 ! K-
                IF(I.EQ. 7) GAMPRT(I) = 0.01290 ! K*-
@@ -83,11 +83,11 @@ C     the PDG WWW pages (URL: http://pdg.lbl.gov/).
                IF(I.EQ.11) GAMPRT(I) = 0.00075 ! 3PI-, 2PI+
                IF(I.EQ.12) GAMPRT(I) = 0.00022 ! 3PI-, 2PI+,  PI0
                IF(I.EQ.13) GAMPRT(I) = 0.00140 ! 2PI-,  PI+, 3PI0
-               IF(I.EQ.14) GAMPRT(I) = 0.00160 ! K-, PI-,  K+ 
+               IF(I.EQ.14) GAMPRT(I) = 0.00160 ! K-, PI-,  K+
                IF(I.EQ.15) GAMPRT(I) = 0.00121 ! K0, PI-, K0B
                IF(I.EQ.16) GAMPRT(I) = 0.00150 ! K-,  K0, PI0
                IF(I.EQ.17) GAMPRT(I) = 0.00080 ! 2PI0 K-
-               IF(I.EQ.18) GAMPRT(I) = 0.00180 ! K-, PI-, PI+ 
+               IF(I.EQ.18) GAMPRT(I) = 0.00180 ! K-, PI-, PI+
                IF(I.EQ.19) GAMPRT(I) = 0.00390 ! PI-, K0B, PI0
                IF(I.EQ.20) GAMPRT(I) = 0.00170 ! ETA, PI-, PI0
                IF(I.EQ.21) GAMPRT(I) = 0.00150 ! PI-, PI0, GAM
@@ -96,9 +96,9 @@ C
 C              ORIGINAL VALUES FOR THIS FILE
 C
 C              Note: these aren't as different as those above
-C              as you think.  The overall normalization 
-C              isn't important.  These are normalized such that 
-C              e and mu decays have branching ratios of 1 and are 
+C              as you think.  The overall normalization
+C              isn't important.  These are normalized such that
+C              e and mu decays have branching ratios of 1 and are
 C              equal.
 C
 C               IF(I.EQ. 1) GAMPRT(I) = 1.0000
@@ -162,7 +162,7 @@ C               IF(I.EQ.22) GAMPRT(I) = 0.018
 
 C
 C     COMMON /TAUKLE/
-C      
+C
       BRA1=0.5
       BRK0=0.5
       BRK0B=0.5
@@ -170,10 +170,10 @@ C
 
 C
 C     COMMON /JAKI/
-C      
+C
       JAK1=0
       JAK2=0
-      
+
       RETURN
       END
-      
+

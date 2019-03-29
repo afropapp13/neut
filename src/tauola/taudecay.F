@@ -2,16 +2,16 @@
 *     ----------------------------
       SUBROUTINE TAUDECAY(IP,PTAU)
 *     ----------------------------
-*     
+*
 *     ( purpose )
 *       tau decay simulation using tauola 2.4
 *
-*     ( input ) 
+*     ( input )
 *       IP       :  15 - TAU-
 *                  -15 - TAU+
 *       PTAU(3)  : MOMENTUM OF TAU ( MeV/c )
 *
-*     ( output ) 
+*     ( output )
 *       COMMON  /HEPEVT/
 *
 *     ( creation date and author )
@@ -19,8 +19,8 @@
 *
 *     ( comment )
 *       test version.
-*       tau have only Pz.  
-*      
+*       tau have only Pz.
+*
 ***********************************************************************
 #include "nework.h"
 #include "taucom.h"
@@ -32,25 +32,25 @@
       REAL PTAU(3)
       REAL POL(4),DUMMY(4),AQF(4)
       DATA ICALL/0/
-      
-C     VARIABLES FOR TAUPOL     
+
+C     VARIABLES FOR TAUPOL
       INTEGER          FLAG, TAU_DEBUG, INDEX
       DOUBLE PRECISION SIGN, ENU, ETAU
       DOUBLE PRECISION THETA, COSTHETA, SINTHETA, PX, PY
-      DOUBLE PRECISION SIGMA, SX, SY, SZ 
+      DOUBLE PRECISION SIGMA, SX, SY, SZ
 
       REAL NUCLEON_MASS, NUCLEON_MOMENTUM, NUCLEON_ENERGY
       REAL NUCLEON_FOURVECT(4), NU_FOURVECT(4), TAU_FOURVECT(4)
       REAL BOOSTED_TAU(4), BOOSTED_NU(4)
       REAL DELTAX, DELTAY, DELTATHETA, POLTHETA, ARROWLENGTH
 
-C     CONTROL THE OUTPUT      
+C     CONTROL THE OUTPUT
       TAU_DEBUG = 1
 
       IF (ABS(IP).NE.15) RETURN
 C
 C --  INITIALIZATION
-C      
+C
       IF (ICALL.EQ.0) THEN
          ICALL=1
          CALL TAINICOM
@@ -62,7 +62,7 @@ C --  CALCULATE MOMENTUM OF TAU LEPTON
       PTAUGV = SQRT(PTAU(1)**2+PTAU(2)**2+PTAU(3)**2)*1.0E-3
 C
 C --  SET POLARITY
-C      
+C
 
 C --  IF ITPOL = 1 USE VALUE SET IN CARD FILE ELSE CALCULATE
 
@@ -77,7 +77,7 @@ C --  IF ITPOL = 1 USE VALUE SET IN CARD FILE ELSE CALCULATE
       ELSE
 
 C     CALCULATE USING TAUPOL
-         
+
 C --  DO A LORENTZ TRANSFORM INTO THE REST FRAME OF THE STRUCK NUCLEON
 
 C     CALCULATE ENERGY AND MOMENTUM OF NUCLEON
@@ -123,7 +123,7 @@ C     ANTI NEUTRINO
          ENDIF
 
 C     PREPARE NUCLEON 4 VECTOR
-         
+
          NUCLEON_FOURVECT(1) = PNE(1,2)*1000.0
          NUCLEON_FOURVECT(2) = PNE(2,2)*1000.0
          NUCLEON_FOURVECT(3) = PNE(3,2)*1000.0
@@ -144,7 +144,7 @@ C     PREPARE NEUTRINO 4 VECTOR
          NU_FOURVECT(4) = ENU*1000.0
 
 C     BOOST NU AND LEPTON TO THE NUCLEON REST FRAME
-         
+
          IF ( NUCLEON_FOURVECT(1).EQ.0.0 .AND.
      $        NUCLEON_FOURVECT(2).EQ.0.0 .AND.
      $        NUCLEON_FOURVECT(3).EQ.0.0 ) THEN
@@ -171,7 +171,7 @@ C     BOOST NU AND LEPTON TO THE NUCLEON REST FRAME
 C     NOW CALL TAUPOL
 
          ENU  = BOOSTED_NU(4)
-         ETAU = BOOSTED_TAU(4) 
+         ETAU = BOOSTED_TAU(4)
 
 C     ADD POTENTIAL DIFFERENCE
          ETAU = ETAU + 27
@@ -224,7 +224,7 @@ C        WRITE OUT TABLES FOR MAKING PLOTS TO CHECK CODE
 
          IF ( ABS(MODENE).NE.1) THEN
             IF ( SIGN.EQ.1) THEN
-               write(64,*) "ARROW ", 
+               write(64,*) "ARROW ",
      $              PX, PX + DELTAX*ARROWLENGTH,
      $              PY, PY + DELTAY*ARROWLENGTH, " 0.2"
             ELSEIF ( SIGN.EQ.-1) THEN
@@ -238,7 +238,7 @@ C        WRITE OUT TABLES FOR MAKING PLOTS TO CHECK CODE
       ENDIF
 C
 C --  CLEAR /HEPEVT/
-C      
+C
       CALL RESLUX
 C
 C --  DETERMINE MOMENTA
@@ -247,16 +247,16 @@ C
          AQF(I)=0.0
  10   CONTINUE
       AQF(4)=AMTAU
-      
+
       IF (IP.GE.0) CALL TRALO4(2,AQF,AQF,AM)
       IF (IP.LT.0) CALL TRALO4(1,AQF,AQF,AM)
 C
 C --  FILL TAU TO /HEPEVT
-C      
+C
       CALL FILHEP(1,1,IP,1,2,0,0,AQF,AMTAU,.TRUE.)
 C
-C --  EXECUTE KOLAL-Z      
-C      
+C --  EXECUTE KOLAL-Z
+C
       IF (IP.GE.0) CALL DEXAY(2,POL)
       IF (IP.LT.0) CALL DEXAY(1,POL)
 C
@@ -266,7 +266,7 @@ C
 C
 C --  SAVE INFORMATION ABOUT THE TAU DECAY TO THE SKTAU COMMON BLOCK
 C --  MODE IS SET IN TAUOLA
-C 
+C
       TAUMOM    = PTAUGV
       TAUDIR(1) = PTAU(1)/(PTAUGV*1000.0)
       TAUDIR(2) = PTAU(2)/(PTAUGV*1000.0)
@@ -274,27 +274,27 @@ C
       POLTAU(1) = POL(1)
       POLTAU(2) = POL(2)
       POLTAU(3) = POL(3)
-      
+
       IF (TAU_DEBUG.EQ.1) THEN
          WRITE(*,*) "TAU MOMENTUM IS: ",   TAUMOM
          WRITE(*,*) "TAU DECAY MODE IS: ", TAUDCY
          WRITE(*,*) "TAU POL IS: ", POLTAU(1), " ", POLTAU(2),
      $        " ", POLTAU(3), VMOD(POLTAU,3)
       ENDIF
-C     
+C
 C --  FILL /MCWORK/
 C
 
-C     
+C
 C --  FILL /LUDATA/ ( IF NEED )
-C      
+C
 C     CALL LUHEPC(2)
 
 C
 C --  DUMP /LUDATA/ ( IF NEED )
-C      
+C
 C     CALL LULIST(2)
 
       RETURN
       END
-      
+

@@ -6,7 +6,7 @@ C         xin(3)     : decay position in nucleus       [fm]
 C         pin(3)     : initial omega momentum          [MeV/c^2]
 C
 C     [output]
-C         common     : OMEGAOUT                            
+C         common     : OMEGAOUT
 C --------------------------------------------------------------
 C  99/5/7 for proton decay MC of omega mode (Y.H)
 C  03/4/4 modified for ATMnu MC (M.Ishitsuka)
@@ -17,11 +17,11 @@ C --------------------------------------------------------------
 C -- function
       real effrmgas
 
-C -- argument(input)      
+C -- argument(input)
       integer kin
       real xin(3),pin(3)
 
-C -- argument(output)      
+C -- argument(output)
       integer fin_id(3),nump,log
       real xout(3),pfi(3,3)
 
@@ -43,7 +43,7 @@ C -- for tracking
 C ---------------- start program
 C ===============
 C  initialize
-C =============== 
+C ===============
 
       ii=1  ! pauli blocking counter
       type=0
@@ -54,7 +54,7 @@ C ===============
 
 C ===============
 C  program start
-C =============== 
+C ===============
       do i=1,3
          x(i)=xin(i)
          p(i)=pin(i)
@@ -64,10 +64,10 @@ C -- determine the tracing limit from radius of nucleus
       rmax= cc2                    ! -- 2.5 * (radius)
 *      step= rmax/100.              ! -- consider max 100 steps.
       step= rmax/1000.             ! -- consider max 1000 steps.
-      
-C ========================================================= 
-C              start point of loop for tracing 
-C ========================================================= 
+
+C =========================================================
+C              start point of loop for tracing
+C =========================================================
  100  continue
       absp=sqrt(p(1)**2+p(2)**2+p(3)**2)
       if(absp .le. 0.001)then
@@ -80,7 +80,7 @@ C =========================================================
          dir(2)=p(2)/absp
          dir(3)=p(3)/absp
       endif
-      
+
       x(1)=x(1)+dir(1)*step
       x(2)=x(2)+dir(2)*step
       x(3)=x(3)+dir(3)*step
@@ -131,18 +131,18 @@ C      nump: number of particles at final state
 C-------------------------------------------------------------------
  900  continue
       call efkinom(type,p,pf,fpid,pn,nump,distance)
-      
+
 *      print *,'efkinom: ',type,fpid,pf
 
-C processing interaction 
+C processing interaction
 
-*  get fermi surface momentum at given radii.      
+*  get fermi surface momentum at given radii.
       pferm=effrmgas(dum,dum,distance)
 
 *  consider pauli blocking  -----------------
 
       if((type.ge.1).and.(type.le.6).and.
-     &     (sqrt(pn(1)**2+pn(1)**2+pn(1)**2).lt.pferm)) then 
+     &     (sqrt(pn(1)**2+pn(1)**2+pn(1)**2).lt.pferm)) then
 
          ii=ii+1
          type=0
@@ -165,7 +165,7 @@ C processing interaction
             goto 100
          endif
       endif
-      
+
 C processing decay
       if(type.gt.10)then
          log_c=type-10
@@ -194,7 +194,7 @@ C== finish (prepare output argument)
  600     FORMAT('  ********** ERROR  MULTIPLICITY > 50 IN OMEGA-DECAY ******')
          NH=50
       END IF
-C     
+C
       DO IPP=NL,NH
          IP0=IPP-NOMEGATL
          IPIORIOMEGA(IPP)=LOOPOMEGA
@@ -209,6 +209,6 @@ C
       NOMEGATL=NH
       NFLAG=1
 
-      return 
+      return
       end
 

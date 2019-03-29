@@ -2,14 +2,14 @@
 *     -------------------
       SUBROUTINE TAINIMAS
 *     -------------------
-*     
+*
 *     ( purpose )
 *       set mass for tauola
 *
-*     ( input ) 
+*     ( input )
 *       none
 *
-*     ( output ) 
+*     ( output )
 *       COMMON  /PARMAS/
 *
 *     ( creation date and author )
@@ -21,12 +21,12 @@
 ***********************************************************************
 #include "taucom.h"
 
-C      
+C
 C     COMMON /PARMAS/
 C
 
 C     LEPTON
-      
+
       CALL MCMASSGV(15,AMTAU)
       AMNUTA = 0.010
       CALL MCMASSGV(13,AMMU)
@@ -35,19 +35,19 @@ C     LEPTON
       AMNUE  = 0.0
 
 C     PI
-      
+
       CALL MCMASSGV(111,AMPIZ)
       CALL MCMASSGV(211,AMPI)
 
 C     RHO, A1
-      
+
       CALL MCMASSGV(213,AMRO)
       GAMRO  = 0.145
       AMA1 = 1.251
       GAMA1 = 0.599
 
 C     K, K*
-      
+
       CALL MCMASSGV(321,AMK)
       CALL MCMASSGV(311,AMKZ)
       CALL MCMASSGV(323,AMKST)
