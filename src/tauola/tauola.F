@@ -44,7 +44,7 @@ C     called by : DEXAY
 C ----------------------------------------------------------------------
 
 C Added by C.W. Walter for including the tau decay info into a ZBS bank.
-#include "taumc.h"
+#include "taumc_com.h"
 
       COMMON / TAUBRA / GAMPRT(30),JLIST(30),NCHAN
 #if defined (ALEPH)

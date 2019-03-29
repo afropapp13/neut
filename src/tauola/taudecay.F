@@ -26,7 +26,7 @@
 #include "taucom.h"
 #include "tacard.h"
 #include "tahepevt.h"
-#include "taumc.h"
+#include "taumc_com.h"
 
       COMMON /PTAU/ PTAUGV
       REAL PTAU(3)
