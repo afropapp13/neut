@@ -19,8 +19,9 @@ OBJ =	tauola.o formf.o choice.o dcdmas.o lunpik.o tralo4.o pkorb.o \
 OBJS = $(OBJ)
 
 FCINCS = taucom.h  taumc_com.h
-CINCS  = taucomC.h taumc_comC.h
+#CINCS  = taucomC.h taumc_comC.h
 FINCS  = taumc.h
+#INCS   = ${FCINCS} ${FINCS} ${CINCS}
 INCS   = ${FCINCS} ${FINCS} ${CINCS}
 
 all: lib${LIBNAME}.a
