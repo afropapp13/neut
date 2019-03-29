@@ -652,7 +652,7 @@ c     if (q0.gt.0) then
        coseno = cos12**2-sin12**2             
 
        CALL WSELF(ILIN,Q0,dq,coseno,Q2,RMAX,MN,mnr,WD,ipol,eout,pin,
-     f     ieta,NRC,NPC,Rrecup,Precup,CTHETAP,Panc,vc,Pret)
+     f     ieta,NRC,NPC,Rrecup,Precup,CTHETAP,Panc,vc)
 
        if (abs(cthetap).ge.1.) then
           goto 10
@@ -664,12 +664,10 @@ c     Different target mass for neutrinos and antineutrinos.
 c     
        if( ieta.eq.1 ) then   
           Epqanc=DSQRT(dmp**2+Panc**2)
-C          Epanc=Epqanc-Q0
-          Epanc=DSQRT(dmn**2+Pret**2)
+          Epanc=Epqanc-Q0
        else 
           Epqanc=DSQRT(dmn**2+Panc**2)
-C          Epanc=Epqanc-Q0
-          Epanc=DSQRT(dmp**2+Pret**2)
+          Epanc=Epqanc-Q0
        endif 
 
 ccccccccccccccoulomb potential cccccccccccccccccccccccccccc           
@@ -1022,7 +1020,7 @@ c      print*,P-dsqrt(vPp(2)*vPp(2)+vPp(3)*vPp(3)+vPp(4)*vPp(4)),ctp
       coseno = cos12**2-sin12**2             
       
       CALL WSELF(ILIN,Q0,dq,coseno,Q2,RMAX,MN,mnr,WD,ipol,eout,pin,
-     f     ieta,0,0,R,P,CTHETAP,Panc,vc,Pret)
+     f     ieta,0,0,R,P,CTHETAP,Panc,vc)
       
       dsum1 = 2.d0*WD(1)*sin12*sin12 + WD(2)*cos12*cos12
      f     -ieta*WD(3)*(ein+eout)*sin12*sin12/dma
@@ -1048,7 +1046,7 @@ c      print*,factor,dsum1,dsum2,wd(1),wd(2),wd(3),wd(4),wd(5)
 
       
       SUBROUTINE WSELF(ILIN,Q0,dq,coseno,Q2,RMAX,MN,mnr,WD,ipol,
-     f     eout,pin,ieta,NRC,NPC,Rrecup,Precup,CTHETAP,Panc,vc,Pret)
+     f     eout,pin,ieta,NRC,NPC,Rrecup,Precup,CTHETAP,Panc,vc)
      
 ******* TODAS LAS UNIDADES EN FMS; Q0 Y DQ DEFINEN EL4-MOMENTO DEL FOTON
 ******* RMAX DEFINEL RANGO DE INTEGRACION Y MN EL NUMERO DE PTOS.
@@ -1097,7 +1095,6 @@ c     COMMON/datos3/xmpi,gp
       EXTERNAL  RLU
 #endif
 
-      Pret = 0
       if (ilin.ne.2) stop'not ready ilin.ne.2 '
  
       cte_r= -4.d0*dpi/(8.d0*dpi*dmnu*dmnu)
@@ -1319,16 +1316,6 @@ ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
          facl=1.d0
          f00=1.d0
          
-C-- Y.H. *TRY to include missing energy; compensate initial nucleon momentum
-         if (ieta.eq.1) then
-            q0nuc = q0 - (dsqrt(P**2+dmn**2)-dmn)
-         elseif (ieta.eq.-1) then
-            q0nuc = q0 - (dsqrt(P**2+dmp**2)-dmp)
-         else
-            print*,"ERROR ieta =", ieta , " invalid " 
-            stop
-         endif
-
          if (ipol.gt.0) then
             
             DKF=(1.5D0*DPI*DPI*DRO)**(1.D0/3.D0)
@@ -1337,10 +1324,8 @@ C-- Y.H. *TRY to include missing energy; compensate initial nucleon momentum
             
             
             if (abs(xlind).gt.1.d-10) then  
-C               unuc_j = ulinrel(q0,dq,dkf)     
-               unuc_j = ulinrel(q0nuc,dq,dkf)     
-C               u_zero=q0+uyi*0.0d0
-               u_zero=q0nuc+uyi*0.0d0
+               unuc_j = ulinrel(q0,dq,dkf)     
+               u_zero=q0+uyi*0.0d0
                udel=delta_lind(u_zero,dq,dro,dkf)
             else                ! no es que valga cero, pero como xlind es cero da igual
                unuc_j = 0.d0+uyi*0.d0
@@ -1365,14 +1350,12 @@ c     facl=facl*delfacl
          
          endif
          
-C         call amunu_pol(axx,azz,a0z,a00,axy,tulin,rulin,q2,q0,dq,f1v,
-C     f        xmuf2v,gaq,gpq,fact,facl,f00,ipol)
-         call amunu_pol(axx,azz,a0z,a00,axy,tulin,rulin,q2,q0nuc,dq,
-     f        f1v,xmuf2v,gaq,gpq,fact,facl,f00,ipol)
+         call amunu_pol(axx,azz,a0z,a00,axy,tulin,rulin,q2,q0,dq,f1v,
+     f        xmuf2v,gaq,gpq,fact,facl,f00,ipol)
          
          R2 = R*R
 
- 1       if(NRC .EQ. 0)then
+         if(NRC .EQ. 0)then
             DFXX(IR)=cte_r*R2*axx*xlind*fema
             DFZZ(IR)=cte_r*R2*azz*xlind*fema
             DF00(IR)=cte_r*R2*a00*xlind*fema
@@ -1413,13 +1396,9 @@ c     exit
       wd(4) = dma*(reszz-resxx)/2.d0/dq**2
       wd(5) = (res0z-q0*(reszz-resxx)/dq)/dq
       wd(3) = resxy/dq
-C      wd(2) = (res00+resxx+(reszz-resxx)*(q0/dq)**2
-C     f     -2.d0*q0*res0z/dq)/2.d0/dma
-      wd(2) = (res00+resxx+(reszz-resxx)*(q0nuc/dq)**2
-     f     -2.d0*q0nuc*res0z/dq)/2.d0/dma
+      wd(2) = (res00+resxx+(reszz-resxx)*(q0/dq)**2
+     f     -2.d0*q0*res0z/dq)/2.d0/dma
       
-      Pret = P
-
       RETURN
       END
 
@@ -1843,22 +1822,15 @@ c      DpminCalc=targetminmon(q0,dq,dmnu,dmso)
          dP=pn(I)         
          
          Ep=DSQRT(dmnu**2+dP**2)     
-C-- Y.H. *TRY to include missing energy; compensate initial nucleon momentum
-         Q0NUC = Q0 - (Ep-dmnu)
-
 c         
 c     Epq = DSQRT(dmnu**2+pqNormsq)
 c     delta(f(x))=delta(x)/abs(df/dx)
 c     df=dp*dq*Epq
 c
-C- Y.H.
-C         CTHETA=0.5d0*((Ep+Q0)**2-(dmnu**2+dP**2+DQ**2))/(dP*DQ)
-         CTHETA=0.5d0*((Ep+Q0NUC)**2-(dmnu**2+dP**2+DQ**2))/(dP*DQ)
+         CTHETA=0.5d0*((Ep+Q0)**2-(dmnu**2+dP**2+DQ**2))/(dP*DQ)
          pqNormsq=dP**2+DQ**2+2.d0*dP*DQ*CTHETA
          pqNorm=DSQRT(pqNormsq)
-C- Y.H.
-C         Epq=Ep+Q0
-         Epq=Ep+Q0NUC
+         Epq=Ep+Q0
 
          if((CTHETA.lt.-1).or.(CTHETA.gt.1))then
             DUR1=DUR1+0.d0
@@ -1972,17 +1944,11 @@ C     ENKin = 0.5*Dp*dp/DMA
       Ep=DSQRT(dmnu**2+dP**2)
 
 c     Q0 = Q0-ENKin
-C-- Y.H. *TRY to include missing energy; compensate initial nucleon momentum
-      Q0NUC = Q0 - (Ep-dmnu)
       
-C      CTHETA=0.5d0*((Ep+Q0)*(Ep+Q0)-(dmso*dmso+dP*dP+DQ*DQ))/(dP*DQ)
-      CTHETA=
-     $     0.5d0*((Ep+Q0NUC)*(Ep+Q0NUC)-(dmso*dmso+dP*dP+DQ*DQ))
-     $     /(dP*DQ)
+      CTHETA=0.5d0*((Ep+Q0)*(Ep+Q0)-(dmso*dmso+dP*dP+DQ*DQ))/(dP*DQ)
       pqNormsq=dP**2+DQ**2+2.d0*dP*DQ*CTHETA
       pqNorm = DSQRT(pqNormsq)
-C      Epq=Ep+Q0
-      Epq=Ep+Q0NUC
+      Epq=Ep+Q0
       
       if(CTHETA.lt.-1.or.ctheta.gt.1)then
          DURT=0.d0
