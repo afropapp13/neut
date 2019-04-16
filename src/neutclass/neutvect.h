@@ -113,6 +113,26 @@ class NeutVect : public TObject {
   Float_t        NuceffFactorPICXKin;
 
   /////////////////////////////////////////////////////////////////////////
+  /* Nieves 1p1h model parameters */
+
+  Int_t          NVQERFG;
+  Int_t          NVQEBind;     
+  Int_t          NVQERPA;
+  Float_t        XNVRPAFP0in;
+  Float_t        XNVRPAPF0ex;
+  Float_t        XNVRPAFstar;
+  Float_t        XNVRPAF;
+  Float_t        XNVRPAPILambda;
+  Float_t        XNVRPACR0;
+  Float_t        XNVRPARHOLambda;
+  Float_t        XNVRPAGp;
+  Float_t        XNVRPAXMPI;
+  Float_t        XNVRPAXMRHO;
+  Float_t        XNVRPAIrel;
+  Int_t          FFTYPE;
+  Int_t          NVBINDFermiCor;
+
+  /////////////////////////////////////////////////////////////////////////
   /* Ineraction mode */
   Int_t          Mode;
 

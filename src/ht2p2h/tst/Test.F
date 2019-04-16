@@ -3,7 +3,7 @@
       REAL*4 ENU,DIRNU(3)
       INTEGER*4 IERR
       
-#include "NEUTINC.h"
+#include "neutinc.h"
 
       IBOUND = 0 
       NUMATOM = 12

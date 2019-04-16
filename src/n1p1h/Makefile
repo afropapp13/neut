@@ -80,9 +80,8 @@ install.library: lib/lib${LIBNAME}.a
 	${INSTALL} -m 0644 $? ${NEUT_ROOT}/lib
 
 install.include: ${INCS}
-	for i in $? ;do ${FH2H} $$i > `echo $$i | sed "s/\.fh$$/.h/"`; done
+	for i in $? ;do ${FH2H} $$i > `echo $$i | sed "s/\.fh$$/C.h/"`; done
 	${INSTALL} -m 0644 ${INCS} ${NEUT_ROOT}/include
-	${INSTALL} -m 0644 ${INCS:.fh=.h} ${NEUT_ROOT}/include
+	${INSTALL} -m 0644 ${INCS:.fh=C.h} ${NEUT_ROOT}/include
 
-clean:
-	\rm -f */*.o */*.a */*.so
+

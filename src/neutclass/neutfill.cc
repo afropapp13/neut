@@ -11,6 +11,7 @@
 #include "neutparamsC.h"
 #include "posinnucC.h"
 #include "neutmodelC.h"
+#include "nieves1p1hC.h"
 #include "necardC.h"
 #include "nrcardC.h"
 #include "nefillverC.h"
@@ -223,6 +224,25 @@ neutfillvect(char *filename, char *treename, char *branchname)
   nv->NuceffFactorPIQELKin = neffpr_.fefcohf; 
   nv->NuceffFactorPICXKin = neffpr_.fefcxhf; 
   nv->NuceffFactorPIAll = neffpr_.fefall;
+
+  /****************************************************/
+
+  nv->NVQERFG          = nievesqepar_.nvqerfg;
+  nv->NVQEBind     	   = nievesqepar_.nvqebind;
+  nv->NVQERPA		   = nievesqepar_.nvqerpa;
+  nv->XNVRPAFP0in      = nievesqepar_.xnvrpafp0in;
+  nv->XNVRPAPF0ex      = nievesqepar_.xnvrpapf0ex;
+  nv->XNVRPAFstar      = nievesqepar_.xnvrpafstar;
+  nv->XNVRPAF	       = nievesqepar_.xnvrpaf;
+  nv->XNVRPAPILambda   = nievesqepar_.xnvrpapilambda;
+  nv->XNVRPACR0        = nievesqepar_.xnvrpacr0;
+  nv->XNVRPARHOLambda  = nievesqepar_.xnvrparholambda;
+  nv->XNVRPAGp         = nievesqepar_.xnvrpagp;
+  nv->XNVRPAXMPI       = nievesqepar_.xnvrpaxmpi;
+  nv->XNVRPAXMRHO      = nievesqepar_.xnvrpaxmrho;
+  nv->XNVRPAIrel       = nievesqepar_.xnvrpairel;
+  nv->FFTYPE           = nievesqepar_.fftype;
+  nv->NVBINDFermiCor   = nievesqepar_.nvbindfermicor;
 
   /****************************************************/
   nv->Mode = nework_.modene;

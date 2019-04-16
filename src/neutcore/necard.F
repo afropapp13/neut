@@ -36,7 +36,10 @@
 *       2013.10    ; P.Rodrigues & A.Bercellieadd 
 *                              new form facor for Rein&Sehgal 1pi
 *       2016.07    ; C. Bronner 
+*
 *                    Hadron multiplicity model for multi-pi mode
+*
+*       2019.04    ; Y.Hayato add new variable for LFG parameters
 *
 ************************************************************************
       IMPLICIT NONE
@@ -137,6 +140,7 @@ C     For form factors for Rein-Seighal update
       XNVRPAXMPI     = 139.57
       XNVRPAXMRHO    = 777.0
       XNVRPAIREL     = 1.
+      NVBINDFERMICOR = 1
 
       NEABSPIEMIT = 1
       
@@ -267,17 +271,19 @@ C      CALL FFKEY('MVSPI' ,XMVSPI ,1,'REAL')
 
       CALL FFKEY('NVQERPA',NVQERPA,1,'INTEGER')
 
-      CALL FFKEY('NVRPAFP0IN'    ,XNVRPAFP0IN,1,'INTEGER')
-      CALL FFKEY('NVRPAPF0EX'    ,XNVRPAPF0EX,1,'INTEGER')
-      CALL FFKEY('NVRPAFSTAR'    ,XNVRPAFSTAR,1,'INTEGER')    
-      CALL FFKEY('NVRPAF'        ,XNVRPAF,1,'INTEGER')        
-      CALL FFKEY('NVRPAPILAMBDA' ,XNVRPAPILAMBDA,1,'INTEGER')
-      CALL FFKEY('NVRPACR0'      ,XNVRPACR0,1,'INTEGER')      
-      CALL FFKEY('NVRPARHOLAMBDA',XNVRPARHOLAMBDA,1,'INTEGER')
-      CALL FFKEY('NVRPAGP'       ,XNVRPAGP,1,'INTEGER')
-      CALL FFKEY('NVRPAXMPI'     ,XNVRPAXMPI,1,'INTEGER')     
-      CALL FFKEY('NVRPAXMRHO'    ,XNVRPAXMRHO,1,'INTEGER')
-      CALL FFKEY('NVRPAIREL'     ,XNVRPAIREL,1,'INTEGER')
+      CALL FFKEY('NVRPAFP0IN'    ,XNVRPAFP0IN,    1,'REAL')
+      CALL FFKEY('NVRPAPF0EX'    ,XNVRPAPF0EX,    1,'REAL')
+      CALL FFKEY('NVRPAFSTAR'    ,XNVRPAFSTAR,    1,'REAL')    
+      CALL FFKEY('NVRPAF'        ,XNVRPAF,        1,'REAL')        
+      CALL FFKEY('NVRPAPILAMBDA' ,XNVRPAPILAMBDA, 1,'REAL')
+      CALL FFKEY('NVRPACR0'      ,XNVRPACR0,      1,'REAL')      
+      CALL FFKEY('NVRPARHOLAMBDA',XNVRPARHOLAMBDA,1,'REAL')
+      CALL FFKEY('NVRPAGP'       ,XNVRPAGP,       1,'REAL')
+      CALL FFKEY('NVRPAXMPI'     ,XNVRPAXMPI,     1,'REAL')     
+      CALL FFKEY('NVRPAXMRHO'    ,XNVRPAXMRHO,    1,'REAL')
+      CALL FFKEY('NVRPAIREL'     ,XNVRPAIREL,     1,'REAL')
+
+      CALL FFKEY('NVBINDFERMICOR',NVBINDFERMICOR, 1,'INTEGER')
 
       CALL FFKEY('MDL2P2H',MDL2P2H,1,'INTEGER')
 

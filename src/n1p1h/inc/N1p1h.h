@@ -80,13 +80,16 @@ class N1p1h{
   //Excited Nucleus formed
   double Ebind;
 
+  //Binding energy Fermi momentum correction
+  int BINDFermiCor;
+
   //for Hydrogen only
   double cosH;
   
   // place to store params
   std::map<std::string,float> card_params;
   std::map<std::string,bool>  card_params_chk;
-#define N1P1H_CARD_PARAMS 16
+#define N1P1H_CARD_PARAMS 17
   char param_names[N1P1H_CARD_PARAMS][32];
 
  public:
