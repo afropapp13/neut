@@ -138,7 +138,7 @@ C     For form factors for Rein-Seighal update
       XNVRPARHOLAMBDA= 2500
       XNVRPAGP       = 0.63
       XNVRPAXMPI     = 139.57
-      XNVRPAXMRHO    = 777.0
+      XNVRPAXMRHO    = 770.0
       XNVRPAIREL     = 1.
       NVBINDFERMICOR = 1
 
