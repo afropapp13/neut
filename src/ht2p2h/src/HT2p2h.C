@@ -182,7 +182,7 @@ void HT2p2h::ComputeIntegrals(int nuclei){
 	  double xs = DoubleDifferential(id,nuclei,Enu,tl,xcos);
 	  double Jacobian = Q3; 
 	  
-	  if( isnan(xs) ) { std::cout << " xs isnan " << xs << "  " << El << "  " << xcos << "  " << Q0 << "  " << Q3 << std::endl; continue; }
+	  if( std::isnan(xs) ) { std::cout << " xs isnan " << xs << "  " << El << "  " << xcos << "  " << Q0 << "  " << Q3 << std::endl; continue; }
 
 	  if( xs < 0. ) break; // IF this condition is fulfilled, next q3 will also, so we break. 
 	  
@@ -501,8 +501,8 @@ int HT2p2h::GenerateHadronKinematics( int id, int nuclei, double frac, double q[
     double p1 = sqrt(p1L*p1L+pRF*sinangRF*pRF*sinangRF); 
     double p2 = sqrt(p2L*p2L+pRF*sinangRF*pRF*sinangRF);
     
-    if( isnan(p1) ) std::cout << " ERROR " << p1 << " " << gamma <<  "  " << pRF << "   " << beta << "   " << e1RF << std::endl;
-    if( isnan(p2) ) std::cout << " ERROR " << p2 << " " << gamma <<  "  " << pRF << "   " << beta << "   " << e1RF << std::endl; 
+    if( std::isnan(p1) ) std::cout << " ERROR " << p1 << " " << gamma <<  "  " << pRF << "   " << beta << "   " << e1RF << std::endl;
+    if( std::isnan(p2) ) std::cout << " ERROR " << p2 << " " << gamma <<  "  " << pRF << "   " << beta << "   " << e1RF << std::endl; 
     
     // Pauli blocking. Outgoing nucleons below fermi level. 
 

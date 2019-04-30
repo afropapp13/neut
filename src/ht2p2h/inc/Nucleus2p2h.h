@@ -82,7 +82,7 @@ class Nucleus2p2h{
 
   double GetFermiLFG(double R,int nuclei,int isospin){
     double kf = pow((3.*pi2*Density(nuclei,isospin,R))/R/R,(1./3.)); //in fm
-    if( isnan(kf) ) std::cout << " >>>>>>>>>>> " <<  R << " " << Density(nuclei,isospin,R) << std::endl; 
+    if( std::isnan(kf) ) std::cout << " >>>>>>>>>>> " <<  R << " " << Density(nuclei,isospin,R) << std::endl; 
     return kf*hbarc/1000.;  // fm to GeV  
   }
 
