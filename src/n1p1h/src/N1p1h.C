@@ -457,7 +457,8 @@ void N1p1h::ComputeIntegrals(int nuclei){
 	  	  
 	  if(tmommin > tmommax)  continue; 
 
-	  if(std::isnan(tmommin))tmommin=0;
+//	  if(std::isnan(tmommin))tmommin=0;
+	  if(isnan(tmommin))tmommin=0;
 
 	  ldp = tmommin+Random()*(tmommax-tmommin);
 	  
