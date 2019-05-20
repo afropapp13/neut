@@ -18,7 +18,7 @@ gampi: gampi.o $(POBJS)
 	$(FC) -o $@ gampi.o -Xlinker -R`pwd` $(POBJS)  $(NEUTLIBS) $(ROOTLIBS) 
 
 run_piscatana: run_piscatana.o $(OBJS)
-	$(FC) -o $@  $(OBJS) run_piscatana.o$(NEUTLIBS) $(ROOTLIBS) 
+	$(FC) -o $@  $(OBJS) run_piscatana.o $(NEUTLIBS) $(ROOTLIBS) 
 
 run_piscatplot: run_piscatplot.o $(OBJS)
 	$(FC) -o $@ $(OBJS) run_piscatplot.o $(NEUTLIBS) $(ROOTLIBS) 
