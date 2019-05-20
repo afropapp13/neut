@@ -1,7 +1,7 @@
 #ifndef PERIODICTABLE_H
 #define PERIODICTABLE_H
 
-const int kZmax=118;
+static const int kZmax=118;
 
 char element_symbol[kZmax][4]={
 {"H"},{"He"},{"Li"},{"Be"},{"B"},{"C"},{"N"},{"O"},

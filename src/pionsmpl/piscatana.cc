@@ -12,7 +12,7 @@
 
 #include "piscatana.h"
 
-#include "PeriodicTable.h"
+#include "../neutgeom/PeriodicTable.h"
 
 #include "necardC.h"
 #include "efpionC.h"
