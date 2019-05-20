@@ -14,6 +14,7 @@
 
 #include "../neutgeom/PeriodicTable.h"
 
+
 #include "necardC.h"
 #include "efpionC.h"
 
@@ -80,7 +81,9 @@ piscatana::~piscatana()
 
   for (int ipion=0; ipion<nPions; ipion++) {
     for (int iNuc=0; iNuc<kZmax; iNuc++) {
-      delete histosLoaded[ipion][iNuc];
+	  if (histosLoaded[ipion][iNuc]){
+		delete histosLoaded[ipion][iNuc];
+	  }
     }
   }
 
@@ -113,6 +116,12 @@ Long64_t piscatana::LoadTree(Long64_t entry)
 
 
 void piscatana::InitFromTree() {
+
+  for (int ipion=0; ipion<nPions; ipion++) {
+    for (int iNuc=0; iNuc<kZmax; iNuc++) {
+	  histosLoaded[ipion][iNuc]=0;
+    }
+  }
 
   cout << endl << "Loading piscat tree from file(s): " << theFile.c_str() << endl;
   
