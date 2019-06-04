@@ -35,7 +35,11 @@ CXXFLAGS  = $(shell root-config --cflags)
 COPTFLAGS = -g -O2 -march=native -Wall -Wno-write-strings -fpermissive -fPIC
 
 
-LIBDIRS = $(NEUT_ROOT)/lib
+NEUT_LIB_DIR = $(NEUT_ROOT)/lib
+STRING := $(filter-out $(wildcard ${NEUT_LIB_DIR}/*tau*),$(wildcard ${NEUT_LIB_DIR}/lib*_*.a))
+NEUTLIBS = -L$(NEUT_LIB_DIR) -Wl,--as-needed,--start-group $(patsubst ${NEUT_LIB_DIR}/lib%.a,-l%,$(STRING)) -Wl,--end-group
+MCLIB=${NEUTLIBS}
+LIBDIRS=${NEUT_LIB_DIR}
 
 #MCLIB = ${LIBDIRS}   -lneutcore_${NEUTCOREVER} -lnuceff_${NUCEFFVER} \
 #		-lneutcore_${NEUTCOREVER} -lnuccorrspl_${NUCCORVER} \
@@ -47,9 +51,9 @@ LIBDIRS = $(NEUT_ROOT)/lib
 #NEUTLIBS = $(wildcard ${LIBDIRS}/lib*.a)
 #$(info ${NEUTLIBS})
 #MCLIB = -L$(LIBDIRS) ${NEUTLIBS}
-#MCLIB = ${LIBDIRS} -lnuceff_${NUCEFFVER} -lneutcore_${NEUTCOREVER} \
-#        -lskmcsvc_${SKMCSVCVER} -lnuccorrspl_${NUCCORVER} \
-#	-lradcorr_${RADCORRVER}		
+MCLIB = -L${LIBDIRS} -lnuceff_${NUCEFFVER} -lneutcore_${NEUTCOREVER} \
+        -lskmcsvc_${SKMCSVCVER} -lnuccorspl_${NUCCORVER} \
+	-lradcorr_${RADCORRVER}		
 
 # CERNLIB dependencies
 CLIBS = ${CERN}/${CERN_LEVEL}/lib/libjetset74.a \

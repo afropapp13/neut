@@ -13,7 +13,7 @@ $(shell mkdir -p bin)
 #LDFLAGS = `root-config --glibs` -lminuit -lm -ldl -lgfortran
 
 #CFLAGS=$(COPTFLAGS) $(CXXOPTIONS) $(ROOTINCDIR) -pthread -std=c++11 -m64 -Iinc
-CFLAGS=$(COPTFLAGS) $(CXXOPTIONS) $(ROOTINCDIR) -pthread -m64 -Iinc
+CFLAGS=$(COPTFLAGS) $(CXXOPTIONS) $(ROOTINCDIR) -pthread -m64 -Iinc -fPIC
 LDFLAGS=$(ROOTLIBS)
 
 lib/Nucleus2p2h.o: src/Nucleus2p2h.C
