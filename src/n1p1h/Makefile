@@ -10,17 +10,17 @@ else
 	RM   = /bin/rm
 
 	FCOPTIONS = -fno-backslash -fno-automatic -fno-second-underscore \
-		    -ffixed-line-length-132 -fdollar-ok -fpic -fbounds-check \
+		    -ffixed-line-length-132 -fdollar-ok -fPIC -fbounds-check \
 		    -Wall -W -ffpe-trap=invalid,zero,overflow \
 		    -DstrictF77 \
 		    -DgFortran -Df2cFortran
-	FCOPTFLAGS= -g
+	FCOPTFLAGS= -g -fPIC
 
 	CXXOPTIONS  = `root-config --cflags`
-	CXXOPTFLAGS = -g -Wno-write-strings -fpermissive
+	CXXOPTFLAGS = -g -Wno-write-strings -fpermissive -fPIC
 
 	COPTIONS    = `root-config --cflags`
-	COPTFLAGS   = -g -Wno-write-strings -fpermissive
+	COPTFLAGS   = -g -Wno-write-strings -fpermissive -fPIC
 endif
 
 LIBNAME=N1p1h_$(N1P1HVER)
