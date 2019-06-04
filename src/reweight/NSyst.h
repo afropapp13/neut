@@ -210,6 +210,12 @@ typedef enum ENSyst {
   kCascTwkDial_FrPiProd_pi,    ///< tweak pion (hadron) production (inelastic in NEUT) probability for pions
   kCascTwkDial_All_pi,         ///< tweak mean free path for pions
 
+  kCascTwkDial_TotalProb,
+  kCascTwkDial_ElasticProb,
+  kCascTwkDial_SinglePiProb,
+  kCascTwkDial_DoublePiProb,
+
+
   kINukeTwkDial_MFP_N,       ///< tweak mean free path for nucleons
   //kINukeTwkDial_FrCEx_N,     ///< tweak charge exchange probability for nucleons, for given total rescattering probability
   //kINukeTwkDial_FrElas_N,    ///< tweak elastic         probability for nucleons, for given total rescattering probability
@@ -493,7 +499,13 @@ public:
        kCascTwkDial_FrCExLow_pi,    
        kCascTwkDial_FrInelHigh_pi,   
        kCascTwkDial_FrCExHigh_pi,    
-       kCascTwkDial_FrPiProd_pi, 
+       kCascTwkDial_FrPiProd_pi,
+
+       kCascTwkDial_TotalProb,
+       kCascTwkDial_ElasticProb,
+       kCascTwkDial_SinglePiProb,
+       kCascTwkDial_DoublePiProb,
+       
        //kINukeTwkDial_MFP_N,       
        //kINukeTwkDial_FrCEx_N,    
        //kINukeTwkDial_FrElas_N,   

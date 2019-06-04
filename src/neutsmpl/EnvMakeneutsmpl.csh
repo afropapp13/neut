@@ -1,11 +1,12 @@
 #!/bin/csh
 
+setenv NEUT_ROOT `pwd`/../..
 setenv SOMEWHERE ${NEUT_ROOT}/src
 setenv MACHINE `${SOMEWHERE}/neutsmpl/bin/Machine`
 
 
 #setenv FC g77
-#setenv FC gfortran
+setenv FC gfortran
 if (${?FC} == 0) then
 	echo "EnvMakeneutsmpl: set environmental variable FC "
 	exit 1
@@ -56,6 +57,7 @@ endif
 
 setenv CERN_ROOT ${CERN}/${CERN_LEVEL}
 
+setenv ROOTSYS /vols/build/t2k/cvw09/root
 #setenv ROOTSYS /usr/local/root_v5.34.36
 #setenv ROOTSYS /usr/local/sklib_gcc4.8.5/root_v5.28.00h
 if (${?ROOTSYS} == 0) then
@@ -65,8 +67,8 @@ endif
 
 setenv PATH ${CERN}/${CERN_LEVEL}/bin:${ROOTSYS}/bin:$PATH
 echo $PATH
-setenv LD_LIBRARY_PATH ${ROOTSYS}/lib/root:${LD_LIBRARY_PATH}
-echo $LD_LIBRARY_PATH
+#setenv LD_LIBRARY_PATH ${ROOTSYS}/lib/root:${LD_LIBRARY_PATH}
+#echo $LD_LIBRARY_PATH
 
 
 setenv EXPERIMENT /
