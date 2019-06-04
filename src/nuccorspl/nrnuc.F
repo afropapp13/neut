@@ -196,10 +196,18 @@ c     p-n double pi production
             pdp = xdpn(ihi2)*erem2 + xdpn(ilo2)*(1-erem2)
          end if
       end if
-      pel=pel*fac*xnucfact
-      psp=psp*fac*xnucfact
-      pdp=pdp*fac*xnucfact
+
+C  Toby Nonnenmacher change april 2018                                                                                                                              
+C      pel=pel*fac*xnucfact                                                                                                                                         
+      pel=pel*fac*(xnucfact * xnucelafact) ! xnucfact changed to xnucfact * xnucelafact with default xnucfact of 1                                                  
+C      psp=psp*fac*xnucfact                                                                                                                                        
+      psp=psp*fac*(xnucfact * xnucspifact) ! xnucfact changed to xnucfact * xnucspifact with default xnucfact of 1                                                  
+C      pdp=pdp*fac*xnucfact                                                                                                                                         
+      pdp=pdp*fac*(xnucfact * xnucdpifact) ! xnucfact changed to xnucfact * xnucdpifact with default xnucfact of 1                                                  
       ptot=pel+psp+pdp
+
+
+
       if(ptot.eq.0) goto 200
       xr=ranf()+1.e-6
       yr=ranf()*ptot
