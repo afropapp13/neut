@@ -65,6 +65,7 @@ class N1p1h{
   int irpa;
   bool RFG; 
   bool ApplyBindEnergy;
+  bool ApplyBindEnergyShift;
   double RPAfp0in; 
   double RPAfp0ex;
   double RPAf; 
@@ -79,9 +80,6 @@ class N1p1h{
 
   //Excited Nucleus formed
   double Ebind;
-
-  //Binding energy Fermi momentum correction
-  int BINDFermiCor;
 
   //for Hydrogen only
   double cosH;

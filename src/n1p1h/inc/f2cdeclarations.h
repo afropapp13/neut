@@ -113,7 +113,8 @@ extern"C" {
   
   
   extern struct {
-    double qvalue; 
+    double qvalue;
+    double qvaluecorr;
   } qvalue_; 
   
   extern struct {

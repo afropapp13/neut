@@ -66,7 +66,6 @@ bool N1p1h2d::ReadConfig(const char *dir){
     else if ( strncmp(item,"XMRHO",5) ==0 )  RPAxmrho = val;
     else if ( strncmp(item,"IREL",4) ==0 )   RPAirel = val;
     else if ( strncmp(item,"EBIND",5) ==0 )   Ebind = val;
-    else if ( strncmp(item,"BINDFERMICOR",12) ==0 ) BINDFermiCor = val;
     
   } while( ! infile.eof() );
 
@@ -97,7 +96,6 @@ bool N1p1h2d::ReadConfig(const char *dir){
   RPAxmpi      = nievesqepar_.xnvrpaxmpi;
   RPAxmrho     = nievesqepar_.xnvrpaxmrho;
   RPAirel      = nievesqepar_.xnvrpairel;
-  BINDFermiCor = nievesqepar_.nvbindfermicor;
 
 #endif
 
@@ -129,7 +127,6 @@ bool N1p1h2d::ReadConfig(const char *dir){
   card_params[param_names[13]]  = RPAxmrho;
   card_params[param_names[14]]  = RPAirel;
   card_params[param_names[15]]  = 0.1;
-  card_params[param_names[16]]  = BINDFermiCor;
 
   if( !ApplyBindEnergy ) 
     std::cout << " Bind energy ignored " << std::endl; 
@@ -197,8 +194,7 @@ N1p1h2d::Initialize(std::string directory, bool d){
 	{"#MA:\0",         "#RPA:\0",     "#RFG:\0",         "#BIND:\0",
 	 "#RPAfp0in:\0",   "#RPAfp0ex:\0","#RPAf:\0",   	 "#RPAfstar:\0",
 	 "#RPApilambda:\0","#RPAcr0:\0",  "#RPArholambda:\0","#RPAgp:\0",
-	 "#RPAxmpi:\0",    "#RPAxmrho:\0","#RPAirel:\0",     "#Enubin:\0",
-	 "#BINDFermiCor\0"};
+	 "#RPAxmpi:\0",    "#RPAxmrho:\0","#RPAirel:\0",     "#Enubin:\0"};
 
   for ( i = 0 ; i < N1P1H_CARD_PARAMS; i++ ){
 	snprintf(param_names[i],32,"%s",param_name_const[i]);
@@ -400,6 +396,7 @@ void N1p1h2d::ComputeIntegrals(int nuclei){
 	  
 	  double xsl = DoubleDifferential(id,nuclei,Enu,tl,xcos);
 
+	  //	  if( xsl < 0. || std::isnan(xsl)  ) xsl=0.;
 	  if( xsl < 0. || isnan(xsl)  ) xsl=0.;
 
 	  xs =  xsl*intfactor4;
@@ -632,7 +629,6 @@ bool N1p1h2d::WriteTable(int nuclei) {
   offile << "#RPAxmpi:      " << RPAxmpi      << std::endl;
   offile << "#RPAxmrho:     " << RPAxmrho     << std::endl;
   offile << "#RPAirel:      " << RPAirel      << std::endl;
-  offile << "#BINDFermiCor  " << BINDFermiCor << std::endl;
   offile << "#Enubin:       " << Enubin       << std::endl;
   offile << "#TABLESTART"     << std::endl;
 
@@ -1026,6 +1022,7 @@ void N1p1h2d::ComputeHintegrals(int nuclei){
 	  
 	  double xsl = DoubleDifferential(id,nuclei,Enu,tl,xcos);
 	  xcos=cosH;
+	  //	  if( xsl < 0. || std::isnan(xsl)  ) xsl=0.;
 	  if( xsl < 0. || isnan(xsl)  ) xsl=0.;
 
 	  xs =  xsl*intfactor4;
