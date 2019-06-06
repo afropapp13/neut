@@ -287,6 +287,7 @@ N1p1h::Initialize(std::string directory, bool d){
 
 void N1p1h::InitializeAllNuclei(void) {
   InitializeNucleus(1,true);
+  InitializeNucleus(11,true);
   InitializeNucleus(12,true);
   InitializeNucleus(13,true);  
   InitializeNucleus(14,true);
