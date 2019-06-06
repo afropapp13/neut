@@ -791,6 +791,11 @@ c      dmnuf=DMNU
 
       cost=(dmnuf**2+Ein**2+Pout**2-Eex**2)/(2*Ein*Pout)
       cosaux= cost
+      if( abs(cosaux).gt.1.D0 ) then 
+         Sigthfree = 0
+         return
+      endif
+
       theta=acos(cosaux)
 
       Q0=ein-eout

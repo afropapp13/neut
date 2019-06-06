@@ -288,11 +288,28 @@ N1p1h::Initialize(std::string directory, bool d){
 void N1p1h::InitializeAllNuclei(void) {
   InitializeNucleus(1,true);
   InitializeNucleus(12,true);
+  InitializeNucleus(13,true);  
+  InitializeNucleus(14,true);
+  InitializeNucleus(15,true);
   InitializeNucleus(16,true);
+  InitializeNucleus(17,true);  
+  InitializeNucleus(18,true);
+  InitializeNucleus(19,true);
+  InitializeNucleus(23,true);
   InitializeNucleus(27,true);
   InitializeNucleus(28,true);
+  InitializeNucleus(35,true);
   InitializeNucleus(40,true);
+  InitializeNucleus(46,true);
+  InitializeNucleus(47,true);
+  InitializeNucleus(48,true);
+  InitializeNucleus(49,true);
+  InitializeNucleus(50,true);
   InitializeNucleus(56,true);
+  InitializeNucleus(59,true);
+  InitializeNucleus(64,true);
+  InitializeNucleus(65,true);
+  InitializeNucleus(207,true);
   InitializeNucleus(208,true);
   return; 
 }
