@@ -185,6 +185,7 @@ void N1p1hInitialize(void) {
 #else
 	n1p1h->Initialize(false);
 #endif
+	//	n1p1h->InitializeAllNuclei();
   }
     
   initialized = true;

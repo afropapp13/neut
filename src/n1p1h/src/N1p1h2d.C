@@ -13,7 +13,7 @@
 
 #ifdef WITH_NEUT
 #include "neutmodelC.h"
-#include "nieves1p1h.h"
+#include "nieves1p1hC.h"
 #endif
 
 #define PNOFSET 10000

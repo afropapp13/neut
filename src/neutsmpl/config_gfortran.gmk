@@ -135,10 +135,10 @@ GENROOTSO = env COPTFLAGS="${COPTIONS} ${COPTFLAGS}" \
 #################################################################
 clean:
 	${RM} -f $(TARGETS) *.o *.so *Dict.h *LinkDef.h *Dict.cc \
-		  *.a lib/*.o lib/*.a
+		  *.a lib/*.o lib/*.a *C.h */*C.h bin
 
 veryclean:
 	${RM} -f $(TARGETS) *.o *.so *Dict.h *LinkDef.h *Dict.cc \
-		  *.a lib/*.o lib/*.a *~ #*
+		  *.a lib/*.o lib/*.a *C.h */*C.h bin *~ #*
 
 				

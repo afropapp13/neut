@@ -144,7 +144,7 @@ c
       
       COMMON/testieta/ieta
       COMMON/Rinit/RMAX
-      COMMON/Qvalue/qvalue
+      COMMON/Qvalue/qvalue,qvaluecorr
       COMMON/enregistre/ipol
       COMMON/VERIF/ILIN,MN,MNR
       
@@ -526,7 +526,7 @@ c************************************************************************
 
        COMMON/testieta/ieta
        COMMON/Rinit/RMAX
-       COMMON/Qvalue/qvalue
+       COMMON/Qvalue/qvalue,qvaluecorr
        COMMON/enregistre/ipol
        COMMON/VERIF/ILIN,MN,MNR
 
@@ -599,7 +599,7 @@ c-----------------------------------------------------------
        COMMON/mavalue/xma
        COMMON/testieta/ieta
        COMMON/Rinit/RMAX
-       COMMON/Qvalue/qvalue
+       COMMON/Qvalue/qvalue,qvaluecorr
        COMMON/VERIF/ILIN,MN,MNR
        COMMON/enregistre/ipol
 
@@ -636,9 +636,11 @@ c     if( EIN .lt. DMI ) RETURN
 
 c      PRINT*," DMF ",DMF*hbarc
 
-       Q0=ein-eout-qvalue/hbarc
-       Dmp=0.93827208*1000./hbarc
-       Dmn=0.93956542*1000./hbarc
+       Q0 = ein-eout-qvaluecorr*1000./hbarc
+       Dmp = 0.93827208*1000./hbarc
+       Dmn = 0.93956542*1000./hbarc
+
+c       print*,"!!!!! ",Q0*hbarc,qvaluecorr*1000.
 
 c     if (q0.gt.0) then                   
        DQ=DSQRT(PIN**2+POUT**2-2.D0*DCOS(THETA)*PIN*POUT)
@@ -789,6 +791,11 @@ c      dmnuf=DMNU
 
       cost=(dmnuf**2+Ein**2+Pout**2-Eex**2)/(2*Ein*Pout)
       cosaux= cost
+      if( abs(cosaux).gt.1.D0 ) then 
+         Sigthfree = 0
+         return
+      endif
+
       theta=acos(cosaux)
 
       Q0=ein-eout
@@ -917,6 +924,10 @@ C
       vq(1)   = Eq
       vPn(1)  = En
       vPp(1)  = Ep
+
+      print*," 3 !!!!!!!!!! ",Eq*hbarc
+
+
 c
 C     coulomb potential modification
 c
@@ -1184,7 +1195,9 @@ c     qth = ieta*(epro-eneu)
          else 
             vc = 0
          endif                  ! Endif ipol.eq.1 
-         
+        
+c         print*," 2 !!!!!!!!!! ",Q0*hbarc,qvaluecorr*1000.
+ 
 c     q0 = q0+qth      
          eoutlocal = eout-vc
          
@@ -1398,6 +1411,9 @@ c     exit
       wd(3) = resxy/dq
       wd(2) = (res00+resxx+(reszz-resxx)*(q0/dq)**2
      f     -2.d0*q0*res0z/dq)/2.d0/dma
+
+
+c         print*," 4 !!!!!!!!!! ",Q0*hbarc,qvaluecorr*1000.
       
       RETURN
       END
