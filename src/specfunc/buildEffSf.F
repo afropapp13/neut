@@ -10,35 +10,36 @@
       subroutine buildEFFSF      
         implicit none
         integer i_builtSf
+        character*1024 inputfile
         save i_builtSf
         data i_builtSf/0/
 
         if (i_builtSf .EQ. 0) then
           write (*,*) "Building Effective SF tables"
-          call buildEFFSF_NUC(1,
-     +         'qelSfData/eff_sf/H2_effective_sf.grid')
-          call buildEFFSF_NUC(2,
-     +         'qelSfData/eff_sf/He3_effective_sf.grid')
-          call buildEFFSF_NUC(3,
-     +         'qelSfData/eff_sf/He4_effective_sf.grid')
-          call buildEFFSF_NUC(4,
-     +         'qelSfData/eff_sf/C12_effective_sf.grid')
-          call buildEFFSF_NUC(5,
-     +         'qelSfData/eff_sf/O16_effective_sf.grid')
-          call buildEFFSF_NUC(6,
-     +         'qelSfData/eff_sf/Ne20_effective_sf.grid')
-          call buildEFFSF_NUC(7,
-     +         'qelSfData/eff_sf/Al27_effective_sf.grid')
-          call buildEFFSF_NUC(8,
-     +         'qelSfData/eff_sf/Ar40_effective_sf.grid')
-          call buildEFFSF_NUC(9,
-     +         'qelSfData/eff_sf/Fe56_effective_sf.grid')
-          call buildEFFSF_NUC(10,
-     +         'qelSfData/eff_sf/Cu63_effective_sf.grid')
-          call buildEFFSF_NUC(11,
-     +         'qelSfData/eff_sf/Zn64_effective_sf.grid')
-          call buildEFFSF_NUC(12,
-     +         'qelSfData/eff_sf/Pb_effective_sf.grid')
+          inputfile = 'qelSfData/eff_sf/H2_effective_sf.grid'
+          call buildEFFSF_NUC(1, inputfile)
+          inputfile = 'qelSfData/eff_sf/He3_effective_sf.grid'
+          call buildEFFSF_NUC(2, inputfile)
+          inputfile = 'qelSfData/eff_sf/He4_effective_sf.grid'
+          call buildEFFSF_NUC(3, inputfile)
+          inputfile = 'qelSfData/eff_sf/C12_effective_sf.grid'
+          call buildEFFSF_NUC(4, inputfile)
+          inputfile = 'qelSfData/eff_sf/O16_effective_sf.grid'
+          call buildEFFSF_NUC(5, inputfile)
+          inputfile = 'qelSfData/eff_sf/Ne20_effective_sf.grid'
+          call buildEFFSF_NUC(6, inputfile)
+          inputfile = 'qelSfData/eff_sf/Al27_effective_sf.grid'
+          call buildEFFSF_NUC(7, inputfile)
+          inputfile = 'qelSfData/eff_sf/Ar40_effective_sf.grid'
+          call buildEFFSF_NUC(8, inputfile)
+          inputfile = 'qelSfData/eff_sf/Fe56_effective_sf.grid'
+          call buildEFFSF_NUC(9, inputfile)
+          inputfile = 'qelSfData/eff_sf/Cu63_effective_sf.grid'
+          call buildEFFSF_NUC(10, inputfile)
+          inputfile = 'qelSfData/eff_sf/Zn64_effective_sf.grid'
+          call buildEFFSF_NUC(11, inputfile)
+          inputfile = 'qelSfData/eff_sf/Pb_effective_sf.grid'
+          call buildEFFSF_NUC(12, inputfile)
           i_builtSf = 1
         endif
       return
@@ -46,14 +47,23 @@
 
       subroutine buildEFFSF_NUC(nuc, inputFile)
         implicit none
-        character(len=45) inputFile
+        character*1024 inputFile
         integer nuc       
 #include "effspecfunc.h"
+#include "neutfilepath.h"
         double precision pval, thisp
         integer p_iterator
         integer pRes
         integer pMin
         integer pMax
+
+        integer*4      LENSTR
+        external       lenstr
+        integer*4      lenpath
+      
+        lenpath = lenstr(CRSTBLPATH)
+c load file and fill array with values
+        inputfile = CRSTBLPATH(1:lenpath)//inputfile
 
 #ifdef __GFORTRAN__
         open(99, file=inputFile, status='old', action='read')        
