@@ -5,13 +5,13 @@ source EnvMakeneutsmpl.csh
 
 cd ${SOMEWHERE}
 
-rm -rf ${SOMEWHERE}/../lib
+rm -rf ${NEUT_ROOT}/lib
 
-rm -rf ${SOMEWHERE}/../inc
-rm -rf ${SOMEWHERE}/../include
+rm -rf ${NEUT_ROOT}/inc
+rm -rf ${NEUT_ROOT}/include
 
 #############################################################################
-echo "--------- COMPILING NEUT LIBS --------- "
+echo "--------- CLEANING NEUT LIBS --------- "
 foreach i ( neutcore nuccorspl nuceff partnuck specfunc skmcsvc tauola neutclass radcorr n1p1h ht2p2h neutsmpl)
   cd ${SOMEWHERE}/$i
   make clean  || exit 1
