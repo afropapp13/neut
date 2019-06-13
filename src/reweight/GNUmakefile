@@ -104,7 +104,7 @@ all: lib
 rootcint: $(DICTIONARY).o
 
 $(DICTIONARY).cc: LinkDef.h $(DICTGEN_OBJECTS)
-	$(RM) $(DICTIONARY).*
+	-$(RM) $(DICTIONARY).*
 	@echo "[package: $(PACKAGE)] Generating ROOT dictionary ..."
 	rootcint -f $(DICTIONARY).cc -c ${ROOTINC} ${NEUTINC} -I$(NEUT_ROOT)/include -I$(NEUT_SRC)/reweight $(DICTGEN_HEADERS) LinkDef.h
 
@@ -130,7 +130,7 @@ GENROOTSO = env COPTFLAGS="${COPTFLAGS}" INCDIRS="${INCDIRS}" \
 	$(FC) $(DEFS) -c $(FCOPTIONS) $(ALLDEFINES) $(FINCDIRS) -o $@ $<
 
 clean:
-	$(RM) *.o *~ ${MOBJS} *Dict.* *.so _ROOT_DICT_ReWeight.*
+	-$(RM) *.o *~ ${MOBJS} *Dict.* *.so _ROOT_DICT_ReWeight.*
 
 lib: $(LIB_DEPEND)
 	@echo "[package: $(PACKAGE)] Generating shared library ..."
