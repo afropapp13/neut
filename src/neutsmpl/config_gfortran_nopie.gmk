@@ -79,14 +79,14 @@ NEUTCLASSDIR= ${NEUT_SRC}/neutclass
 NEUTDISOBJS = ${NEUTCOREDIR}/structm.o ${NEUTCOREDIR}/pdfset.o \
 			  ${NEUTCOREDIR}/grv94di.o  ${NEUTCOREDIR}/grv98_lo.o
 
-NEUTCLSOBJS = ${NEUTCLASSDIR}/neutctrl.so    ${NEUTCLASSDIR}/neutpart.so \
+NEUTCLSOBJS = -Wl,--start-group ${NEUTCLASSDIR}/neutctrl.so    ${NEUTCLASSDIR}/neutpart.so \
 			  ${NEUTCLASSDIR}/neutvect.so    ${NEUTCLASSDIR}/neutvtx.so \
 		      ${NEUTCLASSDIR}/neutfsipart.so ${NEUTCLASSDIR}/neutfsivert.so \
 			  ${NEUTCLASSDIR}/neutnucfsistep.so \
 			  ${NEUTCLASSDIR}/neutnucfsivert.so \
 			  ${NEUTCLASSDIR}/neutfill.o \
 			  ${NEUTCLASSDIR}/neutrootfortwrapper.o \
-			  ${NEUTCLASSDIR}/NeutRootHandlers.o
+			  ${NEUTCLASSDIR}/NeutRootHandlers.o -Wl,--end-group
 
 NEUTLIBS    = ${NEUTDISOBJS} ${NEUTCLSOBJS} \
 			  -L${NEUTLIBDIR} \

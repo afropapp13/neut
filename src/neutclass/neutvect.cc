@@ -43,7 +43,7 @@ NeutVect::ClearVars()
 
   PFSurf   =  0;
   PFMax    =  0;
-  
+
   FluxID   = -1;
 
   ////////////////////////////////////////////
@@ -83,11 +83,11 @@ NeutVect::SetNpart(Int_t npart)
 	}else{
 	  fPartInfo->Expand(fNpart);
 	}
-	
+
 	fVertexID.Set(fNpart);
-	
+
 	fParentIdx.Set(fNpart);
-	
+
 	/*
 	if (fPosIni == NULL){
 	  fPosIni = new TLorentzVector[fNpart];
@@ -117,7 +117,7 @@ NeutVect::SetNfsiPart(Int_t npart)
 	  fFsiPartInfo->Expand(fNfsiPart);
 	}
 
-	
+
   }else{
 	delete fFsiPartInfo;
 	fFsiPartInfo = NULL;
@@ -138,7 +138,7 @@ NeutVect::SetNfsiVert(Int_t nvert)
 	  fFsiVertInfo->Expand(fNfsiVert);
 	}
 
-	
+
   }else{
 	delete fFsiVertInfo;
 	fFsiVertInfo = NULL;
@@ -183,7 +183,7 @@ NeutVect::SetPartInfo(int idx, NeutPart PInfo)
   PInfo_p = new NeutPart();
 
   *PInfo_p = PInfo;
-  
+
   fPartInfo->AddAt(PInfo_p,idx);
 
 }
@@ -213,7 +213,7 @@ NeutVect::SetFsiPartInfo(int idx, NeutFsiPart PInfo)
   PInfo_p = new NeutFsiPart();
 
   *PInfo_p = PInfo;
-  
+
   fFsiPartInfo->AddAt(PInfo_p,idx);
 
 }
@@ -244,7 +244,7 @@ NeutVect::SetFsiVertInfo(int idx, NeutFsiVert VInfo)
   VInfo_p = new NeutFsiVert();
 
   *VInfo_p = VInfo;
-  
+
   fFsiVertInfo->AddAt(VInfo_p,idx);
 
 }
@@ -274,7 +274,7 @@ NeutVect::SetNnucFsiVert(Int_t nnucvert)
 	  fNucFsiVertInfo->Expand(fNnucFsiVert);
 	}
 
-	
+
   }else{
 	delete fNucFsiVertInfo;
 	fNucFsiVertInfo = NULL;
@@ -295,7 +295,7 @@ NeutVect::SetNucFsiVertInfo(int idx, NeutNucFsiVert VInfo)
   VInfo_p = new NeutNucFsiVert();
 
   *VInfo_p = VInfo;
-  
+
   fNucFsiVertInfo->AddAt(VInfo_p,idx);
 
 }
@@ -325,7 +325,7 @@ NeutVect::SetNnucFsiStep(Int_t nnucstep)
 	  fNucFsiStepInfo->Expand(fNnucFsiStep);
 	}
 
-	
+
   }else{
 	delete fNucFsiStepInfo;
 	fNucFsiStepInfo = NULL;
@@ -346,7 +346,7 @@ NeutVect::SetNucFsiStepInfo(int idx, NeutNucFsiStep VInfo)
   VInfo_p = new NeutNucFsiStep();
 
   *VInfo_p = VInfo;
-  
+
   fNucFsiStepInfo->AddAt(VInfo_p,idx);
 
 }
@@ -366,9 +366,11 @@ NeutVect::SetNucFsiStepInfo(Int_t nvert, NeutNucFsiStep *VInfo_array)
 NeutVect::~NeutVect()
 {
 
-  if (fPartInfo) delete fPartInfo;
-  if (fFsiVertInfo) delete fFsiVertInfo;
-  if (fFsiPartInfo) delete fFsiPartInfo;
+  delete fPartInfo;
+  delete fFsiPartInfo;
+  delete fFsiVertInfo;
+  delete fNucFsiVertInfo;
+  delete fNucFsiStepInfo;
 
 }
 
@@ -379,7 +381,7 @@ NeutVect::Dump()
   int i, np;
 
   std::cout << "Event #        :" << EventNo  << "\n";
-  
+
   std::cout << "Target A       :" << TargetA  << "\n";
   std::cout << "Target Z       :" << TargetZ  << "\n";
   std::cout << "Target Free H  :" << TargetH  << "\n";
@@ -434,36 +436,36 @@ NeutVect::Dump()
   std::cout << "FSI LowE QE Kinematic Factor     :" << NuceffFactorPIQELKin << "\n";
   std::cout << "FSI HighE CX Mix Factor          :" << NuceffFactorPICXKin  << "\n";
   std::cout << "FSI Total Mean Free Path Factor  :" << NuceffFactorPIAll    << "\n";
-  
+
   std::cout << "Intr. mode     :" << Mode   << "\n";
   std::cout << "Total Xsec     :" << Totcrs   << " x 10^(-38) cm^2\n";
 
-  std::cout << "# of particles =" << Npart() << "\n";	
-  std::cout << "# of primary particles =" << Nprimary() << "\n";	
+  std::cout << "# of particles =" << Npart() << "\n";
+  std::cout << "# of primary particles =" << Nprimary() << "\n";
 
   np = Npart();
 
   for ( i = 0 ; i < np ; i++ ){
 	std::cout << "i=" << i << "\n";
-	std::cout << "Vertex         =" << VertexID(i) << "\n";		
+	std::cout << "Vertex         =" << VertexID(i) << "\n";
 	std::cout << "Parent Index   =" << ParentIdx(i) << "\n";
 
 	std::cout << "Particle Code  = " << (PartInfo(i))->fPID   << "\n";
 	std::cout << "Particle Mass  = " << (PartInfo(i))->fMass   << "\n";
 	std::cout << "Particle Mom.  =(" << (PartInfo(i))->fP.Px() << ","
-			  << (PartInfo(i))->fP.Py() << "," 
+			  << (PartInfo(i))->fP.Py() << ","
 			  << (PartInfo(i))->fP.Pz() << ","
 			  << (PartInfo(i))->fP.E()  << ")"
 			  << "\n";
 	std::cout << "Particle Flag  = " << (PartInfo(i))->fIsAlive << "\n";
 	std::cout << "Particle Stat. = " << (PartInfo(i))->fStatus  << "\n";
 	std::cout << "Particle Pos(1)=(" << (PartInfo(i))->fPosIni.X() << ","
-			  << (PartInfo(i))->fPosIni.Y() << "," 
+			  << (PartInfo(i))->fPosIni.Y() << ","
 			  << (PartInfo(i))->fPosIni.Z() << ","
 			  << (PartInfo(i))->fPosIni.T()  << ")"
 			  << "\n";
 	std::cout << "Particle Pos(2)=(" << (PartInfo(i))->fPosFin.X() << ","
-			  << (PartInfo(i))->fPosFin.Y() << "," 
+			  << (PartInfo(i))->fPosFin.Y() << ","
 			  << (PartInfo(i))->fPosFin.Z() << ","
 			  << (PartInfo(i))->fPosFin.T()  << ")"
 			  << "\n";
@@ -478,10 +480,10 @@ NeutVect::Dump()
 
 	std::cout << "Particle Code  = " << (FsiPartInfo(i))->fPID   << "\n";
 	std::cout << "Particle Dir.  =(" << (FsiPartInfo(i))->fDir.Px() << ","
-			  << (FsiPartInfo(i))->fDir.Py() << "," 
+			  << (FsiPartInfo(i))->fDir.Py() << ","
 			  << (FsiPartInfo(i))->fDir.Pz() << ")"
 			  << "\n";
-  	std::cout << "Momentum (Lab)        = " << (FsiPartInfo(i))->fMomLab   << "\n"; 
+  	std::cout << "Momentum (Lab)        = " << (FsiPartInfo(i))->fMomLab   << "\n";
 	std::cout << "Momentum (Nuc. Rest)  = " << (FsiPartInfo(i))->fMomNuc   << "\n";
 	std::cout << "Starting->Ending Vertex  = " << (FsiPartInfo(i))->fVertStart << "->" << (FsiPartInfo(i))->fVertEnd  << "\n";
 
@@ -497,13 +499,13 @@ NeutVect::Dump()
     std::cout << "Vertex # " << i+1 << ": ";
     std::cout << "Type=" << (FsiVertInfo(i))->fVertID << ", Pos=(";
 	std::cout << (FsiVertInfo(i))->fPos.Px() << ","
-		  << (FsiVertInfo(i))->fPos.Py() << "," 
+		  << (FsiVertInfo(i))->fPos.Py() << ","
 		  << (FsiVertInfo(i))->fPos.Pz() << ")"
 		  << "\n";
   }
 
   std::cout << "FSI probability :" << Fsiprob   << "\n";
-  
+
 }
 
 

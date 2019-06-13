@@ -21,6 +21,8 @@ TARGETS = neut neut_ntpl dumptotpau dumpelspau dumpcohcrs dumpcrs \
 	neutroot2 dumptotpauC  basic_histos cross_section_histos \
 	neutclass_to_tree
 
+FLAGS      = $(FOPTFLAGS) $(FCOPTIONS) $(FCFLAGS)
+
 all: $(TARGETS)
 
 neut: neut.o $(OBJS)
