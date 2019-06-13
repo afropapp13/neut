@@ -47,19 +47,21 @@ FH2H      = ${NEUT_ROOT}/src/neutsmpl/bin/fh2h.pl
 
 ##Fortran compiler related
 FCOPTIONS = -fno-backslash -fno-automatic -fno-second-underscore \
-		    -ffixed-line-length-132 -fdollar-ok -fpic -fbounds-check \
+		    -ffixed-line-length-132 -fdollar-ok -fPIC -fbounds-check \
 			-Wall -W -ffpe-trap=invalid,zero,overflow \
 			-DstrictF77 \
-			-DgFortran -Df2cFortran -no-pie
-FCOPTFLAGS= -g -no-pie
+			-DgFortran -Df2cFortran
+FCOPTFLAGS= -g
 
 ##C++ compiler related
-CXXOPTIONS  = `root-config --cflags` -DgFortran 
-CXXOPTFLAGS = -g -Wno-write-strings -fpermissive -no-pie
+CXXOPTIONS  = `root-config --cflags` -DgFortran -fPIC
+CXXOPTFLAGS = -g -Wno-write-strings -fpermissive
 
 ##C  compiler related
-COPTIONS    = `root-config --cflags` -DgFortran 
-COPTFLAGS   = -g -Wno-write-strings -fpermissive -no-pie
+COPTIONS    = `root-config --cflags` -DgFortran -fPIC
+COPTFLAGS   = -g -Wno-write-strings -fpermissive
+
+EXEFLAGS = -fno-PIE
 
 ##ROOT related
 ROOTINCDIR  = -I`root-config --incdir`
