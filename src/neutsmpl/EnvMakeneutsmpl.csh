@@ -41,14 +41,12 @@ else
 			${SOMEWHERE}/neutsmpl/config_neut.gmk
 endif
 
-#setenv CERN /cern
-setenv CERN ~/ssd/CERNLIB
+#setenv CERN /path/to/cernlib
 if (${?CERN} == 0) then
 	echo "set environmental variable CERN"
 	exit 1
 endif
 
-#setenv CERN_LEVEL pro
 setenv CERN_LEVEL 2005
 if (${?CERN_LEVEL} == 0) then
 	echo "set environmental variable CERN_LEVEL"
@@ -57,8 +55,7 @@ endif
 
 setenv CERN_ROOT ${CERN}/${CERN_LEVEL}
 
-#setenv ROOTSYS /usr/local/root_v5.34.36
-setenv ROOTSYS ~/ssd/root/build
+#setenv ROOTSYS /path/to/ROOT
 if (${?ROOTSYS} == 0) then
 	echo "set environmental variable ROOTSYS"
 	exit 1
