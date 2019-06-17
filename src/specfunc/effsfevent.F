@@ -209,7 +209,7 @@ c ----- setup temp values for output common block
 
 C ******************************************************************** C
 C ----- Begin event generation -----
-        write(*,*) "Beginning event generation Effective SF"
+c       write(*,*) "Beginning event generation Effective SF"
         N_tries = 0
 10      continue
 

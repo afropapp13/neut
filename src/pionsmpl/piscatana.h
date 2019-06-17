@@ -15,7 +15,7 @@
 #include <TCanvas.h>
 
 #include "pars_piscat.h"
-#include "PeriodicTable.h"
+#include "../neutgeom/PeriodicTable_const.h"
 
 extern "C"
 {
@@ -24,6 +24,7 @@ extern "C"
 
 class piscatana {
 public :
+
    TChain          *fChain;   //!pointer to the analyzed TChain
    Int_t           fCurrent; //!current Tree number in a TChain
 

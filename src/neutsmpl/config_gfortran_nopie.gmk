@@ -18,7 +18,7 @@ ifeq "$(shell cernlib)" ""
   $(error I rely on being able to do cernlib in shell)
 endif
 
-## 
+##
 NEUT_SRC = ${NEUT_ROOT}/src
 
 ## Version numbers
@@ -72,7 +72,7 @@ CERNINCDIR  = -I$(CERN_ROOT)/include
 CERNLIBS    = `cernlib jetset74 pdflib804 photos202 mathlib packlib kernlib`
 
 ## NEUT includes & liraries
-NEUTINCDIR  = -I${NEUT_ROOT}/include 
+NEUTINCDIR  = -I${NEUT_ROOT}/include
 
 NEUTLIBDIR  = ${NEUT_ROOT}/lib
 NEUTCOREDIR = ${NEUT_SRC}/neutcore
@@ -81,12 +81,12 @@ NEUTCLASSDIR= ${NEUT_SRC}/neutclass
 NEUTDISOBJS = ${NEUTCOREDIR}/structm.o ${NEUTCOREDIR}/pdfset.o \
 			  ${NEUTCOREDIR}/grv94di.o  ${NEUTCOREDIR}/grv98_lo.o
 
-NEUTCLSOBJS = -Wl,--start-group ${NEUTCLASSDIR}/neutctrl.so    ${NEUTCLASSDIR}/neutpart.so \
-			  ${NEUTCLASSDIR}/neutvect.so    ${NEUTCLASSDIR}/neutvtx.so \
+NEUTCLSOBJS = -Wl,--start-group ${NEUTCLASSDIR}/neutfill.o \
+		${NEUTCLASSDIR}/neutctrl.so    ${NEUTCLASSDIR}/neutpart.so \
+	  ${NEUTCLASSDIR}/neutvect.so    ${NEUTCLASSDIR}/neutvtx.so \
 		      ${NEUTCLASSDIR}/neutfsipart.so ${NEUTCLASSDIR}/neutfsivert.so \
 			  ${NEUTCLASSDIR}/neutnucfsistep.so \
 			  ${NEUTCLASSDIR}/neutnucfsivert.so \
-			  ${NEUTCLASSDIR}/neutfill.o \
 			  ${NEUTCLASSDIR}/neutrootfortwrapper.o \
 			  ${NEUTCLASSDIR}/NeutRootHandlers.o -Wl,--end-group
 
@@ -142,5 +142,3 @@ clean:
 veryclean:
 	${RM} -f $(TARGETS) *.o *.so *Dict.h *LinkDef.h *Dict.cc \
 		  *.a lib/*.o lib/*.a *C.h */*C.h bin *~ #*
-
-				

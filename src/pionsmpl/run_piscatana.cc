@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define MAIN
+#include "pars_piscat.h"
 #include "piscatana.h"
 
 using namespace std;

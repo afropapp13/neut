@@ -4,12 +4,12 @@
 #
 
 
-ln -sf ../crsdat/nucdens_int_coulomb.dat
+#ln -sf ../crsdat/nucdens_int_coulomb.dat
 
 FILESTART=0
-FILEEND=7
+FILEEND=9
 
-PID=-211
+PID=211
 if [[ $PID == 211 ]]; then
     PID_NAME=pip
 elif [[ $PID == -211 ]]; then
@@ -44,7 +44,7 @@ do
     FILESTOHADD[$i]=${PREFIX_NAME}_${PID_NAME}_ana_${i}.root
 
     NPROCS=$(( $NPROCS + 1 ))
-    if [[ $NPROCS == 8 ]]; then
+    if [[ $NPROCS == 4 ]]; then
         NPROCS=0
         wait
     fi

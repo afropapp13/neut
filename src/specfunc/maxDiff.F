@@ -103,7 +103,7 @@ c ----- loop through energy array to find correct point
 c ----- if sat here - E is bigger than the max allowed - extrapolate linearly
 c ----- extrapolation based on bins N and N-2
         bin = 210
-        write (*,*) "Selected energy greater than maximum calculated"
+c       write (*,*) "Selected energy greater than maximum calculated"
         maxDiff = diffXsecscc(nuc, neutrino, bin-2)
      & + (diffXsecscc(nuc, neutrino, bin)-
      & diffXsecscc(nuc, neutrino, bin-2))
@@ -150,7 +150,7 @@ c ----- if sat here - E is bigger than the max allowed - extrapolate linearly
 c ----- extrapolation based on bins N and N-2
         bin = 200
 
-        write (*,*) "Selected energy greater than maximum calculated"
+c       write (*,*) "Selected energy greater than maximum calculated"
         if ( ipar. gt. 0 ) then 
            neutrino = 1
         else

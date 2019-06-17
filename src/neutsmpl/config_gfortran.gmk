@@ -48,11 +48,10 @@ FH2H      = ${NEUT_ROOT}/src/neutsmpl/bin/fh2h.pl
 
 ##Fortran compiler related
 FCOPTIONS = -fno-backslash -fno-automatic -fno-second-underscore \
-		    -ffixed-line-length-132 -fdollar-ok -fPIC -fbounds-check \
-			-Wall -W -ffpe-trap=invalid,zero,overflow \
-			-DstrictF77 \
-			-DgFortran -Df2cFortran 
-FCOPTFLAGS= -g
+            -ffixed-line-length-132 -fdollar-ok -fPIC -fbounds-check \
+	    -Wall -W -ffpe-trap=invalid,zero,overflow \
+	    -DstrictF77 -DgFortran -Df2cFortran 
+FCOPTFLAGS= -g -fPIC
 
 ##C++ compiler related
 CXXOPTIONS  = `root-config --cflags` -DgFortran  -fPIC
@@ -80,12 +79,12 @@ NEUTCLASSDIR= ${NEUT_SRC}/neutclass
 NEUTDISOBJS = ${NEUTCOREDIR}/structm.o ${NEUTCOREDIR}/pdfset.o \
 			  ${NEUTCOREDIR}/grv94di.o  ${NEUTCOREDIR}/grv98_lo.o
 
-NEUTCLSOBJS = ${NEUTCLASSDIR}/neutctrl.so    ${NEUTCLASSDIR}/neutpart.so \
+NEUTCLSOBJS = ${NEUTCLASSDIR}/neutfill.o \
+ ${NEUTCLASSDIR}/neutctrl.so    ${NEUTCLASSDIR}/neutpart.so \
 			  ${NEUTCLASSDIR}/neutvect.so    ${NEUTCLASSDIR}/neutvtx.so \
 		      ${NEUTCLASSDIR}/neutfsipart.so ${NEUTCLASSDIR}/neutfsivert.so \
 			  ${NEUTCLASSDIR}/neutnucfsistep.so \
 			  ${NEUTCLASSDIR}/neutnucfsivert.so \
-			  ${NEUTCLASSDIR}/neutfill.o \
 			  ${NEUTCLASSDIR}/neutrootfortwrapper.o \
 			  ${NEUTCLASSDIR}/NeutRootHandlers.o
 

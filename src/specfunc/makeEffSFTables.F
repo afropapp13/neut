@@ -33,7 +33,7 @@ c ----- neutrino type, energy
         
         double precision mean, maxValue, meanNC(2), maxValueNC(2)
         integer N_tries
-        common /makeEffSFTable/ mean,maxValue,N_tries,meanNC,maxValueNC
+        common /makeEffSFTable/ mean,maxValue,meanNC,maxValueNC, N_tries
 
         integer targ
         character(len=1) sgn

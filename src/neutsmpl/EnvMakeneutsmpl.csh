@@ -1,11 +1,12 @@
 #!/bin/csh
 
+setenv NEUT_ROOT ${PWD}/../..
 setenv SOMEWHERE ${NEUT_ROOT}/src
 setenv MACHINE `${SOMEWHERE}/neutsmpl/bin/Machine`
 
 
 #setenv FC g77
-#setenv FC gfortran
+setenv FC gfortran
 if (${?FC} == 0) then
 	echo "EnvMakeneutsmpl: set environmental variable FC "
 	exit 1
@@ -41,14 +42,14 @@ else
 endif
 
 #setenv CERN /cern
-#setenv CERN /usr/local/sklib_gcc4.8.5/cern
+setenv CERN ~/ssd/CERNLIB
 if (${?CERN} == 0) then
 	echo "set environmental variable CERN"
 	exit 1
 endif
 
 #setenv CERN_LEVEL pro
-#setenv CERN_LEVEL 2005
+setenv CERN_LEVEL 2005
 if (${?CERN_LEVEL} == 0) then
 	echo "set environmental variable CERN_LEVEL"
 	exit 1
@@ -57,7 +58,7 @@ endif
 setenv CERN_ROOT ${CERN}/${CERN_LEVEL}
 
 #setenv ROOTSYS /usr/local/root_v5.34.36
-#setenv ROOTSYS /usr/local/sklib_gcc4.8.5/root_v5.28.00h
+setenv ROOTSYS ~/ssd/root/build
 if (${?ROOTSYS} == 0) then
 	echo "set environmental variable ROOTSYS"
 	exit 1
