@@ -7,8 +7,9 @@
 * Currently only carbon, iron, oxygen *********************************
 ***********************************************************************
 
-      subroutine buildEFFSF      
+      subroutine buildEFFSF(XMAQE)
         implicit none
+        REAL*4 XMAQE
         integer i_builtSf
         character*1024 inputfile
         save i_builtSf
@@ -16,29 +17,53 @@
 
         if (i_builtSf .EQ. 0) then
           write (*,*) "Building Effective SF tables"
-          inputfile = 'qelSfData/eff_sf/H2_effective_sf.grid'
+C     inputfile = 'qelSfData/eff_sf/H2_effective_sf.grid'
+          write(inputfile,'(A10,F4.2,A28)') 'qelSfData.',XMAQE,
+     $         '/eff_sf/H2_effective_sf.grid'
           call buildEFFSF_NUC(1, inputfile)
-          inputfile = 'qelSfData/eff_sf/He3_effective_sf.grid'
+C     inputfile = 'qelSfData/eff_sf/He3_effective_sf.grid'
+          write(inputfile,'(A10,F4.2,A29)') 'qelSfData.',XMAQE,
+     $         '/eff_sf/He3_effective_sf.grid'
           call buildEFFSF_NUC(2, inputfile)
-          inputfile = 'qelSfData/eff_sf/He4_effective_sf.grid'
+C     inputfile = 'qelSfData/eff_sf/He4_effective_sf.grid'
+          write(inputfile,'(A10,F4.2,A29)') 'qelSfData.',XMAQE,
+     $         '/eff_sf/He4_effective_sf.grid'
           call buildEFFSF_NUC(3, inputfile)
-          inputfile = 'qelSfData/eff_sf/C12_effective_sf.grid'
+C     inputfile = 'qelSfData/eff_sf/C12_effective_sf.grid'
+          write(inputfile,'(A10,F4.2,A29)') 'qelSfData.',XMAQE,
+     $         '/eff_sf/C12_effective_sf.grid'
           call buildEFFSF_NUC(4, inputfile)
-          inputfile = 'qelSfData/eff_sf/O16_effective_sf.grid'
+C     inputfile = 'qelSfData/eff_sf/O16_effective_sf.grid'
+          write(inputfile,'(A10,F4.2,A29)') 'qelSfData.',XMAQE,
+     $         '/eff_sf/O16_effective_sf.grid'
           call buildEFFSF_NUC(5, inputfile)
-          inputfile = 'qelSfData/eff_sf/Ne20_effective_sf.grid'
+C     inputfile = 'qelSfData/eff_sf/Ne20_effective_sf.grid'
+          write(inputfile,'(A10,F4.2,A30)') 'qelSfData.',XMAQE,
+     $         '/eff_sf/Ne20_effective_sf.grid'
           call buildEFFSF_NUC(6, inputfile)
-          inputfile = 'qelSfData/eff_sf/Al27_effective_sf.grid'
+C     inputfile = 'qelSfData/eff_sf/Al27_effective_sf.grid'
+          write(inputfile,'(A10,F4.2,A30)') 'qelSfData.',XMAQE,
+     $         '/eff_sf/Al27_effective_sf.grid'
           call buildEFFSF_NUC(7, inputfile)
-          inputfile = 'qelSfData/eff_sf/Ar40_effective_sf.grid'
+C     inputfile = 'qelSfData/eff_sf/Ar40_effective_sf.grid'
+          write(inputfile,'(A10,F4.2,A30)') 'qelSfData.',XMAQE,
+     $         '/eff_sf/Ar40_effective_sf.grid'
           call buildEFFSF_NUC(8, inputfile)
-          inputfile = 'qelSfData/eff_sf/Fe56_effective_sf.grid'
+C     inputfile = 'qelSfData/eff_sf/Fe56_effective_sf.grid'
+          write(inputfile,'(A10,F4.2,A30)') 'qelSfData.',XMAQE,
+     $         '/eff_sf/Fe56_effective_sf.grid'
           call buildEFFSF_NUC(9, inputfile)
-          inputfile = 'qelSfData/eff_sf/Cu63_effective_sf.grid'
+C     inputfile = 'qelSfData/eff_sf/Cu63_effective_sf.grid'
+          write(inputfile,'(A10,F4.2,A30)') 'qelSfData.',XMAQE,
+     $         '/eff_sf/Cu63_effective_sf.grid'
           call buildEFFSF_NUC(10, inputfile)
-          inputfile = 'qelSfData/eff_sf/Zn64_effective_sf.grid'
+C     inputfile = 'qelSfData/eff_sf/Zn64_effective_sf.grid'
+          write(inputfile,'(A10,F4.2,A30)') 'qelSfData.',XMAQE,
+     $         '/eff_sf/Zn64_effective_sf.grid'
           call buildEFFSF_NUC(11, inputfile)
-          inputfile = 'qelSfData/eff_sf/Pb_effective_sf.grid'
+C     inputfile = 'qelSfData/eff_sf/Pb_effective_sf.grid'
+          write(inputfile,'(A10,F4.2,A28)') 'qelSfData.',XMAQE,
+     $         '/eff_sf/Pb_effective_sf.grid'
           call buildEFFSF_NUC(12, inputfile)
           i_builtSf = 1
         endif

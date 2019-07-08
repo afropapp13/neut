@@ -110,7 +110,7 @@ c           option to combine all pre-made tables into one file for use.
                if (argMDLQE .EQ. "TEM") then
                   MDLQE = 702
                endif
-              call combineEffSFTables(argument, MDLQE)
+              call combineEffSFTables(argument, MDLQE, XMAQE)
               stop
             else
               write (*,*) "When combining tables, a second argument
@@ -224,20 +224,33 @@ c ----- set variables in filename - neutrino type, interaction type, target code
 
 c ----- create output fileNames
         if (mod(MDLQE,1000)/100 .EQ. 7) then
-           write(maxFile, "(A23,A1, I2, A1, I10, A1, A2, A4)")
-     &          "qelSfData/temSFMaxDiff/",sgn,abs(ipar),
+C           write(maxFile, "(A23,A1, I2, A1, I10, A1, A2, A4)")
+C     &          "qelSfData/temSFMaxDiff/",sgn,abs(ipar),
+C     &          "_",targ,"_",interaction,".csv" 
+           write(maxFile, "(A10,F4.2,A14,A1, I2, A1, I10, A1, A2, A4)")
+     &          "qelSfData.",XMAQE,"/temSFMaxDiff/",sgn,abs(ipar),
      &          "_",targ,"_",interaction,".csv" 
            
-           write (totFile, "(A23,A1, I2, A1, I10, A1, A2, A4)")
-     &          "qelSfData/temSFTotXsec/",sgn,abs(ipar),
+C           write (totFile, "(A23,A1, I2, A1, I10, A1, A2, A4)")
+C     &          "qelSfData/temSFTotXsec/",sgn,abs(ipar),
+C     &          "_",targ,"_",interaction,".csv"
+           write (totFile, "(A10,F4.2,A14,A1, I2, A1, I10, A1, A2, A4)")
+     &          "qelSfData.",XMAQE,"/temSFTotXsec/",sgn,abs(ipar),
      &          "_",targ,"_",interaction,".csv"
+
         else
-           write(maxFile, "(A23,A1, I2, A1, I10, A1, A2, A4)")
-     &          "qelSfData/effSFMaxDiff/",sgn,abs(ipar),
+C           write(maxFile, "(A23,A1, I2, A1, I10, A1, A2, A4)")
+C     &          "qelSfData/effSFMaxDiff/",sgn,abs(ipar),
+C     &          "_",targ,"_",interaction,".csv" 
+           write(maxFile, "(A10,F4.2,A14,A1, I2, A1, I10, A1, A2, A4)")
+     &          "qelSfData.",XMAQE,"/effSFMaxDiff/",sgn,abs(ipar),
      &          "_",targ,"_",interaction,".csv" 
            
-           write (totFile, "(A23,A1, I2, A1, I10, A1, A2, A4)")
-     &          "qelSfData/effSFTotXsec/",sgn,abs(ipar),
+C           write (totFile, "(A23,A1, I2, A1, I10, A1, A2, A4)")
+C     &          "qelSfData/effSFTotXsec/",sgn,abs(ipar),
+C     &          "_",targ,"_",interaction,".csv"
+           write (totFile, "(A10,F4.2,A14,A1, I2, A1, I10, A1, A2, A4)")
+     &          "qelSfData.",XMAQE,"/effSFTotXsec/",sgn,abs(ipar),
      &          "_",targ,"_",interaction,".csv"
         endif
         

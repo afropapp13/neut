@@ -18,7 +18,7 @@
 *
 *
 ***********************************************************************
-      double precision function maxDiff(E, ipar, targ, nc)
+      double precision function maxDiff(E, ipar, targ, nc, XMAQE)
         implicit none
 #include "nework.h"
         double precision E
@@ -26,6 +26,7 @@
         integer targ
         integer itarg
         logical nc
+        real*4  XMAQE
 
 c ----- looping index, i, and selected bin
         integer i
@@ -51,12 +52,12 @@ c ----- for nc, 2 nucleons (proton, neutron)
 
         if (nc.EQV..TRUE.)then
           if (i_loadDiffXsecnc .EQ. 0) then
-            call readXsecData(ipar, targ, nc)
+            call readXsecData(ipar, targ, nc, XMAQE)
             i_loadDiffXsecnc = 1
           endif
         else
           if (i_loadDiffXseccc .EQ. 0) then
-            call readXsecData(ipar, targ, nc)
+            call readXsecData(ipar, targ, nc, XMAQE)
             i_loadDiffXseccc = 1
           endif
         endif

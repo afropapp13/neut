@@ -64,6 +64,7 @@ C     2009.01.19 ; Y.Hayato  - PF table change from XX0 to XX5
       INTEGER I,II,J,JJ,jj1,IDUM,ILOADEFFSFQECRS
       REAL RDUM
       CHARACTER*1024 DUMSTR
+      CHARACTER*4    QEMASTR
       integer*4      LENSTR
       external       lenstr
       integer*4      lenpath
@@ -208,14 +209,22 @@ C******** Effective SF based on existing SF code - C. Wilkinson 2014
 C     
 C
       if (mod(MDLQE, 1000)/100 .EQ. 7) then
-         DUMSTR = 'qelSfData/temSFTotXsec/'
+C         DUMSTR = 'qelSfData/temSFTotXsec/'
+           write(QEMASTR,'(F4.2)') XMAQE
+           DUMSTR = 'qelSfData.'
+           DUMSTR = DUMSTR(1:10) // QEMASTR
+           DUMSTR = DUMSTR(1:14) // '/temSFTotXsec/'
       else
-         DUMSTR = 'qelSfData/effSFTotXsec/'
+C         DUMSTR = 'qelSfData/effSFTotXsec/'
+           write(QEMASTR,'(F4.2)') XMAQE
+           DUMSTR = 'qelSfData.'
+           DUMSTR = DUMSTR(1:10) // QEMASTR
+           DUMSTR = DUMSTR(1:14) // '/effSFTotXsec/'
       endif
       
-      DUMSTR=DUMSTR(1:23) // 'ALL'
-      DUMSTR=DUMSTR(1:26) // '_1000000000'
-      DUMSTR=DUMSTR(1:37) // '_cc.csv'
+      DUMSTR=DUMSTR(1:28) // 'ALL'
+      DUMSTR=DUMSTR(1:31) // '_1000000000'
+      DUMSTR=DUMSTR(1:42) // '_cc.csv'
       DUMSTR=CRSTBLPATH(1:lenpath)//DUMSTR
       open(LUN, file=DUMSTR, status="old")
       

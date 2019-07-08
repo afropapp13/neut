@@ -7,17 +7,18 @@
 * Currently only carbon, iron, oxygen *********************************
 ***********************************************************************
 
-      subroutine buildSF      
-        implicit none
+      subroutine buildSF(XMAQE)
+      implicit none
+      REAL*4 XMAQE
         integer i_builtSf
         save i_builtSf
         data i_builtSf/0/
 
         if (i_builtSf .EQ. 0) then
           write (*,*) "Building Spectral function tables"
-          call buildSF_C12
-          call buildSF_O16
-          call buildSF_Fe56
+          call buildSF_C12(XMAQE)
+          call buildSF_O16(XMAQE)
+          call buildSF_Fe56(XMAQE)
           i_builtSf = 1
         endif
       return
@@ -27,13 +28,14 @@
 ***********************************************************************
 *  Carbon - 12  *******************************************************
 ***********************************************************************
-      subroutine buildSF_C12
+      subroutine buildSF_C12(XMAQE)
         implicit none
 c include sf arrays, variables etc
 c sfArray built as (p, E)
 #include "specfunc.h"
 #include "neutfilepath.h"
 
+        REAL*4 XMAQE
         double precision p, E1, E2, E3, E4
         double precision val1, val2, val3, val4
         integer p_iterator, E_iterator
@@ -49,7 +51,9 @@ c sfArray built as (p, E)
       
         lenpath = lenstr(CRSTBLPATH)
 c load file and fill array with values
-        FNAME = 'qelSfData/sf/pke12_tot.grid'
+C        FNAME = 'qelSfData/sf/pke12_tot.grid'
+        write(FNAME,'(A10,F4.2,A18)') 
+     $       'qelSfData.',XMAQE,'/sf/pke12_tot.grid'
         FNAME = CRSTBLPATH(1:lenpath)//FNAME
         open(99, file=FNAME, status='old')
         
@@ -127,13 +131,14 @@ c set all values outside defined range to zero
 ***********************************************************************
 *  Oxygen - 16  *******************************************************
 ***********************************************************************
-      subroutine buildSF_O16
+      subroutine buildSF_O16(XMAQE)
         implicit none
 c include sf arrays, variables etc
 c sfArray built as (p, E)
 #include "specfunc.h"
 #include "neutfilepath.h"
 
+        REAL*4 XMAQE
         double precision p, E1, E2, E3, E4
         double precision val1, val2, val3, val4
         integer p_iterator, E_iterator
@@ -149,7 +154,9 @@ c sfArray built as (p, E)
       
         lenpath = lenstr(CRSTBLPATH)
 c load file and fill array with values
-        FNAME = 'qelSfData/sf/pke16.grid'
+C        FNAME = 'qelSfData/sf/pke16.grid'
+        write(FNAME,'(A10,F4.2,A14)') 
+     $       'qelSfData.',XMAQE,'/sf/pke16.grid'
         FNAME = CRSTBLPATH(1:lenpath)//FNAME
         open(99, file=FNAME, status='old')
         
@@ -231,13 +238,14 @@ c set all values outside defined range to zero
 ***********************************************************************
 *  Iron - 56  *********************************************************
 ***********************************************************************
-      subroutine buildSF_Fe56
+      subroutine buildSF_Fe56(XMAQE)
         implicit none
 c include sf arrays, variables etc
 c sfArray built as (p, E)
 #include "specfunc.h"
 #include "neutfilepath.h"
 
+        REAL*4 XMAQE
         double precision p, E1, E2, E3, E4
         double precision val1, val2, val3, val4
         integer p_iterator, E_iterator
@@ -253,7 +261,9 @@ c sfArray built as (p, E)
       
         lenpath = lenstr(CRSTBLPATH)
 c load file and fill array with values
-        FNAME = 'qelSfData/sf/pke56_tot.grid'
+C        FNAME = 'qelSfData/sf/pke56_tot.grid'
+        write(FNAME,'(A10,F4.2,A18)') 
+     $       'qelSfData.',XMAQE,'/sf/pke56_tot.grid'
         FNAME = CRSTBLPATH(1:lenpath)//FNAME
         open(99, file=FNAME, status='old')
         

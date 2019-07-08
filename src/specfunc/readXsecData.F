@@ -20,7 +20,7 @@
 *
 ***********************************************************************
 
-      subroutine readXsecData(ipar, targ, nc)
+      subroutine readXsecData(ipar, targ, nc, XMAQE)
       
         implicit none
         
@@ -29,6 +29,8 @@
         integer ipar
         integer targ
         logical nc
+        real*4  XMAQE
+
         integer idum
 
         integer i
@@ -40,6 +42,7 @@
 c ----- setting up the filename to open
         character(len=1) sgn
         character(len=1024) fileName
+        character(len=32) qemastr
         character(len=2) interaction
 
 c ----- common block for arrays - filled by readData subroutine
@@ -67,8 +70,11 @@ c ----- nc array second index is proton(1)/neutron(2)
         endif
 
 c ----- filename:
-        write (fileName, "(A33,A2,A4)") 
-     $       "qelSfData/maxDiff/ALL_1000000000_",interaction,".csv"
+C        write (fileName, "(A33,A2,A4)") 
+C     $       "qelSfData/maxDiff/ALL_1000000000_",interaction,".csv"
+        write (fileName, "(A10,F4.2,A24,A2,A4)") 
+     $       "qelSfData.",XMAQE,
+     $       "/maxDiff/ALL_1000000000_",interaction,".csv"
 
 c ----- open file
         fileName = CRSTBLPATH(1:lenpath)//fileName

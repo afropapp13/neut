@@ -105,7 +105,7 @@ c ------- neutrino pdg first
 c           option to combine all pre-made tables into one file for use.
             call GETARG(2, argument)
             if ((argument .EQ. "CC") .OR. (argument .EQ. "NC")) then
-              call combineTables(argument)
+              call combineTables(argument,XMAQE)
               stop
             else
               write (*,*) "When combining tables, a second argument
@@ -177,13 +177,19 @@ c ----- set variables in filename - neutrino type, interaction type, target code
         targ = 1000000000 + NUMBNDP*10000 + NUMATOM*10
 
 c ----- create output fileNames
-        write(maxFile, "(A18,A1, I2, A1, I10, A1, A2, A4)")
-     &  "qelSfData/maxDiff/",sgn,abs(ipar),
-     &  "_",targ,"_",interaction,".csv" 
+C        write(maxFile, "(A18,A1, I2, A1, I10, A1, A2, A4)")
+C     &  "qelSfData/maxDiff/",sgn,abs(ipar),
+c     &  "_",targ,"_",interaction,".csv" 
+        write(maxFile, "(A10,F4.2,A9,A1, I2, A1, I10, A1, A2, A4)")
+     &       "qelSfData.",XMAQE,"/maxDiff/",sgn,abs(ipar),
+     &       "_",targ,"_",interaction,".csv" 
         
-        write (totFile, "(A18,A1, I2, A1, I10, A1, A2, A4)")
-     &  "qelSfData/totXsec/",sgn,abs(ipar),
-     &  "_",targ,"_",interaction,".csv"
+C        write (totFile, "(A18,A1, I2, A1, I10, A1, A2, A4)")
+C     &  "qelSfData/totXsec/",sgn,abs(ipar),
+C     &  "_",targ,"_",interaction,".csv"
+        write (totFile, "(A10,F4.2,A9,A1, I2, A1, I10, A1, A2, A4)")
+     &       "qelSfData.",XMAQE,"/totXsec/",sgn,abs(ipar),
+     &       "_",targ,"_",interaction,".csv"
 
         write (*,"(A1, I2, A1, I10, A1, A2)")
      &  sgn,abs(ipar),"_",targ,"_",interaction

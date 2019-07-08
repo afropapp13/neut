@@ -64,6 +64,8 @@ C     2009.01.19 ; Y.Hayato  - PF table change from XX0 to XX5
       INTEGER I,II,J,JJ,jj1,IDUM,ILOADSFQECRS
       REAL RDUM
       CHARACTER*1024 DUMSTR
+      CHARACTER*4    QEMASTR
+      
       integer*4      LENSTR
       external       lenstr
       integer*4      lenpath
@@ -206,11 +208,15 @@ C------- load Spectral function cross-section ( only needed )
 C********Spectral function implementation *  A.Furmanski - 2013
 C     
 C
-      DUMSTR = 'qelSfData/totXsec/'
+C      DUMSTR = 'qelSfData/totXsec/'
+      write(QEMASTR,'(F4.2)') XMAQE
+      DUMSTR = 'qelSfData.'
+      DUMSTR = DUMSTR(1:10) // QEMASTR
+      DUMSTR = DUMSTR(1:14) // '/totXsec/'
       
-      DUMSTR=DUMSTR(1:18) // 'ALL'
-      DUMSTR=DUMSTR(1:21) // '_1000000000'
-      DUMSTR=DUMSTR(1:32) // '_cc.csv'
+      DUMSTR=DUMSTR(1:23) // 'ALL'
+      DUMSTR=DUMSTR(1:26) // '_1000000000'
+      DUMSTR=DUMSTR(1:37) // '_cc.csv'
       DUMSTR=CRSTBLPATH(1:lenpath)//DUMSTR
       open(LUN, file=DUMSTR, status="old")
       

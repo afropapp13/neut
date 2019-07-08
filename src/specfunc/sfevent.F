@@ -176,7 +176,7 @@ c cc
 
 
 C ----- build the map of spectral function values that can be picked from
-        call buildSF
+        call buildSF(XMAQE)
 C ----- find the maximum allowed value to throw against - note energy in GeV in tables, MeV in code.
 c ----- Carbon-12
 
@@ -185,7 +185,8 @@ c ----- Carbon-12
           if (first .EQV. .TRUE.) then
 c            call buildSF_C12
             if (single.EQV..TRUE.)then
-              tableMax = maxDiff(dble(E)/1000.0, IPAR, targetType, nc)
+               tableMax = maxDiff(dble(E)/1000.0, IPAR, targetType, nc,
+     $              XMAQE)
             endif
             first = .FALSE.
           endif
@@ -195,7 +196,8 @@ c ----- Oxygen-16
           if (first .EQV. .TRUE.) then
 c            call buildSF_O16
             if (single .EQV..TRUE.)then
-              tableMax = maxDiff(dble(E)/1000.0, IPAR, targetType, nc)
+               tableMax = maxDiff(dble(E)/1000.0, IPAR, targetType, nc,
+     $              XMAQE)
             endif
             first = .FALSE.
           endif
@@ -205,7 +207,8 @@ c ----- Iron-56
           if (first .EQV. .TRUE.) then
 c            call buildSF_Fe56
             if (single .EQV..TRUE.)then
-              tableMax = maxDiff(dble(E)/1000.0, IPAR, targetType, nc)
+               tableMax = maxDiff(dble(E)/1000.0, IPAR, targetType, nc,
+     $              XMAQE)
             endif
             first = .FALSE.
           endif
@@ -214,7 +217,8 @@ c ----- Deuterium - currently not used - smith-moniz used instead
           targetType = 1000010020
           if (first .EQV. .TRUE.) then
             if (single .EQV..TRUE.)then
-              tableMax = maxDiff(dble(E)/1000.0, IPAR, targetType, nc)
+               tableMax = maxDiff(dble(E)/1000.0, IPAR, targetType, nc,
+     $              XMAQE)
             endif
             first = .FALSE.
           endif

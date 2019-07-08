@@ -3,12 +3,13 @@
 ******takes input argument either CC or NC
 ******for NC, only nue tables are read in, as all flavours have the same cross-section
       
-      subroutine combineEffSFTables(mode, MDLQE)
+      subroutine combineEffSFTables(mode, MDLQE, XMAQE)
       implicit none
       character(len=2) mode
       character(len=80) outputFileName
       character(len=80) inputFileName
       integer MDLQE
+      REAL*4 XMAQE
 
 c     ----- logical needed to check whether files exist
       logical Iexist
@@ -39,22 +40,30 @@ c     ----- integers corresponding to in and out files
          
          if (mod(MDLQE, 1000)/100 .EQ. 7) then 
             if (table .eq. 1) then
-               outputFileName = "qelSfData/temSFTotXsec/ALL_1000000000_"
+C               outputFileName = "qelSfData/temSFTotXsec/ALL_1000000000_"
+               write(outputFileName,'(A10,F4.2,A29)')
+     $              "qelSfData.",XMAQE,'/temSFTotXsec/ALL_1000000000_'
             else 
-               outputFileName = "qelSfData/temSFMaxDiff/ALL_1000000000_"
+C               outputFileName = "qelSfData/temSFMaxDiff/ALL_1000000000_"
+               write(outputFileName,'(A10,F4.2,A29)')
+     $              "qelSfData.",XMAQE,'/temSFMaxDiff/ALL_1000000000_'
             endif
          else
             if (table .eq. 1) then
-               outputFileName = "qelSfData/effSFTotXsec/ALL_1000000000_"
+C               outputFileName = "qelSfData/effSFTotXsec/ALL_1000000000_"
+               write(outputFileName,'(A10,F4.2,A29)')
+     $              "qelSfData.",XMAQE,'/effSFTotXsec/ALL_1000000000_'
             else 
-               outputFileName = "qelSfData/effSFMaxDiff/ALL_1000000000_"
+C               outputFileName = "qelSfData/effSFMaxDiff/ALL_1000000000_"
+               write(outputFileName,'(A10,F4.2,A29)')
+     $              "qelSfData.",XMAQE,'/effSFMaxDiff/ALL_1000000000_'
             endif
          endif
 
          if (mode.EQ. "CC") then
-            outputFileName = outputFileName(1:38) // "cc.csv"
+            outputFileName = outputFileName(1:43) // "cc.csv"
          else if (mode.EQ. "NC")then
-            outputFileName = outputFileName(1:38) // "nc.csv"
+            outputFileName = outputFileName(1:43) // "nc.csv"
          endif
 
 
@@ -87,60 +96,72 @@ c     ----- integers corresponding to in and out files
                
                if (mod(MDLQE, 1000)/100 .EQ. 7) then 
                   if (table .eq. 1) then
-                     write(inputFileName,"(A23,A1,I2)")
-     &                    "qelSfData/temSFTotXsec/",sgn,abs(pdg)
+C                     write(inputFileName,"(A23,A1,I2)")
+C     &                    "qelSfData/temSFTotXsec/",sgn,abs(pdg)
+                     write(inputFileName,"(A10,F4.2,A14,A1,I2)")
+     &                    "qelSfData.",XMAQE,"/temSFTotXsec/",
+     $                    sgn,abs(pdg)
                   else
-                     write(inputFileName,"(A23,A1,I2)")
-     &                    "qelSfData/temSFMaxDiff/",sgn,abs(pdg)
+C                     write(inputFileName,"(A23,A1,I2)")
+C     &                    "qelSfData/temSFMaxDiff/",sgn,abs(pdg)
+                     write(inputFileName,"(A10,F4.2,A14,A1,I2)")
+     &                    "qelSfData.",XMAQE,"/temSFMaxDiff/",
+     $                    sgn,abs(pdg)
                   endif
                else
                   if (table .eq. 1) then
-                     write(inputFileName,"(A23,A1,I2)")
-     &                    "qelSfData/effSFTotXsec/",sgn,abs(pdg)
+C                     write(inputFileName,"(A23,A1,I2)")
+C     &                    "qelSfData/effSFTotXsec/",sgn,abs(pdg)
+                     write(inputFileName,"(A10,F4.2,A14,A1,I2)")
+     &                    "qelSfData.",XMAQE,"/effSFTotXsec/",
+     $                    sgn,abs(pdg)
                   else
-                     write(inputFileName,"(A23,A1,I2)")
-     &                    "qelSfData/effSFMaxDiff/",sgn,abs(pdg)
+C                     write(inputFileName,"(A23,A1,I2)")
+C     &                    "qelSfData/effSFMaxDiff/",sgn,abs(pdg)
+                     write(inputFileName,"(A10,F4.2,A14,A1,I2)")
+     &                    "qelSfData.",XMAQE,"/effSFMaxDiff/",
+     $                    sgn,abs(pdg)
                   endif                  
                endif
                
                if (j .EQ. 1) then ! H2
-                  inputFileName = inputFileName(1:26) 
+                  inputFileName = inputFileName(1:31) 
      $                // "_1000010020_"
               else if (j .EQ. 2) then ! He3
-                  inputFileName = inputFileName(1:26)                   
+                  inputFileName = inputFileName(1:31)                   
      $                // "_1000020030_"
                else if (j .EQ. 3) then ! He4
-                  inputFileName = inputFileName(1:26) 
+                  inputFileName = inputFileName(1:31) 
      $                 // "_1000020040_"
                else if (j .EQ. 4) then ! C12
-                  inputFileName = inputFileName(1:26) 
+                  inputFileName = inputFileName(1:31) 
      $                 // "_1000060120_"
                else if (j .EQ. 5) then ! O16
-                  inputFileName = inputFileName(1:26) 
+                  inputFileName = inputFileName(1:31) 
      $                 // "_1000080160_"
                else if (j .EQ. 6) then ! Ne20
-                  inputFileName = inputFileName(1:26) 
+                  inputFileName = inputFileName(1:31) 
      $                 // "_1000100200_"
                else if (j .EQ. 7) then ! Al27
-                  inputFileName = inputFileName(1:26) 
+                  inputFileName = inputFileName(1:31) 
      $                 // "_1000130270_"
                else if (j .EQ. 8) then ! Ar40
-                  inputFileName = inputFileName(1:26) 
+                  inputFileName = inputFileName(1:31) 
      $                 // "_1000180400_"
                else if (j .EQ. 9) then ! Fe56
-                  inputFileName = inputFileName(1:26) 
+                  inputFileName = inputFileName(1:31) 
      $                 // "_1000260560_"
                else if (j .EQ. 10) then ! Cu63
-                  inputFileName = inputFileName(1:26)
+                  inputFileName = inputFileName(1:31)
      $                 // "_1000290630_"
                else if (j .EQ. 11) then ! Zn64
-                  inputFileName = inputFileName(1:26)
+                  inputFileName = inputFileName(1:31)
      $                 // "_1000300640_"
                else if (j .EQ. 12) then ! Pb208
-                  inputFileName = inputFileName(1:26) 
+                  inputFileName = inputFileName(1:31) 
      $                 // "_1000822080_"
                else if (j .GT. 12) then ! no more nuclei
-                  inputFileName = inputFileName(1:26) 
+                  inputFileName = inputFileName(1:31) 
      $                 // "_1000000000_"
                   if (abs(i) .LT. 15) then
                      do k = 1, 210
@@ -158,9 +179,9 @@ c     ----- integers corresponding to in and out files
                endif
 
                if (mode.EQ. "CC") then
-                  inputFileName = inputFileName(1:38) // "cc.csv"
+                  inputFileName = inputFileName(1:43) // "cc.csv"
                else if (mode.EQ. "NC")then
-                  inputFileName = inputFileName(1:38) // "nc.csv"
+                  inputFileName = inputFileName(1:43) // "nc.csv"
                endif
                
                inquire(file=inputFileName, exist=Iexist)
