@@ -29,10 +29,10 @@ ROOTINC = -I$(shell root-config --incdir)
 NEUTINC = -I../neutcore -I../nuccorspl -I../skmcsvc -I../nuceff -I../../include -I./ -I../neutclass -I../specfunc
 INCDIRS = ${ROOTINC} ${NEUTINC}
 
-FCOPTIONS = -g -O2 -march=native -Wall
+FCOPTIONS = -g -O2 -Wall
 
 CXXFLAGS  = $(shell root-config --cflags)
-COPTFLAGS = -g -O2 -march=native -Wall -Wno-write-strings -fpermissive -fPIC
+COPTFLAGS = -g -O2 -Wall -Wno-write-strings -fpermissive -fPIC
 
 
 NEUT_LIB_DIR = $(NEUT_ROOT)/lib
