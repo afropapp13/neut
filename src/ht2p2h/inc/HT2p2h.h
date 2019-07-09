@@ -8,6 +8,7 @@
 #include <string>
 #include "HadronTensor.h"
 #include "Nucleus2p2h.h" 
+#include "nieves2p2hC.h"
 
 extern "C"
 {
@@ -71,9 +72,9 @@ class HT2p2h:Nucleus2p2h{
   
   void   CreateVectors(int id,int nuclei,double Enu);  
 
-  int GenerateLeptonKinematics(int id,int nuclei,double Enu,double &TLepton,double &xcos);
+  int GenerateLeptonKinematics(int id,int nuclei,double Enu,double &TLepton,double &xcos,double &R);
 
-  double DoubleDifferential(int id,int nuclei,double Enu,double TMu,double xcos, bool pn = false);
+  double DoubleDifferential(int id,int nuclei,double Enu,double TMu,double xcos, double R, bool pn = false);
 
   double GetHTElement(int nuclei,double q3,double q0);
 
@@ -81,7 +82,7 @@ class HT2p2h:Nucleus2p2h{
 
   int GenerateVectors(int id, int nuclei, double pnu[4], double p[6][4], int idpart[6], int parent[6], double &R );
 
-  double GetFraction(int id, int nuclei, double Enu,double TLepton,double coslepton); 
+  double GetFraction(int id, int nuclei, double Enu,double TLepton,double coslepton,double R); 
   
   void SetDebug(bool a) { debug = a;}
 
@@ -94,7 +95,9 @@ class HT2p2h:Nucleus2p2h{
   void SetHFSparameters(double p1,double p2) { HFSparam1 = p1; HFSparam2 = p2; }
 
   void SetHadronKinMode(int val){  HadKinMode = val; }
-  
+
+  double GetQ0Fermivalue(int nuclei,int id,double R);
+
   double Random(void)
   {
 

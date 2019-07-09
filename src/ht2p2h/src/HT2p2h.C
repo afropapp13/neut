@@ -172,22 +172,30 @@ void HT2p2h::ComputeIntegrals(int nuclei){
 	double tl = El-ml;
 	double Enu2 = Enu*Enu;
 	double pl2 = pl*pl;
-	double plEnu = pl*Enu; 
+	double plEnu = pl*Enu;
 	
 	for( double q3 = q0; q3 < tlc->GetMaxQ3(); q3 += tlc->GetQ3Step()  ) {
 	  double Q3 = q3+tlc->GetQ3Step()/2.;
 	  double xcos = (Q3*Q3-Enu2-pl2)/(-2.*plEnu);
 	  if ( xcos > 1. || xcos < -1. ) continue; 
 	  
-	  double xs = DoubleDifferential(id,nuclei,Enu,tl,xcos);
+	  double xs = 0.;
+
+	  for(  int i = 0; i < 20; i++ ) {
+	    double R = GenerateR(nuclei,-1);
+	    double lxs = DoubleDifferential(id,nuclei,Enu,tl,xcos,R);
+	    if( lxs > 0. ) 
+	      xs += lxs/20.;
+	    if( lxs > MaxXsect ) MaxXsect = lxs*1.05; 
+	  }
+
 	  double Jacobian = Q3; 
 	  
-	  //	  if( std::isnan(xs) ) { std::cout << " xs isnan " << xs << "  " << El << "  " << xcos << "  " << Q0 << "  " << Q3 << std::endl; continue; }
 	  if( isnan(xs) ) { std::cout << " xs isnan " << xs << "  " << El << "  " << xcos << "  " << Q0 << "  " << Q3 << std::endl; continue; }
 
 	  if( xs < 0. ) break; // IF this condition is fulfilled, next q3 will also, so we break. 
 	  
-	  if( xs > MaxXsect ) MaxXsect = xs*1.05; 
+	  
 	  double alocal = xs*Jacobian/plEnu;
 	  Xsect += alocal;
 	}
@@ -230,14 +238,17 @@ double HT2p2h::IntegralCrossSection(int id,int nuclei,double Enu){
 }
 
 
-int HT2p2h::GenerateLeptonKinematics(int id,int nuclei,double Enu,double &TLepton,double &xcos) {
+int HT2p2h::GenerateLeptonKinematics(int id,int nuclei,double Enu,double &TLepton,double &xcos, double &R ) {
  
   CheckNuclei(nuclei);  
 
   Precompindx pindx(id,nuclei);
   double Tlepmax = Enu;
+
+  double qval = GetQ0Fermivalue(nuclei,id,R); 
+
   if( ApplyBindEnergy )  
-    Tlepmax -= GetBind(nuclei,id);
+    Tlepmax -= (GetBind(nuclei,id)+qval);
   
   int ibin = (int) ((Enu+Enubin*0.001)/Enubin);
 
@@ -252,41 +263,28 @@ int HT2p2h::GenerateLeptonKinematics(int id,int nuclei,double Enu,double &TLepto
 
   double tl,cos,xs;
 
-  int tries = -1;
-
-  do {
-
-    tries++;
-
-    cos = 2.*Random()-1.;
-
-    tl = Random()*Tlepmax;
-
-    xs = DoubleDifferential(id,nuclei,Enu,tl,cos); 
-    
-    if( xs == 0 ) continue;
-    
-    double y = max * Random();
-    
-    if( debug ) 
-      std::cout <<  "  y =  " << y << " max =  "<< max << " xs  " << xs  <<  std::endl; 
-    
-    if( xs > max ) {std::cout << " Cross-Section " << xs << " larger than maximum " << max << " cos " << cos << std::endl; MaxCrossSection[pindx][ibin] = max*1.1; }
-
-    if( xs > y ) break;
-
-    
-  } while(1);
-
-
+  cos = 2.*Random()-1.;
   
+  tl = Random()*Tlepmax;
+  
+  xs = DoubleDifferential(id,nuclei,Enu,tl,cos, R ); 
+  
+  if( xs == 0 ) return -1;
+  
+  double y = max * Random();
+  
+  if( debug ) 
+    std::cout <<  "  y =  " << y << " max =  "<< max << " xs  " << xs  <<  std::endl; 
+  
+  if( xs > max ) {std::cout << " Cross-Section " << xs << " larger than maximum " << max << " cos " << cos << std::endl; MaxCrossSection[pindx][ibin] = max*1.1; }
+  
+  if( xs < y ) return -1;
+  
+
   TLepton = tl; 
   xcos = cos; 
 
-
-
-  return tries; 
-
+  return 1; 
 }
 
 
@@ -307,9 +305,7 @@ int HT2p2h::GenerateHadronKinematics( int id, int nuclei, double frac, double q[
     q0 = q[0] - GetBind(nuclei,id);       // Take the bind energy out of the equation.
   else
     q0 = q[0];
- 
-  R = GenerateR(nuclei,-1);
-  
+   
   if( id > 0 ) {   // Neutrinos n --> p 
     if ( Random() > frac ) {
       m1 = neutronmass;  // neutron 
@@ -441,8 +437,10 @@ int HT2p2h::GenerateHadronKinematics( int id, int nuclei, double frac, double q[
 
     for( int i = 0; i < 4 ; i++ ) qf[i] = q[i] + ni1[i] + ni2[i];
 
+    double qval = GetQ0Fermivalue(nuclei,id,R); 
 
-    if( ApplyBindEnergy ) qf[0] = qf[0]-GetBind(nuclei,id); 
+    if( ApplyBindEnergy ) 
+      qf[0] -= (GetBind(nuclei,id)+qval); 
 
     double qfm2 = qf[1]*qf[1] + qf[2]*qf[2] + qf[3]*qf[3];
     double qfm  = sqrt(qfm2);
@@ -502,10 +500,9 @@ int HT2p2h::GenerateHadronKinematics( int id, int nuclei, double frac, double q[
     double p1 = sqrt(p1L*p1L+pRF*sinangRF*pRF*sinangRF); 
     double p2 = sqrt(p2L*p2L+pRF*sinangRF*pRF*sinangRF);
     
-	//    if( std::isnan(p1) ) std::cout << " ERROR " << p1 << " " << gamma <<  "  " << pRF << "   " << beta << "   " << e1RF << std::endl;
-	if( isnan(p1) ) std::cout << " ERROR " << p1 << " " << gamma <<  "  " << pRF << "   " << beta << "   " << e1RF << std::endl;
-	//    if( std::isnan(p2) ) std::cout << " ERROR " << p2 << " " << gamma <<  "  " << pRF << "   " << beta << "   " << e1RF << std::endl; 
-    if( isnan(p2) ) std::cout << " ERROR " << p2 << " " << gamma <<  "  " << pRF << "   " << beta << "   " << e1RF << std::endl;     
+    if( isnan(p1) ) std::cout << " ERROR " << p1 << " " << gamma <<  "  " << pRF << "   " << beta << "   " << e1RF << std::endl;
+    if( isnan(p2) ) std::cout << " ERROR " << p2 << " " << gamma <<  "  " << pRF << "   " << beta << "   " << e1RF << std::endl; 
+    
     // Pauli blocking. Outgoing nucleons below fermi level. 
 
     if( p1 < FermiLevel || p2 < FermiLevel ) { code = -4;continue; }
@@ -557,7 +554,7 @@ int HT2p2h::GenerateHadronKinematics( int id, int nuclei, double frac, double q[
 
 
 
-double   HT2p2h::DoubleDifferential(int id,int nuclei,double Enu,double TLep,double xcos,bool pn ) {
+double   HT2p2h::DoubleDifferential(int id,int nuclei,double Enu,double TLep,double xcos, double R, bool pn ) {
  
   CheckNuclei_2(nuclei);  
   
@@ -591,8 +588,11 @@ double   HT2p2h::DoubleDifferential(int id,int nuclei,double Enu,double TLep,dou
 
   double q0=energyneutrino-energylepton;
   double q0nucleus=q0;
+
+  double qval = GetQ0Fermivalue(nuclei,id,R); 
+
   if( ApplyBindEnergy )
-    q0nucleus-= GetBind(nuclei,id);
+    q0nucleus-= (GetBind(nuclei,id)+qval);
   
   double q02 = q0*q0; 
 
@@ -740,8 +740,11 @@ int HT2p2h::GenerateVectors(int id, int nuclei, double pnu[4],  double p[6][4], 
   int hadrontries;
 
   while(1){
-    GenerateLeptonKinematics(id,nuclei,Enu,TLepton,coslepton);
-    
+
+    double R = GenerateR(nuclei,-1);
+
+    if( GenerateLeptonKinematics(id,nuclei,Enu,TLepton,coslepton,R) < 0 ) continue;
+   
     mass = leptonmass[abs(id)];
     
     elepton = TLepton+mass; 
@@ -765,7 +768,7 @@ int HT2p2h::GenerateVectors(int id, int nuclei, double pnu[4],  double p[6][4], 
     
     //  std::cout << " Generating the hadron kinematics " << std::endl; 
     
-    fractionpn = GetFraction(id,nuclei,Enu,TLepton,coslepton);
+    fractionpn = GetFraction(id,nuclei,Enu,TLepton,coslepton,R);
 
     while(1){
       hadrontries = GenerateHadronKinematics(id,nuclei,fractionpn,q,qi1,qi2,qf1,qf2,idNucleon,R);
@@ -784,7 +787,7 @@ int HT2p2h::GenerateVectors(int id, int nuclei, double pnu[4],  double p[6][4], 
     if ( hadrontries >= 0 ){
       break;
     }
-    std::cout << "HT2p2h: Retry different lepton kinematics" << std::endl;
+    //    std::cout << "HT2p2h: Retry different lepton kinematics" << std::endl;
   }
 
   for(int i = 0; i < 4; i++ ){
@@ -819,15 +822,15 @@ int HT2p2h::GenerateVectors(int id, int nuclei, double pnu[4],  double p[6][4], 
 }
 
 
-double HT2p2h::GetFraction(int id, int nuclei,double Enu,double TLepton,double coslepton){
+double HT2p2h::GetFraction(int id, int nuclei,double Enu,double TLepton,double coslepton, double R){
 
   CheckNuclei(nuclei);  
   
   double fraction = default_pn_nn_fraction;
   
-  double totalCrossSection = DoubleDifferential(id,nuclei,Enu,TLepton,coslepton);
+  double totalCrossSection = DoubleDifferential(id,nuclei,Enu,TLepton,coslepton,R);
   
-  double pnCrossSection = DoubleDifferential(id,nuclei,Enu,TLepton,coslepton,true);
+  double pnCrossSection = DoubleDifferential(id,nuclei,Enu,TLepton,coslepton,R,true);
   
   if( pnCrossSection >= 0. )     fraction =  pnCrossSection/totalCrossSection;
   
@@ -874,4 +877,26 @@ void HT2p2h::CheckNuclei_2(int nuclei){
 	  exit(1);
 	}
   }
+}
+
+
+double HT2p2h::GetQ0Fermivalue(int nuclei,int id,double R){
+  
+  double pfermi = GetFermiLFG(R,nuclei,-1);
+  
+  double qval = pfermi*pfermi/2.*(1./protonmass+1./neutronmass);
+
+  if ((nieves2p2hpar_.nv2p2hqval != 1) &&
+	  (nieves2p2hpar_.nv2p2hqval != 2)){
+	std::cout << "HT2p2h Error : Config param. nv2p2hqval is not properly set"
+			  << "nv2p2hqval is " << nieves2p2hpar_.nv2p2hqval
+			  << std::endl;
+	exit(1);
+  }
+
+  if (nieves2p2hpar_.nv2p2hqval == 1){
+	qval = 0.;
+  }else
+
+  return qval; 
 }

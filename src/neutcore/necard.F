@@ -103,6 +103,7 @@ C-NCEL
 
 C-- MEC
       MDL2P2H = 2
+      NV2P2HQVAL = 2
 
 C      XMASPI  = 1.21
       XMARSRES = 1.21
