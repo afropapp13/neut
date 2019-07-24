@@ -28,7 +28,7 @@ ${TRGS} : ${SRC}
 CERNLIB=$(shell cernlib jetset74 photos202 mathlib packlib kernlib pdflib)
 
 # NEUTLIBS
-NEUTLIBS=-L../../../lib -lNReWeight $(patsubst ../../../lib/lib%.a,-l%,$(wildcard ../../../lib/*.a)) #../../neutsmpl/rmarin_dum.o
+NEUTLIBS=-L../../../lib -lNReWeight -lgfortran $(patsubst ../../../lib/lib%.a,-l%,$(wildcard ../../../lib/*.a)) #../../neutsmpl/rmarin_dum.o
 
 # Includes
 INC = -I../ -I../../../include -I${CERN}/${CERN_LEVEL}/include
