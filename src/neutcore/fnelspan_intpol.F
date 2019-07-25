@@ -41,6 +41,7 @@ C       2011.03.03 ; Y.Hayato  - For neutral current
      $     ILOADEFFSFELCRS,INCELMA
       REAL RDUM
       CHARACTER*1024 DUMSTR
+      CHARACTER*32   QEMASTR
       integer*4      LENSTR
       external       lenstr
       integer*4      lenpath
@@ -162,31 +163,35 @@ C
       if (mod(MDLQE, 1000)/100 .EQ. 4 .AND. (numbndp .eq. 6 .or. 
      &    numbndp .eq. 8 .or. numbndp .eq. 26)) then
 c ----- load xsec table required
-        DUMSTR = 'qelSfData/totXsec/'
+C        DUMSTR = 'qelSfData/totXsec/'
+         write(QEMASTR,'(F4.2)') XMAQE
+         DUMSTR = 'qelSfData.'
+         DUMSTR = DUMSTR(1:10) // QEMASTR
+         DUMSTR = DUMSTR(1:14) // '/totXsec/'
         if (IPAR .EQ. 14) then
-          DUMSTR=DUMSTR(1:18) // '+14'
+          DUMSTR=DUMSTR(1:23) // '+14'
         else if (IPAR .EQ. -14) then
-          DUMSTR=DUMSTR(1:18) // '-14'
+          DUMSTR=DUMSTR(1:23) // '-14'
         else if (IPAR .EQ. 12) then
-          DUMSTR=DUMSTR(1:18) // '+12'
+          DUMSTR=DUMSTR(1:23) // '+12'
         else if (IPAR .EQ. -12) then
-          DUMSTR=DUMSTR(1:18) // '-12'
+          DUMSTR=DUMSTR(1:23) // '-12'
         else if (IPAR .EQ. 16) then
-          DUMSTR=DUMSTR(1:18) // '+16'
+          DUMSTR=DUMSTR(1:23) // '+16'
         else if (IPAR .EQ. -16) then
-          DUMSTR=DUMSTR(1:18) // '-16'
+          DUMSTR=DUMSTR(1:23) // '-16'
         endif
         
         
         if (NUMBNDP .EQ. 6) then
-          DUMSTR=DUMSTR(1:21) // '_1000060120'
+          DUMSTR=DUMSTR(1:26) // '_1000060120'
         else if (NUMBNDP .EQ. 8) then
-          DUMSTR=DUMSTR(1:21) // '_1000080160'
+          DUMSTR=DUMSTR(1:26) // '_1000080160'
         else if (NUMBNDP .EQ. 26) then
-          DUMSTR=DUMSTR(1:21) // '_1000260560'
+          DUMSTR=DUMSTR(1:26) // '_1000260560'
         endif
         
-        DUMSTR=DUMSTR(1:32) // '_nc.csv'
+        DUMSTR=DUMSTR(1:37) // '_nc.csv'
         DUMSTR=CRSTBLPATH(1:lenpath)//DUMSTR
         open(LUN(1), file=DUMSTR, status="old")
 c        write (*,*) "reading cross section table for sf"
@@ -216,51 +221,59 @@ c        write (*,*) "cross section table for sf loaded"
 
 c ----- load xsec table required
         if (mod(MDLQE, 1000)/100 .EQ. 7) then
-           DUMSTR = 'qelSfData/temSFTotXsec/'
+C     DUMSTR = 'qelSfData/temSFTotXsec/'
+           write(QEMASTR,'(F4.2)') XMAQE
+           DUMSTR = 'qelSfData.'
+           DUMSTR = DUMSTR(1:10) // QEMASTR
+           DUMSTR = DUMSTR(1:14) // '/temSFTotXsec/'
         else
-           DUMSTR = 'qelSfData/effSFTotXsec/'
+C     DUMSTR = 'qelSfData/effSFTotXsec/'
+           write(QEMASTR,'(F4.2)') XMAQE
+           DUMSTR = 'qelSfData.'
+           DUMSTR = DUMSTR(1:10) // QEMASTR
+           DUMSTR = DUMSTR(1:14) // '/effSFTotXsec/'
         endif
         if (IPAR .EQ. 14) then
-           DUMSTR=DUMSTR(1:23) // '+14'
+           DUMSTR=DUMSTR(1:28) // '+14'
         else if (IPAR .EQ. -14) then
-           DUMSTR=DUMSTR(1:23) // '-14'
+           DUMSTR=DUMSTR(1:28) // '-14'
         else if (IPAR .EQ. 12) then
-          DUMSTR=DUMSTR(1:23) // '+12'
+          DUMSTR=DUMSTR(1:28) // '+12'
         else if (IPAR .EQ. -12) then
-          DUMSTR=DUMSTR(1:23) // '-12'
+          DUMSTR=DUMSTR(1:28) // '-12'
         else if (IPAR .EQ. 16) then
-          DUMSTR=DUMSTR(1:23) // '+16'
+          DUMSTR=DUMSTR(1:28) // '+16'
         else if (IPAR .EQ. -16) then
-          DUMSTR=DUMSTR(1:23) // '-16'
+          DUMSTR=DUMSTR(1:28) // '-16'
         endif
         
         if (NUMATOM .EQ. 2) then
-          DUMSTR=DUMSTR(1:26) // '_1000010020'
+          DUMSTR=DUMSTR(1:31) // '_1000010020'
         else if (NUMATOM .EQ. 3) then
-           DUMSTR=DUMSTR(1:26) // '_1000020030'
+           DUMSTR=DUMSTR(1:31) // '_1000020030'
         else if (NUMATOM .EQ. 4) then
-           DUMSTR=DUMSTR(1:26) // '_1000020040'
+           DUMSTR=DUMSTR(1:31) // '_1000020040'
         else if (NUMATOM .EQ. 12) then
-          DUMSTR=DUMSTR(1:26) // '_1000060120'
+          DUMSTR=DUMSTR(1:31) // '_1000060120'
         else if (NUMATOM .EQ. 16) then
-          DUMSTR=DUMSTR(1:26) // '_1000080160'
+          DUMSTR=DUMSTR(1:31) // '_1000080160'
         else if (NUMATOM .EQ. 20) then
-          DUMSTR=DUMSTR(1:26) // '_1000100200'
+          DUMSTR=DUMSTR(1:31) // '_1000100200'
         else if (NUMATOM .EQ. 27) then
-          DUMSTR=DUMSTR(1:26) // '_1000130270'
+          DUMSTR=DUMSTR(1:31) // '_1000130270'
         else if (NUMATOM .EQ. 40) then
-          DUMSTR=DUMSTR(1:26) // '_1000180400'
+          DUMSTR=DUMSTR(1:31) // '_1000180400'
         else if (NUMATOM .EQ. 56) then
-          DUMSTR=DUMSTR(1:26) // '_1000260560'
+          DUMSTR=DUMSTR(1:31) // '_1000260560'
         else if (NUMATOM .EQ. 63) then
-          DUMSTR=DUMSTR(1:26) // '_1000290630'
+          DUMSTR=DUMSTR(1:31) // '_1000290630'
         else if (NUMATOM .EQ. 64) then
-          DUMSTR=DUMSTR(1:26) // '_1000300640'
+          DUMSTR=DUMSTR(1:31) // '_1000300640'
         else if (NUMATOM .EQ. 208) then
-          DUMSTR=DUMSTR(1:26) // '_1000822080'
+          DUMSTR=DUMSTR(1:31) // '_1000822080'
         endif
         
-        DUMSTR=DUMSTR(1:37) // '_nc.csv'
+        DUMSTR=DUMSTR(1:42) // '_nc.csv'
         DUMSTR=CRSTBLPATH(1:lenpath)//DUMSTR
         open(LUN(1), file=DUMSTR, status="old")
 c        write (*,*) "reading cross section table for sf"

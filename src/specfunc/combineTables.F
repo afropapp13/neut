@@ -3,11 +3,12 @@
 ******takes input argument either CC or NC
 ******for NC, only nue tables are read in, as all flavours have the same cross-section
       
-      subroutine combineTables(mode)
+      subroutine combineTables(mode, XMAQE)
       implicit none
       character(len=2) mode
       character(len=80) outputFileName
       character(len=80) inputFileName
+      REAL*4 XMAQE
 
 c     ----- logical needed to check whether files exist
       logical Iexist
@@ -37,15 +38,19 @@ c     ----- integers corresponding to in and out files
       do table = 1, 2 ! Loop through total and maxDiff
 
          if (table .eq. 1) then
-            outputFileName = "qelSfData/totXsec/ALL_1000000000_"
+C            outputFileName = "qelSfData/totXsec/ALL_1000000000_"
+            write(outputFileName,'(A10,F4.2,A24)')
+     $           'qelSfData.',XMAQE,'/totXsec/ALL_1000000000_'
          else 
-            outputFileName = "qelSfData/maxDiff/ALL_1000000000_"
+C            outputFileName = "qelSfData/maxDiff/ALL_1000000000_"
+            write(outputFileName,'(A10,F4.2,A24)')
+     $           'qelSfData.',XMAQE,'/maxDiff/ALL_1000000000_'
          endif
 
          if (mode.EQ. "CC") then
-            outputFileName = outputFileName(1:33) // "cc.csv"
+            outputFileName = outputFileName(1:38) // "cc.csv"
          else if (mode.EQ. "NC")then
-            outputFileName = outputFileName(1:33) // "nc.csv"
+            outputFileName = outputFileName(1:38) // "nc.csv"
          endif
 
 
@@ -78,11 +83,15 @@ c     ----- integers corresponding to in and out files
                
 
                if (table .eq. 1) then
-                  write(inputFileName,"(A18,A1,I2)")
-     &                 "qelSfData/totXsec/",sgn,abs(pdg)
+C                  write(inputFileName,"(A18,A1,I2)")
+C     &                 "qelSfData/totXsec/",sgn,abs(pdg)
+                  write(inputFileName,"(A10,F4.2,A9,A1,I2)")
+     $                 "qelSfData.",XMAQE,"/totXsec/",sgn,abs(pdg)
                else
-                  write(inputFileName,"(A18,A1,I2)")
-     &                 "qelSfData/maxDiff/",sgn,abs(pdg)
+C                  write(inputFileName,"(A18,A1,I2)")
+C     &                 "qelSfData/maxDiff/",sgn,abs(pdg)
+                  write(inputFileName,"(A10,F4.2,A9,A1,I2)")
+     $                 "qelSfData.",XMAQE,"/maxDiff/",sgn,abs(pdg)
                endif
 c     write (*,*) inputFileName
 c     inputFileName = inputFileName(1:18) // sgn
@@ -90,16 +99,16 @@ c     write (*,*) inputFileName
 c     inputFileName = inputFileName(1:19) // char(abs(pdg))
                
                if (j .EQ. 1) then ! C12
-                  inputFileName = inputFileName(1:21) 
+                  inputFileName = inputFileName(1:26) 
      $                 // "_1000060120_"
                else if (j .EQ. 2) then ! O16
-                  inputFileName = inputFileName(1:21) 
+                  inputFileName = inputFileName(1:26) 
      $                 // "_1000080160_"
                else if (j .EQ. 3) then ! Fe56
-                  inputFileName = inputFileName(1:21) 
+                  inputFileName = inputFileName(1:26) 
      $                 // "_1000260560_"
                else if (j .GT. 3) then ! no more nuclei
-                  inputFileName = inputFileName(1:21) 
+                  inputFileName = inputFileName(1:26) 
      $                 // "_1000000000_"
                   if (abs(i) .LT. 15) then
                      do k = 1, 210
@@ -117,9 +126,9 @@ c     inputFileName = inputFileName(1:19) // char(abs(pdg))
                endif
 
                if (mode.EQ. "CC") then
-                  inputFileName = inputFileName(1:33) // "cc.csv"
+                  inputFileName = inputFileName(1:38) // "cc.csv"
                else if (mode.EQ. "NC")then
-                  inputFileName = inputFileName(1:33) // "nc.csv"
+                  inputFileName = inputFileName(1:38) // "nc.csv"
                endif
                
                inquire(file=inputFileName, exist=Iexist)

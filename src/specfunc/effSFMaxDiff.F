@@ -18,7 +18,8 @@
 *
 *
 ***********************************************************************
-      double precision function effSFMaxDiff(E, ipar, targ, nc, MDLQE)
+      double precision function effSFMaxDiff(E, ipar, targ, nc, MDLQE,
+     $     XMAQE)
         implicit none
 #include "nework.h"
         double precision E
@@ -27,6 +28,7 @@
         integer itarg
         logical nc
         integer MDLQE
+        real*4  XMAQE
 
 c ----- looping index, i, and selected bin
         integer i
@@ -52,12 +54,12 @@ c ----- for nc, 2 nucleons (proton, neutron)
 
         if (nc.EQV..TRUE.)then
           if (i_loadDiffXsecnc .EQ. 0) then
-            call readEffSFXsecData(ipar, targ, nc, MDLQE)
+            call readEffSFXsecData(ipar, targ, nc, MDLQE, XMAQE)
             i_loadDiffXsecnc = 1
           endif
         else
           if (i_loadDiffXseccc .EQ. 0) then
-            call readEffSFXsecData(ipar, targ, nc, MDLQE)
+            call readEffSFXsecData(ipar, targ, nc, MDLQE, XMAQE)
             i_loadDiffXseccc = 1
           endif
         endif

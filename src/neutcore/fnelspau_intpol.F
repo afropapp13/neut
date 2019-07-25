@@ -65,6 +65,7 @@ C       2009.01.19 ; Y.Hayato  - PF table change from XX0 to XX5
      $     ILOADEFFSFQECRS,IQEMA
       REAL RDUM
       CHARACTER*1024 DUMSTR
+      CHARACTER*32   QEMASTR
       integer*4      LENSTR
       external       lenstr
       integer*4      lenpath
@@ -239,31 +240,36 @@ c      if (mod(MDLQE, 1000)/100 .EQ. 4) then
      $      (numbndp .eq.26)     )) then
 c       if (mod(MDLQE, 1000)/100 .EQ. 4) then
 c ----- load xsec table required
-        DUMSTR = 'qelSfData/totXsec/'
+C     DUMSTR = 'qelSfData/totXsec/'
+         write(QEMASTR,'(F4.2)') XMAQE
+         DUMSTR = 'qelSfData.'
+         DUMSTR = DUMSTR(1:10) // QEMASTR
+         DUMSTR = DUMSTR(1:14) // '/totXsec/'
+         
         if (IPAR .EQ. 14) then
-          DUMSTR=DUMSTR(1:18) // '+14'
+          DUMSTR=DUMSTR(1:23) // '+14'
         else if (IPAR .EQ. -14) then
-          DUMSTR=DUMSTR(1:18) // '-14'
+          DUMSTR=DUMSTR(1:23) // '-14'
         else if (IPAR .EQ. 12) then
-          DUMSTR=DUMSTR(1:18) // '+12'
+          DUMSTR=DUMSTR(1:23) // '+12'
         else if (IPAR .EQ. -12) then
-          DUMSTR=DUMSTR(1:18) // '-12'
+          DUMSTR=DUMSTR(1:23) // '-12'
         else if (IPAR .EQ. 16) then
-          DUMSTR=DUMSTR(1:18) // '+16'
+          DUMSTR=DUMSTR(1:23) // '+16'
         else if (IPAR .EQ. -16) then
-          DUMSTR=DUMSTR(1:18) // '-16'
+          DUMSTR=DUMSTR(1:23) // '-16'
         endif
         
         
         if (NUMBNDP .EQ. 6) then
-          DUMSTR=DUMSTR(1:21) // '_1000060120'
+          DUMSTR=DUMSTR(1:26) // '_1000060120'
         else if (NUMBNDP .EQ. 8) then
-          DUMSTR=DUMSTR(1:21) // '_1000080160'
+          DUMSTR=DUMSTR(1:26) // '_1000080160'
         else if (NUMBNDP .EQ. 26) then
-          DUMSTR=DUMSTR(1:21) // '_1000260560'
+          DUMSTR=DUMSTR(1:26) // '_1000260560'
         endif
         
-        DUMSTR=DUMSTR(1:32) // '_cc.csv'
+        DUMSTR=DUMSTR(1:37) // '_cc.csv'
         DUMSTR=CRSTBLPATH(1:lenpath)//DUMSTR
         open(LUN, file=DUMSTR, status="old")
 

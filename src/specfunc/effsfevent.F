@@ -185,7 +185,7 @@ c cc
         endif
 
 C ----- build the map of spectral function values that can be picked from
-        call buildEFFSF
+        call buildEFFSF(XMAQE)
 C ----- find the maximum allowed value to throw against - note energy in GeV in tables, MeV in code.
 
         if (first .EQV. .TRUE.) then

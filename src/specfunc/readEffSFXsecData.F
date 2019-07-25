@@ -20,7 +20,7 @@
 *
 ***********************************************************************
 
-      subroutine readEffSFXsecData(ipar, targ, nc, MDLQE)
+      subroutine readEffSFXsecData(ipar, targ, nc, MDLQE, XMAQE)
       
         implicit none
         
@@ -31,6 +31,7 @@
         logical nc
         integer idum
         integer MDLQE
+        real*4  XMAQE
 
         integer i
 
@@ -69,11 +70,17 @@ c ----- nc array second index is proton(1)/neutron(2)
 
 c ----- filename:
         if (mod(MDLQE,1000)/100 .EQ. 7) then
-           write (fileName, "(A38,A2,A4)") 
-     $     "qelSfData/temSFMaxDiff/ALL_1000000000_",interaction,".csv"
+C           write (fileName, "(A38,A2,A4)") 
+C     $     "qelSfData/temSFMaxDiff/ALL_1000000000_",interaction,".csv"
+        write (fileName, "(A10,F4.2,A29,A2,A4)") 
+     $          "qelSfData.",XMAQE,
+     $          "/temSFMaxDiff/ALL_1000000000_",interaction,".csv"
         else
-           write (fileName, "(A38,A2,A4)") 
-     $     "qelSfData/effSFMaxDiff/ALL_1000000000_",interaction,".csv"
+C           write (fileName, "(A38,A2,A4)") 
+C     $     "qelSfData/effSFMaxDiff/ALL_1000000000_",interaction,".csv"
+           write (fileName, "(A10,F4.2,A29,A2,A4)") 
+     $          "qelSfData.",XMAQE,
+     $          "/effSFMaxDiff/ALL_1000000000_",interaction,".csv"
         endif    
 
           

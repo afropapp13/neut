@@ -40,6 +40,7 @@ C       2011.03.03 ; Y.Hayato  - For neutral current
       INTEGER I,II,J,JJ,IDUM,ILOADEFFSFELCRS,IQEMA
       REAL RDUM
       CHARACTER*1024 DUMSTR
+      CHARACTER*4    QEMASTR
 
       integer*4      LENSTR
       external       lenstr
@@ -160,13 +161,21 @@ C
      &        NUMATOM .eq. 64 .or. NUMATOM .eq. 208)) then
 c ----- load xsec table required
         if (mod(MDLQE, 1000)/100 .EQ. 7) then
-           DUMSTR = 'qelSfData/temSFTotXsec/'
+C           DUMSTR = 'qelSfData/temSFTotXsec/'
+           write(QEMASTR,'(F4.2)') XMAQE
+           DUMSTR = 'qelSfData.'
+           DUMSTR = DUMSTR(1:10) // QEMASTR
+           DUMSTR = DUMSTR(1:14) // '/temSFTotXsec/'
         else
-           DUMSTR = 'qelSfData/effSFTotXsec/'           
+C           DUMSTR = 'qelSfData/effSFTotXsec/'           
+           write(QEMASTR,'(F4.2)') XMAQE
+           DUMSTR = 'qelSfData.'
+           DUMSTR = DUMSTR(1:10) // QEMASTR
+           DUMSTR = DUMSTR(1:14) // '/effSFTotXsec/'
         endif
-        DUMSTR=DUMSTR(1:23) // 'ALL'
-        DUMSTR=DUMSTR(1:26) // '_1000000000'
-        DUMSTR=DUMSTR(1:37) // '_nc.csv'
+        DUMSTR=DUMSTR(1:28) // 'ALL'
+        DUMSTR=DUMSTR(1:31) // '_1000000000'
+        DUMSTR=DUMSTR(1:42) // '_nc.csv'
         DUMSTR=CRSTBLPATH(1:lenpath)//DUMSTR
         open(LUN, file=DUMSTR, status="old")
 

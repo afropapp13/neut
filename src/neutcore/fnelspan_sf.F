@@ -40,6 +40,7 @@ C       2011.03.03 ; Y.Hayato  - For neutral current
       INTEGER I,II,J,JJ,IDUM,ILOADSFELCRS,IQEMA
       REAL RDUM
       CHARACTER*1024 DUMSTR
+      CHARACTER*32   QEMASTR
 
       integer*4      LENSTR
       external       lenstr
@@ -155,10 +156,15 @@ C
      $       ( NUMBNDP.eq.8 ).or.
      $       ( NUMBNDP.eq.26)    )) then
 c ----- load xsec table required
-        DUMSTR = 'qelSfData/totXsec/'
-        DUMSTR=DUMSTR(1:18) // 'ALL'
-        DUMSTR=DUMSTR(1:21) // '_1000000000'
-        DUMSTR=DUMSTR(1:32) // '_nc.csv'
+C     DUMSTR = 'qelSfData/totXsec/'
+         write(QEMASTR,'(F4.2)') XMAQE
+         DUMSTR = 'qelSfData.'
+         DUMSTR = DUMSTR(1:10) // QEMASTR
+         DUMSTR = DUMSTR(1:14) // '/totXsec/'
+         
+        DUMSTR=DUMSTR(1:23) // 'ALL'
+        DUMSTR=DUMSTR(1:26) // '_1000000000'
+        DUMSTR=DUMSTR(1:37) // '_nc.csv'
         DUMSTR=CRSTBLPATH(1:lenpath)//DUMSTR
         open(LUN, file=DUMSTR, status="old")
 c        write (*,*) "reading cross section table for sf"
