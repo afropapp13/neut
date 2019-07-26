@@ -1,5 +1,8 @@
 #Files/patterns to ignore by Git
 
+#ignore f2c headers
+*C.h
+
 #Ignore object and library files
 *.o
 *.a
@@ -10,3 +13,5 @@
 *Dict.cc
 *Dict.h
 *LinkDef.h
+*.pcm
+src/reweight/_ROOT_DICT_ReWeight.cc
