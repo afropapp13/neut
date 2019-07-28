@@ -1,0 +1,79 @@
+C--------------------------------------------------
+C
+C EVCT-NEVT
+C   Number of events to generate
+C
+
+EVCT-NEVT  100000
+
+EVCT-IDPT 14
+EVCT-MPOS 2
+EVCT-RAD  100.
+EVCT-MDIR 1
+EVCT-DIR 0. 0. 1.
+
+C--------------------------------------------------
+C
+C EVCT-MPV
+C   Energy of neutrino
+C          1 : Fixed  ( given by EVCT-PV )
+C          2 : Random ( range is given by EVCT-PV )
+C          3 : Flux file
+C
+C EVCT-PV
+C   Energy ( range ) of neutrino ( Fixed : Emin is used )
+C          Emin Emax
+C
+C EVCT-FILENM
+C   Flux filname
+C
+C EVCT-HISTNM
+C   Flux histogram name
+C
+C EVCT-INMEV
+C   Energy unit of the input flux histogram
+C          0 : In GeV
+C          1 : In MeV
+C
+
+EVCT-MPV  2
+EVCT-PV  10  5000.
+
+C--------------------------------------------------
+C **** TARGET INFORMATION ****
+C
+C NUMBNDN : total number of neutron
+C           (e.g. CH => 6, H2O => 8, Ar => 22, Fe => 30)
+C
+C NUMBNDP : total number of bound proton
+C           (e.g. CH => 6, H2O => 8, Ar => 18, Fe => 26)
+C
+C NUMFREP : total number of free proton
+C           (e.g. CH => 1, H2O => 2, Ar => 0, Fe => 0)
+C
+C NUMATOM : atomic number of atom heavier than hydrogen
+C           (e.g. CH => 12, H2O =>16, Ar => 40, Fe => 56)
+C
+
+NEUT-NUMBNDN 22
+NEUT-NUMBNDP 18
+NEUT-NUMFREP 0
+NEUT-NUMATOM 40
+
+C-----------------------------------------------------------------------
+C
+C NEUT-RAND
+C   method to initialize random
+C      0 : Read RANDOM number from FILE 
+C             ( specfy file with the enviroment variable RANFILE )
+C      1 : Generating RANDOM SEED from the time
+C
+
+NEUT-RAND 1
+
+C-----------------------------------------------------------------------
+C
+C NEUT-CRSPATH
+C   Cross-section data file pathname
+
+NEUT-CRSPATH '../crsdat'
