@@ -18,7 +18,7 @@ C
 ************************************************************************
 
       integer NUCCVER, NUCCVERtmp
-      data NUCCVERtmp/NENUCCVER/
+      data NUCCVERtmp/NENUCC_VERSION/
 
       NUCCVER = NUCCVERtmp
 

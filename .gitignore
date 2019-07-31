@@ -15,3 +15,17 @@
 *LinkDef.h
 *.pcm
 src/reweight/_ROOT_DICT_ReWeight.cc
+
+#Ignore autotools generated
+*Makefile
+*Makefile.in
+*configure
+*.deps
+*.dirstamp
+config.*
+*.m4
+depcomp
+autom4te.cache
+compile
+install-sh
+missing
