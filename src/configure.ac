@@ -50,6 +50,14 @@ case "${FOUND_ROOTCONFIG}" in
   *) AC_MSG_ERROR(Failed to find root-config. Is root set up?);
 esac
 
+ROOT_MAJOR_VERSION=$(root-config --version  | cut -d . -f 1)
+if test ${ROOT_MAJOR_VERSION} = 6; then
+  echo "Using ROOT 6."
+else
+  echo "Assuming ROOT 5."
+fi
+AM_CONDITIONAL([ROOT_MAJOR_IS_SIX], [test ${ROOT_MAJOR_VERSION} = 6])
+
 AC_CONFIG_FILES([
   Makefile
   neutcore/Makefile

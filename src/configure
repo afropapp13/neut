@@ -633,6 +633,8 @@ ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS
 LIBOBJS
+ROOT_MAJOR_IS_SIX_FALSE
+ROOT_MAJOR_IS_SIX_TRUE
 FOUND_ROOTCONFIG
 CXXCPP
 CPP
@@ -22510,6 +22512,21 @@ $as_echo "Found root-config." >&6; };;
   *) as_fn_error $? "Failed to find root-config. Is root set up?" "$LINENO" 5;
 esac
 
+ROOT_MAJOR_VERSION=$(root-config --version  | cut -d . -f 1)
+if test ${ROOT_MAJOR_VERSION} = 6; then
+  echo "Using ROOT 6."
+else
+  echo "Assuming ROOT 5."
+fi
+ if test ${ROOT_MAJOR_VERSION} = 6; then
+  ROOT_MAJOR_IS_SIX_TRUE=
+  ROOT_MAJOR_IS_SIX_FALSE='#'
+else
+  ROOT_MAJOR_IS_SIX_TRUE='#'
+  ROOT_MAJOR_IS_SIX_FALSE=
+fi
+
+
 ac_config_files="$ac_config_files Makefile neutcore/Makefile nuccorspl/Makefile nuceff/Makefile n1p1h/Makefile ht2p2h/Makefile radcorr/Makefile tauola/Makefile specfunc/Makefile skmcsvc/Makefile zbsfns/Makefile partnuck/Makefile neutclass/Makefile neutsmpl/Makefile"
 
 
@@ -22684,6 +22701,10 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${am__fastdepCXX_TRUE}" && test -z "${am__fastdepCXX_FALSE}"; then
   as_fn_error $? "conditional \"am__fastdepCXX\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${ROOT_MAJOR_IS_SIX_TRUE}" && test -z "${ROOT_MAJOR_IS_SIX_FALSE}"; then
+  as_fn_error $? "conditional \"ROOT_MAJOR_IS_SIX\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 

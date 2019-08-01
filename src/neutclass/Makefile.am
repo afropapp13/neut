@@ -13,8 +13,10 @@ AM_LDFLAGS = $(ROOT_LINKFLAGS)
 
 lib_LTLIBRARIES = libNEUTneutclass.la
 
+if ROOT_MAJOR_IS_SIX
 pcmdir = $(prefix)/lib
 pcm_DATA = neutclassDict_rdict.pcm
+endif
 
 libNEUTneutclass_la_SOURCES = neutclassDict.cc neutctrl.cc neutfsipart.cc neutfsivert.cc neutnucfsistep.cc neutnucfsivert.cc neutpart.cc neutvect.cc neutvtx.cc
 
