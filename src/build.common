@@ -5,7 +5,7 @@ NEUT_STATIC_LIBS = $(top_builddir)/neutclass/libNEUTneutclassUtils.a $(top_build
 
 CERN_ROOT = $(CERN)/$(CERN_LEVEL)/include
 
-CERN_LINKFLAGS := $(shell cernlib jetset74 pdflib804 photos202 mathlib packlib kernlib)
+CERN_LINKFLAGS := $(shell ${CERN}/${CERN_LEVEL}/bin/cernlib jetset74 pdflib804 photos202 mathlib packlib kernlib)
 
 NEUT_FFLAGS = -fno-backslash -fno-automatic -fno-second-underscore -ffixed-line-length-132 -fdollar-ok -fPIC -fbounds-check -Wall -W -ffpe-trap=invalid,zero,overflow -DstrictF77 -DgFortran -Df2cFortran
 

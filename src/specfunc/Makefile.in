@@ -344,7 +344,7 @@ top_srcdir = @top_srcdir@
 NEUT_INCLUDES = -I$(top_srcdir)/radcorr -I$(top_srcdir)/tauola -I$(top_srcdir)/mec -I$(top_srcdir)/ht2p2h/inc -I$(top_srcdir)/nuccorspl -I$(top_srcdir)/zbsfns -I$(top_srcdir)/n1p1h/inc -I$(top_srcdir)/nuceff -I$(top_srcdir)/kamflux -I$(top_srcdir)/nuclsmpl -I$(top_srcdir)/skmcsvc -I$(top_srcdir)/neutcore -I$(top_srcdir)/partnuck -I$(top_srcdir)/specfunc -I$(top_srcdir)/t2kflux_zbs -I$(top_builddir)/neutcore -I$(top_builddir)/skmcsvc -I$(top_builddir)/n1p1h -I$(top_builddir)/nuccorspl -I$(top_builddir)/nuceff
 NEUT_STATIC_LIBS = $(top_builddir)/neutclass/libNEUTneutclassUtils.a $(top_builddir)/neutcore/libNEUTneutcore.a $(top_builddir)/nuccorspl/libNEUTnuccorspl.a $(top_builddir)/nuceff/libNEUTnuceff.a $(top_builddir)/n1p1h/libNEUTn1p1h.a $(top_builddir)/ht2p2h/libNEUTht2p2h.a $(top_builddir)/radcorr/libNEUTradcorr.a $(top_builddir)/tauola/libNEUTtauola.a $(top_builddir)/specfunc/libNEUTspecfunc.a $(top_builddir)/skmcsvc/libNEUTskmcsvc.a $(top_builddir)/zbsfns/libNEUTzbsfns.a $(top_builddir)/partnuck/libNEUTpartnuck.a
 CERN_ROOT = $(CERN)/$(CERN_LEVEL)/include
-CERN_LINKFLAGS := $(shell cernlib jetset74 pdflib804 photos202 mathlib packlib kernlib)
+CERN_LINKFLAGS := $(shell ${CERN}/${CERN_LEVEL}/bin/cernlib jetset74 pdflib804 photos202 mathlib packlib kernlib)
 NEUT_FFLAGS = -fno-backslash -fno-automatic -fno-second-underscore -ffixed-line-length-132 -fdollar-ok -fPIC -fbounds-check -Wall -W -ffpe-trap=invalid,zero,overflow -DstrictF77 -DgFortran -Df2cFortran
 DEFAULT_FFLAGS = $(NEUT_FFLAGS) $(NEUT_INCLUDES) -I$(CERN_ROOT)
 DEFAULT_CXXFLAGS = -fPIC $(NEUT_INCLUDES) -I$(CERN_ROOT) $(shell root-config --cflags)

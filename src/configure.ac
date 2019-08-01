@@ -11,6 +11,23 @@ AC_CONFIG_MACRO_DIRS([m4])
 AC_ARG_VAR(CERN, Top level directory of build cernlib)
 AC_ARG_VAR(CERN_LEVEL, [The CERN 'level', almost certainly 2005])
 
+if test x"${CERN}" == x; then
+  AC_MSG_ERROR(CERN environment variable is not defined.)
+else
+  echo "CERN = ${CERN}"
+fi
+
+if test x"${CERN_LEVEL}" == x; then
+  AC_MSG_ERROR(CERN_LEVEL environment variable is not defined (likely should be 2005).)
+else
+  echo "CERN_LEVEL = ${CERN_LEVEL}"
+fi
+
+AC_CHECK_FILE("${CERN}/${CERN_LEVEL}/bin/cernlib",
+  [],
+  [AC_MSG_ERROR("${CERN}/${CERN_LEVEL}/bin/cernlib does not exist. Is CERNLIB built correctly?")]
+)
+
 AC_CHECK_FILE("${CERN}/${CERN_LEVEL}/include/pdf804/pilot.h",
   [],
   [AC_MSG_ERROR("pdf804/pilot.h does not exist in ${CERN}/${CERN_LEVEL}/include/ (expecting CERN and CERN_LEVEL to be defined.)")]
@@ -29,8 +46,8 @@ LT_INIT
 AC_CHECK_PROG(FOUND_ROOTCONFIG,root-config,"FOUND","NOT-FOUND")
 
 case "${FOUND_ROOTCONFIG}" in
-  "FOUND") AC_MSG_RESULT(Found foot-config.);;
-  *) AC_MSG_ERROR(Failed to find root-config. Is root set up?);;
+  "FOUND") AC_MSG_RESULT(Found root-config.);;
+  *) AC_MSG_ERROR(Failed to find root-config. Is root set up?);
 esac
 
 AC_CONFIG_FILES([
