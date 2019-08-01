@@ -6,6 +6,7 @@ AC_SUBST(NEUT_VERSION, AC_PACKAGE_VERSION)
 AC_SUBST(NEUT_VERSION_NUM, $(echo AC_PACKAGE_VERSION | tr -d '.' ))
 
 AC_CONFIG_SRCDIR([neutsmpl/neutroot.F])
+AC_CONFIG_MACRO_DIRS([m4])
 
 AC_ARG_VAR(CERN, Top level directory of build cernlib)
 AC_ARG_VAR(CERN_LEVEL, [The CERN 'level', almost certainly 2005])
@@ -21,7 +22,9 @@ AC_PROG_CC
 AC_PROG_CXX
 AC_PROG_FC
 AC_PROG_F77
-AC_PROG_RANLIB
+AC_PROG_LIBTOOL
+
+LT_INIT
 
 AC_CHECK_PROG(FOUND_ROOTCONFIG,root-config,"FOUND","NOT-FOUND")
 
@@ -38,6 +41,13 @@ AC_CONFIG_FILES([
   n1p1h/Makefile
   ht2p2h/Makefile
   radcorr/Makefile
+  tauola/Makefile
+  specfunc/Makefile
+  skmcsvc/Makefile
+  zbsfns/Makefile
+  partnuck/Makefile
+  neutclass/Makefile
+  neutsmpl/Makefile
 ])
 
 AC_OUTPUT

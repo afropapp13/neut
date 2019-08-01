@@ -86,9 +86,14 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
+build_triplet = x86_64-pc-linux-gnu
+host_triplet = x86_64-pc-linux-gnu
 subdir = n1p1h
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/configure.ac
+am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
+	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
+	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 DIST_COMMON = $(srcdir)/Makefile.am $(am__DIST_COMMON)
@@ -124,7 +129,6 @@ am__uninstall_files_from_dir = { \
   }
 am__installdirs = "$(DESTDIR)$(libdir)"
 LIBRARIES = $(lib_LIBRARIES)
-AR = ar
 ARFLAGS = cru
 AM_V_AR = $(am__v_AR_$(V))
 am__v_AR_ = $(am__v_AR_$(AM_DEFAULT_VERBOSITY))
@@ -162,38 +166,54 @@ am__v_lt_0 = --silent
 am__v_lt_1 = 
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
+LTCXXCOMPILE = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) \
+	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
+	$(AM_CXXFLAGS) $(CXXFLAGS)
 AM_V_CXX = $(am__v_CXX_$(V))
 am__v_CXX_ = $(am__v_CXX_$(AM_DEFAULT_VERBOSITY))
 am__v_CXX_0 = @echo "  CXX     " $@;
 am__v_CXX_1 = 
 CXXLD = $(CXX)
-CXXLINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
-	-o $@
+CXXLINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
+	$(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 AM_V_CXXLD = $(am__v_CXXLD_$(V))
 am__v_CXXLD_ = $(am__v_CXXLD_$(AM_DEFAULT_VERBOSITY))
 am__v_CXXLD_0 = @echo "  CXXLD   " $@;
 am__v_CXXLD_1 = 
 PPF77COMPILE = $(F77) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_FFLAGS) $(FFLAGS)
+LTPPF77COMPILE = $(LIBTOOL) $(AM_V_lt) --tag=F77 $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=compile $(F77) $(DEFS) \
+	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
+	$(AM_FFLAGS) $(FFLAGS)
 AM_V_PPF77 = $(am__v_PPF77_$(V))
 am__v_PPF77_ = $(am__v_PPF77_$(AM_DEFAULT_VERBOSITY))
 am__v_PPF77_0 = @echo "  PPF77   " $@;
 am__v_PPF77_1 = 
 F77LD = $(F77)
-F77LINK = $(F77LD) $(AM_FFLAGS) $(FFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o \
-	$@
+F77LINK = $(LIBTOOL) $(AM_V_lt) --tag=F77 $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(F77LD) $(AM_FFLAGS) $(FFLAGS) \
+	$(AM_LDFLAGS) $(LDFLAGS) -o $@
 AM_V_F77LD = $(am__v_F77LD_$(V))
 am__v_F77LD_ = $(am__v_F77LD_$(AM_DEFAULT_VERBOSITY))
 am__v_F77LD_0 = @echo "  F77LD   " $@;
 am__v_F77LD_1 = 
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+LTCOMPILE = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) \
+	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
+	$(AM_CFLAGS) $(CFLAGS)
 AM_V_CC = $(am__v_CC_$(V))
 am__v_CC_ = $(am__v_CC_$(AM_DEFAULT_VERBOSITY))
 am__v_CC_0 = @echo "  CC      " $@;
 am__v_CC_1 = 
 CCLD = $(CC)
-LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(AM_LDFLAGS) $(LDFLAGS) -o $@
 AM_V_CCLD = $(am__v_CCLD_$(V))
 am__v_CCLD_ = $(am__v_CCLD_$(AM_DEFAULT_VERBOSITY))
 am__v_CCLD_0 = @echo "  CCLD    " $@;
@@ -230,6 +250,7 @@ DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = ${SHELL} /home/picker24/software/NEUT/neut_build_system/src/missing aclocal-1.15
 AMTAR = $${TAR-tar}
 AM_DEFAULT_VERBOSITY = 1
+AR = ar
 AUTOCONF = ${SHELL} /home/picker24/software/NEUT/neut_build_system/src/missing autoconf
 AUTOHEADER = ${SHELL} /home/picker24/software/NEUT/neut_build_system/src/missing autoheader
 AUTOMAKE = ${SHELL} /home/picker24/software/NEUT/neut_build_system/src/missing automake-1.15
@@ -239,36 +260,55 @@ CCDEPMODE = depmode=gcc3
 CERN = /home/picker24/software/cernlib/cernlib_src_gcc7
 CERN_LEVEL = 2005
 CFLAGS = -g -O2
+CPP = gcc -E
 CPPFLAGS = 
 CXX = g++
+CXXCPP = g++ -E
 CXXDEPMODE = depmode=gcc3
 CXXFLAGS = -g -O2
 CYGPATH_W = echo
-DEFS = -DPACKAGE_NAME=\"neut\" -DPACKAGE_TARNAME=\"neut\" -DPACKAGE_VERSION=\"5.4.1\" -DPACKAGE_STRING=\"neut\ 5.4.1\" -DPACKAGE_BUGREPORT=\"\" -DPACKAGE_URL=\"\" -DPACKAGE=\"neut\" -DVERSION=\"5.4.1\"
+DEFS = -DPACKAGE_NAME=\"neut\" -DPACKAGE_TARNAME=\"neut\" -DPACKAGE_VERSION=\"5.4.1\" -DPACKAGE_STRING=\"neut\ 5.4.1\" -DPACKAGE_BUGREPORT=\"\" -DPACKAGE_URL=\"\" -DPACKAGE=\"neut\" -DVERSION=\"5.4.1\" -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DHAVE_DLFCN_H=1 -DLT_OBJDIR=\".libs/\"
 DEPDIR = .deps
+DLLTOOL = false
+DSYMUTIL = 
+DUMPBIN = 
 ECHO_C = 
 ECHO_N = -n
 ECHO_T = 
+EGREP = /bin/grep -E
 EXEEXT = 
 F77 = g77
 FC = gfortran
 FCFLAGS = -g -O2
 FFLAGS = -g -O2
+FGREP = /bin/grep -F
 FOUND_ROOTCONFIG = FOUND
+GREP = /bin/grep
 INSTALL = /usr/bin/install -c
 INSTALL_DATA = ${INSTALL} -m 644
 INSTALL_PROGRAM = ${INSTALL}
 INSTALL_SCRIPT = ${INSTALL}
 INSTALL_STRIP_PROGRAM = $(install_sh) -c -s
+LD = /usr/bin/ld -m elf_x86_64
 LDFLAGS = 
 LIBOBJS = 
 LIBS = 
+LIBTOOL = $(SHELL) $(top_builddir)/libtool
+LIPO = 
+LN_S = ln -s
 LTLIBOBJS = 
+LT_SYS_LIBRARY_PATH = 
 MAKEINFO = ${SHELL} /home/picker24/software/NEUT/neut_build_system/src/missing makeinfo
+MANIFEST_TOOL = :
 MKDIR_P = /bin/mkdir -p
 NEUT_VERSION = 5.4.1
 NEUT_VERSION_NUM = 541
+NM = /usr/bin/nm -B
+NMEDIT = 
+OBJDUMP = objdump
 OBJEXT = o
+OTOOL = 
+OTOOL64 = 
 PACKAGE = neut
 PACKAGE_BUGREPORT = 
 PACKAGE_NAME = neut
@@ -278,16 +318,19 @@ PACKAGE_URL =
 PACKAGE_VERSION = 5.4.1
 PATH_SEPARATOR = :
 RANLIB = ranlib
+SED = /bin/sed
 SET_MAKE = 
 SHELL = /bin/bash
-STRIP = 
+STRIP = strip
 VERSION = 5.4.1
 abs_builddir = /home/picker24/software/NEUT/neut_build_system/src/n1p1h
 abs_srcdir = /home/picker24/software/NEUT/neut_build_system/src/n1p1h
 abs_top_builddir = /home/picker24/software/NEUT/neut_build_system/src
 abs_top_srcdir = /home/picker24/software/NEUT/neut_build_system/src
+ac_ct_AR = ar
 ac_ct_CC = gcc
 ac_ct_CXX = g++
+ac_ct_DUMPBIN = 
 ac_ct_F77 = g77
 ac_ct_FC = gfortran
 am__include = include
@@ -296,14 +339,22 @@ am__quote =
 am__tar = $${TAR-tar} chof - "$$tardir"
 am__untar = $${TAR-tar} xf -
 bindir = ${exec_prefix}/bin
+build = x86_64-pc-linux-gnu
 build_alias = 
+build_cpu = x86_64
+build_os = linux-gnu
+build_vendor = pc
 builddir = .
 datadir = ${datarootdir}
 datarootdir = ${prefix}/share
 docdir = ${datarootdir}/doc/${PACKAGE_TARNAME}
 dvidir = ${docdir}
 exec_prefix = ${prefix}
+host = x86_64-pc-linux-gnu
 host_alias = 
+host_cpu = x86_64
+host_os = linux-gnu
+host_vendor = pc
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
@@ -329,10 +380,16 @@ top_build_prefix = ../
 top_builddir = ..
 top_srcdir = ..
 NEUT_INCLUDES = -I$(top_srcdir)/radcorr -I$(top_srcdir)/tauola -I$(top_srcdir)/mec -I$(top_srcdir)/ht2p2h/inc -I$(top_srcdir)/nuccorspl -I$(top_srcdir)/zbsfns -I$(top_srcdir)/n1p1h/inc -I$(top_srcdir)/nuceff -I$(top_srcdir)/kamflux -I$(top_srcdir)/nuclsmpl -I$(top_srcdir)/skmcsvc -I$(top_srcdir)/neutcore -I$(top_srcdir)/partnuck -I$(top_srcdir)/specfunc -I$(top_srcdir)/t2kflux_zbs
+NEUT_STATIC_LIBS = $(top_srcdir)/neutclass/libNEUTneutclassUtils.a $(top_srcdir)/neutcore/libNEUTneutcore.a $(top_srcdir)/nuccorspl/libNEUTnuccorspl.a $(top_srcdir)/nuceff/libNEUTnuceff.a $(top_srcdir)/n1p1h/libNEUTn1p1h.a $(top_srcdir)/ht2p2h/libNEUTht2p2h.a $(top_srcdir)/radcorr/libNEUTradcorr.a $(top_srcdir)/tauola/libNEUTtauola.a $(top_srcdir)/specfunc/libNEUTspecfunc.a $(top_srcdir)/skmcsvc/libNEUTskmcsvc.a $(top_srcdir)/zbsfns/libNEUTzbsfns.a $(top_srcdir)/partnuck/libNEUTpartnuck.a
 CERN_ROOT = $(CERN)/$(CERN_LEVEL)/include
+CERN_LINKFLAGS := $(shell cernlib jetset74 pdflib804 photos202 mathlib packlib kernlib)
 NEUT_FFLAGS = -fno-backslash -fno-automatic -fno-second-underscore -ffixed-line-length-132 -fdollar-ok -fPIC -fbounds-check -Wall -W -ffpe-trap=invalid,zero,overflow -DstrictF77 -DgFortran -Df2cFortran
 DEFAULT_FFLAGS = $(NEUT_FFLAGS) $(NEUT_INCLUDES) -I$(CERN_ROOT)
-DEFAULT_CXXFLAGS = -fPIC $(NEUT_INCLUDES) -I$(CERN_ROOT) `root-config --cflags`
+DEFAULT_CXXFLAGS = -fPIC $(NEUT_INCLUDES) -I$(CERN_ROOT) $(shell root-config --cflags)
+ROOT_LINKFLAGS = $(shell root-config --glibs)
+
+# I know... but this seems to work
+EXE_LINKFLAGS = -fno-PIE -fno-pie -no-pie
 lib_LIBRARIES = libNEUTn1p1h.a
 libNEUTn1p1h_a_CXXFLAGS = -DN1P1HVER=541 $(DEFAULT_CXXFLAGS)
 
@@ -345,7 +402,7 @@ UNUSED_srcs =
 all: all-am
 
 .SUFFIXES:
-.SUFFIXES: .C .F .f .o .obj
+.SUFFIXES: .C .F .f .lo .o .obj
 $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am $(top_srcdir)/build.common $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
@@ -460,6 +517,14 @@ include src/$(DEPDIR)/libNEUTn1p1h_a-Simplex.Po
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
 #	$(AM_V_CXX_no)$(CXXCOMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
 
+.C.lo:
+	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.lo$$||'`;\
+	$(LTCXXCOMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ $< &&\
+	$(am__mv) $$depbase.Tpo $$depbase.Plo
+#	$(AM_V_CXX)source='$<' object='$@' libtool=yes \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(AM_V_CXX_no)$(LTCXXCOMPILE) -c -o $@ $<
+
 src/libNEUTn1p1h_a-N1p1h2d.o: src/N1p1h2d.C
 	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libNEUTn1p1h_a_CXXFLAGS) $(CXXFLAGS) -MT src/libNEUTn1p1h_a-N1p1h2d.o -MD -MP -MF src/$(DEPDIR)/libNEUTn1p1h_a-N1p1h2d.Tpo -c -o src/libNEUTn1p1h_a-N1p1h2d.o `test -f 'src/N1p1h2d.C' || echo '$(srcdir)/'`src/N1p1h2d.C
 	$(AM_V_at)$(am__mv) src/$(DEPDIR)/libNEUTn1p1h_a-N1p1h2d.Tpo src/$(DEPDIR)/libNEUTn1p1h_a-N1p1h2d.Po
@@ -536,6 +601,9 @@ src/libNEUTn1p1h_a-Simplex.obj: src/Simplex.C
 .F.obj:
 	$(AM_V_PPF77)$(PPF77COMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
 
+.F.lo:
+	$(AM_V_PPF77)$(LTPPF77COMPILE) -c -o $@ $<
+
 src/libNEUTn1p1h_a-qe.o: src/qe.F
 	$(AM_V_PPF77)$(F77) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libNEUTn1p1h_a_FFLAGS) $(FFLAGS) -c -o src/libNEUTn1p1h_a-qe.o `test -f 'src/qe.F' || echo '$(srcdir)/'`src/qe.F
 
@@ -543,6 +611,12 @@ src/libNEUTn1p1h_a-qe.obj: src/qe.F
 	$(AM_V_PPF77)$(F77) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libNEUTn1p1h_a_FFLAGS) $(FFLAGS) -c -o src/libNEUTn1p1h_a-qe.obj `if test -f 'src/qe.F'; then $(CYGPATH_W) 'src/qe.F'; else $(CYGPATH_W) '$(srcdir)/src/qe.F'; fi`
 .F.f:
 	$(F77COMPILE) -F $<
+
+mostlyclean-libtool:
+	-rm -f *.lo
+
+clean-libtool:
+	-rm -rf .libs _libs
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique
@@ -667,7 +741,8 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-am
 
-clean-am: clean-generic clean-libLIBRARIES mostlyclean-am
+clean-am: clean-generic clean-libLIBRARIES clean-libtool \
+	mostlyclean-am
 
 distclean: distclean-am
 	-rm -rf src/$(DEPDIR)
@@ -722,7 +797,8 @@ maintainer-clean-am: distclean-am maintainer-clean-generic
 
 mostlyclean: mostlyclean-am
 
-mostlyclean-am: mostlyclean-compile mostlyclean-generic
+mostlyclean-am: mostlyclean-compile mostlyclean-generic \
+	mostlyclean-libtool
 
 pdf: pdf-am
 
@@ -737,16 +813,17 @@ uninstall-am: uninstall-libLIBRARIES
 .MAKE: install-am install-strip
 
 .PHONY: CTAGS GTAGS TAGS all all-am check check-am clean clean-generic \
-	clean-libLIBRARIES cscopelist-am ctags ctags-am distclean \
-	distclean-compile distclean-generic distclean-tags distdir dvi \
-	dvi-am html html-am info info-am install install-am \
-	install-data install-data-am install-dvi install-dvi-am \
-	install-exec install-exec-am install-html install-html-am \
-	install-info install-info-am install-libLIBRARIES install-man \
-	install-pdf install-pdf-am install-ps install-ps-am \
-	install-strip installcheck installcheck-am installdirs \
-	maintainer-clean maintainer-clean-generic mostlyclean \
-	mostlyclean-compile mostlyclean-generic pdf pdf-am ps ps-am \
+	clean-libLIBRARIES clean-libtool cscopelist-am ctags ctags-am \
+	distclean distclean-compile distclean-generic \
+	distclean-libtool distclean-tags distdir dvi dvi-am html \
+	html-am info info-am install install-am install-data \
+	install-data-am install-dvi install-dvi-am install-exec \
+	install-exec-am install-html install-html-am install-info \
+	install-info-am install-libLIBRARIES install-man install-pdf \
+	install-pdf-am install-ps install-ps-am install-strip \
+	installcheck installcheck-am installdirs maintainer-clean \
+	maintainer-clean-generic mostlyclean mostlyclean-compile \
+	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
 	tags tags-am uninstall uninstall-am uninstall-libLIBRARIES
 
 .PRECIOUS: Makefile

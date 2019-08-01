@@ -27,7 +27,7 @@ class NeutCtrl : public TObject {
   Float_t CrsWgt[48]; //          Cross-section weight table
                       //           From  0 to 23 : for neutrino
                       //           From 24 to 47 : for anti-neutrino
-  
+
   /* Nuclear effect related */
   Bool_t IsNucEff;    //          Consider pi/K/p/n/eta rescattering or not
                       //          True  : consider

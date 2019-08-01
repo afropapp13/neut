@@ -1,5 +1,5 @@
 #include "neutvtx.h"
-#include "necardC.h"
+
 #include <iostream>
 
 
@@ -14,7 +14,7 @@ void
 NeutVtx::SetNvtx(Int_t nvtx)
 {
   fNvtx = nvtx;
-  
+
   if (nvtx > 0){
 	if (fPos == NULL){
 	  fPos = new TObjArray(fNvtx);
@@ -27,7 +27,7 @@ NeutVtx::SetNvtx(Int_t nvtx)
 	fPos = NULL;
 	fNvtx = 0;
   }
-	
+
 }
 
 NeutVtx::~NeutVtx()
@@ -48,7 +48,7 @@ NeutVtx::SetPos(int vtxid, TLorentzVector pos)
   pos_p = new TLorentzVector();
 
   *pos_p = pos;
-  
+
   fPos->AddAt(pos_p,vtxid);
 
 }
@@ -69,19 +69,19 @@ void
 NeutVtx::Dump()
 {
   //  if (neutcard_.quiet) return;
-  
+
   int i;
   std::cout << "Event #" << EventNo << "\n";
   for (i = 0 ; i < Nvtx() ; i++){
     std::cout << "i=" << i << "\n";
-    
+
     std::cout << "Vertex Pos(1)=(" << (Pos(i))->X() << ","
-	      << (Pos(i))->Y() << "," 
+	      << (Pos(i))->Y() << ","
 	      << (Pos(i))->Z() << ","
 	      << (Pos(i))->T()  << ")"
 	      << "\n";
   }
 }
 
-  
+
 ClassImp(NeutVtx)
