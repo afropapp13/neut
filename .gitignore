@@ -23,8 +23,6 @@ Linux
 
 #Ignore autotools generated
 *Makefile
-*Makefile.in
-*configure
 *.deps
 *.dirstamp
 config.*
