@@ -25,13 +25,6 @@ Linux
 *Makefile
 *.deps
 *.dirstamp
-config.*
 *.m4
-depcomp
 autom4te.cache
-compile
-install-sh
-missing
-libtool
-ltmain.sh
 *.libs
