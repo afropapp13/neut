@@ -32,7 +32,7 @@
 
 #include <TMath.h>
 
-#include "Controls.h"
+#include "NReWeightControls.h"
 #include "PDGCodes.h"
 #include "NReWeightNuXSecCCRES.h"
 #include "NSystSet.h"

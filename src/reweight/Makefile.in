@@ -136,20 +136,43 @@ AM_V_AR = $(am__v_AR_@AM_V@)
 am__v_AR_ = $(am__v_AR_@AM_DEFAULT_V@)
 am__v_AR_0 = @echo "  AR      " $@;
 am__v_AR_1 = 
-lib@LIBPREFIX@NReWeight_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_AR =  \
-	$(AR) $(ARFLAGS)
-lib@LIBPREFIX@NReWeight_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_LIBADD =
-am_lib@LIBPREFIX@NReWeight_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_OBJECTS =  \
-	NFortFns.$(OBJEXT) NModeDefn.$(OBJEXT) NReWeightCasc.$(OBJEXT) \
-	NReWeight.$(OBJEXT) NReWeightINuke.$(OBJEXT) \
-	NReWeightNuclPiless.$(OBJEXT) NReWeightNuXSecCCQE.$(OBJEXT) \
-	NReWeightNuXSecCCRES.$(OBJEXT) NReWeightNuXSecCOH.$(OBJEXT) \
-	NReWeightNuXSecDIS.$(OBJEXT) NReWeightNuXSecNC.$(OBJEXT) \
-	NReWeightNuXSecNCEL.$(OBJEXT) NReWeightNuXSecNCRES.$(OBJEXT) \
-	NReWeightNuXSecRES.$(OBJEXT) NReWeightUtils.$(OBJEXT) \
-	NSystSet.$(OBJEXT) NSystUncertainty.$(OBJEXT) \
-	NTotCrs.$(OBJEXT)
-lib@LIBPREFIX@NReWeight_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_OBJECTS = $(am_lib@LIBPREFIX@NReWeight_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_OBJECTS)
+libNEUTReWeight_@NEUT_VERSION_NUM@_a_AR = $(AR) $(ARFLAGS)
+libNEUTReWeight_@NEUT_VERSION_NUM@_a_LIBADD =
+am__libNEUTReWeight_@NEUT_VERSION_NUM@_a_SOURCES_DIST = NFortFns.cc \
+	NModeDefn.cc NReWeightCasc.cc NReWeight.cc NReWeightINuke.cc \
+	NReWeightNuclPiless.cc NReWeightNuXSecCCQE.cc \
+	NReWeightNuXSecCCRES.cc NReWeightNuXSecCOH.cc \
+	NReWeightNuXSecDIS.cc NReWeightNuXSecNC.cc \
+	NReWeightNuXSecNCEL.cc NReWeightNuXSecNCRES.cc \
+	NReWeightNuXSecRES.cc NReWeightUtils.cc NSystSet.cc \
+	NSystUncertainty.cc NTotCrs.cc
+am__objects_1 = NFortFns.$(OBJEXT) NModeDefn.$(OBJEXT) \
+	NReWeightCasc.$(OBJEXT) NReWeight.$(OBJEXT) \
+	NReWeightINuke.$(OBJEXT) NReWeightNuclPiless.$(OBJEXT) \
+	NReWeightNuXSecCCQE.$(OBJEXT) NReWeightNuXSecCCRES.$(OBJEXT) \
+	NReWeightNuXSecCOH.$(OBJEXT) NReWeightNuXSecDIS.$(OBJEXT) \
+	NReWeightNuXSecNC.$(OBJEXT) NReWeightNuXSecNCEL.$(OBJEXT) \
+	NReWeightNuXSecNCRES.$(OBJEXT) NReWeightNuXSecRES.$(OBJEXT) \
+	NReWeightUtils.$(OBJEXT) NSystSet.$(OBJEXT) \
+	NSystUncertainty.$(OBJEXT) NTotCrs.$(OBJEXT)
+@NEUT_LIBCOMPAT_FALSE@am_libNEUTReWeight_@NEUT_VERSION_NUM@_a_OBJECTS =  \
+@NEUT_LIBCOMPAT_FALSE@	$(am__objects_1)
+libNEUTReWeight_@NEUT_VERSION_NUM@_a_OBJECTS =  \
+	$(am_libNEUTReWeight_@NEUT_VERSION_NUM@_a_OBJECTS)
+libNReWeight_@NEUT_VERSION_NUM@_a_AR = $(AR) $(ARFLAGS)
+libNReWeight_@NEUT_VERSION_NUM@_a_LIBADD =
+am__libNReWeight_@NEUT_VERSION_NUM@_a_SOURCES_DIST = NFortFns.cc \
+	NModeDefn.cc NReWeightCasc.cc NReWeight.cc NReWeightINuke.cc \
+	NReWeightNuclPiless.cc NReWeightNuXSecCCQE.cc \
+	NReWeightNuXSecCCRES.cc NReWeightNuXSecCOH.cc \
+	NReWeightNuXSecDIS.cc NReWeightNuXSecNC.cc \
+	NReWeightNuXSecNCEL.cc NReWeightNuXSecNCRES.cc \
+	NReWeightNuXSecRES.cc NReWeightUtils.cc NSystSet.cc \
+	NSystUncertainty.cc NTotCrs.cc
+@NEUT_LIBCOMPAT_TRUE@am_libNReWeight_@NEUT_VERSION_NUM@_a_OBJECTS =  \
+@NEUT_LIBCOMPAT_TRUE@	$(am__objects_1)
+libNReWeight_@NEUT_VERSION_NUM@_a_OBJECTS =  \
+	$(am_libNReWeight_@NEUT_VERSION_NUM@_a_OBJECTS)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -188,8 +211,11 @@ AM_V_CXXLD = $(am__v_CXXLD_@AM_V@)
 am__v_CXXLD_ = $(am__v_CXXLD_@AM_DEFAULT_V@)
 am__v_CXXLD_0 = @echo "  CXXLD   " $@;
 am__v_CXXLD_1 = 
-SOURCES = $(lib@LIBPREFIX@NReWeight_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_SOURCES)
-DIST_SOURCES = $(lib@LIBPREFIX@NReWeight_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_SOURCES)
+SOURCES = $(libNEUTReWeight_@NEUT_VERSION_NUM@_a_SOURCES) \
+	$(libNReWeight_@NEUT_VERSION_NUM@_a_SOURCES)
+DIST_SOURCES =  \
+	$(am__libNEUTReWeight_@NEUT_VERSION_NUM@_a_SOURCES_DIST) \
+	$(am__libNReWeight_@NEUT_VERSION_NUM@_a_SOURCES_DIST)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -358,26 +384,17 @@ top_srcdir = @top_srcdir@
 # top_builddir dependencies are needed for fh2h.pl-generated headers
 NEUT_INCLUDES = -I$(top_srcdir)/radcorr -I$(top_srcdir)/tauola -I$(top_srcdir)/mec -I$(top_srcdir)/ht2p2h/inc -I$(top_srcdir)/nuccorspl -I$(top_srcdir)/zbsfns -I$(top_srcdir)/n1p1h/inc -I$(top_srcdir)/nuceff -I$(top_srcdir)/kamflux -I$(top_srcdir)/nuclsmpl -I$(top_srcdir)/skmcsvc -I$(top_srcdir)/neutcore -I$(top_srcdir)/partnuck -I$(top_srcdir)/specfunc -I$(top_srcdir)/t2kflux_zbs -I$(top_builddir)/neutcore -I$(top_builddir)/skmcsvc -I$(top_builddir)/n1p1h -I$(top_builddir)/nuccorspl -I$(top_builddir)/nuceff
 NEUT_CLASS_INCLUDES = -I$(top_srcdir)/neutclass
-NEUT_STATIC_LIBS = $(top_builddir)/neutcore/lib@LIBPREFIX@neutcore.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a \
-	$(top_builddir)/nuccorspl/lib@LIBPREFIX@nuccorspl.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a \
-	$(top_builddir)/nuceff/lib@LIBPREFIX@nuceff.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a \
-	$(top_builddir)/n1p1h/lib@LIBPREFIX@n1p1h.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a \
-	$(top_builddir)/ht2p2h/lib@LIBPREFIX@ht2p2h.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a \
-	$(top_builddir)/radcorr/lib@LIBPREFIX@radcorr.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a \
-	$(top_builddir)/tauola/lib@LIBPREFIX@tauola.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a \
-	$(top_builddir)/specfunc/lib@LIBPREFIX@specfunc.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a \
-	$(top_builddir)/skmcsvc/lib@LIBPREFIX@skmcsvc.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a \
-	$(top_builddir)/zbsfns/lib@LIBPREFIX@zbsfns.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a \
-	$(top_builddir)/partnuck/lib@LIBPREFIX@partnuck.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a
+NEUT_STATIC_LIBS = $(top_builddir)/neutcore/lib@LIBPREFIX@neutcore.@NEUT_VERSION_NUM@.a $(top_builddir)/nuccorspl/lib@LIBPREFIX@nuccorspl.@NEUT_VERSION_NUM@.a $(top_builddir)/nuceff/lib@LIBPREFIX@nuceff.@NEUT_VERSION_NUM@.a $(top_builddir)/n1p1h/lib@LIBPREFIX@n1p1h.@NEUT_VERSION_NUM@.a $(top_builddir)/ht2p2h/lib@LIBPREFIX@ht2p2h.@NEUT_VERSION_NUM@.a $(top_builddir)/radcorr/lib@LIBPREFIX@radcorr.@NEUT_VERSION_NUM@.a $(top_builddir)/tauola/lib@LIBPREFIX@tauola.@NEUT_VERSION_NUM@.a $(top_builddir)/specfunc/lib@LIBPREFIX@specfunc.@NEUT_VERSION_NUM@.a $(top_builddir)/skmcsvc/lib@LIBPREFIX@skmcsvc.@NEUT_VERSION_NUM@.a  $(top_builddir)/partnuck/lib@LIBPREFIX@partnuck.@NEUT_VERSION_NUM@.a
+#$(top_builddir)/zbsfns/lib@LIBPREFIX@zbsfns.@NEUT_VERSION_NUM@.a
 @NEUT_LIBCOMPAT_TRUE@NEUTCLASS_LIBS = $(top_builddir)/neutclass/libneutrootTreeSingleton.la $(top_builddir)/neutclass/libneutctrl.la $(top_builddir)/neutclass/libneutfsipart.la $(top_builddir)/neutclass/libneutfsivert.la $(top_builddir)/neutclass/libneutnucfsistep.la $(top_builddir)/neutclass/libneutnucfsivert.la $(top_builddir)/neutclass/libneutpart.la $(top_builddir)/neutclass/libneutvect.la $(top_builddir)/neutclass/libneutvtx.la
-@NEUT_LIBCOMPAT_FALSE@NEUT_LIBS = $(top_builddir)/neutclass/lib@LIBPREFIX@neutclassUtils.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a $(top_builddir)/neutclass/lib@LIBPREFIX@neutclass.la $(NEUT_STATIC_LIBS)
+@NEUT_LIBCOMPAT_FALSE@NEUT_LIBS = $(top_builddir)/neutclass/lib@LIBPREFIX@neutclassUtils.@NEUT_VERSION_NUM@.a $(top_builddir)/neutclass/lib@LIBPREFIX@neutclass.la $(top_builddir)/libNEUT.@NEUT_VERSION_NUM@.a
 @NEUT_LIBCOMPAT_TRUE@NEUT_LIBS = $(NEUTCLASS_LIBS) $(NEUT_STATIC_LIBS)
 CERN_ROOT = $(CERN)/$(CERN_LEVEL)
 CERN_LINKFLAGS = -L$(CERN_ROOT)/lib
 CERN_LIBS = -ljetset74 -lpdflib804 -lphotos202 -lmathlib -lpacklib -lkernlib
 NEUT_FFLAGS = -fno-backslash -fno-automatic -fno-second-underscore -ffixed-line-length-132 -fdollar-ok -fPIC -fbounds-check -Wall -W -ffpe-trap=invalid,zero,overflow -DstrictF77 -DgFortran -Df2cFortran
 DEFAULT_FFLAGS = $(NEUT_FFLAGS) $(NEUT_INCLUDES) -I$(CERN_ROOT)/include
-DEFAULT_CXXFLAGS = -fPIC $(NEUT_INCLUDES) -I$(CERN_ROOT)/include $(shell root-config --cflags)
+DEFAULT_CXXFLAGS = -fPIC $(NEUT_INCLUDES) -I$(CERN_ROOT)/include $(shell root-config --cflags) -lgfortran
 DEFAULT_LINKFLAGS = -version-info @NEUT_VERSION_NUM@
 ROOT_LINKFLAGS = $(shell root-config --ldflags) -pthread -rdynamic -L$(shell root-config --libdir)
 @ROOT_MAJOR_IS_SIX_FALSE@ROOT_LIBS = -lCore -lCint -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lm -ldl
@@ -386,10 +403,15 @@ ROOT_LINKFLAGS = $(shell root-config --ldflags) -pthread -rdynamic -L$(shell roo
 # I know... but this seems to work
 EXE_LINKFLAGS = -fno-PIE -fno-pie -no-pie
 AM_CXXFLAGS = -DNREWEIGHT_VERSION=@NEUT_VERSION_NUM@ $(DEFAULT_CXXFLAGS) $(NEUT_CLASS_INCLUDES)
-LIBNAME = lib@LIBPREFIX@NReWeight.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a
+@NEUT_LIBCOMPAT_FALSE@LIBNAME = libNEUTReWeight.@NEUT_VERSION_NUM@.a
+@NEUT_LIBCOMPAT_TRUE@LIBNAME = libNReWeight.@NEUT_VERSION_NUM@.a
 lib_LIBRARIES = $(LIBNAME)
-lib@LIBPREFIX@NReWeight_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_SOURCES = NFortFns.cc NModeDefn.cc NReWeightCasc.cc NReWeight.cc NReWeightINuke.cc NReWeightNuclPiless.cc NReWeightNuXSecCCQE.cc NReWeightNuXSecCCRES.cc NReWeightNuXSecCOH.cc NReWeightNuXSecDIS.cc NReWeightNuXSecNC.cc NReWeightNuXSecNCEL.cc NReWeightNuXSecNCRES.cc NReWeightNuXSecRES.cc NReWeightUtils.cc NSystSet.cc NSystUncertainty.cc NTotCrs.cc
-include_HEADERS = Controls.h NFortFns.h NModeDefn.h NReWeightCasc.h NReWeight.h NReWeightI.h NReWeightINuke.h NReWeightNuclPiless.h NReWeightNuXSecCCQE.h NReWeightNuXSecCCRES.h NReWeightNuXSecCOH.h NReWeightNuXSecDIS.h NReWeightNuXSecNCEL.h NReWeightNuXSecNC.h NReWeightNuXSecNCRES.h NReWeightNuXSecRES.h NReWeightUtils.h NSyst.h NSystSet.h NSystUncertainty.h NTotCrs.h PDGCodes.h
+
+# Don't seem to be able to have canonical names easily build from makefile variables, this is ugly, but works
+SRCLIST = NFortFns.cc NModeDefn.cc NReWeightCasc.cc NReWeight.cc NReWeightINuke.cc NReWeightNuclPiless.cc NReWeightNuXSecCCQE.cc NReWeightNuXSecCCRES.cc NReWeightNuXSecCOH.cc NReWeightNuXSecDIS.cc NReWeightNuXSecNC.cc NReWeightNuXSecNCEL.cc NReWeightNuXSecNCRES.cc NReWeightNuXSecRES.cc NReWeightUtils.cc NSystSet.cc NSystUncertainty.cc NTotCrs.cc
+@NEUT_LIBCOMPAT_TRUE@libNReWeight_@NEUT_VERSION_NUM@_a_SOURCES = $(SRCLIST)
+@NEUT_LIBCOMPAT_FALSE@libNEUTReWeight_@NEUT_VERSION_NUM@_a_SOURCES = $(SRCLIST)
+include_HEADERS = NReWeightControls.h NFortFns.h NModeDefn.h NReWeightCasc.h NReWeight.h NReWeightI.h NReWeightINuke.h NReWeightNuclPiless.h NReWeightNuXSecCCQE.h NReWeightNuXSecCCRES.h NReWeightNuXSecCOH.h NReWeightNuXSecDIS.h NReWeightNuXSecNCEL.h NReWeightNuXSecNC.h NReWeightNuXSecNCRES.h NReWeightNuXSecRES.h NReWeightUtils.h NSyst.h NSystSet.h NSystUncertainty.h NTotCrs.h PDGCodes.h
 
 # Unused sources that live in the directory
 UNUSED_srcs = 
@@ -459,10 +481,15 @@ uninstall-libLIBRARIES:
 clean-libLIBRARIES:
 	-test -z "$(lib_LIBRARIES)" || rm -f $(lib_LIBRARIES)
 
-lib@LIBPREFIX@NReWeight.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a: $(lib@LIBPREFIX@NReWeight_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_OBJECTS) $(lib@LIBPREFIX@NReWeight_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_DEPENDENCIES) $(EXTRA_lib@LIBPREFIX@NReWeight_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_DEPENDENCIES) 
-	$(AM_V_at)-rm -f lib@LIBPREFIX@NReWeight.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a
-	$(AM_V_AR)$(lib@LIBPREFIX@NReWeight_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_AR) lib@LIBPREFIX@NReWeight.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a $(lib@LIBPREFIX@NReWeight_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_OBJECTS) $(lib@LIBPREFIX@NReWeight_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_LIBADD)
-	$(AM_V_at)$(RANLIB) lib@LIBPREFIX@NReWeight.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a
+libNEUTReWeight.@NEUT_VERSION_NUM@.a: $(libNEUTReWeight_@NEUT_VERSION_NUM@_a_OBJECTS) $(libNEUTReWeight_@NEUT_VERSION_NUM@_a_DEPENDENCIES) $(EXTRA_libNEUTReWeight_@NEUT_VERSION_NUM@_a_DEPENDENCIES) 
+	$(AM_V_at)-rm -f libNEUTReWeight.@NEUT_VERSION_NUM@.a
+	$(AM_V_AR)$(libNEUTReWeight_@NEUT_VERSION_NUM@_a_AR) libNEUTReWeight.@NEUT_VERSION_NUM@.a $(libNEUTReWeight_@NEUT_VERSION_NUM@_a_OBJECTS) $(libNEUTReWeight_@NEUT_VERSION_NUM@_a_LIBADD)
+	$(AM_V_at)$(RANLIB) libNEUTReWeight.@NEUT_VERSION_NUM@.a
+
+libNReWeight.@NEUT_VERSION_NUM@.a: $(libNReWeight_@NEUT_VERSION_NUM@_a_OBJECTS) $(libNReWeight_@NEUT_VERSION_NUM@_a_DEPENDENCIES) $(EXTRA_libNReWeight_@NEUT_VERSION_NUM@_a_DEPENDENCIES) 
+	$(AM_V_at)-rm -f libNReWeight.@NEUT_VERSION_NUM@.a
+	$(AM_V_AR)$(libNReWeight_@NEUT_VERSION_NUM@_a_AR) libNReWeight.@NEUT_VERSION_NUM@.a $(libNReWeight_@NEUT_VERSION_NUM@_a_OBJECTS) $(libNReWeight_@NEUT_VERSION_NUM@_a_LIBADD)
+	$(AM_V_at)$(RANLIB) libNReWeight.@NEUT_VERSION_NUM@.a
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)

@@ -1,4 +1,0 @@
-FC = g77
-FCOPTIONS = -fno-backslash -fno-automatic -finit-local-zero -fno-second-underscore -fugly-complex -ffixed-line-length-132 -fno-globals -fdollar-ok -fpic -ffortran-bounds-check
-ALLDEFINES += -Df2cFortran 
-

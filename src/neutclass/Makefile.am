@@ -106,11 +106,11 @@ lib_LTLIBRARIES = lib@LIBPREFIX@neutclass.la
 
 lib@LIBPREFIX@neutclass_la_SOURCES = neutclassDict.cc neutctrl.cc neutfsipart.cc neutfsivert.cc neutnucfsistep.cc neutnucfsivert.cc neutpart.cc neutvect.cc neutvtx.cc
 #
-LIBNAME = lib@LIBPREFIX@neutclassUtils.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a
+LIBNAME = lib@LIBPREFIX@neutclassUtils.@NEUT_VERSION_NUM@.a
 #
 lib_LIBRARIES = $(LIBNAME)
 #
-lib@LIBPREFIX@neutclassUtils_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_SOURCES = neutrootfortwrapper.cc NeutRootHandlers.cc neutrootTreeSingleton.cc neutfill.cc
+lib@LIBPREFIX@neutclassUtils_@NEUT_VERSION_NUM@_a_SOURCES = neutrootfortwrapper.cc NeutRootHandlers.cc neutrootTreeSingleton.cc neutfill.cc
 
 install-exec-hook:
 	-(cd ${libdir}; $(LN_S) $(LIBNAME) $(shell echo $(LIBNAME) | cut -d . -f 1).a)

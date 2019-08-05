@@ -4,7 +4,7 @@
 #include <math.h>
 #include <TApplication.h>
 #include <TRint.h>
-#include <TROOT.h> 
+#include <TROOT.h>
 #include <TFile.h>
 #include <TTree.h>
 #include "f2cdeclarations.h"
@@ -18,9 +18,9 @@
 
 #define PNOFSET 10000
 
-double Random(void) {
+inline double Random(void) {
   double a =  (double)random()/(double)RAND_MAX;
-  return a; 
+  return a;
 }
 
 
@@ -31,23 +31,23 @@ bool N1p1h::ReadConfig(const char *dir){
 
   snprintf(filename,sizeof(filename),"%s/Configuration",dir);
 
-  std::cout << " Reading configuration from " << filename << std::endl; 
+  std::cout << " Reading configuration from " << filename << std::endl;
 
-  std::ifstream infile(filename); 
+  std::ifstream infile(filename);
 
-  if( infile.fail() ) return false; 
+  if( infile.fail() ) return false;
 
   char item[256];
-  double val; 
+  double val;
 
 
   do {
     char line[1024];
 
     infile.getline(line,1024);
-    
-    if( line[0] == '#' ) continue; 
-    
+
+    if( line[0] == '#' ) continue;
+
     sscanf(line,"%s %lf",item,&val);
 
     if( strncmp(item,"MA",2) ==0 ) xmag = val;
@@ -68,12 +68,12 @@ bool N1p1h::ReadConfig(const char *dir){
     else if ( strncmp(item,"EBIND",5) ==0 )   Ebind = val;
     else if ( strncmp(item,"EBINDCORR",9) == 0 )  ApplyBindEnergyShift = val;
     //    else if ( strncmp(item,"FFTYPE",6) ==0 )   FFtype = val;
-    
+
   } while( ! infile.eof() );
 
 #else
   // Copy parameres from the neut card
-  
+
   xmag = nemdls_.xmaqe;
   irpa = nievesqepar_.nvqerpa;
   if (nievesqepar_.nvqerfg == 0){
@@ -100,7 +100,7 @@ bool N1p1h::ReadConfig(const char *dir){
   RPAxmrho     = nievesqepar_.xnvrpaxmrho;
   RPAirel      = nievesqepar_.xnvrpairel;
   //  FFtype       = nievesqepar_.fftype;
-  
+
 #endif
 
   card_params[param_names[0]]   = xmag;
@@ -140,19 +140,19 @@ bool N1p1h::ReadConfig(const char *dir){
   }
 
 
-  if( !ApplyBindEnergy ) 
-    std::cout << " Bind energy ignored " << std::endl; 
+  if( !ApplyBindEnergy )
+    std::cout << " Bind energy ignored " << std::endl;
   else {
     std::cout << " Bind energy used " << std::endl;
-    if( ApplyBindEnergyShift ) 
+    if( ApplyBindEnergyShift )
       std::cout << " Bind energy correction used " << std::endl;
-    else 
+    else
       std::cout << " Bind energy correction ignored " << std::endl;
   }
 
   if(Ebind != 0)
     std::cout << "Nucleus created in an excited state (GeV): " << Ebind << std::endl;
-  
+
   return true;
 }
 
@@ -163,12 +163,12 @@ N1p1h::N1p1h(){
 
 N1p1h::N1p1h(std::string directory, bool d){
   Initialize(directory,d);
-  InitializeAllNuclei(); 
+  InitializeAllNuclei();
 }
 
 N1p1h::N1p1h(bool d){
   Initialize("Tables",d);
-  InitializeAllNuclei(); 
+  InitializeAllNuclei();
 }
 
 N1p1h::N1p1h(std::string directory, int nuclei, bool d  ) {
@@ -187,33 +187,33 @@ N1p1h::Initialize(std::string directory, bool d){
 
   int i;
 
-  xmag     = 1.05; 
+  xmag     = 1.05;
   irpa     = 1; //1->NUCLEAR EFFECT
-  RFG      = false; 
-  ApplyBindEnergy = true; // Default is always on.  
-  ApplyBindEnergyShift = true; // Default is on. 
-  RPAfp0in = 0.33; 
-  RPAfp0ex = 0.45; 
-  RPAf     = 1; 
-  RPAfstar = 2.13; 
+  RFG      = false;
+  ApplyBindEnergy = true; // Default is always on.
+  ApplyBindEnergyShift = true; // Default is on.
+  RPAfp0in = 0.33;
+  RPAfp0ex = 0.45;
+  RPAf     = 1;
+  RPAfstar = 2.13;
   RPApilambda = 1200.;
-  RPAcr0      = 2.0; 
+  RPAcr0      = 2.0;
   RPArholambda = 2500.;
-  RPAgp        =  0.63; 
+  RPAgp        =  0.63;
   RPAxmpi = 139.57;
-  RPAxmrho = 770.0; 
+  RPAxmrho = 770.0;
   RPAirel  = 1;
   //  FFtype = 1;
- 
+
   Ebind=0;
-  
-  debug = d; 
+
+  debug = d;
 
   static const char param_name_const[N1P1H_CARD_PARAMS][32]=
 	{"#MA:\0",         "#RPA:\0",     "#RFG:\0",         "#BIND:\0",
 	 "#RPAfp0in:\0",   "#RPAfp0ex:\0","#RPAf:\0",   	 "#RPAfstar:\0",
 	 "#RPApilambda:\0","#RPAcr0:\0",  "#RPArholambda:\0","#RPAgp:\0",
-	 "#RPAxmpi:\0",    "#RPAxmrho:\0","#RPAirel:\0",     "#Enubin:\0", 
+	 "#RPAxmpi:\0",    "#RPAxmrho:\0","#RPAirel:\0",     "#Enubin:\0",
          "#EBINDCORR:\0"};
 	 //	 "#FFtype:\0"};
 
@@ -221,21 +221,21 @@ N1p1h::Initialize(std::string directory, bool d){
 	snprintf(param_names[i],32,"%s",param_name_const[i]);
   }
 
-  ReadConfig(directory.c_str()); 
+  ReadConfig(directory.c_str());
 
   snprintf(dirtable,sizeof(dirtable),
 		   "%s",directory.c_str());
 
-  Enubin = 0.1;   // 100 MeV 
+  Enubin = 0.1;   // 100 MeV
   Emax   = 10.5;   // 10 GeV
 
-  RFG = false; 
- 
+  RFG = false;
+
   NRC= 1;//0->loop on R /  1->Random R  /  2->free nucleon
   NPC= 1;//0->dur     / 1->dur1(integral) /  2->durt(prand)
-    
-  // Parameters 
-  
+
+  // Parameters
+
   GFermi = 1.1664e-5;   // Gfermi is in GeV^(-2))
   facconv = 0.19733*0.19733*1.e+15;
 
@@ -244,7 +244,7 @@ N1p1h::Initialize(std::string directory, bool d){
   int    anti     = 1;//1->neutrino;-1->antineutrinos
   double type     = 12;//12,16,40.;
   int contrlepton = 1;//1->muons,0->electron
-  double rm; 
+  double rm;
 
   initialization_(&xmag,&irpa,&rm,&anti,&type,&contrlepton);
 
@@ -254,11 +254,11 @@ N1p1h::Initialize(std::string directory, bool d){
 
   leptonmass[11] = 0.000510998910;  // lepton mass in GeV
   leptonmass[13] = 0.105658357; // muon mass in GeV
-  leptonmass[15] = 1.77682; // tau mass in GeV 
+  leptonmass[15] = 1.77682; // tau mass in GeV
 
   leptonmass[12] = 0.;  // neutrino mass in GeV
   leptonmass[14] = 0.; //  neutrino mass in GeV
-  leptonmass[16] = 0.; //  neutrino mass in GeV 
+  leptonmass[16] = 0.; //  neutrino mass in GeV
 
   daughter[-12] = -11 ;
   daughter[12] = 11;
@@ -269,10 +269,10 @@ N1p1h::Initialize(std::string directory, bool d){
 
   idneutron = 2112;
   idproton = 2212;
-  
+
   protonmass = 0.93827208;
   neutronmass = 0.93956542;
-  
+
   neutrinoIdlist.push_back(-12);
   neutrinoIdlist.push_back(12);
   neutrinoIdlist.push_back(-14);
@@ -280,8 +280,8 @@ N1p1h::Initialize(std::string directory, bool d){
   neutrinoIdlist.push_back(-16);
   neutrinoIdlist.push_back(16);
 
-  std::cout << " N1p1h creating nuclei " << std::endl; 
-  
+  std::cout << " N1p1h creating nuclei " << std::endl;
+
   return;
 }
 
@@ -289,11 +289,11 @@ void N1p1h::InitializeAllNuclei(void) {
   InitializeNucleus(1,true);
   InitializeNucleus(11,true);
   InitializeNucleus(12,true);
-  InitializeNucleus(13,true);  
+  InitializeNucleus(13,true);
   InitializeNucleus(14,true);
   InitializeNucleus(15,true);
   InitializeNucleus(16,true);
-  InitializeNucleus(17,true);  
+  InitializeNucleus(17,true);
   InitializeNucleus(18,true);
   InitializeNucleus(19,true);
   InitializeNucleus(23,true);
@@ -312,12 +312,12 @@ void N1p1h::InitializeAllNuclei(void) {
   InitializeNucleus(65,true);
   InitializeNucleus(207,true);
   InitializeNucleus(208,true);
-  return; 
+  return;
 }
 
 void N1p1h::InitializeNucleus(int id, bool CInt) {
 
-  if( Nuclei[id]  ) // if exist delete to create a new one. 
+  if( Nuclei[id]  ) // if exist delete to create a new one.
     delete Nuclei[id];
 
   if(id == 1){
@@ -325,22 +325,22 @@ void N1p1h::InitializeNucleus(int id, bool CInt) {
       ComputeHintegrals(1);
     return;
   }
-  
+
   Nuclei[id] = new Nucleus(id);
-  
-  if( CInt )   // force the integral calculation 
+
+  if( CInt )   // force the integral calculation
     ComputeIntegrals(id);
-  
-  return; 
+
+  return;
 }
 
 
 void N1p1h::ComputeIntegrals(int nuclei){
-  
-  CheckNuclei(nuclei);  
+
+  CheckNuclei(nuclei);
 
   double hbarc = 197.3269602;
-  
+
   int binmax = Emax/Enubin;
   //  double rmax = Nuclei[nuclei]->FindRMaximumDensity();
   int id,lid;
@@ -353,10 +353,10 @@ void N1p1h::ComputeIntegrals(int nuclei){
   double rmax,ldpmax,vcmax,q2max,emumaxemumin;
   double qval=0.;
   double lr,ang,xcos,tmommax;
-  //double pmommax; 
-  double vc; 
+  //double pmommax;
+  double vc;
   double q0,dq,Elloc,Plloc,coseno,q2;
-  double Emumax,Emumin;	
+  double Emumax,Emumin;
   double Tlepmax,Tlepmin,tl;
   double El;
   double tmommin;
@@ -367,9 +367,9 @@ void N1p1h::ComputeIntegrals(int nuclei){
   double xsect2d;
 
   if( !ReadFromTable(nuclei) ) {
-    
+
     double pi = acos(-1.);
-    
+
     for( unsigned int il = 0; il < neutrinoIdlist.size(); il++ ) { // Looping for all neutrinos and antineutrinos.
       id = neutrinoIdlist[il];
       lid = daughter[id];
@@ -379,12 +379,12 @@ void N1p1h::ComputeIntegrals(int nuclei){
       ml = leptonmass[abs(lid)];
       double ml2 = ml*ml;
 
-      SelectNucleusLepton(lid,nuclei); 
-      
-      //      binmax = 20; 
-      
-      std::cout << " Neutrino " << id << " Lepton  " << lid << " mass " << ml << std::endl; 
-      
+      SelectNucleusLepton(lid,nuclei);
+
+      //      binmax = 20;
+
+      std::cout << " Neutrino " << id << " Lepton  " << lid << " mass " << ml << std::endl;
+
       for( int i = 0; i < binmax; i++ ) {  //looping over the neutrino energy
 	Enu = (double)i*Enubin+Enubin*0.5;
 	//Enu=1.0;
@@ -392,53 +392,53 @@ void N1p1h::ComputeIntegrals(int nuclei){
 	Xsect = Xsect2 = 0.;
 	MaxXsect = 0.;
 	maxcos   = 0.;
-	maxtl    = 0.; 
+	maxtl    = 0.;
 	xsect2d  = 0.;
-	
-	ntot = 1000000; 
+
+	ntot = 1000000;
 
 	rmax = 0.;
 	ldpmax = 0.;
-	vcmax = 0.; 
+	vcmax = 0.;
 	q2max =0.;
-	emumaxemumin = 0.; 
+	emumaxemumin = 0.;
 
 	//radial position
 	double Rmax = Nuclei[nuclei]->GetMaximumRadious();
 
 
-	
+
 	for( int  iloop = 0 ; iloop < ntot; iloop++ ){
 	  //angle neutrino-lepton
 	  ang = Random()*pi;
 	  xcos = cos(ang);
-	  
-	  double intfactor4 = 1.; 
-	  //double intfactor2 = 1.; 
-	  
+
+	  double intfactor4 = 1.;
+	  //double intfactor2 = 1.;
+
 	  correctionangle = sqrt(1.-xcos*xcos)*pi;
-	  
+
 	  //intfactor2 *= correctionangle;
 	  intfactor4 *= correctionangle;
-	  
+
 	  lr = Random()*Rmax;
-	  
+
 	  intfactor4 *= Rmax;
-	  
+
 	  //nucleus simulation
-	  if( irpa ) 
+	  if( irpa )
 	    vcinterpolate_(&lr,&vc); //vc is in GeV
-	  else 
-	    vc = 0.; 
+	  else
+	    vc = 0.;
 
 	  tmommax = Nuclei[nuclei]->GetMaximumFermi(id,lr);
-	  	    
+
 	  if(ApplyBindEnergy) {
 	    qval= (Nuclei[nuclei]->GetQvalueGeV(id)) + Ebind;
 	    if( ApplyBindEnergyShift ) {
 	      double pfermi = Nuclei[nuclei]->GetMaximumFermi(id,lr);
-	      double mass = neutronmass;	   
-	      if( id > 0 ) mass = protonmass; 
+	      double mass = neutronmass;
+	      if( id > 0 ) mass = protonmass;
 	      qval += 0.5*pfermi*pfermi/mass;
 	      //	      std::cout << " 0 >>>>>>> " << pfermi << "  " << mass << " " << qval << std::endl;
 	    }
@@ -446,7 +446,7 @@ void N1p1h::ComputeIntegrals(int nuclei){
 	  else {
 	    qval=0;
 	  }
-	 
+
 	  // Publish the value to be used consistently inside the qe.F code.
 	  qvalue_.qvaluecorr = qval;
 
@@ -454,31 +454,31 @@ void N1p1h::ComputeIntegrals(int nuclei){
 	  Emumax = EmuMax(Enu,xcos,ml,id,tmommax,vc,qval);
 
 	  if( Emumax > Enu ) Emumax = Enu;
-	  	  	  
+
 	  Tlepmax = Emumax-ml;
 
 	  if( Tlepmax < 0.) continue;
-	  
-	  Emumin=EmuMin(Enu,xcos,ml,id,tmommax,vc,qval);	  
 
-	  if( Emumin < ml ) Emumin = ml; 
+	  Emumin=EmuMin(Enu,xcos,ml,id,tmommax,vc,qval);
+
+	  if( Emumin < ml ) Emumin = ml;
 
 	  Tlepmin = Emumin-ml;
 
 	  if( Tlepmin > Tlepmax ) continue;
 
 	  tl= Tlepmin+(Tlepmax-Tlepmin)*Random();
-	  
+
 	  intfactor4 *= (Tlepmax-Tlepmin);
 	  //	  intfactor2 *= (Tlepmax-Tlepmin);
-	  
+
 	  El = ml+tl;
 	  Elloc=El-vc;
 
-	  if( Elloc-ml <= 0.) continue;	
-  
+	  if( Elloc-ml <= 0.) continue;
+
 	  //end lepton kinetic energy (note that min is not used/ !over restriction)
-	  
+
 	  //local calculation !!!!!!!!!!!for target momentum determination
 	  double cosang = cos(ang/2.);
 	  coseno =2.*cosang*cosang-1.;
@@ -487,51 +487,51 @@ void N1p1h::ComputeIntegrals(int nuclei){
 
 
 	  //	  std::cout << " 1 >>>>>>> " << q0 << "  " << qval << std::endl;
-	  
+
 	  double Plloc2 = Elloc*Elloc-ml2;
 
 	  Plloc=sqrt(Plloc2);
-	  
+
 	  double dq2 = Enu2+Plloc2-2*Enu*Plloc*coseno;
 
 	  dq=sqrt(dq2);
-	  
+
 	  q2=q0*q0-dq2;
 
 	  //End local
-	  
+
 	  //Target hadron momentum !!IN GeV
 	  if(id < 0.)
 	    tmommin = targetminmon_(&q0,&dq,&protonmass,&neutronmass);
 	  else if(id > 0.)
 	    tmommin = targetminmon_(&q0,&dq,&neutronmass,&protonmass);
-	  	  
-	  if(tmommin > tmommax)  continue; 
+
+	  if(tmommin > tmommax)  continue;
 
 //	  if(std::isnan(tmommin))tmommin=0;
 	  if(isnan(tmommin))tmommin=0;
 
 	  ldp = tmommin+Random()*(tmommax-tmommin);
-	  
+
 	  ldpsaved = ldp;
-	  
+
 	  intfactor4 *= (tmommax-tmommin)*1000./hbarc;
-	  
+
 	  double Ep;
 	  if(id<0.){
 	    Ep = sqrt(protonmass*protonmass+ldp*ldp);
 	    cosp = 0.5*((Ep+q0)*(Ep+q0)-(neutronmass*neutronmass+ldp*ldp+dq*dq))/(dq*ldp);
 	  }else if(id>0.){
 	    Ep = sqrt(neutronmass*neutronmass+ldp*ldp);
-	    cosp = 0.5*((Ep+q0)*(Ep+q0)-(protonmass*protonmass+ldp*ldp+dq*dq))/(dq*ldp);	    
+	    cosp = 0.5*((Ep+q0)*(Ep+q0)-(protonmass*protonmass+ldp*ldp+dq*dq))/(dq*ldp);
 	  }
-	  
+
 	  if(cosp > 1. || cosp < -1.)continue;
 
 	  //end target mom
-	  
+
 	  // Four differential
-	  
+
 	  double xsl = FourDifferential(id,nuclei,Enu,tl,xcos,lr,ldp,vc);
 
 	  //	  if( xsl < 0. || std::isnan(xsl)  ) xsl=0.;
@@ -550,44 +550,44 @@ void N1p1h::ComputeIntegrals(int nuclei){
 
 	Xsect   /= (double)ntot;
 	Xsect2  /= (double)ntot;
-	//	xsect2d /= (double)ntot; 
-	
+	//	xsect2d /= (double)ntot;
+
 	integral.push_back(Xsect);
 	maximal.push_back(MaxXsect);
-	
-        if( debug ) 
-	std::cout << " nuclei " << nuclei << " Lepton " << lid << " Enu " << Enu << " xsect " << Xsect << "+-" << sqrt(Xsect2-Xsect*Xsect)/sqrt(ntot) << " max " << MaxXsect << " ( " << maxcos << " , " << maxtl << " , " << rmax << " , " << q2max  << " , " <<  emumaxemumin << " ) " << std::endl; 
+
+        if( debug )
+	std::cout << " nuclei " << nuclei << " Lepton " << lid << " Enu " << Enu << " xsect " << Xsect << "+-" << sqrt(Xsect2-Xsect*Xsect)/sqrt(ntot) << " max " << MaxXsect << " ( " << maxcos << " , " << maxtl << " , " << rmax << " , " << q2max  << " , " <<  emumaxemumin << " ) " << std::endl;
 
       }
-      
-      
+
+
       IntCrossSection[pindx] = integral;
-      MaxCrossSection[pindx] = maximal; 
-      
-      
+      MaxCrossSection[pindx] = maximal;
+
+
     }
 
-    RecomputeMaximum(nuclei); 
+    RecomputeMaximum(nuclei);
 
     WriteTable(nuclei);
   }
 
-return; 
+return;
 }
 
 
 bool N1p1h::ReadFromTable(int nuclei) {
-  
-  char Table[256]; 
+
+  char Table[256];
 
   snprintf(Table,sizeof(Table),
-		   "%s/CrossSection_%d.dat",dirtable,nuclei); 
+		   "%s/CrossSection_%d.dat",dirtable,nuclei);
 
-  std::ifstream infile(Table); 
+  std::ifstream infile(Table);
 
-  if( infile.fail() ) return false; 
+  if( infile.fail() ) return false;
 
-  std::cout << " Reading data from " << Table << std::endl; 
+  std::cout << " Reading data from " << Table << std::endl;
 
   std::vector<double> elintegral;
   std::vector<double> elmaximal;
@@ -602,12 +602,12 @@ bool N1p1h::ReadFromTable(int nuclei) {
   std::vector<double> atauintegral;
   std::vector<double> ataumaximal;
 
-  double enu; 
+  double enu;
 
-  double eltot, elmax, aeltot, aelmax, mutot, mumax, amutot, amumax, tautot, taumax, atautot, ataumax; 
+  double eltot, elmax, aeltot, aelmax, mutot, mumax, amutot, amumax, tautot, taumax, atautot, ataumax;
 
   bool all_ok;
-  
+
   char tmpstr[1024],comment[1024],comment2[1024];
   int  i,ret;
   float tmpval,diff;
@@ -669,7 +669,7 @@ bool N1p1h::ReadFromTable(int nuclei) {
 	  break;
 	}
 	ret = sscanf(tmpstr,"%lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf",
-				 &enu,    &eltot, &elmax,  &aeltot, &aelmax, 
+				 &enu,    &eltot, &elmax,  &aeltot, &aelmax,
 				 &mutot,  &mumax, &amutot, &amumax, &tautot,
 				 &taumax, &atautot,&ataumax );
 	if (ret != 13){
@@ -691,17 +691,17 @@ bool N1p1h::ReadFromTable(int nuclei) {
   }
 
   IntCrossSection[Precompindx(12,nuclei)] = elintegral;
-  MaxCrossSection[Precompindx(12,nuclei)] = elmaximal; 
+  MaxCrossSection[Precompindx(12,nuclei)] = elmaximal;
   IntCrossSection[Precompindx(-12,nuclei)] = aelintegral;
-  MaxCrossSection[Precompindx(-12,nuclei)] = aelmaximal; 
+  MaxCrossSection[Precompindx(-12,nuclei)] = aelmaximal;
   IntCrossSection[Precompindx(14,nuclei)] = muonintegral;
-  MaxCrossSection[Precompindx(14,nuclei)] = muonmaximal; 
+  MaxCrossSection[Precompindx(14,nuclei)] = muonmaximal;
   IntCrossSection[Precompindx(-14,nuclei)] = amuonintegral;
-  MaxCrossSection[Precompindx(-14,nuclei)] = amuonmaximal; 
+  MaxCrossSection[Precompindx(-14,nuclei)] = amuonmaximal;
   IntCrossSection[Precompindx(16,nuclei)] = tauintegral;
-  MaxCrossSection[Precompindx(16,nuclei)] = taumaximal; 
+  MaxCrossSection[Precompindx(16,nuclei)] = taumaximal;
   IntCrossSection[Precompindx(-16,nuclei)] = atauintegral;
-  MaxCrossSection[Precompindx(-16,nuclei)] = ataumaximal; 
+  MaxCrossSection[Precompindx(-16,nuclei)] = ataumaximal;
 
   return true;
 }
@@ -709,38 +709,38 @@ bool N1p1h::ReadFromTable(int nuclei) {
 
 
 void N1p1h::RecomputeMaximum(int nuclei) {
-  bool changed = false; 
+  bool changed = false;
 
   do{
-    changed = false; 
+    changed = false;
     for( unsigned int i = 1; i < MaxCrossSection[Precompindx(12,nuclei)].size()-1 ; i++ ) {
       for( unsigned int il = 0; il < neutrinoIdlist.size(); il++ ) { // Looping for all neutrinos and antineutrinos.
 	int id = neutrinoIdlist[il];
-       
+
 	if( (MaxCrossSection[Precompindx(id,nuclei)][i-1]+ MaxCrossSection[Precompindx(id,nuclei)][i+1])/2. -  MaxCrossSection[Precompindx(id,nuclei)][i] >  MaxCrossSection[Precompindx(id,nuclei)][i]*1.001 ) {
-	  std::cout << MaxCrossSection[Precompindx(id,nuclei)][i] ; 
-	  MaxCrossSection[Precompindx(id,nuclei)][i] =  (MaxCrossSection[Precompindx(id,nuclei)][i-1]+ MaxCrossSection[Precompindx(id,nuclei)][i+1])/2. ; 
+	  std::cout << MaxCrossSection[Precompindx(id,nuclei)][i] ;
+	  MaxCrossSection[Precompindx(id,nuclei)][i] =  (MaxCrossSection[Precompindx(id,nuclei)][i-1]+ MaxCrossSection[Precompindx(id,nuclei)][i+1])/2. ;
 	  changed = true;
-	  if( debug ) 
-	  std::cout << " >>> " <<  MaxCrossSection[Precompindx(id,nuclei)][i] << std::endl; 
-	}  
+	  if( debug )
+	  std::cout << " >>> " <<  MaxCrossSection[Precompindx(id,nuclei)][i] << std::endl;
+	}
       }
     }
-  } while( changed ); 
-    
+  } while( changed );
+
 }
 
 
 bool N1p1h::WriteTable(int nuclei) {
-  
-  char Table[256]; 
+
+  char Table[256];
 
   snprintf(Table,sizeof(Table),
-		   "%s/CrossSection_%d.dat",dirtable,nuclei); 
-  
-  std::ofstream offile(Table,std::ofstream::app); 
-  
-  if( offile.fail() ) return false; 
+		   "%s/CrossSection_%d.dat",dirtable,nuclei);
+
+  std::ofstream offile(Table,std::ofstream::app);
+
+  if( offile.fail() ) return false;
   offile << "#PARAMSTART"     << std::endl;
 
   offile << "#MA: " << xmag << std::endl;
@@ -771,9 +771,9 @@ bool N1p1h::WriteTable(int nuclei) {
   offile << "#RPAirel:      " << RPAirel      << std::endl;
   offile << "#Enubin:       " << Enubin       << std::endl;
 
-  if( ApplyBindEnergy && ApplyBindEnergyShift ) 
+  if( ApplyBindEnergy && ApplyBindEnergyShift )
     offile << "#EBINDCORR:       1" << std::endl;
-  else 
+  else
     offile << "#EBINDCORR:       0" << std::endl;
 
   offile << "#TABLESTART"     << std::endl;
@@ -782,14 +782,14 @@ bool N1p1h::WriteTable(int nuclei) {
 
     double enu = ((double)i*Enubin+Enubin*0.5);
 
-    offile << enu << "  " 
-           << IntCrossSection[Precompindx(12,nuclei)][i]  << "  " <<  MaxCrossSection[Precompindx(12,nuclei)][i] << "  " 
-	   << IntCrossSection[Precompindx(-12,nuclei)][i] << "  " << MaxCrossSection[Precompindx(-12,nuclei)][i] << "  " 
-	   << IntCrossSection[Precompindx(14,nuclei)][i]  << "  " << MaxCrossSection[Precompindx(14,nuclei)][i]  << "  " 
-	   << IntCrossSection[Precompindx(-14,nuclei)][i] << "  " << MaxCrossSection[Precompindx(-14,nuclei)][i] << "  " 
-	   << IntCrossSection[Precompindx(16,nuclei)][i]  << "  " << MaxCrossSection[Precompindx(16,nuclei)][i]  << "  " 
+    offile << enu << "  "
+           << IntCrossSection[Precompindx(12,nuclei)][i]  << "  " <<  MaxCrossSection[Precompindx(12,nuclei)][i] << "  "
+	   << IntCrossSection[Precompindx(-12,nuclei)][i] << "  " << MaxCrossSection[Precompindx(-12,nuclei)][i] << "  "
+	   << IntCrossSection[Precompindx(14,nuclei)][i]  << "  " << MaxCrossSection[Precompindx(14,nuclei)][i]  << "  "
+	   << IntCrossSection[Precompindx(-14,nuclei)][i] << "  " << MaxCrossSection[Precompindx(-14,nuclei)][i] << "  "
+	   << IntCrossSection[Precompindx(16,nuclei)][i]  << "  " << MaxCrossSection[Precompindx(16,nuclei)][i]  << "  "
 	   << IntCrossSection[Precompindx(-16,nuclei)][i] << "  " << MaxCrossSection[Precompindx(-16,nuclei)][i] << " \n";
-   
+
   }
   offile << "#"     << std::endl;
 
@@ -801,35 +801,35 @@ bool N1p1h::WriteTable(int nuclei) {
 double N1p1h::IntegralCrossSection(int id,int nuclei,double Enu){
 
   static bool first = true;
-  
+
   if( first ) {
-    
+
     first = false;
 
     if( debug ) {
 
       std::cout << " && Integral Cross section  " << std::endl;
       std::cout << " && ------------------ " << std::endl;
-      
-      for(double x = 0.; x < Emax ; x += 0.005 ) 
+
+      for(double x = 0.; x < Emax ; x += 0.005 )
 	std::cout << " && "<< x << "  " << IntegralCrossSection(id,nuclei,x) << std::endl;
-    
+
     }
   }
 
-  CheckNuclei(nuclei);  
-  
-  int ibin = (int) ((Enu+Enubin*0.001)/Enubin); 
+  CheckNuclei(nuclei);
+
+  int ibin = (int) ((Enu+Enubin*0.001)/Enubin);
 
   Precompindx pindx(id,nuclei);
 
-  int bin0 = ibin -1 ; 
-  int bin1 = ibin; 
-  int bin2 = ibin +1 ; 
+  int bin0 = ibin -1 ;
+  int bin1 = ibin;
+  int bin2 = ibin +1 ;
 
   int binmax = Emax/Enubin;
 
-  double a0,a1,a2 = 0.0; 
+  double a0,a1,a2 = 0.0;
   double x0,x1,x2;
 
   x0 = (double)(bin0)*Enubin+Enubin*0.5;
@@ -838,67 +838,67 @@ double N1p1h::IntegralCrossSection(int id,int nuclei,double Enu){
 
   if( bin0 < 0 ) bin0 = 0;
 
-  if( bin0 < binmax ) 
-    a0 = IntCrossSection[pindx][bin0]; 
+  if( bin0 < binmax )
+    a0 = IntCrossSection[pindx][bin0];
   else
-    a0 = IntCrossSection[pindx][binmax-1]; 
+    a0 = IntCrossSection[pindx][binmax-1];
 
-  if( bin1 < binmax ) 
+  if( bin1 < binmax )
     a1 = IntCrossSection[pindx][bin1];
-  else 
+  else
     a1 = IntCrossSection[pindx][binmax-1];
 
-  if( bin2 < binmax ) 
+  if( bin2 < binmax )
     a2 = IntCrossSection[pindx][bin2];
   else
     a2 = IntCrossSection[pindx][binmax-1];
 
 
-  double cross_section; 
+  double cross_section;
 
-  if( a0 == a1 && a0 == 0. ) 
+  if( a0 == a1 && a0 == 0. )
     cross_section = 0.;
-  else 
+  else
     cross_section = a0*(Enu-x1)*(Enu-x2)/((x0-x1)*(x0-x2))+a1*(Enu-x0)*(Enu-x2)/((x1-x0)*(x1-x2))+a2*(Enu-x0)*(Enu-x1)/((x2-x0)*(x2-x1));
 
   if( cross_section < 0.0 ) cross_section = 0.0;
 
-  return cross_section; 
+  return cross_section;
 }
 
 double N1p1h::CrossSectionmax(int id,int nuclei,double Enu){
 
  static bool first = true;
- 
+
   if( first ) {
-    
+
     first = false;
 
     if( debug ) {
 
       std::cout << " ## Cross section maximum " << std::endl;
       std::cout << " ## --------------------- " << std::endl;
-      
-      for(double x = 0.; x < Emax ; x += 0.005 ) 
+
+      for(double x = 0.; x < Emax ; x += 0.005 )
 	std::cout << " ## "<< x << "  " << CrossSectionmax(id,nuclei,x) << std::endl;
-    
+
     }
   }
 
 
-  CheckNuclei(nuclei);  
-  
- int ibin = (int) ((Enu+Enubin*0.001)/Enubin); 
- 
+  CheckNuclei(nuclei);
+
+ int ibin = (int) ((Enu+Enubin*0.001)/Enubin);
+
   Precompindx pindx(id,nuclei);
 
-  int bin0 = ibin -1 ; 
-  int bin1 = ibin; 
-  int bin2 = ibin +1 ; 
+  int bin0 = ibin -1 ;
+  int bin1 = ibin;
+  int bin2 = ibin +1 ;
 
   int binmax = Emax/Enubin;
 
-  double a0,a1,a2 = 0.0; 
+  double a0,a1,a2 = 0.0;
   double x0,x1,x2;
 
   x0 = (double)(bin0)*Enubin+Enubin*0.5;
@@ -907,30 +907,30 @@ double N1p1h::CrossSectionmax(int id,int nuclei,double Enu){
 
   if( bin0 < 0 ) bin0 = 0;
 
-  if( bin0 < binmax ) 
-    a0 = MaxCrossSection[pindx][bin0]; 
+  if( bin0 < binmax )
+    a0 = MaxCrossSection[pindx][bin0];
   else
-    a0 = MaxCrossSection[pindx][binmax-1]; 
+    a0 = MaxCrossSection[pindx][binmax-1];
 
-  if( bin1 < binmax ) 
+  if( bin1 < binmax )
     a1 = MaxCrossSection[pindx][bin1];
-  else 
+  else
     a1 = MaxCrossSection[pindx][binmax-1];
 
-  if( bin2 < binmax ) 
+  if( bin2 < binmax )
     a2 = MaxCrossSection[pindx][bin2];
   else
     a2 = MaxCrossSection[pindx][binmax-1];
 
 
-  double cross_section; 
+  double cross_section;
 
-  if( a0 == a1 && a0 == 0. ) 
+  if( a0 == a1 && a0 == 0. )
     cross_section = 0.;
-  else 
+  else
     cross_section = a0*(Enu-x1)*(Enu-x2)/((x0-x1)*(x0-x2))+a1*(Enu-x0)*(Enu-x2)/((x1-x0)*(x1-x2))+a2*(Enu-x0)*(Enu-x1)/((x2-x0)*(x2-x1));
- 
-  return cross_section*1.; 
+
+  return cross_section*1.;
 }
 
 double   N1p1h::DoubleDifferential(int id,int nuclei, double Enu,double TLep,double xcos) {
@@ -940,26 +940,26 @@ double   N1p1h::DoubleDifferential(int id,int nuclei, double Enu,double TLep,dou
     SelectNucleusLepton(lid,nuclei);
     double xs=sigthfree_(&Enu,&TLep,&xcos)*unit;
     cosH=xcos;
-    return xs; 
+    return xs;
   }else {
-    NPC = NRC = 0; 
+    NPC = NRC = 0;
     int lid = daughter[id];
-    SelectNucleusLepton(lid,nuclei); 
+    SelectNucleusLepton(lid,nuclei);
     return sigthnacho_(&Enu,&TLep,&xcos)*unit;
   }
 }
 
 
 double   N1p1h::FourDifferential(int id,int nuclei, double Enu,double TLep,double xcos,double &R, double &dP, double &vc) {
- 
+
   if( nuclei == 1 ) {
     int lid = daughter[id];
-    SelectNucleusLepton(lid,nuclei); 
-    return sigthfree_(&Enu,&TLep,&xcos)*unit; 
+    SelectNucleusLepton(lid,nuclei);
+    return sigthfree_(&Enu,&TLep,&xcos)*unit;
   }
   else {
     NRC = 10;NPC = 10;
-    int lid = daughter[id]; 
+    int lid = daughter[id];
     SelectNucleusLepton(lid,nuclei);
     return sigthbruno_(&Enu,&TLep,&xcos,&NRC,&NPC,&R,&dP,&vc)*unit;
   }
@@ -971,119 +971,119 @@ void N1p1h::GenerateVectors(int id,int nuclei,double pnu[4],  double p[4][4], in
   double hbarc = 197.3269602;
 
   Precompindx pindx(id,nuclei);
-  
-  double Enu = pnu[0];
-  
-  double Enu2 = Enu*Enu; 
 
-  double dP,vc; 
+  double Enu = pnu[0];
+
+  double Enu2 = Enu*Enu;
+
+  double dP,vc;
 
   int lid = daughter[id];
 
   double mass = leptonmass[abs(lid)];
-  double mass2 = mass*mass; 
-#if 0 
+  double mass2 = mass*mass;
+#if 0
   double Tlepmax = Enu-mass;
-  
-  if( ApplyBindEnergy ) { 
-    Tlepmax -= ((Nuclei[nuclei]->GetQvalueGeV(id)) + Ebind);  
+
+  if( ApplyBindEnergy ) {
+    Tlepmax -= ((Nuclei[nuclei]->GetQvalueGeV(id)) + Ebind);
     if( ApplyBindEnergyShift ) {
       double pfermi = Nuclei[nuclei]->GetMaximumFermi(id,lr);
-      double mass = neutronmass;	   
-      if( id > 0 ) mass = protonmass; 
+      double mass = neutronmass;
+      if( id > 0 ) mass = protonmass;
       Tlepmax -= 0.5*pfermi*pfermi/mass;
     }
   }
-#endif 
+#endif
   int ibin = (int) ((Enu+Enubin*0.001)/Enubin);
 
   double cmax = CrossSectionmax(id,nuclei,Enu);
-    
-  double cx,val; 
 
-  int    it = 0; 
+  double cx,val;
+
+  int    it = 0;
   double pi = acos(-1.);
 
-  numberofiterationslastevent = 0; 
+  numberofiterationslastevent = 0;
 
   //radial position
   double Rmax = Nuclei[nuclei]->GetMaximumRadious();
 
-  SelectNucleusLepton(lid,nuclei);  
+  SelectNucleusLepton(lid,nuclei);
 
   //  Nuclei[nuclei]->DumpInfo();
 
 
-  int r0 = 0; 
-  int r1 = 0; 
-  int r2 = 0; 
+  int r0 = 0;
+  int r1 = 0;
+  int r2 = 0;
   int r3 = 0;
-  int r4 = 0; 
- 
+  int r4 = 0;
+
   do {
 
-    double intfactor4 = Rmax; 
+    double intfactor4 = Rmax;
 
-    it++; 
+    it++;
     double ang = Random()*pi;
-    double xcos = cos(ang); 
+    double xcos = cos(ang);
 
     intfactor4 *= sqrt(1.-xcos*xcos)*pi;
 
     R = Random()*Rmax;
 
-    double qval; 
+    double qval;
     if(ApplyBindEnergy) {
       qval= (Nuclei[nuclei]->GetQvalueGeV(id)) + Ebind;
       if( ApplyBindEnergyShift ) {
 	double pfermi = Nuclei[nuclei]->GetMaximumFermi(id,R);
-	double mass = neutronmass;	   
-	if( id > 0 ) mass = protonmass; 
-	qval += 0.5*pfermi*pfermi/mass;       
-	//	std::cout << " >>> " << 0.5*pfermi*pfermi/mass << " " << qval << " " << pfermi << mass <<  std::endl; 
+	double mass = neutronmass;
+	if( id > 0 ) mass = protonmass;
+	qval += 0.5*pfermi*pfermi/mass;
+	//	std::cout << " >>> " << 0.5*pfermi*pfermi/mass << " " << qval << " " << pfermi << mass <<  std::endl;
       }
     }
     else {
       qval=0;
     }
-    
-    // Publish the value to be used consistently inside the qe.F code. 
+
+    // Publish the value to be used consistently inside the qe.F code.
     qvalue_.qvaluecorr = qval;
 
     double vc = 0.;
- 
+
     //nucleus simulation
-    if( irpa ) 
+    if( irpa )
       vcinterpolate_(&R,&vc); //vc is in GeV
-    
+
     //lepton kinetic energy
-    double tmommax = Nuclei[nuclei]->GetMaximumFermi(id,R);	  
+    double tmommax = Nuclei[nuclei]->GetMaximumFermi(id,R);
     double Emumax = EmuMax(Enu,xcos,mass,id,tmommax,vc,qval);
     double Emumin = EmuMin(Enu,xcos,mass,id,tmommax,vc,qval);
-    
+
     if( Emumax > Enu ) Emumax = Enu;
-    if( Emumin < mass ) Emumin = mass; 
-    
-    // Emumax = Enu; Emumin=mass; 
-    
+    if( Emumin < mass ) Emumin = mass;
+
+    // Emumax = Enu; Emumin=mass;
+
     double Tlepmax = Emumax-mass;
     double Tlepmin = Emumin-mass;
 
-    // Keep the values for debugging 
+    // Keep the values for debugging
 
-    TlepmaxKept = Tlepmax; 
-    TlepminKept = Tlepmin; 
-        
-    if( Tlepmax < 0. || Tlepmin > Tlepmax ) { 
+    TlepmaxKept = Tlepmax;
+    TlepminKept = Tlepmin;
+
+    if( Tlepmax < 0. || Tlepmin > Tlepmax ) {
       cx = 0; val = 1.;
       r0++;
       continue;
-    } 
-    
+    }
+
     double Tlep = Tlepmin+(Tlepmax-Tlepmin)*Random();
 
     intfactor4 *= (Tlepmax-Tlepmin);
-    
+
     double El = mass+Tlep;
     double Elloc=El-vc;
 
@@ -1098,11 +1098,11 @@ void N1p1h::GenerateVectors(int id,int nuclei,double pnu[4],  double p[4][4], in
       cx = 0; val = 1.;
       r1++;
       continue;
-    }    
+    }
     double Plloc = sqrt(Plloc2);
-    
+
     // End lepton kinetic energy (note that min is not used/ !over restriction
-    
+
     // Local calculation !!!!!!!!!!!for target momentum determination
     double cosang = cos(ang/2.);
     double coseno = 2.*cosang*cosang-1.;
@@ -1111,25 +1111,25 @@ void N1p1h::GenerateVectors(int id,int nuclei,double pnu[4],  double p[4][4], in
       cx = 0; val = 1.;
       continue;
     }
-   
+
     //    std::cout << " 2 >>>>>>> " << q0 << "  " << qval << std::endl;
 
 
     double dq = sqrt(Enu2+Plloc2-2.*Enu*Plloc*coseno);
-    
-    double tmommin = 0; 
+
+    double tmommin = 0;
 
     //Target hadron momentum !!IN GeV
-    if(id < 0.) 
+    if(id < 0.)
       tmommin = targetminmon_(&q0,&dq,&protonmass,&neutronmass);
     else if(id > 0.)
       tmommin = targetminmon_(&q0,&dq,&neutronmass,&protonmass);
-    
+
 	//    if(std::isnan(tmommin))tmommin=0;
 	if(isnan(tmommin))tmommin=0;
 
-    tmomminkept = tmommin; 
-    
+    tmomminkept = tmommin;
+
     if( tmommin >= tmommax ){
       cx = 0; val = 1;
       r2++;
@@ -1144,7 +1144,7 @@ void N1p1h::GenerateVectors(int id,int nuclei,double pnu[4],  double p[4][4], in
       cosp = 0.5*((Ep+q0)*(Ep+q0)-(neutronmass*neutronmass+dP*dP+dq*dq))/(dq*dP);
     }else if(id>0.){
       Ep = sqrt(neutronmass*neutronmass+dP*dP);
-      cosp = 0.5*((Ep+q0)*(Ep+q0)-(protonmass*protonmass+dP*dP+dq*dq))/(dq*dP);	    
+      cosp = 0.5*((Ep+q0)*(Ep+q0)-(protonmass*protonmass+dP*dP+dq*dq))/(dq*dP);
     }
 
     if(cosp < -1. || cosp > 1.){
@@ -1153,31 +1153,31 @@ void N1p1h::GenerateVectors(int id,int nuclei,double pnu[4],  double p[4][4], in
     }
 
     intfactor4 *= (tmommax-tmommin)*1000./hbarc;
-        
+
     cx =  FourDifferential(id,nuclei,Enu,Tlep,xcos,R,dP,vc)*intfactor4;
 
-    if( cx <= 0.0 ) { 
+    if( cx <= 0.0 ) {
       cx = 0;
       val = 1.;
       r3++;
-      continue; 
-    }
-    
-    if( cx > cmax*1.2 ) { 
-      std::cout << " Enu " << Enu << " max " << cmax << " < " << cx << "( " <<  MaxCrossSection[pindx][ibin] << " , " <<  MaxCrossSection[pindx][ibin+1] << " ) " << std::endl; 
-      cmax = cx; 
+      continue;
     }
 
-    val = cmax*Random(); 
+    if( cx > cmax*1.2 ) {
+      std::cout << " Enu " << Enu << " max " << cmax << " < " << cx << "( " <<  MaxCrossSection[pindx][ibin] << " , " <<  MaxCrossSection[pindx][ibin+1] << " ) " << std::endl;
+      cmax = cx;
+    }
 
-  } while ( cx < val && it < 50e+4 ); 
+    val = cmax*Random();
+
+  } while ( cx < val && it < 50e+4 );
 
 
   //  std::cout << (double)r0/(double)it << "  " << 100.*(double)r1/(double)it << "  " << 100.*(double)r2/(double)it << "  " << 100.*(double)r3/(double)it << "  " << std::endl;
 
   xsec = cx;
 
-  if( xsec == 0  ) std::cout << it << std::endl; 
+  if( xsec == 0  ) std::cout << it << std::endl;
 
   double z[3];
 
@@ -1186,7 +1186,7 @@ void N1p1h::GenerateVectors(int id,int nuclei,double pnu[4],  double p[4][4], in
   z[2] = pnu[3]/Enu;
 
   comptmomentum_(z);
-  
+
   for(int i=0;i<4;i++){
     p[0][i]=fourvectors_.vPnu[i];
     p[1][i]=fourvectors_.vPn[i];
@@ -1202,22 +1202,22 @@ void N1p1h::GenerateVectors(int id,int nuclei,double pnu[4],  double p[4][4], in
   idpart[0] = id;
   if( id < 0 ) {
     idpart[1] = idproton;
-    idpart[3] = idneutron; 
+    idpart[3] = idneutron;
   }
   else {
     idpart[3] = idproton;
-    idpart[1] = idneutron; 
+    idpart[1] = idneutron;
   }
-  idpart[2] = daughter[id]; 
-  
-  numberofiterationslastevent = it; 
+  idpart[2] = daughter[id];
 
-  return; 
+  numberofiterationslastevent = it;
+
+  return;
 }
 
 void N1p1h::CheckNuclei(int nuclei){
   if( Nuclei[nuclei] == NULL && nuclei != 1 ) {
-	
+
     std::cout << " N1p1h Error: nuclei " << nuclei << " not available " << std::endl;
     exit(1);
     /*
@@ -1225,7 +1225,7 @@ void N1p1h::CheckNuclei(int nuclei){
 	Nuclei[nuclei] = new Nucleus(nuclei);
 	ComputeIntegrals(nuclei);*/
   }
-  
+
 }
 
 double N1p1h::EmuMax(double E,double xcos,double ml, int id,double pfermi, double vc,double qval){
@@ -1241,34 +1241,34 @@ double N1p1h::EmuMax(double E,double xcos,double ml, int id,double pfermi, doubl
   }
 
   double E2=E*E;
-  double ml2=ml*ml; 
+  double ml2=ml*ml;
   double mt2=mt*mt;
   double ms2=ms*ms;
-  double pfermi2=pfermi*pfermi; 
+  double pfermi2=pfermi*pfermi;
 
-  //  double Enf = sqrt(pfermi*pfermi+mn*mn); 
-  //  double Epf = sqrt(pfermi*pfermi+mp*mp); 
+  //  double Enf = sqrt(pfermi*pfermi+mn*mn);
+  //  double Epf = sqrt(pfermi*pfermi+mp*mp);
 
   double Emax = E - qval + sqrt(pfermi2+mt2);
   double Emumax = Emax-sqrt(pfermi2+ms2);
-  
-  // Solve Equations...Newton Method
- 
-  double emin = ml+vc;
-  double emax = Emumax; 
 
-  double d1,d2; 
-  
-  double delta = 0.; 
+  // Solve Equations...Newton Method
+
+  double emin = ml+vc;
+  double emax = Emumax;
+
+  double d1,d2;
+
+  double delta = 0.;
   int i=0;
   double Ep,pmu,p;
   double ecos2 = 2.*E*xcos;
 
 
-    
+
   Ep = Emax - emin;
   double pmu2;
-  pmu2 = (emin-vc)*(emin-vc)-ml2; 
+  pmu2 = (emin-vc)*(emin-vc)-ml2;
   if ( pmu2 > 0 ){
 	pmu = sqrt(pmu2);
   } else {
@@ -1279,9 +1279,9 @@ double N1p1h::EmuMax(double E,double xcos,double ml, int id,double pfermi, doubl
   //  if( std::isnan(pmu) || (emin-vc) < 0. ) { pmu2=pmu=0; }
   if( isnan(pmu) || (emin-vc) < 0. ) { pmu2=pmu=0; }
   p = sqrt(E2+pmu2-pmu*ecos2)-pfermi;
-  
+
   d1 = Ep-sqrt(p*p+ms2);
-  
+
   Ep = Emax - emax;
   pmu2=(emax-vc)*(emax-vc)-ml2;
   if ( pmu2 > 0 ){
@@ -1290,45 +1290,45 @@ double N1p1h::EmuMax(double E,double xcos,double ml, int id,double pfermi, doubl
 	pmu2 = 0;
 	pmu = 0;
   }
-  
+
   p = sqrt(E2+pmu2-pmu*ecos2)-pfermi;
-  
+
   if( p < pfermi ) { emin = emax = Emumax; return emax; }
-  
+
   d2 = Ep-sqrt(p*p+ms2);
-  
+
   do{
 
     if( d1*d2 > 0. ){
       emin = emax = Emumax;
       i=99.;
     }
-    else if( d1*d2 < 0.0 ) { 
+    else if( d1*d2 < 0.0 ) {
       double emid = (emax+emin)/2.;
-      
+
       Ep = Emax - emid;
       pmu2 =(emid-vc)*(emid-vc)-ml2;
       pmu = sqrt(pmu2);
       p = sqrt(E2+pmu2-pmu*ecos2)-pfermi;
 
       double d3 = Ep-sqrt(p*p+ms2);
-      
+
       if( d1*d3 < 0. ) {
 	emax = emid;
-	d2 = d3; 
+	d2 = d3;
       }
       else if( d2*d3 < 0. ){
 	emin = emid;
-	d1 = d3; 
+	d1 = d3;
       }
     }
 
 
-    delta = (emax-emin)/(emax+emin)*2.; 
+    delta = (emax-emin)/(emax+emin)*2.;
     i++;
-  } while ( delta > 1.e-4 && i < 1e+2 ); 
+  } while ( delta > 1.e-4 && i < 1e+2 );
 
-  return emax; 
+  return emax;
 }
 
 double N1p1h::EmuMin(double E,double xcos,double ml, int id,double pfermi, double vc, double qval){
@@ -1344,23 +1344,23 @@ double N1p1h::EmuMin(double E,double xcos,double ml, int id,double pfermi, doubl
   }
 
   double pfermi2 = pfermi*pfermi;
-  double mt2 = mt*mt; 
+  double mt2 = mt*mt;
   double ms2 = ms*ms;
-  double ml2 = ml*ml; 
+  double ml2 = ml*ml;
 
-  double E2 = E*E; 
+  double E2 = E*E;
 
   double Emax = E -qval + sqrt(pfermi2+mt2);
   double Emumax = Emax - sqrt(pfermi2+ms2);
- 
-  // Solve Equations...Newton Method
-  
-  double emin = ml+vc;
-  double emax = Emumax; 
 
-  double d1,d2,d3; 
-  
-  double delta = 0.; 
+  // Solve Equations...Newton Method
+
+  double emin = ml+vc;
+  double emax = Emumax;
+
+  double d1,d2,d3;
+
+  double delta = 0.;
   int i=0;
   double Ep,pmu,p;
 
@@ -1368,9 +1368,9 @@ double N1p1h::EmuMin(double E,double xcos,double ml, int id,double pfermi, doubl
 
    Ep = Emax - emin;
    double pmu2;
-   pmu2 = (emin-vc)*(emin-vc)-ml2; 
+   pmu2 = (emin-vc)*(emin-vc)-ml2;
    if ( pmu2 > 0 ){
-	 pmu = sqrt(pmu2);	 
+	 pmu = sqrt(pmu2);
    } else {
 	 pmu2=0.;
 	 pmu =0.;
@@ -1379,11 +1379,11 @@ double N1p1h::EmuMin(double E,double xcos,double ml, int id,double pfermi, doubl
    //   if(std::isnan(pmu)){pmu2=pmu=0;}
    if(isnan(pmu)){pmu2=pmu=0;}
    p = sqrt(E2+pmu2-pmu*ecos2)+pfermi;
-   
+
    d1 = Ep-sqrt(p*p+ms2);
-   
+
    Ep = Emax - emax;
-   pmu2 = (emax-vc)*(emax-vc)-ml2; 
+   pmu2 = (emax-vc)*(emax-vc)-ml2;
    if ( pmu2 > 0 ){
 	 pmu = sqrt(pmu2);
    }else{
@@ -1392,19 +1392,19 @@ double N1p1h::EmuMin(double E,double xcos,double ml, int id,double pfermi, doubl
    }
 
    p = sqrt(E2+pmu2-pmu*ecos2)+pfermi;
-   
+
    d2 = Ep-sqrt(p*p+ms2);
 
   do{
-    
+
     if(/*E-ml<ml && */d1*d2>0.0){//std::cout<<"pmu d1 "<<sqrt((emin-vc)*(emin-vc)-ml2) <<" pmu d2 "<<pmu<<" d1 "<<d1<<" d2 "<<d2<<" test "<<emin<<" "<<(emin+emax)/2<<" "<<emax<<" cos "<<xcos<<std::endl;
       i=99;
       emax=emin=ml;
-    }    
+    }
     else if( d1*d2 < 0.0 ) {
-      
+
       double emid = 0.5*(emax+emin);
-      
+
       Ep = Emax - emid;
 
       double pmu2 = (emid-vc)*(emid-vc)-ml2;
@@ -1415,50 +1415,50 @@ double N1p1h::EmuMin(double E,double xcos,double ml, int id,double pfermi, doubl
 
       if( d1*d3 < 0. ) {
 	emax = emid;
-	d2 = d3; 
+	d2 = d3;
       }
       else if( d2*d3 < 0. ) {
 	emin = emid;
-	d1=d3; 
+	d1=d3;
       }
 
     }
 
-    delta = (emax-emin)/(emax+emin)*2.; 
+    delta = (emax-emin)/(emax+emin)*2.;
     i++;
-  } while ( delta > 1.e-4 && i < 1e+2 ); 
+  } while ( delta > 1.e-4 && i < 1e+2 );
 
-  return emin; 
+  return emin;
 }
 
 
 void N1p1h::SelectNucleusLepton(int leptonid,int nuclei) {
-  static int Savedleptonid = 0; 
-  static int Savednulei = 0; 
-    
-  // if( leptonid == Savedleptonid && Savednulei == nuclei ) return; 
-  
-  Savedleptonid = leptonid; 
+  static int Savedleptonid = 0;
+  static int Savednulei = 0;
+
+  // if( leptonid == Savedleptonid && Savednulei == nuclei ) return;
+
+  Savedleptonid = leptonid;
   Savednulei = nuclei;
-  
+
   CheckNuclei(nuclei);
-  
+
   double ml = leptonmass[abs(leptonid)];
   double massMeV = ml*1000.;
-    
+
   setleptonmass_(&leptonid,&massMeV);
 
   if( nuclei == 1 ) {
-    if( leptonid < 0 ) 
+    if( leptonid < 0 )
       testieta_.ieta = -1;
-    else 
+    else
       testieta_.ieta = 1;
     return;
-  } 
+  }
 
-  if( leptonid < 0 ) 
+  if( leptonid < 0 )
     Nuclei[nuclei]->CopyNucleiStructure(-1);
-  else 
+  else
     Nuclei[nuclei]->CopyNucleiStructure(1);
 
   if( !ApplyBindEnergy  )  Nuclei[nuclei]->NoBindEnergy();
@@ -1466,11 +1466,11 @@ void N1p1h::SelectNucleusLepton(int leptonid,int nuclei) {
 }
 
 void N1p1h::ComputeHintegrals(int nuclei){
-  
+
   if(nuclei !=1) std::cout<<"Entering wrong loop. This is only for Hydrogen.Requesed: "<< nuclei << std::endl;
 
   double hbarc = 197.3269602;
-  
+
   int binmax = Emax/Enubin;
   //  double rmax = Nuclei[nuclei]->FindRMaximumDensity();
   int id,lid;
@@ -1483,8 +1483,8 @@ void N1p1h::ComputeHintegrals(int nuclei){
   double q2max,emumaxemumin;
   double qval=0.;
   double lr,ang,xcos,tmommax;
-  //double pmommax; 
-  double Emumax,Emumin;	
+  //double pmommax;
+  double Emumax,Emumin;
   double Tlepmax,Tlepmin,tl;
   double El;
   double tmommin;
@@ -1494,9 +1494,9 @@ void N1p1h::ComputeHintegrals(int nuclei){
   double xsect2d;
 
   if( !ReadFromTable(nuclei) ) {
-    
+
     double pi = acos(-1.);
-    
+
     for( unsigned int il = 0; il < neutrinoIdlist.size(); il++ ) { // Looping for all neutrinos and antineutrinos.
       id = neutrinoIdlist[il];
       lid = daughter[id];
@@ -1504,13 +1504,13 @@ void N1p1h::ComputeHintegrals(int nuclei){
       std::vector<double> integral;
       std::vector<double> maximal;
       ml = leptonmass[abs(lid)];
-      double ml2 = ml*ml;    
-      //      binmax = 20; 
+      double ml2 = ml*ml;
+      //      binmax = 20;
 
-      SelectNucleusLepton(id,1); 
-      
-      std::cout << " Neutrino " << id << " Lepton  " << lid << " mass " << ml << std::endl; 
-      
+      SelectNucleusLepton(id,1);
+
+      std::cout << " Neutrino " << id << " Lepton  " << lid << " mass " << ml << std::endl;
+
       for( int i = 0; i < binmax; i++ ) {  //looping over the neutrino energy
 	Enu = (double)i*Enubin+Enubin*0.5;
 
@@ -1518,35 +1518,35 @@ void N1p1h::ComputeHintegrals(int nuclei){
 	Xsect = Xsect2 = 0.;
 	MaxXsect = 0.;
 	maxcos   = 0.;
-	maxtl    = 0.; 
+	maxtl    = 0.;
 	xsect2d  = 0.;
-	
-	ntot = 1000000; 
+
+	ntot = 1000000;
 
 	q2max =0.;
-	emumaxemumin = 0.; 
+	emumaxemumin = 0.;
 
 	if( id > 0 ) {
 	  integral.push_back(0.);
 	  maximal.push_back(0.);
-	  continue; 
+	  continue;
 	}
 
 	for( int  iloop = 0 ; iloop < ntot; iloop++ ){
 	  //angle neutrino-lepton
 	  //	  ang = Random()*pi;
 	  xcos =1;// cos(ang);
-	  
-	  double intfactor4 = 1.; 
+
+	  double intfactor4 = 1.;
 	  intfactor4 *= 2;;
-	  
+
 	  //lepton kinetic energy
 	  Emumax=Enu;
-	  	  	  
+
 	  Tlepmax = Emumax-ml;
 
 	  if( Tlepmax < 0.) continue;
-	  
+
 	  Emumin=ml;
 
 	  Tlepmin = Emumin-ml;
@@ -1554,11 +1554,11 @@ void N1p1h::ComputeHintegrals(int nuclei){
 	  if( Tlepmin > Tlepmax ) continue;
 
 	  tl= Tlepmin+(Tlepmax-Tlepmin)*Random();
-	  
+
 	  intfactor4 *= (Tlepmax-Tlepmin);
 
 	  // Four differential
-	  
+
 	  double xsl = DoubleDifferential(id,nuclei,Enu,tl,xcos);
 	  xcos=cosH;
 	  //	  if( xsl < 0. || std::isnan(xsl)  ) xsl=0.;
@@ -1576,28 +1576,28 @@ void N1p1h::ComputeHintegrals(int nuclei){
 
 	Xsect   /= (double)ntot;
 	Xsect2  /= (double)ntot;
-	
+
 	integral.push_back(Xsect);
 	maximal.push_back(MaxXsect);
-	
-        if( debug ) 
-	std::cout << " nuclei " << nuclei << " Lepton " << lid << " Enu " << Enu << " xsect " << Xsect << "+-" << sqrt(Xsect2-Xsect*Xsect)/sqrt(ntot) << " max " << MaxXsect << " ( " << maxcos << " , " << q2max  << " , " <<  emumaxemumin << " ) " << std::endl; 
+
+        if( debug )
+	std::cout << " nuclei " << nuclei << " Lepton " << lid << " Enu " << Enu << " xsect " << Xsect << "+-" << sqrt(Xsect2-Xsect*Xsect)/sqrt(ntot) << " max " << MaxXsect << " ( " << maxcos << " , " << q2max  << " , " <<  emumaxemumin << " ) " << std::endl;
 
       }
-      
-      
+
+
       IntCrossSection[pindx] = integral;
-      MaxCrossSection[pindx] = maximal; 
-      
-      
+      MaxCrossSection[pindx] = maximal;
+
+
     }
 
-    RecomputeMaximum(nuclei); 
+    RecomputeMaximum(nuclei);
 
     WriteTable(nuclei);
   }
 
-return; 
+return;
 }
 
 void N1p1h::GenerateHVectors(int id,int nuclei,double pnu[4],  double p[4][4], int idpart[4], int parent[4], double &R, double &xsec){
@@ -1605,99 +1605,99 @@ void N1p1h::GenerateHVectors(int id,int nuclei,double pnu[4],  double p[4][4], i
   double hbarc = 197.3269602;
 
   Precompindx pindx(id,nuclei);
-  
-  double Enu = pnu[0];
-  
-  double Enu2 = Enu*Enu; 
 
-  double dP,vc; 
+  double Enu = pnu[0];
+
+  double Enu2 = Enu*Enu;
+
+  double dP,vc;
 
   int lid = daughter[id];
 
   double mass = leptonmass[abs(lid)];
-  double mass2 = mass*mass; 
+  double mass2 = mass*mass;
 
   double Tlepmax = Enu-mass;
-  
+
   int ibin = (int) ((Enu+Enubin*0.001)/Enubin);
 
   double cmax = CrossSectionmax(id,nuclei,Enu);
-    
-  double cx,val; 
 
-  int    it = 0; 
+  double cx,val;
+
+  int    it = 0;
   double pi = acos(-1.);
 
-  numberofiterationslastevent = 0; 
+  numberofiterationslastevent = 0;
   double qval=0.;
 
-  SelectNucleusLepton(lid,nuclei);  
+  SelectNucleusLepton(lid,nuclei);
 
   //  Nuclei[nuclei]->DumpInfo();
-  
-  int r0 = 0; 
-  int r1 = 0; 
-  int r2 = 0; 
+
+  int r0 = 0;
+  int r1 = 0;
+  int r2 = 0;
   int r3 = 0;
-  int r4 = 0; 
- 
+  int r4 = 0;
+
   do {
 
     double intfactor4=1;
-    
-    it++; 
+
+    it++;
     //    double ang = Random()*pi;
-    double xcos = 1;//cos(ang); 
+    double xcos = 1;//cos(ang);
 
     intfactor4 *= 2;//sqrt(1.-xcos*xcos)*pi;
 
     R = 0.;
     dP=0.;
-    
-    double vc = 0.; 
-        
+
+    double vc = 0.;
+
     //lepton kinetic energy
     double Emumax = Enu;
-    double Emumin = mass; 
-    
-    // Emumax = Enu; Emumin=mass; 
-    
+    double Emumin = mass;
+
+    // Emumax = Enu; Emumin=mass;
+
     double Tlepmax = Emumax-mass;
     double Tlepmin = Emumin-mass;
 
-    // Keep the values for debugging 
+    // Keep the values for debugging
 
-    TlepmaxKept = Tlepmax; 
-    TlepminKept = Tlepmin; 
-        
-    if( Tlepmax < 0. || Tlepmin > Tlepmax ) { 
+    TlepmaxKept = Tlepmax;
+    TlepminKept = Tlepmin;
+
+    if( Tlepmax < 0. || Tlepmin > Tlepmax ) {
       cx = 0; val = 1.;
       r0++;
       continue;
-    } 
-    
+    }
+
     double Tlep = Tlepmin+(Tlepmax-Tlepmin)*Random();
 
     intfactor4 *= (Tlepmax-Tlepmin);
 
     cx =  DoubleDifferential(id,nuclei,Enu,Tlep,xcos)*intfactor4;
     xcos=cosH;
-    if( cx <= 0.0 ) { 
+    if( cx <= 0.0 ) {
       cx = 0;
       val = 1.;
       r3++;
-      continue; 
+      continue;
 
     }
-    
-    if( cx > cmax ) { 
-      //      std::cout << " Enu " << Enu << " max " << cmax << " < " << cx << "( " <<  MaxCrossSection[pindx][ibin] << " , " <<  MaxCrossSection[pindx][ibin+1] << " ) " << std::endl; 
-      cmax = cx; 
+
+    if( cx > cmax ) {
+      //      std::cout << " Enu " << Enu << " max " << cmax << " < " << cx << "( " <<  MaxCrossSection[pindx][ibin] << " , " <<  MaxCrossSection[pindx][ibin+1] << " ) " << std::endl;
+      cmax = cx;
     }
 
-    val = cmax*Random(); 
+    val = cmax*Random();
 
-  } while ( cx < val && it < 50e+4 ); 
+  } while ( cx < val && it < 50e+4 );
 
 
   //  std::cout << (double)r0/(double)it << "  " << 100.*(double)r1/(double)it << "  " << 100.*(double)r2/(double)it << "  " << 100.*(double)r3/(double)it << "  " << std::endl;
@@ -1705,7 +1705,7 @@ void N1p1h::GenerateHVectors(int id,int nuclei,double pnu[4],  double p[4][4], i
   xsec = cx;
 
   if( xsec == 0  )std::cout << it << std::endl;
-  
+
   double z[3];
 
   z[0] = pnu[1]/Enu;
@@ -1713,7 +1713,7 @@ void N1p1h::GenerateHVectors(int id,int nuclei,double pnu[4],  double p[4][4], i
   z[2] = pnu[3]/Enu;
 
   comptmomentum_(z);
-  
+
   for(int i=0;i<4;i++){
     p[0][i]=fourvectors_.vPnu[i];
     p[1][i]=fourvectors_.vPn[i];
@@ -1729,15 +1729,15 @@ void N1p1h::GenerateHVectors(int id,int nuclei,double pnu[4],  double p[4][4], i
   idpart[0] = id;
   if( id < 0 ) {
     idpart[1] = idproton;
-    idpart[3] = idneutron; 
+    idpart[3] = idneutron;
   }
   else {
     idpart[3] = idproton;
-    idpart[1] = idneutron; 
+    idpart[1] = idneutron;
   }
-  idpart[2] = daughter[id]; 
-  
-  numberofiterationslastevent = it; 
+  idpart[2] = daughter[id];
 
-  return; 
+  numberofiterationslastevent = it;
+
+  return;
 }

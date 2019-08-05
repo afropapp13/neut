@@ -41,13 +41,19 @@ function add_to_LD_LIBRARY_PATH () {
   done
 }
 
-THISDIR=
+#if it was sourced as . setup.sh then you can't scrub off the end... assume that
+#we are in the correct directory.
+if ! echo "${BASH_SOURCE}" | grep "/" --silent; then
+  SETUPDIR=$(readlink -f $PWD)
+else
+  SETUPDIR=$(readlink -f ${BASH_SOURCE%/*})
+fi
 
-export NEUT=${THISDIR}
-export NEUT_CARDS=${THISDIR}/share/neut/Cards
-export NEUT_CRSDAT=${THISDIR}/share/neut/crsdat
+export NEUT=${SETUPDIR}
+export NEUT_CARDS=${SETUPDIR}/share/neut/Cards
+export NEUT_CRSDAT=${SETUPDIR}/share/neut/crsdat
 
 add_to_PATH ${NEUT}/bin
 add_to_LD_LIBRARY_PATH ${NEUT}/lib
 
-unset THISDIR
+unset SETUPDIR

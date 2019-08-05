@@ -34,7 +34,7 @@
 
 #include <TMath.h>
 
-#include "Controls.h"
+#include "NReWeightControls.h"
 #include "PDGCodes.h"
 #include "NReWeightNuclPiless.h"
 #include "NSystSet.h"

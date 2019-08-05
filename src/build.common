@@ -3,7 +3,8 @@ NEUT_INCLUDES = -I$(top_srcdir)/radcorr -I$(top_srcdir)/tauola -I$(top_srcdir)/m
 
 NEUT_CLASS_INCLUDES = -I$(top_srcdir)/neutclass
 
-NEUT_STATIC_LIBS = $(top_builddir)/neutcore/lib@LIBPREFIX@neutcore.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a $(top_builddir)/nuccorspl/lib@LIBPREFIX@nuccorspl.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a $(top_builddir)/nuceff/lib@LIBPREFIX@nuceff.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a $(top_builddir)/n1p1h/lib@LIBPREFIX@n1p1h.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a $(top_builddir)/ht2p2h/lib@LIBPREFIX@ht2p2h.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a $(top_builddir)/radcorr/lib@LIBPREFIX@radcorr.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a $(top_builddir)/tauola/lib@LIBPREFIX@tauola.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a $(top_builddir)/specfunc/lib@LIBPREFIX@specfunc.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a $(top_builddir)/skmcsvc/lib@LIBPREFIX@skmcsvc.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a $(top_builddir)/zbsfns/lib@LIBPREFIX@zbsfns.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a $(top_builddir)/partnuck/lib@LIBPREFIX@partnuck.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a
+NEUT_STATIC_LIBS = $(top_builddir)/neutcore/lib@LIBPREFIX@neutcore.@NEUT_VERSION_NUM@.a $(top_builddir)/nuccorspl/lib@LIBPREFIX@nuccorspl.@NEUT_VERSION_NUM@.a $(top_builddir)/nuceff/lib@LIBPREFIX@nuceff.@NEUT_VERSION_NUM@.a $(top_builddir)/n1p1h/lib@LIBPREFIX@n1p1h.@NEUT_VERSION_NUM@.a $(top_builddir)/ht2p2h/lib@LIBPREFIX@ht2p2h.@NEUT_VERSION_NUM@.a $(top_builddir)/radcorr/lib@LIBPREFIX@radcorr.@NEUT_VERSION_NUM@.a $(top_builddir)/tauola/lib@LIBPREFIX@tauola.@NEUT_VERSION_NUM@.a $(top_builddir)/specfunc/lib@LIBPREFIX@specfunc.@NEUT_VERSION_NUM@.a $(top_builddir)/skmcsvc/lib@LIBPREFIX@skmcsvc.@NEUT_VERSION_NUM@.a  $(top_builddir)/partnuck/lib@LIBPREFIX@partnuck.@NEUT_VERSION_NUM@.a
+#$(top_builddir)/zbsfns/lib@LIBPREFIX@zbsfns.@NEUT_VERSION_NUM@.a
 
 
 if NEUT_LIBCOMPAT
@@ -14,7 +15,7 @@ NEUT_LIBS = $(NEUTCLASS_LIBS) $(NEUT_STATIC_LIBS)
 
 else
 
-NEUT_LIBS = $(top_builddir)/neutclass/lib@LIBPREFIX@neutclassUtils.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a $(top_builddir)/neutclass/lib@LIBPREFIX@neutclass.la $(NEUT_STATIC_LIBS)
+NEUT_LIBS = $(top_builddir)/neutclass/lib@LIBPREFIX@neutclassUtils.@NEUT_VERSION_NUM@.a $(top_builddir)/neutclass/lib@LIBPREFIX@neutclass.la $(top_builddir)/libNEUT.@NEUT_VERSION_NUM@.a
 
 endif
 
@@ -27,7 +28,7 @@ NEUT_FFLAGS = -fno-backslash -fno-automatic -fno-second-underscore -ffixed-line-
 
 DEFAULT_FFLAGS = $(NEUT_FFLAGS) $(NEUT_INCLUDES) -I$(CERN_ROOT)/include
 
-DEFAULT_CXXFLAGS = -fPIC $(NEUT_INCLUDES) -I$(CERN_ROOT)/include $(shell root-config --cflags)
+DEFAULT_CXXFLAGS = -fPIC $(NEUT_INCLUDES) -I$(CERN_ROOT)/include $(shell root-config --cflags) -lgfortran
 
 DEFAULT_LINKFLAGS = -version-info @NEUT_VERSION_NUM@
 

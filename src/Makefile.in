@@ -14,6 +14,7 @@
 
 @SET_MAKE@
 
+
 VPATH = @srcdir@
 am__is_gnu_make = { \
   if test -z '$(MAKELEVEL)'; then \
@@ -103,33 +104,6 @@ am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
 mkinstalldirs = $(install_sh) -d
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
-AM_V_P = $(am__v_P_@AM_V@)
-am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
-am__v_P_0 = false
-am__v_P_1 = :
-AM_V_GEN = $(am__v_GEN_@AM_V@)
-am__v_GEN_ = $(am__v_GEN_@AM_DEFAULT_V@)
-am__v_GEN_0 = @echo "  GEN     " $@;
-am__v_GEN_1 = 
-AM_V_at = $(am__v_at_@AM_V@)
-am__v_at_ = $(am__v_at_@AM_DEFAULT_V@)
-am__v_at_0 = @
-am__v_at_1 = 
-SOURCES =
-DIST_SOURCES =
-RECURSIVE_TARGETS = all-recursive check-recursive cscopelist-recursive \
-	ctags-recursive dvi-recursive html-recursive info-recursive \
-	install-data-recursive install-dvi-recursive \
-	install-exec-recursive install-html-recursive \
-	install-info-recursive install-pdf-recursive \
-	install-ps-recursive install-recursive installcheck-recursive \
-	installdirs-recursive pdf-recursive ps-recursive \
-	tags-recursive uninstall-recursive
-am__can_run_installinfo = \
-  case $$AM_UPDATE_INFO_DIR in \
-    n|no|NO) false;; \
-    *) (install-info --version) >/dev/null 2>&1;; \
-  esac
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
 am__vpath_adj = case $$p in \
     $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
@@ -157,7 +131,68 @@ am__uninstall_files_from_dir = { \
     || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
-am__installdirs = "$(DESTDIR)$(includedir)"
+am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(includedir)"
+LIBRARIES = $(lib_LIBRARIES)
+ARFLAGS = cru
+AM_V_AR = $(am__v_AR_@AM_V@)
+am__v_AR_ = $(am__v_AR_@AM_DEFAULT_V@)
+am__v_AR_0 = @echo "  AR      " $@;
+am__v_AR_1 = 
+libNEUT_@NEUT_VERSION_NUM@_a_AR = $(AR) $(ARFLAGS)
+libNEUT_@NEUT_VERSION_NUM@_a_LIBADD =
+am_libNEUT_@NEUT_VERSION_NUM@_a_OBJECTS =
+libNEUT_@NEUT_VERSION_NUM@_a_OBJECTS =  \
+	$(am_libNEUT_@NEUT_VERSION_NUM@_a_OBJECTS)
+AM_V_P = $(am__v_P_@AM_V@)
+am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
+am__v_P_0 = false
+am__v_P_1 = :
+AM_V_GEN = $(am__v_GEN_@AM_V@)
+am__v_GEN_ = $(am__v_GEN_@AM_DEFAULT_V@)
+am__v_GEN_0 = @echo "  GEN     " $@;
+am__v_GEN_1 = 
+AM_V_at = $(am__v_at_@AM_V@)
+am__v_at_ = $(am__v_at_@AM_DEFAULT_V@)
+am__v_at_0 = @
+am__v_at_1 = 
+DEFAULT_INCLUDES = -I.@am__isrc@
+COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
+	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+AM_V_lt = $(am__v_lt_@AM_V@)
+am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
+am__v_lt_0 = --silent
+am__v_lt_1 = 
+LTCOMPILE = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) \
+	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
+	$(AM_CFLAGS) $(CFLAGS)
+AM_V_CC = $(am__v_CC_@AM_V@)
+am__v_CC_ = $(am__v_CC_@AM_DEFAULT_V@)
+am__v_CC_0 = @echo "  CC      " $@;
+am__v_CC_1 = 
+CCLD = $(CC)
+LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+AM_V_CCLD = $(am__v_CCLD_@AM_V@)
+am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
+am__v_CCLD_0 = @echo "  CCLD    " $@;
+am__v_CCLD_1 = 
+SOURCES = $(libNEUT_@NEUT_VERSION_NUM@_a_SOURCES)
+DIST_SOURCES = $(libNEUT_@NEUT_VERSION_NUM@_a_SOURCES)
+RECURSIVE_TARGETS = all-recursive check-recursive cscopelist-recursive \
+	ctags-recursive dvi-recursive html-recursive info-recursive \
+	install-data-recursive install-dvi-recursive \
+	install-exec-recursive install-html-recursive \
+	install-info-recursive install-pdf-recursive \
+	install-ps-recursive install-recursive installcheck-recursive \
+	installdirs-recursive pdf-recursive ps-recursive \
+	tags-recursive uninstall-recursive
+am__can_run_installinfo = \
+  case $$AM_UPDATE_INFO_DIR in \
+    n|no|NO) false;; \
+    *) (install-info --version) >/dev/null 2>&1;; \
+  esac
 HEADERS = $(include_HEADERS)
 RECURSIVE_CLEAN_TARGETS = mostlyclean-recursive clean-recursive	\
   distclean-recursive maintainer-clean-recursive
@@ -188,8 +223,8 @@ ETAGS = etags
 CTAGS = ctags
 CSCOPE = cscope
 DIST_SUBDIRS = $(SUBDIRS)
-am__DIST_COMMON = $(srcdir)/Makefile.in compile config.guess \
-	config.sub depcomp install-sh ltmain.sh missing
+am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/build.common compile \
+	config.guess config.sub depcomp install-sh ltmain.sh missing
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -368,17 +403,51 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-BUILT_SOURCES = neutcore/necardC.h neutcore/neworkC.h neutcore/neutfilepathC.h neutcore/posinnucC.h neutcore/neutparamsC.h neutcore/neutmodelC.h neutcore/nefillverC.h neutcore/neutcrsC.h neutcore/rsconsC.h skmcsvc/vcworkC.h skmcsvc/vcvrtxC.h n1p1h/nieves1p1hC.h nuccorspl/nrcardC.h nuceff/fsihistC.h nuccorspl/nucleonfsihistC.h
+
+# top_builddir dependencies are needed for fh2h.pl-generated headers
+NEUT_INCLUDES = -I$(top_srcdir)/radcorr -I$(top_srcdir)/tauola -I$(top_srcdir)/mec -I$(top_srcdir)/ht2p2h/inc -I$(top_srcdir)/nuccorspl -I$(top_srcdir)/zbsfns -I$(top_srcdir)/n1p1h/inc -I$(top_srcdir)/nuceff -I$(top_srcdir)/kamflux -I$(top_srcdir)/nuclsmpl -I$(top_srcdir)/skmcsvc -I$(top_srcdir)/neutcore -I$(top_srcdir)/partnuck -I$(top_srcdir)/specfunc -I$(top_srcdir)/t2kflux_zbs -I$(top_builddir)/neutcore -I$(top_builddir)/skmcsvc -I$(top_builddir)/n1p1h -I$(top_builddir)/nuccorspl -I$(top_builddir)/nuceff
+NEUT_CLASS_INCLUDES = -I$(top_srcdir)/neutclass
+NEUT_STATIC_LIBS = $(top_builddir)/neutcore/lib@LIBPREFIX@neutcore.@NEUT_VERSION_NUM@.a $(top_builddir)/nuccorspl/lib@LIBPREFIX@nuccorspl.@NEUT_VERSION_NUM@.a $(top_builddir)/nuceff/lib@LIBPREFIX@nuceff.@NEUT_VERSION_NUM@.a $(top_builddir)/n1p1h/lib@LIBPREFIX@n1p1h.@NEUT_VERSION_NUM@.a $(top_builddir)/ht2p2h/lib@LIBPREFIX@ht2p2h.@NEUT_VERSION_NUM@.a $(top_builddir)/radcorr/lib@LIBPREFIX@radcorr.@NEUT_VERSION_NUM@.a $(top_builddir)/tauola/lib@LIBPREFIX@tauola.@NEUT_VERSION_NUM@.a $(top_builddir)/specfunc/lib@LIBPREFIX@specfunc.@NEUT_VERSION_NUM@.a $(top_builddir)/skmcsvc/lib@LIBPREFIX@skmcsvc.@NEUT_VERSION_NUM@.a  $(top_builddir)/partnuck/lib@LIBPREFIX@partnuck.@NEUT_VERSION_NUM@.a
+#$(top_builddir)/zbsfns/lib@LIBPREFIX@zbsfns.@NEUT_VERSION_NUM@.a
+@NEUT_LIBCOMPAT_TRUE@NEUTCLASS_LIBS = $(top_builddir)/neutclass/libneutrootTreeSingleton.la $(top_builddir)/neutclass/libneutctrl.la $(top_builddir)/neutclass/libneutfsipart.la $(top_builddir)/neutclass/libneutfsivert.la $(top_builddir)/neutclass/libneutnucfsistep.la $(top_builddir)/neutclass/libneutnucfsivert.la $(top_builddir)/neutclass/libneutpart.la $(top_builddir)/neutclass/libneutvect.la $(top_builddir)/neutclass/libneutvtx.la
+@NEUT_LIBCOMPAT_FALSE@NEUT_LIBS = $(top_builddir)/neutclass/lib@LIBPREFIX@neutclassUtils.@NEUT_VERSION_NUM@.a $(top_builddir)/neutclass/lib@LIBPREFIX@neutclass.la $(top_builddir)/libNEUT.@NEUT_VERSION_NUM@.a
+@NEUT_LIBCOMPAT_TRUE@NEUT_LIBS = $(NEUTCLASS_LIBS) $(NEUT_STATIC_LIBS)
+CERN_ROOT = $(CERN)/$(CERN_LEVEL)
+CERN_LINKFLAGS = -L$(CERN_ROOT)/lib
+CERN_LIBS = -ljetset74 -lpdflib804 -lphotos202 -lmathlib -lpacklib -lkernlib
+NEUT_FFLAGS = -fno-backslash -fno-automatic -fno-second-underscore -ffixed-line-length-132 -fdollar-ok -fPIC -fbounds-check -Wall -W -ffpe-trap=invalid,zero,overflow -DstrictF77 -DgFortran -Df2cFortran
+DEFAULT_FFLAGS = $(NEUT_FFLAGS) $(NEUT_INCLUDES) -I$(CERN_ROOT)/include
+DEFAULT_CXXFLAGS = -fPIC $(NEUT_INCLUDES) -I$(CERN_ROOT)/include $(shell root-config --cflags) -lgfortran
+DEFAULT_LINKFLAGS = -version-info @NEUT_VERSION_NUM@
+ROOT_LINKFLAGS = $(shell root-config --ldflags) -pthread -rdynamic -L$(shell root-config --libdir)
+@ROOT_MAJOR_IS_SIX_FALSE@ROOT_LIBS = -lCore -lCint -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lm -ldl
+@ROOT_MAJOR_IS_SIX_TRUE@ROOT_LIBS = -lCore -lImt -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lROOTVecOps -lTree -lTreePlayer -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lMultiProc -lROOTDataFrame
+
+# I know... but this seems to work
+EXE_LINKFLAGS = -fno-PIE -fno-pie -no-pie
+BUILT_SOURCES = neutcore/necardC.h neutcore/neworkC.h neutcore/neutfilepathC.h neutcore/posinnucC.h neutcore/neutparamsC.h neutcore/neutmodelC.h neutcore/nefillverC.h neutcore/neutcrsC.h neutcore/rsconsC.h skmcsvc/vcworkC.h skmcsvc/vcvrtxC.h n1p1h/nieves1p1hC.h nuccorspl/nrcardC.h nuceff/fsihistC.h nuceff/efpionC.h nuccorspl/nucleonfsihistC.h
 CLEANFILES = $(BUILT_SOURCES)
 include_HEADERS = $(BUILT_SOURCES)
-SUBDIRS = neutcore nuccorspl nuceff n1p1h ht2p2h radcorr tauola specfunc skmcsvc zbsfns partnuck neutclass neutsmpl reweight tools
+
+# Order here matters, should build core libraries, combine them in this dir (.), then build reweight, programs, and tools.
+SUBDIRS = neutcore nuccorspl nuceff n1p1h ht2p2h radcorr tauola specfunc skmcsvc partnuck neutclass . neutsmpl nuclsmpl reweight tools neututils
+ZEBRA_SUBDIRS = zbsfns
+
+# Combine all of the core static libraries into one!
+# The lines below trick/override automake into building this library out of all
+# of the object files it used to build the other libraries.
+# This will cause a make warning about overriding a target, but you can safetly
+# ignore the warning.
+@NEUT_LIBCOMPAT_FALSE@LIBNAME = libNEUT.@NEUT_VERSION_NUM@.a
+@NEUT_LIBCOMPAT_FALSE@lib_LIBRARIES = $(LIBNAME)
+@NEUT_LIBCOMPAT_FALSE@libNEUT_@NEUT_VERSION_NUM@_a_SOURCES = 
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 
 .SUFFIXES:
 am--refresh: Makefile
 	@:
-$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
+$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am $(srcdir)/build.common $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
@@ -400,6 +469,7 @@ Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	    echo ' cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__depfiles_maybe)'; \
 	    cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__depfiles_maybe);; \
 	esac;
+$(srcdir)/build.common $(am__empty):
 
 $(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
 	$(SHELL) ./config.status --recheck
@@ -409,6 +479,48 @@ $(top_srcdir)/configure:  $(am__configure_deps)
 $(ACLOCAL_M4):  $(am__aclocal_m4_deps)
 	$(am__cd) $(srcdir) && $(ACLOCAL) $(ACLOCAL_AMFLAGS)
 $(am__aclocal_m4_deps):
+install-libLIBRARIES: $(lib_LIBRARIES)
+	@$(NORMAL_INSTALL)
+	@list='$(lib_LIBRARIES)'; test -n "$(libdir)" || list=; \
+	list2=; for p in $$list; do \
+	  if test -f $$p; then \
+	    list2="$$list2 $$p"; \
+	  else :; fi; \
+	done; \
+	test -z "$$list2" || { \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(libdir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(libdir)" || exit 1; \
+	  echo " $(INSTALL_DATA) $$list2 '$(DESTDIR)$(libdir)'"; \
+	  $(INSTALL_DATA) $$list2 "$(DESTDIR)$(libdir)" || exit $$?; }
+	@$(POST_INSTALL)
+	@list='$(lib_LIBRARIES)'; test -n "$(libdir)" || list=; \
+	for p in $$list; do \
+	  if test -f $$p; then \
+	    $(am__strip_dir) \
+	    echo " ( cd '$(DESTDIR)$(libdir)' && $(RANLIB) $$f )"; \
+	    ( cd "$(DESTDIR)$(libdir)" && $(RANLIB) $$f ) || exit $$?; \
+	  else :; fi; \
+	done
+
+uninstall-libLIBRARIES:
+	@$(NORMAL_UNINSTALL)
+	@list='$(lib_LIBRARIES)'; test -n "$(libdir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(libdir)'; $(am__uninstall_files_from_dir)
+
+clean-libLIBRARIES:
+	-test -z "$(lib_LIBRARIES)" || rm -f $(lib_LIBRARIES)
+
+libNEUT.@NEUT_VERSION_NUM@.a: $(libNEUT_@NEUT_VERSION_NUM@_a_OBJECTS) $(libNEUT_@NEUT_VERSION_NUM@_a_DEPENDENCIES) $(EXTRA_libNEUT_@NEUT_VERSION_NUM@_a_DEPENDENCIES) 
+	$(AM_V_at)-rm -f libNEUT.@NEUT_VERSION_NUM@.a
+	$(AM_V_AR)$(libNEUT_@NEUT_VERSION_NUM@_a_AR) libNEUT.@NEUT_VERSION_NUM@.a $(libNEUT_@NEUT_VERSION_NUM@_a_OBJECTS) $(libNEUT_@NEUT_VERSION_NUM@_a_LIBADD)
+	$(AM_V_at)$(RANLIB) libNEUT.@NEUT_VERSION_NUM@.a
+
+mostlyclean-compile:
+	-rm -f *.$(OBJEXT)
+
+distclean-compile:
+	-rm -f *.tab.c
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -737,10 +849,10 @@ distcleancheck: distclean
 check-am: all-am
 check: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) check-recursive
-all-am: Makefile $(HEADERS)
+all-am: Makefile $(LIBRARIES) $(HEADERS)
 installdirs: installdirs-recursive
 installdirs-am:
-	for dir in "$(DESTDIR)$(includedir)"; do \
+	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(includedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: $(BUILT_SOURCES)
@@ -776,15 +888,18 @@ maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
 	-test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
+@NEUT_LIBCOMPAT_TRUE@install-exec-hook:
+@NEUT_LIBCOMPAT_TRUE@uninstall-hook:
 clean: clean-recursive
 
-clean-am: clean-generic clean-libtool mostlyclean-am
+clean-am: clean-generic clean-libLIBRARIES clean-libtool \
+	mostlyclean-am
 
 distclean: distclean-recursive
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -f Makefile
-distclean-am: clean-am distclean-generic distclean-libtool \
-	distclean-tags
+distclean-am: clean-am distclean-compile distclean-generic \
+	distclean-libtool distclean-tags
 
 dvi: dvi-recursive
 
@@ -804,8 +919,9 @@ install-dvi: install-dvi-recursive
 
 install-dvi-am:
 
-install-exec-am:
-
+install-exec-am: install-libLIBRARIES
+	@$(NORMAL_INSTALL)
+	$(MAKE) $(AM_MAKEFLAGS) install-exec-hook
 install-html: install-html-recursive
 
 install-html-am:
@@ -834,7 +950,8 @@ maintainer-clean-am: distclean-am maintainer-clean-generic
 
 mostlyclean: mostlyclean-recursive
 
-mostlyclean-am: mostlyclean-generic mostlyclean-libtool
+mostlyclean-am: mostlyclean-compile mostlyclean-generic \
+	mostlyclean-libtool
 
 pdf: pdf-recursive
 
@@ -844,29 +961,33 @@ ps: ps-recursive
 
 ps-am:
 
-uninstall-am: uninstall-includeHEADERS
-
+uninstall-am: uninstall-includeHEADERS uninstall-libLIBRARIES
+	@$(NORMAL_INSTALL)
+	$(MAKE) $(AM_MAKEFLAGS) uninstall-hook
 .MAKE: $(am__recursive_targets) all check install install-am \
-	install-strip
+	install-exec-am install-strip uninstall-am
 
 .PHONY: $(am__recursive_targets) CTAGS GTAGS TAGS all all-am \
 	am--refresh check check-am clean clean-cscope clean-generic \
-	clean-libtool cscope cscopelist-am ctags ctags-am dist \
-	dist-all dist-bzip2 dist-gzip dist-lzip dist-shar dist-tarZ \
-	dist-xz dist-zip distcheck distclean distclean-generic \
-	distclean-libtool distclean-tags distcleancheck distdir \
-	distuninstallcheck dvi dvi-am html html-am info info-am \
-	install install-am install-data install-data-am install-dvi \
-	install-dvi-am install-exec install-exec-am install-html \
+	clean-libLIBRARIES clean-libtool cscope cscopelist-am ctags \
+	ctags-am dist dist-all dist-bzip2 dist-gzip dist-lzip \
+	dist-shar dist-tarZ dist-xz dist-zip distcheck distclean \
+	distclean-compile distclean-generic distclean-libtool \
+	distclean-tags distcleancheck distdir distuninstallcheck dvi \
+	dvi-am html html-am info info-am install install-am \
+	install-data install-data-am install-dvi install-dvi-am \
+	install-exec install-exec-am install-exec-hook install-html \
 	install-html-am install-includeHEADERS install-info \
-	install-info-am install-man install-pdf install-pdf-am \
-	install-ps install-ps-am install-strip installcheck \
-	installcheck-am installdirs installdirs-am maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-generic \
-	mostlyclean-libtool pdf pdf-am ps ps-am tags tags-am uninstall \
-	uninstall-am uninstall-includeHEADERS
+	install-info-am install-libLIBRARIES install-man install-pdf \
+	install-pdf-am install-ps install-ps-am install-strip \
+	installcheck installcheck-am installdirs installdirs-am \
+	maintainer-clean maintainer-clean-generic mostlyclean \
+	mostlyclean-compile mostlyclean-generic mostlyclean-libtool \
+	pdf pdf-am ps ps-am tags tags-am uninstall uninstall-am \
+	uninstall-hook uninstall-includeHEADERS uninstall-libLIBRARIES
 
 .PRECIOUS: Makefile
+
 
 %C.h: %.h
 	$(top_srcdir)/tools/fh2h.pl $< > $@
@@ -876,6 +997,15 @@ n1p1h/nieves1p1hC.h: n1p1h/inc/nieves1p1h.h
 
 neutcore/neutmodelC.h: neutcore/neutmodel.h n1p1h/nieves1p1hC.h
 	$(top_srcdir)/tools/fh2h.pl $< > $@
+
+@NEUT_LIBCOMPAT_FALSE@$(LIBNAME): $(NEUT_STATIC_LIBS)
+@NEUT_LIBCOMPAT_FALSE@	$(AR) -rs $@ $(top_builddir)/nuccorspl/*.o $(top_builddir)/nuceff/*.o $(top_builddir)/n1p1h/src/*.o $(top_builddir)/ht2p2h/src/*.o $(top_builddir)/radcorr/*.o $(top_builddir)/tauola/*.o $(top_builddir)/specfunc/*.o $(top_builddir)/skmcsvc/*.o $(top_builddir)/partnuck/*.o $(top_builddir)/neutcore/*.o
+
+@NEUT_LIBCOMPAT_FALSE@install-exec-hook:
+@NEUT_LIBCOMPAT_FALSE@	-(cd ${libdir}; $(LN_S) $(LIBNAME) $(shell echo $(LIBNAME) | cut -d . -f 1).a)
+
+@NEUT_LIBCOMPAT_FALSE@uninstall-hook:
+@NEUT_LIBCOMPAT_FALSE@	-(cd ${libdir}; rm -f $(shell echo $(LIBNAME) | cut -d . -f 1).a)
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

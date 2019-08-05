@@ -16,7 +16,7 @@
 
 #include <TMath.h>
 
-#include "Controls.h"
+#include "NReWeightControls.h"
 #include "NReWeightINuke.h"
 #include "NSystSet.h"
 #include "NSystUncertainty.h"

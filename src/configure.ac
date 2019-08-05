@@ -91,8 +91,15 @@ AC_CONFIG_FILES([
   partnuck/Makefile
   neutclass/Makefile
   neutsmpl/Makefile
+  nuclsmpl/Makefile
   reweight/Makefile
   tools/Makefile
+  neututils/Makefile
+  neututils/calc_ccqe_crs/Makefile
+  neututils/calc_coh_crs.rs/Makefile
+  neututils/calc_dis_crs/Makefile
+  neututils/calc_nuc_dens/Makefile
+  neututils/calc_res_crs/Makefile
 ])
 
 AC_OUTPUT

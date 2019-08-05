@@ -1,5 +1,5 @@
 # include "CrossSection.hh"
-# include "clenshaw_curtis.cc"
+# include "clenshaw_curtis.hh"
 
 //#define DEBUG
 
@@ -58,7 +58,7 @@ double CrossSection::DifferentialCrossSection(const double energy) {
   q2max = 2.*PRMASS*energy*(1.-mass_lep/energy);
   q2 = 2.*PRMASS*energy*x*y;
 
-  correction = 1.-q2min/(2.*(q2+pow(PIMASS,2.))) 
+  correction = 1.-q2min/(2.*(q2+pow(PIMASS,2.)))
     + y/4.*q2min*(q2-q2min)/pow(q2+pow(PIMASS,2.),2.);
 
   if (y < ymin || y > ymax || q2 < q2min || q2 > q2max) correction = 0.;
@@ -113,12 +113,12 @@ double CrossSection::TotalCrossSection(const double energy, const int nloop) {
   for ( dim = 0; dim < dim_num; dim++ ) {
     order_1d[dim] = nloop;
   }
-  
+
   order_nd = i4vec_product ( dim_num, order_1d ); // order_1d[0]*order_1d[1]
-  
+
   point  = new double[dim_num*order_nd];
   weight = new double[order_nd];
-  
+
   clenshaw_curtis_compute_nd ( dim_num, order_1d, point, weight );
 
   for ( order = 0; order < order_nd; order++ ) {

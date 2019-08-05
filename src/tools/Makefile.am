@@ -5,19 +5,17 @@ include $(top_srcdir)/build.common
 INST_ROOT = $(prefix)
 
 if NEUT_LIBCOMPAT
-LIB_LIST = libneutrootTreeSingleton.so libneutctrl.so libneutfsipart.so libneutfsivert.so libneutnucfsistep.so libneutnucfsivert.so libneutpart.so libneutvect.so libneutvtx.so
-LIB_FLAGS = -lneutrootTreeSingleton.so -lneutctrl.so -lneutfsipart.so -lneutfsivert.so -lneutnucfsistep.so -lneutnucfsivert.so -lneutpart.so -lneutvect.so -lneutvtx.so
+LIB_LIST = neutrootTreeSingleton.so neutctrl.so neutfsipart.so neutfsivert.so neutnucfsistep.so neutnucfsivert.so neutpart.so neutvect.so neutvtx.so libneutcore.a libnuccorspl.a libnuceff.a libn1p1h.a libht2p2h.a libradcorr.a libtauola.a libspecfunc.a libskmcsvc.a libzbsfns.a libpartnuck.a
+LIB_FLAGS = $(INST_ROOT)/lib/neutrootTreeSingleton.so $(INST_ROOT)/lib/neutctrl.so $(INST_ROOT)/lib/neutfsipart.so $(INST_ROOT)/lib/neutfsivert.so $(INST_ROOT)/lib/neutnucfsistep.so $(INST_ROOT)/lib/neutnucfsivert.so $(INST_ROOT)/lib/neutpart.so $(INST_ROOT)/lib/neutvect.so $(INST_ROOT)/lib/neutvtx.so -lneutcore -lnuccorspl -lnuceff -ln1p1h -lht2p2h -lradcorr -ltauola -lspecfunc -lskmcsvc -lzbsfns -lpartnuck
+RW_LIB = libNReWeight.so
+RW_FLAGS = -lNReWeight
 else
-LIB_LIST = lib@LIBPREFIX@neutclassUtils.a lib@LIBPREFIX@neutclass.a
-LIB_FLAGS = -l@LIBPREFIX@neutclassUtils -l@LIBPREFIX@neutclass
+LIB_LIST = libneutclassUtils.a libneutclass.a libNEUT.a
+LIB_FLAGS = -lneutclassUtils -lneutclass -lNEUT
+RW_LIB = libNEUTReWeight.so
+RW_FLAGS = -lNEUTReWeight
 endif
 
-LIB_LIST += lib@LIBPREFIX@neutcore.a lib@LIBPREFIX@nuccorspl.a lib@LIBPREFIX@nuceff.a lib@LIBPREFIX@n1p1h.a lib@LIBPREFIX@ht2p2h.a lib@LIBPREFIX@radcorr.a lib@LIBPREFIX@tauola.a lib@LIBPREFIX@specfunc.a lib@LIBPREFIX@skmcsvc.a lib@LIBPREFIX@zbsfns.a lib@LIBPREFIX@partnuck.a
-
-RW_LIB = libNEUTReWeight.so
-LIB_FLAGS += -l@LIBPREFIX@neutcore -l@LIBPREFIX@nuccorspl -l@LIBPREFIX@nuceff -l@LIBPREFIX@n1p1h -l@LIBPREFIX@ht2p2h -l@LIBPREFIX@radcorr -l@LIBPREFIX@tauola -l@LIBPREFIX@specfunc -l@LIBPREFIX@skmcsvc -l@LIBPREFIX@zbsfns -l@LIBPREFIX@partnuck
-
-RW_FLAGS = -lNEUTReWeight
 NEUT_VERSION = @NEUT_VERSION@
 
 ROOT_FLAGS = $(ROOT_LINKFLAGS) $(ROOT_LIBS)
@@ -29,6 +27,9 @@ neut-config: neut-config.in
 
 install-exec-hook: neut-config
 	-cp neut-config ${bindir}/
+	-cp ${top_srcdir}/tools/setup.sh ${prefix}/
+	chmod +x ${prefix}/setup.sh
 
 uninstall-hook:
 	-(cd ${bindir}; rm -f neut-config)
+	-(cd ${prefix}; rm -f setup.sh)
