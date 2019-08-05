@@ -4,6 +4,10 @@
 INSTALL_ROOT="__INST_ROOT__"
 SCRIPTNAME=$0
 
+if [ ${#} -eq 0 ]; then
+  echo "${SCRIPTNAME} [--incdir] [--libdir] [--libs] [--iolibs] [--rwlibs] [--libflags] [--iolibflags] [--rwlibflags] [--rootflags] [--cernflags]"
+fi
+
 while [[ ${#} -gt 0 ]]; do
 
   key="$1"
@@ -21,12 +25,20 @@ while [[ ${#} -gt 0 ]]; do
       echo "__LIB_LIST__"
       ;;
 
+      --iolibs)
+      echo "__IO_LIB_LIST__"
+      ;;
+
       --rwlibs)
       echo "__RW_LIB__ __LIB_LIST__"
       ;;
 
       --libflags)
       echo "__LIB_FLAGS__"
+      ;;
+
+      --iolibflags)
+      echo "__IO_LIB_FLAGS__"
       ;;
 
       --rwlibflags)
@@ -51,8 +63,10 @@ while [[ ${#} -gt 0 ]]; do
       echo -e "\t--incdir                   : Print location of installed header files."
       echo -e "\t--libdir                   : Print location of installed libraries."
       echo -e "\t--libs                     : Print list of NEUT generation library names."
+      echo -e "\t--iolibs                   : Print list of NEUT vector ROOT i/o library names."
       echo -e "\t--rwlibs                   : Print list of NEUT reweight library names."
       echo -e "\t--libflags                 : Print list of NEUT generation library linker flags."
+      echo -e "\t--iolibflags               : Print list of NEUT vector ROOT i/o library inker flags."
       echo -e "\t--rwlibflags               : Print list of NEUT reweight library linker flags."
       echo -e "\t--rootflags                : Print compiler flags used when compiling against ROOT"
       echo -e "\t--cernflags                : Print compiler flags used when compiling against CERNLIB."

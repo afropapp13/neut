@@ -14,8 +14,14 @@ CLEANFILES = $(BUILT_SOURCES)
 
 include_HEADERS = $(BUILT_SOURCES)
 
+if NEUT_LIBCOMPAT
+# Order here matters, should build core libraries, combine them in this dir (.), then build reweight, programs, and tools.
+# Cannot currently build neututils dirs in compat mode.
+SUBDIRS = neutcore nuccorspl nuceff n1p1h ht2p2h radcorr tauola specfunc skmcsvc partnuck neutclass . neutsmpl reweight tools
+else
 # Order here matters, should build core libraries, combine them in this dir (.), then build reweight, programs, and tools.
 SUBDIRS = neutcore nuccorspl nuceff n1p1h ht2p2h radcorr tauola specfunc skmcsvc partnuck neutclass . neutsmpl reweight tools neututils
+endif
 
 ZEBRA_SUBDIRS = zbsfns
 

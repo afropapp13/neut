@@ -88,6 +88,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
+@NEUT_LIBCOMPAT_TRUE@am__append_1 = $(top_srcdir)/neutcore/fourVector.F
 subdir = specfunc
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
@@ -136,13 +137,20 @@ am__v_AR_0 = @echo "  AR      " $@;
 am__v_AR_1 = 
 lib@LIBPREFIX@specfunc_@NEUT_VERSION_NUM@_a_AR = $(AR) $(ARFLAGS)
 lib@LIBPREFIX@specfunc_@NEUT_VERSION_NUM@_a_LIBADD =
+am__lib@LIBPREFIX@specfunc_@NEUT_VERSION_NUM@_a_SOURCES_DIST =  \
+	buildEffSf.F buildSf.F calcLH.F combineEffSFTables.F \
+	combineTables.F effsfevent.F effSFMaxDiff.F maxDiff.F \
+	readEffSFXsecData.F readXsecData.F selectEffSFValues.F \
+	selectSfValues.F sfevent.F $(top_srcdir)/neutcore/fourVector.F
+am__dirstamp = $(am__leading_dot)dirstamp
+@NEUT_LIBCOMPAT_TRUE@am__objects_1 = $(top_srcdir)/neutcore/fourVector.$(OBJEXT)
 am_lib@LIBPREFIX@specfunc_@NEUT_VERSION_NUM@_a_OBJECTS =  \
 	buildEffSf.$(OBJEXT) buildSf.$(OBJEXT) calcLH.$(OBJEXT) \
 	combineEffSFTables.$(OBJEXT) combineTables.$(OBJEXT) \
 	effsfevent.$(OBJEXT) effSFMaxDiff.$(OBJEXT) maxDiff.$(OBJEXT) \
 	readEffSFXsecData.$(OBJEXT) readXsecData.$(OBJEXT) \
 	selectEffSFValues.$(OBJEXT) selectSfValues.$(OBJEXT) \
-	sfevent.$(OBJEXT)
+	sfevent.$(OBJEXT) $(am__objects_1)
 lib@LIBPREFIX@specfunc_@NEUT_VERSION_NUM@_a_OBJECTS =  \
 	$(am_lib@LIBPREFIX@specfunc_@NEUT_VERSION_NUM@_a_OBJECTS)
 AM_V_P = $(am__v_P_@AM_V@)
@@ -181,7 +189,7 @@ am__v_F77LD_ = $(am__v_F77LD_@AM_DEFAULT_V@)
 am__v_F77LD_0 = @echo "  F77LD   " $@;
 am__v_F77LD_1 = 
 SOURCES = $(lib@LIBPREFIX@specfunc_@NEUT_VERSION_NUM@_a_SOURCES)
-DIST_SOURCES = $(lib@LIBPREFIX@specfunc_@NEUT_VERSION_NUM@_a_SOURCES)
+DIST_SOURCES = $(am__lib@LIBPREFIX@specfunc_@NEUT_VERSION_NUM@_a_SOURCES_DIST)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -360,7 +368,11 @@ AM_FFLAGS = -DSPECFUNCVER=@NEUT_VERSION_NUM@ $(DEFAULT_FFLAGS)
 LIBNAME = lib@LIBPREFIX@specfunc.@NEUT_VERSION_NUM@.a
 @NEUT_LIBCOMPAT_TRUE@lib_LIBRARIES = $(LIBNAME)
 @NEUT_LIBCOMPAT_FALSE@noinst_LIBRARIES = $(LIBNAME)
-lib@LIBPREFIX@specfunc_@NEUT_VERSION_NUM@_a_SOURCES = buildEffSf.F buildSf.F calcLH.F combineEffSFTables.F combineTables.F effsfevent.F effSFMaxDiff.F maxDiff.F readEffSFXsecData.F readXsecData.F selectEffSFValues.F selectSfValues.F sfevent.F
+lib@LIBPREFIX@specfunc_@NEUT_VERSION_NUM@_a_SOURCES = buildEffSf.F \
+	buildSf.F calcLH.F combineEffSFTables.F combineTables.F \
+	effsfevent.F effSFMaxDiff.F maxDiff.F readEffSFXsecData.F \
+	readXsecData.F selectEffSFValues.F selectSfValues.F sfevent.F \
+	$(am__append_1)
 
 # Unused sources that live in the directory
 UNUSED_srcs = selectSfValues.old.F tauvect_dummy.F
@@ -432,6 +444,15 @@ clean-libLIBRARIES:
 
 clean-noinstLIBRARIES:
 	-test -z "$(noinst_LIBRARIES)" || rm -f $(noinst_LIBRARIES)
+$(top_srcdir)/neutcore/$(am__dirstamp):
+	@$(MKDIR_P) $(top_srcdir)/neutcore
+	@: > $(top_srcdir)/neutcore/$(am__dirstamp)
+$(top_srcdir)/neutcore/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) $(top_srcdir)/neutcore/$(DEPDIR)
+	@: > $(top_srcdir)/neutcore/$(DEPDIR)/$(am__dirstamp)
+$(top_srcdir)/neutcore/fourVector.$(OBJEXT):  \
+	$(top_srcdir)/neutcore/$(am__dirstamp) \
+	$(top_srcdir)/neutcore/$(DEPDIR)/$(am__dirstamp)
 
 lib@LIBPREFIX@specfunc.@NEUT_VERSION_NUM@.a: $(lib@LIBPREFIX@specfunc_@NEUT_VERSION_NUM@_a_OBJECTS) $(lib@LIBPREFIX@specfunc_@NEUT_VERSION_NUM@_a_DEPENDENCIES) $(EXTRA_lib@LIBPREFIX@specfunc_@NEUT_VERSION_NUM@_a_DEPENDENCIES) 
 	$(AM_V_at)-rm -f lib@LIBPREFIX@specfunc.@NEUT_VERSION_NUM@.a
@@ -440,6 +461,7 @@ lib@LIBPREFIX@specfunc.@NEUT_VERSION_NUM@.a: $(lib@LIBPREFIX@specfunc_@NEUT_VERS
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
+	-rm -f $(top_srcdir)/neutcore/*.$(OBJEXT)
 
 distclean-compile:
 	-rm -f *.tab.c
@@ -530,6 +552,8 @@ clean-generic:
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
 	-test . = "$(srcdir)" || test -z "$(CONFIG_CLEAN_VPATH_FILES)" || rm -f $(CONFIG_CLEAN_VPATH_FILES)
+	-test -z "$(top_srcdir)/neutcore/$(DEPDIR)/$(am__dirstamp)" || rm -f $(top_srcdir)/neutcore/$(DEPDIR)/$(am__dirstamp)
+	-test -z "$(top_srcdir)/neutcore/$(am__dirstamp)" || rm -f $(top_srcdir)/neutcore/$(am__dirstamp)
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"

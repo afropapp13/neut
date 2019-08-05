@@ -222,7 +222,9 @@ am__define_uniq_tagged_files = \
 ETAGS = etags
 CTAGS = ctags
 CSCOPE = cscope
-DIST_SUBDIRS = $(SUBDIRS)
+DIST_SUBDIRS = neutcore nuccorspl nuceff n1p1h ht2p2h radcorr tauola \
+	specfunc skmcsvc partnuck neutclass . neutsmpl reweight tools \
+	neututils
 am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/build.common compile \
 	config.guess config.sub depcomp install-sh ltmain.sh missing
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -428,9 +430,12 @@ EXE_LINKFLAGS = -fno-PIE -fno-pie -no-pie
 BUILT_SOURCES = neutcore/necardC.h neutcore/neworkC.h neutcore/neutfilepathC.h neutcore/posinnucC.h neutcore/neutparamsC.h neutcore/neutmodelC.h neutcore/nefillverC.h neutcore/neutcrsC.h neutcore/rsconsC.h skmcsvc/vcworkC.h skmcsvc/vcvrtxC.h n1p1h/nieves1p1hC.h nuccorspl/nrcardC.h nuceff/fsihistC.h nuceff/efpionC.h nuccorspl/nucleonfsihistC.h
 CLEANFILES = $(BUILT_SOURCES)
 include_HEADERS = $(BUILT_SOURCES)
+# Order here matters, should build core libraries, combine them in this dir (.), then build reweight, programs, and tools.
+@NEUT_LIBCOMPAT_FALSE@SUBDIRS = neutcore nuccorspl nuceff n1p1h ht2p2h radcorr tauola specfunc skmcsvc partnuck neutclass . neutsmpl reweight tools neututils
 
 # Order here matters, should build core libraries, combine them in this dir (.), then build reweight, programs, and tools.
-SUBDIRS = neutcore nuccorspl nuceff n1p1h ht2p2h radcorr tauola specfunc skmcsvc partnuck neutclass . neutsmpl nuclsmpl reweight tools neututils
+# Cannot currently build neututils dirs in compat mode.
+@NEUT_LIBCOMPAT_TRUE@SUBDIRS = neutcore nuccorspl nuceff n1p1h ht2p2h radcorr tauola specfunc skmcsvc partnuck neutclass . neutsmpl reweight tools
 ZEBRA_SUBDIRS = zbsfns
 
 # Combine all of the core static libraries into one!
