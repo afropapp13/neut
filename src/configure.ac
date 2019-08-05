@@ -4,10 +4,14 @@ AC_INIT([neut], [5.4.1])
 
 AC_SUBST(NEUT_VERSION, AC_PACKAGE_VERSION)
 AC_SUBST(NEUT_VERSION_NUM, $(echo AC_PACKAGE_VERSION | tr -d '.' ))
+AC_SUBST(NEUT_VERSION_MAJ, $(echo AC_PACKAGE_VERSION | cut -d . -f 1 ))
+AC_SUBST(NEUT_VERSION_MIN, $(echo AC_PACKAGE_VERSION | cut -d . -f 2 ))
+AC_SUBST(NEUT_VERSION_REV, $(echo AC_PACKAGE_VERSION | cut -d . -f 3 ))
 
 AC_CONFIG_SRCDIR([neutsmpl/neutroot.F])
 AC_CONFIG_MACRO_DIRS([m4])
 
+################ Check CERNLIB
 AC_ARG_VAR(CERN, Top level directory of build cernlib)
 AC_ARG_VAR(CERN_LEVEL, [The CERN 'level', almost certainly 2005])
 
@@ -40,9 +44,11 @@ AC_PROG_CXX
 AC_PROG_FC
 AC_PROG_F77
 AC_PROG_LIBTOOL
+AC_PROG_LN_S
 
 LT_INIT
 
+########## Check ROOT
 AC_CHECK_PROG(FOUND_ROOTCONFIG,root-config,"FOUND","NOT-FOUND")
 
 case "${FOUND_ROOTCONFIG}" in
@@ -57,6 +63,18 @@ else
   echo "Assuming ROOT 5."
 fi
 AM_CONDITIONAL([ROOT_MAJOR_IS_SIX], [test ${ROOT_MAJOR_VERSION} = 6])
+
+######## Check compat mode
+AC_ARG_ENABLE([compatnames],
+    AS_HELP_STRING([--enable-compatnames], [Enable 5.4.0 and previous library naming scheme]))
+
+AM_CONDITIONAL([NEUT_LIBCOMPAT], [test "x$enable_compatnames" = "xyes"])
+
+AS_IF([test "x$enable_compatnames" = "xyes"], [
+  AC_SUBST(LIBPREFIX, [])
+], [
+  AC_SUBST(LIBPREFIX, [NEUT])
+])
 
 AC_CONFIG_FILES([
   Makefile
@@ -73,6 +91,8 @@ AC_CONFIG_FILES([
   partnuck/Makefile
   neutclass/Makefile
   neutsmpl/Makefile
+  reweight/Makefile
+  tools/Makefile
 ])
 
 AC_OUTPUT

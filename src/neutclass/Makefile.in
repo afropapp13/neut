@@ -16,6 +16,7 @@
 
 
 
+
 VPATH = @srcdir@
 am__is_gnu_make = { \
   if test -z '$(MAKELEVEL)'; then \
@@ -98,7 +99,8 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
 	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
-DIST_COMMON = $(srcdir)/Makefile.am $(am__DIST_COMMON)
+DIST_COMMON = $(srcdir)/Makefile.am $(am__include_HEADERS_DIST) \
+	$(am__DIST_COMMON)
 mkinstalldirs = $(install_sh) -d
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
@@ -130,30 +132,108 @@ am__uninstall_files_from_dir = { \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
 am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(libdir)" \
-	"$(DESTDIR)$(pcmdir)"
+	"$(DESTDIR)$(pcmdir)" "$(DESTDIR)$(includedir)"
 LIBRARIES = $(lib_LIBRARIES)
 ARFLAGS = cru
 AM_V_AR = $(am__v_AR_@AM_V@)
 am__v_AR_ = $(am__v_AR_@AM_DEFAULT_V@)
 am__v_AR_0 = @echo "  AR      " $@;
 am__v_AR_1 = 
-libNEUTneutclassUtils_a_AR = $(AR) $(ARFLAGS)
-libNEUTneutclassUtils_a_LIBADD =
-am_libNEUTneutclassUtils_a_OBJECTS = neutrootfortwrapper.$(OBJEXT) \
-	NeutRootHandlers.$(OBJEXT) neutrootTreeSingleton.$(OBJEXT) \
-	neutfill.$(OBJEXT)
-libNEUTneutclassUtils_a_OBJECTS =  \
-	$(am_libNEUTneutclassUtils_a_OBJECTS)
+lib@LIBPREFIX@neutclassUtils_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_AR =  \
+	$(AR) $(ARFLAGS)
+lib@LIBPREFIX@neutclassUtils_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_LIBADD =
+am__lib@LIBPREFIX@neutclassUtils_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_SOURCES_DIST =  \
+	neutrootfortwrapper.cc NeutRootHandlers.cc \
+	neutrootTreeSingleton.cc neutfill.cc
+@NEUT_LIBCOMPAT_FALSE@am_lib@LIBPREFIX@neutclassUtils_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_OBJECTS =  \
+@NEUT_LIBCOMPAT_FALSE@	neutrootfortwrapper.$(OBJEXT) \
+@NEUT_LIBCOMPAT_FALSE@	NeutRootHandlers.$(OBJEXT) \
+@NEUT_LIBCOMPAT_FALSE@	neutrootTreeSingleton.$(OBJEXT) \
+@NEUT_LIBCOMPAT_FALSE@	neutfill.$(OBJEXT)
+lib@LIBPREFIX@neutclassUtils_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_OBJECTS = $(am_lib@LIBPREFIX@neutclassUtils_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_OBJECTS)
 LTLIBRARIES = $(lib_LTLIBRARIES)
-libNEUTneutclass_la_LIBADD =
-am_libNEUTneutclass_la_OBJECTS = neutclassDict.lo neutctrl.lo \
-	neutfsipart.lo neutfsivert.lo neutnucfsistep.lo \
-	neutnucfsivert.lo neutpart.lo neutvect.lo neutvtx.lo
-libNEUTneutclass_la_OBJECTS = $(am_libNEUTneutclass_la_OBJECTS)
+lib@LIBPREFIX@neutclass_la_LIBADD =
+am__lib@LIBPREFIX@neutclass_la_SOURCES_DIST = neutclassDict.cc \
+	neutctrl.cc neutfsipart.cc neutfsivert.cc neutnucfsistep.cc \
+	neutnucfsivert.cc neutpart.cc neutvect.cc neutvtx.cc
+@NEUT_LIBCOMPAT_FALSE@am_lib@LIBPREFIX@neutclass_la_OBJECTS =  \
+@NEUT_LIBCOMPAT_FALSE@	neutclassDict.lo neutctrl.lo \
+@NEUT_LIBCOMPAT_FALSE@	neutfsipart.lo neutfsivert.lo \
+@NEUT_LIBCOMPAT_FALSE@	neutnucfsistep.lo neutnucfsivert.lo \
+@NEUT_LIBCOMPAT_FALSE@	neutpart.lo neutvect.lo neutvtx.lo
+lib@LIBPREFIX@neutclass_la_OBJECTS =  \
+	$(am_lib@LIBPREFIX@neutclass_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
 am__v_lt_1 = 
+@NEUT_LIBCOMPAT_FALSE@am_lib@LIBPREFIX@neutclass_la_rpath = -rpath \
+@NEUT_LIBCOMPAT_FALSE@	$(libdir)
+libneutctrl_la_LIBADD =
+am__libneutctrl_la_SOURCES_DIST = neutctrlDict.cc neutctrl.cc
+@NEUT_LIBCOMPAT_TRUE@am_libneutctrl_la_OBJECTS = neutctrlDict.lo \
+@NEUT_LIBCOMPAT_TRUE@	neutctrl.lo
+libneutctrl_la_OBJECTS = $(am_libneutctrl_la_OBJECTS)
+@NEUT_LIBCOMPAT_TRUE@am_libneutctrl_la_rpath = -rpath $(libdir)
+libneutfsipart_la_LIBADD =
+am__libneutfsipart_la_SOURCES_DIST = neutfsipartDict.cc neutfsipart.cc
+@NEUT_LIBCOMPAT_TRUE@am_libneutfsipart_la_OBJECTS =  \
+@NEUT_LIBCOMPAT_TRUE@	neutfsipartDict.lo neutfsipart.lo
+libneutfsipart_la_OBJECTS = $(am_libneutfsipart_la_OBJECTS)
+@NEUT_LIBCOMPAT_TRUE@am_libneutfsipart_la_rpath = -rpath $(libdir)
+libneutfsivert_la_LIBADD =
+am__libneutfsivert_la_SOURCES_DIST = neutfsivertDict.cc neutfsivert.cc
+@NEUT_LIBCOMPAT_TRUE@am_libneutfsivert_la_OBJECTS =  \
+@NEUT_LIBCOMPAT_TRUE@	neutfsivertDict.lo neutfsivert.lo
+libneutfsivert_la_OBJECTS = $(am_libneutfsivert_la_OBJECTS)
+@NEUT_LIBCOMPAT_TRUE@am_libneutfsivert_la_rpath = -rpath $(libdir)
+libneutnucfsistep_la_LIBADD =
+am__libneutnucfsistep_la_SOURCES_DIST = neutnucfsistepDict.cc \
+	neutnucfsistep.cc
+@NEUT_LIBCOMPAT_TRUE@am_libneutnucfsistep_la_OBJECTS =  \
+@NEUT_LIBCOMPAT_TRUE@	neutnucfsistepDict.lo neutnucfsistep.lo
+libneutnucfsistep_la_OBJECTS = $(am_libneutnucfsistep_la_OBJECTS)
+@NEUT_LIBCOMPAT_TRUE@am_libneutnucfsistep_la_rpath = -rpath $(libdir)
+libneutnucfsivert_la_LIBADD =
+am__libneutnucfsivert_la_SOURCES_DIST = neutnucfsivertDict.cc \
+	neutnucfsivert.cc
+@NEUT_LIBCOMPAT_TRUE@am_libneutnucfsivert_la_OBJECTS =  \
+@NEUT_LIBCOMPAT_TRUE@	neutnucfsivertDict.lo neutnucfsivert.lo
+libneutnucfsivert_la_OBJECTS = $(am_libneutnucfsivert_la_OBJECTS)
+@NEUT_LIBCOMPAT_TRUE@am_libneutnucfsivert_la_rpath = -rpath $(libdir)
+libneutpart_la_LIBADD =
+am__libneutpart_la_SOURCES_DIST = neutpartDict.cc neutpart.cc
+@NEUT_LIBCOMPAT_TRUE@am_libneutpart_la_OBJECTS = neutpartDict.lo \
+@NEUT_LIBCOMPAT_TRUE@	neutpart.lo
+libneutpart_la_OBJECTS = $(am_libneutpart_la_OBJECTS)
+@NEUT_LIBCOMPAT_TRUE@am_libneutpart_la_rpath = -rpath $(libdir)
+libneutrootTreeSingleton_la_LIBADD =
+am__libneutrootTreeSingleton_la_SOURCES_DIST = neutrootfortwrapper.cc \
+	NeutRootHandlers.cc neutrootTreeSingleton.cc neutfill.cc
+@NEUT_LIBCOMPAT_TRUE@am_libneutrootTreeSingleton_la_OBJECTS = libneutrootTreeSingleton_la-neutrootfortwrapper.lo \
+@NEUT_LIBCOMPAT_TRUE@	libneutrootTreeSingleton_la-NeutRootHandlers.lo \
+@NEUT_LIBCOMPAT_TRUE@	libneutrootTreeSingleton_la-neutrootTreeSingleton.lo \
+@NEUT_LIBCOMPAT_TRUE@	libneutrootTreeSingleton_la-neutfill.lo
+libneutrootTreeSingleton_la_OBJECTS =  \
+	$(am_libneutrootTreeSingleton_la_OBJECTS)
+libneutrootTreeSingleton_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
+	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CXXLD) \
+	$(libneutrootTreeSingleton_la_CXXFLAGS) $(CXXFLAGS) \
+	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+@NEUT_LIBCOMPAT_TRUE@am_libneutrootTreeSingleton_la_rpath = -rpath \
+@NEUT_LIBCOMPAT_TRUE@	$(libdir)
+libneutvect_la_LIBADD =
+am__libneutvect_la_SOURCES_DIST = neutvectDict.cc neutvect.cc
+@NEUT_LIBCOMPAT_TRUE@am_libneutvect_la_OBJECTS = neutvectDict.lo \
+@NEUT_LIBCOMPAT_TRUE@	neutvect.lo
+libneutvect_la_OBJECTS = $(am_libneutvect_la_OBJECTS)
+@NEUT_LIBCOMPAT_TRUE@am_libneutvect_la_rpath = -rpath $(libdir)
+libneutvtx_la_LIBADD =
+am__libneutvtx_la_SOURCES_DIST = neutvtxDict.cc neutvtx.cc
+@NEUT_LIBCOMPAT_TRUE@am_libneutvtx_la_OBJECTS = neutvtxDict.lo \
+@NEUT_LIBCOMPAT_TRUE@	neutvtx.lo
+libneutvtx_la_OBJECTS = $(am_libneutvtx_la_OBJECTS)
+@NEUT_LIBCOMPAT_TRUE@am_libneutvtx_la_rpath = -rpath $(libdir)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -188,16 +268,35 @@ AM_V_CXXLD = $(am__v_CXXLD_@AM_V@)
 am__v_CXXLD_ = $(am__v_CXXLD_@AM_DEFAULT_V@)
 am__v_CXXLD_0 = @echo "  CXXLD   " $@;
 am__v_CXXLD_1 = 
-SOURCES = $(libNEUTneutclassUtils_a_SOURCES) \
-	$(libNEUTneutclass_la_SOURCES)
-DIST_SOURCES = $(libNEUTneutclassUtils_a_SOURCES) \
-	$(libNEUTneutclass_la_SOURCES)
+SOURCES = $(lib@LIBPREFIX@neutclassUtils_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_SOURCES) \
+	$(lib@LIBPREFIX@neutclass_la_SOURCES) \
+	$(libneutctrl_la_SOURCES) $(libneutfsipart_la_SOURCES) \
+	$(libneutfsivert_la_SOURCES) $(libneutnucfsistep_la_SOURCES) \
+	$(libneutnucfsivert_la_SOURCES) $(libneutpart_la_SOURCES) \
+	$(libneutrootTreeSingleton_la_SOURCES) \
+	$(libneutvect_la_SOURCES) $(libneutvtx_la_SOURCES)
+DIST_SOURCES = $(am__lib@LIBPREFIX@neutclassUtils_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_SOURCES_DIST) \
+	$(am__lib@LIBPREFIX@neutclass_la_SOURCES_DIST) \
+	$(am__libneutctrl_la_SOURCES_DIST) \
+	$(am__libneutfsipart_la_SOURCES_DIST) \
+	$(am__libneutfsivert_la_SOURCES_DIST) \
+	$(am__libneutnucfsistep_la_SOURCES_DIST) \
+	$(am__libneutnucfsivert_la_SOURCES_DIST) \
+	$(am__libneutpart_la_SOURCES_DIST) \
+	$(am__libneutrootTreeSingleton_la_SOURCES_DIST) \
+	$(am__libneutvect_la_SOURCES_DIST) \
+	$(am__libneutvtx_la_SOURCES_DIST)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
     *) (install-info --version) >/dev/null 2>&1;; \
   esac
 DATA = $(pcm_DATA)
+am__include_HEADERS_DIST = neutctrl.h neutfsipart.h neutfsivert.h \
+	neutnucfsistep.h neutnucfsivert.h neutpart.h \
+	NeutRootHandlers.h neutrootTreeSingleton.h neutvect.h \
+	neutvtx.h
+HEADERS = $(include_HEADERS)
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
 # Read a list of newline-separated strings from the standard input,
 # and print each of them once, without duplicates.  Input order is
@@ -265,6 +364,7 @@ INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
 LD = @LD@
 LDFLAGS = @LDFLAGS@
 LIBOBJS = @LIBOBJS@
+LIBPREFIX = @LIBPREFIX@
 LIBS = @LIBS@
 LIBTOOL = @LIBTOOL@
 LIPO = @LIPO@
@@ -275,7 +375,10 @@ MAKEINFO = @MAKEINFO@
 MANIFEST_TOOL = @MANIFEST_TOOL@
 MKDIR_P = @MKDIR_P@
 NEUT_VERSION = @NEUT_VERSION@
+NEUT_VERSION_MAJ = @NEUT_VERSION_MAJ@
+NEUT_VERSION_MIN = @NEUT_VERSION_MIN@
 NEUT_VERSION_NUM = @NEUT_VERSION_NUM@
+NEUT_VERSION_REV = @NEUT_VERSION_REV@
 NM = @NM@
 NMEDIT = @NMEDIT@
 OBJDUMP = @OBJDUMP@
@@ -355,30 +458,70 @@ top_srcdir = @top_srcdir@
 
 # top_builddir dependencies are needed for fh2h.pl-generated headers
 NEUT_INCLUDES = -I$(top_srcdir)/radcorr -I$(top_srcdir)/tauola -I$(top_srcdir)/mec -I$(top_srcdir)/ht2p2h/inc -I$(top_srcdir)/nuccorspl -I$(top_srcdir)/zbsfns -I$(top_srcdir)/n1p1h/inc -I$(top_srcdir)/nuceff -I$(top_srcdir)/kamflux -I$(top_srcdir)/nuclsmpl -I$(top_srcdir)/skmcsvc -I$(top_srcdir)/neutcore -I$(top_srcdir)/partnuck -I$(top_srcdir)/specfunc -I$(top_srcdir)/t2kflux_zbs -I$(top_builddir)/neutcore -I$(top_builddir)/skmcsvc -I$(top_builddir)/n1p1h -I$(top_builddir)/nuccorspl -I$(top_builddir)/nuceff
-NEUT_STATIC_LIBS = $(top_builddir)/neutclass/libNEUTneutclassUtils.a $(top_builddir)/neutcore/libNEUTneutcore.a $(top_builddir)/nuccorspl/libNEUTnuccorspl.a $(top_builddir)/nuceff/libNEUTnuceff.a $(top_builddir)/n1p1h/libNEUTn1p1h.a $(top_builddir)/ht2p2h/libNEUTht2p2h.a $(top_builddir)/radcorr/libNEUTradcorr.a $(top_builddir)/tauola/libNEUTtauola.a $(top_builddir)/specfunc/libNEUTspecfunc.a $(top_builddir)/skmcsvc/libNEUTskmcsvc.a $(top_builddir)/zbsfns/libNEUTzbsfns.a $(top_builddir)/partnuck/libNEUTpartnuck.a
-CERN_ROOT = $(CERN)/$(CERN_LEVEL)/include
-CERN_LINKFLAGS := $(shell ${CERN}/${CERN_LEVEL}/bin/cernlib jetset74 pdflib804 photos202 mathlib packlib kernlib)
+NEUT_CLASS_INCLUDES = -I$(top_srcdir)/neutclass
+NEUT_STATIC_LIBS = $(top_builddir)/neutcore/lib@LIBPREFIX@neutcore.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a \
+	$(top_builddir)/nuccorspl/lib@LIBPREFIX@nuccorspl.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a \
+	$(top_builddir)/nuceff/lib@LIBPREFIX@nuceff.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a \
+	$(top_builddir)/n1p1h/lib@LIBPREFIX@n1p1h.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a \
+	$(top_builddir)/ht2p2h/lib@LIBPREFIX@ht2p2h.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a \
+	$(top_builddir)/radcorr/lib@LIBPREFIX@radcorr.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a \
+	$(top_builddir)/tauola/lib@LIBPREFIX@tauola.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a \
+	$(top_builddir)/specfunc/lib@LIBPREFIX@specfunc.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a \
+	$(top_builddir)/skmcsvc/lib@LIBPREFIX@skmcsvc.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a \
+	$(top_builddir)/zbsfns/lib@LIBPREFIX@zbsfns.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a \
+	$(top_builddir)/partnuck/lib@LIBPREFIX@partnuck.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a
+@NEUT_LIBCOMPAT_TRUE@NEUTCLASS_LIBS = $(top_builddir)/neutclass/libneutrootTreeSingleton.la $(top_builddir)/neutclass/libneutctrl.la $(top_builddir)/neutclass/libneutfsipart.la $(top_builddir)/neutclass/libneutfsivert.la $(top_builddir)/neutclass/libneutnucfsistep.la $(top_builddir)/neutclass/libneutnucfsivert.la $(top_builddir)/neutclass/libneutpart.la $(top_builddir)/neutclass/libneutvect.la $(top_builddir)/neutclass/libneutvtx.la
+@NEUT_LIBCOMPAT_FALSE@NEUT_LIBS = $(top_builddir)/neutclass/lib@LIBPREFIX@neutclassUtils.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a $(top_builddir)/neutclass/lib@LIBPREFIX@neutclass.la $(NEUT_STATIC_LIBS)
+@NEUT_LIBCOMPAT_TRUE@NEUT_LIBS = $(NEUTCLASS_LIBS) $(NEUT_STATIC_LIBS)
+CERN_ROOT = $(CERN)/$(CERN_LEVEL)
+CERN_LINKFLAGS = -L$(CERN_ROOT)/lib
+CERN_LIBS = -ljetset74 -lpdflib804 -lphotos202 -lmathlib -lpacklib -lkernlib
 NEUT_FFLAGS = -fno-backslash -fno-automatic -fno-second-underscore -ffixed-line-length-132 -fdollar-ok -fPIC -fbounds-check -Wall -W -ffpe-trap=invalid,zero,overflow -DstrictF77 -DgFortran -Df2cFortran
-DEFAULT_FFLAGS = $(NEUT_FFLAGS) $(NEUT_INCLUDES) -I$(CERN_ROOT)
-DEFAULT_CXXFLAGS = -fPIC $(NEUT_INCLUDES) -I$(CERN_ROOT) $(shell root-config --cflags)
-ROOT_LINKFLAGS = $(shell root-config --glibs)
+DEFAULT_FFLAGS = $(NEUT_FFLAGS) $(NEUT_INCLUDES) -I$(CERN_ROOT)/include
+DEFAULT_CXXFLAGS = -fPIC $(NEUT_INCLUDES) -I$(CERN_ROOT)/include $(shell root-config --cflags)
+DEFAULT_LINKFLAGS = -version-info @NEUT_VERSION_NUM@
+ROOT_LINKFLAGS = $(shell root-config --ldflags) -pthread -rdynamic -L$(shell root-config --libdir)
+@ROOT_MAJOR_IS_SIX_FALSE@ROOT_LIBS = -lCore -lCint -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lm -ldl
+@ROOT_MAJOR_IS_SIX_TRUE@ROOT_LIBS = -lCore -lImt -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lROOTVecOps -lTree -lTreePlayer -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lMultiProc -lROOTDataFrame
 
 # I know... but this seems to work
 EXE_LINKFLAGS = -fno-PIE -fno-pie -no-pie
-NEUTCLASSHEADERS = neutctrl.h neutfsipart.h neutfsivert.h neutnucfsistep.h neutnucfsivert.h neutpart.h neutvect.h neutvtx.h
-BUILT_SOURCES = neutclassDict.cc
-CLEANFILES = $(BUILT_SOURCES)
 AM_CXXFLAGS = -DNEUTCLASSVER=@NEUT_VERSION_NUM@ $(DEFAULT_CXXFLAGS)
-AM_LDFLAGS = $(ROOT_LINKFLAGS)
-lib_LTLIBRARIES = libNEUTneutclass.la
-@ROOT_MAJOR_IS_SIX_TRUE@pcmdir = $(prefix)/lib
-@ROOT_MAJOR_IS_SIX_TRUE@pcm_DATA = neutclassDict_rdict.pcm
-libNEUTneutclass_la_SOURCES = neutclassDict.cc neutctrl.cc neutfsipart.cc neutfsivert.cc neutnucfsistep.cc neutnucfsivert.cc neutpart.cc neutvect.cc neutvtx.cc
-lib_LIBRARIES = libNEUTneutclassUtils.a
-libNEUTneutclassUtils_a_SOURCES = neutrootfortwrapper.cc NeutRootHandlers.cc neutrootTreeSingleton.cc neutfill.cc
+AM_LDFLAGS = $(ROOT_LINKFLAGS) $(DEFAULT_LINKFLAGS)
+@NEUT_LIBCOMPAT_FALSE@@ROOT_MAJOR_IS_SIX_TRUE@pcmdir = $(prefix)/lib
+@NEUT_LIBCOMPAT_TRUE@@ROOT_MAJOR_IS_SIX_TRUE@pcmdir = $(prefix)/lib
+@NEUT_LIBCOMPAT_FALSE@@ROOT_MAJOR_IS_SIX_TRUE@pcm_DATA = neutclassDict_rdict.pcm
+@NEUT_LIBCOMPAT_TRUE@@ROOT_MAJOR_IS_SIX_TRUE@pcm_DATA = neutctrlDict_rdict.pcm neutfsipartDict_rdict.pcm neutfsivertDict_rdict.pcm neutnucfsistepDict_rdict.pcm neutnucfsivertDict_rdict.pcm neutpartDict_rdict.pcm neutvectDict_rdict.pcm neutvtxDict_rdict.pcm
+@NEUT_LIBCOMPAT_FALSE@lib_LTLIBRARIES = lib@LIBPREFIX@neutclass.la
+@NEUT_LIBCOMPAT_TRUE@lib_LTLIBRARIES = libneutctrl.la libneutfsipart.la libneutfsivert.la libneutnucfsistep.la libneutnucfsivert.la libneutpart.la libneutvect.la libneutvtx.la libneutrootTreeSingleton.la
+@NEUT_LIBCOMPAT_TRUE@libneutctrl_la_SOURCES = neutctrlDict.cc neutctrl.cc
+@NEUT_LIBCOMPAT_TRUE@libneutfsipart_la_SOURCES = neutfsipartDict.cc neutfsipart.cc
+@NEUT_LIBCOMPAT_TRUE@libneutfsivert_la_SOURCES = neutfsivertDict.cc neutfsivert.cc
+@NEUT_LIBCOMPAT_TRUE@libneutnucfsistep_la_SOURCES = neutnucfsistepDict.cc neutnucfsistep.cc
+@NEUT_LIBCOMPAT_TRUE@libneutnucfsivert_la_SOURCES = neutnucfsivertDict.cc neutnucfsivert.cc
+@NEUT_LIBCOMPAT_TRUE@libneutpart_la_SOURCES = neutpartDict.cc neutpart.cc
+@NEUT_LIBCOMPAT_TRUE@libneutvect_la_SOURCES = neutvectDict.cc neutvect.cc
+@NEUT_LIBCOMPAT_TRUE@libneutvtx_la_SOURCES = neutvtxDict.cc neutvtx.cc
+@NEUT_LIBCOMPAT_TRUE@libneutrootTreeSingleton_la_SOURCES = neutrootfortwrapper.cc NeutRootHandlers.cc neutrootTreeSingleton.cc neutfill.cc
+
+#you may think this is pointless, but look up autotools renaming objects...
+@NEUT_LIBCOMPAT_TRUE@libneutrootTreeSingleton_la_CXXFLAGS = $(AM_CXXFLAGS)
+
+##### if new style where you have one I/O library and one static utils library.
+@NEUT_LIBCOMPAT_FALSE@NEUTCLASSHEADERS = neutctrl.h neutfsipart.h neutfsivert.h neutnucfsistep.h neutnucfsivert.h neutpart.h neutvect.h neutvtx.h
+@NEUT_LIBCOMPAT_FALSE@BUILT_SOURCES = neutclassDict.cc
+@NEUT_LIBCOMPAT_FALSE@CLEANFILES = $(BUILT_SOURCES)
+@NEUT_LIBCOMPAT_FALSE@include_HEADERS = neutctrl.h neutfsipart.h neutfsivert.h neutnucfsistep.h neutnucfsivert.h neutpart.h NeutRootHandlers.h neutrootTreeSingleton.h neutvect.h neutvtx.h
+@NEUT_LIBCOMPAT_FALSE@lib@LIBPREFIX@neutclass_la_SOURCES = neutclassDict.cc neutctrl.cc neutfsipart.cc neutfsivert.cc neutnucfsistep.cc neutnucfsivert.cc neutpart.cc neutvect.cc neutvtx.cc
+#
+@NEUT_LIBCOMPAT_FALSE@LIBNAME = lib@LIBPREFIX@neutclassUtils.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a
+#
+@NEUT_LIBCOMPAT_FALSE@lib_LIBRARIES = $(LIBNAME)
+#
+@NEUT_LIBCOMPAT_FALSE@lib@LIBPREFIX@neutclassUtils_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_SOURCES = neutrootfortwrapper.cc NeutRootHandlers.cc neutrootTreeSingleton.cc neutfill.cc
 
 # Unused sources that live in the directory
-UNUSED_srcs = chkfillneutvect.cc chkfillneutvtx.cc chkreadneutvect.cc chkreadneutvtx.cc
+@NEUT_LIBCOMPAT_FALSE@UNUSED_srcs = chkfillneutvect.cc chkfillneutvtx.cc chkreadneutvect.cc chkreadneutvtx.cc
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -446,10 +589,10 @@ uninstall-libLIBRARIES:
 clean-libLIBRARIES:
 	-test -z "$(lib_LIBRARIES)" || rm -f $(lib_LIBRARIES)
 
-libNEUTneutclassUtils.a: $(libNEUTneutclassUtils_a_OBJECTS) $(libNEUTneutclassUtils_a_DEPENDENCIES) $(EXTRA_libNEUTneutclassUtils_a_DEPENDENCIES) 
-	$(AM_V_at)-rm -f libNEUTneutclassUtils.a
-	$(AM_V_AR)$(libNEUTneutclassUtils_a_AR) libNEUTneutclassUtils.a $(libNEUTneutclassUtils_a_OBJECTS) $(libNEUTneutclassUtils_a_LIBADD)
-	$(AM_V_at)$(RANLIB) libNEUTneutclassUtils.a
+lib@LIBPREFIX@neutclassUtils.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a: $(lib@LIBPREFIX@neutclassUtils_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_OBJECTS) $(lib@LIBPREFIX@neutclassUtils_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_DEPENDENCIES) $(EXTRA_lib@LIBPREFIX@neutclassUtils_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_DEPENDENCIES) 
+	$(AM_V_at)-rm -f lib@LIBPREFIX@neutclassUtils.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a
+	$(AM_V_AR)$(lib@LIBPREFIX@neutclassUtils_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_AR) lib@LIBPREFIX@neutclassUtils.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a $(lib@LIBPREFIX@neutclassUtils_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_OBJECTS) $(lib@LIBPREFIX@neutclassUtils_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_LIBADD)
+	$(AM_V_at)$(RANLIB) lib@LIBPREFIX@neutclassUtils.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a
 
 install-libLTLIBRARIES: $(lib_LTLIBRARIES)
 	@$(NORMAL_INSTALL)
@@ -486,8 +629,35 @@ clean-libLTLIBRARIES:
 	  rm -f $${locs}; \
 	}
 
-libNEUTneutclass.la: $(libNEUTneutclass_la_OBJECTS) $(libNEUTneutclass_la_DEPENDENCIES) $(EXTRA_libNEUTneutclass_la_DEPENDENCIES) 
-	$(AM_V_CXXLD)$(CXXLINK) -rpath $(libdir) $(libNEUTneutclass_la_OBJECTS) $(libNEUTneutclass_la_LIBADD) $(LIBS)
+lib@LIBPREFIX@neutclass.la: $(lib@LIBPREFIX@neutclass_la_OBJECTS) $(lib@LIBPREFIX@neutclass_la_DEPENDENCIES) $(EXTRA_lib@LIBPREFIX@neutclass_la_DEPENDENCIES) 
+	$(AM_V_CXXLD)$(CXXLINK) $(am_lib@LIBPREFIX@neutclass_la_rpath) $(lib@LIBPREFIX@neutclass_la_OBJECTS) $(lib@LIBPREFIX@neutclass_la_LIBADD) $(LIBS)
+
+libneutctrl.la: $(libneutctrl_la_OBJECTS) $(libneutctrl_la_DEPENDENCIES) $(EXTRA_libneutctrl_la_DEPENDENCIES) 
+	$(AM_V_CXXLD)$(CXXLINK) $(am_libneutctrl_la_rpath) $(libneutctrl_la_OBJECTS) $(libneutctrl_la_LIBADD) $(LIBS)
+
+libneutfsipart.la: $(libneutfsipart_la_OBJECTS) $(libneutfsipart_la_DEPENDENCIES) $(EXTRA_libneutfsipart_la_DEPENDENCIES) 
+	$(AM_V_CXXLD)$(CXXLINK) $(am_libneutfsipart_la_rpath) $(libneutfsipart_la_OBJECTS) $(libneutfsipart_la_LIBADD) $(LIBS)
+
+libneutfsivert.la: $(libneutfsivert_la_OBJECTS) $(libneutfsivert_la_DEPENDENCIES) $(EXTRA_libneutfsivert_la_DEPENDENCIES) 
+	$(AM_V_CXXLD)$(CXXLINK) $(am_libneutfsivert_la_rpath) $(libneutfsivert_la_OBJECTS) $(libneutfsivert_la_LIBADD) $(LIBS)
+
+libneutnucfsistep.la: $(libneutnucfsistep_la_OBJECTS) $(libneutnucfsistep_la_DEPENDENCIES) $(EXTRA_libneutnucfsistep_la_DEPENDENCIES) 
+	$(AM_V_CXXLD)$(CXXLINK) $(am_libneutnucfsistep_la_rpath) $(libneutnucfsistep_la_OBJECTS) $(libneutnucfsistep_la_LIBADD) $(LIBS)
+
+libneutnucfsivert.la: $(libneutnucfsivert_la_OBJECTS) $(libneutnucfsivert_la_DEPENDENCIES) $(EXTRA_libneutnucfsivert_la_DEPENDENCIES) 
+	$(AM_V_CXXLD)$(CXXLINK) $(am_libneutnucfsivert_la_rpath) $(libneutnucfsivert_la_OBJECTS) $(libneutnucfsivert_la_LIBADD) $(LIBS)
+
+libneutpart.la: $(libneutpart_la_OBJECTS) $(libneutpart_la_DEPENDENCIES) $(EXTRA_libneutpart_la_DEPENDENCIES) 
+	$(AM_V_CXXLD)$(CXXLINK) $(am_libneutpart_la_rpath) $(libneutpart_la_OBJECTS) $(libneutpart_la_LIBADD) $(LIBS)
+
+libneutrootTreeSingleton.la: $(libneutrootTreeSingleton_la_OBJECTS) $(libneutrootTreeSingleton_la_DEPENDENCIES) $(EXTRA_libneutrootTreeSingleton_la_DEPENDENCIES) 
+	$(AM_V_CXXLD)$(libneutrootTreeSingleton_la_LINK) $(am_libneutrootTreeSingleton_la_rpath) $(libneutrootTreeSingleton_la_OBJECTS) $(libneutrootTreeSingleton_la_LIBADD) $(LIBS)
+
+libneutvect.la: $(libneutvect_la_OBJECTS) $(libneutvect_la_DEPENDENCIES) $(EXTRA_libneutvect_la_DEPENDENCIES) 
+	$(AM_V_CXXLD)$(CXXLINK) $(am_libneutvect_la_rpath) $(libneutvect_la_OBJECTS) $(libneutvect_la_LIBADD) $(LIBS)
+
+libneutvtx.la: $(libneutvtx_la_OBJECTS) $(libneutvtx_la_DEPENDENCIES) $(EXTRA_libneutvtx_la_DEPENDENCIES) 
+	$(AM_V_CXXLD)$(CXXLINK) $(am_libneutvtx_la_rpath) $(libneutvtx_la_OBJECTS) $(libneutvtx_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -496,18 +666,30 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NeutRootHandlers.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libneutrootTreeSingleton_la-NeutRootHandlers.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libneutrootTreeSingleton_la-neutfill.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libneutrootTreeSingleton_la-neutrootTreeSingleton.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libneutrootTreeSingleton_la-neutrootfortwrapper.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/neutclassDict.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/neutctrl.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/neutctrlDict.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/neutfill.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/neutfsipart.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/neutfsipartDict.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/neutfsivert.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/neutfsivertDict.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/neutnucfsistep.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/neutnucfsistepDict.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/neutnucfsivert.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/neutnucfsivertDict.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/neutpart.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/neutpartDict.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/neutrootTreeSingleton.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/neutrootfortwrapper.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/neutvect.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/neutvectDict.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/neutvtx.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/neutvtxDict.Plo@am__quote@
 
 .cc.o:
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -532,6 +714,34 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LTCXXCOMPILE) -c -o $@ $<
+
+libneutrootTreeSingleton_la-neutrootfortwrapper.lo: neutrootfortwrapper.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libneutrootTreeSingleton_la_CXXFLAGS) $(CXXFLAGS) -MT libneutrootTreeSingleton_la-neutrootfortwrapper.lo -MD -MP -MF $(DEPDIR)/libneutrootTreeSingleton_la-neutrootfortwrapper.Tpo -c -o libneutrootTreeSingleton_la-neutrootfortwrapper.lo `test -f 'neutrootfortwrapper.cc' || echo '$(srcdir)/'`neutrootfortwrapper.cc
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libneutrootTreeSingleton_la-neutrootfortwrapper.Tpo $(DEPDIR)/libneutrootTreeSingleton_la-neutrootfortwrapper.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='neutrootfortwrapper.cc' object='libneutrootTreeSingleton_la-neutrootfortwrapper.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libneutrootTreeSingleton_la_CXXFLAGS) $(CXXFLAGS) -c -o libneutrootTreeSingleton_la-neutrootfortwrapper.lo `test -f 'neutrootfortwrapper.cc' || echo '$(srcdir)/'`neutrootfortwrapper.cc
+
+libneutrootTreeSingleton_la-NeutRootHandlers.lo: NeutRootHandlers.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libneutrootTreeSingleton_la_CXXFLAGS) $(CXXFLAGS) -MT libneutrootTreeSingleton_la-NeutRootHandlers.lo -MD -MP -MF $(DEPDIR)/libneutrootTreeSingleton_la-NeutRootHandlers.Tpo -c -o libneutrootTreeSingleton_la-NeutRootHandlers.lo `test -f 'NeutRootHandlers.cc' || echo '$(srcdir)/'`NeutRootHandlers.cc
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libneutrootTreeSingleton_la-NeutRootHandlers.Tpo $(DEPDIR)/libneutrootTreeSingleton_la-NeutRootHandlers.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='NeutRootHandlers.cc' object='libneutrootTreeSingleton_la-NeutRootHandlers.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libneutrootTreeSingleton_la_CXXFLAGS) $(CXXFLAGS) -c -o libneutrootTreeSingleton_la-NeutRootHandlers.lo `test -f 'NeutRootHandlers.cc' || echo '$(srcdir)/'`NeutRootHandlers.cc
+
+libneutrootTreeSingleton_la-neutrootTreeSingleton.lo: neutrootTreeSingleton.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libneutrootTreeSingleton_la_CXXFLAGS) $(CXXFLAGS) -MT libneutrootTreeSingleton_la-neutrootTreeSingleton.lo -MD -MP -MF $(DEPDIR)/libneutrootTreeSingleton_la-neutrootTreeSingleton.Tpo -c -o libneutrootTreeSingleton_la-neutrootTreeSingleton.lo `test -f 'neutrootTreeSingleton.cc' || echo '$(srcdir)/'`neutrootTreeSingleton.cc
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libneutrootTreeSingleton_la-neutrootTreeSingleton.Tpo $(DEPDIR)/libneutrootTreeSingleton_la-neutrootTreeSingleton.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='neutrootTreeSingleton.cc' object='libneutrootTreeSingleton_la-neutrootTreeSingleton.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libneutrootTreeSingleton_la_CXXFLAGS) $(CXXFLAGS) -c -o libneutrootTreeSingleton_la-neutrootTreeSingleton.lo `test -f 'neutrootTreeSingleton.cc' || echo '$(srcdir)/'`neutrootTreeSingleton.cc
+
+libneutrootTreeSingleton_la-neutfill.lo: neutfill.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libneutrootTreeSingleton_la_CXXFLAGS) $(CXXFLAGS) -MT libneutrootTreeSingleton_la-neutfill.lo -MD -MP -MF $(DEPDIR)/libneutrootTreeSingleton_la-neutfill.Tpo -c -o libneutrootTreeSingleton_la-neutfill.lo `test -f 'neutfill.cc' || echo '$(srcdir)/'`neutfill.cc
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libneutrootTreeSingleton_la-neutfill.Tpo $(DEPDIR)/libneutrootTreeSingleton_la-neutfill.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='neutfill.cc' object='libneutrootTreeSingleton_la-neutfill.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libneutrootTreeSingleton_la_CXXFLAGS) $(CXXFLAGS) -c -o libneutrootTreeSingleton_la-neutfill.lo `test -f 'neutfill.cc' || echo '$(srcdir)/'`neutfill.cc
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -559,6 +769,27 @@ uninstall-pcmDATA:
 	@list='$(pcm_DATA)'; test -n "$(pcmdir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
 	dir='$(DESTDIR)$(pcmdir)'; $(am__uninstall_files_from_dir)
+install-includeHEADERS: $(include_HEADERS)
+	@$(NORMAL_INSTALL)
+	@list='$(include_HEADERS)'; test -n "$(includedir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(includedir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(includedir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_HEADER) $$files '$(DESTDIR)$(includedir)'"; \
+	  $(INSTALL_HEADER) $$files "$(DESTDIR)$(includedir)" || exit $$?; \
+	done
+
+uninstall-includeHEADERS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(include_HEADERS)'; test -n "$(includedir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(includedir)'; $(am__uninstall_files_from_dir)
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique
@@ -645,9 +876,9 @@ distdir: $(DISTFILES)
 check-am: all-am
 check: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) check-am
-all-am: Makefile $(LIBRARIES) $(LTLIBRARIES) $(DATA)
+all-am: Makefile $(LIBRARIES) $(LTLIBRARIES) $(DATA) $(HEADERS)
 installdirs:
-	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(libdir)" "$(DESTDIR)$(pcmdir)"; do \
+	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(libdir)" "$(DESTDIR)$(pcmdir)" "$(DESTDIR)$(includedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: $(BUILT_SOURCES)
@@ -706,14 +937,15 @@ info: info-am
 
 info-am:
 
-install-data-am: install-pcmDATA
+install-data-am: install-includeHEADERS install-pcmDATA
 
 install-dvi: install-dvi-am
 
 install-dvi-am:
 
 install-exec-am: install-libLIBRARIES install-libLTLIBRARIES
-
+	@$(NORMAL_INSTALL)
+	$(MAKE) $(AM_MAKEFLAGS) install-exec-hook
 install-html: install-html-am
 
 install-html-am:
@@ -752,10 +984,12 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-libLIBRARIES uninstall-libLTLIBRARIES \
-	uninstall-pcmDATA
-
-.MAKE: all check install install-am install-strip
+uninstall-am: uninstall-includeHEADERS uninstall-libLIBRARIES \
+	uninstall-libLTLIBRARIES uninstall-pcmDATA
+	@$(NORMAL_INSTALL)
+	$(MAKE) $(AM_MAKEFLAGS) uninstall-hook
+.MAKE: all check install install-am install-exec-am install-strip \
+	uninstall-am
 
 .PHONY: CTAGS GTAGS TAGS all all-am check check-am clean clean-generic \
 	clean-libLIBRARIES clean-libLTLIBRARIES clean-libtool \
@@ -763,21 +997,87 @@ uninstall-am: uninstall-libLIBRARIES uninstall-libLTLIBRARIES \
 	distclean-generic distclean-libtool distclean-tags distdir dvi \
 	dvi-am html html-am info info-am install install-am \
 	install-data install-data-am install-dvi install-dvi-am \
-	install-exec install-exec-am install-html install-html-am \
-	install-info install-info-am install-libLIBRARIES \
-	install-libLTLIBRARIES install-man install-pcmDATA install-pdf \
-	install-pdf-am install-ps install-ps-am install-strip \
-	installcheck installcheck-am installdirs maintainer-clean \
+	install-exec install-exec-am install-exec-hook install-html \
+	install-html-am install-includeHEADERS install-info \
+	install-info-am install-libLIBRARIES install-libLTLIBRARIES \
+	install-man install-pcmDATA install-pdf install-pdf-am \
+	install-ps install-ps-am install-strip installcheck \
+	installcheck-am installdirs maintainer-clean \
 	maintainer-clean-generic mostlyclean mostlyclean-compile \
 	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags tags-am uninstall uninstall-am uninstall-libLIBRARIES \
+	tags tags-am uninstall uninstall-am uninstall-hook \
+	uninstall-includeHEADERS uninstall-libLIBRARIES \
 	uninstall-libLTLIBRARIES uninstall-pcmDATA
 
 .PRECIOUS: Makefile
 
 
-neutclassDict.cc neutclassDict_rdict.pcm: $(NEUTCLASSHEADERS) neutclassLinkDef.h
-	rootcint -f neutclassDict.cc -c $^
+######### ROOT Standalone I/O library
+
+##### if compat
+# if we want each class to be a separate so
+
+@NEUT_LIBCOMPAT_TRUE@neutctrlLinkDef.h:
+@NEUT_LIBCOMPAT_TRUE@	echo -e "#ifdef __CINT__\n#pragma link off all globals;\n#pragma link off all classes;\n#pragma link off all functions;\n#pragma link C++ class NeutCtrl;\n#endif" > $@
+
+@NEUT_LIBCOMPAT_TRUE@neutfsipartLinkDef.h:
+@NEUT_LIBCOMPAT_TRUE@	echo -e "#ifdef __CINT__\n#pragma link off all globals;\n#pragma link off all classes;\n#pragma link off all functions;\n#pragma link C++ class NeutFsiPart;\n#endif" > $@
+
+@NEUT_LIBCOMPAT_TRUE@neutfsivertLinkDef.h:
+@NEUT_LIBCOMPAT_TRUE@	echo -e "#ifdef __CINT__\n#pragma link off all globals;\n#pragma link off all classes;\n#pragma link off all functions;\n#pragma link C++ class NeutFsiVert;\n#endif" > $@
+
+@NEUT_LIBCOMPAT_TRUE@neutnucfsistepLinkDef.h:
+@NEUT_LIBCOMPAT_TRUE@	echo -e "#ifdef __CINT__\n#pragma link off all globals;\n#pragma link off all classes;\n#pragma link off all functions;\n#pragma link C++ class NeutNucFsiStep;\n#endif" > $@
+
+@NEUT_LIBCOMPAT_TRUE@neutnucfsivertLinkDef.h:
+@NEUT_LIBCOMPAT_TRUE@	echo -e "#ifdef __CINT__\n#pragma link off all globals;\n#pragma link off all classes;\n#pragma link off all functions;\n#pragma link C++ class NeutNucFsiVert;\n#endif" > $@
+
+@NEUT_LIBCOMPAT_TRUE@neutpartLinkDef.h:
+@NEUT_LIBCOMPAT_TRUE@	echo -e "#ifdef __CINT__\n#pragma link off all globals;\n#pragma link off all classes;\n#pragma link off all functions;\n#pragma link C++ class NeutPart;\n#endif" > $@
+
+@NEUT_LIBCOMPAT_TRUE@neutvectLinkDef.h:
+@NEUT_LIBCOMPAT_TRUE@	echo -e "#ifdef __CINT__\n#pragma link off all globals;\n#pragma link off all classes;\n#pragma link off all functions;\n#pragma link C++ class NeutVect;\n#endif" > $@
+
+@NEUT_LIBCOMPAT_TRUE@neutvtxLinkDef.h:
+@NEUT_LIBCOMPAT_TRUE@	echo -e "#ifdef __CINT__\n#pragma link off all globals;\n#pragma link off all classes;\n#pragma link off all functions;\n#pragma link C++ class NeutVtx;\n#endif" > $@
+
+@NEUT_LIBCOMPAT_TRUE@@ROOT_MAJOR_IS_SIX_TRUE@%Dict.cc %Dict_rdict.pcm: %.h %LinkDef.h
+@NEUT_LIBCOMPAT_TRUE@@ROOT_MAJOR_IS_SIX_TRUE@	rootcint -f $@ -c $^
+@NEUT_LIBCOMPAT_TRUE@@ROOT_MAJOR_IS_SIX_FALSE@%Dict.cc: %.h %LinkDef.h
+@NEUT_LIBCOMPAT_TRUE@@ROOT_MAJOR_IS_SIX_FALSE@	rootcint -f $@ -c $^
+
+@NEUT_LIBCOMPAT_TRUE@install-exec-hook:
+@NEUT_LIBCOMPAT_TRUE@	-(cd ${libdir}; $(LN_S) libneutctrl.so neutctrl.so)
+@NEUT_LIBCOMPAT_TRUE@	-(cd ${libdir}; $(LN_S) libneutfsipart.so neutfsipart.so)
+@NEUT_LIBCOMPAT_TRUE@	-(cd ${libdir}; $(LN_S) libneutfsivert.so neutfsivert.so)
+@NEUT_LIBCOMPAT_TRUE@	-(cd ${libdir}; $(LN_S) libneutnucfsistep.so neutnucfsistep.so)
+@NEUT_LIBCOMPAT_TRUE@	-(cd ${libdir}; $(LN_S) libneutnucfsivert.so neutnucfsivert.so)
+@NEUT_LIBCOMPAT_TRUE@	-(cd ${libdir}; $(LN_S) libneutpart.so neutpart.so)
+@NEUT_LIBCOMPAT_TRUE@	-(cd ${libdir}; $(LN_S) libneutvect.so neutvect.so)
+@NEUT_LIBCOMPAT_TRUE@	-(cd ${libdir}; $(LN_S) libneutvtx.so neutvtx.so)
+@NEUT_LIBCOMPAT_TRUE@	-(cd ${libdir}; $(LN_S) libneutrootTreeSingleton.so neutrootTreeSingleton.so)
+
+@NEUT_LIBCOMPAT_TRUE@uninstall-hook:
+@NEUT_LIBCOMPAT_TRUE@	-(cd ${libdir}; rm -f neutctrl.so)
+@NEUT_LIBCOMPAT_TRUE@	-(cd ${libdir}; rm -f neutfsipart.so)
+@NEUT_LIBCOMPAT_TRUE@	-(cd ${libdir}; rm -f neutfsivert.so)
+@NEUT_LIBCOMPAT_TRUE@	-(cd ${libdir}; rm -f neutnucfsistep.so)
+@NEUT_LIBCOMPAT_TRUE@	-(cd ${libdir}; rm -f neutnucfsivert.so)
+@NEUT_LIBCOMPAT_TRUE@	-(cd ${libdir}; rm -f neutpart.so)
+@NEUT_LIBCOMPAT_TRUE@	-(cd ${libdir}; rm -f neutvect.so)
+@NEUT_LIBCOMPAT_TRUE@	-(cd ${libdir}; rm -f neutvtx.so)
+@NEUT_LIBCOMPAT_TRUE@	-(cd ${libdir}; rm -f neutrootTreeSingleton.so)
+
+@NEUT_LIBCOMPAT_FALSE@@ROOT_MAJOR_IS_SIX_TRUE@neutclassDict.cc neutclassDict_rdict.pcm: $(NEUTCLASSHEADERS) neutclassLinkDef.h
+@NEUT_LIBCOMPAT_FALSE@@ROOT_MAJOR_IS_SIX_TRUE@	rootcint -f neutclassDict.cc -c $^
+@NEUT_LIBCOMPAT_FALSE@@ROOT_MAJOR_IS_SIX_FALSE@neutclassDict.cc: $(NEUTCLASSHEADERS) neutclassLinkDef.h
+@NEUT_LIBCOMPAT_FALSE@@ROOT_MAJOR_IS_SIX_FALSE@	rootcint -f neutclassDict.cc -c $^
+
+@NEUT_LIBCOMPAT_FALSE@install-exec-hook:
+@NEUT_LIBCOMPAT_FALSE@	-(cd ${libdir}; $(LN_S) $(LIBNAME) $(shell echo $(LIBNAME) | cut -d . -f 1).a)
+
+@NEUT_LIBCOMPAT_FALSE@uninstall-hook:
+@NEUT_LIBCOMPAT_FALSE@	-(cd ${libdir}; rm -f $(shell echo $(LIBNAME) | cut -d . -f 1).a)
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

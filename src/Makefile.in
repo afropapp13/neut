@@ -277,6 +277,7 @@ INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
 LD = @LD@
 LDFLAGS = @LDFLAGS@
 LIBOBJS = @LIBOBJS@
+LIBPREFIX = @LIBPREFIX@
 LIBS = @LIBS@
 LIBTOOL = @LIBTOOL@
 LIPO = @LIPO@
@@ -287,7 +288,10 @@ MAKEINFO = @MAKEINFO@
 MANIFEST_TOOL = @MANIFEST_TOOL@
 MKDIR_P = @MKDIR_P@
 NEUT_VERSION = @NEUT_VERSION@
+NEUT_VERSION_MAJ = @NEUT_VERSION_MAJ@
+NEUT_VERSION_MIN = @NEUT_VERSION_MIN@
 NEUT_VERSION_NUM = @NEUT_VERSION_NUM@
+NEUT_VERSION_REV = @NEUT_VERSION_REV@
 NM = @NM@
 NMEDIT = @NMEDIT@
 OBJDUMP = @OBJDUMP@
@@ -367,7 +371,7 @@ top_srcdir = @top_srcdir@
 BUILT_SOURCES = neutcore/necardC.h neutcore/neworkC.h neutcore/neutfilepathC.h neutcore/posinnucC.h neutcore/neutparamsC.h neutcore/neutmodelC.h neutcore/nefillverC.h neutcore/neutcrsC.h neutcore/rsconsC.h skmcsvc/vcworkC.h skmcsvc/vcvrtxC.h n1p1h/nieves1p1hC.h nuccorspl/nrcardC.h nuceff/fsihistC.h nuccorspl/nucleonfsihistC.h
 CLEANFILES = $(BUILT_SOURCES)
 include_HEADERS = $(BUILT_SOURCES)
-SUBDIRS = neutcore nuccorspl nuceff n1p1h ht2p2h radcorr tauola specfunc skmcsvc zbsfns partnuck neutclass neutsmpl
+SUBDIRS = neutcore nuccorspl nuceff n1p1h ht2p2h radcorr tauola specfunc skmcsvc zbsfns partnuck neutclass neutsmpl reweight tools
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 

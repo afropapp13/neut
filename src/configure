@@ -633,6 +633,9 @@ ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS
 LIBOBJS
+LIBPREFIX
+NEUT_LIBCOMPAT_FALSE
+NEUT_LIBCOMPAT_TRUE
 ROOT_MAJOR_IS_SIX_FALSE
 ROOT_MAJOR_IS_SIX_TRUE
 FOUND_ROOTCONFIG
@@ -726,6 +729,9 @@ INSTALL_SCRIPT
 INSTALL_PROGRAM
 CERN_LEVEL
 CERN
+NEUT_VERSION_REV
+NEUT_VERSION_MIN
+NEUT_VERSION_MAJ
 NEUT_VERSION_NUM
 NEUT_VERSION
 target_alias
@@ -780,6 +786,7 @@ with_aix_soname
 with_gnu_ld
 with_sysroot
 enable_libtool_lock
+enable_compatnames
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1441,6 +1448,7 @@ Optional Features:
   --enable-fast-install[=PKGS]
                           optimize for fast installation [default=yes]
   --disable-libtool-lock  avoid locking (might break parallel builds)
+  --enable-compatnames    Enable 5.4.0 and previous library naming scheme
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -2461,10 +2469,17 @@ NEUT_VERSION=5.4.1
 
 NEUT_VERSION_NUM=$(echo 5.4.1 | tr -d '.' )
 
+NEUT_VERSION_MAJ=$(echo 5.4.1 | cut -d . -f 1 )
+
+NEUT_VERSION_MIN=$(echo 5.4.1 | cut -d . -f 2 )
+
+NEUT_VERSION_REV=$(echo 5.4.1 | cut -d . -f 3 )
 
 
 
 
+
+################ Check CERNLIB
 
 
 
@@ -22464,9 +22479,21 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 # Only expand once:
 
 
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether ln -s works" >&5
+$as_echo_n "checking whether ln -s works... " >&6; }
+LN_S=$as_ln_s
+if test "$LN_S" = "ln -s"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no, using $LN_S" >&5
+$as_echo "no, using $LN_S" >&6; }
+fi
 
 
 
+
+########## Check ROOT
 # Extract the first word of "root-config", so it can be a program name with args.
 set dummy root-config; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
@@ -22527,7 +22554,34 @@ else
 fi
 
 
-ac_config_files="$ac_config_files Makefile neutcore/Makefile nuccorspl/Makefile nuceff/Makefile n1p1h/Makefile ht2p2h/Makefile radcorr/Makefile tauola/Makefile specfunc/Makefile skmcsvc/Makefile zbsfns/Makefile partnuck/Makefile neutclass/Makefile neutsmpl/Makefile"
+######## Check compat mode
+# Check whether --enable-compatnames was given.
+if test "${enable_compatnames+set}" = set; then :
+  enableval=$enable_compatnames;
+fi
+
+
+ if test "x$enable_compatnames" = "xyes"; then
+  NEUT_LIBCOMPAT_TRUE=
+  NEUT_LIBCOMPAT_FALSE='#'
+else
+  NEUT_LIBCOMPAT_TRUE='#'
+  NEUT_LIBCOMPAT_FALSE=
+fi
+
+
+if test "x$enable_compatnames" = "xyes"; then :
+
+
+
+else
+
+  LIBPREFIX=NEUT
+
+
+fi
+
+ac_config_files="$ac_config_files Makefile neutcore/Makefile nuccorspl/Makefile nuceff/Makefile n1p1h/Makefile ht2p2h/Makefile radcorr/Makefile tauola/Makefile specfunc/Makefile skmcsvc/Makefile zbsfns/Makefile partnuck/Makefile neutclass/Makefile neutsmpl/Makefile reweight/Makefile tools/Makefile"
 
 
 cat >confcache <<\_ACEOF
@@ -22705,6 +22759,10 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${ROOT_MAJOR_IS_SIX_TRUE}" && test -z "${ROOT_MAJOR_IS_SIX_FALSE}"; then
   as_fn_error $? "conditional \"ROOT_MAJOR_IS_SIX\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${NEUT_LIBCOMPAT_TRUE}" && test -z "${NEUT_LIBCOMPAT_FALSE}"; then
+  as_fn_error $? "conditional \"NEUT_LIBCOMPAT\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 
@@ -23848,6 +23906,8 @@ do
     "partnuck/Makefile") CONFIG_FILES="$CONFIG_FILES partnuck/Makefile" ;;
     "neutclass/Makefile") CONFIG_FILES="$CONFIG_FILES neutclass/Makefile" ;;
     "neutsmpl/Makefile") CONFIG_FILES="$CONFIG_FILES neutsmpl/Makefile" ;;
+    "reweight/Makefile") CONFIG_FILES="$CONFIG_FILES reweight/Makefile" ;;
+    "tools/Makefile") CONFIG_FILES="$CONFIG_FILES tools/Makefile" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac

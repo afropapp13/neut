@@ -17,10 +17,10 @@
 
  Important revisions after version 2.0.0 :
  @ Aug 01, 2009 - CA
-   Was adapted from Jim's and Costas' T2K-specific GENIE reweighting code. 
+   Was adapted from Jim's and Costas' T2K-specific GENIE reweighting code.
    First included in v2.5.1.
  @ May 17, 2010 - CA
-   Code extracted from NReWeightNuXSec and redeveloped in preparation for 
+   Code extracted from NReWeightNuXSec and redeveloped in preparation for
    the Summer 2010 T2K analyses.
  @ Oct 22, 2010 - CA
    Make static consts kModeMa and kModeNormAndMaShape public to aid
@@ -55,7 +55,7 @@ const int NReWeightNuXSecCCQE::kModeMa;
 const int NReWeightNuXSecCCQE::kModeNormAndMaShape;
 
 //_______________________________________________________________________________________
-NReWeightNuXSecCCQE::NReWeightNuXSecCCQE() 
+NReWeightNuXSecCCQE::NReWeightNuXSecCCQE()
 {
   this->Init();
 }
@@ -68,7 +68,7 @@ NReWeightNuXSecCCQE::~NReWeightNuXSecCCQE()
 void NReWeightNuXSecCCQE::Init(void)
 {
   fortFns = NFortFns::Instance();
-  
+
   neutTotCrs = NTotCrs::Instance();
 
   this->SetMode(kModeMa);
@@ -82,11 +82,11 @@ void NReWeightNuXSecCCQE::Init(void)
   fNormDef     = 1.;
   fNormCurr    = fNormDef;
 
-  fMaTwkDial   = 0.; 
+  fMaTwkDial   = 0.;
   fMaDef       = 0.;
   fMaCurr      = fMaDef;
 
-  fAxlFFTwkDial   = 0.; 
+  fAxlFFTwkDial   = 0.;
   fAxlFFDef       = 0.;
   fAxlFFCurr      = fAxlFFDef;
 
@@ -98,18 +98,18 @@ void NReWeightNuXSecCCQE::Init(void)
   fVecFFOutCurr    = fVecFFOutDef;
   fVecFFOutTwkDial = 0.;
 
-  fPfTwkDial   = 0.; 
-  fPfDef       = 0;  // Set in nesetfgparms.F  
+  fPfTwkDial   = 0.;
+  fPfDef       = 0;  // Set in nesetfgparms.F
   fPfCurr      = fPfDef;
 
-  fEbTwkDial   = 0.; 
-  fEbDef       = 0;  // Set in nesetfgparms.F    
+  fEbTwkDial   = 0.;
+  fEbDef       = 0;  // Set in nesetfgparms.F
   fEbCurr      = fEbDef;
 
-  fKapTwkDial   = 0.; 
+  fKapTwkDial   = 0.;
   fKapDef       = 0.;
   fKapCurr      = fKapDef;
- 
+
   fSCCVecTwkDial  = 0;
   fSCCVecDef      = fortFns->SCCFVdef;
   fSCCVecCurr     = fSCCVecDef;
@@ -135,7 +135,7 @@ void NReWeightNuXSecCCQE::Init(void)
   fDef_3CompGamma  = 0.515;
   fCurr_3CompGamma = fDef_3CompGamma;
   fErr_3CompGamma  = 0.0;
-  
+
   fTwk_3CompBeta  = 0.0;
   fDef_3CompBeta  = 2.0;
   fCurr_3CompBeta = fDef_3CompBeta;
@@ -148,19 +148,19 @@ void NReWeightNuXSecCCQE::Init(void)
 
   // Z expansion
   kMaxZExpA = 10;
-    
+
   fDef_ZExp_NTerms  = 4;
   fCurr_ZExp_NTerms = fDef_ZExp_NTerms;
   fDef_ZExp_Q4Cut   = 1;
   fCurr_ZExp_Q4Cut  = fDef_ZExp_Q4Cut;
-		   
+
   fTwk_ZExp_TCut  = 0.0;
   fDef_ZExp_TCut  = 0.1764;
   fCurr_ZExp_TCut = fDef_ZExp_TCut;
   fErr_ZExp_TCut  = 0.0;
 
   fTwk_ZExp_T0  = 0.0;
-  fDef_ZExp_T0  = -0.28; 
+  fDef_ZExp_T0  = -0.28;
   fCurr_ZExp_T0 = fDef_ZExp_T0;
   fErr_ZExp_T0  = 0.0;
 
@@ -186,31 +186,31 @@ bool NReWeightNuXSecCCQE::IsHandled(NSyst_t syst)
 
     //case ( kXSecTwkDial_NormCCQE    ) :
     //case ( kXSecTwkDial_MaCCQEshape ) :
-    //	 if(fMode==kModeNormAndMaShape) { 
-    //	   handle = true;  
-    //	 } else { 
-    //	   handle = false; 
+    //	 if(fMode==kModeNormAndMaShape) {
+    //	   handle = true;
+    //	 } else {
+    //	   handle = false;
     //	 }
     //  break;
 
-  case ( kXSecTwkDial_MaCCQEshape ) :  
-  case ( kXSecTwkDial_1overMaCCQE2 ) :  
+  case ( kXSecTwkDial_MaCCQEshape ) :
+  case ( kXSecTwkDial_1overMaCCQE2 ) :
   case ( kXSecTwkDial_NormCCQE    ) :  // Placed here temporarily, in GENIE it's only used with Shape as above
   case ( kXSecTwkDial_MaCCQE ) :
-    //if(fMode==kModeMa) { 
-      handle = true;  
-  //} else { 
-  //  handle = false; 
+    //if(fMode==kModeMa) {
+      handle = true;
+  //} else {
+  //  handle = false;
   //}
   break;
 
   case ( kXSecTwkDial_AxlFFCCQE ) :
   case ( kXSecTwkDial_VecFFCCQE ) :
   case ( kXSecTwkDial_VecFFCCQE_out ) :
-  case ( kSystNucl_CCQEPauliSupViaKF ) :  
-  case ( kSystNucl_CCQEFermiSurfMom  ) :  
-  case ( kSystNucl_CCQEBindingEnergy ) :  
-    handle = true;  
+  case ( kSystNucl_CCQEPauliSupViaKF ) :
+  case ( kSystNucl_CCQEFermiSurfMom  ) :
+  case ( kSystNucl_CCQEBindingEnergy ) :
+    handle = true;
   break;
 
   case ( kXSecTwkDial_SCCVecQE ) :
@@ -233,21 +233,21 @@ bool NReWeightNuXSecCCQE::IsHandled(NSyst_t syst)
     // ZExp
   case (kXSecTwkDial_FAZExp_NTerms) :
   case (kXSecTwkDial_FAZExp_TCut) :
-  case (kXSecTwkDial_FAZExp_T0 ) : 
-  case (kXSecTwkDial_FAZExp_Q4Cut ) : 
-  case (kXSecTwkDial_FAZExp_A0 ) : 
-  case (kXSecTwkDial_FAZExp_A1 ) : 
-  case (kXSecTwkDial_FAZExp_A2 ) : 
-  case (kXSecTwkDial_FAZExp_A3 ) : 
-  case (kXSecTwkDial_FAZExp_A4 ) : 
-  case (kXSecTwkDial_FAZExp_A5 ) : 
-  case (kXSecTwkDial_FAZExp_A6 ) : 
-  case (kXSecTwkDial_FAZExp_A7 ) : 
-  case (kXSecTwkDial_FAZExp_A8 ) : 
-  case (kXSecTwkDial_FAZExp_A9 ) : 
+  case (kXSecTwkDial_FAZExp_T0 ) :
+  case (kXSecTwkDial_FAZExp_Q4Cut ) :
+  case (kXSecTwkDial_FAZExp_A0 ) :
+  case (kXSecTwkDial_FAZExp_A1 ) :
+  case (kXSecTwkDial_FAZExp_A2 ) :
+  case (kXSecTwkDial_FAZExp_A3 ) :
+  case (kXSecTwkDial_FAZExp_A4 ) :
+  case (kXSecTwkDial_FAZExp_A5 ) :
+  case (kXSecTwkDial_FAZExp_A6 ) :
+  case (kXSecTwkDial_FAZExp_A7 ) :
+  case (kXSecTwkDial_FAZExp_A8 ) :
+  case (kXSecTwkDial_FAZExp_A9 ) :
     handle = true;
   break;
-  
+
   default:
     handle = false;
     break;
@@ -321,7 +321,7 @@ void NReWeightNuXSecCCQE::SetSystematic(NSyst_t syst, double twk_dial)
   case ( kXSecTwkDial_FAxlCCQEBeta ) :
     fTwk_3CompBeta = twk_dial;
     break;
-    
+
 
   // ZExp Info Fill IN
   case (kXSecTwkDial_FAZExp_NTerms) :
@@ -336,7 +336,7 @@ void NReWeightNuXSecCCQE::SetSystematic(NSyst_t syst, double twk_dial)
   case (kXSecTwkDial_FAZExp_T0 ) :
     fTwk_ZExp_T0 = twk_dial;
     break;
-      
+
   default:
     break;
   }
@@ -349,7 +349,7 @@ void NReWeightNuXSecCCQE::SetSystematic(NSyst_t syst, double twk_dial)
       break;
     }
   }
-  
+
 }
 //_______________________________________________________________________________________
 void NReWeightNuXSecCCQE::Reset(void)
@@ -357,25 +357,25 @@ void NReWeightNuXSecCCQE::Reset(void)
   fNormTwkDial = 0.;
   fNormCurr    = fNormDef;
 
-  fMaTwkDial   = 0.; 
+  fMaTwkDial   = 0.;
   fMaCurr      = fMaDef;
 
-  fAxlFFTwkDial   = 0.; 
+  fAxlFFTwkDial   = 0.;
   fAxlFFCurr      = fAxlFFDef;
 
-  fVecFFTwkDial   = 0.; 
+  fVecFFTwkDial   = 0.;
   fVecFFCurr      = fVecFFDef;
 
   fVecFFOutTwkDial = 0.;
   fVecFFOutCurr    = fVecFFOutDef;
 
-  fPfTwkDial   = 0.; 
+  fPfTwkDial   = 0.;
   fPfCurr      = fPfDef;
 
-  fEbTwkDial   = 0.; 
+  fEbTwkDial   = 0.;
   fEbCurr      = fEbDef;
 
-  fKapTwkDial   = 0.; 
+  fKapTwkDial   = 0.;
   fKapCurr      = fKapDef;
 
   fSCCVecTwkDial = 0.;
@@ -389,7 +389,7 @@ void NReWeightNuXSecCCQE::Reset(void)
 
   // Alt FF
   fAltMDLQEAF = 1;
-  
+
   fTwk_3CompAlpha  = 0.0;
   fCurr_3CompAlpha = fDef_3CompAlpha;
 
@@ -417,7 +417,7 @@ void NReWeightNuXSecCCQE::Reset(void)
     fTwk_ZExp_ATerms[i]  = 0.0;
     fCurr_ZExp_ATerms[i] = fDef_ZExp_ATerms[i];
   }
-  
+
   this->Reconfigure();
 }
 //_______________________________________________________________________________________
@@ -425,7 +425,7 @@ void NReWeightNuXSecCCQE::Reconfigure(void)
 {
   NSystUncertainty * fracerr = NSystUncertainty::Instance();
 
-  if(fMode==kModeMa) {   
+  if(fMode==kModeMa) {
     int    sign_matwk = utils::rew::Sign(fMaTwkDial);
     double fracerr_ma = fracerr->OneSigmaErr(kXSecTwkDial_MaCCQE, sign_matwk);
     //fMaCurr = fMaDef * (1. + fMaTwkDial * fracerr_ma);
@@ -443,10 +443,10 @@ void NReWeightNuXSecCCQE::Reconfigure(void)
   }
 
   //else
-  //if(fMode==kModeNormAndMaShape) { 
+  //if(fMode==kModeNormAndMaShape) {
   int    sign_normtwk = utils::rew::Sign(fNormTwkDial);
   double fracerr_norm = fracerr->OneSigmaErr(kXSecTwkDial_NormCCQE,    sign_normtwk);
-  fNormCurr = fNormDef * (1. + fNormTwkDial * fracerr_norm);     
+  fNormCurr = fNormDef * (1. + fNormTwkDial * fracerr_norm);
   //}
 
   fNormCurr = TMath::Max(0., fNormCurr);
@@ -467,7 +467,7 @@ void NReWeightNuXSecCCQE::Reconfigure(void)
   /*
   if (fVecFFTwkDial) fVecFFCurr = fVecFFTwkDial;
   if (fVecFFCurr != fVecFFDef) fortFns->SetMCDefaultVal(kXSecTwkDial_VecFFCCQE, fVecFFCurr);
-  
+
   if (fVecFFOutTwkDial) fVecFFOutCurr = fVecFFOutTwkDial;
   else fVecFFOutCurr = fVecFFCurr;
   */
@@ -538,20 +538,20 @@ void NReWeightNuXSecCCQE::Reconfigure(void)
   fErr_ZExp_T0  = fracerr->OneSigmaErr( kXSecTwkDial_FAZExp_T0,
 					  utils::rew::Sign(fTwk_ZExp_T0) );
   fCurr_ZExp_T0 = fDef_ZExp_T0 * ( 1.0 + fTwk_ZExp_T0 * fErr_ZExp_T0 );
-  
+
   // A Terms
   int zexpenum = (int) kXSecTwkDial_FAZExp_A0;
   for (int i = 0; i < kMaxZExpA; i++){
-    fErr_ZExp_ATerms[i] = fracerr->OneSigmaErr( zexpenum + i,
+    fErr_ZExp_ATerms[i] = fracerr->OneSigmaErr( NSyst_t(zexpenum + i),
 						utils::rew::Sign(fTwk_ZExp_ATerms[i]) );
     fCurr_ZExp_ATerms[i]
-      = fDef_ZExp_ATerms[i] * ( 1.0 + fTwk_ZExp_ATerms[i] * fErr_ZExp_ATerms[i] );    
+      = fDef_ZExp_ATerms[i] * ( 1.0 + fTwk_ZExp_ATerms[i] * fErr_ZExp_ATerms[i] );
   }
-  
-  
+
+
 }
 //_______________________________________________________________________________________
-double NReWeightNuXSecCCQE::CalcWeight() 
+double NReWeightNuXSecCCQE::CalcWeight()
 {
   bool is_ccqe = modeDefn.isCCQE(nework_.modene);
   if(!is_ccqe) return 1.;
@@ -565,10 +565,10 @@ double NReWeightNuXSecCCQE::CalcWeight()
   //if(fMode==kModeMa) {
   double wght = this->CalcWeightMa() * this->CalcWeightNorm();
   return wght;
-     //} 
-  //else 
+     //}
+  //else
   //if(fMode==kModeNormAndMaShape) {
-  //   double wght = 
+  //   double wght =
   //       this->CalcWeightNorm   () *
   //       this->CalcWeightMaShape();
   //   return wght;
@@ -580,18 +580,18 @@ double NReWeightNuXSecCCQE::CalcWeight()
 double NReWeightNuXSecCCQE::CalcChisq()
 {
   double chisq = 0.;
-  //if(fMode==kModeMa) {   
+  //if(fMode==kModeMa) {
      chisq += TMath::Power(fMaTwkDial, 2.);
      //}
   //else
-  //if(fMode==kModeNormAndMaShape) { 
+  //if(fMode==kModeNormAndMaShape) {
      chisq += TMath::Power(fNormTwkDial, 2.);
   //   chisq += TMath::Power(fMaTwkDial,   2.);
   //}
   return chisq;
 }
 //_______________________________________________________________________________________
-double NReWeightNuXSecCCQE::CalcWeightNorm() 
+double NReWeightNuXSecCCQE::CalcWeightNorm()
 {
   bool tweaked = (TMath::Abs(fNormTwkDial) > controls::kASmallNum);
   if(!tweaked) return 1.0;
@@ -602,7 +602,7 @@ double NReWeightNuXSecCCQE::CalcWeightNorm()
 
 }
 //_______________________________________________________________________________________
-double NReWeightNuXSecCCQE::CalcWeightMa() 
+double NReWeightNuXSecCCQE::CalcWeightMa()
 {
   bool tweaked = (TMath::Abs(fMaTwkDial) > controls::kASmallNum ||
 		  TMath::Abs(fKapTwkDial) > controls::kASmallNum ||
@@ -616,10 +616,10 @@ double NReWeightNuXSecCCQE::CalcWeightMa()
 		  TMath::Abs(fPsFFTwkDial) > controls::kASmallNum ||
 		  (fAltMDLQEAF > 1)
 		  );
-  
+
   if(!tweaked) return 1.0;
 
-  
+
   fortFns->SetDefaults();
   fortFns->Reconfigure();
 
@@ -630,7 +630,7 @@ double NReWeightNuXSecCCQE::CalcWeightMa()
 
   // Double Check Dipole -> Alternative is set.
   if (fAltMDLQEAF > 1) nemdls_.mdlqeaf = 1;
-  
+
   float old_xsec     = fortFns->evdifcrs();
   //float old_xsec   = event.DiffXSec();
   //float old_weight = event.Weight();
@@ -642,7 +642,7 @@ double NReWeightNuXSecCCQE::CalcWeightMa()
     cout << "NReWeightNuXSecCCQE::CalcWeightMa() Warning: old_xsec==0, setting weight to 1" << endl;
     return 1;
   }
-  
+
   //nemdls_.xmaqe = fMaCurr;//RT: comment out since now common block
   //nemdls_.kapp  = fKapCurr;//should be passing this info through
   fMaDef = nemdls_.xmaqe;
@@ -654,7 +654,7 @@ double NReWeightNuXSecCCQE::CalcWeightMa()
   // FUNCTION SHOULD
   // - Take dipole cross-section to start
   // - Then calculate weights for other models.
-  
+
 // MDLQE    : CC Quasi-elastic / NC elastic model
 //          : x1 : Smith-Moniz for CC
 //          : x2 : Smith-Moniz for CC with BBBA05
@@ -719,9 +719,9 @@ double NReWeightNuXSecCCQE::CalcWeightMa()
     nemdls_.axzexpa7 = fCurr_ZExp_ATerms[7];
     nemdls_.axzexpa8 = fCurr_ZExp_ATerms[8];
     nemdls_.axzexpa9 = fCurr_ZExp_ATerms[9];
-    
+
   }
-  
+
   fortFns->Reconfigure();
 
   // Grab FG parameters after they've been set via nesetgfparams depending on target nucleus
@@ -744,11 +744,11 @@ double NReWeightNuXSecCCQE::CalcWeightMa()
 #ifdef _N_REWEIGHT_CCQE_DEBUG_
   cout << "differential cross section (old) = " << old_xsec << endl;
   cout << "differential cross section (new) = " << new_xsec << endl;
-#endif 
+#endif
 
   // Normalize out change in total cross section from MA variations for MA_shape variation
   if(fMode==kModeNormAndMaShape) {
-    
+
     // Get neutrino type
     int inu=-1;
     if (nework_.ipne[0] == 14) inu = neutTotCrs->numu;
@@ -756,17 +756,17 @@ double NReWeightNuXSecCCQE::CalcWeightMa()
     else if (nework_.ipne[0] == 12) inu = neutTotCrs->nue;
     else if (nework_.ipne[0] == -12) inu = neutTotCrs->nueb;
     else {
-      cout << "NReWeightNuXSecCCQE::CalcWeightMa() Error: Cannot MA-shape reweight this neutrino type = " 
+      cout << "NReWeightNuXSecCCQE::CalcWeightMa() Error: Cannot MA-shape reweight this neutrino type = "
 	   << nework_.ipne[0] << endl;
       exit (-1);
     }
-    
+
     // Calculate neutrino energy
     float Enu = 0;  // GeV
     for (int i=0; i<3; i++)
       Enu += nework_.pne[0][i]*nework_.pne[0][i];
     Enu = sqrt(Enu);
-    
+
     // Warning: Does not take into account variations of PFSurf
     float old_tot_xsec = neutTotCrs->ccqe_crs[inu]->Interpolate(Enu, fPfDef, fMaDef);
     float new_tot_xsec = neutTotCrs->ccqe_crs[inu]->Interpolate(Enu, fPfDef, fMaCurr);
@@ -779,7 +779,7 @@ double NReWeightNuXSecCCQE::CalcWeightMa()
 #ifdef _N_REWEIGHT_CCQE_DEBUG_
     cout << "total cross section (old) = " << old_tot_xsec << endl;
     cout << "total cross section (new) = " << new_tot_xsec << endl;
-#endif 
+#endif
 
     new_weight *= old_tot_xsec / new_tot_xsec ;
   }
@@ -788,16 +788,16 @@ double NReWeightNuXSecCCQE::CalcWeightMa()
     cout << "NReWeightNuXSecCCQE::CalcWeightMa() Warning: new_weight is infinite, setting to 1" << endl;
     return 1;
   }
-  
+
 #ifdef _N_REWEIGHT_CCQE_DEBUG_
   cout << "new weight = " << new_weight << endl;
-#endif 
+#endif
 
   return new_weight;
-  
+
 }
 //_______________________________________________________________________________________
-double NReWeightNuXSecCCQE::CalcWeightMaShape() 
+double NReWeightNuXSecCCQE::CalcWeightMaShape()
 {
   return 1.0;
 
@@ -822,7 +822,7 @@ double NReWeightNuXSecCCQE::CalcWeightMaShape()
 
 //double old_integrated_xsec = event.XSec();
   double old_integrated_xsec = fXSecModelDef -> Integral(interaction);
-  double new_integrated_xsec = fXSecModel    -> Integral(interaction);   
+  double new_integrated_xsec = fXSecModel    -> Integral(interaction);
   assert(new_integrated_xsec > 0);
   new_weight *= (old_integrated_xsec/new_integrated_xsec);
 

@@ -14,6 +14,7 @@
 
 @SET_MAKE@
 
+
 VPATH = @srcdir@
 am__is_gnu_make = { \
   if test -z '$(MAKELEVEL)'; then \
@@ -88,7 +89,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-subdir = neutcore
+subdir = reweight
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
 	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
@@ -96,7 +97,8 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
 	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
-DIST_COMMON = $(srcdir)/Makefile.am $(am__DIST_COMMON)
+DIST_COMMON = $(srcdir)/Makefile.am $(include_HEADERS) \
+	$(am__DIST_COMMON)
 mkinstalldirs = $(install_sh) -d
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
@@ -127,93 +129,27 @@ am__uninstall_files_from_dir = { \
     || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
-am__installdirs = "$(DESTDIR)$(libdir)"
+am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(includedir)"
 LIBRARIES = $(lib_LIBRARIES)
 ARFLAGS = cru
 AM_V_AR = $(am__v_AR_@AM_V@)
 am__v_AR_ = $(am__v_AR_@AM_DEFAULT_V@)
 am__v_AR_0 = @echo "  AR      " $@;
 am__v_AR_1 = 
-lib@LIBPREFIX@neutcore_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_AR =  \
+lib@LIBPREFIX@NReWeight_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_AR =  \
 	$(AR) $(ARFLAGS)
-lib@LIBPREFIX@neutcore_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_LIBADD =
-am_lib@LIBPREFIX@neutcore_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_OBJECTS =  \
-	bbba05.$(OBJEXT) fnelspau_sf.$(OBJEXT) neelsvcp.$(OBJEXT) \
-	pdfset.$(OBJEXT) rsifl6g.$(OBJEXT) fnelspf.$(OBJEXT) \
-	neelsvct.$(OBJEXT) qgdisg.$(OBJEXT) rsifl7.$(OBJEXT) \
-	cohcrsneberger.$(OBJEXT) fnels_rpascl.$(OBJEXT) \
-	neelsvnp.$(OBJEXT) rnazi.$(OBJEXT) rslzbte.$(OBJEXT) \
-	cohcrsne.$(OBJEXT) fnf2.$(OBJEXT) neelsvnt.$(OBJEXT) \
-	rnelq2.$(OBJEXT) rslzbt.$(OBJEXT) cohcrsnekart.$(OBJEXT) \
-	fngamfct.$(OBJEXT) neffect.$(OBJEXT) rnmass.$(OBJEXT) \
-	rslzbtg.$(OBJEXT) cohcrsnerein.$(OBJEXT) \
-	fnmec_nieves.$(OBJEXT) nefillmodel.$(OBJEXT) \
-	rnncelq2.$(OBJEXT) rslzbtk.$(OBJEXT) cohkartlamda.$(OBJEXT) \
-	fnmec_select.$(OBJEXT) nefillver.$(OBJEXT) rnrot.$(OBJEXT) \
-	rspauli.$(OBJEXT) cohkartq2min.$(OBJEXT) fnncelscrs.$(OBJEXT) \
-	nefrmmom.$(OBJEXT) rnw1320.$(OBJEXT) rsrotvec.$(OBJEXT) \
-	cohkarttmin.$(OBJEXT) fnncq2max.$(OBJEXT) negamnuc.$(OBJEXT) \
-	rnw13.$(OBJEXT) rssetcrs.$(OBJEXT) cohkartwmax.$(OBJEXT) \
-	fnncq2min.$(OBJEXT) negenseed.$(OBJEXT) rnw.$(OBJEXT) \
-	rssetvct.$(OBJEXT) cohma.$(OBJEXT) fnnpot.$(OBJEXT) \
-	negetr.$(OBJEXT) rnxy.$(OBJEXT) rssgcrs.$(OBJEXT) \
-	dcohmxneberger.$(OBJEXT) fnpkno2.$(OBJEXT) nejet.$(OBJEXT) \
-	rs3drt.$(OBJEXT) rssgvct.$(OBJEXT) dcohmxnekart.$(OBJEXT) \
-	fnpkno.$(OBJEXT) nek0.$(OBJEXT) rsasum.$(OBJEXT) \
-	rsskcrs.$(OBJEXT) dcohmxnerein.$(OBJEXT) fnq2max.$(OBJEXT) \
-	nekindpa.$(OBJEXT) rsasumg.$(OBJEXT) rsskvct.$(OBJEXT) \
-	dcohneberger.$(OBJEXT) fnq2min.$(OBJEXT) neknopar.$(OBJEXT) \
-	rsclfme.$(OBJEXT) rsspicrs.$(OBJEXT) dcohnekart.$(OBJEXT) \
-	fnrworld.$(OBJEXT) nelibver.$(OBJEXT) rsclfm.$(OBJEXT) \
-	rsspivct.$(OBJEXT) dcohnerein.$(OBJEXT) fntotpau.$(OBJEXT) \
-	nemechad.$(OBJEXT) rsclfmg.$(OBJEXT) rs.spivcttest.$(OBJEXT) \
-	ddifcrs.$(OBJEXT) fnxf3.$(OBJEXT) nemeclpv.$(OBJEXT) \
-	rsclfmk.$(OBJEXT) ddifmx.$(OBJEXT) fourVector.$(OBJEXT) \
-	nemecvcp.$(OBJEXT) rsdcrse.$(OBJEXT) rstcrset.$(OBJEXT) \
-	difcrsne.$(OBJEXT) fvfrmgev.$(OBJEXT) nemkgam.$(OBJEXT) \
-	rsdcrs.$(OBJEXT) rstcrsetm.$(OBJEXT) difcrsnerein.$(OBJEXT) \
-	grv94di.$(OBJEXT) nemknpos.$(OBJEXT) rsdcrsg.$(OBJEXT) \
-	rstcrsetrd.$(OBJEXT) dndxdy.$(OBJEXT) grv98_lo.$(OBJEXT) \
-	nemodgam.$(OBJEXT) rsdcrsk.$(OBJEXT) rstcrsett.$(OBJEXT) \
-	dnela.$(OBJEXT) lenstr.$(OBJEXT) nemodsel.$(OBJEXT) \
-	rsdiste.$(OBJEXT) rstcrs.$(OBJEXT) dnels.$(OBJEXT) \
-	LH.$(OBJEXT) nemultip.$(OBJEXT) rsdist.$(OBJEXT) \
-	rstcrsgamrd.$(OBJEXT) dnelsnl.$(OBJEXT) neapivct.$(OBJEXT) \
-	nencelslpv.$(OBJEXT) rsdistg.$(OBJEXT) rstcrsg.$(OBJEXT) \
-	dnelsq2.$(OBJEXT) necard.$(OBJEXT) nencelsspff.$(OBJEXT) \
-	rsdistk.$(OBJEXT) rstcrsgm.$(OBJEXT) dnncela.$(OBJEXT) \
-	nechadir.$(OBJEXT) nencelsvcp.$(OBJEXT) rsdt33e.$(OBJEXT) \
-	rstcrsgt.$(OBJEXT) dnncelsq2.$(OBJEXT) necharge.$(OBJEXT) \
-	rsdt33.$(OBJEXT) rstcrsk.$(OBJEXT) elaxff.$(OBJEXT) \
-	nechkfb.$(OBJEXT) nencelsvnp.$(OBJEXT) rsdt33g.$(OBJEXT) \
-	rstcrskm.$(OBJEXT) evdifcrs.$(OBJEXT) neclpos.$(OBJEXT) \
-	nencelsvnt.$(OBJEXT) rsdt33k.$(OBJEXT) rstcrskrd.$(OBJEXT) \
-	fnapicrs.$(OBJEXT) neclrcrs.$(OBJEXT) neomega.$(OBJEXT) \
-	rsifl1e.$(OBJEXT) rstcrskt.$(OBJEXT) fndsigmapidt.$(OBJEXT) \
-	neclrwrk.$(OBJEXT) neranbll2.$(OBJEXT) rsifl1.$(OBJEXT) \
-	rstcrsm.$(OBJEXT) fnelscrn.$(OBJEXT) necohvct.$(OBJEXT) \
-	neranbll.$(OBJEXT) rsifl1k.$(OBJEXT) rstcrsrd.$(OBJEXT) \
-	fnelscrs.$(OBJEXT) necpnewk.$(OBJEXT) nerdseed.$(OBJEXT) \
-	rsifl2e.$(OBJEXT) rstcrst.$(OBJEXT) fnels_erpascl.$(OBJEXT) \
-	necrosel.$(OBJEXT) nesetfgparams.$(OBJEXT) rsifl2.$(OBJEXT) \
-	rs.wdist.$(OBJEXT) fnelsint.$(OBJEXT) necrosin.$(OBJEXT) \
-	nesettarg.$(OBJEXT) rsifl2g.$(OBJEXT) rsy00.$(OBJEXT) \
-	fnelspan_effsf.$(OBJEXT) necrosto.$(OBJEXT) nesortdl.$(OBJEXT) \
-	rsifl2k.$(OBJEXT) rsy20.$(OBJEXT) fnelspan.$(OBJEXT) \
-	necrsmode.$(OBJEXT) nevect.$(OBJEXT) rsifl3e.$(OBJEXT) \
-	rsy21.$(OBJEXT) fnelspan_intpol.$(OBJEXT) nedcy2bd.$(OBJEXT) \
-	nevent.$(OBJEXT) rsifl3.$(OBJEXT) rsy22.$(OBJEXT) \
-	fnelspan_sf.$(OBJEXT) nedifvct.$(OBJEXT) nrsettarg.$(OBJEXT) \
-	rsifl3k.$(OBJEXT) structm.$(OBJEXT) fnelspau_effsf.$(OBJEXT) \
-	neelslpv.$(OBJEXT) nudeex.$(OBJEXT) rsifl4.$(OBJEXT) \
-	neelslvc.$(OBJEXT) nudeex_n.$(OBJEXT) rsifl4g.$(OBJEXT) \
-	fnelspau_intpol.$(OBJEXT) neelsspf.$(OBJEXT) \
-	nudeex_org.$(OBJEXT) rsifl5.$(OBJEXT) \
-	fnelspau_select.$(OBJEXT) neelsspff.$(OBJEXT) \
-	nudeex_p.$(OBJEXT) rsifl6.$(OBJEXT) structg.$(OBJEXT) \
-	bbba07.$(OBJEXT) fa3comp.$(OBJEXT) fazexp.$(OBJEXT) \
-	ddifnerein.$(OBJEXT) qedifcrs.$(OBJEXT)
-lib@LIBPREFIX@neutcore_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_OBJECTS = $(am_lib@LIBPREFIX@neutcore_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_OBJECTS)
+lib@LIBPREFIX@NReWeight_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_LIBADD =
+am_lib@LIBPREFIX@NReWeight_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_OBJECTS =  \
+	NFortFns.$(OBJEXT) NModeDefn.$(OBJEXT) NReWeightCasc.$(OBJEXT) \
+	NReWeight.$(OBJEXT) NReWeightINuke.$(OBJEXT) \
+	NReWeightNuclPiless.$(OBJEXT) NReWeightNuXSecCCQE.$(OBJEXT) \
+	NReWeightNuXSecCCRES.$(OBJEXT) NReWeightNuXSecCOH.$(OBJEXT) \
+	NReWeightNuXSecDIS.$(OBJEXT) NReWeightNuXSecNC.$(OBJEXT) \
+	NReWeightNuXSecNCEL.$(OBJEXT) NReWeightNuXSecNCRES.$(OBJEXT) \
+	NReWeightNuXSecRES.$(OBJEXT) NReWeightUtils.$(OBJEXT) \
+	NSystSet.$(OBJEXT) NSystUncertainty.$(OBJEXT) \
+	NTotCrs.$(OBJEXT)
+lib@LIBPREFIX@NReWeight_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_OBJECTS = $(am_lib@LIBPREFIX@NReWeight_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_OBJECTS)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -230,48 +166,12 @@ DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
 am__mv = mv -f
-PPF77COMPILE = $(F77) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
-	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_FFLAGS) $(FFLAGS)
+CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
+	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
 am__v_lt_1 = 
-LTPPF77COMPILE = $(LIBTOOL) $(AM_V_lt) --tag=F77 $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=compile $(F77) $(DEFS) \
-	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
-	$(AM_FFLAGS) $(FFLAGS)
-AM_V_PPF77 = $(am__v_PPF77_@AM_V@)
-am__v_PPF77_ = $(am__v_PPF77_@AM_DEFAULT_V@)
-am__v_PPF77_0 = @echo "  PPF77   " $@;
-am__v_PPF77_1 = 
-F77LD = $(F77)
-F77LINK = $(LIBTOOL) $(AM_V_lt) --tag=F77 $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(F77LD) $(AM_FFLAGS) $(FFLAGS) \
-	$(AM_LDFLAGS) $(LDFLAGS) -o $@
-AM_V_F77LD = $(am__v_F77LD_@AM_V@)
-am__v_F77LD_ = $(am__v_F77LD_@AM_DEFAULT_V@)
-am__v_F77LD_0 = @echo "  F77LD   " $@;
-am__v_F77LD_1 = 
-COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
-	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
-LTCOMPILE = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) \
-	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
-	$(AM_CFLAGS) $(CFLAGS)
-AM_V_CC = $(am__v_CC_@AM_V@)
-am__v_CC_ = $(am__v_CC_@AM_DEFAULT_V@)
-am__v_CC_0 = @echo "  CC      " $@;
-am__v_CC_1 = 
-CCLD = $(CC)
-LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
-	$(AM_LDFLAGS) $(LDFLAGS) -o $@
-AM_V_CCLD = $(am__v_CCLD_@AM_V@)
-am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
-am__v_CCLD_0 = @echo "  CCLD    " $@;
-am__v_CCLD_1 = 
-CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
-	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 LTCXXCOMPILE = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) \
 	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
@@ -288,21 +188,33 @@ AM_V_CXXLD = $(am__v_CXXLD_@AM_V@)
 am__v_CXXLD_ = $(am__v_CXXLD_@AM_DEFAULT_V@)
 am__v_CXXLD_0 = @echo "  CXXLD   " $@;
 am__v_CXXLD_1 = 
-F77COMPILE = $(F77) $(AM_FFLAGS) $(FFLAGS)
-LTF77COMPILE = $(LIBTOOL) $(AM_V_lt) --tag=F77 $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=compile $(F77) $(AM_FFLAGS) $(FFLAGS)
-AM_V_F77 = $(am__v_F77_@AM_V@)
-am__v_F77_ = $(am__v_F77_@AM_DEFAULT_V@)
-am__v_F77_0 = @echo "  F77     " $@;
-am__v_F77_1 = 
-SOURCES = $(lib@LIBPREFIX@neutcore_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_SOURCES)
-DIST_SOURCES = $(lib@LIBPREFIX@neutcore_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_SOURCES)
+SOURCES = $(lib@LIBPREFIX@NReWeight_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_SOURCES)
+DIST_SOURCES = $(lib@LIBPREFIX@NReWeight_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
     *) (install-info --version) >/dev/null 2>&1;; \
   esac
+HEADERS = $(include_HEADERS)
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
+# Read a list of newline-separated strings from the standard input,
+# and print each of them once, without duplicates.  Input order is
+# *not* preserved.
+am__uniquify_input = $(AWK) '\
+  BEGIN { nonempty = 0; } \
+  { items[$$0] = 1; nonempty = 1; } \
+  END { if (nonempty) { for (i in items) print i; }; } \
+'
+# Make sure the list of sources is unique.  This is necessary because,
+# e.g., the same source file might be shared among _SOURCES variables
+# for different programs/libraries.
+am__define_uniq_tagged_files = \
+  list='$(am__tagged_files)'; \
+  unique=`for i in $$list; do \
+    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
+  done | $(am__uniquify_input)`
+ETAGS = etags
+CTAGS = ctags
 am__DIST_COMMON = $(srcdir)/Makefile.in $(top_srcdir)/build.common \
 	$(top_srcdir)/depcomp
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -473,60 +385,18 @@ ROOT_LINKFLAGS = $(shell root-config --ldflags) -pthread -rdynamic -L$(shell roo
 
 # I know... but this seems to work
 EXE_LINKFLAGS = -fno-PIE -fno-pie -no-pie
-AM_FFLAGS = -DNECORE_VERSION=@NEUT_VERSION_NUM@ $(DEFAULT_FFLAGS)
-AM_CXXFLAGS = -DNECORE_VERSION=@NEUT_VERSION_NUM@ $(DEFAULT_CXXFLAGS)
-LIBNAME = lib@LIBPREFIX@neutcore.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a
+AM_CXXFLAGS = -DNREWEIGHT_VERSION=@NEUT_VERSION_NUM@ $(DEFAULT_CXXFLAGS) $(NEUT_CLASS_INCLUDES)
+LIBNAME = lib@LIBPREFIX@NReWeight.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a
 lib_LIBRARIES = $(LIBNAME)
-lib@LIBPREFIX@neutcore_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_SOURCES =  \
-	bbba05.F fnelspau_sf.F neelsvcp.F pdfset.F rsifl6g.F fnelspf.F \
-	neelsvct.F qgdisg.F rsifl7.F cohcrsneberger.F fnels_rpascl.F \
-	neelsvnp.F rnazi.F rslzbte.F cohcrsne.F fnf2.F neelsvnt.F \
-	rnelq2.F rslzbt.F cohcrsnekart.F fngamfct.F neffect.F rnmass.F \
-	rslzbtg.F cohcrsnerein.F fnmec_nieves.F nefillmodel.F \
-	rnncelq2.F rslzbtk.F cohkartlamda.F fnmec_select.F nefillver.F \
-	rnrot.F rspauli.F cohkartq2min.F fnncelscrs.F nefrmmom.F \
-	rnw1320.F rsrotvec.F cohkarttmin.F fnncq2max.F negamnuc.F \
-	rnw13.F rssetcrs.F cohkartwmax.F fnncq2min.F negenseed.F rnw.F \
-	rssetvct.F cohma.F fnnpot.F negetr.F rnxy.F rssgcrs.F \
-	dcohmxneberger.F fnpkno2.F nejet.F rs3drt.F rssgvct.F \
-	dcohmxnekart.F fnpkno.F nek0.F rsasum.F rsskcrs.F \
-	dcohmxnerein.F fnq2max.F nekindpa.F rsasumg.F rsskvct.F \
-	dcohneberger.F fnq2min.F neknopar.F rsclfme.F rsspicrs.F \
-	dcohnekart.F fnrworld.F nelibver.F rsclfm.F rsspivct.F \
-	dcohnerein.F fntotpau.F nemechad.F rsclfmg.F rs.spivcttest.F \
-	ddifcrs.F fnxf3.F nemeclpv.F rsclfmk.F ddifmx.F fourVector.F \
-	nemecvcp.F rsdcrse.F rstcrset.F difcrsne.F fvfrmgev.F \
-	nemkgam.F rsdcrs.F rstcrsetm.F difcrsnerein.F grv94di.F \
-	nemknpos.F rsdcrsg.F rstcrsetrd.F dndxdy.F grv98_lo.F \
-	nemodgam.F rsdcrsk.F rstcrsett.F dnela.F lenstr.F nemodsel.F \
-	rsdiste.F rstcrs.F dnels.F LH.F nemultip.F rsdist.F \
-	rstcrsgamrd.F dnelsnl.F neapivct.F nencelslpv.F rsdistg.F \
-	rstcrsg.F dnelsq2.F necard.F nencelsspff.F rsdistk.F \
-	rstcrsgm.F dnncela.F nechadir.F nencelsvcp.F rsdt33e.F \
-	rstcrsgt.F dnncelsq2.F necharge.F rsdt33.F rstcrsk.F elaxff.F \
-	nechkfb.F nencelsvnp.F rsdt33g.F rstcrskm.F evdifcrs.F \
-	neclpos.F nencelsvnt.F rsdt33k.F rstcrskrd.F fnapicrs.F \
-	neclrcrs.F neomega.F rsifl1e.F rstcrskt.F fndsigmapidt.F \
-	neclrwrk.F neranbll2.F rsifl1.F rstcrsm.F fnelscrn.F \
-	necohvct.F neranbll.F rsifl1k.F rstcrsrd.F fnelscrs.F \
-	necpnewk.F nerdseed.F rsifl2e.F rstcrst.F fnels_erpascl.F \
-	necrosel.F nesetfgparams.F rsifl2.F rs.wdist.F fnelsint.F \
-	necrosin.F nesettarg.F rsifl2g.F rsy00.F fnelspan_effsf.F \
-	necrosto.F nesortdl.F rsifl2k.F rsy20.F fnelspan.F necrsmode.F \
-	nevect.F rsifl3e.F rsy21.F fnelspan_intpol.F nedcy2bd.F \
-	nevent.F rsifl3.F rsy22.F fnelspan_sf.F nedifvct.F nrsettarg.F \
-	rsifl3k.F structm.F fnelspau_effsf.F neelslpv.F nudeex.F \
-	rsifl4.F neelslvc.F nudeex_n.F rsifl4g.F fnelspau_intpol.F \
-	neelsspf.F nudeex_org.F rsifl5.F fnelspau_select.F neelsspff.F \
-	nudeex_p.F rsifl6.F structg.f bbba07.cc fa3comp.cc fazexp.cc \
-	ddifnerein.c qedifcrs.c
+lib@LIBPREFIX@NReWeight_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_SOURCES = NFortFns.cc NModeDefn.cc NReWeightCasc.cc NReWeight.cc NReWeightINuke.cc NReWeightNuclPiless.cc NReWeightNuXSecCCQE.cc NReWeightNuXSecCCRES.cc NReWeightNuXSecCOH.cc NReWeightNuXSecDIS.cc NReWeightNuXSecNC.cc NReWeightNuXSecNCEL.cc NReWeightNuXSecNCRES.cc NReWeightNuXSecRES.cc NReWeightUtils.cc NSystSet.cc NSystUncertainty.cc NTotCrs.cc
+include_HEADERS = Controls.h NFortFns.h NModeDefn.h NReWeightCasc.h NReWeight.h NReWeightI.h NReWeightINuke.h NReWeightNuclPiless.h NReWeightNuXSecCCQE.h NReWeightNuXSecCCRES.h NReWeightNuXSecCOH.h NReWeightNuXSecDIS.h NReWeightNuXSecNCEL.h NReWeightNuXSecNC.h NReWeightNuXSecNCRES.h NReWeightNuXSecRES.h NReWeightUtils.h NSyst.h NSystSet.h NSystUncertainty.h NTotCrs.h PDGCodes.h
 
 # Unused sources that live in the directory
-UNUSED_srcs = calcqecrs.F rs.tcrsdump.F nencelsvct.F fnelspau.F
+UNUSED_srcs = 
 all: all-am
 
 .SUFFIXES:
-.SUFFIXES: .F .c .cc .f .lo .o .obj
+.SUFFIXES: .cc .lo .o .obj
 $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am $(top_srcdir)/build.common $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
@@ -536,9 +406,9 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am $(top_srcdir)/build.common $(am__c
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign neutcore/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign reweight/Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --foreign neutcore/Makefile
+	  $(AUTOMAKE) --foreign reweight/Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
 	  *config.status*) \
@@ -589,10 +459,10 @@ uninstall-libLIBRARIES:
 clean-libLIBRARIES:
 	-test -z "$(lib_LIBRARIES)" || rm -f $(lib_LIBRARIES)
 
-lib@LIBPREFIX@neutcore.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a: $(lib@LIBPREFIX@neutcore_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_OBJECTS) $(lib@LIBPREFIX@neutcore_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_DEPENDENCIES) $(EXTRA_lib@LIBPREFIX@neutcore_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_DEPENDENCIES) 
-	$(AM_V_at)-rm -f lib@LIBPREFIX@neutcore.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a
-	$(AM_V_AR)$(lib@LIBPREFIX@neutcore_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_AR) lib@LIBPREFIX@neutcore.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a $(lib@LIBPREFIX@neutcore_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_OBJECTS) $(lib@LIBPREFIX@neutcore_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_LIBADD)
-	$(AM_V_at)$(RANLIB) lib@LIBPREFIX@neutcore.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a
+lib@LIBPREFIX@NReWeight.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a: $(lib@LIBPREFIX@NReWeight_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_OBJECTS) $(lib@LIBPREFIX@NReWeight_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_DEPENDENCIES) $(EXTRA_lib@LIBPREFIX@NReWeight_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_DEPENDENCIES) 
+	$(AM_V_at)-rm -f lib@LIBPREFIX@NReWeight.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a
+	$(AM_V_AR)$(lib@LIBPREFIX@NReWeight_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_AR) lib@LIBPREFIX@NReWeight.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a $(lib@LIBPREFIX@NReWeight_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_OBJECTS) $(lib@LIBPREFIX@NReWeight_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_LIBADD)
+	$(AM_V_at)$(RANLIB) lib@LIBPREFIX@NReWeight.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -600,46 +470,24 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bbba07.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ddifnerein.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fa3comp.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fazexp.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/qedifcrs.Po@am__quote@
-
-.F.o:
-	$(AM_V_PPF77)$(PPF77COMPILE) -c -o $@ $<
-
-.F.obj:
-	$(AM_V_PPF77)$(PPF77COMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
-
-.F.lo:
-	$(AM_V_PPF77)$(LTPPF77COMPILE) -c -o $@ $<
-.F.f:
-	$(F77COMPILE) -F $<
-
-.c.o:
-@am__fastdepCC_TRUE@	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
-@am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ $< &&\
-@am__fastdepCC_TRUE@	$(am__mv) $$depbase.Tpo $$depbase.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(COMPILE) -c -o $@ $<
-
-.c.obj:
-@am__fastdepCC_TRUE@	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.obj$$||'`;\
-@am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ `$(CYGPATH_W) '$<'` &&\
-@am__fastdepCC_TRUE@	$(am__mv) $$depbase.Tpo $$depbase.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(COMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
-
-.c.lo:
-@am__fastdepCC_TRUE@	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.lo$$||'`;\
-@am__fastdepCC_TRUE@	$(LTCOMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ $< &&\
-@am__fastdepCC_TRUE@	$(am__mv) $$depbase.Tpo $$depbase.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LTCOMPILE) -c -o $@ $<
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NFortFns.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NModeDefn.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NReWeight.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NReWeightCasc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NReWeightINuke.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NReWeightNuXSecCCQE.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NReWeightNuXSecCCRES.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NReWeightNuXSecCOH.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NReWeightNuXSecDIS.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NReWeightNuXSecNC.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NReWeightNuXSecNCEL.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NReWeightNuXSecNCRES.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NReWeightNuXSecRES.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NReWeightNuclPiless.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NReWeightUtils.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NSystSet.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NSystUncertainty.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NTotCrs.Po@am__quote@
 
 .cc.o:
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -665,26 +513,84 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LTCXXCOMPILE) -c -o $@ $<
 
-.f.o:
-	$(AM_V_F77)$(F77COMPILE) -c -o $@ $<
-
-.f.obj:
-	$(AM_V_F77)$(F77COMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
-
-.f.lo:
-	$(AM_V_F77)$(LTF77COMPILE) -c -o $@ $<
-
 mostlyclean-libtool:
 	-rm -f *.lo
 
 clean-libtool:
 	-rm -rf .libs _libs
-tags TAGS:
+install-includeHEADERS: $(include_HEADERS)
+	@$(NORMAL_INSTALL)
+	@list='$(include_HEADERS)'; test -n "$(includedir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(includedir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(includedir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_HEADER) $$files '$(DESTDIR)$(includedir)'"; \
+	  $(INSTALL_HEADER) $$files "$(DESTDIR)$(includedir)" || exit $$?; \
+	done
 
-ctags CTAGS:
+uninstall-includeHEADERS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(include_HEADERS)'; test -n "$(includedir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(includedir)'; $(am__uninstall_files_from_dir)
 
-cscope cscopelist:
+ID: $(am__tagged_files)
+	$(am__define_uniq_tagged_files); mkid -fID $$unique
+tags: tags-am
+TAGS: tags
 
+tags-am: $(TAGS_DEPENDENCIES) $(am__tagged_files)
+	set x; \
+	here=`pwd`; \
+	$(am__define_uniq_tagged_files); \
+	shift; \
+	if test -z "$(ETAGS_ARGS)$$*$$unique"; then :; else \
+	  test -n "$$unique" || unique=$$empty_fix; \
+	  if test $$# -gt 0; then \
+	    $(ETAGS) $(ETAGSFLAGS) $(AM_ETAGSFLAGS) $(ETAGS_ARGS) \
+	      "$$@" $$unique; \
+	  else \
+	    $(ETAGS) $(ETAGSFLAGS) $(AM_ETAGSFLAGS) $(ETAGS_ARGS) \
+	      $$unique; \
+	  fi; \
+	fi
+ctags: ctags-am
+
+CTAGS: ctags
+ctags-am: $(TAGS_DEPENDENCIES) $(am__tagged_files)
+	$(am__define_uniq_tagged_files); \
+	test -z "$(CTAGS_ARGS)$$unique" \
+	  || $(CTAGS) $(CTAGSFLAGS) $(AM_CTAGSFLAGS) $(CTAGS_ARGS) \
+	     $$unique
+
+GTAGS:
+	here=`$(am__cd) $(top_builddir) && pwd` \
+	  && $(am__cd) $(top_srcdir) \
+	  && gtags -i $(GTAGS_ARGS) "$$here"
+cscopelist: cscopelist-am
+
+cscopelist-am: $(am__tagged_files)
+	list='$(am__tagged_files)'; \
+	case "$(srcdir)" in \
+	  [\\/]* | ?:[\\/]*) sdir="$(srcdir)" ;; \
+	  *) sdir=$(subdir)/$(srcdir) ;; \
+	esac; \
+	for i in $$list; do \
+	  if test -f "$$i"; then \
+	    echo "$(subdir)/$$i"; \
+	  else \
+	    echo "$$sdir/$$i"; \
+	  fi; \
+	done >> $(top_builddir)/cscope.files
+
+distclean-tags:
+	-rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH tags
 
 distdir: $(DISTFILES)
 	@srcdirstrip=`echo "$(srcdir)" | sed 's/[].[^$$\\*]/\\\\&/g'`; \
@@ -718,9 +624,9 @@ distdir: $(DISTFILES)
 	done
 check-am: all-am
 check: check-am
-all-am: Makefile $(LIBRARIES)
+all-am: Makefile $(LIBRARIES) $(HEADERS)
 installdirs:
-	for dir in "$(DESTDIR)$(libdir)"; do \
+	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(includedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -761,7 +667,8 @@ clean-am: clean-generic clean-libLIBRARIES clean-libtool \
 distclean: distclean-am
 	-rm -rf ./$(DEPDIR)
 	-rm -f Makefile
-distclean-am: clean-am distclean-compile distclean-generic
+distclean-am: clean-am distclean-compile distclean-generic \
+	distclean-tags
 
 dvi: dvi-am
 
@@ -775,7 +682,7 @@ info: info-am
 
 info-am:
 
-install-data-am:
+install-data-am: install-includeHEADERS
 
 install-dvi: install-dvi-am
 
@@ -822,25 +729,26 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-libLIBRARIES
+uninstall-am: uninstall-includeHEADERS uninstall-libLIBRARIES
 	@$(NORMAL_INSTALL)
 	$(MAKE) $(AM_MAKEFLAGS) uninstall-hook
 .MAKE: install-am install-exec-am install-strip uninstall-am
 
-.PHONY: all all-am check check-am clean clean-generic \
-	clean-libLIBRARIES clean-libtool cscopelist-am ctags-am \
+.PHONY: CTAGS GTAGS TAGS all all-am check check-am clean clean-generic \
+	clean-libLIBRARIES clean-libtool cscopelist-am ctags ctags-am \
 	distclean distclean-compile distclean-generic \
-	distclean-libtool distdir dvi dvi-am html html-am info info-am \
-	install install-am install-data install-data-am install-dvi \
-	install-dvi-am install-exec install-exec-am install-exec-hook \
-	install-html install-html-am install-info install-info-am \
+	distclean-libtool distclean-tags distdir dvi dvi-am html \
+	html-am info info-am install install-am install-data \
+	install-data-am install-dvi install-dvi-am install-exec \
+	install-exec-am install-exec-hook install-html install-html-am \
+	install-includeHEADERS install-info install-info-am \
 	install-libLIBRARIES install-man install-pdf install-pdf-am \
 	install-ps install-ps-am install-strip installcheck \
 	installcheck-am installdirs maintainer-clean \
 	maintainer-clean-generic mostlyclean mostlyclean-compile \
 	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags-am uninstall uninstall-am uninstall-hook \
-	uninstall-libLIBRARIES
+	tags tags-am uninstall uninstall-am uninstall-hook \
+	uninstall-includeHEADERS uninstall-libLIBRARIES
 
 .PRECIOUS: Makefile
 

@@ -146,7 +146,7 @@ libNEUTneutsmpl_a_OBJECTS = $(am_libNEUTneutsmpl_a_OBJECTS)
 PROGRAMS = $(bin_PROGRAMS)
 am_neutroot2_OBJECTS = neutroot.$(OBJEXT)
 neutroot2_OBJECTS = $(am_neutroot2_OBJECTS)
-neutroot2_LDADD = $(LDADD)
+am__DEPENDENCIES_1 =
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
@@ -298,6 +298,7 @@ INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
 LD = @LD@
 LDFLAGS = @LDFLAGS@
 LIBOBJS = @LIBOBJS@
+LIBPREFIX = @LIBPREFIX@
 LIBS = @LIBS@
 LIBTOOL = @LIBTOOL@
 LIPO = @LIPO@
@@ -308,7 +309,10 @@ MAKEINFO = @MAKEINFO@
 MANIFEST_TOOL = @MANIFEST_TOOL@
 MKDIR_P = @MKDIR_P@
 NEUT_VERSION = @NEUT_VERSION@
+NEUT_VERSION_MAJ = @NEUT_VERSION_MAJ@
+NEUT_VERSION_MIN = @NEUT_VERSION_MIN@
 NEUT_VERSION_NUM = @NEUT_VERSION_NUM@
+NEUT_VERSION_REV = @NEUT_VERSION_REV@
 NM = @NM@
 NMEDIT = @NMEDIT@
 OBJDUMP = @OBJDUMP@
@@ -388,13 +392,31 @@ top_srcdir = @top_srcdir@
 
 # top_builddir dependencies are needed for fh2h.pl-generated headers
 NEUT_INCLUDES = -I$(top_srcdir)/radcorr -I$(top_srcdir)/tauola -I$(top_srcdir)/mec -I$(top_srcdir)/ht2p2h/inc -I$(top_srcdir)/nuccorspl -I$(top_srcdir)/zbsfns -I$(top_srcdir)/n1p1h/inc -I$(top_srcdir)/nuceff -I$(top_srcdir)/kamflux -I$(top_srcdir)/nuclsmpl -I$(top_srcdir)/skmcsvc -I$(top_srcdir)/neutcore -I$(top_srcdir)/partnuck -I$(top_srcdir)/specfunc -I$(top_srcdir)/t2kflux_zbs -I$(top_builddir)/neutcore -I$(top_builddir)/skmcsvc -I$(top_builddir)/n1p1h -I$(top_builddir)/nuccorspl -I$(top_builddir)/nuceff
-NEUT_STATIC_LIBS = $(top_builddir)/neutclass/libNEUTneutclassUtils.a $(top_builddir)/neutcore/libNEUTneutcore.a $(top_builddir)/nuccorspl/libNEUTnuccorspl.a $(top_builddir)/nuceff/libNEUTnuceff.a $(top_builddir)/n1p1h/libNEUTn1p1h.a $(top_builddir)/ht2p2h/libNEUTht2p2h.a $(top_builddir)/radcorr/libNEUTradcorr.a $(top_builddir)/tauola/libNEUTtauola.a $(top_builddir)/specfunc/libNEUTspecfunc.a $(top_builddir)/skmcsvc/libNEUTskmcsvc.a $(top_builddir)/zbsfns/libNEUTzbsfns.a $(top_builddir)/partnuck/libNEUTpartnuck.a
-CERN_ROOT = $(CERN)/$(CERN_LEVEL)/include
-CERN_LINKFLAGS := $(shell ${CERN}/${CERN_LEVEL}/bin/cernlib jetset74 pdflib804 photos202 mathlib packlib kernlib)
+NEUT_CLASS_INCLUDES = -I$(top_srcdir)/neutclass
+NEUT_STATIC_LIBS = $(top_builddir)/neutcore/lib@LIBPREFIX@neutcore.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a \
+	$(top_builddir)/nuccorspl/lib@LIBPREFIX@nuccorspl.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a \
+	$(top_builddir)/nuceff/lib@LIBPREFIX@nuceff.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a \
+	$(top_builddir)/n1p1h/lib@LIBPREFIX@n1p1h.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a \
+	$(top_builddir)/ht2p2h/lib@LIBPREFIX@ht2p2h.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a \
+	$(top_builddir)/radcorr/lib@LIBPREFIX@radcorr.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a \
+	$(top_builddir)/tauola/lib@LIBPREFIX@tauola.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a \
+	$(top_builddir)/specfunc/lib@LIBPREFIX@specfunc.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a \
+	$(top_builddir)/skmcsvc/lib@LIBPREFIX@skmcsvc.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a \
+	$(top_builddir)/zbsfns/lib@LIBPREFIX@zbsfns.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a \
+	$(top_builddir)/partnuck/lib@LIBPREFIX@partnuck.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a
+@NEUT_LIBCOMPAT_TRUE@NEUTCLASS_LIBS = $(top_builddir)/neutclass/libneutrootTreeSingleton.la $(top_builddir)/neutclass/libneutctrl.la $(top_builddir)/neutclass/libneutfsipart.la $(top_builddir)/neutclass/libneutfsivert.la $(top_builddir)/neutclass/libneutnucfsistep.la $(top_builddir)/neutclass/libneutnucfsivert.la $(top_builddir)/neutclass/libneutpart.la $(top_builddir)/neutclass/libneutvect.la $(top_builddir)/neutclass/libneutvtx.la
+@NEUT_LIBCOMPAT_FALSE@NEUT_LIBS = $(top_builddir)/neutclass/lib@LIBPREFIX@neutclassUtils.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a $(top_builddir)/neutclass/lib@LIBPREFIX@neutclass.la $(NEUT_STATIC_LIBS)
+@NEUT_LIBCOMPAT_TRUE@NEUT_LIBS = $(NEUTCLASS_LIBS) $(NEUT_STATIC_LIBS)
+CERN_ROOT = $(CERN)/$(CERN_LEVEL)
+CERN_LINKFLAGS = -L$(CERN_ROOT)/lib
+CERN_LIBS = -ljetset74 -lpdflib804 -lphotos202 -lmathlib -lpacklib -lkernlib
 NEUT_FFLAGS = -fno-backslash -fno-automatic -fno-second-underscore -ffixed-line-length-132 -fdollar-ok -fPIC -fbounds-check -Wall -W -ffpe-trap=invalid,zero,overflow -DstrictF77 -DgFortran -Df2cFortran
-DEFAULT_FFLAGS = $(NEUT_FFLAGS) $(NEUT_INCLUDES) -I$(CERN_ROOT)
-DEFAULT_CXXFLAGS = -fPIC $(NEUT_INCLUDES) -I$(CERN_ROOT) $(shell root-config --cflags)
-ROOT_LINKFLAGS = $(shell root-config --glibs)
+DEFAULT_FFLAGS = $(NEUT_FFLAGS) $(NEUT_INCLUDES) -I$(CERN_ROOT)/include
+DEFAULT_CXXFLAGS = -fPIC $(NEUT_INCLUDES) -I$(CERN_ROOT)/include $(shell root-config --cflags)
+DEFAULT_LINKFLAGS = -version-info @NEUT_VERSION_NUM@
+ROOT_LINKFLAGS = $(shell root-config --ldflags) -pthread -rdynamic -L$(shell root-config --libdir)
+@ROOT_MAJOR_IS_SIX_FALSE@ROOT_LIBS = -lCore -lCint -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lm -ldl
+@ROOT_MAJOR_IS_SIX_TRUE@ROOT_LIBS = -lCore -lImt -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lROOTVecOps -lTree -lTreePlayer -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lMultiProc -lROOTDataFrame
 
 # I know... but this seems to work
 EXE_LINKFLAGS = -fno-PIE -fno-pie -no-pie
@@ -405,7 +427,8 @@ libNEUTneutsmpl_a_SOURCES = nevecgen.F grndmq.F rmarin_dum.F flx_intrfc.cc ufm2t
 libNEUTneutsmpl_a_CXXFLAGS = -DNEUTSMPL_VERSION=@NEUT_VERSION_NUM@ $(DEFAULT_CXXFLAGS) -I$(top_srcdir)/neutclass
 neutroot2_SOURCES = neutroot.F
 neutroot2_DEPENDENCIES = libNEUTneutsmpl.a
-neutroot2_LDFLAGS = $(EXE_LINKFLAGS) libNEUTneutsmpl.a  $(NEUT_STATIC_LIBS) $(top_builddir)/neutclass/libNEUTneutclass.la $(CERN_LINKFLAGS) $(ROOT_LINKFLAGS) -lstdc++
+neutroot2_LDADD = libNEUTneutsmpl.a $(NEUT_LIBS) $(CERN_LIBS) $(ROOT_LIBS) -lstdc++
+neutroot2_LDFLAGS = $(EXE_LINKFLAGS) $(CERN_LINKFLAGS) $(ROOT_LINKFLAGS)
 all: all-am
 
 .SUFFIXES:

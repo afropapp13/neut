@@ -14,6 +14,7 @@
 
 @SET_MAKE@
 
+#Its not ideal, but this should be manually kept aprised of any changes in build.common
 VPATH = @srcdir@
 am__is_gnu_make = { \
   if test -z '$(MAKELEVEL)'; then \
@@ -88,7 +89,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-subdir = ht2p2h
+subdir = tools
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
 	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
@@ -100,48 +101,6 @@ DIST_COMMON = $(srcdir)/Makefile.am $(am__DIST_COMMON)
 mkinstalldirs = $(install_sh) -d
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
-am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
-am__vpath_adj = case $$p in \
-    $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
-    *) f=$$p;; \
-  esac;
-am__strip_dir = f=`echo $$p | sed -e 's|^.*/||'`;
-am__install_max = 40
-am__nobase_strip_setup = \
-  srcdirstrip=`echo "$(srcdir)" | sed 's/[].[^$$\\*|]/\\\\&/g'`
-am__nobase_strip = \
-  for p in $$list; do echo "$$p"; done | sed -e "s|$$srcdirstrip/||"
-am__nobase_list = $(am__nobase_strip_setup); \
-  for p in $$list; do echo "$$p $$p"; done | \
-  sed "s| $$srcdirstrip/| |;"' / .*\//!s/ .*/ ./; s,\( .*\)/[^/]*$$,\1,' | \
-  $(AWK) 'BEGIN { files["."] = "" } { files[$$2] = files[$$2] " " $$1; \
-    if (++n[$$2] == $(am__install_max)) \
-      { print $$2, files[$$2]; n[$$2] = 0; files[$$2] = "" } } \
-    END { for (dir in files) print dir, files[dir] }'
-am__base_list = \
-  sed '$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;s/\n/ /g' | \
-  sed '$$!N;$$!N;$$!N;$$!N;s/\n/ /g'
-am__uninstall_files_from_dir = { \
-  test -z "$$files" \
-    || { test ! -d "$$dir" && test ! -f "$$dir" && test ! -r "$$dir"; } \
-    || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
-         $(am__cd) "$$dir" && rm -f $$files; }; \
-  }
-am__installdirs = "$(DESTDIR)$(libdir)"
-LIBRARIES = $(lib_LIBRARIES)
-ARFLAGS = cru
-AM_V_AR = $(am__v_AR_@AM_V@)
-am__v_AR_ = $(am__v_AR_@AM_DEFAULT_V@)
-am__v_AR_0 = @echo "  AR      " $@;
-am__v_AR_1 = 
-lib@LIBPREFIX@ht2p2h_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_AR =  \
-	$(AR) $(ARFLAGS)
-lib@LIBPREFIX@ht2p2h_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_LIBADD =
-am__dirstamp = $(am__leading_dot)dirstamp
-am_lib@LIBPREFIX@ht2p2h_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_OBJECTS =  \
-	src/HadronTensor.$(OBJEXT) src/HT2p2h.$(OBJEXT) \
-	src/HT2p2hFotranInterface.$(OBJEXT) src/Nucleus2p2h.$(OBJEXT)
-lib@LIBPREFIX@ht2p2h_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_OBJECTS = $(am_lib@LIBPREFIX@ht2p2h_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_OBJECTS)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -154,42 +113,15 @@ AM_V_at = $(am__v_at_@AM_V@)
 am__v_at_ = $(am__v_at_@AM_DEFAULT_V@)
 am__v_at_0 = @
 am__v_at_1 = 
-DEFAULT_INCLUDES = -I.@am__isrc@
-depcomp = $(SHELL) $(top_srcdir)/depcomp
-am__depfiles_maybe = depfiles
-am__mv = mv -f
-CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
-	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
-AM_V_lt = $(am__v_lt_@AM_V@)
-am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
-am__v_lt_0 = --silent
-am__v_lt_1 = 
-LTCXXCOMPILE = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) \
-	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
-	$(AM_CXXFLAGS) $(CXXFLAGS)
-AM_V_CXX = $(am__v_CXX_@AM_V@)
-am__v_CXX_ = $(am__v_CXX_@AM_DEFAULT_V@)
-am__v_CXX_0 = @echo "  CXX     " $@;
-am__v_CXX_1 = 
-CXXLD = $(CXX)
-CXXLINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
-	$(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
-AM_V_CXXLD = $(am__v_CXXLD_@AM_V@)
-am__v_CXXLD_ = $(am__v_CXXLD_@AM_DEFAULT_V@)
-am__v_CXXLD_0 = @echo "  CXXLD   " $@;
-am__v_CXXLD_1 = 
-SOURCES = $(lib@LIBPREFIX@ht2p2h_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_SOURCES)
-DIST_SOURCES = $(lib@LIBPREFIX@ht2p2h_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_SOURCES)
+SOURCES =
+DIST_SOURCES =
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
     *) (install-info --version) >/dev/null 2>&1;; \
   esac
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
-am__DIST_COMMON = $(srcdir)/Makefile.in $(top_srcdir)/build.common \
-	$(top_srcdir)/depcomp
+am__DIST_COMMON = $(srcdir)/Makefile.in $(top_srcdir)/build.common
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
@@ -358,17 +290,65 @@ ROOT_LINKFLAGS = $(shell root-config --ldflags) -pthread -rdynamic -L$(shell roo
 
 # I know... but this seems to work
 EXE_LINKFLAGS = -fno-PIE -fno-pie -no-pie
-LIBNAME = lib@LIBPREFIX@ht2p2h.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a
-lib_LIBRARIES = $(LIBNAME)
-AM_CXXFLAGS = -DHT2P2HVER=@NEUT_VERSION_NUM@ $(DEFAULT_CXXFLAGS)
-lib@LIBPREFIX@ht2p2h_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_SOURCES = src/HadronTensor.C src/HT2p2h.C src/HT2p2hFotranInterface.C src/Nucleus2p2h.C
-
-# Unused sources that live in the directory
-UNUSED_srcs = 
+INST_ROOT = $(prefix)
+@NEUT_LIBCOMPAT_FALSE@LIB_LIST = lib@LIBPREFIX@neutclassUtils.a \
+@NEUT_LIBCOMPAT_FALSE@	lib@LIBPREFIX@neutclass.a \
+@NEUT_LIBCOMPAT_FALSE@	lib@LIBPREFIX@neutcore.a \
+@NEUT_LIBCOMPAT_FALSE@	lib@LIBPREFIX@nuccorspl.a \
+@NEUT_LIBCOMPAT_FALSE@	lib@LIBPREFIX@nuceff.a \
+@NEUT_LIBCOMPAT_FALSE@	lib@LIBPREFIX@n1p1h.a \
+@NEUT_LIBCOMPAT_FALSE@	lib@LIBPREFIX@ht2p2h.a \
+@NEUT_LIBCOMPAT_FALSE@	lib@LIBPREFIX@radcorr.a \
+@NEUT_LIBCOMPAT_FALSE@	lib@LIBPREFIX@tauola.a \
+@NEUT_LIBCOMPAT_FALSE@	lib@LIBPREFIX@specfunc.a \
+@NEUT_LIBCOMPAT_FALSE@	lib@LIBPREFIX@skmcsvc.a \
+@NEUT_LIBCOMPAT_FALSE@	lib@LIBPREFIX@zbsfns.a \
+@NEUT_LIBCOMPAT_FALSE@	lib@LIBPREFIX@partnuck.a
+@NEUT_LIBCOMPAT_TRUE@LIB_LIST = libneutrootTreeSingleton.so \
+@NEUT_LIBCOMPAT_TRUE@	libneutctrl.so libneutfsipart.so \
+@NEUT_LIBCOMPAT_TRUE@	libneutfsivert.so libneutnucfsistep.so \
+@NEUT_LIBCOMPAT_TRUE@	libneutnucfsivert.so libneutpart.so \
+@NEUT_LIBCOMPAT_TRUE@	libneutvect.so libneutvtx.so \
+@NEUT_LIBCOMPAT_TRUE@	lib@LIBPREFIX@neutcore.a \
+@NEUT_LIBCOMPAT_TRUE@	lib@LIBPREFIX@nuccorspl.a \
+@NEUT_LIBCOMPAT_TRUE@	lib@LIBPREFIX@nuceff.a \
+@NEUT_LIBCOMPAT_TRUE@	lib@LIBPREFIX@n1p1h.a \
+@NEUT_LIBCOMPAT_TRUE@	lib@LIBPREFIX@ht2p2h.a \
+@NEUT_LIBCOMPAT_TRUE@	lib@LIBPREFIX@radcorr.a \
+@NEUT_LIBCOMPAT_TRUE@	lib@LIBPREFIX@tauola.a \
+@NEUT_LIBCOMPAT_TRUE@	lib@LIBPREFIX@specfunc.a \
+@NEUT_LIBCOMPAT_TRUE@	lib@LIBPREFIX@skmcsvc.a \
+@NEUT_LIBCOMPAT_TRUE@	lib@LIBPREFIX@zbsfns.a \
+@NEUT_LIBCOMPAT_TRUE@	lib@LIBPREFIX@partnuck.a
+@NEUT_LIBCOMPAT_FALSE@LIB_FLAGS = -l@LIBPREFIX@neutclassUtils \
+@NEUT_LIBCOMPAT_FALSE@	-l@LIBPREFIX@neutclass \
+@NEUT_LIBCOMPAT_FALSE@	-l@LIBPREFIX@neutcore \
+@NEUT_LIBCOMPAT_FALSE@	-l@LIBPREFIX@nuccorspl \
+@NEUT_LIBCOMPAT_FALSE@	-l@LIBPREFIX@nuceff -l@LIBPREFIX@n1p1h \
+@NEUT_LIBCOMPAT_FALSE@	-l@LIBPREFIX@ht2p2h -l@LIBPREFIX@radcorr \
+@NEUT_LIBCOMPAT_FALSE@	-l@LIBPREFIX@tauola \
+@NEUT_LIBCOMPAT_FALSE@	-l@LIBPREFIX@specfunc \
+@NEUT_LIBCOMPAT_FALSE@	-l@LIBPREFIX@skmcsvc -l@LIBPREFIX@zbsfns \
+@NEUT_LIBCOMPAT_FALSE@	-l@LIBPREFIX@partnuck
+@NEUT_LIBCOMPAT_TRUE@LIB_FLAGS = -lneutrootTreeSingleton.so \
+@NEUT_LIBCOMPAT_TRUE@	-lneutctrl.so -lneutfsipart.so \
+@NEUT_LIBCOMPAT_TRUE@	-lneutfsivert.so -lneutnucfsistep.so \
+@NEUT_LIBCOMPAT_TRUE@	-lneutnucfsivert.so -lneutpart.so \
+@NEUT_LIBCOMPAT_TRUE@	-lneutvect.so -lneutvtx.so \
+@NEUT_LIBCOMPAT_TRUE@	-l@LIBPREFIX@neutcore \
+@NEUT_LIBCOMPAT_TRUE@	-l@LIBPREFIX@nuccorspl \
+@NEUT_LIBCOMPAT_TRUE@	-l@LIBPREFIX@nuceff -l@LIBPREFIX@n1p1h \
+@NEUT_LIBCOMPAT_TRUE@	-l@LIBPREFIX@ht2p2h -l@LIBPREFIX@radcorr \
+@NEUT_LIBCOMPAT_TRUE@	-l@LIBPREFIX@tauola -l@LIBPREFIX@specfunc \
+@NEUT_LIBCOMPAT_TRUE@	-l@LIBPREFIX@skmcsvc -l@LIBPREFIX@zbsfns \
+@NEUT_LIBCOMPAT_TRUE@	-l@LIBPREFIX@partnuck
+RW_LIB = libNEUTReWeight.so
+RW_FLAGS = -lNEUTReWeight
+ROOT_FLAGS = $(ROOT_LINKFLAGS) $(ROOT_LIBS)
+CERN_FLAGS = $(CERN_LINKFLAGS) $(CERN_LIBS)
 all: all-am
 
 .SUFFIXES:
-.SUFFIXES: .C .lo .o .obj
 $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am $(top_srcdir)/build.common $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
@@ -378,9 +358,9 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am $(top_srcdir)/build.common $(am__c
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign ht2p2h/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign tools/Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --foreign ht2p2h/Makefile
+	  $(AUTOMAKE) --foreign tools/Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
 	  *config.status*) \
@@ -399,92 +379,6 @@ $(top_srcdir)/configure:  $(am__configure_deps)
 $(ACLOCAL_M4):  $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(am__aclocal_m4_deps):
-install-libLIBRARIES: $(lib_LIBRARIES)
-	@$(NORMAL_INSTALL)
-	@list='$(lib_LIBRARIES)'; test -n "$(libdir)" || list=; \
-	list2=; for p in $$list; do \
-	  if test -f $$p; then \
-	    list2="$$list2 $$p"; \
-	  else :; fi; \
-	done; \
-	test -z "$$list2" || { \
-	  echo " $(MKDIR_P) '$(DESTDIR)$(libdir)'"; \
-	  $(MKDIR_P) "$(DESTDIR)$(libdir)" || exit 1; \
-	  echo " $(INSTALL_DATA) $$list2 '$(DESTDIR)$(libdir)'"; \
-	  $(INSTALL_DATA) $$list2 "$(DESTDIR)$(libdir)" || exit $$?; }
-	@$(POST_INSTALL)
-	@list='$(lib_LIBRARIES)'; test -n "$(libdir)" || list=; \
-	for p in $$list; do \
-	  if test -f $$p; then \
-	    $(am__strip_dir) \
-	    echo " ( cd '$(DESTDIR)$(libdir)' && $(RANLIB) $$f )"; \
-	    ( cd "$(DESTDIR)$(libdir)" && $(RANLIB) $$f ) || exit $$?; \
-	  else :; fi; \
-	done
-
-uninstall-libLIBRARIES:
-	@$(NORMAL_UNINSTALL)
-	@list='$(lib_LIBRARIES)'; test -n "$(libdir)" || list=; \
-	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
-	dir='$(DESTDIR)$(libdir)'; $(am__uninstall_files_from_dir)
-
-clean-libLIBRARIES:
-	-test -z "$(lib_LIBRARIES)" || rm -f $(lib_LIBRARIES)
-src/$(am__dirstamp):
-	@$(MKDIR_P) src
-	@: > src/$(am__dirstamp)
-src/$(DEPDIR)/$(am__dirstamp):
-	@$(MKDIR_P) src/$(DEPDIR)
-	@: > src/$(DEPDIR)/$(am__dirstamp)
-src/HadronTensor.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/HT2p2h.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/HT2p2hFotranInterface.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/Nucleus2p2h.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-
-lib@LIBPREFIX@ht2p2h.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a: $(lib@LIBPREFIX@ht2p2h_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_OBJECTS) $(lib@LIBPREFIX@ht2p2h_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_DEPENDENCIES) $(EXTRA_lib@LIBPREFIX@ht2p2h_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_DEPENDENCIES) 
-	$(AM_V_at)-rm -f lib@LIBPREFIX@ht2p2h.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a
-	$(AM_V_AR)$(lib@LIBPREFIX@ht2p2h_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_AR) lib@LIBPREFIX@ht2p2h.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a $(lib@LIBPREFIX@ht2p2h_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_OBJECTS) $(lib@LIBPREFIX@ht2p2h_@NEUT_VERSION_MAJ@_@NEUT_VERSION_MIN@_@NEUT_VERSION_REV@_a_LIBADD)
-	$(AM_V_at)$(RANLIB) lib@LIBPREFIX@ht2p2h.@NEUT_VERSION_MAJ@.@NEUT_VERSION_MIN@.@NEUT_VERSION_REV@.a
-
-mostlyclean-compile:
-	-rm -f *.$(OBJEXT)
-	-rm -f src/*.$(OBJEXT)
-
-distclean-compile:
-	-rm -f *.tab.c
-
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/HT2p2h.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/HT2p2hFotranInterface.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/HadronTensor.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/Nucleus2p2h.Po@am__quote@
-
-.C.o:
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
-@am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ $< &&\
-@am__fastdepCXX_TRUE@	$(am__mv) $$depbase.Tpo $$depbase.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXXCOMPILE) -c -o $@ $<
-
-.C.obj:
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.obj$$||'`;\
-@am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ `$(CYGPATH_W) '$<'` &&\
-@am__fastdepCXX_TRUE@	$(am__mv) $$depbase.Tpo $$depbase.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXXCOMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
-
-.C.lo:
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.lo$$||'`;\
-@am__fastdepCXX_TRUE@	$(LTCXXCOMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ $< &&\
-@am__fastdepCXX_TRUE@	$(am__mv) $$depbase.Tpo $$depbase.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LTCXXCOMPILE) -c -o $@ $<
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -530,11 +424,8 @@ distdir: $(DISTFILES)
 	done
 check-am: all-am
 check: check-am
-all-am: Makefile $(LIBRARIES)
+all-am: Makefile
 installdirs:
-	for dir in "$(DESTDIR)$(libdir)"; do \
-	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
-	done
 install: install-am
 install-exec: install-exec-am
 install-data: install-data-am
@@ -561,21 +452,17 @@ clean-generic:
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
 	-test . = "$(srcdir)" || test -z "$(CONFIG_CLEAN_VPATH_FILES)" || rm -f $(CONFIG_CLEAN_VPATH_FILES)
-	-rm -f src/$(DEPDIR)/$(am__dirstamp)
-	-rm -f src/$(am__dirstamp)
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-am
 
-clean-am: clean-generic clean-libLIBRARIES clean-libtool \
-	mostlyclean-am
+clean-am: clean-generic clean-libtool mostlyclean-am
 
 distclean: distclean-am
-	-rm -rf src/$(DEPDIR)
 	-rm -f Makefile
-distclean-am: clean-am distclean-compile distclean-generic
+distclean-am: clean-am distclean-generic
 
 dvi: dvi-am
 
@@ -595,7 +482,7 @@ install-dvi: install-dvi-am
 
 install-dvi-am:
 
-install-exec-am: install-libLIBRARIES
+install-exec-am:
 	@$(NORMAL_INSTALL)
 	$(MAKE) $(AM_MAKEFLAGS) install-exec-hook
 install-html: install-html-am
@@ -619,14 +506,12 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
-	-rm -rf src/$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
 mostlyclean: mostlyclean-am
 
-mostlyclean-am: mostlyclean-compile mostlyclean-generic \
-	mostlyclean-libtool
+mostlyclean-am: mostlyclean-generic mostlyclean-libtool
 
 pdf: pdf-am
 
@@ -636,34 +521,35 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-libLIBRARIES
+uninstall-am:
 	@$(NORMAL_INSTALL)
 	$(MAKE) $(AM_MAKEFLAGS) uninstall-hook
 .MAKE: install-am install-exec-am install-strip uninstall-am
 
-.PHONY: all all-am check check-am clean clean-generic \
-	clean-libLIBRARIES clean-libtool cscopelist-am ctags-am \
-	distclean distclean-compile distclean-generic \
+.PHONY: all all-am check check-am clean clean-generic clean-libtool \
+	cscopelist-am ctags-am distclean distclean-generic \
 	distclean-libtool distdir dvi dvi-am html html-am info info-am \
 	install install-am install-data install-data-am install-dvi \
 	install-dvi-am install-exec install-exec-am install-exec-hook \
 	install-html install-html-am install-info install-info-am \
-	install-libLIBRARIES install-man install-pdf install-pdf-am \
-	install-ps install-ps-am install-strip installcheck \
-	installcheck-am installdirs maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-compile \
-	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags-am uninstall uninstall-am uninstall-hook \
-	uninstall-libLIBRARIES
+	install-man install-pdf install-pdf-am install-ps \
+	install-ps-am install-strip installcheck installcheck-am \
+	installdirs maintainer-clean maintainer-clean-generic \
+	mostlyclean mostlyclean-generic mostlyclean-libtool pdf pdf-am \
+	ps ps-am tags-am uninstall uninstall-am uninstall-hook
 
 .PRECIOUS: Makefile
 
 
-install-exec-hook:
-	-(cd ${libdir}; $(LN_S) $(LIBNAME) $(shell echo $(LIBNAME) | cut -d . -f 1).a)
+neut-config: neut-config.in
+	cat ${top_srcdir}/tools/neut-config.in | sed "s|__INST_ROOT__|$(INST_ROOT)|g" | sed "s|__LIB_LIST__|$(LIB_LIST)|g" | sed "s|__RW_LIB__|$(RW_LIB)|g" | sed "s|__LIB_FLAGS__|$(LIB_FLAGS)|g" | sed "s|__RW_FLAGS__|$(RW_FLAGS)|g" | sed "s|__NEUT_VERSION__|$(NEUT_VERSION)|g" | sed "s|__ROOT_FLAGS__|$(ROOT_FLAGS)|g" | sed "s|__CERN_FLAGS__|$(CERN_FLAGS)|g" > neut-config
+	chmod +x neut-config
+
+install-exec-hook: neut-config
+	-cp neut-config ${bindir}/
 
 uninstall-hook:
-	-(cd ${libdir}; rm -f $(shell echo $(LIBNAME) | cut -d . -f 1).a)
+	-(cd ${bindir}; rm -f neut-config)
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

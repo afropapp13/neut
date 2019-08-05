@@ -6,7 +6,7 @@
 #include "TChain.h"
 #include "neutvect.h"
 
- class NeutrootTreeSingleton { 
+ class NeutrootTreeSingleton {
 
  public:
    static NeutrootTreeSingleton* Instance (std::string filename);
@@ -39,9 +39,6 @@
      }
    };
    friend struct Cleaner;
-
-   ClassDef(NeutrootTreeSingleton, 1)    
 };
 
 #endif
-

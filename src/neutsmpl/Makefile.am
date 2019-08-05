@@ -15,4 +15,6 @@ neutroot2_SOURCES = neutroot.F
 
 neutroot2_DEPENDENCIES = libNEUTneutsmpl.a
 
-neutroot2_LDFLAGS = $(EXE_LINKFLAGS) libNEUTneutsmpl.a  $(NEUT_STATIC_LIBS) $(top_builddir)/neutclass/libNEUTneutclass.la $(CERN_LINKFLAGS) $(ROOT_LINKFLAGS) -lstdc++
+neutroot2_LDADD = libNEUTneutsmpl.a $(NEUT_LIBS) $(CERN_LIBS) $(ROOT_LIBS) -lstdc++
+
+neutroot2_LDFLAGS = $(EXE_LINKFLAGS) $(CERN_LINKFLAGS) $(ROOT_LINKFLAGS)

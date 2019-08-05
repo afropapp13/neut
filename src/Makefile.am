@@ -12,4 +12,4 @@ CLEANFILES = $(BUILT_SOURCES)
 
 include_HEADERS = $(BUILT_SOURCES)
 
-SUBDIRS = neutcore nuccorspl nuceff n1p1h ht2p2h radcorr tauola specfunc skmcsvc zbsfns partnuck neutclass neutsmpl
+SUBDIRS = neutcore nuccorspl nuceff n1p1h ht2p2h radcorr tauola specfunc skmcsvc zbsfns partnuck neutclass neutsmpl reweight tools
