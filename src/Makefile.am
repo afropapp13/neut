@@ -23,6 +23,7 @@ else
 SUBDIRS = neutcore nuccorspl nuceff n1p1h ht2p2h radcorr tauola specfunc skmcsvc partnuck neutclass . neutsmpl reweight tools neututils
 endif
 
+# When I can get a hold of the zebra code I will add an --enable flag for the ZEBRA_SUBDIRS, but for the moment, disable them.
 ZEBRA_SUBDIRS = zbsfns
 
 if !NEUT_LIBCOMPAT

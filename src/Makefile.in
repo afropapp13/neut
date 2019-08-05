@@ -436,6 +436,8 @@ include_HEADERS = $(BUILT_SOURCES)
 # Order here matters, should build core libraries, combine them in this dir (.), then build reweight, programs, and tools.
 # Cannot currently build neututils dirs in compat mode.
 @NEUT_LIBCOMPAT_TRUE@SUBDIRS = neutcore nuccorspl nuceff n1p1h ht2p2h radcorr tauola specfunc skmcsvc partnuck neutclass . neutsmpl reweight tools
+
+# When I can get a hold of the zebra code I will add an --enable flag for the ZEBRA_SUBDIRS, but for the moment, disable them.
 ZEBRA_SUBDIRS = zbsfns
 
 # Combine all of the core static libraries into one!
