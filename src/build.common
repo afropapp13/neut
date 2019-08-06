@@ -17,7 +17,7 @@ NEUT_LIBS = $(NEUTCLASS_LIBS) $(NEUT_STATIC_LIBS)
 
 else
 
-NEUT_LIBS = $(top_builddir)/neutclass/lib@LIBPREFIX@neutclassUtils.@NEUT_VERSION_NUM@.a $(top_builddir)/neutclass/lib@LIBPREFIX@neutclass.la $(top_builddir)/libNEUT.@NEUT_VERSION_NUM@.a
+NEUT_LIBS = $(top_builddir)/neutclass/libNEUTClassUtils.@NEUT_VERSION_NUM@.a $(top_builddir)/neutclass/libNEUTClass.la $(top_builddir)/libNEUT.@NEUT_VERSION_NUM@.a
 
 endif
 

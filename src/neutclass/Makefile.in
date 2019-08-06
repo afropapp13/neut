@@ -138,36 +138,34 @@ AM_V_AR = $(am__v_AR_@AM_V@)
 am__v_AR_ = $(am__v_AR_@AM_DEFAULT_V@)
 am__v_AR_0 = @echo "  AR      " $@;
 am__v_AR_1 = 
-lib@LIBPREFIX@neutclassUtils_@NEUT_VERSION_NUM@_a_AR = $(AR) \
-	$(ARFLAGS)
-lib@LIBPREFIX@neutclassUtils_@NEUT_VERSION_NUM@_a_LIBADD =
-am__lib@LIBPREFIX@neutclassUtils_@NEUT_VERSION_NUM@_a_SOURCES_DIST =  \
+libNEUTClassUtils_@NEUT_VERSION_NUM@_a_AR = $(AR) $(ARFLAGS)
+libNEUTClassUtils_@NEUT_VERSION_NUM@_a_LIBADD =
+am__libNEUTClassUtils_@NEUT_VERSION_NUM@_a_SOURCES_DIST =  \
 	neutrootfortwrapper.cc NeutRootHandlers.cc \
 	neutrootTreeSingleton.cc neutfill.cc fill_dsdq2.cc
 am__objects_1 = neutrootfortwrapper.$(OBJEXT) \
 	NeutRootHandlers.$(OBJEXT) neutrootTreeSingleton.$(OBJEXT) \
 	neutfill.$(OBJEXT) fill_dsdq2.$(OBJEXT)
-@NEUT_LIBCOMPAT_FALSE@am_lib@LIBPREFIX@neutclassUtils_@NEUT_VERSION_NUM@_a_OBJECTS =  \
+@NEUT_LIBCOMPAT_FALSE@am_libNEUTClassUtils_@NEUT_VERSION_NUM@_a_OBJECTS =  \
 @NEUT_LIBCOMPAT_FALSE@	$(am__objects_1)
-lib@LIBPREFIX@neutclassUtils_@NEUT_VERSION_NUM@_a_OBJECTS = $(am_lib@LIBPREFIX@neutclassUtils_@NEUT_VERSION_NUM@_a_OBJECTS)
+libNEUTClassUtils_@NEUT_VERSION_NUM@_a_OBJECTS =  \
+	$(am_libNEUTClassUtils_@NEUT_VERSION_NUM@_a_OBJECTS)
 LTLIBRARIES = $(lib_LTLIBRARIES)
-lib@LIBPREFIX@neutclass_la_LIBADD =
-am__lib@LIBPREFIX@neutclass_la_SOURCES_DIST = neutclassDict.cc \
-	neutctrl.cc neutfsipart.cc neutfsivert.cc neutnucfsistep.cc \
+libNEUTClass_la_LIBADD =
+am__libNEUTClass_la_SOURCES_DIST = neutclassDict.cc neutctrl.cc \
+	neutfsipart.cc neutfsivert.cc neutnucfsistep.cc \
 	neutnucfsivert.cc neutpart.cc neutvect.cc neutvtx.cc
-@NEUT_LIBCOMPAT_FALSE@am_lib@LIBPREFIX@neutclass_la_OBJECTS =  \
-@NEUT_LIBCOMPAT_FALSE@	neutclassDict.lo neutctrl.lo \
-@NEUT_LIBCOMPAT_FALSE@	neutfsipart.lo neutfsivert.lo \
-@NEUT_LIBCOMPAT_FALSE@	neutnucfsistep.lo neutnucfsivert.lo \
-@NEUT_LIBCOMPAT_FALSE@	neutpart.lo neutvect.lo neutvtx.lo
-lib@LIBPREFIX@neutclass_la_OBJECTS =  \
-	$(am_lib@LIBPREFIX@neutclass_la_OBJECTS)
+@NEUT_LIBCOMPAT_FALSE@am_libNEUTClass_la_OBJECTS = neutclassDict.lo \
+@NEUT_LIBCOMPAT_FALSE@	neutctrl.lo neutfsipart.lo \
+@NEUT_LIBCOMPAT_FALSE@	neutfsivert.lo neutnucfsistep.lo \
+@NEUT_LIBCOMPAT_FALSE@	neutnucfsivert.lo neutpart.lo \
+@NEUT_LIBCOMPAT_FALSE@	neutvect.lo neutvtx.lo
+libNEUTClass_la_OBJECTS = $(am_libNEUTClass_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
 am__v_lt_1 = 
-@NEUT_LIBCOMPAT_FALSE@am_lib@LIBPREFIX@neutclass_la_rpath = -rpath \
-@NEUT_LIBCOMPAT_FALSE@	$(libdir)
+@NEUT_LIBCOMPAT_FALSE@am_libNEUTClass_la_rpath = -rpath $(libdir)
 libneutctrl_la_LIBADD =
 am__libneutctrl_la_SOURCES_DIST = neutctrlDict.cc neutctrl.cc
 @NEUT_LIBCOMPAT_TRUE@am_libneutctrl_la_OBJECTS = neutctrlDict.lo \
@@ -271,16 +269,16 @@ AM_V_CXXLD = $(am__v_CXXLD_@AM_V@)
 am__v_CXXLD_ = $(am__v_CXXLD_@AM_DEFAULT_V@)
 am__v_CXXLD_0 = @echo "  CXXLD   " $@;
 am__v_CXXLD_1 = 
-SOURCES =  \
-	$(lib@LIBPREFIX@neutclassUtils_@NEUT_VERSION_NUM@_a_SOURCES) \
-	$(lib@LIBPREFIX@neutclass_la_SOURCES) \
-	$(libneutctrl_la_SOURCES) $(libneutfsipart_la_SOURCES) \
-	$(libneutfsivert_la_SOURCES) $(libneutnucfsistep_la_SOURCES) \
+SOURCES = $(libNEUTClassUtils_@NEUT_VERSION_NUM@_a_SOURCES) \
+	$(libNEUTClass_la_SOURCES) $(libneutctrl_la_SOURCES) \
+	$(libneutfsipart_la_SOURCES) $(libneutfsivert_la_SOURCES) \
+	$(libneutnucfsistep_la_SOURCES) \
 	$(libneutnucfsivert_la_SOURCES) $(libneutpart_la_SOURCES) \
 	$(libneutrootTreeSingleton_la_SOURCES) \
 	$(libneutvect_la_SOURCES) $(libneutvtx_la_SOURCES)
-DIST_SOURCES = $(am__lib@LIBPREFIX@neutclassUtils_@NEUT_VERSION_NUM@_a_SOURCES_DIST) \
-	$(am__lib@LIBPREFIX@neutclass_la_SOURCES_DIST) \
+DIST_SOURCES =  \
+	$(am__libNEUTClassUtils_@NEUT_VERSION_NUM@_a_SOURCES_DIST) \
+	$(am__libNEUTClass_la_SOURCES_DIST) \
 	$(am__libneutctrl_la_SOURCES_DIST) \
 	$(am__libneutfsipart_la_SOURCES_DIST) \
 	$(am__libneutfsivert_la_SOURCES_DIST) \
@@ -474,7 +472,7 @@ NEUT_STATIC_LIBS = $(top_builddir)/neutcore/lib@LIBPREFIX@neutcore.@NEUT_VERSION
 	$(top_builddir)/partnuck/lib@LIBPREFIX@partnuck.@NEUT_VERSION_NUM@.a \
 	$(am__append_1)
 @NEUT_LIBCOMPAT_TRUE@NEUTCLASS_LIBS = $(top_builddir)/neutclass/libneutrootTreeSingleton.la $(top_builddir)/neutclass/libneutctrl.la $(top_builddir)/neutclass/libneutfsipart.la $(top_builddir)/neutclass/libneutfsivert.la $(top_builddir)/neutclass/libneutnucfsistep.la $(top_builddir)/neutclass/libneutnucfsivert.la $(top_builddir)/neutclass/libneutpart.la $(top_builddir)/neutclass/libneutvect.la $(top_builddir)/neutclass/libneutvtx.la
-@NEUT_LIBCOMPAT_FALSE@NEUT_LIBS = $(top_builddir)/neutclass/lib@LIBPREFIX@neutclassUtils.@NEUT_VERSION_NUM@.a $(top_builddir)/neutclass/lib@LIBPREFIX@neutclass.la $(top_builddir)/libNEUT.@NEUT_VERSION_NUM@.a
+@NEUT_LIBCOMPAT_FALSE@NEUT_LIBS = $(top_builddir)/neutclass/libNEUTClassUtils.@NEUT_VERSION_NUM@.a $(top_builddir)/neutclass/libNEUTClass.la $(top_builddir)/libNEUT.@NEUT_VERSION_NUM@.a
 @NEUT_LIBCOMPAT_TRUE@NEUT_LIBS = $(NEUTCLASS_LIBS) $(NEUT_STATIC_LIBS)
 CERN_ROOT = $(CERN)/$(CERN_LEVEL)
 CERN_LINKFLAGS = -L$(CERN_ROOT)/lib
@@ -498,7 +496,7 @@ NEUTCLASSUTILS_SRCS = neutrootfortwrapper.cc NeutRootHandlers.cc neutrootTreeSin
 @NEUT_LIBCOMPAT_TRUE@@ROOT_MAJOR_IS_SIX_TRUE@pcmdir = $(prefix)/lib
 @NEUT_LIBCOMPAT_FALSE@@ROOT_MAJOR_IS_SIX_TRUE@pcm_DATA = neutclassDict_rdict.pcm
 @NEUT_LIBCOMPAT_TRUE@@ROOT_MAJOR_IS_SIX_TRUE@pcm_DATA = neutctrlDict_rdict.pcm neutfsipartDict_rdict.pcm neutfsivertDict_rdict.pcm neutnucfsistepDict_rdict.pcm neutnucfsivertDict_rdict.pcm neutpartDict_rdict.pcm neutvectDict_rdict.pcm neutvtxDict_rdict.pcm
-@NEUT_LIBCOMPAT_FALSE@lib_LTLIBRARIES = lib@LIBPREFIX@neutclass.la
+@NEUT_LIBCOMPAT_FALSE@lib_LTLIBRARIES = libNEUTClass.la
 @NEUT_LIBCOMPAT_TRUE@lib_LTLIBRARIES = libneutctrl.la libneutfsipart.la libneutfsivert.la libneutnucfsistep.la libneutnucfsivert.la libneutpart.la libneutvect.la libneutvtx.la libneutrootTreeSingleton.la
 @NEUT_LIBCOMPAT_TRUE@libneutctrl_la_SOURCES = neutctrlDict.cc neutctrl.cc
 @NEUT_LIBCOMPAT_TRUE@libneutfsipart_la_SOURCES = neutfsipartDict.cc neutfsipart.cc
@@ -518,13 +516,13 @@ NEUTCLASSUTILS_SRCS = neutrootfortwrapper.cc NeutRootHandlers.cc neutrootTreeSin
 @NEUT_LIBCOMPAT_FALSE@BUILT_SOURCES = neutclassDict.cc
 @NEUT_LIBCOMPAT_FALSE@CLEANFILES = $(BUILT_SOURCES)
 @NEUT_LIBCOMPAT_FALSE@include_HEADERS = neutctrl.h neutfsipart.h neutfsivert.h neutnucfsistep.h neutnucfsivert.h neutpart.h NeutRootHandlers.h neutrootTreeSingleton.h neutvect.h neutvtx.h
-@NEUT_LIBCOMPAT_FALSE@lib@LIBPREFIX@neutclass_la_SOURCES = neutclassDict.cc neutctrl.cc neutfsipart.cc neutfsivert.cc neutnucfsistep.cc neutnucfsivert.cc neutpart.cc neutvect.cc neutvtx.cc
+@NEUT_LIBCOMPAT_FALSE@libNEUTClass_la_SOURCES = neutclassDict.cc neutctrl.cc neutfsipart.cc neutfsivert.cc neutnucfsistep.cc neutnucfsivert.cc neutpart.cc neutvect.cc neutvtx.cc
 #
-@NEUT_LIBCOMPAT_FALSE@LIBNAME = lib@LIBPREFIX@neutclassUtils.@NEUT_VERSION_NUM@.a
+@NEUT_LIBCOMPAT_FALSE@LIBNAME = libNEUTClassUtils.@NEUT_VERSION_NUM@.a
 #
 @NEUT_LIBCOMPAT_FALSE@lib_LIBRARIES = $(LIBNAME)
 #
-@NEUT_LIBCOMPAT_FALSE@lib@LIBPREFIX@neutclassUtils_@NEUT_VERSION_NUM@_a_SOURCES = $(NEUTCLASSUTILS_SRCS)
+@NEUT_LIBCOMPAT_FALSE@libNEUTClassUtils_@NEUT_VERSION_NUM@_a_SOURCES = $(NEUTCLASSUTILS_SRCS)
 
 # Unused sources that live in the directory
 @NEUT_LIBCOMPAT_FALSE@UNUSED_srcs = chkfillneutvect.cc chkfillneutvtx.cc chkreadneutvect.cc chkreadneutvtx.cc
@@ -595,10 +593,10 @@ uninstall-libLIBRARIES:
 clean-libLIBRARIES:
 	-test -z "$(lib_LIBRARIES)" || rm -f $(lib_LIBRARIES)
 
-lib@LIBPREFIX@neutclassUtils.@NEUT_VERSION_NUM@.a: $(lib@LIBPREFIX@neutclassUtils_@NEUT_VERSION_NUM@_a_OBJECTS) $(lib@LIBPREFIX@neutclassUtils_@NEUT_VERSION_NUM@_a_DEPENDENCIES) $(EXTRA_lib@LIBPREFIX@neutclassUtils_@NEUT_VERSION_NUM@_a_DEPENDENCIES) 
-	$(AM_V_at)-rm -f lib@LIBPREFIX@neutclassUtils.@NEUT_VERSION_NUM@.a
-	$(AM_V_AR)$(lib@LIBPREFIX@neutclassUtils_@NEUT_VERSION_NUM@_a_AR) lib@LIBPREFIX@neutclassUtils.@NEUT_VERSION_NUM@.a $(lib@LIBPREFIX@neutclassUtils_@NEUT_VERSION_NUM@_a_OBJECTS) $(lib@LIBPREFIX@neutclassUtils_@NEUT_VERSION_NUM@_a_LIBADD)
-	$(AM_V_at)$(RANLIB) lib@LIBPREFIX@neutclassUtils.@NEUT_VERSION_NUM@.a
+libNEUTClassUtils.@NEUT_VERSION_NUM@.a: $(libNEUTClassUtils_@NEUT_VERSION_NUM@_a_OBJECTS) $(libNEUTClassUtils_@NEUT_VERSION_NUM@_a_DEPENDENCIES) $(EXTRA_libNEUTClassUtils_@NEUT_VERSION_NUM@_a_DEPENDENCIES) 
+	$(AM_V_at)-rm -f libNEUTClassUtils.@NEUT_VERSION_NUM@.a
+	$(AM_V_AR)$(libNEUTClassUtils_@NEUT_VERSION_NUM@_a_AR) libNEUTClassUtils.@NEUT_VERSION_NUM@.a $(libNEUTClassUtils_@NEUT_VERSION_NUM@_a_OBJECTS) $(libNEUTClassUtils_@NEUT_VERSION_NUM@_a_LIBADD)
+	$(AM_V_at)$(RANLIB) libNEUTClassUtils.@NEUT_VERSION_NUM@.a
 
 install-libLTLIBRARIES: $(lib_LTLIBRARIES)
 	@$(NORMAL_INSTALL)
@@ -635,8 +633,8 @@ clean-libLTLIBRARIES:
 	  rm -f $${locs}; \
 	}
 
-lib@LIBPREFIX@neutclass.la: $(lib@LIBPREFIX@neutclass_la_OBJECTS) $(lib@LIBPREFIX@neutclass_la_DEPENDENCIES) $(EXTRA_lib@LIBPREFIX@neutclass_la_DEPENDENCIES) 
-	$(AM_V_CXXLD)$(CXXLINK) $(am_lib@LIBPREFIX@neutclass_la_rpath) $(lib@LIBPREFIX@neutclass_la_OBJECTS) $(lib@LIBPREFIX@neutclass_la_LIBADD) $(LIBS)
+libNEUTClass.la: $(libNEUTClass_la_OBJECTS) $(libNEUTClass_la_DEPENDENCIES) $(EXTRA_libNEUTClass_la_DEPENDENCIES) 
+	$(AM_V_CXXLD)$(CXXLINK) $(am_libNEUTClass_la_rpath) $(libNEUTClass_la_OBJECTS) $(libNEUTClass_la_LIBADD) $(LIBS)
 
 libneutctrl.la: $(libneutctrl_la_OBJECTS) $(libneutctrl_la_DEPENDENCIES) $(EXTRA_libneutctrl_la_DEPENDENCIES) 
 	$(AM_V_CXXLD)$(CXXLINK) $(am_libneutctrl_la_rpath) $(libneutctrl_la_OBJECTS) $(libneutctrl_la_LIBADD) $(LIBS)

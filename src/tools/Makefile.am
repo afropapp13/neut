@@ -5,15 +5,18 @@ include $(top_srcdir)/build.common
 INST_ROOT = $(prefix)
 
 if NEUT_LIBCOMPAT
+
 IO_LIB_LIST = neutrootTreeSingleton.so neutctrl.so neutfsipart.so neutfsivert.so neutnucfsistep.so neutnucfsivert.so neutpart.so neutvect.so neutvtx.so
 IO_LIB_FLAGS = $(INST_ROOT)/lib/neutrootTreeSingleton.so $(INST_ROOT)/lib/neutctrl.so $(INST_ROOT)/lib/neutfsipart.so $(INST_ROOT)/lib/neutfsivert.so $(INST_ROOT)/lib/neutnucfsistep.so $(INST_ROOT)/lib/neutnucfsivert.so $(INST_ROOT)/lib/neutpart.so $(INST_ROOT)/lib/neutvect.so $(INST_ROOT)/lib/neutvtx.so
 LIB_LIST = $(IO_LIB_LIST) libneutcore.a libnuccorspl.a libnuceff.a libn1p1h.a libht2p2h.a libradcorr.a libtauola.a libspecfunc.a libskmcsvc.a libzbsfns.a libpartnuck.a
 LIB_FLAGS = $(IO_LIB_FLAGS) -lneutcore -lnuccorspl -lnuceff -ln1p1h -lht2p2h -lradcorr -ltauola -lspecfunc -lskmcsvc -lzbsfns -lpartnuck
 RW_LIB = libNReWeight.so
 RW_FLAGS = -lNReWeight
+
 else
-IO_LIB_LIST = libneutclassUtils.a libneutclass.so
-IO_LIB_FLAGS = -lneutclassUtils -lneutclass
+
+IO_LIB_LIST = libNEUTClassUtils.a libNEUTClass.so
+IO_LIB_FLAGS = -lNEUTClassUtils -lNEUTClass
 LIB_LIST = libNEUT.a
 LIB_FLAGS = -lNEUT
 RW_LIB = libNEUTReWeight.so

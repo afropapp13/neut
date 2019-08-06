@@ -104,15 +104,15 @@ CLEANFILES = $(BUILT_SOURCES)
 
 include_HEADERS = neutctrl.h neutfsipart.h neutfsivert.h neutnucfsistep.h neutnucfsivert.h neutpart.h NeutRootHandlers.h neutrootTreeSingleton.h neutvect.h neutvtx.h
 
-lib_LTLIBRARIES = lib@LIBPREFIX@neutclass.la
+lib_LTLIBRARIES = libNEUTClass.la
 
-lib@LIBPREFIX@neutclass_la_SOURCES = neutclassDict.cc neutctrl.cc neutfsipart.cc neutfsivert.cc neutnucfsistep.cc neutnucfsivert.cc neutpart.cc neutvect.cc neutvtx.cc
+libNEUTClass_la_SOURCES = neutclassDict.cc neutctrl.cc neutfsipart.cc neutfsivert.cc neutnucfsistep.cc neutnucfsivert.cc neutpart.cc neutvect.cc neutvtx.cc
 #
-LIBNAME = lib@LIBPREFIX@neutclassUtils.@NEUT_VERSION_NUM@.a
+LIBNAME = libNEUTClassUtils.@NEUT_VERSION_NUM@.a
 #
 lib_LIBRARIES = $(LIBNAME)
 #
-lib@LIBPREFIX@neutclassUtils_@NEUT_VERSION_NUM@_a_SOURCES = $(NEUTCLASSUTILS_SRCS)
+libNEUTClassUtils_@NEUT_VERSION_NUM@_a_SOURCES = $(NEUTCLASSUTILS_SRCS)
 
 install-exec-hook:
 	-(cd ${libdir}; $(LN_S) $(LIBNAME) $(shell echo $(LIBNAME) | cut -d . -f 1).a)
