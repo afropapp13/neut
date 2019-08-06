@@ -2,6 +2,8 @@ include $(top_srcdir)/build.common
 
 AM_FFLAGS = -DNECORE_VERSION=@NEUT_VERSION_NUM@ $(DEFAULT_FFLAGS)
 AM_CXXFLAGS = -DNECORE_VERSION=@NEUT_VERSION_NUM@ $(DEFAULT_CXXFLAGS)
+# automake determines that a few of the c files are pure C and thus wont use the CXX flags.
+AM_CFLAGS = -DNECORE_VERSION=@NEUT_VERSION_NUM@ $(DEFAULT_CFLAGS)
 
 LIBNAME = lib@LIBPREFIX@neutcore.@NEUT_VERSION_NUM@.a
 
