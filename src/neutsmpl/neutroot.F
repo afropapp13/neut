@@ -4,7 +4,7 @@ C
 C    2010.06 P. de Perio - Get filename from command line
 C    2011.08 S. Tobayama - Flux input option implemented
 C
-C******************************************************    
+C******************************************************
 
       PROGRAM NEUT
 
@@ -43,7 +43,7 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
 #include "nework.h"
 #include "vcwork.h"
-#include "neutparams.h"      
+#include "neutparams.h"
 #include "posinnuc.h"
 
       character*80 FILENAME,OPTION,TREE,VECBRANCH,VTXBRANCH
@@ -103,7 +103,7 @@ C--Read flux histogram from ROOT file
       endif
 
 C--Main loop
-      
+
       DO 100 I=1,NEVTEVCT
 
 C--Set vertex
@@ -148,19 +148,19 @@ C--Draw ENEU from event rate (flux*cross-section) distribution
          if (fntotpau(IDPTEVCT,ENEU/1000.).le.1.e-7) then
             IRETRY = IRETRY + 1
             if (IRETRY .gt. 100000) then
-               write(*,*) 
+               write(*,*)
      $              'Too many tries to set neutrino energy'
-               write(*,*) 
+               write(*,*)
      $              'Check the energy and interaction modes in the card'
                stop
             endif
             goto 30
          endif
-         
+
          DO 50 J=1,3
             PNEU(J)=ENEU*DIR(J)
  50      continue
-         
+
 C--Generate event
          CALL RLUXAT(LUX,ISEED1,K1,K2)
          CALL RM48UT(ISEED2,K3,K4)
@@ -169,7 +169,7 @@ C--Generate event
      $        'Ev.#',I, ' SEEDS ',ISEED1,K1,K2,ISEED2,K3,K4
        ENDIF
 
-         call NEVECGEN(IDPTEVCT,POS,PNEU,IERR)
+         call NEVECT(IDPTEVCT,POS,PNEU,IERR)
 
          if (ierr.ne.0) then
             goto 20
@@ -202,4 +202,3 @@ C         iret = neutfilldsdq2(filename,tree,vecbranch,vtxbranch)
 
       STOP
       END
-

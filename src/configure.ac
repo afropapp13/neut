@@ -76,6 +76,13 @@ AS_IF([test "x$enable_compatnames" = "xyes"], [
   AC_SUBST(LIBPREFIX, [NEUT])
 ])
 
+######## Check use tauola
+AC_ARG_ENABLE([tauola],
+    AS_HELP_STRING([--enable-tauola], [Enable tauola, requires ZEBRA!]))
+
+AM_CONDITIONAL([NEUT_USE_TAUOLA], [test "x$enable_tauola" = "xyes"])
+
+
 AC_CONFIG_FILES([
   Makefile
   neutcore/Makefile

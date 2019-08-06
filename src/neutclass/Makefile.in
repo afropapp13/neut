@@ -91,6 +91,8 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
+@NEUT_LIBCOMPAT_TRUE@@NEUT_USE_TAUOLA_TRUE@am__append_1 = $(top_builddir)/tauola/lib@LIBPREFIX@tauola.@NEUT_VERSION_NUM@.a
+@NEUT_USE_TAUOLA_TRUE@am__append_2 = -DNEUT_USE_TAUOLA
 subdir = neutclass
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
@@ -144,12 +146,12 @@ lib@LIBPREFIX@neutclassUtils_@NEUT_VERSION_NUM@_a_AR = $(AR) \
 lib@LIBPREFIX@neutclassUtils_@NEUT_VERSION_NUM@_a_LIBADD =
 am__lib@LIBPREFIX@neutclassUtils_@NEUT_VERSION_NUM@_a_SOURCES_DIST =  \
 	neutrootfortwrapper.cc NeutRootHandlers.cc \
-	neutrootTreeSingleton.cc neutfill.cc
+	neutrootTreeSingleton.cc neutfill.cc fill_dsdq2.cc
+am__objects_1 = neutrootfortwrapper.$(OBJEXT) \
+	NeutRootHandlers.$(OBJEXT) neutrootTreeSingleton.$(OBJEXT) \
+	neutfill.$(OBJEXT) fill_dsdq2.$(OBJEXT)
 @NEUT_LIBCOMPAT_FALSE@am_lib@LIBPREFIX@neutclassUtils_@NEUT_VERSION_NUM@_a_OBJECTS =  \
-@NEUT_LIBCOMPAT_FALSE@	neutrootfortwrapper.$(OBJEXT) \
-@NEUT_LIBCOMPAT_FALSE@	NeutRootHandlers.$(OBJEXT) \
-@NEUT_LIBCOMPAT_FALSE@	neutrootTreeSingleton.$(OBJEXT) \
-@NEUT_LIBCOMPAT_FALSE@	neutfill.$(OBJEXT)
+@NEUT_LIBCOMPAT_FALSE@	$(am__objects_1)
 lib@LIBPREFIX@neutclassUtils_@NEUT_VERSION_NUM@_a_OBJECTS = $(am_lib@LIBPREFIX@neutclassUtils_@NEUT_VERSION_NUM@_a_OBJECTS)
 LTLIBRARIES = $(lib_LTLIBRARIES)
 lib@LIBPREFIX@neutclass_la_LIBADD =
@@ -209,11 +211,15 @@ libneutpart_la_OBJECTS = $(am_libneutpart_la_OBJECTS)
 @NEUT_LIBCOMPAT_TRUE@am_libneutpart_la_rpath = -rpath $(libdir)
 libneutrootTreeSingleton_la_LIBADD =
 am__libneutrootTreeSingleton_la_SOURCES_DIST = neutrootfortwrapper.cc \
-	NeutRootHandlers.cc neutrootTreeSingleton.cc neutfill.cc
-@NEUT_LIBCOMPAT_TRUE@am_libneutrootTreeSingleton_la_OBJECTS = libneutrootTreeSingleton_la-neutrootfortwrapper.lo \
-@NEUT_LIBCOMPAT_TRUE@	libneutrootTreeSingleton_la-NeutRootHandlers.lo \
-@NEUT_LIBCOMPAT_TRUE@	libneutrootTreeSingleton_la-neutrootTreeSingleton.lo \
-@NEUT_LIBCOMPAT_TRUE@	libneutrootTreeSingleton_la-neutfill.lo
+	NeutRootHandlers.cc neutrootTreeSingleton.cc neutfill.cc \
+	fill_dsdq2.cc
+am__objects_2 = libneutrootTreeSingleton_la-neutrootfortwrapper.lo \
+	libneutrootTreeSingleton_la-NeutRootHandlers.lo \
+	libneutrootTreeSingleton_la-neutrootTreeSingleton.lo \
+	libneutrootTreeSingleton_la-neutfill.lo \
+	libneutrootTreeSingleton_la-fill_dsdq2.lo
+@NEUT_LIBCOMPAT_TRUE@am_libneutrootTreeSingleton_la_OBJECTS =  \
+@NEUT_LIBCOMPAT_TRUE@	$(am__objects_2)
 libneutrootTreeSingleton_la_OBJECTS =  \
 	$(am_libneutrootTreeSingleton_la_OBJECTS)
 libneutrootTreeSingleton_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
@@ -460,17 +466,26 @@ top_srcdir = @top_srcdir@
 # top_builddir dependencies are needed for fh2h.pl-generated headers
 NEUT_INCLUDES = -I$(top_srcdir)/radcorr -I$(top_srcdir)/tauola -I$(top_srcdir)/mec -I$(top_srcdir)/ht2p2h/inc -I$(top_srcdir)/nuccorspl -I$(top_srcdir)/zbsfns -I$(top_srcdir)/n1p1h/inc -I$(top_srcdir)/nuceff -I$(top_srcdir)/kamflux -I$(top_srcdir)/nuclsmpl -I$(top_srcdir)/skmcsvc -I$(top_srcdir)/neutcore -I$(top_srcdir)/partnuck -I$(top_srcdir)/specfunc -I$(top_srcdir)/t2kflux_zbs -I$(top_builddir)/neutcore -I$(top_builddir)/skmcsvc -I$(top_builddir)/n1p1h -I$(top_builddir)/nuccorspl -I$(top_builddir)/nuceff
 NEUT_CLASS_INCLUDES = -I$(top_srcdir)/neutclass
-@NEUT_LIBCOMPAT_TRUE@NEUT_STATIC_LIBS = $(top_builddir)/neutcore/lib@LIBPREFIX@neutcore.@NEUT_VERSION_NUM@.a $(top_builddir)/nuccorspl/lib@LIBPREFIX@nuccorspl.@NEUT_VERSION_NUM@.a $(top_builddir)/nuceff/lib@LIBPREFIX@nuceff.@NEUT_VERSION_NUM@.a $(top_builddir)/n1p1h/lib@LIBPREFIX@n1p1h.@NEUT_VERSION_NUM@.a $(top_builddir)/ht2p2h/lib@LIBPREFIX@ht2p2h.@NEUT_VERSION_NUM@.a $(top_builddir)/radcorr/lib@LIBPREFIX@radcorr.@NEUT_VERSION_NUM@.a $(top_builddir)/tauola/lib@LIBPREFIX@tauola.@NEUT_VERSION_NUM@.a $(top_builddir)/specfunc/lib@LIBPREFIX@specfunc.@NEUT_VERSION_NUM@.a $(top_builddir)/skmcsvc/lib@LIBPREFIX@skmcsvc.@NEUT_VERSION_NUM@.a  $(top_builddir)/partnuck/lib@LIBPREFIX@partnuck.@NEUT_VERSION_NUM@.a
-#$(top_builddir)/zbsfns/lib@LIBPREFIX@zbsfns.@NEUT_VERSION_NUM@.a
+@NEUT_LIBCOMPAT_TRUE@NEUT_STATIC_LIBS = $(top_builddir)/neutcore/lib@LIBPREFIX@neutcore.@NEUT_VERSION_NUM@.a \
+@NEUT_LIBCOMPAT_TRUE@	$(top_builddir)/nuccorspl/lib@LIBPREFIX@nuccorspl.@NEUT_VERSION_NUM@.a \
+@NEUT_LIBCOMPAT_TRUE@	$(top_builddir)/nuceff/lib@LIBPREFIX@nuceff.@NEUT_VERSION_NUM@.a \
+@NEUT_LIBCOMPAT_TRUE@	$(top_builddir)/n1p1h/lib@LIBPREFIX@n1p1h.@NEUT_VERSION_NUM@.a \
+@NEUT_LIBCOMPAT_TRUE@	$(top_builddir)/ht2p2h/lib@LIBPREFIX@ht2p2h.@NEUT_VERSION_NUM@.a \
+@NEUT_LIBCOMPAT_TRUE@	$(top_builddir)/radcorr/lib@LIBPREFIX@radcorr.@NEUT_VERSION_NUM@.a \
+@NEUT_LIBCOMPAT_TRUE@	$(top_builddir)/specfunc/lib@LIBPREFIX@specfunc.@NEUT_VERSION_NUM@.a \
+@NEUT_LIBCOMPAT_TRUE@	$(top_builddir)/skmcsvc/lib@LIBPREFIX@skmcsvc.@NEUT_VERSION_NUM@.a \
+@NEUT_LIBCOMPAT_TRUE@	$(top_builddir)/partnuck/lib@LIBPREFIX@partnuck.@NEUT_VERSION_NUM@.a \
+@NEUT_LIBCOMPAT_TRUE@	$(am__append_1)
 @NEUT_LIBCOMPAT_TRUE@NEUTCLASS_LIBS = $(top_builddir)/neutclass/libneutrootTreeSingleton.la $(top_builddir)/neutclass/libneutctrl.la $(top_builddir)/neutclass/libneutfsipart.la $(top_builddir)/neutclass/libneutfsivert.la $(top_builddir)/neutclass/libneutnucfsistep.la $(top_builddir)/neutclass/libneutnucfsivert.la $(top_builddir)/neutclass/libneutpart.la $(top_builddir)/neutclass/libneutvect.la $(top_builddir)/neutclass/libneutvtx.la
 @NEUT_LIBCOMPAT_FALSE@NEUT_LIBS = $(top_builddir)/neutclass/lib@LIBPREFIX@neutclassUtils.@NEUT_VERSION_NUM@.a $(top_builddir)/neutclass/lib@LIBPREFIX@neutclass.la $(top_builddir)/libNEUT.@NEUT_VERSION_NUM@.a
 @NEUT_LIBCOMPAT_TRUE@NEUT_LIBS = $(NEUTCLASS_LIBS) $(NEUT_STATIC_LIBS)
 CERN_ROOT = $(CERN)/$(CERN_LEVEL)
 CERN_LINKFLAGS = -L$(CERN_ROOT)/lib
 CERN_LIBS = -ljetset74 -lpdflib804 -lphotos202 -lmathlib -lpacklib -lkernlib
-NEUT_FFLAGS = -fno-backslash -fno-automatic -fno-second-underscore -ffixed-line-length-132 -fdollar-ok -fPIC -fbounds-check -Wall -W -ffpe-trap=invalid,zero,overflow -DstrictF77 -DgFortran -Df2cFortran
+NEUT_DEFINES = -DgFortran $(am__append_2)
+NEUT_FFLAGS = -fno-backslash -fno-automatic -fno-second-underscore -ffixed-line-length-132 -fdollar-ok -fPIC -fbounds-check -Wall -W -ffpe-trap=invalid,zero,overflow -DstrictF77 -Df2cFortran $(NEUT_DEFINES)
 DEFAULT_FFLAGS = $(NEUT_FFLAGS) $(NEUT_INCLUDES) -I$(CERN_ROOT)/include
-DEFAULT_CXXFLAGS = -fPIC $(NEUT_INCLUDES) -I$(CERN_ROOT)/include $(shell root-config --cflags) -lgfortran
+DEFAULT_CXXFLAGS = -fPIC $(NEUT_DEFINES) $(NEUT_INCLUDES) -I$(CERN_ROOT)/include $(shell root-config --cflags)
 DEFAULT_LINKFLAGS = -version-info @NEUT_VERSION_NUM@
 ROOT_LINKFLAGS = $(shell root-config --ldflags) -pthread -rdynamic -L$(shell root-config --libdir)
 @ROOT_MAJOR_IS_SIX_FALSE@ROOT_LIBS = -lCore -lCint -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lm -ldl
@@ -478,8 +493,10 @@ ROOT_LINKFLAGS = $(shell root-config --ldflags) -pthread -rdynamic -L$(shell roo
 
 # I know... but this seems to work
 EXE_LINKFLAGS = -fno-PIE -fno-pie -no-pie
+EXE_RTLIBS = -lstdc++ -lgfortran
 AM_CXXFLAGS = -DNEUTCLASSVER=@NEUT_VERSION_NUM@ $(DEFAULT_CXXFLAGS)
 AM_LDFLAGS = $(ROOT_LINKFLAGS) $(DEFAULT_LINKFLAGS)
+NEUTCLASSUTILS_SRCS = neutrootfortwrapper.cc NeutRootHandlers.cc neutrootTreeSingleton.cc neutfill.cc fill_dsdq2.cc
 @NEUT_LIBCOMPAT_FALSE@@ROOT_MAJOR_IS_SIX_TRUE@pcmdir = $(prefix)/lib
 @NEUT_LIBCOMPAT_TRUE@@ROOT_MAJOR_IS_SIX_TRUE@pcmdir = $(prefix)/lib
 @NEUT_LIBCOMPAT_FALSE@@ROOT_MAJOR_IS_SIX_TRUE@pcm_DATA = neutclassDict_rdict.pcm
@@ -494,7 +511,7 @@ AM_LDFLAGS = $(ROOT_LINKFLAGS) $(DEFAULT_LINKFLAGS)
 @NEUT_LIBCOMPAT_TRUE@libneutpart_la_SOURCES = neutpartDict.cc neutpart.cc
 @NEUT_LIBCOMPAT_TRUE@libneutvect_la_SOURCES = neutvectDict.cc neutvect.cc
 @NEUT_LIBCOMPAT_TRUE@libneutvtx_la_SOURCES = neutvtxDict.cc neutvtx.cc
-@NEUT_LIBCOMPAT_TRUE@libneutrootTreeSingleton_la_SOURCES = neutrootfortwrapper.cc NeutRootHandlers.cc neutrootTreeSingleton.cc neutfill.cc
+@NEUT_LIBCOMPAT_TRUE@libneutrootTreeSingleton_la_SOURCES = $(NEUTCLASSUTILS_SRCS)
 
 #you may think this is pointless, but look up autotools renaming objects...
 @NEUT_LIBCOMPAT_TRUE@libneutrootTreeSingleton_la_CXXFLAGS = $(AM_CXXFLAGS)
@@ -510,7 +527,7 @@ AM_LDFLAGS = $(ROOT_LINKFLAGS) $(DEFAULT_LINKFLAGS)
 #
 @NEUT_LIBCOMPAT_FALSE@lib_LIBRARIES = $(LIBNAME)
 #
-@NEUT_LIBCOMPAT_FALSE@lib@LIBPREFIX@neutclassUtils_@NEUT_VERSION_NUM@_a_SOURCES = neutrootfortwrapper.cc NeutRootHandlers.cc neutrootTreeSingleton.cc neutfill.cc
+@NEUT_LIBCOMPAT_FALSE@lib@LIBPREFIX@neutclassUtils_@NEUT_VERSION_NUM@_a_SOURCES = $(NEUTCLASSUTILS_SRCS)
 
 # Unused sources that live in the directory
 @NEUT_LIBCOMPAT_FALSE@UNUSED_srcs = chkfillneutvect.cc chkfillneutvtx.cc chkreadneutvect.cc chkreadneutvtx.cc
@@ -658,7 +675,9 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NeutRootHandlers.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fill_dsdq2.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libneutrootTreeSingleton_la-NeutRootHandlers.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libneutrootTreeSingleton_la-fill_dsdq2.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libneutrootTreeSingleton_la-neutfill.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libneutrootTreeSingleton_la-neutrootTreeSingleton.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libneutrootTreeSingleton_la-neutrootfortwrapper.Plo@am__quote@
@@ -734,6 +753,13 @@ libneutrootTreeSingleton_la-neutfill.lo: neutfill.cc
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='neutfill.cc' object='libneutrootTreeSingleton_la-neutfill.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libneutrootTreeSingleton_la_CXXFLAGS) $(CXXFLAGS) -c -o libneutrootTreeSingleton_la-neutfill.lo `test -f 'neutfill.cc' || echo '$(srcdir)/'`neutfill.cc
+
+libneutrootTreeSingleton_la-fill_dsdq2.lo: fill_dsdq2.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libneutrootTreeSingleton_la_CXXFLAGS) $(CXXFLAGS) -MT libneutrootTreeSingleton_la-fill_dsdq2.lo -MD -MP -MF $(DEPDIR)/libneutrootTreeSingleton_la-fill_dsdq2.Tpo -c -o libneutrootTreeSingleton_la-fill_dsdq2.lo `test -f 'fill_dsdq2.cc' || echo '$(srcdir)/'`fill_dsdq2.cc
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libneutrootTreeSingleton_la-fill_dsdq2.Tpo $(DEPDIR)/libneutrootTreeSingleton_la-fill_dsdq2.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='fill_dsdq2.cc' object='libneutrootTreeSingleton_la-fill_dsdq2.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libneutrootTreeSingleton_la_CXXFLAGS) $(CXXFLAGS) -c -o libneutrootTreeSingleton_la-fill_dsdq2.lo `test -f 'fill_dsdq2.cc' || echo '$(srcdir)/'`fill_dsdq2.cc
 
 mostlyclean-libtool:
 	-rm -f *.lo

@@ -2,20 +2,20 @@
 //
 // Purpose:
 //    Creates cross section histograms (total and each mode)
-//    for all nuclei present in ND280. Can also create an 
+//    for all nuclei present in ND280. Can also create an
 //    effective cross section weighted by atomic abundance in
 //    FGD1+2 FV.
-// 
-// Usage Options: 
+//
+// Usage Options:
 // -i Can be two types:
-//      1) ND280 geometry file: In this case cross sections are output for all 
+//      1) ND280 geometry file: In this case cross sections are output for all
 //                              nuclei present in the geometry.
 //      2) ND280 numc file: Select interactions that occur in the FGD1+2 FV
 //                          and determines atomic abundance from truth info
 //      3) Composition file: Containing histogram named "hZ_comp" with abundance
-//                           of each element 
-//         
-// -f Flux file for calculating flux_x_xsec and determining atomic abundance from 
+//                           of each element
+//
+// -f Flux file for calculating flux_x_xsec and determining atomic abundance from
 //    numc file:
 //      e.g. http://www.t2k.org/beam/NuFlux/FluxRelease/10a/fluka_flux/nd5_fine
 //    In principle this should correspond to the flux used to generated the numc
@@ -26,7 +26,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////////
 
-#include <iostream>  
+#include <iostream>
 #include <cstdlib>
 #include "TFile.h"
 #include "TGeoManager.h"
@@ -58,7 +58,7 @@ int main(int argc, char *argv[]){
 
   // open the geometry file
   TFile fnd280in(inFile.Data());
-  
+
   // Get TGeoManager key name
   TIter next(fnd280in.GetListOfKeys());
   TKey *key;
@@ -93,7 +93,7 @@ int main(int argc, char *argv[]){
   std::cout << "Key Name = " << keyName  << std::endl;
 
   // determine elements
-  TGeoManager *geom; 
+  TGeoManager *geom;
   TTree *tree;
   TNDelements *nd280elements;
   TH1D *hZ_comp;
@@ -109,7 +109,7 @@ int main(int argc, char *argv[]){
     hZ_comp = new TH1D(*(TH1D*)fnd280in.Get(keyName));
     nd280elements = new TNDelements(hZ_comp);
   }
-  
+
   nd280elements->Print();
 
 
@@ -127,10 +127,10 @@ int main(int argc, char *argv[]){
   char  nuName[4][6]  = {"numu","nue","numub","nueb"};
   char nuTitle[4][13] = {"#nu#mu","#nue","#bar{#nu#mu}","#bar{#nue}"};
   int     nuID[4]    = {14,12,-14,-12};
- 
+
 
   TFile *theOutputFile = new TFile(outputFile,"RECREATE");
-  
+
   // Store array of elements as histogram
   TH1I *hZ = new TH1I("hZ","hZ;Index (ie);Z",kNelements,0,kNelements);
   for (int ie=0; ie<kNelements; ie++)
@@ -145,23 +145,23 @@ int main(int argc, char *argv[]){
     std::cout << "Generating Xsecs for " << element_name[Z[ie]-1] << ", Z=" << Z[ie] << ", A=" << A[ie] << std::endl;
 
     for (int inu=0; inu<4; inu++) {
-      
+
       for (int imode=0; imode<kNneutModes; imode++) {
 
 	h_xsec[ie][inu][imode] = new TH1D(Form("%s_xsec_%s_%s",element_symbol[Z[ie]-1],nuName[inu],neutModeName[imode]),Form("^{%d}_{%d}%s %s;True E_{%s} [GeV];#sigma [cm^{2}/atom]",A[ie],Z[ie],element_symbol[Z[ie]-1],neutModeTitle[imode],nuTitle[inu]),nBins,enuLow,enuHigh);
-	
+
 	for (float enu=enuLow+binWidth/2; enu<enuHigh; enu+=binWidth) {
 	  float neutxs;
 	  neutxs_(&nuID[inu], &enu, &Z[ie], &A[ie], &neutModeID[imode], &neutxs);
 	  h_xsec[ie][inu][imode]->Fill(enu,neutxs*pow(10,-38));
-	} 
+	}
       }
     }
   }
   std::cout << std::endl;
 
-  
-  // Following section is for calculating effective cross section 
+
+  // Following section is for calculating effective cross section
   TFile *theFluxFile = new TFile(fluxFile);
   TH1D *h_flux[4];
   TH1D *h_flux_x_xsec[kNelements][5];
@@ -194,36 +194,36 @@ int main(int argc, char *argv[]){
 
     for (int inu=0; inu<4; inu++)
       h_flux_x_xsec[ie][4]->Add(h_flux_x_xsec[ie][inu]);
-  }	
+  }
   /**/
 
-  
+
   // Now do some calculations to find molecule ratio
   Double_t *real_ratio;
 
   // Pie Chart colours
   Int_t pieColors[kNelements];
-  for (int ie=0; ie<kNelements; ie++) 
+  for (int ie=0; ie<kNelements; ie++)
     pieColors[ie] = ie+2;
 
-  char *pieLabels[kNelements];
-    
+  char const *pieLabels[kNelements];
+
 
   if (foundNumcKey) {
 
     Double_t *W = nd280elements->W();
-   
+
 
     // Pie Chart labels
-    for (int ie=0; ie<kNelements; ie++) 
+    for (int ie=0; ie<kNelements; ie++)
       pieLabels[ie] = Form("%s (%.02g\%)",(nd280elements->getLabels())[ie],W[ie]*100);
-    
+
 
     TPie *pZN = new TPie("pZN","pZN",kNelements,W,pieColors,pieLabels);
     pZN->Write();
-    
 
-    Double_t ratio[kNelements][kNelements];      
+
+    Double_t ratio[kNelements][kNelements];
     Double_t numEvents[kNelements];
     for (int ie=0; ie<kNelements; ie++) {
       numEvents[ie] = h_flux_x_xsec[ie][4]->Integral();
@@ -236,15 +236,15 @@ int main(int argc, char *argv[]){
     }
 
     real_ratio = new Double_t[kNelements];
-    
+
     std::cout << "Element Nint(%) Atom Abundance" << std::endl;
-    
+
     for (int ie_num=0; ie_num<kNelements; ie_num++) {
       for (int ie_den=0; ie_den<kNelements; ie_den++) {
 	real_ratio[ie_num] += 1./ratio[ie_num][ie_den];
       }
       real_ratio[ie_num] = 1./real_ratio[ie_num];
-    
+
       std::cout << element_name[Z[ie_num]-1] << " " << W[ie_num] << " " << real_ratio[ie_num] << std::endl;
     }
 
@@ -256,10 +256,10 @@ int main(int argc, char *argv[]){
     real_ratio = nd280elements->W();
   }
 
-   
+
   if (foundCompKey || foundNumcKey) {
 
-    for (int ie=0; ie<kNelements; ie++) 
+    for (int ie=0; ie<kNelements; ie++)
       pieLabels[ie] = Form("%s (%.02g\%)",(nd280elements->getLabels())[ie],real_ratio[ie]*100);
     TPie *pZW = new TPie("pZW","pZW",kNelements,real_ratio,pieColors,pieLabels);
     pZW->Write();
@@ -269,7 +269,7 @@ int main(int argc, char *argv[]){
     TH1D *eff_xsec[4][kNneutModes];
     for (int inu=0; inu<4; inu++) {
       for (int imode=0; imode<kNneutModes; imode++) {
-      
+
 	eff_xsec[inu][imode] = new TH1D(Form("eff_xsec_%s_%s",nuName[inu],neutModeName[imode]),Form("FGD1+2 FV Eff. #sigma (%s);True E_{%s} [GeV];#sigma [cm^{2}/atom]",neutModeTitle[imode],nuTitle[inu]),nBins,enuLow,enuHigh);
 
 	for (int ie=0; ie<kNelements; ie++) {
@@ -290,7 +290,7 @@ int main(int argc, char *argv[]){
   theOutputFile->Close();
 
   return 0;
-  
+
 }
 
 
@@ -302,18 +302,18 @@ int getArgs(int argc, char* argv[]){
 
     switch(argv[1][1]){
 
-    case 'i': 
+    case 'i':
       inFile = argv[2];
       ++argv; --argc;
       break;
 
 
-    case 'o': 
+    case 'o':
       outputFile = argv[2];
       ++argv; --argc;
       break;
 
-    case 'f': 
+    case 'f':
       fluxFile = argv[2];
       ++argv; --argc;
       break;
@@ -321,6 +321,5 @@ int getArgs(int argc, char* argv[]){
     ++argv; --argc;
   }
   return 0;
-  
-}
 
+}

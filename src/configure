@@ -633,6 +633,8 @@ ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS
 LIBOBJS
+NEUT_USE_TAUOLA_FALSE
+NEUT_USE_TAUOLA_TRUE
 LIBPREFIX
 NEUT_LIBCOMPAT_FALSE
 NEUT_LIBCOMPAT_TRUE
@@ -787,6 +789,7 @@ with_gnu_ld
 with_sysroot
 enable_libtool_lock
 enable_compatnames
+enable_tauola
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1449,6 +1452,7 @@ Optional Features:
                           optimize for fast installation [default=yes]
   --disable-libtool-lock  avoid locking (might break parallel builds)
   --enable-compatnames    Enable 5.4.0 and previous library naming scheme
+  --enable-tauola         Enable tauola, requires ZEBRA!
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -22581,6 +22585,23 @@ else
 
 fi
 
+######## Check use tauola
+# Check whether --enable-tauola was given.
+if test "${enable_tauola+set}" = set; then :
+  enableval=$enable_tauola;
+fi
+
+
+ if test "x$enable_tauola" = "xyes"; then
+  NEUT_USE_TAUOLA_TRUE=
+  NEUT_USE_TAUOLA_FALSE='#'
+else
+  NEUT_USE_TAUOLA_TRUE='#'
+  NEUT_USE_TAUOLA_FALSE=
+fi
+
+
+
 ac_config_files="$ac_config_files Makefile neutcore/Makefile nuccorspl/Makefile nuceff/Makefile n1p1h/Makefile ht2p2h/Makefile mec/Makefile radcorr/Makefile tauola/Makefile specfunc/Makefile skmcsvc/Makefile zbsfns/Makefile partnuck/Makefile neutclass/Makefile neutsmpl/Makefile nuclsmpl/Makefile pionsmpl/Makefile neutgeom/Makefile reweight/Makefile tools/Makefile neututils/Makefile neututils/calc_ccqe_crs/Makefile neututils/calc_coh_crs.rs/Makefile neututils/calc_dis_crs/Makefile neututils/calc_nuc_dens/Makefile neututils/calc_res_crs/Makefile"
 
 
@@ -22763,6 +22784,10 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${NEUT_LIBCOMPAT_TRUE}" && test -z "${NEUT_LIBCOMPAT_FALSE}"; then
   as_fn_error $? "conditional \"NEUT_LIBCOMPAT\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${NEUT_USE_TAUOLA_TRUE}" && test -z "${NEUT_USE_TAUOLA_FALSE}"; then
+  as_fn_error $? "conditional \"NEUT_USE_TAUOLA\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 

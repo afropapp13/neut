@@ -89,6 +89,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
+@NEUT_LIBCOMPAT_FALSE@@NEUT_USE_TAUOLA_TRUE@am__append_1 = -DNEUT_USE_TAUOLA
 subdir = mec
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
@@ -357,9 +358,10 @@ top_srcdir = @top_srcdir@
 @NEUT_LIBCOMPAT_FALSE@CERN_ROOT = $(CERN)/$(CERN_LEVEL)
 @NEUT_LIBCOMPAT_FALSE@CERN_LINKFLAGS = -L$(CERN_ROOT)/lib
 @NEUT_LIBCOMPAT_FALSE@CERN_LIBS = -ljetset74 -lpdflib804 -lphotos202 -lmathlib -lpacklib -lkernlib
-@NEUT_LIBCOMPAT_FALSE@NEUT_FFLAGS = -fno-backslash -fno-automatic -fno-second-underscore -ffixed-line-length-132 -fdollar-ok -fPIC -fbounds-check -Wall -W -ffpe-trap=invalid,zero,overflow -DstrictF77 -DgFortran -Df2cFortran
+@NEUT_LIBCOMPAT_FALSE@NEUT_DEFINES = -DgFortran $(am__append_1)
+@NEUT_LIBCOMPAT_FALSE@NEUT_FFLAGS = -fno-backslash -fno-automatic -fno-second-underscore -ffixed-line-length-132 -fdollar-ok -fPIC -fbounds-check -Wall -W -ffpe-trap=invalid,zero,overflow -DstrictF77 -Df2cFortran $(NEUT_DEFINES)
 @NEUT_LIBCOMPAT_FALSE@DEFAULT_FFLAGS = $(NEUT_FFLAGS) $(NEUT_INCLUDES) -I$(CERN_ROOT)/include
-@NEUT_LIBCOMPAT_FALSE@DEFAULT_CXXFLAGS = -fPIC $(NEUT_INCLUDES) -I$(CERN_ROOT)/include $(shell root-config --cflags) -lgfortran
+@NEUT_LIBCOMPAT_FALSE@DEFAULT_CXXFLAGS = -fPIC $(NEUT_DEFINES) $(NEUT_INCLUDES) -I$(CERN_ROOT)/include $(shell root-config --cflags)
 @NEUT_LIBCOMPAT_FALSE@DEFAULT_LINKFLAGS = -version-info @NEUT_VERSION_NUM@
 @NEUT_LIBCOMPAT_FALSE@ROOT_LINKFLAGS = $(shell root-config --ldflags) -pthread -rdynamic -L$(shell root-config --libdir)
 @NEUT_LIBCOMPAT_FALSE@@ROOT_MAJOR_IS_SIX_FALSE@ROOT_LIBS = -lCore -lCint -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lm -ldl
@@ -367,6 +369,7 @@ top_srcdir = @top_srcdir@
 
 # I know... but this seems to work
 @NEUT_LIBCOMPAT_FALSE@EXE_LINKFLAGS = -fno-PIE -fno-pie -no-pie
+@NEUT_LIBCOMPAT_FALSE@EXE_RTLIBS = -lstdc++ -lgfortran
 @NEUT_LIBCOMPAT_FALSE@AM_FFLAGS = -DNEMEC_VERSION=@NEUT_VERSION_NUM@ $(DEFAULT_FFLAGS)
 @NEUT_LIBCOMPAT_FALSE@LIBNAME = lib@LIBPREFIX@neutmec.@NEUT_VERSION_NUM@.a
 @NEUT_LIBCOMPAT_FALSE@noinst_LIBRARIES = $(LIBNAME)

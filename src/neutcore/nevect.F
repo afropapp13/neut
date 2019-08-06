@@ -2,16 +2,16 @@
 *     ------------------------------
       SUBROUTINE NEVECT(IP,POS,PMOM,IERR)
 *     ------------------------------
-*     
+*
 *     ( purpose )
 *       VECTOR GENERATION ( NEUTRINO INTERACTION )
 *
-*     ( input ) 
+*     ( input )
 *       IP      : PARICLE CODE
 *       POS(3)  : VERTEX POSITION
 *       PMOM(3) : MOMENTUM ( MEV/C)
 *
-*     ( output ) 
+*     ( output )
 *       COMMON VCWORK,VCVRTX
 *
 *     ( creation date and author )
@@ -37,22 +37,35 @@
 
       REAL POS(3),PMOM(3)
 
+      INTEGER*4 ICOUNTER
+      SAVE      ICOUNTER
+      DATA ICOUNTER/0/
+
       real*4    EVPIPROB
       external  EVPIPROB
 C
       IERR = 1
 C
+      ICOUNTER = ICOUNTER +1
       if (QUIET.le.1) then
-         write(*,*) '--------------------------------------------------'
+        write(*,'(A6,I9)') 'Num.: ',ICOUNTER
       endif
-C     
+C
 C --  CLEAR COMMONS
 C
       CALL VCCLCM
       CALL NECLPOS
-C     
+C
 C --  MAKE VECTOR
-C      
+C
+
+#ifndef NEUT_USE_TAUOLA
+      IF ((abs(ip).ne.12).and.(abs(ip).ne.14)) then
+         write(*,*) 'IP should be 12 or 14.'
+         stop
+      endif
+#endif
+
       CALL NEVENT(IP,PMOM,IERR)
 
       IF (IERR.ne.0) THEN
@@ -67,34 +80,38 @@ C --  TRACE IN O16
 C
       CALL EFCLFSI
       IF (NENEFO16.EQ.0) CALL NEFFECT
+
+#ifdef NEUT_USE_TAUOLA
 C
 C --  EXECUTE TAU DECAY
 C
       CALL TAUVECT
+#endif
+
 C
 C --  CONSIDER NULCEAR EXCITATION OF GAMMA
 C
       if(NUMATOM.eq.16) CALL NEMKGAM ! only 16O
 c      CALL NEMKGAM
 C
-C --  translate K0 -> K LONG or K SHORT 
+C --  translate K0 -> K LONG or K SHORT
 C
       CALL NEK0
 C
-C --  decay omega meson 
+C --  decay omega meson
 C
       CALL NEOMEGA
 C
 C --  nucleon rescattering
 C
       call nrintr
-C      
+C
 C --  nucleon ejection following pion/delta absorption
 C
       call absneject
 C
 C --  radiative correction
-C     
+C
       call radcorr
 C
 C -- Calculate FSIPROB after all possible instances of EFTRACE

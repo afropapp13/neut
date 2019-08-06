@@ -9,12 +9,12 @@
 #include <iostream>
 #include <stdlib.h>
 
-#include "../../include/neutvect.h"
-#include "../../include/neutvtx.h"
+#include "neutvect.h"
+#include "neutvtx.h"
 
 using namespace std;
 
-bool 
+bool
 isCC(int mode)
 {
   if ( abs(mode) < 30 ){
@@ -24,7 +24,7 @@ isCC(int mode)
 
 }
 
-bool 
+bool
 isNC(int mode)
 {
   if ( abs(mode) >= 30 ){
@@ -34,7 +34,7 @@ isNC(int mode)
 
 }
 
-bool 
+bool
 isCC1pi(int mode)
 {
   /* CC1pi : 11, 12, 13 , -11, -12, -13 */
@@ -46,7 +46,7 @@ isCC1pi(int mode)
 
 }
 
-bool 
+bool
 isCCdis(int mode)
 {
   /* CCDIS : 21(W<2), 26(W>2) */
@@ -63,14 +63,14 @@ isLepton(Int_t ip_in)
 {
   Int_t ip ;
   ip = abs(ip_in);
-  
+
   if (( ip != 12 ) && ( ip != 14 ) && ( ip != 16 ) &&
 	  ( ip != 11 ) && ( ip != 13 ) && ( ip != 15 )){
 	cout << "IP is not lepton.. " << ip << endl;
 	return false;
   }
   return true;
-  
+
 }
 
 /* generic functions */
@@ -78,11 +78,11 @@ Int_t
 fill_energy(NeutVect *nvect, Int_t idx, TH1D *h1, Double_t weight)
 {
   Double_t energy;
-  
+
   energy = (nvect->PartInfo(idx))->fP.E();
   energy = energy / 1000.;
   h1->Fill(energy,weight);
-  
+
   return 0;
 
 }
@@ -91,7 +91,7 @@ Int_t
 fill_momentum(NeutVect *nvect, Int_t idx, TH1D *h1, Double_t weight)
 {
   Double_t p;
-  
+
   p = (nvect->PartInfo(idx))->fP.P();
   p = p / 1000.;
   h1->Fill(p,weight);
@@ -106,7 +106,7 @@ fill_costhetaL(NeutVect *nvect, Int_t idx, TH1D *h1, Double_t weight)
   Double_t costhetaL;
 
   if ( (nvect->PartInfo(idx))->fP.P() > 0 ){
-	costhetaL = 
+	costhetaL =
 	  (nvect->PartInfo(idx))->fP.Pz() /
 	  (nvect->PartInfo(idx))->fP.P();
   }else{
@@ -129,26 +129,26 @@ fill_phiL(NeutVect *nvect, Int_t idx, TH1D *h1, Double_t weight)
   }else{
 	return 0;
   }
-	
+
   h1->Fill(phiL,weight);
   return 0;
 
 }
 
 Int_t
-fill_opening_angle(NeutVect *nvect, int idx1, int idx2, TH1D *h1, 
+fill_opening_angle(NeutVect *nvect, int idx1, int idx2, TH1D *h1,
 				   Double_t weight)
 {
   TVector3 p1,p2;
   Double_t costheta;
-  
+
   p1 = (nvect->PartInfo(idx1))->fP.Vect();
   p2 = (nvect->PartInfo(idx2))->fP.Vect();
 
   costheta = cos(p1.Angle(p2));
 
   h1->Fill(costheta,weight);
-  
+
 }
 
 Int_t
@@ -174,7 +174,7 @@ fill_rad_momentum(NeutVect *nvect, int idx1, TH2D *h2, Double_t weight)
   Double_t radius;
 
   Double_t p;
-  
+
   p = (nvect->PartInfo(idx1))->fP.P();
   p = p / 1000.;
 
@@ -197,7 +197,7 @@ fill_in_enu_hist(NeutVect *nvect, TH1D *h1, Double_t weight)
 	cout << "IP is not neutrino.. " << ip << endl;
 	return -1;
   }
-	
+
   fill_energy(nvect, 0, h1, weight);
 
   return 0;
@@ -207,7 +207,7 @@ Int_t
 fill_out_plep_hist(NeutVect *nvect, TH1D *h1, Double_t weight)
 {
   Int_t    idx,ip;
-  
+
   if (abs(nvect->Mode)==2){
 	idx = 3;
   }else{
@@ -240,7 +240,7 @@ fill_in_pnuc1_hist(NeutVect *nvect, TH1D *h1, Double_t weight)
 	cout << "IP is not nucleon " << ip << " mode= " << mode << endl;
 	return -1;
   }
-	
+
   fill_momentum(nvect, 1, h1, weight);
 
   return 0;
@@ -265,7 +265,7 @@ fill_in_pnuc2_hist(NeutVect *nvect, TH1D *h1, Double_t weight)
 	cout << "IP is not nucleon " << ip << endl;
 	return -1;
   }
-	
+
   fill_momentum(nvect, 2, h1, weight);
 
   return 0;
@@ -303,7 +303,7 @@ fill_out_pnuc1_hist(NeutVect *nvect, TH1D *h1, Double_t weight)
 	cout << "IP is not nucleon " << ip << endl;
 	return -1;
   }
-	
+
   fill_momentum(nvect, idx, h1, weight);
 
   return 0;
@@ -338,7 +338,7 @@ fill_out_pnuc2_hist(NeutVect *nvect, TH1D *h1, Double_t weight)
 	cout << "IP is not nucleon " << ip << endl;
 	return -1;
   }
-	
+
   fill_momentum(nvect, idx, h1, weight);
 
   return 0;
@@ -361,7 +361,7 @@ fill_coslep_hist(NeutVect *nvect, TH1D *h1, Double_t weight)
   ip = abs((nvect->PartInfo(idx))->fPID);
   if (isLepton(ip)){
 	coslep = (nvect->PartInfo(0))->fP.Vect()*(nvect->PartInfo(idx))->fP.Vect();
-	coslep = coslep / 
+	coslep = coslep /
 	  ((nvect->PartInfo(0))->fP.P()*(nvect->PartInfo(idx))->fP.P());
 	h1->Fill(coslep,weight);
   }else{
@@ -431,7 +431,7 @@ fill_rad_in_pnuc1_mom_hist(NeutVect *nvect, TH2D *h2, Double_t weight)
 	cout << "IP is not nucleon " << ip << " mode= " << mode << endl;
 	return -1;
   }
-	
+
   fill_rad_momentum(nvect, 1, h2, weight);
 
   return 0;
@@ -460,7 +460,7 @@ fill_rad_out_pnuc1_mom_hist(NeutVect *nvect, TH2D *h2, Double_t weight)
 	cout << "IP is not nucleon " << ip << " mode= " << mode << endl;
 	return -1;
   }
-	
+
   fill_rad_momentum(nvect, idx, h2, weight);
 
   return 0;
@@ -494,7 +494,7 @@ fill_in_dir_costhetaL_nuc1_hist(NeutVect *nvect, TH1D *h1, Double_t weight)
 	cout << "IP is not nucleon " << ip << endl;
 	return -1;
   }
-	
+
   fill_costhetaL(nvect, idx, h1, weight);
 
   return 0;
@@ -520,7 +520,7 @@ fill_in_dir_costhetaL_nuc2_hist(NeutVect *nvect, TH1D *h1, Double_t weight)
 	cout << "IP is not nucleon " << ip << endl;
 	return -1;
   }
-	
+
   fill_costhetaL(nvect, idx, h1, weight);
 
   return 0;
@@ -551,7 +551,7 @@ fill_in_dir_phiL_nuc1_hist(NeutVect *nvect, TH1D *h1, Double_t weight)
 	cout << "IP is not nucleon " << ip << endl;
 	return -1;
   }
-	
+
   fill_phiL(nvect, idx, h1, weight);
 
   return 0;
@@ -577,7 +577,7 @@ fill_in_dir_phiL_nuc2_hist(NeutVect *nvect, TH1D *h1, Double_t weight)
 	cout << "IP is not nucleon " << ip << endl;
 	return -1;
   }
-	
+
   fill_phiL(nvect, idx, h1, weight);
 
   return 0;
@@ -655,7 +655,7 @@ fill_out_dir_costhetaL_nuc1_hist(NeutVect *nvect, TH1D *h1, Double_t weight)
 	cout << "IP is not nucleon " << ip << endl;
 	return -1;
   }
-	
+
   fill_costhetaL(nvect, idx, h1, weight);
 
   return 0;
@@ -690,7 +690,7 @@ fill_out_dir_costhetaL_nuc2_hist(NeutVect *nvect, TH1D *h1, Double_t weight)
 	cout << "IP is not nucleon " << ip << endl;
 	return -1;
   }
-	
+
   fill_costhetaL(nvect, idx, h1, weight);
 
   return 0;
@@ -728,7 +728,7 @@ fill_out_dir_phiL_nuc1_hist(NeutVect *nvect, TH1D *h1, Double_t weight)
 	cout << "IP is not nucleon " << ip << endl;
 	return -1;
   }
-	
+
   fill_phiL(nvect, idx, h1, weight);
 
   return 0;
@@ -763,7 +763,7 @@ fill_out_dir_phiL_nuc2_hist(NeutVect *nvect, TH1D *h1, Double_t weight)
 	cout << "IP is not nucleon " << ip << endl;
 	return -1;
   }
-	
+
   fill_phiL(nvect, idx, h1, weight);
 
   return 0;
@@ -804,7 +804,7 @@ fill_rescat_pnuc1_hist(NeutVect *nvect, TH1D *h1, Double_t weight)
 	  }
 	}
   }
-	
+
   fill_momentum(nvect, idx, h1, weight);
 
   return 0;
@@ -821,19 +821,19 @@ fill_histograms(NeutVect *nvect, TH1D *h[][20][6], int idx, int ip_idx,
   //
   //  2: momentum of initial nucleon #1
   //  3: momentum of initial nucleon #2
-  //  
+  //
   //  4: momentum of scattered nucleon before FSI #1
-  //  5: momentum of scattered nucleon before FSI #2 
-  //  
+  //  5: momentum of scattered nucleon before FSI #2
+  //
   //  6: scattered angle of lepton
   //  7: q2
-  //    
+  //
   //  8: initial nucleon #1 direction in Lab. ( cos \theta_Lab )
   //  9: initial nucleon #2 direction in Lab. ( cos \theta_Lab )
   ///
   // 10: initial nucleon #1 direction in Lab. ( \phi_Lab )
   // 11: initial nucleon #2 direction in Lab. ( \phi_Lab )
-  //  
+  //
   // 12: outgoing nucleon #1 direction in Lab. ( cos \theta_Lab )
   // 13: outgoing nucleon #2 direction in Lab. ( cos \theta_Lab )
   //
@@ -845,9 +845,9 @@ fill_histograms(NeutVect *nvect, TH1D *h[][20][6], int idx, int ip_idx,
   // 17: opening angle of 2 incoming nucleons
   // 18: opening angle of 2 outgoing nucleons
   //
-  // 19: interaction position (radius) in nucleus. 
+  // 19: interaction position (radius) in nucleus.
   //
-  
+
   fill_in_enu_hist(nvect,   h[idx][0][ip_idx], xnorm);
   fill_out_plep_hist(nvect, h[idx][1][ip_idx], xnorm);
 
@@ -887,7 +887,7 @@ fill_2d_histograms(NeutVect *nvect, TH2D *h[][2][6], int idx, int ip_idx,
 				   double xnorm)
 {
   fill_rad_in_pnuc1_mom_hist(nvect, h[idx][0][ip_idx], xnorm);
-  fill_rad_out_pnuc1_mom_hist(nvect, h[idx][1][ip_idx], xnorm);  
+  fill_rad_out_pnuc1_mom_hist(nvect, h[idx][1][ip_idx], xnorm);
 }
 
 
@@ -908,7 +908,7 @@ basic_histos(char *fname,char *fname_out)
   gSystem->Load("../neutclass/neutnucfsistep.so");
   gSystem->Load("../neutclass/neutnucfsivert.so");
   gSystem->Load("../neutclass/neutvect.so");
-  
+
   TFile *f;
   f = new TFile(fname);
   if (f->IsZombie()){
@@ -979,7 +979,7 @@ basic_histos(char *fname,char *fname_out)
 						  "in_nucs_open\0", "out_nucs_open\0",
 						  "intr_pos\0",
   };
-						  
+
   char hist_type_2d[2][16]={"in_nuc1_p_rad\0","out_nuc1_p_rad\0"};
 
   char flavor_str[6][16]={"nue\0"  ,"numu\0"    ,"nutau\0",
@@ -991,14 +991,14 @@ basic_histos(char *fname,char *fname_out)
   Double_t h_max_2d_1[2] ={10.,10.};
   Double_t h_min_2d_2[2] ={ 0., 0.};
   Double_t h_max_2d_2[2] ={ 1., 5.};
-  
+
   int       h_bins[20]={
 	1200, 1200,  100,
-	 100,  500,  500, 
+	 100,  500,  500,
 	50,   1200,	  50,
 	50,     50,   50,
-	50,     50  , 
-	50,     50  , 
+	50,     50  ,
+	50,     50  ,
 	500,
     50,     50  ,100};
 
@@ -1007,7 +1007,7 @@ basic_histos(char *fname,char *fname_out)
 	 0.  ,  0.  ,  0.,
 	-1.  ,-30.  , -1.,
 	-1.  , -3.14, -3.14,
-	-1.  , -1.  , 
+	-1.  , -1.  ,
 	-3.14, -3.14,
      0.  , -1.  , -1.,
      0. };
@@ -1016,8 +1016,8 @@ basic_histos(char *fname,char *fname_out)
 	30. , 30.  ,    1.,
 	1.  ,  5.  ,    5.,
 	1.,    0.  ,    1.,
-	1.,    3.14,    3.14, 
-	1.,    1.  ,    
+	1.,    3.14,    3.14,
+	1.,    1.  ,
 	3.14,  3.14,
     5.,    1.  ,    1.,
    10.};
@@ -1087,13 +1087,13 @@ basic_histos(char *fname,char *fname_out)
 	  }
 	}
 	if ( ip_idx == 6 ){
-	  cout << 
-		"event " << nev << 
+	  cout <<
+		"event " << nev <<
 		":ip for #1 is not neutrino but "<< ip <<
 		endl;
 	  return 1;
 	}
-	
+
 	mode = nvect->Mode;
 	h_modes->Fill(double(mode),1.);
 	/* all = 0 */
@@ -1103,7 +1103,7 @@ basic_histos(char *fname,char *fname_out)
 	if ( isCC(mode) ){
 	  fill_histograms(nvect,h_combined,1,ip_idx,rate_norm);
 	  fill_2d_histograms(nvect,h_2d_combined,1,ip_idx,rate_norm);
-	}	  
+	}
 	if ( isNC(mode) ){
 	  fill_histograms(nvect,h_combined,2,ip_idx,rate_norm);
 	  fill_2d_histograms(nvect,h_2d_combined,2,ip_idx,rate_norm);
@@ -1125,7 +1125,7 @@ basic_histos(char *fname,char *fname_out)
 	  fill_2d_histograms(nvect,h_2d_combined,6,ip_idx,rate_norm);
 	}
   }
-  
+
   for ( i = 0 ; i < 7 ; i++ ){
 	for ( j = 0 ; j < 20 ; j++ ){ /* histogram type */
 	  for ( k = 0 ; k < 6 ; k++ ){ /* flavor */
@@ -1148,7 +1148,7 @@ basic_histos(char *fname,char *fname_out)
   f_out->Close();
   return 0;
 }
-  
+
 	/*
 	cout << "Event #        :" << nvect->EventNo << "\n";
 	cout << "Target A       :" << nvect->TargetA << "\n";
@@ -1166,19 +1166,19 @@ basic_histos(char *fname,char *fname_out)
 	cout << "Particle Code  = " << (nvect->PartInfo(i))->fPID   << "\n";
 	cout << "Particle Mass  = " << (nvect->PartInfo(i))->fMass   << "\n";
 	cout << "Particle Mom.  =(" << (nvect->PartInfo(i))->fP.Px() << ","
-	<< (nvect->PartInfo(i))->fP.Py() << "," 
+	<< (nvect->PartInfo(i))->fP.Py() << ","
 	<< (nvect->PartInfo(i))->fP.Pz() << ","
 	<< (nvect->PartInfo(i))->fP.E()  << ")"
 	<< "\n";
 	cout << "Particle Flag  = " << (nvect->PartInfo(i))->fIsAlive << "\n";
 	cout << "Particle Stat. = " << (nvect->PartInfo(i))->fStatus  << "\n";
 	cout << "Particle Pos(1)=(" << (nvect->PartInfo(i))->fPosIni.X() << ","
-	<< (nvect->PartInfo(i))->fPosIni.Y() << "," 
+	<< (nvect->PartInfo(i))->fPosIni.Y() << ","
 	<< (nvect->PartInfo(i))->fPosIni.Z() << ","
 	<< (nvect->PartInfo(i))->fPosIni.T()  << ")"
 	<< "\n";
 	  cout << "Particle Pos(2)=(" << (nvect->PartInfo(i))->fPosFin.Px() << ","
-	  	   << (nvect->PartInfo(i))->fPosFin.Y() << "," 
+	  	   << (nvect->PartInfo(i))->fPosFin.Y() << ","
 		   << (nvect->PartInfo(i))->fPosFin.Z() << ","
 		   << (nvect->PartInfo(i))->fPosFin.T()  << ")"
 		   << "\n";
@@ -1187,16 +1187,16 @@ basic_histos(char *fname,char *fname_out)
 
 	for (i = 0 ; i < nvtx->Nvtx() ; i++){
 	  cout << "i=" << i << "\n";
-	  
+
 	  cout << "Vertex Pos(1)=(" << (nvtx->Pos(i))->X() << ","
-		   << (nvtx->Pos(i))->Y() << "," 
+		   << (nvtx->Pos(i))->Y() << ","
 		   << (nvtx->Pos(i))->Z() << ","
 		   << (nvtx->Pos(i))->T()  << ")"
 		   << "\n";
 	}
 	*/
-  
-  
+
+
 int
 main(int argc, char **argv)
 {

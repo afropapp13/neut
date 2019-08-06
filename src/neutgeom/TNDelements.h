@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////////
-// 
+//
 // TNDelements.h
-// Class for obtaining elements in nd280 geometry 
+// Class for obtaining elements in nd280 geometry
 //
 //////////////////////////////////////////////////////////////////////////
 
@@ -29,11 +29,11 @@ public:
 
     hZA = new TH2D("hZA","hZA",kZmax,0,kZmax,kAmax,0,kAmax);
 
-    TIter next(theGeometry->GetListOfMaterials());   
+    TIter next(theGeometry->GetListOfMaterials());
     TGeoMixture *currMixture;
     while ((currMixture=(TGeoMixture*)next())) {
 
-      Double_t *Z = currMixture->GetZmixt();      
+      Double_t *Z = currMixture->GetZmixt();
       Double_t *A = currMixture->GetAmixt();
       Double_t *W = currMixture->GetWmixt();
 
@@ -45,7 +45,7 @@ public:
 	  W_temp = hZA->GetBinContent(TMath::Nint(Z[ie])+1,A_bin);
 	  if (W_temp) break;
 	}
-	
+
 	// Clear Z column if this isotope has higher abundance
 	// and store it
 	if (W[ie]>W_temp) {
@@ -53,11 +53,11 @@ public:
 	    hZA->SetBinContent(TMath::Nint(Z[ie])+1,A_bin,0);
 	  }
 	  hZA->Fill(TMath::Nint(Z[ie]),TMath::Nint(A[ie]),W[ie]);
-	  
+
 	}
-	
+
       }
-      
+
     }
 
 
@@ -66,13 +66,13 @@ public:
     for (int Z_bin=1; Z_bin<=kZmax; Z_bin++) {
       for (int A_bin=1; A_bin<=kAmax; A_bin++) {
 	if (!hZA->GetBinContent(Z_bin,A_bin)) continue;
-	
+
 	fZ[fNelements] = Z_bin-1;
 	fA[fNelements] = A_bin-1;
 	fNelements++;
       }
     }
-    
+
   }
 
 
@@ -89,7 +89,7 @@ public:
 
     Double_t        EvtVtx[4];
     TBranch        *b_EvtVtx;   //!
-   
+
     Int_t           StdHepPdg[80];   //[StdHepN]
     TBranch        *b_StdHepPdg;   //!
 
@@ -105,7 +105,7 @@ public:
       if (!(ientry%100000)) std::cout << "Processing event " << ientry << " / " << nentries << std::endl;
 
       theNumcChain->GetEntry(ientry);
-   
+
       // In FV
       Int_t inFGD1=1;
       Int_t inFGD2=1;
@@ -123,9 +123,9 @@ public:
       int I = (nucID - nStrange*10000000 - Z*10000 - A*10);
 
       hZA->Fill(Z,A);
-      
+
     }
-    
+
     // Now get most abundant isotope for each element
     fNelements=0;
     for (int Z_bin=1; Z_bin<=kZmax; Z_bin++) {
@@ -135,7 +135,7 @@ public:
 
       for (int A_bin=1; A_bin<=kAmax; A_bin++) {
 	Double_t temp_A = hZA->GetBinContent(Z_bin,A_bin);
-	
+
 	if (!temp_A) continue;
 	else if (temp_A > max_A) {
 	  max_A = temp_A;
@@ -147,22 +147,22 @@ public:
       if (max_A) {
 	fW[fNelements] = fW[fNelements]/hZA->GetEntries();
 	labels[fNelements] = element_symbol[fZ[fNelements]-1];
-	fNelements++;      
+	fNelements++;
       }
     }
 
-    
 
-    
+
+
   }
 
 
 
   // Get elements from composition file
-  TNDelements(TH1D *aTheCompHist){	
+  TNDelements(TH1D *aTheCompHist){
 
     theCompHist = aTheCompHist;
-  
+
     hZA = new TH2D("hZA","hZA",kZmax,0,kZmax,kAmax,0,kAmax);
 
     fNelements=0;
@@ -177,11 +177,11 @@ public:
 
 	hZA->Fill(Z_bin-1,a_stable[Z_bin-2]);
 
-	fNelements++;      
+	fNelements++;
       }
 
     }
-    
+
   }
 
 
@@ -206,8 +206,8 @@ public:
   Int_t* Z() {return fZ;}
   Int_t* A() {return fA;}
   Double_t* W() {return fW;}
-  char **getLabels() {return labels;}
-  
+  char const **getLabels() {return labels;}
+
   TString getElementSymbol(int ie) {
     TString sym = element_symbol[fZ[ie]-1];
     return sym;
@@ -216,10 +216,10 @@ public:
     TString name = element_name[fZ[ie]-1];
     return name;
   }
-  
+
   ~TNDelements() {
     hZA->Delete();
-    
+
   };
 
 
@@ -234,7 +234,7 @@ private:
   TH2D    *hZA;
   Int_t    fZ[kZmax], fA[kAmax];
   Double_t fW[kZmax];
-  char     *labels[kZmax];
- 
+  char    const *labels[kZmax];
+
 };
 #endif

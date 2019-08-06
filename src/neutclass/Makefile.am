@@ -3,6 +3,8 @@ include $(top_srcdir)/build.common
 AM_CXXFLAGS = -DNEUTCLASSVER=@NEUT_VERSION_NUM@ $(DEFAULT_CXXFLAGS)
 AM_LDFLAGS = $(ROOT_LINKFLAGS) $(DEFAULT_LINKFLAGS)
 
+NEUTCLASSUTILS_SRCS = neutrootfortwrapper.cc NeutRootHandlers.cc neutrootTreeSingleton.cc neutfill.cc fill_dsdq2.cc
+
 ######### ROOT Standalone I/O library
 
 ##### if compat
@@ -54,7 +56,7 @@ libneutnucfsivert_la_SOURCES = neutnucfsivertDict.cc neutnucfsivert.cc
 libneutpart_la_SOURCES = neutpartDict.cc neutpart.cc
 libneutvect_la_SOURCES = neutvectDict.cc neutvect.cc
 libneutvtx_la_SOURCES = neutvtxDict.cc neutvtx.cc
-libneutrootTreeSingleton_la_SOURCES = neutrootfortwrapper.cc NeutRootHandlers.cc neutrootTreeSingleton.cc neutfill.cc
+libneutrootTreeSingleton_la_SOURCES = $(NEUTCLASSUTILS_SRCS)
 
 #you may think this is pointless, but look up autotools renaming objects...
 libneutrootTreeSingleton_la_CXXFLAGS = $(AM_CXXFLAGS)
@@ -110,7 +112,7 @@ LIBNAME = lib@LIBPREFIX@neutclassUtils.@NEUT_VERSION_NUM@.a
 #
 lib_LIBRARIES = $(LIBNAME)
 #
-lib@LIBPREFIX@neutclassUtils_@NEUT_VERSION_NUM@_a_SOURCES = neutrootfortwrapper.cc NeutRootHandlers.cc neutrootTreeSingleton.cc neutfill.cc
+lib@LIBPREFIX@neutclassUtils_@NEUT_VERSION_NUM@_a_SOURCES = $(NEUTCLASSUTILS_SRCS)
 
 install-exec-hook:
 	-(cd ${libdir}; $(LN_S) $(LIBNAME) $(shell echo $(LIBNAME) | cut -d . -f 1).a)

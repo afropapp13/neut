@@ -74,13 +74,13 @@ C         return
 
 C--Convert units:
 C  numom is in GeV, for compatibility with neutxs
-C  pneu, input to nevecgen, wants to be in MeV
+C  pneu, input to NEVECT, wants to be in MeV
 
       PNEU(1) = numom(1)*1000.
       PNEU(2) = numom(2)*1000.
       PNEU(3) = numom(3)*1000.
 
-C--nevecgen wants a position for the initial vertex
+C--NEVECT wants a position for the initial vertex
 C  set this to zero for now
 
       POS(1) = 0.
@@ -89,7 +89,7 @@ C  set this to zero for now
 
 C--Generate event
 
-      call NEVECGEN(IPAR,POS,PNEU,IERR)
+      call NEVECT(IPAR,POS,PNEU,IERR)
 
       return
 

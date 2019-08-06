@@ -14,8 +14,11 @@ extern "C" {
   float fnrawcrs_( int *, int *, float * );
   float fntotpau_( int *, float * );
   void necard_();
+  #ifdef gFortran
   void _gfortran_set_args(int, char **);
+  #else
   extern void f_setarg(int, char **);
+  #endif
 }
 
 
@@ -30,7 +33,7 @@ cross_section_histos(char *fname_out)
   gSystem->Load("../neutclass/neutnucfsistep.so");
   gSystem->Load("../neutclass/neutnucfsivert.so");
   gSystem->Load("../neutclass/neutvect.so");
-  
+
   TFile *f_out;
   f_out = new TFile(fname_out,"RECREATE");
   if (f_out->IsZombie()){
@@ -44,7 +47,7 @@ cross_section_histos(char *fname_out)
 
   const Int_t mode_tbl[28]={
 	01, 11, 12, 13, 21, 31, 32, 33, 34, 41,
-	51, 52, 16, 36, 22, 42, 43, 23, 44, 45, 
+	51, 52, 16, 36, 22, 42, 43, 23, 44, 45,
 	26, 46, 17, 38, 39,  2, 15, 35};
 
   const Int_t flv_tbl[6]={12,14,16,-12,-14,-16};
@@ -84,28 +87,28 @@ cross_section_histos(char *fname_out)
 		}
 		crssect[i][abs(mode)] = fnrawcrs_(&flv, &mode, &e);
 	  }
-	  crssect[i][0] = fntotpau_(&flv, &e);	  
+	  crssect[i][0] = fntotpau_(&flv, &e);
 	}
 	if ( crssect[3][0] > 0 ){
-	  cout << 
-		"nuebar Enu = " << 
+	  cout <<
+		"nuebar Enu = " <<
 		e <<
-		" : CCQE = " << 
+		" : CCQE = " <<
 		crssect[3][1] <<
-		" TOTAL = " << 
+		" TOTAL = " <<
 		crssect[3][0] <<
-		" Ratio = " << 
+		" Ratio = " <<
 		crssect[3][1]/crssect[3][0] <<
 		endl;
 	}
 	tn->Fill();
-  }  
+  }
 
   f_out->Write();
   f_out->Close();
   return 0;
 }
-  
+
 int
 main(int argc, char **argv)
 {

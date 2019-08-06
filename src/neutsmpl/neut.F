@@ -86,7 +86,7 @@ C--Set energy
  50      continue
          
 C--Generate event
-         call NEVECGEN(IDPTEVCT,POS,PNEU,IERR)
+         call NEVECT(IDPTEVCT,POS,PNEU,IERR)
 
          if (ierr.ne.0) then
             goto 20

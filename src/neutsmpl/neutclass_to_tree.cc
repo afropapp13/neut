@@ -23,8 +23,8 @@
 #include "nucleonfsihistC.h"
 #include "neutcrsC.h"
 
-#include "../../include/neutvect.h"
-#include "../../include/neutvtx.h"
+#include "neutvect.h"
+#include "neutvtx.h"
 
 using namespace std;
 
@@ -41,20 +41,20 @@ copy_back(NeutVect *nv)
   nenupr_.pfsurf 	  = nv->PFSurf   ;
   nenupr_.pfmax 	  = nv->PFMax    ;
   posinnuc_.ibound    = nv->Ibound   ;
-  
+
   /****************************************************/
   // interaction model and some parameters
   nemdls_.mdlqe 	= nv->QEModel  ;
   nemdls_.mdlspi    = nv->SPIModel ;
-                      
+
   nemdls_.mdlcoh    = nv->COHModel ;
   nemdls_.mdldis    = nv->DISModel ;
-                      
+
   nemdls_.mdlqeaf   = nv->QEVForm  ;
   nemdls_.xmaqe 	= nv->QEMA     ;
-                      
+
   neut1pi_.neiff    = nv->SPIForm  ;
-                      
+
   neut1pi_.nenrtype = nv->SPINRType;
 
   nv->SPICA5I  = neut1pi_.rneca5i  ;
@@ -62,14 +62,14 @@ copy_back(NeutVect *nv)
 
   nemdls_.xmaspi= nv->SPIMA    ;
   nemdls_.xmvspi= nv->SPIMV    ;
-                   
+
   nemdls_.xmares= nv->RESMA    ;
   nemdls_.xmvres= nv->RESMV    ;
-                   
+
   nemdls_.xmvqe = nv->QEMV     ;
-                   
+
   nemdls_.kapp 	= nv->KAPPA    ;
-                   
+
   nemdls_.xmacoh= nv->COHMA    ;
   nemdls_.rad0nu= nv->COHR0    ;
   nemdls_.fa1coh= nv->COHA1err ;
@@ -94,23 +94,23 @@ copy_back(NeutVect *nv)
 
 
   neffpr_.fefqe  = nv->NuceffFactorPIQE   ;
-  neffpr_.fefinel= nv->NuceffFactorPIInel ;    
-  neffpr_.fefabs = nv->NuceffFactorPIAbs  ;   
-  neffpr_.fefqeh = nv->NuceffFactorPIQEH  ; 
-  neffpr_.fefcx  = nv->NuceffFactorPICX   ; 
-  neffpr_.fefcxh = nv->NuceffFactorPICXH  ;  
-  neffpr_.fefcoh = nv->NuceffFactorPICoh  ; 
-  neffpr_.fefqehf= nv->NuceffFactorPIQEHKin;  	  
-  neffpr_.fefcohf= nv->NuceffFactorPIQELKin; 
-  neffpr_.fefcxhf= nv->NuceffFactorPICXKin;   
-  neffpr_.fefall = nv->NuceffFactorPIAll  ; 
+  neffpr_.fefinel= nv->NuceffFactorPIInel ;
+  neffpr_.fefabs = nv->NuceffFactorPIAbs  ;
+  neffpr_.fefqeh = nv->NuceffFactorPIQEH  ;
+  neffpr_.fefcx  = nv->NuceffFactorPICX   ;
+  neffpr_.fefcxh = nv->NuceffFactorPICXH  ;
+  neffpr_.fefcoh = nv->NuceffFactorPICoh  ;
+  neffpr_.fefqehf= nv->NuceffFactorPIQEHKin;
+  neffpr_.fefcohf= nv->NuceffFactorPIQELKin;
+  neffpr_.fefcxhf= nv->NuceffFactorPICXKin;
+  neffpr_.fefall = nv->NuceffFactorPIAll  ;
 
   /****************************************************/
   nework_.modene       = nv->Mode;
   neutcrscom_.totcrsne = nv->Totcrs;
 
   neutcrscom_.crsenergy= nv->CrsEnergy;
-  
+
   for ( i = 0 ; i < 8 ; i++ ){
 	neutcrscom_.difcrsne[i] = nv->DifCrsNE[i];
   }
@@ -127,11 +127,11 @@ copy_back(NeutVect *nv)
   for ( i = 0 ; i < vcwork_.nvc ; i++ ){
 	Double_t mass;
 	NeutPart pinfo;
-	
+
 	vcwork_.ivtivc[i] = nv->VertexID(i);
 
 	vcwork_.iorgvc[i] = nv->ParentIdx(i);
-	  
+
 	vcwork_.ipvc[i]   = nv->PartInfo(i)->fPID;
 	vcwork_.amasvc[i] = nv->PartInfo(i)->fMass;
 
@@ -147,7 +147,7 @@ copy_back(NeutVect *nv)
 	posinnuc_.posnuc[i][2] = nv->PartInfo(i)->fPosIni.Z();
 
   }
-  
+
 }
 
 Int_t
@@ -162,7 +162,7 @@ neutclass_to_tree(char *fname,char *fname_out)
   gSystem->Load("../neutclass/neutnucfsistep.so");
   gSystem->Load("../neutclass/neutnucfsivert.so");
   gSystem->Load("../neutclass/neutvect.so");
-  
+
   TFile *f;
   f = new TFile(fname);
   if (f->IsZombie()){
@@ -248,7 +248,7 @@ neutclass_to_tree(char *fname,char *fname_out)
   f_out->Close();
   return 0;
 }
-  
+
 	/*
 	cout << "Event #        :" << nvect->EventNo << "\n";
 	cout << "Target A       :" << nvect->TargetA << "\n";
@@ -266,19 +266,19 @@ neutclass_to_tree(char *fname,char *fname_out)
 	cout << "Particle Code  = " << (nvect->PartInfo(i))->fPID   << "\n";
 	cout << "Particle Mass  = " << (nvect->PartInfo(i))->fMass   << "\n";
 	cout << "Particle Mom.  =(" << (nvect->PartInfo(i))->fP.Px() << ","
-	<< (nvect->PartInfo(i))->fP.Py() << "," 
+	<< (nvect->PartInfo(i))->fP.Py() << ","
 	<< (nvect->PartInfo(i))->fP.Pz() << ","
 	<< (nvect->PartInfo(i))->fP.E()  << ")"
 	<< "\n";
 	cout << "Particle Flag  = " << (nvect->PartInfo(i))->fIsAlive << "\n";
 	cout << "Particle Stat. = " << (nvect->PartInfo(i))->fStatus  << "\n";
 	cout << "Particle Pos(1)=(" << (nvect->PartInfo(i))->fPosIni.X() << ","
-	<< (nvect->PartInfo(i))->fPosIni.Y() << "," 
+	<< (nvect->PartInfo(i))->fPosIni.Y() << ","
 	<< (nvect->PartInfo(i))->fPosIni.Z() << ","
 	<< (nvect->PartInfo(i))->fPosIni.T()  << ")"
 	<< "\n";
 	  cout << "Particle Pos(2)=(" << (nvect->PartInfo(i))->fPosFin.Px() << ","
-	  	   << (nvect->PartInfo(i))->fPosFin.Y() << "," 
+	  	   << (nvect->PartInfo(i))->fPosFin.Y() << ","
 		   << (nvect->PartInfo(i))->fPosFin.Z() << ","
 		   << (nvect->PartInfo(i))->fPosFin.T()  << ")"
 		   << "\n";
@@ -287,16 +287,16 @@ neutclass_to_tree(char *fname,char *fname_out)
 
 	for (i = 0 ; i < nvtx->Nvtx() ; i++){
 	  cout << "i=" << i << "\n";
-	  
+
 	  cout << "Vertex Pos(1)=(" << (nvtx->Pos(i))->X() << ","
-		   << (nvtx->Pos(i))->Y() << "," 
+		   << (nvtx->Pos(i))->Y() << ","
 		   << (nvtx->Pos(i))->Z() << ","
 		   << (nvtx->Pos(i))->T()  << ")"
 		   << "\n";
 	}
 	*/
-  
-  
+
+
 int
 main(int argc, char **argv)
 {
