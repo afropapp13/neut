@@ -104,7 +104,7 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_nuclscat_OBJECTS = nuclscat.$(OBJEXT) tauvect.$(OBJEXT)
+am_nuclscat_OBJECTS = nuclscat.$(OBJEXT)
 nuclscat_OBJECTS = $(am_nuclscat_OBJECTS)
 am__DEPENDENCIES_1 =
 nuclscat_DEPENDENCIES = $(NEUT_LIBS) $(am__DEPENDENCIES_1) \
@@ -117,7 +117,7 @@ nuclscat_LINK = $(LIBTOOL) $(AM_V_lt) --tag=F77 $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(F77LD) $(AM_FFLAGS) $(FFLAGS) \
 	$(nuclscat_LDFLAGS) $(LDFLAGS) -o $@
 am_run_nuclscatana_OBJECTS = run_nuclscatana.$(OBJEXT) \
-	tauvect.$(OBJEXT)
+	nuclscatana.$(OBJEXT)
 run_nuclscatana_OBJECTS = $(am_run_nuclscatana_OBJECTS)
 run_nuclscatana_DEPENDENCIES = $(NEUT_LIBS) $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_1)
@@ -126,7 +126,7 @@ run_nuclscatana_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
 	$(AM_CXXFLAGS) $(CXXFLAGS) $(run_nuclscatana_LDFLAGS) \
 	$(LDFLAGS) -o $@
 am_run_nucltransana_OBJECTS = run_nucltransana.$(OBJEXT) \
-	tauvect.$(OBJEXT)
+	nucltransana.$(OBJEXT)
 run_nucltransana_OBJECTS = $(am_run_nucltransana_OBJECTS)
 run_nucltransana_DEPENDENCIES = $(NEUT_LIBS) $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_1)
@@ -375,7 +375,7 @@ top_srcdir = @top_srcdir@
 # top_builddir dependencies are needed for fh2h.pl-generated headers
 NEUT_INCLUDES = -I$(top_srcdir)/radcorr -I$(top_srcdir)/tauola -I$(top_srcdir)/mec -I$(top_srcdir)/ht2p2h/inc -I$(top_srcdir)/nuccorspl -I$(top_srcdir)/zbsfns -I$(top_srcdir)/n1p1h/inc -I$(top_srcdir)/nuceff -I$(top_srcdir)/kamflux -I$(top_srcdir)/nuclsmpl -I$(top_srcdir)/skmcsvc -I$(top_srcdir)/neutcore -I$(top_srcdir)/partnuck -I$(top_srcdir)/specfunc -I$(top_srcdir)/t2kflux_zbs -I$(top_builddir)/neutcore -I$(top_builddir)/skmcsvc -I$(top_builddir)/n1p1h -I$(top_builddir)/nuccorspl -I$(top_builddir)/nuceff
 NEUT_CLASS_INCLUDES = -I$(top_srcdir)/neutclass
-NEUT_STATIC_LIBS = $(top_builddir)/neutcore/lib@LIBPREFIX@neutcore.@NEUT_VERSION_NUM@.a $(top_builddir)/nuccorspl/lib@LIBPREFIX@nuccorspl.@NEUT_VERSION_NUM@.a $(top_builddir)/nuceff/lib@LIBPREFIX@nuceff.@NEUT_VERSION_NUM@.a $(top_builddir)/n1p1h/lib@LIBPREFIX@n1p1h.@NEUT_VERSION_NUM@.a $(top_builddir)/ht2p2h/lib@LIBPREFIX@ht2p2h.@NEUT_VERSION_NUM@.a $(top_builddir)/radcorr/lib@LIBPREFIX@radcorr.@NEUT_VERSION_NUM@.a $(top_builddir)/tauola/lib@LIBPREFIX@tauola.@NEUT_VERSION_NUM@.a $(top_builddir)/specfunc/lib@LIBPREFIX@specfunc.@NEUT_VERSION_NUM@.a $(top_builddir)/skmcsvc/lib@LIBPREFIX@skmcsvc.@NEUT_VERSION_NUM@.a  $(top_builddir)/partnuck/lib@LIBPREFIX@partnuck.@NEUT_VERSION_NUM@.a
+@NEUT_LIBCOMPAT_TRUE@NEUT_STATIC_LIBS = $(top_builddir)/neutcore/lib@LIBPREFIX@neutcore.@NEUT_VERSION_NUM@.a $(top_builddir)/nuccorspl/lib@LIBPREFIX@nuccorspl.@NEUT_VERSION_NUM@.a $(top_builddir)/nuceff/lib@LIBPREFIX@nuceff.@NEUT_VERSION_NUM@.a $(top_builddir)/n1p1h/lib@LIBPREFIX@n1p1h.@NEUT_VERSION_NUM@.a $(top_builddir)/ht2p2h/lib@LIBPREFIX@ht2p2h.@NEUT_VERSION_NUM@.a $(top_builddir)/radcorr/lib@LIBPREFIX@radcorr.@NEUT_VERSION_NUM@.a $(top_builddir)/tauola/lib@LIBPREFIX@tauola.@NEUT_VERSION_NUM@.a $(top_builddir)/specfunc/lib@LIBPREFIX@specfunc.@NEUT_VERSION_NUM@.a $(top_builddir)/skmcsvc/lib@LIBPREFIX@skmcsvc.@NEUT_VERSION_NUM@.a  $(top_builddir)/partnuck/lib@LIBPREFIX@partnuck.@NEUT_VERSION_NUM@.a
 #$(top_builddir)/zbsfns/lib@LIBPREFIX@zbsfns.@NEUT_VERSION_NUM@.a
 @NEUT_LIBCOMPAT_TRUE@NEUTCLASS_LIBS = $(top_builddir)/neutclass/libneutrootTreeSingleton.la $(top_builddir)/neutclass/libneutctrl.la $(top_builddir)/neutclass/libneutfsipart.la $(top_builddir)/neutclass/libneutfsivert.la $(top_builddir)/neutclass/libneutnucfsistep.la $(top_builddir)/neutclass/libneutnucfsivert.la $(top_builddir)/neutclass/libneutpart.la $(top_builddir)/neutclass/libneutvect.la $(top_builddir)/neutclass/libneutvtx.la
 @NEUT_LIBCOMPAT_FALSE@NEUT_LIBS = $(top_builddir)/neutclass/lib@LIBPREFIX@neutclassUtils.@NEUT_VERSION_NUM@.a $(top_builddir)/neutclass/lib@LIBPREFIX@neutclass.la $(top_builddir)/libNEUT.@NEUT_VERSION_NUM@.a
@@ -395,13 +395,13 @@ ROOT_LINKFLAGS = $(shell root-config --ldflags) -pthread -rdynamic -L$(shell roo
 EXE_LINKFLAGS = -fno-PIE -fno-pie -no-pie
 AM_FFLAGS = -DNUCLSMPL_VERSION=@NEUT_VERSION_NUM@ $(DEFAULT_FFLAGS)
 AM_CXXFLAGS = -DNUCLSMPL_VERSION=@NEUT_VERSION_NUM@ $(DEFAULT_CXXFLAGS) -I$(top_srcdir)/neutclass
-nuclscat_SOURCES = nuclscat.F tauvect.F
+nuclscat_SOURCES = nuclscat.F
 nuclscat_LDADD = $(NEUT_LIBS) $(CERN_LIBS) $(ROOT_LIBS) -lstdc++
 nuclscat_LDFLAGS = $(EXE_LINKFLAGS) $(CERN_LINKFLAGS) $(ROOT_LINKFLAGS)
-run_nuclscatana_SOURCES = run_nuclscatana.cc tauvect.F
+run_nuclscatana_SOURCES = run_nuclscatana.cc nuclscatana.cc
 run_nuclscatana_LDADD = $(NEUT_LIBS) $(CERN_LIBS) $(ROOT_LIBS) -lgfortran
 run_nuclscatana_LDFLAGS = $(EXE_LINKFLAGS) $(CERN_LINKFLAGS) $(ROOT_LINKFLAGS)
-run_nucltransana_SOURCES = run_nucltransana.cc tauvect.F
+run_nucltransana_SOURCES = run_nucltransana.cc nucltransana.cc
 run_nucltransana_LDADD = $(NEUT_LIBS) $(CERN_LIBS) $(ROOT_LIBS) -lgfortran
 run_nucltransana_LDFLAGS = $(EXE_LINKFLAGS) $(CERN_LINKFLAGS) $(ROOT_LINKFLAGS)
 all: all-am
@@ -506,6 +506,8 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nuclscatana.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nucltransana.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/run_nuclscatana.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/run_nucltransana.Po@am__quote@
 

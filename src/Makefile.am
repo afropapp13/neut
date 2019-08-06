@@ -20,7 +20,7 @@ if NEUT_LIBCOMPAT
 SUBDIRS = neutcore nuccorspl nuceff n1p1h ht2p2h radcorr tauola specfunc skmcsvc partnuck neutclass . neutsmpl reweight tools
 else
 # Order here matters, should build core libraries, combine them in this dir (.), then build reweight, programs, and tools.
-SUBDIRS = neutcore nuccorspl nuceff n1p1h mec ht2p2h radcorr tauola specfunc skmcsvc partnuck neutclass . neutsmpl reweight tools neututils
+SUBDIRS = neutcore nuccorspl nuceff n1p1h mec ht2p2h radcorr tauola specfunc skmcsvc partnuck neutclass . neutsmpl reweight tools neututils nuclsmpl pionsmpl
 endif
 
 # When I can get a hold of the zebra code I will add an --enable flag for the ZEBRA_SUBDIRS, but for the moment, disable them.
