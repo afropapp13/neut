@@ -90,8 +90,8 @@ build_triplet = @build@
 host_triplet = @host@
 @NEUT_LIBCOMPAT_TRUE@@NEUT_USE_TAUOLA_TRUE@am__append_1 = $(top_builddir)/tauola/lib@LIBPREFIX@tauola.@NEUT_VERSION_NUM@.a
 @NEUT_USE_TAUOLA_TRUE@am__append_2 = -DNEUT_USE_TAUOLA
-bin_PROGRAMS = gampi$(EXEEXT) piscat$(EXEEXT) run_piscatana$(EXEEXT)
-subdir = pionsmpl
+bin_PROGRAMS = makeEffSFTables$(EXEEXT) makeSFTables$(EXEEXT)
+subdir = neututils/make_SF_tables
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
 	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
@@ -105,33 +105,24 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_gampi_OBJECTS = gampi.$(OBJEXT)
-gampi_OBJECTS = $(am_gampi_OBJECTS)
+am_makeEffSFTables_OBJECTS = makeEffSFTables.$(OBJEXT)
+makeEffSFTables_OBJECTS = $(am_makeEffSFTables_OBJECTS)
 am__DEPENDENCIES_1 =
-gampi_DEPENDENCIES = $(NEUT_LIBS) $(am__DEPENDENCIES_1) \
+am__DEPENDENCIES_2 = $(NEUT_STATIC_LIBS) $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
 am__v_lt_1 = 
-gampi_LINK = $(LIBTOOL) $(AM_V_lt) --tag=F77 $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(F77LD) $(AM_FFLAGS) $(FFLAGS) \
-	$(gampi_LDFLAGS) $(LDFLAGS) -o $@
-am_piscat_OBJECTS = piscat.$(OBJEXT)
-piscat_OBJECTS = $(am_piscat_OBJECTS)
-piscat_DEPENDENCIES = $(NEUT_LIBS) $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
-piscat_LINK = $(LIBTOOL) $(AM_V_lt) --tag=F77 $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(F77LD) $(AM_FFLAGS) $(FFLAGS) \
-	$(piscat_LDFLAGS) $(LDFLAGS) -o $@
-am_run_piscatana_OBJECTS = run_piscatana.$(OBJEXT) piscatana.$(OBJEXT)
-run_piscatana_OBJECTS = $(am_run_piscatana_OBJECTS)
-run_piscatana_DEPENDENCIES = $(NEUT_LIBS) $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
-run_piscatana_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
-	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CXXLD) \
-	$(AM_CXXFLAGS) $(CXXFLAGS) $(run_piscatana_LDFLAGS) $(LDFLAGS) \
+makeEffSFTables_LINK = $(LIBTOOL) $(AM_V_lt) --tag=F77 \
+	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(F77LD) \
+	$(AM_FFLAGS) $(FFLAGS) $(makeEffSFTables_LDFLAGS) $(LDFLAGS) \
 	-o $@
+am_makeSFTables_OBJECTS = makeTables.$(OBJEXT)
+makeSFTables_OBJECTS = $(am_makeSFTables_OBJECTS)
+makeSFTables_LINK = $(LIBTOOL) $(AM_V_lt) --tag=F77 $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(F77LD) $(AM_FFLAGS) $(FFLAGS) \
+	$(makeSFTables_LDFLAGS) $(LDFLAGS) -o $@
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -145,9 +136,6 @@ am__v_at_ = $(am__v_at_@AM_DEFAULT_V@)
 am__v_at_0 = @
 am__v_at_1 = 
 DEFAULT_INCLUDES = -I.@am__isrc@
-depcomp = $(SHELL) $(top_srcdir)/depcomp
-am__depfiles_maybe = depfiles
-am__mv = mv -f
 PPF77COMPILE = $(F77) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_FFLAGS) $(FFLAGS)
 LTPPF77COMPILE = $(LIBTOOL) $(AM_V_lt) --tag=F77 $(AM_LIBTOOLFLAGS) \
@@ -166,45 +154,8 @@ AM_V_F77LD = $(am__v_F77LD_@AM_V@)
 am__v_F77LD_ = $(am__v_F77LD_@AM_DEFAULT_V@)
 am__v_F77LD_0 = @echo "  F77LD   " $@;
 am__v_F77LD_1 = 
-CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
-	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
-LTCXXCOMPILE = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) \
-	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
-	$(AM_CXXFLAGS) $(CXXFLAGS)
-AM_V_CXX = $(am__v_CXX_@AM_V@)
-am__v_CXX_ = $(am__v_CXX_@AM_DEFAULT_V@)
-am__v_CXX_0 = @echo "  CXX     " $@;
-am__v_CXX_1 = 
-CXXLD = $(CXX)
-CXXLINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
-	$(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
-AM_V_CXXLD = $(am__v_CXXLD_@AM_V@)
-am__v_CXXLD_ = $(am__v_CXXLD_@AM_DEFAULT_V@)
-am__v_CXXLD_0 = @echo "  CXXLD   " $@;
-am__v_CXXLD_1 = 
-COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
-	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
-LTCOMPILE = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) \
-	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
-	$(AM_CFLAGS) $(CFLAGS)
-AM_V_CC = $(am__v_CC_@AM_V@)
-am__v_CC_ = $(am__v_CC_@AM_DEFAULT_V@)
-am__v_CC_0 = @echo "  CC      " $@;
-am__v_CC_1 = 
-CCLD = $(CC)
-LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
-	$(AM_LDFLAGS) $(LDFLAGS) -o $@
-AM_V_CCLD = $(am__v_CCLD_@AM_V@)
-am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
-am__v_CCLD_0 = @echo "  CCLD    " $@;
-am__v_CCLD_1 = 
-SOURCES = $(gampi_SOURCES) $(piscat_SOURCES) $(run_piscatana_SOURCES)
-DIST_SOURCES = $(gampi_SOURCES) $(piscat_SOURCES) \
-	$(run_piscatana_SOURCES)
+SOURCES = $(makeEffSFTables_SOURCES) $(makeSFTables_SOURCES)
+DIST_SOURCES = $(makeEffSFTables_SOURCES) $(makeSFTables_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -229,8 +180,7 @@ am__define_uniq_tagged_files = \
   done | $(am__uniquify_input)`
 ETAGS = etags
 CTAGS = ctags
-am__DIST_COMMON = $(srcdir)/Makefile.in $(top_srcdir)/build.common \
-	$(top_srcdir)/depcomp README
+am__DIST_COMMON = $(srcdir)/Makefile.in $(top_srcdir)/build.common
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
@@ -400,21 +350,21 @@ ROOT_LINKFLAGS = $(shell root-config --ldflags) -pthread -rdynamic -L$(shell roo
 # I know... but this seems to work
 EXE_LINKFLAGS = -fno-PIE -fno-pie -no-pie
 EXE_RTLIBS = -lstdc++ -lgfortran
-AM_FFLAGS = -DPIONSMPL_VERSION=@NEUT_VERSION_NUM@ $(DEFAULT_FFLAGS)
-AM_CXXFLAGS = -DPIONSMPL_VERSION=@NEUT_VERSION_NUM@ $(DEFAULT_CXXFLAGS) -I$(top_srcdir)/neutclass
-piscat_SOURCES = piscat.F
-piscat_LDADD = $(NEUT_LIBS) $(CERN_LIBS) $(ROOT_LIBS) $(EXE_RTLIBS)
-piscat_LDFLAGS = $(EXE_LINKFLAGS) $(CERN_LINKFLAGS) $(ROOT_LINKFLAGS)
-run_piscatana_SOURCES = run_piscatana.cc piscatana.cc
-run_piscatana_LDADD = $(NEUT_LIBS) $(CERN_LIBS) $(ROOT_LIBS) $(EXE_RTLIBS)
-run_piscatana_LDFLAGS = $(EXE_LINKFLAGS) $(CERN_LINKFLAGS) $(ROOT_LINKFLAGS)
-gampi_SOURCES = gampi.F
-gampi_LDADD = $(NEUT_LIBS) $(CERN_LIBS) $(ROOT_LIBS) $(EXE_RTLIBS)
-gampi_LDFLAGS = $(EXE_LINKFLAGS) $(CERN_LINKFLAGS) $(ROOT_LINKFLAGS)
+AM_FFLAGS = $(DEFAULT_FFLAGS)
+SPECFUNC_PROGLDADD = $(NEUT_STATIC_LIBS) $(CERN_LIBS) $(ROOT_LIBS) $(EXE_RTLIBS)
+SPECFUNC_PROGLDFLAGS = $(EXE_LINKFLAGS) $(CERN_LINKFLAGS) $(ROOT_LINKFLAGS)
+makeEffSFTables_SOURCES = makeEffSFTables.F
+makeEffSFTables_LDADD = $(SPECFUNC_PROGLDADD)
+makeEffSFTables_LDFLAGS = $(SPECFUNC_PROGLDFLAGS)
+makeEffSFTables_DEPENDENCIES = $(NEUT_STATIC_LIBS)
+makeSFTables_SOURCES = makeTables.F
+makeSFTables_LDADD = $(SPECFUNC_PROGLDADD)
+makeSFTables_LDFLAGS = $(SPECFUNC_PROGLDFLAGS)
+makeSFTables_DEPENDENCIES = $(NEUT_STATIC_LIBS)
 all: all-am
 
 .SUFFIXES:
-.SUFFIXES: .F .cc .f .lo .o .obj
+.SUFFIXES: .F .f .lo .o .obj
 $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am $(top_srcdir)/build.common $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
@@ -424,9 +374,9 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am $(top_srcdir)/build.common $(am__c
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign pionsmpl/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign neututils/make_SF_tables/Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --foreign pionsmpl/Makefile
+	  $(AUTOMAKE) --foreign neututils/make_SF_tables/Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
 	  *config.status*) \
@@ -495,26 +445,19 @@ clean-binPROGRAMS:
 	echo " rm -f" $$list; \
 	rm -f $$list
 
-gampi$(EXEEXT): $(gampi_OBJECTS) $(gampi_DEPENDENCIES) $(EXTRA_gampi_DEPENDENCIES) 
-	@rm -f gampi$(EXEEXT)
-	$(AM_V_F77LD)$(gampi_LINK) $(gampi_OBJECTS) $(gampi_LDADD) $(LIBS)
+makeEffSFTables$(EXEEXT): $(makeEffSFTables_OBJECTS) $(makeEffSFTables_DEPENDENCIES) $(EXTRA_makeEffSFTables_DEPENDENCIES) 
+	@rm -f makeEffSFTables$(EXEEXT)
+	$(AM_V_F77LD)$(makeEffSFTables_LINK) $(makeEffSFTables_OBJECTS) $(makeEffSFTables_LDADD) $(LIBS)
 
-piscat$(EXEEXT): $(piscat_OBJECTS) $(piscat_DEPENDENCIES) $(EXTRA_piscat_DEPENDENCIES) 
-	@rm -f piscat$(EXEEXT)
-	$(AM_V_F77LD)$(piscat_LINK) $(piscat_OBJECTS) $(piscat_LDADD) $(LIBS)
-
-run_piscatana$(EXEEXT): $(run_piscatana_OBJECTS) $(run_piscatana_DEPENDENCIES) $(EXTRA_run_piscatana_DEPENDENCIES) 
-	@rm -f run_piscatana$(EXEEXT)
-	$(AM_V_CXXLD)$(run_piscatana_LINK) $(run_piscatana_OBJECTS) $(run_piscatana_LDADD) $(LIBS)
+makeSFTables$(EXEEXT): $(makeSFTables_OBJECTS) $(makeSFTables_DEPENDENCIES) $(EXTRA_makeSFTables_DEPENDENCIES) 
+	@rm -f makeSFTables$(EXEEXT)
+	$(AM_V_F77LD)$(makeSFTables_LINK) $(makeSFTables_OBJECTS) $(makeSFTables_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
 
 distclean-compile:
 	-rm -f *.tab.c
-
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/piscatana.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/run_piscatana.Po@am__quote@
 
 .F.o:
 	$(AM_V_PPF77)$(PPF77COMPILE) -c -o $@ $<
@@ -526,30 +469,6 @@ distclean-compile:
 	$(AM_V_PPF77)$(LTPPF77COMPILE) -c -o $@ $<
 .F.f:
 	$(F77COMPILE) -F $<
-
-.cc.o:
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
-@am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ $< &&\
-@am__fastdepCXX_TRUE@	$(am__mv) $$depbase.Tpo $$depbase.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXXCOMPILE) -c -o $@ $<
-
-.cc.obj:
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.obj$$||'`;\
-@am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ `$(CYGPATH_W) '$<'` &&\
-@am__fastdepCXX_TRUE@	$(am__mv) $$depbase.Tpo $$depbase.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXXCOMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
-
-.cc.lo:
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.lo$$||'`;\
-@am__fastdepCXX_TRUE@	$(LTCXXCOMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ $< &&\
-@am__fastdepCXX_TRUE@	$(am__mv) $$depbase.Tpo $$depbase.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LTCXXCOMPILE) -c -o $@ $<
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -681,7 +600,6 @@ clean: clean-am
 clean-am: clean-binPROGRAMS clean-generic clean-libtool mostlyclean-am
 
 distclean: distclean-am
-	-rm -rf ./$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-tags
@@ -727,7 +645,6 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
-	-rm -rf ./$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 

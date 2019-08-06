@@ -317,7 +317,7 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-SUBDIRS = calc_ccqe_crs calc_coh_crs.rs calc_dis_crs calc_nuc_dens calc_res_crs
+SUBDIRS = calc_ccqe_crs calc_coh_crs.rs calc_dis_crs calc_nuc_dens calc_res_crs make_SF_tables
 all: all-recursive
 
 .SUFFIXES:

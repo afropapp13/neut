@@ -2,14 +2,6 @@ include $(top_srcdir)/build.common
 
 AM_FFLAGS = -DSPECFUNCVER=@NEUT_VERSION_NUM@ $(DEFAULT_FFLAGS)
 
-# bin_PROGRAMS = makeEffSFTables makeTables
-
-# makeEffSFTables_SOURCES = makeEffSFTables.F
-# makeEffSFTables_LDADD = lib@LIBPREFIX@specfunc.a
-
-# makeTables_SOURCES = makeTables.F
-# makeTables_LDADD = lib@LIBPREFIX@specfunc.a
-
 LIBNAME = lib@LIBPREFIX@specfunc.@NEUT_VERSION_NUM@.a
 
 if NEUT_LIBCOMPAT

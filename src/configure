@@ -22602,7 +22602,7 @@ fi
 
 
 
-ac_config_files="$ac_config_files Makefile neutcore/Makefile nuccorspl/Makefile nuceff/Makefile n1p1h/Makefile ht2p2h/Makefile mec/Makefile radcorr/Makefile tauola/Makefile specfunc/Makefile skmcsvc/Makefile zbsfns/Makefile partnuck/Makefile neutclass/Makefile neutsmpl/Makefile nuclsmpl/Makefile pionsmpl/Makefile neutgeom/Makefile reweight/Makefile tools/Makefile neututils/Makefile neututils/calc_ccqe_crs/Makefile neututils/calc_coh_crs.rs/Makefile neututils/calc_dis_crs/Makefile neututils/calc_nuc_dens/Makefile neututils/calc_res_crs/Makefile"
+ac_config_files="$ac_config_files Makefile neutcore/Makefile nuccorspl/Makefile nuceff/Makefile n1p1h/Makefile ht2p2h/Makefile mec/Makefile radcorr/Makefile tauola/Makefile specfunc/Makefile skmcsvc/Makefile zbsfns/Makefile partnuck/Makefile neutclass/Makefile neutsmpl/Makefile nuclsmpl/Makefile pionsmpl/Makefile neutgeom/Makefile reweight/Makefile tools/Makefile neututils/Makefile neututils/calc_ccqe_crs/Makefile neututils/calc_coh_crs.rs/Makefile neututils/calc_dis_crs/Makefile neututils/calc_nuc_dens/Makefile neututils/calc_res_crs/Makefile neututils/make_SF_tables/Makefile"
 
 
 cat >confcache <<\_ACEOF
@@ -23943,6 +23943,7 @@ do
     "neututils/calc_dis_crs/Makefile") CONFIG_FILES="$CONFIG_FILES neututils/calc_dis_crs/Makefile" ;;
     "neututils/calc_nuc_dens/Makefile") CONFIG_FILES="$CONFIG_FILES neututils/calc_nuc_dens/Makefile" ;;
     "neututils/calc_res_crs/Makefile") CONFIG_FILES="$CONFIG_FILES neututils/calc_res_crs/Makefile" ;;
+    "neututils/make_SF_tables/Makefile") CONFIG_FILES="$CONFIG_FILES neututils/make_SF_tables/Makefile" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac

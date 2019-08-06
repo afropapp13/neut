@@ -3,7 +3,7 @@ include $(top_srcdir)/build.common
 AM_FFLAGS = -DNEUTSMPL_VERSION=@NEUT_VERSION_NUM@ $(DEFAULT_FFLAGS)
 AM_CXXFLAGS = -DNEUTSMPL_VERSION=@NEUT_VERSION_NUM@ $(DEFAULT_CXXFLAGS) -I$(top_srcdir)/neutclass
 
-bin_PROGRAMS = neutroot2 neut neut_ntpl dumptotpau dumpelspau dumpcohcrs dumpcrs dumptotpauC basic_histos neutclass_to_tree cross_section_histos
+bin_PROGRAMS = neutroot2
 
 NEUTSMPL_PROGLDADD = $(NEUT_LIBS) $(CERN_LIBS) $(ROOT_LIBS) $(EXE_RTLIBS)
 NEUTSMPL_PROGLDFLAGS = $(EXE_LINKFLAGS) $(CERN_LINKFLAGS) $(ROOT_LINKFLAGS)
@@ -11,6 +11,10 @@ NEUTSMPL_PROGLDFLAGS = $(EXE_LINKFLAGS) $(CERN_LINKFLAGS) $(ROOT_LINKFLAGS)
 neutroot2_SOURCES = neutroot.F flx_intrfc.cc ufm2th1dist.cc trapfpe.c
 neutroot2_LDADD = $(NEUTSMPL_PROGLDADD)
 neutroot2_LDFLAGS = $(NEUTSMPL_PROGLDFLAGS)
+
+if !NEUT_LIBCOMPAT
+
+bin_PROGRAMS += neut neut_ntpl dumptotpau dumpelspau dumpcohcrs dumpcrs dumptotpauC basic_histos neutclass_to_tree cross_section_histos
 
 neut_SOURCES = neut.F
 neut_LDADD = $(NEUTSMPL_PROGLDADD)
@@ -51,3 +55,5 @@ neutclass_to_tree_LDFLAGS = $(NEUTSMPL_PROGLDFLAGS)
 cross_section_histos_SOURCES = cross_section_histos.cc fnrawcrs.F
 cross_section_histos_LDADD = $(NEUTSMPL_PROGLDADD)
 cross_section_histos_LDFLAGS = $(NEUTSMPL_PROGLDFLAGS)
+
+endif

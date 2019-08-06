@@ -90,10 +90,8 @@ build_triplet = @build@
 host_triplet = @host@
 @NEUT_LIBCOMPAT_TRUE@@NEUT_USE_TAUOLA_TRUE@am__append_1 = $(top_builddir)/tauola/lib@LIBPREFIX@tauola.@NEUT_VERSION_NUM@.a
 @NEUT_USE_TAUOLA_TRUE@am__append_2 = -DNEUT_USE_TAUOLA
-bin_PROGRAMS = neutroot2$(EXEEXT) neut$(EXEEXT) neut_ntpl$(EXEEXT) \
-	dumptotpau$(EXEEXT) dumpelspau$(EXEEXT) dumpcohcrs$(EXEEXT) \
-	dumpcrs$(EXEEXT) dumptotpauC$(EXEEXT) basic_histos$(EXEEXT) \
-	neutclass_to_tree$(EXEEXT) cross_section_histos$(EXEEXT)
+bin_PROGRAMS = neutroot2$(EXEEXT) $(am__EXEEXT_1)
+@NEUT_LIBCOMPAT_FALSE@am__append_3 = neut neut_ntpl dumptotpau dumpelspau dumpcohcrs dumpcrs dumptotpauC basic_histos neutclass_to_tree cross_section_histos
 subdir = neutsmpl
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
@@ -106,14 +104,24 @@ DIST_COMMON = $(srcdir)/Makefile.am $(am__DIST_COMMON)
 mkinstalldirs = $(install_sh) -d
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
+@NEUT_LIBCOMPAT_FALSE@am__EXEEXT_1 = neut$(EXEEXT) neut_ntpl$(EXEEXT) \
+@NEUT_LIBCOMPAT_FALSE@	dumptotpau$(EXEEXT) dumpelspau$(EXEEXT) \
+@NEUT_LIBCOMPAT_FALSE@	dumpcohcrs$(EXEEXT) dumpcrs$(EXEEXT) \
+@NEUT_LIBCOMPAT_FALSE@	dumptotpauC$(EXEEXT) \
+@NEUT_LIBCOMPAT_FALSE@	basic_histos$(EXEEXT) \
+@NEUT_LIBCOMPAT_FALSE@	neutclass_to_tree$(EXEEXT) \
+@NEUT_LIBCOMPAT_FALSE@	cross_section_histos$(EXEEXT)
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_basic_histos_OBJECTS = basic_histos.$(OBJEXT)
+am__basic_histos_SOURCES_DIST = basic_histos.cc
+@NEUT_LIBCOMPAT_FALSE@am_basic_histos_OBJECTS =  \
+@NEUT_LIBCOMPAT_FALSE@	basic_histos.$(OBJEXT)
 basic_histos_OBJECTS = $(am_basic_histos_OBJECTS)
 am__DEPENDENCIES_1 =
 am__DEPENDENCIES_2 = $(NEUT_LIBS) $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
-basic_histos_DEPENDENCIES = $(am__DEPENDENCIES_2)
+@NEUT_LIBCOMPAT_FALSE@basic_histos_DEPENDENCIES =  \
+@NEUT_LIBCOMPAT_FALSE@	$(am__DEPENDENCIES_2)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
@@ -121,59 +129,75 @@ am__v_lt_1 =
 basic_histos_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
 	$(CXXFLAGS) $(basic_histos_LDFLAGS) $(LDFLAGS) -o $@
-am_cross_section_histos_OBJECTS = cross_section_histos.$(OBJEXT) \
-	fnrawcrs.$(OBJEXT)
+am__cross_section_histos_SOURCES_DIST = cross_section_histos.cc \
+	fnrawcrs.F
+@NEUT_LIBCOMPAT_FALSE@am_cross_section_histos_OBJECTS =  \
+@NEUT_LIBCOMPAT_FALSE@	cross_section_histos.$(OBJEXT) \
+@NEUT_LIBCOMPAT_FALSE@	fnrawcrs.$(OBJEXT)
 cross_section_histos_OBJECTS = $(am_cross_section_histos_OBJECTS)
-cross_section_histos_DEPENDENCIES = $(am__DEPENDENCIES_2)
+@NEUT_LIBCOMPAT_FALSE@cross_section_histos_DEPENDENCIES =  \
+@NEUT_LIBCOMPAT_FALSE@	$(am__DEPENDENCIES_2)
 cross_section_histos_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CXXLD) \
 	$(AM_CXXFLAGS) $(CXXFLAGS) $(cross_section_histos_LDFLAGS) \
 	$(LDFLAGS) -o $@
-am_dumpcohcrs_OBJECTS = dumpcohcrs.$(OBJEXT)
+am__dumpcohcrs_SOURCES_DIST = dumpcohcrs.F
+@NEUT_LIBCOMPAT_FALSE@am_dumpcohcrs_OBJECTS = dumpcohcrs.$(OBJEXT)
 dumpcohcrs_OBJECTS = $(am_dumpcohcrs_OBJECTS)
-dumpcohcrs_DEPENDENCIES = $(am__DEPENDENCIES_2)
+@NEUT_LIBCOMPAT_FALSE@dumpcohcrs_DEPENDENCIES = $(am__DEPENDENCIES_2)
 dumpcohcrs_LINK = $(LIBTOOL) $(AM_V_lt) --tag=F77 $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(F77LD) $(AM_FFLAGS) $(FFLAGS) \
 	$(dumpcohcrs_LDFLAGS) $(LDFLAGS) -o $@
-am_dumpcrs_OBJECTS = dumpcrs.$(OBJEXT) fnrawcrs.$(OBJEXT)
+am__dumpcrs_SOURCES_DIST = dumpcrs.F fnrawcrs.F
+@NEUT_LIBCOMPAT_FALSE@am_dumpcrs_OBJECTS = dumpcrs.$(OBJEXT) \
+@NEUT_LIBCOMPAT_FALSE@	fnrawcrs.$(OBJEXT)
 dumpcrs_OBJECTS = $(am_dumpcrs_OBJECTS)
-dumpcrs_DEPENDENCIES = $(am__DEPENDENCIES_2)
+@NEUT_LIBCOMPAT_FALSE@dumpcrs_DEPENDENCIES = $(am__DEPENDENCIES_2)
 dumpcrs_LINK = $(LIBTOOL) $(AM_V_lt) --tag=F77 $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(F77LD) $(AM_FFLAGS) $(FFLAGS) \
 	$(dumpcrs_LDFLAGS) $(LDFLAGS) -o $@
-am_dumpelspau_OBJECTS = dumpelspau.$(OBJEXT)
+am__dumpelspau_SOURCES_DIST = dumpelspau.F
+@NEUT_LIBCOMPAT_FALSE@am_dumpelspau_OBJECTS = dumpelspau.$(OBJEXT)
 dumpelspau_OBJECTS = $(am_dumpelspau_OBJECTS)
-dumpelspau_DEPENDENCIES = $(am__DEPENDENCIES_2)
+@NEUT_LIBCOMPAT_FALSE@dumpelspau_DEPENDENCIES = $(am__DEPENDENCIES_2)
 dumpelspau_LINK = $(LIBTOOL) $(AM_V_lt) --tag=F77 $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(F77LD) $(AM_FFLAGS) $(FFLAGS) \
 	$(dumpelspau_LDFLAGS) $(LDFLAGS) -o $@
-am_dumptotpau_OBJECTS = dumptotpau.$(OBJEXT)
+am__dumptotpau_SOURCES_DIST = dumptotpau.F
+@NEUT_LIBCOMPAT_FALSE@am_dumptotpau_OBJECTS = dumptotpau.$(OBJEXT)
 dumptotpau_OBJECTS = $(am_dumptotpau_OBJECTS)
-dumptotpau_DEPENDENCIES = $(am__DEPENDENCIES_2)
+@NEUT_LIBCOMPAT_FALSE@dumptotpau_DEPENDENCIES = $(am__DEPENDENCIES_2)
 dumptotpau_LINK = $(LIBTOOL) $(AM_V_lt) --tag=F77 $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(F77LD) $(AM_FFLAGS) $(FFLAGS) \
 	$(dumptotpau_LDFLAGS) $(LDFLAGS) -o $@
-am_dumptotpauC_OBJECTS = dumptotpauC.$(OBJEXT)
+am__dumptotpauC_SOURCES_DIST = dumptotpauC.cc
+@NEUT_LIBCOMPAT_FALSE@am_dumptotpauC_OBJECTS = dumptotpauC.$(OBJEXT)
 dumptotpauC_OBJECTS = $(am_dumptotpauC_OBJECTS)
-dumptotpauC_DEPENDENCIES = $(am__DEPENDENCIES_2)
+@NEUT_LIBCOMPAT_FALSE@dumptotpauC_DEPENDENCIES =  \
+@NEUT_LIBCOMPAT_FALSE@	$(am__DEPENDENCIES_2)
 dumptotpauC_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
 	$(CXXFLAGS) $(dumptotpauC_LDFLAGS) $(LDFLAGS) -o $@
-am_neut_OBJECTS = neut.$(OBJEXT)
+am__neut_SOURCES_DIST = neut.F
+@NEUT_LIBCOMPAT_FALSE@am_neut_OBJECTS = neut.$(OBJEXT)
 neut_OBJECTS = $(am_neut_OBJECTS)
-neut_DEPENDENCIES = $(am__DEPENDENCIES_2)
+@NEUT_LIBCOMPAT_FALSE@neut_DEPENDENCIES = $(am__DEPENDENCIES_2)
 neut_LINK = $(LIBTOOL) $(AM_V_lt) --tag=F77 $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(F77LD) $(AM_FFLAGS) $(FFLAGS) \
 	$(neut_LDFLAGS) $(LDFLAGS) -o $@
-am_neut_ntpl_OBJECTS = neut_ntpl.$(OBJEXT)
+am__neut_ntpl_SOURCES_DIST = neut_ntpl.F
+@NEUT_LIBCOMPAT_FALSE@am_neut_ntpl_OBJECTS = neut_ntpl.$(OBJEXT)
 neut_ntpl_OBJECTS = $(am_neut_ntpl_OBJECTS)
-neut_ntpl_DEPENDENCIES = $(am__DEPENDENCIES_2)
+@NEUT_LIBCOMPAT_FALSE@neut_ntpl_DEPENDENCIES = $(am__DEPENDENCIES_2)
 neut_ntpl_LINK = $(LIBTOOL) $(AM_V_lt) --tag=F77 $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(F77LD) $(AM_FFLAGS) $(FFLAGS) \
 	$(neut_ntpl_LDFLAGS) $(LDFLAGS) -o $@
-am_neutclass_to_tree_OBJECTS = neutclass_to_tree.$(OBJEXT)
+am__neutclass_to_tree_SOURCES_DIST = neutclass_to_tree.cc
+@NEUT_LIBCOMPAT_FALSE@am_neutclass_to_tree_OBJECTS =  \
+@NEUT_LIBCOMPAT_FALSE@	neutclass_to_tree.$(OBJEXT)
 neutclass_to_tree_OBJECTS = $(am_neutclass_to_tree_OBJECTS)
-neutclass_to_tree_DEPENDENCIES = $(am__DEPENDENCIES_2)
+@NEUT_LIBCOMPAT_FALSE@neutclass_to_tree_DEPENDENCIES =  \
+@NEUT_LIBCOMPAT_FALSE@	$(am__DEPENDENCIES_2)
 neutclass_to_tree_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CXXLD) \
 	$(AM_CXXFLAGS) $(CXXFLAGS) $(neutclass_to_tree_LDFLAGS) \
@@ -260,11 +284,13 @@ SOURCES = $(basic_histos_SOURCES) $(cross_section_histos_SOURCES) \
 	$(dumptotpau_SOURCES) $(dumptotpauC_SOURCES) $(neut_SOURCES) \
 	$(neut_ntpl_SOURCES) $(neutclass_to_tree_SOURCES) \
 	$(neutroot2_SOURCES)
-DIST_SOURCES = $(basic_histos_SOURCES) $(cross_section_histos_SOURCES) \
-	$(dumpcohcrs_SOURCES) $(dumpcrs_SOURCES) $(dumpelspau_SOURCES) \
-	$(dumptotpau_SOURCES) $(dumptotpauC_SOURCES) $(neut_SOURCES) \
-	$(neut_ntpl_SOURCES) $(neutclass_to_tree_SOURCES) \
-	$(neutroot2_SOURCES)
+DIST_SOURCES = $(am__basic_histos_SOURCES_DIST) \
+	$(am__cross_section_histos_SOURCES_DIST) \
+	$(am__dumpcohcrs_SOURCES_DIST) $(am__dumpcrs_SOURCES_DIST) \
+	$(am__dumpelspau_SOURCES_DIST) $(am__dumptotpau_SOURCES_DIST) \
+	$(am__dumptotpauC_SOURCES_DIST) $(am__neut_SOURCES_DIST) \
+	$(am__neut_ntpl_SOURCES_DIST) \
+	$(am__neutclass_to_tree_SOURCES_DIST) $(neutroot2_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -290,7 +316,7 @@ am__define_uniq_tagged_files = \
 ETAGS = etags
 CTAGS = ctags
 am__DIST_COMMON = $(srcdir)/Makefile.in $(top_srcdir)/build.common \
-	$(top_srcdir)/depcomp README
+	$(top_srcdir)/depcomp
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
@@ -432,16 +458,16 @@ top_srcdir = @top_srcdir@
 # top_builddir dependencies are needed for fh2h.pl-generated headers
 NEUT_INCLUDES = -I$(top_srcdir)/radcorr -I$(top_srcdir)/tauola -I$(top_srcdir)/mec -I$(top_srcdir)/ht2p2h/inc -I$(top_srcdir)/nuccorspl -I$(top_srcdir)/zbsfns -I$(top_srcdir)/n1p1h/inc -I$(top_srcdir)/nuceff -I$(top_srcdir)/kamflux -I$(top_srcdir)/nuclsmpl -I$(top_srcdir)/skmcsvc -I$(top_srcdir)/neutcore -I$(top_srcdir)/partnuck -I$(top_srcdir)/specfunc -I$(top_srcdir)/t2kflux_zbs -I$(top_builddir)/neutcore -I$(top_builddir)/skmcsvc -I$(top_builddir)/n1p1h -I$(top_builddir)/nuccorspl -I$(top_builddir)/nuceff
 NEUT_CLASS_INCLUDES = -I$(top_srcdir)/neutclass
-@NEUT_LIBCOMPAT_TRUE@NEUT_STATIC_LIBS = $(top_builddir)/neutcore/lib@LIBPREFIX@neutcore.@NEUT_VERSION_NUM@.a \
-@NEUT_LIBCOMPAT_TRUE@	$(top_builddir)/nuccorspl/lib@LIBPREFIX@nuccorspl.@NEUT_VERSION_NUM@.a \
-@NEUT_LIBCOMPAT_TRUE@	$(top_builddir)/nuceff/lib@LIBPREFIX@nuceff.@NEUT_VERSION_NUM@.a \
-@NEUT_LIBCOMPAT_TRUE@	$(top_builddir)/n1p1h/lib@LIBPREFIX@n1p1h.@NEUT_VERSION_NUM@.a \
-@NEUT_LIBCOMPAT_TRUE@	$(top_builddir)/ht2p2h/lib@LIBPREFIX@ht2p2h.@NEUT_VERSION_NUM@.a \
-@NEUT_LIBCOMPAT_TRUE@	$(top_builddir)/radcorr/lib@LIBPREFIX@radcorr.@NEUT_VERSION_NUM@.a \
-@NEUT_LIBCOMPAT_TRUE@	$(top_builddir)/specfunc/lib@LIBPREFIX@specfunc.@NEUT_VERSION_NUM@.a \
-@NEUT_LIBCOMPAT_TRUE@	$(top_builddir)/skmcsvc/lib@LIBPREFIX@skmcsvc.@NEUT_VERSION_NUM@.a \
-@NEUT_LIBCOMPAT_TRUE@	$(top_builddir)/partnuck/lib@LIBPREFIX@partnuck.@NEUT_VERSION_NUM@.a \
-@NEUT_LIBCOMPAT_TRUE@	$(am__append_1)
+NEUT_STATIC_LIBS = $(top_builddir)/neutcore/lib@LIBPREFIX@neutcore.@NEUT_VERSION_NUM@.a \
+	$(top_builddir)/n1p1h/lib@LIBPREFIX@n1p1h.@NEUT_VERSION_NUM@.a \
+	$(top_builddir)/ht2p2h/lib@LIBPREFIX@ht2p2h.@NEUT_VERSION_NUM@.a \
+	$(top_builddir)/nuccorspl/lib@LIBPREFIX@nuccorspl.@NEUT_VERSION_NUM@.a \
+	$(top_builddir)/nuceff/lib@LIBPREFIX@nuceff.@NEUT_VERSION_NUM@.a \
+	$(top_builddir)/radcorr/lib@LIBPREFIX@radcorr.@NEUT_VERSION_NUM@.a \
+	$(top_builddir)/specfunc/lib@LIBPREFIX@specfunc.@NEUT_VERSION_NUM@.a \
+	$(top_builddir)/skmcsvc/lib@LIBPREFIX@skmcsvc.@NEUT_VERSION_NUM@.a \
+	$(top_builddir)/partnuck/lib@LIBPREFIX@partnuck.@NEUT_VERSION_NUM@.a \
+	$(am__append_1)
 @NEUT_LIBCOMPAT_TRUE@NEUTCLASS_LIBS = $(top_builddir)/neutclass/libneutrootTreeSingleton.la $(top_builddir)/neutclass/libneutctrl.la $(top_builddir)/neutclass/libneutfsipart.la $(top_builddir)/neutclass/libneutfsivert.la $(top_builddir)/neutclass/libneutnucfsistep.la $(top_builddir)/neutclass/libneutnucfsivert.la $(top_builddir)/neutclass/libneutpart.la $(top_builddir)/neutclass/libneutvect.la $(top_builddir)/neutclass/libneutvtx.la
 @NEUT_LIBCOMPAT_FALSE@NEUT_LIBS = $(top_builddir)/neutclass/lib@LIBPREFIX@neutclassUtils.@NEUT_VERSION_NUM@.a $(top_builddir)/neutclass/lib@LIBPREFIX@neutclass.la $(top_builddir)/libNEUT.@NEUT_VERSION_NUM@.a
 @NEUT_LIBCOMPAT_TRUE@NEUT_LIBS = $(NEUTCLASS_LIBS) $(NEUT_STATIC_LIBS)
@@ -467,36 +493,36 @@ NEUTSMPL_PROGLDFLAGS = $(EXE_LINKFLAGS) $(CERN_LINKFLAGS) $(ROOT_LINKFLAGS)
 neutroot2_SOURCES = neutroot.F flx_intrfc.cc ufm2th1dist.cc trapfpe.c
 neutroot2_LDADD = $(NEUTSMPL_PROGLDADD)
 neutroot2_LDFLAGS = $(NEUTSMPL_PROGLDFLAGS)
-neut_SOURCES = neut.F
-neut_LDADD = $(NEUTSMPL_PROGLDADD)
-neut_LDFLAGS = $(NEUTSMPL_PROGLDFLAGS)
-neut_ntpl_SOURCES = neut_ntpl.F
-neut_ntpl_LDADD = $(NEUTSMPL_PROGLDADD)
-neut_ntpl_LDFLAGS = $(NEUTSMPL_PROGLDFLAGS)
-dumptotpau_SOURCES = dumptotpau.F
-dumptotpau_LDADD = $(NEUTSMPL_PROGLDADD)
-dumptotpau_LDFLAGS = $(NEUTSMPL_PROGLDFLAGS)
-dumpelspau_SOURCES = dumpelspau.F
-dumpelspau_LDADD = $(NEUTSMPL_PROGLDADD)
-dumpelspau_LDFLAGS = $(NEUTSMPL_PROGLDFLAGS)
-dumpcohcrs_SOURCES = dumpcohcrs.F
-dumpcohcrs_LDADD = $(NEUTSMPL_PROGLDADD)
-dumpcohcrs_LDFLAGS = $(NEUTSMPL_PROGLDFLAGS)
-dumpcrs_SOURCES = dumpcrs.F fnrawcrs.F
-dumpcrs_LDADD = $(NEUTSMPL_PROGLDADD)
-dumpcrs_LDFLAGS = $(NEUTSMPL_PROGLDFLAGS)
-dumptotpauC_SOURCES = dumptotpauC.cc
-dumptotpauC_LDADD = $(NEUTSMPL_PROGLDADD)
-dumptotpauC_LDFLAGS = $(NEUTSMPL_PROGLDFLAGS)
-basic_histos_SOURCES = basic_histos.cc
-basic_histos_LDADD = $(NEUTSMPL_PROGLDADD)
-basic_histos_LDFLAGS = $(NEUTSMPL_PROGLDFLAGS)
-neutclass_to_tree_SOURCES = neutclass_to_tree.cc
-neutclass_to_tree_LDADD = $(NEUTSMPL_PROGLDADD)
-neutclass_to_tree_LDFLAGS = $(NEUTSMPL_PROGLDFLAGS)
-cross_section_histos_SOURCES = cross_section_histos.cc fnrawcrs.F
-cross_section_histos_LDADD = $(NEUTSMPL_PROGLDADD)
-cross_section_histos_LDFLAGS = $(NEUTSMPL_PROGLDFLAGS)
+@NEUT_LIBCOMPAT_FALSE@neut_SOURCES = neut.F
+@NEUT_LIBCOMPAT_FALSE@neut_LDADD = $(NEUTSMPL_PROGLDADD)
+@NEUT_LIBCOMPAT_FALSE@neut_LDFLAGS = $(NEUTSMPL_PROGLDFLAGS)
+@NEUT_LIBCOMPAT_FALSE@neut_ntpl_SOURCES = neut_ntpl.F
+@NEUT_LIBCOMPAT_FALSE@neut_ntpl_LDADD = $(NEUTSMPL_PROGLDADD)
+@NEUT_LIBCOMPAT_FALSE@neut_ntpl_LDFLAGS = $(NEUTSMPL_PROGLDFLAGS)
+@NEUT_LIBCOMPAT_FALSE@dumptotpau_SOURCES = dumptotpau.F
+@NEUT_LIBCOMPAT_FALSE@dumptotpau_LDADD = $(NEUTSMPL_PROGLDADD)
+@NEUT_LIBCOMPAT_FALSE@dumptotpau_LDFLAGS = $(NEUTSMPL_PROGLDFLAGS)
+@NEUT_LIBCOMPAT_FALSE@dumpelspau_SOURCES = dumpelspau.F
+@NEUT_LIBCOMPAT_FALSE@dumpelspau_LDADD = $(NEUTSMPL_PROGLDADD)
+@NEUT_LIBCOMPAT_FALSE@dumpelspau_LDFLAGS = $(NEUTSMPL_PROGLDFLAGS)
+@NEUT_LIBCOMPAT_FALSE@dumpcohcrs_SOURCES = dumpcohcrs.F
+@NEUT_LIBCOMPAT_FALSE@dumpcohcrs_LDADD = $(NEUTSMPL_PROGLDADD)
+@NEUT_LIBCOMPAT_FALSE@dumpcohcrs_LDFLAGS = $(NEUTSMPL_PROGLDFLAGS)
+@NEUT_LIBCOMPAT_FALSE@dumpcrs_SOURCES = dumpcrs.F fnrawcrs.F
+@NEUT_LIBCOMPAT_FALSE@dumpcrs_LDADD = $(NEUTSMPL_PROGLDADD)
+@NEUT_LIBCOMPAT_FALSE@dumpcrs_LDFLAGS = $(NEUTSMPL_PROGLDFLAGS)
+@NEUT_LIBCOMPAT_FALSE@dumptotpauC_SOURCES = dumptotpauC.cc
+@NEUT_LIBCOMPAT_FALSE@dumptotpauC_LDADD = $(NEUTSMPL_PROGLDADD)
+@NEUT_LIBCOMPAT_FALSE@dumptotpauC_LDFLAGS = $(NEUTSMPL_PROGLDFLAGS)
+@NEUT_LIBCOMPAT_FALSE@basic_histos_SOURCES = basic_histos.cc
+@NEUT_LIBCOMPAT_FALSE@basic_histos_LDADD = $(NEUTSMPL_PROGLDADD)
+@NEUT_LIBCOMPAT_FALSE@basic_histos_LDFLAGS = $(NEUTSMPL_PROGLDFLAGS)
+@NEUT_LIBCOMPAT_FALSE@neutclass_to_tree_SOURCES = neutclass_to_tree.cc
+@NEUT_LIBCOMPAT_FALSE@neutclass_to_tree_LDADD = $(NEUTSMPL_PROGLDADD)
+@NEUT_LIBCOMPAT_FALSE@neutclass_to_tree_LDFLAGS = $(NEUTSMPL_PROGLDFLAGS)
+@NEUT_LIBCOMPAT_FALSE@cross_section_histos_SOURCES = cross_section_histos.cc fnrawcrs.F
+@NEUT_LIBCOMPAT_FALSE@cross_section_histos_LDADD = $(NEUTSMPL_PROGLDADD)
+@NEUT_LIBCOMPAT_FALSE@cross_section_histos_LDFLAGS = $(NEUTSMPL_PROGLDFLAGS)
 all: all-am
 
 .SUFFIXES:

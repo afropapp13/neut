@@ -1,11 +1,11 @@
    TO BUILD AND RUN PION SCATTERING AND PHOTOPRODUCTION PROGRAMS
 
-1) After completing ../neutsmpl/Makeneutsmpl.csh, run `make all`
+1) After completing build
 
 2) Run: ./piscat neut.card output.hbk <111 or 211 or -211>
     or: ./run_piscat.sh
 
-3) Analyse: 
+3) Analyse:
 	a) h2root output.hbk output.root
 	b) ./run_piscatana -i output.root -o output_ana.root
 	c) ./run_piscatplot -i <list of root files from step b)> -l <list of legend labels> -d <plot type> -e <expected # of events per file if hadd'ed>
@@ -14,5 +14,3 @@
 
 
 Contact: pdeperio@physics.utoronto.ca
-
-

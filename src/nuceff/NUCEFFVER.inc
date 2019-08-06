@@ -1,3 +1,0 @@
-NUCEFFVER   = 5.4.1
-INUCEFFVER  = 541
-
