@@ -176,37 +176,37 @@ am_lib@LIBPREFIX@neutcore_@NEUT_VERSION_NUM@_a_OBJECTS =  \
 	nemodgam.$(OBJEXT) rsdcrsk.$(OBJEXT) rstcrsett.$(OBJEXT) \
 	dnela.$(OBJEXT) lenstr.$(OBJEXT) nemodsel.$(OBJEXT) \
 	rsdiste.$(OBJEXT) rstcrs.$(OBJEXT) dnels.$(OBJEXT) \
-	LH.$(OBJEXT) nemultip.$(OBJEXT) rsdist.$(OBJEXT) \
-	rstcrsgamrd.$(OBJEXT) dnelsnl.$(OBJEXT) neapivct.$(OBJEXT) \
-	nencelslpv.$(OBJEXT) rsdistg.$(OBJEXT) rstcrsg.$(OBJEXT) \
-	dnelsq2.$(OBJEXT) necard.$(OBJEXT) nencelsspff.$(OBJEXT) \
-	rsdistk.$(OBJEXT) rstcrsgm.$(OBJEXT) dnncela.$(OBJEXT) \
-	nechadir.$(OBJEXT) nencelsvcp.$(OBJEXT) rsdt33e.$(OBJEXT) \
-	rstcrsgt.$(OBJEXT) dnncelsq2.$(OBJEXT) necharge.$(OBJEXT) \
-	rsdt33.$(OBJEXT) rstcrsk.$(OBJEXT) elaxff.$(OBJEXT) \
-	nechkfb.$(OBJEXT) nencelsvnp.$(OBJEXT) rsdt33g.$(OBJEXT) \
-	rstcrskm.$(OBJEXT) evdifcrs.$(OBJEXT) neclpos.$(OBJEXT) \
-	nencelsvnt.$(OBJEXT) rsdt33k.$(OBJEXT) rstcrskrd.$(OBJEXT) \
-	fnapicrs.$(OBJEXT) neclrcrs.$(OBJEXT) neomega.$(OBJEXT) \
-	rsifl1e.$(OBJEXT) rstcrskt.$(OBJEXT) fndsigmapidt.$(OBJEXT) \
-	neclrwrk.$(OBJEXT) neranbll2.$(OBJEXT) rsifl1.$(OBJEXT) \
-	rstcrsm.$(OBJEXT) fnelscrn.$(OBJEXT) necohvct.$(OBJEXT) \
-	neranbll.$(OBJEXT) rsifl1k.$(OBJEXT) rstcrsrd.$(OBJEXT) \
-	fnelscrs.$(OBJEXT) necpnewk.$(OBJEXT) nerdseed.$(OBJEXT) \
-	rsifl2e.$(OBJEXT) rstcrst.$(OBJEXT) fnels_erpascl.$(OBJEXT) \
-	necrosel.$(OBJEXT) nesetfgparams.$(OBJEXT) rsifl2.$(OBJEXT) \
-	fnelsint.$(OBJEXT) necrosin.$(OBJEXT) nesettarg.$(OBJEXT) \
-	rsifl2g.$(OBJEXT) rsy00.$(OBJEXT) fnelspan_effsf.$(OBJEXT) \
-	necrosto.$(OBJEXT) nesortdl.$(OBJEXT) rsifl2k.$(OBJEXT) \
-	rsy20.$(OBJEXT) fnelspan.$(OBJEXT) necrsmode.$(OBJEXT) \
-	nevect.$(OBJEXT) rsifl3e.$(OBJEXT) rsy21.$(OBJEXT) \
-	fnelspan_intpol.$(OBJEXT) nedcy2bd.$(OBJEXT) nevent.$(OBJEXT) \
-	rsifl3.$(OBJEXT) rsy22.$(OBJEXT) fnelspan_sf.$(OBJEXT) \
-	nedifvct.$(OBJEXT) nrsettarg.$(OBJEXT) rsifl3k.$(OBJEXT) \
-	structm.$(OBJEXT) fnelspau_effsf.$(OBJEXT) neelslpv.$(OBJEXT) \
-	nudeex.$(OBJEXT) rsifl4.$(OBJEXT) neelslvc.$(OBJEXT) \
-	nudeex_n.$(OBJEXT) rsifl4g.$(OBJEXT) fnelspau_intpol.$(OBJEXT) \
-	neelsspf.$(OBJEXT) nudeex_org.$(OBJEXT) rsifl5.$(OBJEXT) \
+	nemultip.$(OBJEXT) rsdist.$(OBJEXT) rstcrsgamrd.$(OBJEXT) \
+	dnelsnl.$(OBJEXT) neapivct.$(OBJEXT) nencelslpv.$(OBJEXT) \
+	rsdistg.$(OBJEXT) rstcrsg.$(OBJEXT) dnelsq2.$(OBJEXT) \
+	necard.$(OBJEXT) nencelsspff.$(OBJEXT) rsdistk.$(OBJEXT) \
+	rstcrsgm.$(OBJEXT) dnncela.$(OBJEXT) nechadir.$(OBJEXT) \
+	nencelsvcp.$(OBJEXT) rsdt33e.$(OBJEXT) rstcrsgt.$(OBJEXT) \
+	dnncelsq2.$(OBJEXT) necharge.$(OBJEXT) rsdt33.$(OBJEXT) \
+	rstcrsk.$(OBJEXT) elaxff.$(OBJEXT) nechkfb.$(OBJEXT) \
+	nencelsvnp.$(OBJEXT) rsdt33g.$(OBJEXT) rstcrskm.$(OBJEXT) \
+	evdifcrs.$(OBJEXT) neclpos.$(OBJEXT) nencelsvnt.$(OBJEXT) \
+	rsdt33k.$(OBJEXT) rstcrskrd.$(OBJEXT) fnapicrs.$(OBJEXT) \
+	neclrcrs.$(OBJEXT) neomega.$(OBJEXT) rsifl1e.$(OBJEXT) \
+	rstcrskt.$(OBJEXT) fndsigmapidt.$(OBJEXT) neclrwrk.$(OBJEXT) \
+	neranbll2.$(OBJEXT) rsifl1.$(OBJEXT) rstcrsm.$(OBJEXT) \
+	fnelscrn.$(OBJEXT) necohvct.$(OBJEXT) neranbll.$(OBJEXT) \
+	rsifl1k.$(OBJEXT) rstcrsrd.$(OBJEXT) fnelscrs.$(OBJEXT) \
+	necpnewk.$(OBJEXT) nerdseed.$(OBJEXT) rsifl2e.$(OBJEXT) \
+	rstcrst.$(OBJEXT) fnels_erpascl.$(OBJEXT) necrosel.$(OBJEXT) \
+	nesetfgparams.$(OBJEXT) rsifl2.$(OBJEXT) fnelsint.$(OBJEXT) \
+	necrosin.$(OBJEXT) nesettarg.$(OBJEXT) rsifl2g.$(OBJEXT) \
+	rsy00.$(OBJEXT) fnelspan_effsf.$(OBJEXT) necrosto.$(OBJEXT) \
+	nesortdl.$(OBJEXT) rsifl2k.$(OBJEXT) rsy20.$(OBJEXT) \
+	fnelspan.$(OBJEXT) necrsmode.$(OBJEXT) nevect.$(OBJEXT) \
+	rsifl3e.$(OBJEXT) rsy21.$(OBJEXT) fnelspan_intpol.$(OBJEXT) \
+	nedcy2bd.$(OBJEXT) nevent.$(OBJEXT) rsifl3.$(OBJEXT) \
+	rsy22.$(OBJEXT) fnelspan_sf.$(OBJEXT) nedifvct.$(OBJEXT) \
+	nrsettarg.$(OBJEXT) rsifl3k.$(OBJEXT) structm.$(OBJEXT) \
+	fnelspau_effsf.$(OBJEXT) neelslpv.$(OBJEXT) nudeex.$(OBJEXT) \
+	rsifl4.$(OBJEXT) neelslvc.$(OBJEXT) nudeex_n.$(OBJEXT) \
+	rsifl4g.$(OBJEXT) fnelspau_intpol.$(OBJEXT) neelsspf.$(OBJEXT) \
+	nudeex_org.$(OBJEXT) rsifl5.$(OBJEXT) \
 	fnelspau_select.$(OBJEXT) neelsspff.$(OBJEXT) \
 	nudeex_p.$(OBJEXT) rsifl6.$(OBJEXT) structg.$(OBJEXT) \
 	bbba07.$(OBJEXT) fa3comp.$(OBJEXT) fazexp.$(OBJEXT) \
@@ -490,27 +490,27 @@ lib@LIBPREFIX@neutcore_@NEUT_VERSION_NUM@_a_SOURCES = bbba05.F \
 	nemkgam.F rsdcrs.F rstcrsetm.F difcrsnerein.F grv94di.F \
 	nemknpos.F rsdcrsg.F rstcrsetrd.F dndxdy.F grv98_lo.F \
 	nemodgam.F rsdcrsk.F rstcrsett.F dnela.F lenstr.F nemodsel.F \
-	rsdiste.F rstcrs.F dnels.F LH.F nemultip.F rsdist.F \
-	rstcrsgamrd.F dnelsnl.F neapivct.F nencelslpv.F rsdistg.F \
-	rstcrsg.F dnelsq2.F necard.F nencelsspff.F rsdistk.F \
-	rstcrsgm.F dnncela.F nechadir.F nencelsvcp.F rsdt33e.F \
-	rstcrsgt.F dnncelsq2.F necharge.F rsdt33.F rstcrsk.F elaxff.F \
-	nechkfb.F nencelsvnp.F rsdt33g.F rstcrskm.F evdifcrs.F \
-	neclpos.F nencelsvnt.F rsdt33k.F rstcrskrd.F fnapicrs.F \
-	neclrcrs.F neomega.F rsifl1e.F rstcrskt.F fndsigmapidt.F \
-	neclrwrk.F neranbll2.F rsifl1.F rstcrsm.F fnelscrn.F \
-	necohvct.F neranbll.F rsifl1k.F rstcrsrd.F fnelscrs.F \
-	necpnewk.F nerdseed.F rsifl2e.F rstcrst.F fnels_erpascl.F \
-	necrosel.F nesetfgparams.F rsifl2.F fnelsint.F necrosin.F \
-	nesettarg.F rsifl2g.F rsy00.F fnelspan_effsf.F necrosto.F \
-	nesortdl.F rsifl2k.F rsy20.F fnelspan.F necrsmode.F nevect.F \
-	rsifl3e.F rsy21.F fnelspan_intpol.F nedcy2bd.F nevent.F \
-	rsifl3.F rsy22.F fnelspan_sf.F nedifvct.F nrsettarg.F \
-	rsifl3k.F structm.F fnelspau_effsf.F neelslpv.F nudeex.F \
-	rsifl4.F neelslvc.F nudeex_n.F rsifl4g.F fnelspau_intpol.F \
-	neelsspf.F nudeex_org.F rsifl5.F fnelspau_select.F neelsspff.F \
-	nudeex_p.F rsifl6.F structg.f bbba07.cc fa3comp.cc fazexp.cc \
-	ddifnerein.c qedifcrs.c
+	rsdiste.F rstcrs.F dnels.F nemultip.F rsdist.F rstcrsgamrd.F \
+	dnelsnl.F neapivct.F nencelslpv.F rsdistg.F rstcrsg.F \
+	dnelsq2.F necard.F nencelsspff.F rsdistk.F rstcrsgm.F \
+	dnncela.F nechadir.F nencelsvcp.F rsdt33e.F rstcrsgt.F \
+	dnncelsq2.F necharge.F rsdt33.F rstcrsk.F elaxff.F nechkfb.F \
+	nencelsvnp.F rsdt33g.F rstcrskm.F evdifcrs.F neclpos.F \
+	nencelsvnt.F rsdt33k.F rstcrskrd.F fnapicrs.F neclrcrs.F \
+	neomega.F rsifl1e.F rstcrskt.F fndsigmapidt.F neclrwrk.F \
+	neranbll2.F rsifl1.F rstcrsm.F fnelscrn.F necohvct.F \
+	neranbll.F rsifl1k.F rstcrsrd.F fnelscrs.F necpnewk.F \
+	nerdseed.F rsifl2e.F rstcrst.F fnels_erpascl.F necrosel.F \
+	nesetfgparams.F rsifl2.F fnelsint.F necrosin.F nesettarg.F \
+	rsifl2g.F rsy00.F fnelspan_effsf.F necrosto.F nesortdl.F \
+	rsifl2k.F rsy20.F fnelspan.F necrsmode.F nevect.F rsifl3e.F \
+	rsy21.F fnelspan_intpol.F nedcy2bd.F nevent.F rsifl3.F rsy22.F \
+	fnelspan_sf.F nedifvct.F nrsettarg.F rsifl3k.F structm.F \
+	fnelspau_effsf.F neelslpv.F nudeex.F rsifl4.F neelslvc.F \
+	nudeex_n.F rsifl4g.F fnelspau_intpol.F neelsspf.F nudeex_org.F \
+	rsifl5.F fnelspau_select.F neelsspff.F nudeex_p.F rsifl6.F \
+	structg.f bbba07.cc fa3comp.cc fazexp.cc ddifnerein.c \
+	qedifcrs.c
 
 # Unused sources that live in the directory
 UNUSED_srcs = calcqecrs.F rs.tcrsdump.F nencelsvct.F fnelspau.F rs.wdist.F
