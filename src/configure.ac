@@ -83,6 +83,7 @@ AC_CONFIG_FILES([
   nuceff/Makefile
   n1p1h/Makefile
   ht2p2h/Makefile
+  mec/Makefile
   radcorr/Makefile
   tauola/Makefile
   specfunc/Makefile
@@ -92,6 +93,8 @@ AC_CONFIG_FILES([
   neutclass/Makefile
   neutsmpl/Makefile
   nuclsmpl/Makefile
+  pionsmpl/Makefile
+  neutgeom/Makefile
   reweight/Makefile
   tools/Makefile
   neututils/Makefile

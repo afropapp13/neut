@@ -18,11 +18,7 @@ else
 noinst_LIBRARIES = $(LIBNAME)
 endif
 
-lib@LIBPREFIX@specfunc_@NEUT_VERSION_NUM@_a_SOURCES = buildEffSf.F buildSf.F calcLH.F combineEffSFTables.F combineTables.F effsfevent.F effSFMaxDiff.F maxDiff.F readEffSFXsecData.F readXsecData.F selectEffSFValues.F selectSfValues.F sfevent.F
-
-if NEUT_LIBCOMPAT
-lib@LIBPREFIX@specfunc_@NEUT_VERSION_NUM@_a_SOURCES += $(top_srcdir)/neutcore/fourVector.F
-endif
+lib@LIBPREFIX@specfunc_@NEUT_VERSION_NUM@_a_SOURCES = buildEffSf.F buildSf.F calcLH.F combineEffSFTables.F combineTables.F effsfevent.F effSFMaxDiff.F maxDiff.F readEffSFXsecData.F readXsecData.F selectEffSFValues.F selectSfValues.F sfevent.F fourVector.F
 
 # Unused sources that live in the directory
 UNUSED_srcs = selectSfValues.old.F tauvect_dummy.F

@@ -20,7 +20,7 @@ if NEUT_LIBCOMPAT
 SUBDIRS = neutcore nuccorspl nuceff n1p1h ht2p2h radcorr tauola specfunc skmcsvc partnuck neutclass . neutsmpl reweight tools
 else
 # Order here matters, should build core libraries, combine them in this dir (.), then build reweight, programs, and tools.
-SUBDIRS = neutcore nuccorspl nuceff n1p1h ht2p2h radcorr tauola specfunc skmcsvc partnuck neutclass . neutsmpl reweight tools neututils
+SUBDIRS = neutcore nuccorspl nuceff n1p1h mec ht2p2h radcorr tauola specfunc skmcsvc partnuck neutclass . neutsmpl reweight tools neututils
 endif
 
 # When I can get a hold of the zebra code I will add an --enable flag for the ZEBRA_SUBDIRS, but for the moment, disable them.
@@ -40,7 +40,7 @@ lib_LIBRARIES = $(LIBNAME)
 libNEUT_@NEUT_VERSION_NUM@_a_SOURCES =
 
 $(LIBNAME): $(NEUT_STATIC_LIBS)
-	$(AR) -rs $@ $(top_builddir)/nuccorspl/*.o $(top_builddir)/nuceff/*.o $(top_builddir)/n1p1h/src/*.o $(top_builddir)/ht2p2h/src/*.o $(top_builddir)/radcorr/*.o $(top_builddir)/tauola/*.o $(top_builddir)/specfunc/*.o $(top_builddir)/skmcsvc/*.o $(top_builddir)/partnuck/*.o $(top_builddir)/neutcore/*.o
+	$(AR) -rs $@ $(top_builddir)/nuccorspl/*.o $(top_builddir)/nuceff/*.o $(top_builddir)/n1p1h/src/*.o $(top_builddir)/ht2p2h/src/*.o $(top_builddir)/radcorr/*.o $(top_builddir)/tauola/*.o $(top_builddir)/specfunc/*.o $(top_builddir)/skmcsvc/*.o $(top_builddir)/partnuck/*.o $(top_builddir)/neutcore/*.o $(top_builddir)/mec/*.o
 
 install-exec-hook:
 	-(cd ${libdir}; $(LN_S) $(LIBNAME) $(shell echo $(LIBNAME) | cut -d . -f 1).a)
