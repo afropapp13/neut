@@ -76,7 +76,7 @@ C--Read card files
       CALL NECARD
       CALL NECARDEV
 
-C--Fill interactio model
+C--Fill interaction model
       call nefillmodel
 
 C--open file
