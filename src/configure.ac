@@ -82,6 +82,28 @@ AC_ARG_ENABLE([tauola],
 
 AM_CONDITIONAL([NEUT_USE_TAUOLA], [test "x$enable_tauola" = "xyes"])
 
+######## Check debug
+AC_ARG_ENABLE([debug],
+    AS_HELP_STRING([--enable-debug], [Compile with debug symbols]))
+
+# Overrides default -g -O2
+CFLAGS=""
+CXXFLAGS=""
+FFLAGS=""
+AM_CONDITIONAL([NEUT_DEBUG], [test "x$enable_debug" = "xyes"])
+
+######## Check gprof
+AC_ARG_WITH([gperf],
+  AS_HELP_STRING([--with-gperf=<lib>],
+  [Directory containing libprofiler.so]),
+  [
+    AM_CONDITIONAL([NEUT_USE_GPERF], [true])
+    AC_SUBST([NEUT_GPERF],[$with_gperf])
+    echo "Using google perftools from ${with_gperf}."
+  ], [
+    AM_CONDITIONAL([NEUT_USE_GPERF], [false])
+  ]
+)
 
 AC_CONFIG_FILES([
   Makefile

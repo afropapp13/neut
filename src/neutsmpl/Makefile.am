@@ -12,6 +12,10 @@ neutroot2_SOURCES = neutroot.F flx_intrfc.cc ufm2th1dist.cc trapfpe.c
 neutroot2_LDADD = $(NEUTSMPL_PROGLDADD)
 neutroot2_LDFLAGS = $(NEUTSMPL_PROGLDFLAGS)
 
+if NEUT_USE_GPERF
+neutroot2_SOURCES += gperfstart.cc
+endif
+
 if !NEUT_LIBCOMPAT
 
 bin_PROGRAMS += neut neut_ntpl dumptotpau dumpelspau dumpcohcrs dumpcrs dumptotpauC basic_histos neutclass_to_tree cross_section_histos

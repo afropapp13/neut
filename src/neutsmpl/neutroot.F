@@ -67,6 +67,10 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
       LUX = 3
 
+#ifdef NEUT_USE_GPERF
+      CALL gperfstart
+#endif
+
 C--Read card files
 
       CALL NECARD
