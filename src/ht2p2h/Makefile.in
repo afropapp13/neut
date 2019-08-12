@@ -366,8 +366,7 @@ DEFAULT_CXXFLAGS = -fPIC $(NEUT_DEFINES) $(NEUT_INCLUDES) \
 	-I$(CERN_ROOT)/include $(shell root-config --cflags) \
 	$(am__append_5) $(am__append_8)
 DEFAULT_CFLAGS = -fPIC $(NEUT_DEFINES) $(NEUT_INCLUDES) \
-	-I$(CERN_ROOT)/include $(shell root-config --cflags) \
-	$(am__append_6) $(am__append_9)
+	-I$(CERN_ROOT)/include $(am__append_6) $(am__append_9)
 DEFAULT_LINKFLAGS = -version-info @NEUT_VERSION_NUM@
 ROOT_LINKFLAGS = $(shell root-config --ldflags) -pthread -rdynamic -L$(shell root-config --libdir)
 @ROOT_MAJOR_IS_SIX_FALSE@ROOT_LIBS = -lCore -lCint -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lm -ldl

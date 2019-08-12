@@ -5,7 +5,7 @@ c      include "fourVector.F"
       double precision function LH(k,kPrime,p,qTilde,IPAR,nc,nucPdg,
      $     NUMATOM)
         implicit none
-#include "../neutcore/neutmodel.h"
+#include "neutmodel.h"
 c ----- neutrino pdg, nucleon pdg, nc logical flag        
         integer IPAR
         integer nucPdg, NUMATOM
@@ -163,8 +163,8 @@ c        LH = 0
 c function to calculate Axial form factor
       double precision function CalcFA(q,nc,sgn)
         implicit none
-#include "../neutcore/necard.h"
-#include "../neutcore/neutmodel.h"
+#include "necard.h"
+#include "neutmodel.h"
         logical BBBA5, BBBA7, BBBA7af
         real*8 gep, gmp, gen, gmn
         real*8 fabbba07, q2

@@ -11,12 +11,12 @@
 *       E      : NEUTRINO ENERGY ( GEV )
 *       IPAR   : NEUTRINO TYPE
 *                  12 : NEU-E
-*                 -12 : NEU-E-BAR            
+*                 -12 : NEU-E-BAR
 *                  14 : NEU-MU
-*                 -14 : NEU-MU-BAR            
+*                 -14 : NEU-MU-BAR
 *                  16 : NEU-TAU
 *                 -16 : NEU-TAU-BAR
-*     
+*
 *     (Output)
 *       FNELSPAU_INTPOL : CROSS SECTION ( 10**-38cm^2 )
 *
@@ -31,16 +31,16 @@
 *                    CROSS SECTIONS OF NEU_TAU_BAR ARE LARGE AT
 *                    HIGH ENERGY REGION, BUT WE ADD NO CORRECTION.
 *       2000.09.05 ; K. KANEYUKI FIX FNNUCL, UPDATE CF
-*     
+*
 C
-C       2002.09.17 ; Y.Hayato ; 
+C       2002.09.17 ; Y.Hayato ;
 C                      Cross-section was calculated with programs in ver 99b.
-C                             modifications : dnels.F  
+C                             modifications : dnels.F
 C                                                 line 65 was commented out
 C                                                 line 57 do not subtract V
 C                                                 fixed potential
 C                                             dnelsq2.F
-C                                                 MA=1.1 
+C                                                 MA=1.1
 C
 C       2007.11,05 ; G.Mitsuka - cross section for each energy and
 C                      target is set after loading cross section table
@@ -49,7 +49,7 @@ C       2009.01.19 ; Y.Hayato  - PF table change from XX0 to XX5
 ************************************************************************
       IMPLICIT NONE
 
-#include "neutparams.h"      
+#include "neutparams.h"
 #include "qecrs.h"
 #include "neutmodel.h"
 #include "necard.h"
@@ -60,6 +60,10 @@ C       2009.01.19 ; Y.Hayato  - PF table change from XX0 to XX5
 
       INTEGER LUN
       DATA LUN/80/
+
+C -- for SF nuclei tests
+      logical HaveSpecFuncForNuclei, HaveEffSpecFuncForNuclei
+      external HaveSpecFuncForNuclei, HaveEffSpecFuncForNuclei
 
       INTEGER I,II,J,JJ,IDUM,ILOADQECRS,ILOADSFQECRS,
      $     ILOADEFFSFQECRS,IQEMA
@@ -83,7 +87,7 @@ C       2009.01.19 ; Y.Hayato  - PF table change from XX0 to XX5
       INTEGER*4 IDVECFORM
 
       REAL FERMISURF(9)
-      DATA FERMISURF/0.195, 0.205, 0.215, 0.225, 0.235, 
+      DATA FERMISURF/0.195, 0.205, 0.215, 0.225, 0.235,
      &               0.245, 0.255, 0.265, 0.275/
 
       REAL CRSLE1(210),CRSLE2(210),CRSLE3(210),CRSLE4(210)
@@ -131,51 +135,51 @@ C     Enu for tau-nu
       EQUIVALENCE (ET(51),ET2(1))
       EQUIVALENCE (ET(101),ET3(1))
 
-C     
+C
 C --  ENERGY OF ELECTRON/MUON NEUTRINO
 C
-       DATA EE1/0.025,0.075,0.125,0.175,0.225, 
-     $          0.275,0.325,0.375,0.425,0.475, 
-     $          0.525,0.575,0.625,0.675,0.725, 
-     $          0.775,0.825,0.875,0.925,0.975, 
-     $          1.025,1.075,1.125,1.175,1.225, 
-     $          1.275,1.325,1.375,1.425,1.475, 
-     $          1.525,1.575,1.625,1.675,1.725, 
-     $          1.775,1.825,1.875,1.925,1.975, 
-     $          2.025,2.075,2.125,2.175,2.225, 
+       DATA EE1/0.025,0.075,0.125,0.175,0.225,
+     $          0.275,0.325,0.375,0.425,0.475,
+     $          0.525,0.575,0.625,0.675,0.725,
+     $          0.775,0.825,0.875,0.925,0.975,
+     $          1.025,1.075,1.125,1.175,1.225,
+     $          1.275,1.325,1.375,1.425,1.475,
+     $          1.525,1.575,1.625,1.675,1.725,
+     $          1.775,1.825,1.875,1.925,1.975,
+     $          2.025,2.075,2.125,2.175,2.225,
      $          2.275,2.325,2.375,2.425,2.475/
 
-      DATA EE2/ 2.525,2.575,2.625,2.675,2.725, 
-     $          2.775,2.825,2.875,2.925,2.975, 
-     $          3.025,3.075,3.125,3.175,3.225, 
-     $          3.275,3.325,3.375,3.425,3.475, 
-     $          3.525,3.575,3.625,3.675,3.725, 
-     $          3.775,3.825,3.875,3.925,3.975, 
-     $          4.025,4.075,4.125,4.175,4.225, 
-     $          4.275,4.325,4.375,4.425,4.475, 
-     $          4.525,4.575,4.625,4.675,4.725, 
+      DATA EE2/ 2.525,2.575,2.625,2.675,2.725,
+     $          2.775,2.825,2.875,2.925,2.975,
+     $          3.025,3.075,3.125,3.175,3.225,
+     $          3.275,3.325,3.375,3.425,3.475,
+     $          3.525,3.575,3.625,3.675,3.725,
+     $          3.775,3.825,3.875,3.925,3.975,
+     $          4.025,4.075,4.125,4.175,4.225,
+     $          4.275,4.325,4.375,4.425,4.475,
+     $          4.525,4.575,4.625,4.675,4.725,
      $          4.775,4.825,4.875,4.925,4.975/
 
-      DATA EE3/ 5.025,5.075,5.125,5.175,5.225, 
-     $          5.275,5.325,5.375,5.425,5.475, 
-     $          5.525,5.575,5.625,5.675,5.725, 
-     $          5.775,5.825,5.875,5.925,5.975, 
-     $          6.025,6.075,6.125,6.175,6.225, 
-     $          6.275,6.325,6.375,6.425,6.475, 
-     $          6.525,6.575,6.625,6.675,6.725, 
-     $          6.775,6.825,6.875,6.925,6.975, 
-     $          7.025,7.075,7.125,7.175,7.225, 
+      DATA EE3/ 5.025,5.075,5.125,5.175,5.225,
+     $          5.275,5.325,5.375,5.425,5.475,
+     $          5.525,5.575,5.625,5.675,5.725,
+     $          5.775,5.825,5.875,5.925,5.975,
+     $          6.025,6.075,6.125,6.175,6.225,
+     $          6.275,6.325,6.375,6.425,6.475,
+     $          6.525,6.575,6.625,6.675,6.725,
+     $          6.775,6.825,6.875,6.925,6.975,
+     $          7.025,7.075,7.125,7.175,7.225,
      $          7.275,7.325,7.375,7.425,7.475/
-     
-      DATA EE4/ 7.525,7.575,7.625,7.675,7.725, 
-     $          7.775,7.825,7.875,7.925,7.975, 
-     $          8.025,8.075,8.125,8.175,8.225, 
-     $          8.275,8.325,8.375,8.425,8.475, 
-     $          8.525,8.575,8.625,8.675,8.725, 
-     $          8.775,8.825,8.875,8.925,8.975, 
-     $          9.025,9.075,9.125,9.175,9.225, 
-     $          9.275,9.325,9.375,9.425,9.475, 
-     $          9.525,9.575,9.625,9.675,9.725, 
+
+      DATA EE4/ 7.525,7.575,7.625,7.675,7.725,
+     $          7.775,7.825,7.875,7.925,7.975,
+     $          8.025,8.075,8.125,8.175,8.225,
+     $          8.275,8.325,8.375,8.425,8.475,
+     $          8.525,8.575,8.625,8.675,8.725,
+     $          8.775,8.825,8.875,8.925,8.975,
+     $          9.025,9.075,9.125,9.175,9.225,
+     $          9.275,9.325,9.375,9.425,9.475,
+     $          9.525,9.575,9.625,9.675,9.725,
      $          9.775,9.825,9.875,9.925,9.975/
 
       DATA EE5/ 11.00,12.00,13.00,14.00,15.00,
@@ -183,7 +187,7 @@ C
 
 C
 C --  ENERGY OF TAU NEUTRINO
-C      
+C
       DATA ET1 /.270E+01,.280E+01,.290E+01,.300E+01,.310E+01,
      &          .320E+01,.330E+01,.340E+01,.350E+01,.360E+01,
      &          .370E+01,.380E+01,.390E+01,.400E+01,.410E+01,
@@ -212,18 +216,11 @@ C
 
       lenpath = lenstr(crstblpath)
 
-      if (mod(MDLQE, 1000)/100 .EQ. 4 .AND. (numbndp .eq. 6 .or. 
-     &    numbndp .eq. 8 .or. numbndp .eq. 26)) then
-c      if (mod(MDLQE, 1000)/100 .EQ. 4) then
+      if (mod(MDLQE, 1000)/100 .EQ. 4 .AND. HaveSpecFuncForNuclei() ) then
         if (iloadsfqecrs.ne.0) goto 300
       else if (((mod(MDLQE, 1000)/100 .EQ. 6 ).or.
-     &          (mod(MDLQE, 1000)/100 .EQ. 7 )    ).AND. 
-     &         ((NUMATOM .eq.  2) .or. (NUMATOM .eq.   3) .or.
-     &          (NUMATOM .eq.  4) .or. (NUMATOM .eq.  12) .or.
-     &          (NUMATOM .eq. 16) .or. (NUMATOM .eq.  20) .or.
-     &          (NUMATOM .eq. 27) .or. (NUMATOM .eq.  40) .or.
-     &          (NUMATOM .eq. 56) .or. (NUMATOM .eq.  63) .or.
-     &          (NUMATOM .eq. 64) .or. (NUMATOM .eq. 208))) then
+     &          (mod(MDLQE, 1000)/100 .EQ. 7 )    ).AND.
+     &          HaveEffSpecFuncForNuclei() ) then
          if (iloadeffsfqecrs.ne.0) goto 600
       else
         if (iloadqecrs.ne.0) goto 100
@@ -234,10 +231,8 @@ c      if (mod(MDLQE, 1000)/100 .EQ. 4) then
 *******  Spectral function implementation *****
 * A.Furmanski - 2013
 *
-      if ( (mod(MDLQE, 1000)/100 .EQ. 4) .AND. 
-     $     ((numbndp .eq. 6) .or. 
-     &      (numbndp .eq. 8) .or. 
-     $      (numbndp .eq.26)     )) then
+      if ( (mod(MDLQE, 1000)/100 .EQ. 4) .AND.
+     $      HaveSpecFuncForNuclei() ) then
 c       if (mod(MDLQE, 1000)/100 .EQ. 4) then
 c ----- load xsec table required
 C     DUMSTR = 'qelSfData/totXsec/'
@@ -245,7 +240,7 @@ C     DUMSTR = 'qelSfData/totXsec/'
          DUMSTR = 'qelSfData.'
          DUMSTR = DUMSTR(1:10) // QEMASTR
          DUMSTR = DUMSTR(1:14) // '/totXsec/'
-         
+
         if (IPAR .EQ. 14) then
           DUMSTR=DUMSTR(1:23) // '+14'
         else if (IPAR .EQ. -14) then
@@ -259,8 +254,8 @@ C     DUMSTR = 'qelSfData/totXsec/'
         else if (IPAR .EQ. -16) then
           DUMSTR=DUMSTR(1:23) // '-16'
         endif
-        
-        
+
+
         if (NUMBNDP .EQ. 6) then
           DUMSTR=DUMSTR(1:26) // '_1000060120'
         else if (NUMBNDP .EQ. 8) then
@@ -268,7 +263,7 @@ C     DUMSTR = 'qelSfData/totXsec/'
         else if (NUMBNDP .EQ. 26) then
           DUMSTR=DUMSTR(1:26) // '_1000260560'
         endif
-        
+
         DUMSTR=DUMSTR(1:37) // '_cc.csv'
         DUMSTR=CRSTBLPATH(1:lenpath)//DUMSTR
         open(LUN, file=DUMSTR, status="old")
@@ -283,19 +278,14 @@ c ----- CRSLE1 is re-used here for storing cross-section values for SF implement
         close(LUN)
         write (*,*) "cross section table for sf loaded"
         iloadsfqecrs = 1
-300     continue        
+300     continue
 
 *******  Effective SF implementation *****
 * C. Wilkinson 2014
 *
       else if (( (mod(MDLQE, 1000)/100 .EQ. 6 ).or.
-     &           (mod(MDLQE, 1000)/100 .EQ. 7 )    ).AND. 
-     &         ( (NUMATOM .eq.  2 ).or. (NUMATOM .eq.   3) .or.
-     &           (NUMATOM .eq.  4 ).or. (NUMATOM .eq.  12) .or.
-     &           (NUMATOM .eq. 16 ).or. (NUMATOM .eq.  20) .or.
-     &           (NUMATOM .eq. 27 ).or. (NUMATOM .eq.  40) .or.
-     &           (NUMATOM .eq. 56 ).or. (NUMATOM .eq.  63) .or.
-     &           (NUMATOM .eq. 64 ).or. (NUMATOM .eq. 208))) then
+     &           (mod(MDLQE, 1000)/100 .EQ. 7 )    ).AND.
+     &           HaveEffSpecFuncForNuclei() ) then
 
 c ----- load xsec table required
         if (mod(MDLQE, 1000)/100 .EQ. 7) then
@@ -303,7 +293,7 @@ c ----- load xsec table required
         else
            DUMSTR = 'qelSfData/effSFTotXsec/'
         endif
-         
+
         if (IPAR .EQ. 14) then
            DUMSTR=DUMSTR(1:23) // '+14'
         else if (IPAR .EQ. -14) then
@@ -317,7 +307,7 @@ c ----- load xsec table required
         else if (IPAR .EQ. -16) then
           DUMSTR=DUMSTR(1:23) // '-16'
         endif
-        
+
         if (NUMATOM .EQ. 2) then
           DUMSTR=DUMSTR(1:26) // '_1000010020'
         else if (NUMATOM .EQ. 3) then
@@ -343,7 +333,7 @@ c ----- load xsec table required
         else if (NUMATOM .EQ. 208) then
           DUMSTR=DUMSTR(1:26) // '_1000822080'
         endif
-        
+
         DUMSTR=DUMSTR(1:37) // '_cc.csv'
         DUMSTR=CRSTBLPATH(1:lenpath)//DUMSTR
         open(LUN, file=DUMSTR, status="old")
@@ -358,7 +348,7 @@ c ----- CRSLE1 is re-used here for storing cross-section values for SF implement
         close(LUN)
         write (*,*) "CCQE table for the Effective SF loaded"
         iloadeffsfqecrs = 1
-600     continue        
+600     continue
 
 c ----- find energy wanted and interpolate to get value of total xsec
         ii = 0
@@ -371,7 +361,7 @@ c ----- find energy wanted and interpolate to get value of total xsec
           endif
         enddo
 21      continue
-        WeightEnu = (E-EE(ii))/(EE(ii+1)-EE(ii))    
+        WeightEnu = (E-EE(ii))/(EE(ii+1)-EE(ii))
 
         if (e.gt.ee(210)) then ! larger than maximum energy - assume linear extrapolation
 C          write(*,*) "larger than maximum energy - extrapolating"
@@ -379,7 +369,7 @@ C          write(*,*) "larger than maximum energy - extrapolating"
           FNELSPAU_INTPOL = CRSLE1(ii-1)
      $              + (CRSLE1(ii)-CRSLE1(ii-1))*WeightEnu
         else
-           FNELSPAU_INTPOL = CRSLE1(ii) 
+           FNELSPAU_INTPOL = CRSLE1(ii)
      $              + (CRSLE1(ii+1)-CRSLE1(ii))*WeightEnu
         endif
 c        iloadqecrs = 1
@@ -405,7 +395,7 @@ C
          write(*,*) 'fnelspau_interpol: ERROR MODEL for QE', MDLQE,
      $        ' IS NOT DEFINED'
          STOP
-      endif         
+      endif
 
       if (IQEMA.eq.101) then
          DUMSTR = DUMSTR(1:17) // 'ma1.01'
@@ -448,11 +438,11 @@ C
       else
          DUMSTR = DUMSTR(1:23) // '.dat'
       end if
-      
+
       DUMSTR=CRSTBLPATH(1:lenpath)//DUMSTR
       print*, ' from file: ', DUMSTR(1:lenstr(dumstr))
-      open(LUN,file=DUMSTR,form='formatted',status='old')               
-      
+      open(LUN,file=DUMSTR,form='formatted',status='old')
+
       read(LUN,*) IDDUM,RDUM,
      $            PFDUM(1),PFDUM(2),PFDUM(3),PFDUM(4),PFDUM(5),
      $            PFDUM(6),PFDUM(7),PFDUM(8),PFDUM(9)
@@ -475,7 +465,7 @@ C
      &           CRSLE1(i),CRSLE2(i),CRSLE3(i),CRSLE4(i),CRSLE5(i),
      &           CRSLE6(i),CRSLE7(i),CRSLE8(i),CRSLE9(i)!,CRSLE10(i)!,
 C     &           CRSLE11(i),CRSLE12(i)
-            
+
             if ( abs(RDUM-EE(I)).gt.0.001 ) then
                write(*,*) 'Cross-section table seems to be corrupted.'
                stop
@@ -646,19 +636,19 @@ C         CRSRFGRT(12,i)=CRSRT12(i)
       CRSHIG=0.
 
 C     set weight for interpolation of fermi surface momentum
-      if( (PFSURF.le.FERMISURF(1)) .or. 
+      if( (PFSURF.le.FERMISURF(1)) .or.
      $     (PFSURF.gt.FERMISURF(9))) then
          return
       endif
       do 10 j=1,8
          if( (PFSURF.gt.FERMISURF(j) )
-     $        .and. 
+     $        .and.
      $        (PFSURF.le.FERMISURF(j+1))) then
             jj = j
             goto 10
          endif
  10   continue
-      WeightPF 
+      WeightPF
      $     = (PFSURF-FERMISURF(jj))
      $     /(FERMISURF(jj+1)-FERMISURF(jj))
 
@@ -684,9 +674,9 @@ C
                CRSHIG   = CRSRFGLE(jj+1,ii)
                FNELSPAU_INTPOL = CRSLOW + (CRSHIG-CRSLOW)*WeightPF
             else
-               CRSLOW   = CRSRFGLE(jj  ,ii) 
+               CRSLOW   = CRSRFGLE(jj  ,ii)
      $              + (CRSRFGLE(jj  ,ii+1)-CRSRFGLE(jj  ,ii))*WeightEnu
-               CRSHIG   = CRSRFGLE(jj+1,ii) 
+               CRSHIG   = CRSRFGLE(jj+1,ii)
      $              + (CRSRFGLE(jj+1,ii+1)-CRSRFGLE(jj+1,ii))*WeightEnu
                FNELSPAU_INTPOL = CRSLOW + (CRSHIG-CRSLOW)*WeightPF
             endif
@@ -697,9 +687,9 @@ C
                CRSHIG   = CRSRFGRE(jj+1,ii)
                FNELSPAU_INTPOL = CRSLOW + (CRSHIG-CRSLOW)*WeightPF
             else
-               CRSLOW   = CRSRFGRE(jj  ,ii) 
+               CRSLOW   = CRSRFGRE(jj  ,ii)
      $              + (CRSRFGRE(jj  ,ii+1)-CRSRFGRE(jj  ,ii))*WeightEnu
-               CRSHIG   = CRSRFGRE(jj+1,ii) 
+               CRSHIG   = CRSRFGRE(jj+1,ii)
      $              + (CRSRFGRE(jj+1,ii+1)-CRSRFGRE(jj+1,ii))*WeightEnu
                FNELSPAU_INTPOL = CRSLOW + (CRSHIG-CRSLOW)*WeightPF
             endif
@@ -729,9 +719,9 @@ C
                CRSHIG   = CRSRFGLM(jj+1,ii)
                FNELSPAU_INTPOL = CRSLOW + (CRSHIG-CRSLOW)*WeightPF
             else
-               CRSLOW   = CRSRFGLM(jj  ,ii) 
+               CRSLOW   = CRSRFGLM(jj  ,ii)
      $              + (CRSRFGLM(jj  ,ii+1)-CRSRFGLM(jj  ,ii))*WeightEnu
-               CRSHIG   = CRSRFGLM(jj+1,ii) 
+               CRSHIG   = CRSRFGLM(jj+1,ii)
      $              + (CRSRFGLM(jj+1,ii+1)-CRSRFGLM(jj+1,ii))*WeightEnu
                FNELSPAU_INTPOL = CRSLOW + (CRSHIG-CRSLOW)*WeightPF
             endif
@@ -742,9 +732,9 @@ C
                CRSHIG   = CRSRFGRM(jj+1,ii)
                FNELSPAU_INTPOL = CRSLOW + (CRSHIG-CRSLOW)*WeightPF
             else
-               CRSLOW   = CRSRFGRM(jj  ,ii) 
+               CRSLOW   = CRSRFGRM(jj  ,ii)
      $              + (CRSRFGRM(jj  ,ii+1)-CRSRFGRM(jj  ,ii))*WeightEnu
-               CRSHIG   = CRSRFGRM(jj+1,ii) 
+               CRSHIG   = CRSRFGRM(jj+1,ii)
      $              + (CRSRFGRM(jj+1,ii+1)-CRSRFGRM(jj+1,ii))*WeightEnu
                FNELSPAU_INTPOL = CRSLOW + (CRSHIG-CRSLOW)*WeightPF
             endif
@@ -774,9 +764,9 @@ C
                CRSHIG   = CRSRFGLT(jj+1,ii)
                FNELSPAU_INTPOL = CRSLOW + (CRSHIG-CRSLOW)*WeightPF
             else
-               CRSLOW   = CRSRFGLT(jj  ,ii) 
+               CRSLOW   = CRSRFGLT(jj  ,ii)
      $              + (CRSRFGLT(jj  ,ii+1)-CRSRFGLT(jj  ,ii))*WeightEnu
-               CRSHIG   = CRSRFGLT(jj+1,ii) 
+               CRSHIG   = CRSRFGLT(jj+1,ii)
      $              + (CRSRFGLT(jj+1,ii+1)-CRSRFGLT(jj+1,ii))*WeightEnu
                FNELSPAU_INTPOL = CRSLOW + (CRSHIG-CRSLOW)*WeightPF
             endif
@@ -787,9 +777,9 @@ C
                CRSHIG   = CRSRFGRT(jj+1,ii)
                FNELSPAU_INTPOL = CRSLOW + (CRSHIG-CRSLOW)*WeightPF
             else
-               CRSLOW   = CRSRFGRT(jj  ,ii) 
+               CRSLOW   = CRSRFGRT(jj  ,ii)
      $              + (CRSRFGRT(jj  ,ii+1)-CRSRFGRT(jj  ,ii))*WeightEnu
-               CRSHIG   = CRSRFGRT(jj+1,ii) 
+               CRSHIG   = CRSRFGRT(jj+1,ii)
      $              + (CRSRFGRT(jj+1,ii+1)-CRSRFGRT(jj+1,ii))*WeightEnu
                FNELSPAU_INTPOL = CRSLOW + (CRSHIG-CRSLOW)*WeightPF
             endif

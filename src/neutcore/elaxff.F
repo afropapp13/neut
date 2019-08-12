@@ -25,7 +25,7 @@
 *     Then enable it here, as well as inside qedifcrs.c if you want RW
 ************************************************************************
       IMPLICIT NONE
-#include "../neutcore/neutmodel.h"
+#include "neutmodel.h"
 
       LOGICAL nc
       INTEGER sgn

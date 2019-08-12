@@ -11,8 +11,8 @@
       program makeTables
         implicit none
 
-#include "../neutcore/necard.h"
-#include "../neutcore/neutmodel.h"
+#include "necard.h"
+#include "neutmodel.h"
 #include "specfunc.h"
 #include "nework.h"
 

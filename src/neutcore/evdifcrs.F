@@ -2,27 +2,27 @@
 *     -------------------------
       FUNCTION EVDIFCRS()
 *     -------------------------
-*     
+*
 *     ( purpose )
 *        SAVE INTERACTION CROSS-SECTION
 *
-*     ( input ) 
+*     ( input )
 *       COMMON NEWORK
 *          modene
 *          numne (=4)
-*          ipne 
+*          ipne
 *          pne
 *       COMMON NECARD
 *       COMMON NEUTMODEL
 *       COMMON NEUTPARAMS
 *
-*     ( output ) 
+*     ( output )
 *       DIFCRSSECT
 *
 *     ( creation date and author )
 *       2010.07.19 ; Taken from nemodsel
 *       2010.10.13 ; Integrated into NEUTCORE - P. de Perio
-*     
+*
 C%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 C
 C    MODSEL   : INTERACTION MODE
@@ -175,7 +175,7 @@ C    RATFRE : FREE PROTON RATIO IN TARGET
 C    IFREE  : =0 BOUND NUCLEON, =1 FREE PROTON
 C
 C    IBOUND : =0 Free proton  , =1 Bound nucleon
-C     
+C
       IMPLICIT NONE
 
 #include "nework.h"
@@ -196,8 +196,8 @@ C -- Preparation
 C
       real*4 plep,   elep,   xmlep
       real*4 xmn01,  xmn02,  enuc1, enuc2
-      real*4 q2,     coslep 
-      real*4 w,      x,      xcoh,  y 
+      real*4 q2,     coslep
+      real*4 w,      x,      xcoh,  y
       real*8 e8,     x8,     y8,    q28
 
       real*4 dcp,    dc33p
@@ -228,7 +228,7 @@ C      real *4 PNEU(3),PFABS,AMIN,BETA,EV(3),GM
       external dnelsq2
       real*8 dnncelsq2
       external dnncelsq2
-    
+
 C -- Parameters
       integer*4 iorig
 
@@ -237,8 +237,11 @@ C -- Flags
 
       integer*4 IMOD
 
+C -- for SF nuclei tests
+      logical HaveSpecFuncForNuclei, HaveEffSpecFuncForNuclei
+      external HaveSpecFuncForNuclei, HaveEffSpecFuncForNuclei
 C -- for SF parameters
-      real*8 k(4) 
+      real*8 k(4)
       real*8 kprime(4)
       real*8 p(4)
       real*8 qTilde(4)
@@ -263,7 +266,7 @@ C -- for SF parameters
       IF (MODENE.eq.-32) IMOD=14
       IF (MODENE.eq.-33) IMOD=17
       IF (MODENE.eq.-34) IMOD=15
-      
+
       IF (MODENE.eq.22)  IMOD=1
       IF (MODENE.eq.42)  IMOD=11
       IF (MODENE.eq.43)  IMOD=12
@@ -291,10 +294,10 @@ C -- for SF parameters
          xmlep=XMMU
       else if (abs(ipne(3)).eq.15) then
          xmlep=XMTAU
-      else 
+      else
          xmlep=0.
       endif
-         
+
       if (ipne(2).eq.2112) then
          xmn01 = XMNE
       else
@@ -305,7 +308,7 @@ C -- for SF parameters
       else
          xmn02 = XMP
       endif
-      
+
       e = sqrt(pne(1,1)**2+pne(2,1)**2+pne(3,1)**2)
 
       enuc1= sqrt((pne(1,2)**2+pne(2,2)**2+pne(3,2)**2)+xmn01**2)
@@ -318,17 +321,17 @@ cRT: variables for SF
       k(2) = pne(1,1)
       k(3) = pne(2,1)
       k(4) = pne(3,1)
-      
+
       kPrime(1) = elep
       kPrime(2) = pne(1,3)
       kPrime(3) = pne(2,3)
       kPrime(4) = pne(3,3)
-      
+
       p(1) = enuc1
       p(2) = pne(1,2)
       p(3) = pne(2,2)
       p(4) = pne(3,2)
-      
+
       qTilde(1) = enuc2-enuc1
       qTilde(2) = pne(1,1)-pne(1,3)
       qTilde(3) = pne(2,1)-pne(2,3)
@@ -337,7 +340,7 @@ cRT: variables for SF
       nucPdg = ipne(2)
 cRT: end variables for SF
 
-      q2 =   (e - elep)**2 
+      q2 =   (e - elep)**2
      $     - ( (pne(1,1)-pne(1,3))**2
      $        +(pne(2,1)-pne(2,3))**2
      $        +(pne(3,1)-pne(3,3))**2)
@@ -367,10 +370,10 @@ cRT: end variables for SF
       endif
 
       nc = (abs(modene).gt.30)
-C      
+C
 C
 C --  FOR NEUTRINO
-C     
+C
       if (abs(modene).eq.1) then
 
 C      Boost neutrino to nucleon rest frame
@@ -382,27 +385,19 @@ C            do i =1,3
 C               PNEU(i) = pne(i,1)
 C               EV(i)=-pne(i,2)/PFABS
 C            enddo
-C            CALL MCVECBST(PNEU,0.,EV,GM)  
+C            CALL MCVECBST(PNEU,0.,EV,GM)
 C            e = SQRT(PNEU(1)**2+PNEU(2)**2+PNEU(3)**2)
 C         ENDIF
 
          ccnc = 1
 
-         if (IBOUND .eq. 1) then                 
-            if ((mod(mdlqe,1000)/100 .EQ. 4) .AND. 
-     $          ((NUMATOM.eq.16) .or. 
-     $           (NUMATOM.eq.12) .or. 
-     $           (NUMATOM.eq.56)) ) then
-               evdifcrs
-     $              = LH(k,kPrime,p,qTilde,IPAR,nc,nucPdg, NUMATOM)
+         if (IBOUND .eq. 1) then
+            if ( (mod(mdlqe,1000)/100 .EQ. 4) .AND.
+     $           HaveSpecFuncForNuclei() ) then
+              evdifcrs = LH(k,kPrime,p,qTilde,IPAR,nc,nucPdg, NUMATOM)
             else if (((mod(mdlqe,1000)/100 .EQ. 6 ) .or.
      $                (mod(mdlqe,1000)/100 .EQ. 7 )      ).AND.
-     &              ((NUMATOM .eq. 2) .or. (NUMATOM .eq.  3) .or.
-     &               (NUMATOM .eq. 4) .or. (NUMATOM .eq. 12) .or.
-     &               (NUMATOM .eq.16) .or. (NUMATOM .eq. 20) .or.
-     &               (NUMATOM .eq.27) .or. (NUMATOM .eq. 40) .or.
-     &               (NUMATOM .eq.56) .or. (NUMATOM .eq. 63) .or.
-     &               (NUMATOM .eq.64) .or. (NUMATOM .eq.208))) then
+     &           HaveEffSpecFuncForNuclei() ) then
                evdifcrs
      $              = LH(k,kPrime,p,qTilde,IPAR,nc,nucPdg, NUMATOM)
             else
@@ -426,8 +421,8 @@ c         else
 c            write(*,*) "model greater than 400"
 c         evdifcrs
 c     $        = LH(k,kPrime,p,qTilde,IPAR,nc,nucPdg)
-c     endif 
-      else if (    ((abs(modene).ge.11).and.(abs(modene).le.13)) 
+c     endif
+      else if (    ((abs(modene).ge.11).and.(abs(modene).le.13))
      $         .or.((abs(modene).ge.31).and.(abs(modene).le.34)))
      $        then
          if ( w.le.XMN+XMPI ) then
@@ -443,20 +438,15 @@ c     endif
       else if ((abs(modene).eq.51).or.(abs(modene).eq.52)) then
          ccnc   = 0
          if (IBOUND .eq. 1) then
-            if ((mod(mdlqe,1000)/100 .EQ. 100) .AND. 
-     $          ((NUMATOM.eq.16) .or. 
-     $           (NUMATOM.eq.12) .or. 
-     $           (NUMATOM.eq.56))) then
+
+
+            if ( (mod(mdlqe,1000)/100 .EQ. 100) .AND.
+     $            HaveSpecFuncForNuclei() ) then
                evdifcrs
      $              = LH(k,kPrime,p,qTilde,IPAR,nc,nucPdg, NUMATOM)
             else if ( ((mod(mdlqe,1000)/100 .EQ. 6 ).or.
      $                 (mod(mdlqe,1000)/100 .EQ. 7 )    ) .AND.
-     &                ((NUMATOM .eq. 2) .or. (NUMATOM .eq.   3) .or.
-     &                 (NUMATOM .eq. 4) .or. (NUMATOM .eq.  12) .or.
-     &                 (NUMATOM .eq.16) .or. (NUMATOM .eq.  20) .or.
-     &                 (NUMATOM .eq.27) .or. (NUMATOM .eq.  40) .or.
-     &                 (NUMATOM .eq.56) .or. (NUMATOM .eq.  63) .or.
-     &                 (NUMATOM .eq.64) .or. (NUMATOM .eq. 208))) then
+     &                 HaveEffSpecFuncForNuclei() ) then
                evdifcrs
      $              = LH(k,kPrime,p,qTilde,IPAR,nc,nucPdg, NUMATOM)
             else
@@ -477,11 +467,11 @@ C        write(*,*) 'in evdifcrs, MDLCOH = ',MDLCOH
         if (MDLCOH.eq.0) then
           evdifcrs = dcohnerein(e,ipar,modene,CRSX,CRSY,CRSZ,CRSPHI)
 C          write(*,*) 'in RS if statement, e=',e,
-C     $ ' ipar=',ipar,' x=',CRSX,' y=',CRSY,' z=',CRSZ,' phi=',CRSPHI 
+C     $ ' ipar=',ipar,' x=',CRSX,' y=',CRSY,' z=',CRSZ,' phi=',CRSPHI
        else if (MDLCOH.eq.2) then
           evdifcrs = dcohneberger(e,ipar,modene,CRSX,CRSY,CRSZ,CRSPHI)
 C          write(*,*) 'in BS if statement, evdifcrs = ',evdifcrs,' e=',e,
-C     $ ' ipar=',ipar,' x=',CRSX,' y=',CRSX,' z=',CRSX,' phi=',CRSPHI   
+C     $ ' ipar=',ipar,' x=',CRSX,' y=',CRSX,' z=',CRSX,' phi=',CRSPHI
        endif
       else if (   (abs(modene).eq.22)
      $        .or.(abs(modene).eq.42).or.(abs(modene).eq.43))

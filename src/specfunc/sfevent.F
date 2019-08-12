@@ -37,11 +37,12 @@ c ----- temporary values to copy to output common block
         integer tmp_IFLGNE(5)
         integer tmp_ICRNNE(5)
 
-        
-#include "../neutcore/necard.h"
-#include "../neutcore/neutmodel.h"
 
-        real E, DIRNEU(3)
+#include "necard.h"
+#include "neutmodel.h"
+#include "necardev.h"
+
+        real E, DIRNEU(3), theta_lab
         integer IPAR, IERR, mode
         logical single, nc, first
 
@@ -71,7 +72,7 @@ C ----- temporary vector for use when needed
         double precision temp_vector(4)
 
 C ----- common block for dealing with spectral function selection
-# include "../specfunc/specfunc.h"
+#include "specfunc.h"
 
 C ----- terms in the cross-section
         double precision initialTerm, volumeTerm, jacobian, crossSection
@@ -83,13 +84,13 @@ C ----- when calculating tables or total cross-sections
         common /makeTable/ mean, maxValue, N_tries, meanNC, maxValueNC
 
 C ----- external functions
-        double precision modMomentum, LH, dotProduct, maxDiff
+        double precision modMomentum, LH, dotProduct, maxDiff, getTheta
         logical isCorr
 
         real RLU, FNELS_RPASCL
-        external modMomentum, LH, dotProduct, RLU, maxDiff, 
+        external modMomentum, LH, dotProduct, RLU, maxDiff,
      &  FNELS_RPASCL
-C ----- parameters        
+C ----- parameters
         double precision Gf, cosThetaC, Pi
 
         parameter(Gf = 1.16639E-11,cosThetaC = 0.97418
@@ -99,7 +100,7 @@ c        write (*,*) "MAKING CCQE EVENT"
 c        write (*,*) numbndp,numatom, mode, E
 c ----- E is in GeV here - change it to MeV for the calculation
 
-        if ((NUMBNDP .ne. 6) .AND. (NUMBNDP .ne. 8) .AND. 
+        if ((NUMBNDP .ne. 6) .AND. (NUMBNDP .ne. 8) .AND.
      &      (NUMBNDP .ne. 26)) then
          write (*,*) "using RFG for nucleus with atomic mass", NUMATOM
          if (abs(mode) .eq.1) then
@@ -133,7 +134,7 @@ C ----- set masses of particles
 c nc
         if (nc .EQV. .TRUE.) then
           if ((single .EQV..TRUE. .and. abs(MODE) .EQ. 52)
-     &.OR. ((single .EQV. .FALSE. .AND. RLU(DUMMY) 
+     &.OR. ((single .EQV. .FALSE. .AND. RLU(DUMMY)
      & .LT. dble(NUMBNDN/dble(NUMATOM))))) then
             call MCMASS(2112, dummy)
             inNucleonMass = dummy
@@ -154,7 +155,7 @@ c nc
             IPNE(4) = 2212
             tmp_MODENE = mode
           endif
-c cc        
+c cc
         else if (IPAR .LT. 0) then
           call MCMASS(2212, dummy)
           inNucleonMass = dummy
@@ -225,7 +226,7 @@ c ----- Deuterium - currently not used - smith-moniz used instead
         endif
 c        write (*,*) "tablemax = ", tableMax
 
-        
+
 c ----- setup temp values for output common block
         tmp_NUMNE = 4
         tmp_IPNE(1) = IPAR
@@ -271,7 +272,7 @@ c ----- For generating actual events we have already decided.
         endif
 
 C ----- select values from the spectral function array
-        if (NUMATOM .LT. 3) then
+2207    if (NUMATOM .LT. 3) then
           p(2) = 0
           p(3) = 0
           p(4) = 0
@@ -298,7 +299,7 @@ c ----- not enough energy - skip straight to end of event
           goto 20
         endif
 C ----- calculate outgoing momenta, and pick a direction
-        kPrime(1) = (dotProduct(temp_vector, temp_vector) 
+        kPrime(1) = (dotProduct(temp_vector, temp_vector)
      &  - outNucleonMass**2 + leptonMass**2)
      &  / (2 * sqrt(dotProduct(temp_vector, temp_vector)) )
         call pickDirection(kPrime, leptonMass)
@@ -317,7 +318,18 @@ c temp_vector contains c.o.m momentum and energy
 
         call boost(kPrime, comVel)
         call boost(pPrime, comVel)
-        
+
+        if(ANGDEG.gt.-1) then
+          theta_lab = abs(getTheta(kPrime))*(90.0/acos(0.0))
+          if ((theta_lab.lt.(ANGDEG - 0.5*ANGWIDTH)) .or.
+     &        (theta_lab.gt.(ANGDEG + 0.5*ANGWIDTH))) then
+            write(6,*) 'Thrown angle ', theta_lab, ' outside of allowed range.'
+            goto 2207
+          else
+            write(6,*) 'Accepting thrown angle ', theta_lab
+          endif
+        endif
+
 C ----- calculate q and qTilde
         do i = 1, 4
           q(i) = k(i) - kPrime(i)
@@ -327,7 +339,7 @@ C ----- calculate q and qTilde
 
 C ----- pauli blocking
         if (modMomentum(pPrime) .LT. fermiMomentum) then
-c event impossible due to pauli blocking - go straight to end of event          
+c event impossible due to pauli blocking - go straight to end of event
           crossSection = 0
           goto 20
 c          write(*,*) "pauliBlocking"
@@ -339,12 +351,12 @@ c          write(*,*) "pauliBlocking"
 C ----- Calculate xsec
         initialTerm = Gf**2 * cosThetaC**2
      &   / ( 8*Pi*Pi*k(1)*kPrime(1)*p(1)*pPrime(1) )
-       
+
 c ----- for nc events there is no cabibbo mixing to worry about
         if (nc.EQV..TRUE.)then
           initialTerm = initialTerm / (cosThetaC**2)
         endif
-        
+
         volumeTerm = 1
      &               * 4*Pi*(modMomentum(kPrimeCom)**2)
      &               * Jacobian(kPrime, kPrimeCom, pPrime, comVel)
@@ -379,13 +391,13 @@ c sent straight here if event is impossible
         endif
         N_tries = N_tries + 1
 
-**********  For table generation only! 
-**********  Once enough events generated, stop 
+**********  For table generation only!
+**********  Once enough events generated, stop
 **********  This value can be changed to increase precision/speed
         if (single .EQV. .FALSE.) then
           if (N_tries .GT. 1000000) then
             mean = mean / N_tries
-            meanNC(1) = meanNC(1) *dble(NUMATOM) / 
+            meanNC(1) = meanNC(1) *dble(NUMATOM) /
      &                  (dble(N_tries)*dble(NUMBNDP))
             meanNC(2) = meanNC(2) *dble(NUMATOM) /
      &                  (dble(N_tries)*dble(NUMBNDN))
@@ -394,11 +406,11 @@ c sent straight here if event is impossible
           endif
 c event complete - go back to start to generate more
           goto 10
-        
+
 
 
 C ----- for event generation -  compare to value loaded from xsec table
-c ----- 1% factor reduces efficiency but avoids errors from interpolation
+c ----- 5% factor reduces efficiency but avoids errors from interpolation
        else if (crossSection*1E38 .LT. RLU(dummy)*tableMax*1.05) then
          goto 10
        endif
@@ -422,11 +434,11 @@ c ----- need to change everything into GeV
         enddo
 
         E = E / 1000 ! turn back into GeV for the rest of neut
-      
-      
+
+
 c ----- Add second nucleon, if interaction in correlated tail
         if (isCorr(p, Etilde, targetType) .eqv..true.) then
-          NUMNE = 5          
+          NUMNE = 5
           if (IPNE(2) .eq. 2212) then ! all correlated pairs treated as n-p
             IPNE(5) = 2112
           else
@@ -439,7 +451,7 @@ c ----- Add second nucleon, if interaction in correlated tail
             PNE(i,5) = -1*real(p(i+1)/1000)
           enddo
         endif
-       
+
       return
       end
 
@@ -458,13 +470,13 @@ C ----- Jacobian converts from c.o.m integration to lab integration
         integer i
 
         external modMomentum
-        
+
         gam = 1. / sqrt(1. - modMomentum(comVel)**2)
 
         cosTheta0 = (kPrimeCom(2)*comVel(2) + kPrimeCom(3)*comVel(3)
-     +               + kPrimeCom(4)*comVel(4)) 
+     +               + kPrimeCom(4)*comVel(4))
      + /( modMomentum(kPrimeCom) * modMomentum(comVel) )
-        
+
         sinTheta0 = sqrt( 1. - cosTheta0**2 )
 
         do i = 2, 4
@@ -474,8 +486,8 @@ C ----- Jacobian converts from c.o.m integration to lab integration
         do i = 2, 4
           velDiff(i) = vkPrime(i) - vpPrime(i)
         enddo
-        
-        
+
+
 c        Jacobian = sqrt(sinTheta0**2 + gam*(cosTheta0**2) )
         Jacobian = sqrt(1 + (1 - cosTheta0**2)*(gam**2 - 1))
      +             / modMomentum(velDiff)
@@ -514,14 +526,14 @@ c        Jacobian = sqrt(sinTheta0**2 + gam*(cosTheta0**2) )
             pMax = 300 ! return to values later
             eMax = 100 ! return to values later
           endif
-          
+
 C         write(*,*) modMomentum(p), Etilde
           if ((modMomentum(p) .gt. pMax) .or. (Etilde .gt. eMax))then
             isCorr = .TRUE.
-            return 
+            return
           endif
 
           isCorr = .FALSE.
-          
+
           return
           end

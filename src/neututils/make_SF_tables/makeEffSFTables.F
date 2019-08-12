@@ -11,8 +11,8 @@
       program makeEffSFTables
         implicit none
 
-#include "../neutcore/necard.h"
-#include "../neutcore/neutmodel.h"
+#include "necard.h"
+#include "neutmodel.h"
 #include "effspecfunc.h"
 #include "nework.h"
 

@@ -7,8 +7,8 @@
 
 c ----- include spectral function arrays, variables etc
 #include "effspecfunc.h"
-#include "../neutcore/necard.h"
-#include "../neutcore/neutmodel.h"
+#include "necard.h"
+#include "neutmodel.h"
         logical RFG
         double precision theta, phi, mag, y
         double precision val, maxValueE, maxValuep, interpVal

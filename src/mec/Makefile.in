@@ -380,7 +380,6 @@ top_srcdir = @top_srcdir@
 @NEUT_LIBCOMPAT_FALSE@	$(am__append_4) $(am__append_7)
 @NEUT_LIBCOMPAT_FALSE@DEFAULT_CFLAGS = -fPIC $(NEUT_DEFINES) \
 @NEUT_LIBCOMPAT_FALSE@	$(NEUT_INCLUDES) -I$(CERN_ROOT)/include \
-@NEUT_LIBCOMPAT_FALSE@	$(shell root-config --cflags) \
 @NEUT_LIBCOMPAT_FALSE@	$(am__append_5) $(am__append_8)
 @NEUT_LIBCOMPAT_FALSE@DEFAULT_LINKFLAGS = -version-info @NEUT_VERSION_NUM@
 @NEUT_LIBCOMPAT_FALSE@ROOT_LINKFLAGS = $(shell root-config --ldflags) -pthread -rdynamic -L$(shell root-config --libdir)

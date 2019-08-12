@@ -152,7 +152,8 @@ am_lib@LIBPREFIX@specfunc_@NEUT_VERSION_NUM@_a_OBJECTS =  \
 	effsfevent.$(OBJEXT) effSFMaxDiff.$(OBJEXT) maxDiff.$(OBJEXT) \
 	readEffSFXsecData.$(OBJEXT) readXsecData.$(OBJEXT) \
 	selectEffSFValues.$(OBJEXT) selectSfValues.$(OBJEXT) \
-	sfevent.$(OBJEXT) fourVector.$(OBJEXT)
+	sfevent.$(OBJEXT) fourVector.$(OBJEXT) \
+	HaveSpecFuncForNuclei.$(OBJEXT)
 lib@LIBPREFIX@specfunc_@NEUT_VERSION_NUM@_a_OBJECTS =  \
 	$(am_lib@LIBPREFIX@specfunc_@NEUT_VERSION_NUM@_a_OBJECTS)
 AM_V_P = $(am__v_P_@AM_V@)
@@ -168,6 +169,9 @@ am__v_at_ = $(am__v_at_@AM_DEFAULT_V@)
 am__v_at_0 = @
 am__v_at_1 = 
 DEFAULT_INCLUDES = -I.@am__isrc@
+depcomp = $(SHELL) $(top_srcdir)/depcomp
+am__depfiles_maybe = depfiles
+am__mv = mv -f
 PPF77COMPILE = $(F77) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_FFLAGS) $(FFLAGS)
 AM_V_lt = $(am__v_lt_@AM_V@)
@@ -190,6 +194,42 @@ AM_V_F77LD = $(am__v_F77LD_@AM_V@)
 am__v_F77LD_ = $(am__v_F77LD_@AM_DEFAULT_V@)
 am__v_F77LD_0 = @echo "  F77LD   " $@;
 am__v_F77LD_1 = 
+CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
+	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
+LTCXXCOMPILE = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) \
+	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
+	$(AM_CXXFLAGS) $(CXXFLAGS)
+AM_V_CXX = $(am__v_CXX_@AM_V@)
+am__v_CXX_ = $(am__v_CXX_@AM_DEFAULT_V@)
+am__v_CXX_0 = @echo "  CXX     " $@;
+am__v_CXX_1 = 
+CXXLD = $(CXX)
+CXXLINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
+	$(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+AM_V_CXXLD = $(am__v_CXXLD_@AM_V@)
+am__v_CXXLD_ = $(am__v_CXXLD_@AM_DEFAULT_V@)
+am__v_CXXLD_0 = @echo "  CXXLD   " $@;
+am__v_CXXLD_1 = 
+COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
+	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+LTCOMPILE = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) \
+	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
+	$(AM_CFLAGS) $(CFLAGS)
+AM_V_CC = $(am__v_CC_@AM_V@)
+am__v_CC_ = $(am__v_CC_@AM_DEFAULT_V@)
+am__v_CC_0 = @echo "  CC      " $@;
+am__v_CC_1 = 
+CCLD = $(CC)
+LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+AM_V_CCLD = $(am__v_CCLD_@AM_V@)
+am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
+am__v_CCLD_0 = @echo "  CCLD    " $@;
+am__v_CCLD_1 = 
 SOURCES = $(lib@LIBPREFIX@specfunc_@NEUT_VERSION_NUM@_a_SOURCES)
 DIST_SOURCES = $(lib@LIBPREFIX@specfunc_@NEUT_VERSION_NUM@_a_SOURCES)
 am__can_run_installinfo = \
@@ -198,7 +238,8 @@ am__can_run_installinfo = \
     *) (install-info --version) >/dev/null 2>&1;; \
   esac
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
-am__DIST_COMMON = $(srcdir)/Makefile.in $(top_srcdir)/build.common
+am__DIST_COMMON = $(srcdir)/Makefile.in $(top_srcdir)/build.common \
+	$(top_srcdir)/depcomp
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
@@ -365,8 +406,7 @@ DEFAULT_CXXFLAGS = -fPIC $(NEUT_DEFINES) $(NEUT_INCLUDES) \
 	-I$(CERN_ROOT)/include $(shell root-config --cflags) \
 	$(am__append_5) $(am__append_8)
 DEFAULT_CFLAGS = -fPIC $(NEUT_DEFINES) $(NEUT_INCLUDES) \
-	-I$(CERN_ROOT)/include $(shell root-config --cflags) \
-	$(am__append_6) $(am__append_9)
+	-I$(CERN_ROOT)/include $(am__append_6) $(am__append_9)
 DEFAULT_LINKFLAGS = -version-info @NEUT_VERSION_NUM@
 ROOT_LINKFLAGS = $(shell root-config --ldflags) -pthread -rdynamic -L$(shell root-config --libdir)
 @ROOT_MAJOR_IS_SIX_FALSE@ROOT_LIBS = -lCore -lCint -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lm -ldl
@@ -376,17 +416,18 @@ ROOT_LINKFLAGS = $(shell root-config --ldflags) -pthread -rdynamic -L$(shell roo
 EXE_LINKFLAGS = -fno-PIE -fno-pie -no-pie
 EXE_RTLIBS = -lstdc++ -lgfortran $(am__append_10)
 AM_FFLAGS = -DSPECFUNCVER=@NEUT_VERSION_NUM@ $(DEFAULT_FFLAGS)
+AM_CXXFLAGS = -DSPECFUNCVER=@NEUT_VERSION_NUM@ $(DEFAULT_CXXFLAGS)
 LIBNAME = lib@LIBPREFIX@specfunc.@NEUT_VERSION_NUM@.a
 @NEUT_LIBCOMPAT_TRUE@lib_LIBRARIES = $(LIBNAME)
 @NEUT_LIBCOMPAT_FALSE@noinst_LIBRARIES = $(LIBNAME)
-lib@LIBPREFIX@specfunc_@NEUT_VERSION_NUM@_a_SOURCES = buildEffSf.F buildSf.F calcLH.F combineEffSFTables.F combineTables.F effsfevent.F effSFMaxDiff.F maxDiff.F readEffSFXsecData.F readXsecData.F selectEffSFValues.F selectSfValues.F sfevent.F fourVector.F
+lib@LIBPREFIX@specfunc_@NEUT_VERSION_NUM@_a_SOURCES = buildEffSf.F buildSf.F calcLH.F combineEffSFTables.F combineTables.F effsfevent.F effSFMaxDiff.F maxDiff.F readEffSFXsecData.F readXsecData.F selectEffSFValues.F selectSfValues.F sfevent.F fourVector.F HaveSpecFuncForNuclei.cc
 
 # Unused sources that live in the directory
 UNUSED_srcs = 
 all: all-am
 
 .SUFFIXES:
-.SUFFIXES: .F .f .lo .o .obj
+.SUFFIXES: .F .cc .f .lo .o .obj
 $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am $(top_srcdir)/build.common $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
@@ -463,6 +504,8 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/HaveSpecFuncForNuclei.Po@am__quote@
+
 .F.o:
 	$(AM_V_PPF77)$(PPF77COMPILE) -c -o $@ $<
 
@@ -473,6 +516,30 @@ distclean-compile:
 	$(AM_V_PPF77)$(LTPPF77COMPILE) -c -o $@ $<
 .F.f:
 	$(F77COMPILE) -F $<
+
+.cc.o:
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
+@am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ $< &&\
+@am__fastdepCXX_TRUE@	$(am__mv) $$depbase.Tpo $$depbase.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXXCOMPILE) -c -o $@ $<
+
+.cc.obj:
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.obj$$||'`;\
+@am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ `$(CYGPATH_W) '$<'` &&\
+@am__fastdepCXX_TRUE@	$(am__mv) $$depbase.Tpo $$depbase.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXXCOMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
+
+.cc.lo:
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.lo$$||'`;\
+@am__fastdepCXX_TRUE@	$(LTCXXCOMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ $< &&\
+@am__fastdepCXX_TRUE@	$(am__mv) $$depbase.Tpo $$depbase.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LTCXXCOMPILE) -c -o $@ $<
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -561,6 +628,7 @@ clean-am: clean-generic clean-libLIBRARIES clean-libtool \
 	clean-noinstLIBRARIES mostlyclean-am
 
 distclean: distclean-am
+	-rm -rf ./$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic
 
@@ -606,6 +674,7 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
+	-rm -rf ./$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 

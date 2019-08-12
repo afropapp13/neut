@@ -41,7 +41,7 @@ COREDIR =	../neutcore
 LIBDIRS =	-L${COREDIR}            -L../nuccorspl/Linux_pc \
 			-L../nuceff/Linux_pc -L../partnuck/Linux_pc  \
 			-L../zbsfns/Linux_pc -L../skmcsvc/Linux_pc \
-			-L../specfunc/Linux_pc
+			-LLinux_pc
 
 MCLIB = ${LIBDIRS} -lneutcore_${NEUTCOREVER} -lspecfunc_${SPECFUNCVER} \
 		-lnuceff_${NUCEFFVER} -lneutcore_${NEUTCOREVER} \
