@@ -67,14 +67,14 @@ double CrossSection::DifferentialCrossSection(const double energy) {
   y2mpe2 = pow(y,2.) - pow(PIMASS/energy,2.);
   bte = pow(RAD0NU,2.)*pow(ATOMN,2./3.)*pow(energy,2.)/(3.*pow(HBARC,2.));
 
-  soln_tmp = sqrt(abs(y*(y+2.*PRMASS*x/energy)*abs(y2mpe2)))
+  soln_tmp = sqrt(std::abs(y*(y+2.*PRMASS*x/energy)*std::abs(y2mpe2)))
     *(1.-y)/pow(1.+2.*PRMASS*energy*x*y/pow(AM,2.),2.);
   epitot = energy*y;
   epikin = energy*y-PIMASS;
   if(epikin < 0.) return 0.;
 
-  arg1 = -2.*bte*y*(y+PRMASS*x/energy-z*(1+PRMASS*x/energy)*sqrt(abs(y2mpe2)));
-  arg2 = -2.*bte*sqrt(abs(((1.-pow(z,2.))*y2mpe2*(2.*PRMASS/energy)*x*y
+  arg1 = -2.*bte*y*(y+PRMASS*x/energy-z*(1+PRMASS*x/energy)*sqrt(std::abs(y2mpe2)));
+  arg2 = -2.*bte*sqrt(std::abs(((1.-pow(z,2.))*y2mpe2*(2.*PRMASS/energy)*x*y
 			   *(1.-y*(1.+PRMASS*x/(2.*energy))))));
 
   femto1 = crosin_(epikin);
