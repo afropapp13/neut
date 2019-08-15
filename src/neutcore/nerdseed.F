@@ -14,7 +14,7 @@
 
       real*4     DUMMY
 
-      
+
       call getenv('RANFILE',ranfile)
       write(*,*) "Now opening random seed file(",ranfile,")"
       open(unit=99,file=ranfile,status='unknown')
@@ -23,7 +23,7 @@
       ISEED = ISEED1
 
 C Now ranf is calling RLU (2008/11/22, hayato)
-CC--- use same seed for RANLUX : 
+CC--- use same seed for RANLUX :
 C      call seedranf(iseed)
 C      dummy = ranf()
 
@@ -33,10 +33,16 @@ C--- Changed from RNDM to RANLUX
 C--- Changed from RAMBO to RM48
       CALL RM48IN(ISEED2,0,0)
 
+#ifdef NEUT_USE_TAUOLA
       CALL RMARIN(istau1,istau2,istau3)
-
+#else
+      write(*,*) "************************************************"
+      write(*,*) "*****  RMARIN function was not called as   *****"
+      write(*,*) "*****  tauola support was not built.       *****"
+      write(*,*) "*****  If this is unexpected, rebuild with *****"
+      write(*,*) "*****  tauola.                             *****"
+      write(*,*) "************************************************"
+#endif
 
       RETURN
       END
-      
-      
