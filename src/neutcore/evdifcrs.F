@@ -215,8 +215,8 @@ C      real *4 PNEU(3),PFABS,AMIN,BETA,EV(3),GM
       real*8   cohma
       external cohma
 
-      double precision LH
-      external LH
+      double precision LH_GeV
+      external LH_GeV
 
       real*4   dcohnerein
       external dcohnerein
@@ -241,10 +241,10 @@ C -- for SF nuclei tests
       logical HaveSpecFuncForNuclei, HaveEffSpecFuncForNuclei
       external HaveSpecFuncForNuclei, HaveEffSpecFuncForNuclei
 C -- for SF parameters
-      real*8 k(4)
-      real*8 kprime(4)
-      real*8 p(4)
-      real*8 qTilde(4)
+      double precision k_GeV(4)
+      double precision kprime_GeV(4)
+      double precision p_GeV(4)
+      double precision qTilde_GeV(4)
       logical nc
       integer*4 nucPdg
 
@@ -317,25 +317,25 @@ C -- for SF parameters
       enuc2= sqrt((pne(1,4)**2+pne(2,4)**2+pne(3,4)**2)+xmn02**2)
 
 cRT: variables for SF
-      k(1) = e
-      k(2) = pne(1,1)
-      k(3) = pne(2,1)
-      k(4) = pne(3,1)
+      k_GeV(1) = e
+      k_GeV(2) = pne(1,1)
+      k_GeV(3) = pne(2,1)
+      k_GeV(4) = pne(3,1)
 
-      kPrime(1) = elep
-      kPrime(2) = pne(1,3)
-      kPrime(3) = pne(2,3)
-      kPrime(4) = pne(3,3)
+      kPrime_GeV(1) = elep
+      kPrime_GeV(2) = pne(1,3)
+      kPrime_GeV(3) = pne(2,3)
+      kPrime_GeV(4) = pne(3,3)
 
-      p(1) = enuc1
-      p(2) = pne(1,2)
-      p(3) = pne(2,2)
-      p(4) = pne(3,2)
+      p_GeV(1) = enuc1
+      p_GeV(2) = pne(1,2)
+      p_GeV(3) = pne(2,2)
+      p_GeV(4) = pne(3,2)
 
-      qTilde(1) = enuc2-enuc1
-      qTilde(2) = pne(1,1)-pne(1,3)
-      qTilde(3) = pne(2,1)-pne(2,3)
-      qTilde(4) = pne(3,1)-pne(3,3)
+      qTilde_GeV(1) = enuc2-enuc1
+      qTilde_GeV(2) = pne(1,1)-pne(1,3)
+      qTilde_GeV(3) = pne(2,1)-pne(2,3)
+      qTilde_GeV(4) = pne(3,1)-pne(3,3)
 
       nucPdg = ipne(2)
 cRT: end variables for SF
@@ -394,12 +394,12 @@ C         ENDIF
          if (IBOUND .eq. 1) then
             if ( (mod(mdlqe,1000)/100 .EQ. 4) .AND.
      $           HaveSpecFuncForNuclei() ) then
-              evdifcrs = LH(k,kPrime,p,qTilde,IPAR,nc,nucPdg, NUMATOM)
+              evdifcrs = LH_GeV(k_GeV,kPrime_GeV,p_GeV,qTilde_GeV,IPAR,nc,nucPdg, NUMATOM)
             else if (((mod(mdlqe,1000)/100 .EQ. 6 ) .or.
      $                (mod(mdlqe,1000)/100 .EQ. 7 )      ).AND.
      &           HaveEffSpecFuncForNuclei() ) then
                evdifcrs
-     $              = LH(k,kPrime,p,qTilde,IPAR,nc,nucPdg, NUMATOM)
+     $              = LH_GeV(k_GeV,kPrime_GeV,p_GeV,qTilde_GeV,IPAR,nc,nucPdg, NUMATOM)
             else
                evdifcrs
      $              = qedifcrs(ipar, ccnc, e, elep, coslep)
@@ -420,7 +420,7 @@ C     $        evdifcrs/ddifcrs(e*1000.,coslep,elep*1000.,ipar)
 c         else
 c            write(*,*) "model greater than 400"
 c         evdifcrs
-c     $        = LH(k,kPrime,p,qTilde,IPAR,nc,nucPdg)
+c     $        = LH_GeV(k_GeV,kPrime_GeV,p_GeV,qTilde_GeV,IPAR,nc,nucPdg)
 c     endif
       else if (    ((abs(modene).ge.11).and.(abs(modene).le.13))
      $         .or.((abs(modene).ge.31).and.(abs(modene).le.34)))
@@ -443,12 +443,12 @@ c     endif
             if ( (mod(mdlqe,1000)/100 .EQ. 100) .AND.
      $            HaveSpecFuncForNuclei() ) then
                evdifcrs
-     $              = LH(k,kPrime,p,qTilde,IPAR,nc,nucPdg, NUMATOM)
+     $              = LH_GeV(k_GeV,kPrime_GeV,p_GeV,qTilde_GeV,IPAR,nc,nucPdg, NUMATOM)
             else if ( ((mod(mdlqe,1000)/100 .EQ. 6 ).or.
      $                 (mod(mdlqe,1000)/100 .EQ. 7 )    ) .AND.
      &                 HaveEffSpecFuncForNuclei() ) then
                evdifcrs
-     $              = LH(k,kPrime,p,qTilde,IPAR,nc,nucPdg, NUMATOM)
+     $              = LH_GeV(k_GeV,kPrime_GeV,p_GeV,qTilde_GeV,IPAR,nc,nucPdg, NUMATOM)
             else
                evdifcrs
      $              = qedifcrs(ipar, ccnc, e, elep, coslep)
