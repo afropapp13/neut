@@ -54,7 +54,7 @@ C     Setup Variables
       DOUBLE PRECISION MA
 
 C      Dipole FA
-      if (MDLQEAF.eq.1 .or. MDLQEAF.eq.0) then
+      if (MDLQEAF.eq.1) then
          if (isNC .EQV. .TRUE.) then
             FA = gA / (( 1 +( Q2_GeV /( XMANCEL**2 ) ) )**2)
          else
@@ -73,6 +73,14 @@ C     3 Component FF
 C     ZEXP FF
       else if (MDLQEAF.eq.5) then
          FA = faZEXP( Q2_GeV )
+      else
+        write(*,*) 'INVALID MDLQEAF specified:',MDLQEAF,' should be:'
+        write(*,*) '    1: Dipole'
+        write(*,*) '    2: BBBA07'
+        write(*,*) '    3: 2-component'
+        write(*,*) '    4: 3-component'
+        write(*,*) '    5: Z-expansion'
+        stop
       endif
 
 C     Apply NC Scaling to FA
