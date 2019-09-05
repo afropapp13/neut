@@ -8,13 +8,17 @@ bin_PROGRAMS = neutroot
 NEUTSMPL_PROGLDADD = $(NEUT_LIBS) $(CERN_LIBS) $(ROOT_LIBS) $(EXE_RTLIBS)
 NEUTSMPL_PROGLDFLAGS = $(EXE_LINKFLAGS) $(CERN_LINKFLAGS) $(ROOT_LINKFLAGS)
 
-neutroot_SOURCES = neutroot.F flx_intrfc.cc ufm2th1dist.cc trapfpe.c
-neutroot_LDADD = $(NEUTSMPL_PROGLDADD)
-neutroot_LDFLAGS = $(NEUTSMPL_PROGLDFLAGS)
+noinst_LIBRARIES = libNEUTROOTIFace.a
+
+libNEUTROOTIFace_a_SOURCES = flx_intrfc.cc ufm2th1dist.cc trapfpe.c
 
 if NEUT_USE_GPERF
-neutroot_SOURCES += gperfstart.cc
+libNEUTROOTIFace_a_SOURCES += gperfstart.cc
 endif
+
+neutroot_SOURCES = neutroot.F 
+neutroot_LDADD = $(NEUTSMPL_PROGLDADD) libNEUTROOTIFace.a
+neutroot_LDFLAGS = $(NEUTSMPL_PROGLDFLAGS)
 
 #This is stupid
 install-exec-hook:
