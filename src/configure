@@ -22585,6 +22585,7 @@ fi
 
 if test "x$enable_compatnames" = "xyes"; then :
 
+  echo "Using compatilibity library names"
 
 
 else

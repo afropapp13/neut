@@ -1,4 +1,4 @@
-AC_PREREQ([2.68])
+AC_PREREQ([2.63])
 
 AC_INIT([neut], [5.4.1])
 
@@ -9,7 +9,7 @@ AC_SUBST(NEUT_VERSION_MIN, $(echo AC_PACKAGE_VERSION | cut -d . -f 2 ))
 AC_SUBST(NEUT_VERSION_REV, $(echo AC_PACKAGE_VERSION | cut -d . -f 3 ))
 
 AC_CONFIG_SRCDIR([neutsmpl/neutroot.F])
-AC_CONFIG_MACRO_DIRS([m4])
+AC_CONFIG_MACRO_DIR([m4])
 
 ################ Check CERNLIB
 AC_ARG_VAR(CERN, Top level directory of build cernlib)
@@ -37,7 +37,7 @@ AC_CHECK_FILE("${CERN}/${CERN_LEVEL}/include/pdf804/pilot.h",
   [AC_MSG_ERROR("pdf804/pilot.h does not exist in ${CERN}/${CERN_LEVEL}/include/ (expecting CERN and CERN_LEVEL to be defined.)")]
 )
 
-AM_INIT_AUTOMAKE([foreign 1.13 subdir-objects])
+AM_INIT_AUTOMAKE([foreign 1.11 subdir-objects])
 
 AC_PROG_CC
 AC_PROG_CXX
@@ -71,6 +71,7 @@ AC_ARG_ENABLE([compatnames],
 AM_CONDITIONAL([NEUT_LIBCOMPAT], [test "x$enable_compatnames" = "xyes"])
 
 AS_IF([test "x$enable_compatnames" = "xyes"], [
+  echo "Using compatilibity library names"
   AC_SUBST(LIBPREFIX, [])
 ], [
   AC_SUBST(LIBPREFIX, [NEUT])
