@@ -142,9 +142,6 @@ T2Kflux_SK::load_flux_histograms()
 	snprintf(htitle,sizeof(htitle),"t2k_skflux %s;energy",
 			 flavor_string[i]);
 	fluxhisto[i] = (TH1D *)(histf->Get(hname));
-	if (fluxhisto[i] == NULL){
-	  ierr = 1;
-	}
  	
 	for( j = 0 ; j < 4 ; j++){
 	  if (ratehisto[i][j] != NULL){
@@ -220,8 +217,15 @@ T2Kflux_SK::load_beam_flux_histograms()
 			 beam_flavor_string[i]);
 	tmphisto = (TH1D *)(histf->Get(hname));
 	if (tmphisto == NULL){
-	  ierr = 1;
-	  break;
+	  snprintf(hname,sizeof(htitle),"sk_nom_%s",
+			   beam_flavor_string[i]);
+	  snprintf(htitle,sizeof(htitle),"t2k_skflux %s;energy",
+			   beam_flavor_string[i]);
+	  tmphisto = (TH1D *)(histf->Get(hname));
+	  if (tmphisto == NULL){
+		ierr = 1;
+		break;
+	  }
 	}
 	snprintf(hname,sizeof(htitle),"t2k_skflux_%s",
 			 flavor_string[i]);
