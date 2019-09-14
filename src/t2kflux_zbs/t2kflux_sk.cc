@@ -1,9 +1,10 @@
 #include <TH1D.h>
 #include <iostream>
 #include <t2kflux_sk.h>
+#include <t2kneut_sk.h>
 #include <stdlib.h>
 #include <TFile.h>
-
+#include <TMath.h>
 
 #ifdef FLUX_10A
 #include "uhdef.h"
@@ -39,7 +40,11 @@ extern "C"
 {
   void neopskfxv_(int *, const char *, int *, int *, int );
 
+#ifdef gFortran
+  float fntotpau_(int *,float *);
+#else
   double fntotpau_(int *,float *);
+#endif
 
   void hnoent_(int *, int *);
   void hgntf_(int *, int *, int *);
@@ -80,7 +85,10 @@ T2Kflux_SK::rand_enu(int ip_flux,int ip_crs, int *err)
   }
   flux_idx = pid_idx(ip_flux);
   crs_idx  = pid_idx(ip_crs);
+  /*
   enu = (unr_rate[flux_idx][crs_idx])->Sample();
+  */
+  enu = GetRandom(ratehisto[flux_idx][crs_idx]);
   return enu;
 };
 
@@ -97,9 +105,64 @@ T2Kflux_SK::rand_enuflux(int ip_flux,int *err)
 	}
   }
   flux_idx = pid_idx(ip_flux);
+  /*
   enu = (unr_flux[flux_idx])->Sample();
+  */
+  enu = GetRandom(fluxhisto[flux_idx]);
   return enu;
 };
+
+double
+T2Kflux_SK::GetRandom(TH1D *h1d)
+{
+  if (h1d->GetDimension() > 1) {
+	return 0;
+  }
+
+  Int_t nbinsx = h1d->GetNbinsX();
+
+  Double_t *fIntegral = 0;
+
+  fIntegral = new Double_t[nbinsx + 2];
+
+  Int_t ibin = 0; 
+  fIntegral[ibin] = 0;
+
+  for (Int_t binx=1; binx <= nbinsx; ++binx) {
+	++ibin;
+	Double_t y = h1d->GetBinContent(binx);
+	if (y < 0){
+	  cout << "Bin content is negative" << endl;
+	  exit(1);
+	}
+	fIntegral[ibin] = fIntegral[ibin - 1] + y;
+  }
+  if (fIntegral[nbinsx] == 0){
+	delete fIntegral;
+	return 0;
+  }
+
+  for (Int_t bin=1; bin <= nbinsx; ++bin){
+	fIntegral[bin] /= fIntegral[nbinsx];
+  }
+
+  fIntegral[nbinsx+1] = h1d->GetEntries();
+
+  Double_t r1 = global_tr3->Rndm();
+  
+  ibin = TMath::BinarySearch(nbinsx,fIntegral,r1);
+  Double_t x = h1d->GetBinLowEdge(ibin+1);
+  if (r1 > fIntegral[ibin]){
+	x += 
+	  h1d->GetBinWidth(ibin+1) * 
+	  (r1 - fIntegral[ibin])/
+	  (fIntegral[ibin+1] - fIntegral[ibin]);
+	delete fIntegral;
+	return x;
+  }
+
+  return 0;
+}
 
 int
 T2Kflux_SK::load_flux_histograms()
@@ -136,18 +199,25 @@ T2Kflux_SK::load_flux_histograms()
   for ( i = 0 ; i < 4 ; i++ ){
 	if (fluxhisto[i] != NULL){
 	  delete fluxhisto[i];
+	  fluxhisto[i] = 0;
 	}
-	snprintf(hname,sizeof(htitle),"t2k_skflux_%s",
+  }
+
+  for ( i = 0 ; i < 4 ; i++ ){
+	snprintf(hname,sizeof(hname),"t2k_skflux_%s",
 			 flavor_string[i]);
 	snprintf(htitle,sizeof(htitle),"t2k_skflux %s;energy",
 			 flavor_string[i]);
 	fluxhisto[i] = (TH1D *)(histf->Get(hname));
+	if (fluxhisto[i] == 0){
+	  return -1;
+	}
  	
 	for( j = 0 ; j < 4 ; j++){
 	  if (ratehisto[i][j] != NULL){
 		delete ratehisto[i][j];
 	  }
-	  snprintf(hname,sizeof(htitle),"skrate_%s_x_%s",
+	  snprintf(hname,sizeof(hname),"skrate_%s_x_%s",
 			   flavor_string[i],flavor_string[j]);
 	  snprintf(htitle,sizeof(htitle),"skrate %s x %s ;energy",
 			   flavor_string[i],flavor_string[j]);
@@ -213,13 +283,11 @@ T2Kflux_SK::load_beam_flux_histograms()
 	if (fluxhisto[i] != NULL){
 	  delete fluxhisto[i];
 	}
-	snprintf(hname,sizeof(htitle),"enu_sk_13a_real_%s",
+	snprintf(hname,sizeof(hname),"enu_sk_13a_real_%s",
 			 beam_flavor_string[i]);
 	tmphisto = (TH1D *)(histf->Get(hname));
 	if (tmphisto == NULL){
-	  snprintf(hname,sizeof(htitle),"sk_nom_%s",
-			   beam_flavor_string[i]);
-	  snprintf(htitle,sizeof(htitle),"t2k_skflux %s;energy",
+	  snprintf(hname,sizeof(hname),"sk_nom_%s",
 			   beam_flavor_string[i]);
 	  tmphisto = (TH1D *)(histf->Get(hname));
 	  if (tmphisto == NULL){
@@ -227,15 +295,23 @@ T2Kflux_SK::load_beam_flux_histograms()
 		break;
 	  }
 	}
-	snprintf(hname,sizeof(htitle),"t2k_skflux_%s",
+	snprintf(hname,sizeof(hname),"t2k_skflux_%s",
 			 flavor_string[i]);
 	snprintf(htitle,sizeof(htitle),"t2k_skflux %s;energy",
 			 flavor_string[i]);
 	fluxhisto[i]=(TH1D *)tmphisto->Clone(hname);
 	fluxhisto[i]->SetTitle(htitle);
 
+	Double_t bin_width;
+	Double_t flux_val;
 
-	
+	nbins = fluxhisto[i]->GetNbinsX();
+	for ( k = 1 ; k <= nbins ; k++ ){
+	  bin_width = fluxhisto[i]->GetBinWidth(k);
+	  flux_val  = fluxhisto[i]->GetBinContent(k);
+	  fluxhisto[i]->SetBinContent(k, flux_val*bin_width);
+	}
+
 	for( j = 0 ; j < 4 ; j++){
 	  if (ratehisto[i][j] != NULL){
 		delete ratehisto[i][j];
@@ -251,7 +327,7 @@ T2Kflux_SK::load_beam_flux_histograms()
 	  nbins = crshisto[j]->GetNbinsX();
 	  crshisto[j]->Reset();
 
-	  snprintf(hname,sizeof(htitle),"skrate_%s_x_%s",
+	  snprintf(hname,sizeof(hname),"skrate_%s_x_%s",
 			   flavor_string[i],flavor_string[j]);
 	  snprintf(htitle,sizeof(htitle),"skrate %s x %s ;energy",
 			   flavor_string[i],flavor_string[j]);
@@ -397,6 +473,9 @@ T2Kflux_SK::load_flux()
 
   }
 
+  /* 2019/09/14 : Stop using TUnuran 
+	 because this does not bsupport var. bin widths.
+
   for (flux_index = 0 ; flux_index < 4 ; flux_index ++){
 	unr_fluxdist[flux_index] = new TUnuranEmpDist(fluxhisto[flux_index],true);
 	unr_flux[flux_index] = new TUnuran(tr3);
@@ -411,6 +490,7 @@ T2Kflux_SK::load_flux()
 		->Init(*(unr_ratedist[flux_index][crs_index]),"empk");
 	}
   }
+  */
 
 
   flux_loaded = 1;
@@ -426,7 +506,7 @@ T2Kflux_SK::reset_histos()
 
   for ( i = 0 ; i < 4 ; i++ ){
 	if (fluxhisto[i] == NULL){
-	  snprintf(hname,sizeof(htitle),"t2k_skflux_%s",
+	  snprintf(hname,sizeof(hname),"t2k_skflux_%s",
 			   flavor_string[i]);
 	  snprintf(htitle,sizeof(htitle),"t2k_skflux %s;energy",
 			   flavor_string[i]);
@@ -437,7 +517,7 @@ T2Kflux_SK::reset_histos()
  	
 	for( j = 0 ; j < 4 ; j++){
 	  if (ratehisto[i][j] == NULL){
-		snprintf(hname,sizeof(htitle),"skrate_%s_x_%s",
+		snprintf(hname,sizeof(hname),"skrate_%s_x_%s",
 				 flavor_string[i],flavor_string[j]);
 		snprintf(htitle,sizeof(htitle),"skrate %s x %s ;energy",
 				 flavor_string[i],flavor_string[j]);
