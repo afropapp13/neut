@@ -56,6 +56,7 @@ namespace rew   {
   static void print_allparams();
 
   void SetDefaults();
+  void SetDefaults_FromCard();
   void Reconfigure();
   
   void SetMCDefaultVal(NSyst_t syst, double val);
@@ -110,6 +111,8 @@ namespace rew   {
   double FEFCXdef  ;
   double FEFCXHdef ;
   double FEFALLdef ;
+
+  int MECModeldef;
 
   static NFortFns * fInstance;
 
