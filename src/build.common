@@ -63,7 +63,7 @@ ROOT_LIBS = -lCore -lCint -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRin
 endif
 
 # I know... but this seems to work
-EXE_LINKFLAGS = -fno-PIE -fno-pie
+EXE_LINKFLAGS = -fno-PIE -fno-pie -no-pie
 EXE_RTLIBS =  -lstdc++ -lgfortran
 if NEUT_USE_GPERF
 EXE_RTLIBS += -L@NEUT_GPERF@ -lprofiler
