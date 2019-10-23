@@ -18,6 +18,7 @@
 ************************************************************************
 #include "dsbnkf.h"
 #include "tacard.h"
+#include "cardname.h"
 
       CHARACTER*40 TMPFIL, COMMAND
 
@@ -32,11 +33,7 @@ C --  Initialize
 C --- get card file name (1st argument of the program)
 
       WRITE(6,*)
-      IF (IARGC() .GE. 1) THEN
-         CALL GETARG(1, FCARD)
-      ELSE
-         FCARD = 'supersim.card'
-      END IF
+      CALL RESOLVECARDNAME
       WRITE(6,*) 'TAU card file you read is ',FCARD
 
 C -- extract NEUT card
@@ -81,5 +78,3 @@ C -- extract NEUT card
 
       RETURN
       END
-
-

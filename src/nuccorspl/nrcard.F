@@ -17,14 +17,10 @@
 *
 ************************************************************************
 #include "nrcard.h"
+#include "cardname.h"
 
       CHARACTER*256 TMPFIL, COMMAND
-      CHARACTER*256 FCARD
 
-      INTEGER*4 IARGC
-#ifndef gFortran
-      EXTERNAL  IARGC
-#endif
 C --  Initialize
 
       NUCRESCAT = 1
@@ -34,11 +30,7 @@ C --  Initialize
 C --- get card file name (1st argument of the program)
 
       WRITE(6,*)
-      IF (IARGC() .GE. 1) THEN
-         CALL GETARG(1, FCARD)
-      ELSE
-         FCARD = 'neut.card'
-      END IF
+      CALL RESOLVECARDNAME
       WRITE(6,*) 'NUCLEON RESCATTERING card file you read is ',FCARD
 
 C -- extract NUCRES card

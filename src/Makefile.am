@@ -9,7 +9,7 @@ n1p1h/nieves1p1hC.h: n1p1h/inc/nieves1p1h.h
 neutcore/neutmodelC.h: neutcore/neutmodel.h n1p1h/nieves1p1hC.h
 	$(top_srcdir)/tools/fh2h.pl $< > $@
 
-BUILT_SOURCES = neutcore/necardC.h neutcore/neworkC.h neutcore/neutfilepathC.h neutcore/posinnucC.h neutcore/neutparamsC.h neutcore/neutmodelC.h neutcore/nefillverC.h neutcore/neutcrsC.h neutcore/rsconsC.h skmcsvc/vcworkC.h skmcsvc/vcvrtxC.h n1p1h/nieves1p1hC.h nuccorspl/nrcardC.h nuceff/fsihistC.h nuceff/efpionC.h nuccorspl/nucleonfsihistC.h
+BUILT_SOURCES = neutcore/cardnameC.h neutcore/necardC.h neutcore/neworkC.h neutcore/neutfilepathC.h neutcore/posinnucC.h neutcore/neutparamsC.h neutcore/neutmodelC.h neutcore/nefillverC.h neutcore/neutcrsC.h neutcore/rsconsC.h skmcsvc/vcworkC.h skmcsvc/vcvrtxC.h n1p1h/nieves1p1hC.h nuccorspl/nrcardC.h nuceff/fsihistC.h nuceff/efpionC.h nuccorspl/nucleonfsihistC.h
 CLEANFILES = $(BUILT_SOURCES)
 
 include_HEADERS = $(BUILT_SOURCES)
@@ -17,10 +17,10 @@ include_HEADERS = $(BUILT_SOURCES)
 if NEUT_LIBCOMPAT
 # Order here matters, should build core libraries, combine them in this dir (.), then build reweight, programs, and tools.
 # Cannot currently build neututils dirs in compat mode.
-SUBDIRS = neutcore nuccorspl nuceff n1p1h ht2p2h radcorr skmcsvc partnuck neutclass specfunc . neutsmpl reweight tools
+SUBDIRS = neutcore nuccorspl nuceff n1p1h ht2p2h radcorr skmcsvc partnuck neutclass specfunc . neutsmpl reweight tools escat
 else
 # Order here matters, should build core libraries, combine them in this dir (.), then build reweight, programs, and tools.
-SUBDIRS = neutcore nuccorspl nuceff n1p1h mec ht2p2h radcorr skmcsvc partnuck neutclass specfunc . neutsmpl reweight tools neututils nuclsmpl pionsmpl neutgeom
+SUBDIRS = neutcore nuccorspl nuceff n1p1h mec ht2p2h radcorr skmcsvc partnuck neutclass specfunc . neutsmpl reweight tools neututils nuclsmpl pionsmpl neutgeom escat
 endif
 
 # When I can get a hold of the zebra code I will add an --enable flag for the ZEBRA_SUBDIRS, but for the moment, disable them.

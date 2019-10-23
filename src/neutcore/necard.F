@@ -21,9 +21,9 @@
 *       2007.11.05 ; G.Mitsuka add nesettarg.F for nuceff
 *                                  nrsettarg.F for nuccorspl
 *       2008.08.13 ; Y.Hayato add FEF*** to control mean free path of pis
-*       2009.01.11 ; Y.Hayato Default potential is calculated 
+*       2009.01.11 ; Y.Hayato Default potential is calculated
 *                                         using Fermi surface momentum
-*       2009.04.11 ; Y.Hayato Move the location to call default parameter 
+*       2009.04.11 ; Y.Hayato Move the location to call default parameter
 *                             initialization routine (nesetfgparams)
 *       2010.06    ; P.de Perio add flag for nucleon ejection
 *                               add mfp model select for low energy pions
@@ -32,10 +32,10 @@
 *                               add more factors to FEF
 *                               added flag to check if nu sim or other sim
 *       2013.05    ; F.d.M. Blaszczyk add formation zone parameter FZMU2
-*                                     default value for FZMU2 is 0.08     
-*       2013.10    ; P.Rodrigues & A.Bercellieadd 
+*                                     default value for FZMU2 is 0.08
+*       2013.10    ; P.Rodrigues & A.Bercellieadd
 *                              new form facor for Rein&Sehgal 1pi
-*       2016.07    ; C. Bronner 
+*       2016.07    ; C. Bronner
 *
 *                    Hadron multiplicity model for multi-pi mode
 *
@@ -43,25 +43,25 @@
 *
 ************************************************************************
       IMPLICIT NONE
-      
+
       REAL*4 SPACE
       COMMON /CFREAD/SPACE(1000)
 
+#include "cardname.h"
 #include "necard.h"
 #include "neutparams.h"
 #include "neutmodel.h"
 #include "neutfilepath.h"
 
       CHARACTER*40 TMPFIL, COMMAND
-
-      CHARACTER*128 FCARD
+      CHARACTER*1024 CRSPATH_ENV
 
       INTEGER*4     IRANDFLG
 
       INTEGER*4     I,IRET
 
       INTEGER*4     IARGC
-#ifndef gFortran 
+#ifndef gFortran
       EXTERNAL      IARGC
 #endif
 
@@ -120,7 +120,7 @@ C     For form factors for Rein-Seighal update
       XMACOH  = 1.0
       RAD0NU  = 1.0
       fA1COH  = 0.0
-      fb1COH  = 0.0 
+      fb1COH  = 0.0
 
       MDLQE     = 2002
       MDLQEAF   = 1
@@ -143,7 +143,7 @@ C     For form factors for Rein-Seighal update
       NVBINDFERMICOR = 1
 
       NEABSPIEMIT = 1
-      
+
       PFSURF =  0.225
       PFMAX  =  0.225
 C      VNUINI = -0.027 ! defined below
@@ -182,7 +182,13 @@ C      RPILESSDCY = 0.20E0
       RPILESSDCY = 0.00E0
 
 C     Cross-section data table PATH
-      CRSTBLPATH ='./'
+C     Check environemnt variable first.
+      CALL GETENV('NEUT_CRSPATH',CRSPATH_ENV)
+      IF ( LEN(CRSPATH_ENV) .GT. 0) THEN
+        CRSTBLPATH = CRSPATH_ENV
+      ELSE
+        CRSTBLPATH = './'
+      ENDIF
 
 C     FermiMomentum used for pauli blocking in SF model only
 C     (NOTE: default is -1, gets set elsewhere correctly if not user-defined)
@@ -194,7 +200,7 @@ C     relatve size of second class currents (vector and axial)
 
 C     RT: adding error parameter for FP(Q2=0)
       FPQE = 1.0
-      
+
 C     Radiative correction on/off ( default off )
       IRADCORR = 0
 
@@ -204,12 +210,7 @@ C     RT: adding diffractive pion parameters
 
 C --- get card file name (1st argument of the program)
 
-      WRITE(6,*) 
-      IF (IARGC() .GE. 1) THEN
-         CALL GETARG(1, FCARD)
-      ELSE
-         FCARD = 'neut.card'
-      END IF
+      CALL RESOLVECARDNAME
       WRITE(6,*) '======= CONFIGURATION FOR INTERACTIONS ======='
       WRITE(6,*) 'NEUT card file you read is ',FCARD
 
@@ -262,7 +263,7 @@ C      CALL FFKEY('MVSPI' ,XMVSPI ,1,'REAL')
       CALL FFKEY('R0COH' ,RAD0NU ,1,'REAL')
       CALL FFKEY('fA1COH',fA1COH ,1,'REAL')
       CALL FFKEY('fb1COH',fb1COH ,1,'REAL')
- 
+
       CALL FFKEY('MDLQE',MDLQE,1,'INTEGER')
       CALL FFKEY('MDLQEAF',MDLQEAF,1,'INTEGER')
 
@@ -273,13 +274,13 @@ C      CALL FFKEY('MVSPI' ,XMVSPI ,1,'REAL')
 
       CALL FFKEY('NVRPAFP0IN'    ,XNVRPAFP0IN,    1,'REAL')
       CALL FFKEY('NVRPAPF0EX'    ,XNVRPAPF0EX,    1,'REAL')
-      CALL FFKEY('NVRPAFSTAR'    ,XNVRPAFSTAR,    1,'REAL')    
-      CALL FFKEY('NVRPAF'        ,XNVRPAF,        1,'REAL')        
+      CALL FFKEY('NVRPAFSTAR'    ,XNVRPAFSTAR,    1,'REAL')
+      CALL FFKEY('NVRPAF'        ,XNVRPAF,        1,'REAL')
       CALL FFKEY('NVRPAPILAMBDA' ,XNVRPAPILAMBDA, 1,'REAL')
-      CALL FFKEY('NVRPACR0'      ,XNVRPACR0,      1,'REAL')      
+      CALL FFKEY('NVRPACR0'      ,XNVRPACR0,      1,'REAL')
       CALL FFKEY('NVRPARHOLAMBDA',XNVRPARHOLAMBDA,1,'REAL')
       CALL FFKEY('NVRPAGP'       ,XNVRPAGP,       1,'REAL')
-      CALL FFKEY('NVRPAXMPI'     ,XNVRPAXMPI,     1,'REAL')     
+      CALL FFKEY('NVRPAXMPI'     ,XNVRPAXMPI,     1,'REAL')
       CALL FFKEY('NVRPAXMRHO'    ,XNVRPAXMRHO,    1,'REAL')
       CALL FFKEY('NVRPAIREL'     ,XNVRPAIREL,     1,'REAL')
 
@@ -314,12 +315,12 @@ C      CALL FFKEY('MVSPI' ,XMVSPI ,1,'REAL')
 
       CALL FFKEY('IPILESSDCY',IPILESSDCY,1,'INTEGER')
       CALL FFKEY('RPILESSDCY',RPILESSDCY,1,'REAL')
-      
+
       CALL FFKEY('PFSF',PFSF,1,'REAL')
 
       CALL FFKEY('SCCFV',SCCFV,1,'REAL')
       CALL FFKEY('SCCFA',SCCFA,1,'REAL')
-      
+
       CALL FFKEY('FPQE',FPQE,1,'REAL')
 
       CALL FFGO
@@ -427,7 +428,7 @@ C      WRITE(6,*) 'NECARD : MVSPI  = ',XMVSPI
       WRITE(6,*) 'NECARD : SCCFA     = ',SCCFA
       WRITE(6,*) 'NECARD : FPQE      = ',FPQE
       WRITE(6,*) 'NECARD : PFSF      = ',PFSF
- 
+
       IF (NEMODFLG.EQ.-1) THEN
          WRITE(6,*) 'NECARD : CRS  = ',CRSNEUT
          WRITE(6,*) 'NECARD : CRSB = ',CRSNEUTB
@@ -459,7 +460,7 @@ C      WRITE(6,*) 'NECARD : MVSPI  = ',XMVSPI
       WRITE(6,*) 'NECARD : VNUINI = ',VNUINI
       WRITE(6,*) 'NECARD : VNUFIN = ',VNUFIN
       WRITE(6,*) 'NECARD : IFORMLEN = ',IFORMLEN
-      WRITE(6,*) 'NECARD : FZMU2 = ',FZMU2      
+      WRITE(6,*) 'NECARD : FZMU2 = ',FZMU2
       WRITE(6,*) 'NECARD : ABSPIEMIT = ',NEABSPIEMIT
       WRITE(6,*) 'NECARD : NUSIM = ',NUSIM
       WRITE(6,*) 'NECARD : QUIET = ',QUIET
@@ -495,10 +496,10 @@ C      ISPIMA = INT(XMASPI*100+0.5)
       INFFRESMA = INT(XMANFFRES*100+0.5)
 
       if (mod(MDLQE, 10000)/1000 .NE. 2) then
-         IF ( IQEMA.ne.101 .and. IQEMA.ne.103 .and. 
-     $        IQEMA.ne.105 .and. 
+         IF ( IQEMA.ne.101 .and. IQEMA.ne.103 .and.
+     $        IQEMA.ne.105 .and.
      $        IQEMA.ne.111 .and. IQEMA.ne.121 .and.
-     &        IQEMA.ne.131 .and. IQEMA.ne.160 ) 
+     &        IQEMA.ne.131 .and. IQEMA.ne.160 )
      $        THEN
             WRITE(6,*)
      &           'NECARD error: MAQE must be 1.01, 1.03, 1.05',
@@ -507,25 +508,25 @@ C      ISPIMA = INT(XMASPI*100+0.5)
          END IF
       endif
 
-C      IF ( ISPIMA.ne.95 .and. ISPIMA.ne.101 .and. ISPIMA.ne.103. 
+C      IF ( ISPIMA.ne.95 .and. ISPIMA.ne.101 .and. ISPIMA.ne.103.
 C     $     .and. ISPIMA.ne.111 .and. ISPIMA.ne.121 ) THEN
-C         WRITE(6,*) 
+C         WRITE(6,*)
 C     $        'NECARD error: MASPI must be 0.95, 1.01, 1.03, 1.11 or 1.21'
 C         STOP
 C      END IF
 
 
-      IF ( IRSRESMA.ne.95 .and. IRSRESMA.ne.101 .and. IRSRESMA.ne.103. 
+      IF ( IRSRESMA.ne.95 .and. IRSRESMA.ne.101 .and. IRSRESMA.ne.103.
      $     .and. IRSRESMA.ne.111 .and. IRSRESMA.ne.121 ) THEN
-         WRITE(6,*) 
+         WRITE(6,*)
      $     'NECARD error: MARS must be 0.95, 1.01, 1.03, 1.11 or 1.21'
          STOP
       END IF
 
-      IF ( INFFRESMA.ne.95 .and. INFFRESMA.ne.101 .and. 
-     $     INFFRESMA.ne.103. .and. INFFRESMA.ne.111 .and. 
+      IF ( INFFRESMA.ne.95 .and. INFFRESMA.ne.101 .and.
+     $     INFFRESMA.ne.103. .and. INFFRESMA.ne.111 .and.
      $     INFFRESMA.ne.121 ) THEN
-         WRITE(6,*) 
+         WRITE(6,*)
      $    'NECARD error: MARNFF must be 0.95, 1.01, 1.03, 1.11 or 1.21'
          STOP
       END IF
@@ -534,7 +535,7 @@ C      END IF
          WRITE(6,*) 'NECARD error: FEFQEHF must be between 0 and 1!'
          STOP
       END IF
-      
+
       IF (FEFCXHF.lt.0 .or. FEFCXHF.gt.1) THEN
          WRITE(6,*) 'NECARD error: FEFCXHF must be between 0 and 1!'
          STOP
