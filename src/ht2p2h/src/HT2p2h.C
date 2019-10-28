@@ -2,6 +2,8 @@
 #include <dirent.h>
 #include <stdlib.h>
 #include <math.h>
+#include <string.h>
+#include <fstream>
 
 #define PNOFFSET 10000
 
@@ -80,45 +82,47 @@ void HT2p2h::ReadTensors(std::string dirname ){
   if ( ( dir = opendir (dirname.c_str()) ) != 0 ) {
 
     std::cout << " HT2p2h reading directory " << dirname << std::endl; 
-    
+	
     while( ( ent = readdir(dir) ) != 0 ) {
-
+	  
       if( ent->d_name[0] == '.' ) continue; 
-           
+	  
       HadronTensor *ht = new HadronTensor();
 	  ht->Initialize(dirname+"/"+std::string(ent->d_name));
       int nuclei = ht->GetNuclei();
       if( nuclei == -1 ) continue;  // This is not a proper file. 
       if( ht->IsPN()  ){
-	Tensor[nuclei+PNOFFSET] = ht;
-	Tensor_init[nuclei+PNOFFSET] = false;
-
-	if( nuclei == 28 ) { // Create a copy for 27 (Al) 
-	  Tensor[27+PNOFFSET] = ht;
-	  Tensor_init[27+PNOFFSET] = false;
-	}
-	
+		Tensor[nuclei+PNOFFSET] = ht;
+		Tensor_fname[nuclei+PNOFFSET] = dirname+"/"+std::string(ent->d_name);
+		Tensor_init[nuclei+PNOFFSET] = false;
+		
+		if( nuclei == 28 ) { // Create a copy for 27 (Al) 
+		  Tensor[27+PNOFFSET] = ht;
+		  Tensor_fname[nuclei+PNOFFSET] = dirname+"/"+std::string(ent->d_name);
+		  Tensor_init[27+PNOFFSET] = false;
+		}
       }
       else{
-	Tensor[nuclei] = ht;
-	Tensor_init[nuclei] = false;
-	if( nuclei == 28 ) { // Create a copy for 27 (Al) 
-	  Tensor[27] = ht;
-	  Tensor_init[27] = false;
-	}
-      }
-      
-      std::cout << " Tensor for nuclei " << nuclei << " has been read " << std::endl; 
+		Tensor[nuclei] = ht;
+		Tensor_init[nuclei] = false;
+		if( nuclei == 28 ) { // Create a copy for 27 (Al) 
+		  Tensor[27] = ht;
+		  Tensor_init[27] = false;
+		}
 
+      }
+	  
+      std::cout << " Tensor for nuclei " << nuclei << " has been read " << std::endl; 
+	  
       /*
-	InitializeNucleus(nuclei); 
+		InitializeNucleus(nuclei); 
 	
-	Precompindx pindx1(1,nuclei);
-	
-	Precompindx pindx2(-1,nuclei);
-	
-	if( !ht->IsPN() )   // Only for the total. 
-	ComputeIntegrals(nuclei);
+		Precompindx pindx1(1,nuclei);
+		
+		Precompindx pindx2(-1,nuclei);
+		
+		if( !ht->IsPN() )   // Only for the total. 
+		ComputeIntegrals(nuclei);
       */
       
     }
@@ -130,13 +134,167 @@ void HT2p2h::ReadTensors(std::string dirname ){
 }
 
 
+int HT2p2h::ReadIntegrals(int nuclei){
+  
+  std::ifstream infile;
+
+  std::string fname;
+  fname = Tensor_fname[nuclei+PNOFFSET];
+
+#define LOCALBUFSIZ (1024*1024*10)
+  char *line = NULL;
+  char *item = NULL;
+  int  ipar, ret, i;
+
+  line = malloc(LOCALBUFSIZ);
+  item = malloc(LOCALBUFSIZ);
+  infile.open (fname.c_str());
+  if (infile.fail()){
+	std::cout << "Failed to open Tensor file" 
+			  << fname 
+			  << std::endl;
+	exit(1);
+  }
+
+  std::cout << " Reading Cross-section from the Tensor File " 
+			<< fname << std::endl; 
+
+  int crstbl_exists = 0;
+  /* search for the Cross-sections block  */
+  while(infile.getline(line,LOCALBUFSIZ)){
+	if (strstr (line,"#Cross-section Table")){
+	  crstbl_exists = 1;
+	  break;
+	}
+  }
+  if (crstbl_exists == 0){
+	free(line);
+	free(item);
+	return -1;
+  }
+
+  /* search for the parameters block  */
+  int param_agreed = 0;
+  while(infile.getline(line,LOCALBUFSIZ)){
+	if ( strstr(line,"#PARAMSTART") ){
+	  break;
+	}
+  }
+  /* search for the table with same parameter value */
+  while(infile.getline(line,LOCALBUFSIZ)){  
+	if (line[0] == 0) continue;
+	if (line[0] != '#') break;
+	if (strncmp (line,"#NV2P2HQVAL",11)==0){
+	  sscanf(line,"%s %d",item, &ipar);
+	  if (ipar == nieves2p2hpar_.nv2p2hqval){
+		param_agreed = 1;
+		break;
+	  }
+	}
+  }  
+  if (param_agreed == 0){
+	free(line);
+	free(item);
+	return -1;
+  }
+
+  int    nuclei_file;
+  int    ebinmax;
+  double enubin;
+
+  /* read # of nuclei */
+  if (infile.getline(line,LOCALBUFSIZ)){
+	nuclei_file = atoi(line);
+  }else{
+	free(line);
+	free(item);
+	return -1;
+  }
+
+  if (nuclei_file != nuclei){
+	std::cout << "Inconsistent nuclei was stored" << std::endl;
+	free(line);
+	free(item);
+	return -2;
+  }
+
+  /* read # of energy bins */
+  if (infile.getline(line,LOCALBUFSIZ)){
+	ebinmax = atoi(line);
+  }else{
+	free(line);
+	free(item);
+	return -3;
+  }
+
+  /* read energy bin size */
+  if (infile.getline(line,LOCALBUFSIZ)){
+	enubin = atof(line);
+  }else{
+	free(line);
+	free(item);
+	return -4;
+  }
+
+  std::vector<double> integrals[neutrinoIdlist.size()];
+  std::vector<double> maximals[neutrinoIdlist.size()];
+  double crs[neutrinoIdlist.size()];
+  double max[neutrinoIdlist.size()];
+
+  double enu;
+
+  for (i = 0 ; i < ebinmax ; i++){
+	infile.getline(line,LOCALBUFSIZ);
+	ret = sscanf(line, "%d %lf %lf %lf %lf %lf %lf %lf",
+				 &ipar, &enu, 
+				 &crs[0], &max[0], &crs[1], &max[1], &crs[2], &max[2],
+				 &crs[3], &max[3], &crs[4], &max[4], &crs[5], &max[5]);
+	if (ret != 8){
+	  free(line);
+	  free(item);
+	  return -2;
+	}
+	if ( enu - ((double)i*enubin+enubin*0.5) > enubin/100. ){
+	  free(line);
+	  free(item);
+	  return -3;
+	}
+
+	for( unsigned int il = 0; il < 6;  il++ ) {	
+	  integrals[il].push_back(crs[il]);
+	  maximals[il].push_back(max[il]);
+	}
+  }
+
+  for( unsigned int il = 0; il < 6;  il++ ) {	
+	int id = neutrinoIdlist[il]; 
+	Precompindx pindx(id,nuclei);
+    IntCrossSection[pindx] = integrals[il];
+    MaxCrossSection[pindx] = maximals[il]; 
+  }
+
+  free(line);
+  free(item);
+
+  return 0;
+
+}
+
+
 void HT2p2h::ComputeIntegrals(int nuclei){
 
+  int ret;
   CheckNuclei_2(nuclei);  
- 
+  
   int binmax = Emax/Enubin;
   
   //  std::cout << " Looping for " << neutrinoIdlist.size() << " neutrinos with " << binmax << " bins " <<  std::endl; 
+
+  ret = ReadIntegrals(nuclei);
+  if (ret == 0){
+	/* cross-section was stored in the tensor file */
+	return;
+  }
 
 
   for( unsigned int il = 0; il < neutrinoIdlist.size(); il++ ) {
@@ -211,7 +369,44 @@ void HT2p2h::ComputeIntegrals(int nuclei){
     MaxCrossSection[pindx] = maximal; 
     
   }
+  
+  std::vector<double> integral_dump[neutrinoIdlist.size()];
+  std::vector<double> maximal_dump[neutrinoIdlist.size()];
 
+  for( unsigned int il = 0; il < neutrinoIdlist.size(); il++ ) {
+    int id = neutrinoIdlist[il]; 
+    Precompindx pindx(id,nuclei);
+	
+    integral_dump[il] = IntCrossSection[pindx];
+    maximal_dump[il]  = MaxCrossSection[pindx];
+
+  }  
+
+  std::string fname;
+  fname = Tensor_fname[nuclei+PNOFFSET];
+
+  std::ofstream offile(fname.c_str(),std::ofstream::app);
+  if (offile.fail()){
+	return;
+  }
+
+  offile << "#Cross-section Table" << std::endl;
+  offile << "#PARAMSTART" << std::endl;
+  offile << "#NV2P2HQVAL   " << nieves2p2hpar_.nv2p2hqval << std::endl;
+  offile << nuclei << std::endl;
+  offile << binmax << std::endl;
+  offile << Enubin << std::endl;
+
+  for( int i = 0; i < binmax; i++ ) {
+	offile << i << " ";
+	offile << (double)i*Enubin+Enubin*0.5 << " ";
+	for( unsigned int il = 0; il < neutrinoIdlist.size(); il++ ) {
+	  offile << integral_dump[il][i] << " "
+			 << maximal_dump[il][i];
+	}
+	offile << std::endl;
+  }
+  
   return; 
 }
 
@@ -900,3 +1095,4 @@ double HT2p2h::GetQ0Fermivalue(int nuclei,int id,double R){
 
   return qval; 
 }
+
