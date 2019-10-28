@@ -53,9 +53,11 @@ class HT2p2h:Nucleus2p2h{
   std::map< Precompindx , std::vector<double> > IntCrossSection;       // Contains the integrated cross-sections.
   std::map< Precompindx , std::vector<double> > MaxCrossSection;       // Contains the maximal cross-sections. 
   std::map< int , HadronTensor* > Tensor;                      // Contains the tensors.....
-  std::map< int , bool > Tensor_init;                      // Initialized flag of the tensor 
+  std::map< int , bool > Tensor_init;                      // Initialized flag of the tensor
+  std::map< int , std::string > Tensor_fname;                     // Filename of the tensor 
   void   ReadTensors(std::string dirname );
   void   ComputeIntegrals(int nuclei);
+  int    ReadIntegrals(int nuclei);
 
   void   CheckNuclei(int id);
   void   CheckNuclei_2(int id);
