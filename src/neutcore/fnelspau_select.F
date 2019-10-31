@@ -47,6 +47,10 @@ C       Support for RPA correction
       external fnelspau_intpol,fnelspau_sf,fnelspau_effsf,fnels_erpascl,
      $         fn_1p1h_n
 
+C -- for SF nuclei tests
+      logical HaveSpecFuncForNuclei, HaveEffSpecFuncForNuclei
+      external HaveSpecFuncForNuclei, HaveEffSpecFuncForNuclei
+
 C -- currently dummy argument
       if ( ipar.gt.0 ) then
          mode = 1
@@ -97,18 +101,11 @@ C
       endif
 
       if ( (mod(MDLQE, 1000)/100 .EQ. 4) .and.
-     &     ( (numbndp .eq. 6) .or.
-     &       (numbndp .eq. 8) .or.
-     $       (numbndp .eq. 26))) then
+     &      HaveSpecFuncForNuclei() ) then
          FNELSPAU_SELECT = fnelspau_sf(E, IPAR)
       else if (  ((mod(MDLQE, 1000)/100 .EQ. 6 ).or.
      &            (mod(MDLQE, 1000)/100 .EQ. 7 )    ).and.
-     &           ((NUMATOM .eq.  2) .or. (NUMATOM .eq.  3) .or.
-     &            (NUMATOM .eq.  4) .or. (NUMATOM .eq. 12) .or.
-     &            (NUMATOM .eq. 16) .or. (NUMATOM .eq. 20) .or.
-     &            (NUMATOM .eq. 27) .or. (NUMATOM .eq. 40) .or.
-     &            (NUMATOM .eq. 56) .or. (NUMATOM .eq. 63) .or.
-     &            (NUMATOM .eq. 64) .or. (NUMATOM .eq.208))) then
+     &            HaveEffSpecFuncForNuclei()        ) then
          FNELSPAU_SELECT = fnelspau_effsf(E, IPAR)
       else
          FNELSPAU_SELECT = fnelspau_intpol(E, IPAR)

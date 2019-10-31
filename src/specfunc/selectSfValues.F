@@ -7,8 +7,8 @@
 
 c ----- include spectral function arrays, variables etc
 #include "specfunc.h"
-#include "../neutcore/necard.h"
-#include "../neutcore/neutmodel.h"
+#include "necard.h"
+#include "neutmodel.h"
         logical RFG
         double precision theta, phi, mag, y
         double precision val, maxValueE, maxValuep, interpVal
@@ -51,7 +51,7 @@ c          y = rand(0)
 c          mag = 220 * y**(1./3.)
 c          ETilde = 34 + 939.565 - sqrt(939.565**2 + mag**2)
 c
-c          
+c
 c          p(1) = 0
 c          p(2) = mag*sin(theta)*cos(phi)
 c          p(3) = mag*sin(theta)*sin(phi)
@@ -78,7 +78,7 @@ c ----- goto 11 occurs for failure to select a momentum value
 c        if (mag .GT. 200) then
 c          val = 0.5 * val
 c        endif
-        
+
         pBin = (mag) / (p_Array(nuc,2) - p_Array(nuc,1))
         if (pBin .GE. 200) then
           pBin = 199
@@ -96,7 +96,7 @@ c ----- interpolate between p-bins to get probability of momentum p
 c ------- momentum value not selected
           goto 11
         endif
-        
+
         do Ebin = 1, nBinsE(nuc)
           maxValueE = max(maxValueE, sFArray(nuc,pbin,Ebin) )
           maxValueE = max(maxValueE, sFArray(nuc,pbin+1,Ebin) )
@@ -122,7 +122,7 @@ c        endif
         if (EBin .EQ. 0) then
           goto 12
         endif
-      
+
 c interpolate between bins
       interpVal =
      +(p_Array(nuc,pBin+1)-mag)*(E_Array(nuc,EBin+1)-ETilde)*
@@ -136,8 +136,8 @@ c interpolate between bins
      ++
      +(mag-p_Array(nuc,pBin))*(ETilde-E_Array(nuc,EBin))*
      + sfArray(nuc,pBin+1, EBin+1)
-      
-      interpVal = 
+
+      interpVal =
      +interpVal/((p_Array(nuc,2)-p_Array(nuc,1))*
      + (E_Array(nuc,2)-E_Array(nuc,1)))
 
@@ -147,7 +147,7 @@ c check if value falls above or below maxAllowed - if above, reselect
 c ------- energy value not selected
           goto 12
         endif
-        
+
         p(1) = 0
         p(2) = mag*sin(theta)*cos(phi)
         p(3) = mag*sin(theta)*sin(phi)

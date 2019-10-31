@@ -8,6 +8,8 @@ extern "C" {
   void  nesetfgparams_();
   void  nefillmodel_();
   void  zexpconfig_();
+  void necard_();
+  void necardev_();
 }
   
 using namespace neut;
@@ -222,10 +224,75 @@ void NFortFns::SetMCDefaultVal(NSyst_t syst, double val) {
   
 }
 
-void NFortFns::SetDefaults() {
-  // Documentation: See neutmodel.h and necard.h 
+void NFortFns::SetDefaults_FromCard() {
+
+  // Set up the defaults from a card file
+  // See NEUT D card file in https://t2k.org/nd280/datacomp/production006/mcp/neutcards
+  necard_();
+  necardev_();
+  nefillmodel_();
 
   /*
+  // Hack job to get NEUT working for Prod 6T
+
+  // MEC model default is Nieves lepton tensor
+  fInstance->MECModeldef = 1;
+
+  // Default Parameters Used in MC Generation
+  fInstance->XMAQEdef   = 1.21;
+  fInstance->XMVQEdef   = 0.84;
+  fInstance->KAPPdef    = 1.0;
+
+  fInstance->XMASPIdef  = 1.21;
+  fInstance->XMVSPIdef  = 0.84;
+
+  fInstance->XMARESdef  = 1.21;
+  fInstance->XMVRESdef  = 0.84;
+
+  fInstance->XMASPIdef  = 0.95;
+  fInstance->XMVSPIdef  = 0.84;
+  fInstance->NEIFFdef   = 1;
+  fInstance->NENRTYPEdef= 0;
+  fInstance->RNECA5Idef = 1.01;
+  fInstance->RNEBGSCLdef= 1.30;
+
+  fInstance->XMANFFRESdef = 0.95;
+  fInstance->XMVNFFRESdef = 0.84;
+  fInstance->XMARSRESdef = 1.21;
+  fInstance->XMVRSRESdef = 0.84;
+
+  fInstance->NECOHEPIdef  = 0;  
+  fInstance->XMACOHdef  = 1.0;
+  fInstance->RAD0NUdef  = 1.0;
+  fInstance->fA1COHdef  = 0.0;
+  fInstance->fb1COHdef  = 0.0;
+
+  fInstance->NEPDFdef     = 12;
+  fInstance->NEBODEKdef   = 1;
+
+  fInstance->MDLQEAFdef   = 1;
+  fInstance->MDLQEdef     = 402;
+
+  fInstance->FEFQEdef   = 1.0;
+  fInstance->FEFQEHdef  = 1.8;
+  fInstance->FEFINELdef = 1.0;
+  fInstance->FEFABSdef  = 1.1;
+  fInstance->FEFCXdef   = 1.0;
+  fInstance->FEFCXHdef  = 1.8;
+  fInstance->FEFALLdef  = 1.0;
+
+  //These two kept for historical reasons
+  fInstance->XMARESdef  = 1.21;
+  fInstance->XMVRESdef  = 0.84;
+
+  //All below can not be found in NEUT ROOT file at moment
+  fInstance->NEPDFdef     = 12;
+  fInstance->NEBODEKdef   = 1;
+
+  fInstance->SCCFVdef = 0.0;
+  fInstance->SCCFAdef = 0.0;
+  fInstance->FPQEdef = 1.0;
+
   nemdls_.sccfv = SCCFVdef;
   nemdls_.sccfa = SCCFAdef;
   nemdls_.fpqe = FPQEdef;
@@ -250,7 +317,91 @@ void NFortFns::SetDefaults() {
   //nemdls_.nrtypespi = NENRTYPEdef;
   //nemdls_.rca5ispi  = RNECA5Idef;
   //nemdls_.rbgsclspi = RNEBGSCLdef;
-  
+
+  neut1pi_.xmanffres = XMANFFRESdef;
+  neut1pi_.xmvnffres = XMVNFFRESdef;
+  neut1pi_.xmarsres = XMARSRESdef;
+  neut1pi_.xmvrsres = XMVRSRESdef;
+  neut1pi_.neiff    = NEIFFdef;
+  neut1pi_.nenrtype = NENRTYPEdef;
+  neut1pi_.rneca5i  = RNECA5Idef;
+  neut1pi_.rnebgscl = RNEBGSCLdef;
+
+  nemdls_.xmacoh = XMACOHdef;
+  nemdls_.rad0nu = RAD0NUdef;
+  nemdls_.fa1coh = fA1COHdef;
+  nemdls_.fb1coh = fb1COHdef;
+
+  // Fixed parameters
+  neutcard_.nefrmflg  = 0;
+  neutcard_.nepauflg  = 0;
+  neutcard_.nenefo16  = 0;
+  neutcard_.nemodflg  = 0;
+
+  neutcard_.nenefmodl = 1;
+  neutcard_.nenefmodh = 1;
+  neutcard_.nenefkinh = 1;
+  neutpiabs_.neabspiemit = 1;
+
+  //if (MCID==piscat)
+  //neutcard_.nusim = 0;
+  //else
+  neutcard_.nusim = 1;
+
+  // Nuclear parameter //
+  // Note: Nucleus dependant so set using nesetfgparams_() after nucleus is determined
+  //nenupr_.pfsurf      = 0.225;
+  //nenupr_.pfmax       = 0.225;
+  //nenupr_.vnuini      = -1. * (sqrt(0.9396^2 + pdfsurf^2) - 0.9396);
+  //nenupr_.vnufin      =  0;
+  nenupr_.iformlen    =  1;  // On by default
+
+  // Pion FSI Tuned Parameters
+  neffpr_.fefqe   = FEFQEdef;
+  neffpr_.fefqeh  = FEFQEHdef;
+  neffpr_.fefinel = FEFINELdef;
+  neffpr_.fefabs  = FEFABSdef;
+  neffpr_.fefcx   = FEFCXdef;
+  neffpr_.fefcxh  = FEFCXHdef;
+  neffpr_.fefall  = FEFALLdef;
+
+  // Fixed values
+  neffpr_.fefcoh =  1;
+  neffpr_.fefqehf = 1;
+  neffpr_.fefcxhf = 0;
+  neffpr_.fefcohf = 0;
+  */
+}
+
+void NFortFns::SetDefaults() {
+  // Documentation: See neutmodel.h and necard.h 
+
+  /*
+     nemdls_.sccfv = SCCFVdef;
+     nemdls_.sccfa = SCCFAdef;
+     nemdls_.fpqe = FPQEdef;
+
+     nemdls_.mdlqeaf = MDLQEAFdef;
+     nemdls_.mdlqe = MDLQEdef;
+  // Should be 0 as the default model is 0 (Rein and Sehgal)
+  neutcoh_.necohepi = NECOHEPIdef;
+
+  nemdls_.xmaqe = XMAQEdef;
+  nemdls_.xmvqe = XMVQEdef;
+  nemdls_.kapp  = KAPPdef;
+
+  //  nemdls_.xmaspi = XMASPIdef;
+  //  nemdls_.xmvspi = XMVSPIdef;
+  //nemdls_.xmares = XMARESdef;
+  //nemdls_.xmvres = XMVRESdef;
+
+  //nemdls_.xmaspi    = XMASPIdef;
+  //nemdls_.xmvspi    = XMVSPIdef;
+  //nemdls_.iffspi    = NEIFFdef;
+  //nemdls_.nrtypespi = NENRTYPEdef;
+  //nemdls_.rca5ispi  = RNECA5Idef;
+  //nemdls_.rbgsclspi = RNEBGSCLdef;
+
   neut1pi_.xmanffres = XMANFFRESdef;
   neut1pi_.xmvnffres = XMVNFFRESdef;
   neut1pi_.xmarsres = XMARSRESdef;
@@ -281,7 +432,7 @@ void NFortFns::SetDefaults() {
   //neutcard_.nusim = 0;
   //else
   neutcard_.nusim = 1;
-  
+
   // Nuclear parameter //
   // Note: Nucleus dependant so set using nesetfgparams_() after nucleus is determined
   //nenupr_.pfsurf      = 0.225;
@@ -298,7 +449,7 @@ void NFortFns::SetDefaults() {
   neffpr_.fefcx   = FEFCXdef;
   neffpr_.fefcxh  = FEFCXHdef;
   neffpr_.fefall  = FEFALLdef;
-  
+
   // Fixed values
   neffpr_.fefcoh =  1;
   neffpr_.fefqehf = 1;
@@ -306,8 +457,8 @@ void NFortFns::SetDefaults() {
   neffpr_.fefcohf = 0;
   */
 
-  //defaults that still need to be passed through
-  neutdis_.nepdf = NEPDFdef;
+    //defaults that still need to be passed through
+    neutdis_.nepdf = NEPDFdef;
   neutdis_.nebodek = NEBODEKdef;
 
   nemdls_.sccfv = SCCFVdef;
@@ -323,7 +474,7 @@ void NFortFns::SetDefaults() {
 }
 
 void NFortFns::print_fsihist() {
-  
+
   cout << endl << "-------------------------------" << endl;
   cout << "FSI History Common Block" << endl;
   cout << endl << "Nvert: " << fsihist_.nvert << endl;
@@ -334,8 +485,8 @@ void NFortFns::print_fsihist() {
       cout << fsihist_.posvert[ivert][j] << " ";
     cout << endl;
   }
-    
-  
+
+
   cout << endl << "Nvcvert: " << fsihist_.nvcvert << endl;
   cout << "ip ipvert abspvert iverti ivertf dirvert[3]" << endl;
   for (int ip=0; ip<fsihist_.nvcvert; ip++) {
@@ -347,13 +498,13 @@ void NFortFns::print_fsihist() {
 
   cout << endl << "Ibound = " << posinnuc_.ibound << endl;
   cout << endl << "Fsiprob = " << fsihist_.fsiprob << endl;
- 
+
   cout << endl;
 }
 
 
 void NFortFns::print_nework() {
-  
+
   cout << endl << "-------------------------------" << endl;
   cout << "NEWORK Common Block" << endl;
   cout << endl << "Mode = " << nework_.modene << ", Numne = " << nework_.numne << endl;
@@ -364,12 +515,12 @@ void NFortFns::print_nework() {
       cout << nework_.pne[ip][j] << " ";
     cout << endl;
   }
-  
+
   cout << endl;
 }
 
 void NFortFns::print_neutcrs() {
-  
+
   cout << endl << "-------------------------------" << endl;
   cout << "NEUTCRS Common Block" << endl;
   cout << "Crs[3] = " << neutcrscom_.crsx << " " << neutcrscom_.crsy << " " << neutcrscom_.crsz << " " << endl;
@@ -429,7 +580,7 @@ void NFortFns::print_allparams() {
   cout << "neuttarget_.numbndp = " <<   neuttarget_.numbndp << endl;
   cout << "neuttarget_.numfrep = " <<  neuttarget_.numfrep<< endl;
   cout << "neuttarget_.numatom = " <<  neuttarget_.numatom<< endl;
-  
+
   cout << "nenupr_.pfsurf = " <<  nenupr_.pfsurf<< endl;
   cout << "nenupr_.pfmax = " <<  nenupr_.pfmax<< endl;
   cout << "nenupr_.vnuini = " << nenupr_.vnuini<< endl;
@@ -453,7 +604,7 @@ void NFortFns::print_allparams() {
   cout << "neutcard_.nenefkinh = (1)" <<  neutcard_.nenefkinh << endl;
   cout << "neutpiabs_.neabspiemit = (1)" <<  neutpiabs_.neabspiemit << endl;
   cout << "neutcard_.nusim = (1)" <<  neutcard_.nusim << endl;
-  
+
   cout << "neutcoh_.necohepi  = (0)" <<  neutcoh_.necohepi << endl;
 
   cout << "neffpr_.fefcoh = (1)" <<   neffpr_.fefcoh << endl;

@@ -42,7 +42,9 @@ AM_INIT_AUTOMAKE([foreign 1.11 subdir-objects])
 AC_PROG_CC
 AC_PROG_CXX
 AC_PROG_FC
-AC_PROG_F77
+AC_SUBST(F77, [${FC}])
+AC_SUBST(FFLAGS, [${FCFLAGS}])
+
 AC_PROG_LIBTOOL
 AC_PROG_LN_S
 
@@ -71,8 +73,12 @@ AC_ARG_ENABLE([compatnames],
 AM_CONDITIONAL([NEUT_LIBCOMPAT], [test "x$enable_compatnames" = "xyes"])
 
 AS_IF([test "x$enable_compatnames" = "xyes"], [
+<<<<<<< HEAD
   echo "Using compatilibity library names"
   AC_SUBST(LIBPREFIX, [])
+=======
+  :
+>>>>>>> feature/qe_escat
 ], [
   AC_SUBST(LIBPREFIX, [NEUT])
 ])
@@ -125,6 +131,7 @@ AC_CONFIG_FILES([
   nuclsmpl/Makefile
   pionsmpl/Makefile
   neutgeom/Makefile
+  escat/Makefile
   reweight/Makefile
   tools/Makefile
   neututils/Makefile

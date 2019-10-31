@@ -47,14 +47,14 @@
       REAL*4 SPACE
       COMMON /CFREAD/SPACE(1000)
 
+#include "cardname.h"
 #include "necard.h"
 #include "neutparams.h"
 #include "neutmodel.h"
 #include "neutfilepath.h"
 
       CHARACTER*40 TMPFIL, COMMAND
-
-      CHARACTER*128 FCARD
+      CHARACTER*1024 CRSPATH_ENV
 
       INTEGER*4     IRANDFLG
 
@@ -182,7 +182,13 @@ C      RPILESSDCY = 0.20E0
       RPILESSDCY = 0.00E0
 
 C     Cross-section data table PATH
-      CRSTBLPATH ='./'
+C     Check environemnt variable first.
+      CALL GETENV('NEUT_CRSPATH',CRSPATH_ENV)
+      IF ( LEN(CRSPATH_ENV) .GT. 0) THEN
+        CRSTBLPATH = CRSPATH_ENV
+      ELSE
+        CRSTBLPATH = './'
+      ENDIF
 
 C     FermiMomentum used for pauli blocking in SF model only
 C     (NOTE: default is -1, gets set elsewhere correctly if not user-defined)
@@ -204,12 +210,16 @@ C     RT: adding diffractive pion parameters
 
 C --- get card file name (1st argument of the program)
 
+<<<<<<< HEAD
       WRITE(6,*)
       IF (IARGC() .GE. 1) THEN
          CALL GETARG(1, FCARD)
       ELSE
          FCARD = 'neut.card'
       END IF
+=======
+      CALL RESOLVECARDNAME
+>>>>>>> feature/qe_escat
       WRITE(6,*) '======= CONFIGURATION FOR INTERACTIONS ======='
       WRITE(6,*) 'NEUT card file you read is ',FCARD
 

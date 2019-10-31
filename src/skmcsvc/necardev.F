@@ -17,10 +17,9 @@
       IMPLICIT NONE
 
 #include "necardev.h"
+#include "cardname.h"
 
       CHARACTER*40 TMPFIL, COMMAND
-
-      character*128 FCARD
 
       INTEGER*4     IRET
 
@@ -28,7 +27,7 @@
 #ifndef gFortran
       EXTERNAL      IARGC
 #endif
-      
+
 C --  Initialize
 
       NEVTEVCT   = 0
@@ -44,16 +43,14 @@ C --  Initialize
 
       MPVEVCT    = 0
       CALL VZERO(2,PVEVCT)
-      
+
+      ANGDEG = -1
+      ANGWIDTH = 0
+
 C --- get card file name (1st argument of the program)
 
       WRITE(6,*)
-      IF (IARGC() .GE. 1) THEN
-         CALL GETARG(1, FCARD)
-      ELSE
-         FCARD = 'neut.card'
-      END IF
-
+      CALL RESOLVECARDNAME
       WRITE(6,*) 'NEUT(EVCT) card file you read is ',FCARD
 
 C -- extract NEUT card
@@ -87,6 +84,8 @@ C -- extract NEUT card
       CALL FFKEY('FILENM',FILENMEVCT,80,'MIXED')
       CALL FFKEY('HISTNM',HISTNMEVCT,80,'MIXED')
       CALL FFKEY('INMEV' ,INMEVEVCT ,1,'INTEGER')
+      CALL FFKEY('ANGDEG' ,ANGDEG ,1,'REAL')
+      CALL FFKEY('ANGWIDTH' ,ANGWIDTH ,1,'REAL')
 
       CALL FFGO
       CLOSE(UNIT=91)
@@ -140,7 +139,17 @@ C -- extract NEUT card
          stop
       endif
 
+      if(ANGDEG.ge.0) then
+        WRITE(6,*) 'NECARDEV : ANGDEG = ',ANGDEG
+        WRITE(6,*) 'NECARDEV : ANGWIDTH = ',ANGWIDTH
+        if(ANGDEG.gt.180) then
+          WRITE(6,*) 'Cannot have a fixed angle greater than 180 degrees.'
+          stop
+        endif
+        if(ANGWIDTH.eq.0) then
+          WRITE(6,*) 'Cannot have a 0 angular bite. Set EVCT-ANGWIDTH to > 0'
+          stop
+        endif
+      endif
       RETURN
       END
-
-

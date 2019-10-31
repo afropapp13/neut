@@ -4,24 +4,24 @@
 *     ----------------------------------
 *
 *     (Purpose)
-*       Neutral Current elastic without pauli principle 
+*       Neutral Current elastic without pauli principle
 *       nu + n -> nu + n
 *       nu + p -> nu + p
 *
 *     (Input)
-*       E      : NEUTRINO ENERGY ( GEV )  
+*       E      : NEUTRINO ENERGY ( GEV )
 *       IPAR   : NEUTRINO TYPE
 *                  12 : NEU-E
-*                 -12 : NEU-E-BAR            
+*                 -12 : NEU-E-BAR
 *                  14 : NEU-MU
-*                 -14 : NEU-MU-BAR            
+*                 -14 : NEU-MU-BAR
 *                  16 : NEU-TAU
-*                 -16 : NEU-TAU-BAR    
+*                 -16 : NEU-TAU-BAR
 *       ITARG  : Target type
 *                2212 : Proton
 *                2112 : Proton
 *       Q2     : Q**2
-*     
+*
 *     (Output)
 *       DNNCELSQ2 : Q**2 DISTRIBUTION OF NC ELASTIC SCATTERING
 *
@@ -32,7 +32,7 @@
 C
 C    CONST ; G**2*M**2/8/PI
 C    WEINBG ; Weingberg angle
-C    AM ; lepton mass(=0.)  
+C    AM ; lepton mass(=0.)
 C
       IMPLICIT NONE
 
@@ -45,22 +45,19 @@ C
       REAL FNNCQ2MAX,FNNCQ2MIN,EE
       EXTERNAL FNNCQ2MAX, FNNCQ2MIN
 
-      REAL faBBBA07
-      EXTERNAL faBBBA07
-
       REAL*8 CONST,PM,PIM,WEINBG
       REAL*8 AM
 
-C--   taken from A. Bodek et al, Eur. Phys. J. C 71 (2011) 1726 
+C--   taken from A. Bodek et al, Eur. Phys. J. C 71 (2011) 1726
       REAL TRCORA, TRCORB
       PARAMETER (TRCORA = 6.0)
       PARAMETER (TRCORB = 0.34)
 
-c      DATA CONST/1.76D-1/      
+c      DATA CONST/1.76D-1/
       DATA CONST/1.85D-1/      !<------ Remove Cabbibo angle
       DATA PM/0.938/
       DATA PIM/0.13957/
-   
+
       DATA WEINBG/0.23117/
 
       REAL*8 AVMASS,VVMASS
@@ -71,27 +68,27 @@ c      DATA CONST/1.76D-1/
       REAL*8 AAA,BBB,CCC,SMU
       REAL*8 F3A,F3V
 
-      REAL*8 ELAXFF
+      DOUBLE PRECISION ELAXFF
       EXTERNAL ELAXFF
-      
+
       INTEGER SGN
       LOGICAL NC
-      
+
       INTEGER NCELMODE
 
       AVMASS = XMANCEL
       VVMASS = XMVQE
-     
+
       AM = 0.
 
-C --  Setup info for FA CALC      
+C --  Setup info for FA CALC
       NC = .true.
 C      if (SGN.lt.0) then
          SGN = -1
 C      else
 C         SGN = 1
 C      endif
-      
+
 C-------
       EE=E
       Q2T1=FNNCQ2MIN(EE,ITARG)
@@ -109,21 +106,21 @@ C-------
 
       NCELMODE = mod(MDLQE,100)/10
 
-      if (NCELMODE.eq.3) THEN           
+      if (NCELMODE.eq.3) THEN
          CALL BBBA07(Q2,GPE,GPM,GNE,GNM)
       else if (NCELMODE.eq.2) THEN
          CALL BBBA05(Q2,GPE,GPM,GNE,GNM)
-      else if (NCELMODE.eq.1) THEN 
+      else if (NCELMODE.eq.1) THEN
          GPE = 1./(1.- SQ2/VVMASS**2)**2
          GPM = 2.793/(1.- SQ2/VVMASS**2)**2
-         
+
          GNE = 0.
          GNM = -1.913/(1.-SQ2/VVMASS**2)**2
       else
          write(*,*) 'Invalid NC Elastic mode specified by MDLQE',MDLQE
          stop
       endif
-         
+
       GVE=GPE-GNE
       GVM=GPM-GNM
 
@@ -140,15 +137,15 @@ C      FA=-0.5*1.23/(1.-SQ2/AVMASS**2)**2
 C      FA=0.5*1.267/(1.-SQ2/AVMASS**2)**2
 
       FA=ELAXFF(Q2, NC, SGN)
-      
+
 C-- Proton, flip sign
       if (ITARG.eq.2212) then
          FA=-1. * FA
       endif
 
       FP=FPQE*2.*(PM**2)*FA/(-SQ2+PIM**2)
-      F3A = SCCFA * FA 
-   
+      F3A = SCCFA * FA
+
 C-- Proton or neutron
       if (ITARG.eq.2112) then
          FN1 = (GNE-SQ2/4./PM**2*GNM)/(1.-SQ2/4./PM**2)
@@ -195,7 +192,7 @@ C      CCC=(FA**2+F1V**2-SQ2/PM**2*F2VG**2/4.)/4.
      &     *F3V-(FA+SQ2*FP/2./PM**2)*F3A
       CCC=(FA**2+F1V**2-SQ2/PM**2*F2VG**2/4.-SQ2/PM**2*F3A**2)/4.
       SMU=4.*PM*E+SQ2-AM**2
-     
+
       IF (IPAR.GT.0) THEN
        dnncelsq2=CONST/E**2*(AAA-BBB*SMU/PM**2+CCC*SMU**2/PM**4)
       ELSE

@@ -33,9 +33,9 @@ c ----- temporary values to copy to output common block
         integer tmp_IFLGNE(5)
         integer tmp_ICRNNE(5)
 
-        
-#include "../neutcore/necard.h"
-#include "../neutcore/neutmodel.h"
+
+#include "necard.h"
+#include "neutmodel.h"
 
         real E, DIRNEU(3)
         integer IPAR, IERR, mode
@@ -70,7 +70,7 @@ C ----- temporary vector for use when needed
         double precision temp_vector(4)
 
 C ----- common block for dealing with spectral function selection
-# include "../specfunc/effspecfunc.h"
+#include "effspecfunc.h"
 
 C ----- terms in the cross-section
         double precision initialTerm, volumeTerm, crossSection
@@ -93,7 +93,7 @@ C ----- Functions defined in this file
 
         real RLU
         external modMomentum, LH, dotProduct, RLU, effSFMaxDiff
-C ----- parameters        
+C ----- parameters
         double precision Gf, cosThetaC, Pi
 
         parameter(Gf = 1.16639E-11,cosThetaC = 0.97418
@@ -101,7 +101,7 @@ C ----- parameters
 
 C        write(*,*) "MAKING CCQE EVENT"
 c ----- E is in GeV here - change it to MeV for the calculation
-        
+
         targ = 0
         targ = getTarget(NUMATOM)
 
@@ -144,7 +144,7 @@ C ----- set masses of particles
 c nc
         if (nc .EQV. .TRUE.) then
           if ((single .EQV..TRUE. .and. abs(MODE) .EQ. 52)
-     &.OR. ((single .EQV. .FALSE. .AND. RLU(DUMMY) 
+     &.OR. ((single .EQV. .FALSE. .AND. RLU(DUMMY)
      & .LT. dble(NUMBNDN/dble(NUMATOM))))) then
             call MCMASS(2112, dummy)
             inNucleonMass = dummy
@@ -165,7 +165,7 @@ c nc
             IPNE(4) = 2212
             tmp_MODENE = mode
           endif
-c cc        
+c cc
         else if (IPAR .LT. 0) then
           call MCMASS(2212, dummy)
           inNucleonMass = dummy
@@ -194,7 +194,7 @@ C ----- find the maximum allowed value to throw against - note energy in GeV in 
            endif
            first = .FALSE.
         endif
-        
+
 c ----- setup temp values for output common block
         tmp_NUMNE = 4
         tmp_IPNE(1) = IPAR
@@ -263,7 +263,7 @@ C     Target nucleus mass
            call MCMASS(targ, dummy)
            testVect(1) = inNucleonMass - ETilde - (modMomentum(p)**2/
      +          (2*(dummy - inNucleonMass + ETilde)))
-        endif   
+        endif
 
 C     CW: the cross section has to be calculated with the nucleon on mass shell
         p(1) = sqrt(inNucleonMass**2 + modMomentum(p)**2)
@@ -288,7 +288,7 @@ c ----- not enough energy - skip straight to end of event
 C ----- calculate outgoing momenta, and pick a direction
 C     CW: modify. Can I pick a direction like this. Yes.
 C     CW: this needs to be modified.
-        kPrime(1) = (dotProduct(temp_vector, temp_vector) 
+        kPrime(1) = (dotProduct(temp_vector, temp_vector)
      &  - outNucleonMass**2 + leptonMass**2)
      &  / (2 * sqrt(dotProduct(temp_vector, temp_vector)) )
         call pickDirection(kPrime, leptonMass)
@@ -328,12 +328,12 @@ C     CW: Now apply Pauli suppression if q3 < 2*fermiMomentum
 C ----- Calculate xsec
         initialTerm = Gf**2 * cosThetaC**2
      &   / ( 8*Pi*Pi*k(1)*kPrime(1)*p(1)*pPrime(1) )
-      
+
 c ----- for nc events there is no cabibbo mixing to worry about
         if (nc.EQV..TRUE.)then
           initialTerm = initialTerm / (cosThetaC**2)
         endif
-        
+
         volumeTerm = 1
      &               * 4*Pi*(modMomentum(kPrimeCom)**2)
      &               * Jacobian(kPrime, kPrimeCom, pPrime, comVel)
@@ -358,13 +358,13 @@ c sent straight here if event is impossible
         endif
         N_tries = N_tries + 1
 
-**********  For table generation only! 
-**********  Once enough events generated, stop 
+**********  For table generation only!
+**********  Once enough events generated, stop
 **********  This value can be changed to increase precision/speed
         if (single .EQV. .FALSE.) then
            if (N_tries .GT. 1000000) then
               mean = mean / N_tries
-              meanNC(1) = meanNC(1) *dble(NUMATOM) / 
+              meanNC(1) = meanNC(1) *dble(NUMATOM) /
      &             (dble(N_tries)*dble(NUMBNDP))
               meanNC(2) = meanNC(2) *dble(NUMATOM) /
      &             (dble(N_tries)*dble(NUMBNDN))
@@ -379,7 +379,7 @@ c     ----- 1% factor reduces efficiency but avoids errors from interpolation
         else if (crossSection*1E38 .LT. RLU(dummy)*tableMax*1.05) then
            goto 10
         endif
-        
+
 c ----- if event has got to here - event is saved
 c ----- need to change everything into GeV
         MODENE = tmp_MODENE
@@ -401,7 +401,7 @@ c ----- need to change everything into GeV
 
 C     Simulate second nucleon for a correlated event
         if (isCorr .eqv..true.) then
-          NUMNE = 5          
+          NUMNE = 5
           if (IPNE(2) .eq. 2212) then ! all correlated pairs treated as n-p
             IPNE(5) = 2112
           else
@@ -414,7 +414,7 @@ C     Simulate second nucleon for a correlated event
             PNE(i,5) = -1*real(p(i+1)/1000)
           enddo
         endif
-       
+
       return
       end
 
@@ -438,7 +438,7 @@ C     Simulate second nucleon for a correlated event
           else if (NUMATOM .eq. 4) then ! He4
              f1p1h = 0.791
           else if (NUMATOM .eq. 12 .OR. NUMATOM .eq. 16) then ! C12 or O16
-             f1p1h = 0.808             
+             f1p1h = 0.808
           else if (NUMATOM .eq. 20) then ! Ne20
              f1p1h = 0.765
           else if (NUMATOM .eq. 27) then ! Al27
@@ -447,7 +447,7 @@ C     Simulate second nucleon for a correlated event
              f1p1h = 0.809
           else if (NUMATOM .eq. 56) then ! Fe56
              f1p1h = 0.822
-          else if (NUMATOM .eq. 63 .OR. NUMATOM .eq. 64 .OR. 
+          else if (NUMATOM .eq. 63 .OR. NUMATOM .eq. 64 .OR.
      &            NUMATOM .eq. 208) then ! Pb208
              f1p1h = 0.896
           endif
@@ -465,7 +465,7 @@ C     Modify if TEM is turned on and nucleus is heavier than carbon
           end
 
       integer function getTarget(NUMATOM)
-      
+
           if (NUMATOM .eq. 2) then  ! H2
              getTarget = 1000010020
           else if (NUMATOM .eq. 3) then ! He3
@@ -486,20 +486,20 @@ C     Modify if TEM is turned on and nucleus is heavier than carbon
              getTarget = 1000260560
           else if (NUMATOM .eq. 63) then ! Cu63
              getTarget = 1000290630
-          else if (NUMATOM .eq. 64) then ! Zn64  
+          else if (NUMATOM .eq. 64) then ! Zn64
              getTarget = 1000300640
           else if (NUMATOM .eq. 208) then ! Pb208
              getTarget = 1000822080
           endif
-          return 
+          return
           end
-      
+
       double precision function pauliBlocking(q, fermiMomentum, NUMATOM,
      &     nc)
           double precision dQQ, dotProduct, modMomentum, fermiMomentum
           logical nc
           double precision q(4)
-          
+
           external dotProduct, modMomentum
 
           pauliBlocking = 1.
@@ -511,12 +511,12 @@ C     Pauli blocking only applies for CC events
              if (nc .EQV. .FALSE.) then
                 pauliBlocking = 1 - 0.588918*EXP(-17.2306*dQQ)**0.749157
              endif
-C     For all other targets except deuterium             
+C     For all other targets except deuterium
           else
              if (modMomentum(q) .LT. 2*fermiMomentum) then
                 pauliBlocking = (3./4.)*(modMomentum(q)/fermiMomentum)*
      +               (1 - ((modMomentum(q)/fermiMomentum)**2)/12)
-             endif   
+             endif
           endif
-          return 
+          return
           end

@@ -1,37 +1,37 @@
 ************************************************************************
 *     -------------------------
-      FUNCTION ELAXFF(Q2, nc, sgn)
+      DOUBLE PRECISION FUNCTION ELAXFF(Q2_GeV, isNC, nuPDGSign)
 *     -------------------------
 *
 *     (Purpose)
 *       Return axial form factor value given chosen form
 *
 *     (Input)
-*       Q2     : FOUR-MOM TRANSFER (GeV^2)
-*       nc     : neutral current flag
-*                 true  : NC
-*                 false : CC
-*       sgn    : PDG Sign (Neutrino/Antineutrino)
-*                +1 : Neutrino
-*                -1 : Anti-neutrino
-*     
+*       Q2_GeV    : FOUR-MOM TRANSFER (GeV^2)
+*       isNC      : neutral current flag
+*                   true  : NC
+*                   false : CC
+*       nuPDGSign : PDG Sign (Neutrino/Antineutrino)
+*                  +1 : Neutrino
+*                  -1 : Anti-neutrino
+*
 *     (Output)
 *       ELAXFF : Elastic Form Factor (Dimensionless)
 *
 *     (Creation Date and Author)
 *     2016.09.09 ; P. Stowell
-*     
+*
 *     To add a new fa form, just add a cc file copying the fa2COMP format.
 *     Then enable it here, as well as inside qedifcrs.c if you want RW
 ************************************************************************
       IMPLICIT NONE
-#include "../neutcore/neutmodel.h"
+#include "neutmodel.h"
 
-      LOGICAL nc
-      INTEGER sgn
-      
-      double precision Q2
-      
+      LOGICAL isNC
+      INTEGER nuPDGSign
+
+      double precision Q2_GeV
+
 C     Read in FA Functions
       double precision fabbba07
       external fabbba07
@@ -41,49 +41,47 @@ C     Read in FA Functions
 
       double precision fa3COMP
       external fa3COMP
-      
+
       double precision faZEXP
       external faZEXP
-      
-     
-C     Setup Variables      
-      REAL*8 ELAXFF
-      REAL*8 FA
-      REAL*4 gA
-      REAL*8 MA
-      
+
+      double precision gA
+      parameter (gA = -1.2673)
+
+
+C     Setup Variables
+      DOUBLE PRECISION FA
+      DOUBLE PRECISION MA
+
 C      Dipole FA
       if (MDLQEAF.eq.1 .or. MDLQEAF.eq.0) then
-         gA = -1.2673
-C         MA = 1000 * dble(XMAQE)                 -2017/03/28 Y. Hyaato
-C         FA = gA / (( 1 -( Q2 /( MA**2 ) ) )**2) -2017/03/28 Y. Hyaato
-         if (nc .EQV. .TRUE.) then
-            FA = gA / (( 1 +( Q2 /( XMANCEL**2 ) ) )**2)
+         if (isNC .EQV. .TRUE.) then
+            FA = gA / (( 1 +( Q2_GeV /( XMANCEL**2 ) ) )**2)
          else
-            FA = gA / (( 1 +( Q2 /( XMAQE**2 ) ) )**2)
+            FA = gA / (( 1 +( Q2_GeV /( XMAQE**2 ) ) )**2)
          endif
 
-C     BBBA07 FF         
+C     BBBA07 FF
       else if (MDLQEAF.eq.2) then
-         FA = fabbba07( Q2 )
+         FA = fabbba07( Q2_GeV )
 C     2 Component FF
       else if (MDLQEAF.eq.3) then
-         FA = fa2COMP( Q2 )
+         FA = fa2COMP( Q2_GeV )
 C     3 Component FF
       else if (MDLQEAF.eq.4) then
-         FA = fa3COMP( Q2 )
+         FA = fa3COMP( Q2_GeV )
 C     ZEXP FF
       else if (MDLQEAF.eq.5) then
-         FA = faZEXP( Q2 )
+         FA = faZEXP( Q2_GeV )
       endif
 
 C     Apply NC Scaling to FA
-      if (nc .EQV. .TRUE.) then
-         FA = sgn*(0.5 * FA)
+      if (isNC .EQV. .TRUE.) then
+         FA = nuPDGSign*(0.5 * FA)
       endif
 
 C     RETURN FA
       ELAXFF = FA
-      
+
       RETURN
       END
