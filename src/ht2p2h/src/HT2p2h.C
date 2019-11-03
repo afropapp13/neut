@@ -402,7 +402,7 @@ void HT2p2h::ComputeIntegrals(int nuclei){
 	offile << (double)i*Enubin+Enubin*0.5 << " ";
 	for( unsigned int il = 0; il < neutrinoIdlist.size(); il++ ) {
 	  offile << integral_dump[il][i] << " "
-			 << maximal_dump[il][i];
+			 << maximal_dump[il][i] << " ";
 	}
 	offile << std::endl;
   }
