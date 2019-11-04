@@ -146,8 +146,8 @@ int HT2p2h::ReadIntegrals(int nuclei){
   char *item = NULL;
   int  ipar, ret, i;
 
-  line = malloc(LOCALBUFSIZ);
-  item = malloc(LOCALBUFSIZ);
+  line = (char *)malloc(LOCALBUFSIZ);
+  item = (char *)malloc(LOCALBUFSIZ);
   infile.open (fname.c_str());
   if (infile.fail()){
 	std::cout << "Failed to open Tensor file" 
@@ -248,7 +248,7 @@ int HT2p2h::ReadIntegrals(int nuclei){
 	ret = sscanf(line,"%d %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf",
 				 &ipar, &enu, 
 				 &crs[0], &max[0], &crs[1], &max[1], &crs[2], &max[2],
-				 &crs[3], &max[3], &crs[4], &max[4], &crs[5], &max[5])
+				 &crs[3], &max[3], &crs[4], &max[4], &crs[5], &max[5]);
 	if (ret != 14){
 	  free(line);
 	  free(item);
