@@ -245,11 +245,11 @@ int HT2p2h::ReadIntegrals(int nuclei){
 
   for (i = 0 ; i < ebinmax ; i++){
 	infile.getline(line,LOCALBUFSIZ);
-	ret = sscanf(line, "%d %lf %lf %lf %lf %lf %lf %lf",
+	ret = sscanf(line,"%d %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf",
 				 &ipar, &enu, 
 				 &crs[0], &max[0], &crs[1], &max[1], &crs[2], &max[2],
-				 &crs[3], &max[3], &crs[4], &max[4], &crs[5], &max[5]);
-	if (ret != 8){
+				 &crs[3], &max[3], &crs[4], &max[4], &crs[5], &max[5])
+	if (ret != 14){
 	  free(line);
 	  free(item);
 	  return -2;
