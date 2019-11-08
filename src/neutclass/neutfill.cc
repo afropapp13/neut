@@ -1,5 +1,4 @@
 #include <iostream>
-
 #include <NeutRootHandlers.h>
 
 #include "neutvect.h"
@@ -18,7 +17,9 @@
 #include "posinnucC.h"
 #include "fsihistC.h"
 #include "nucleonfsihistC.h"
+#include "fsinucleonreweightC.h"
 #include "neutcrsC.h"
+#include "nrintC.h"
 
 extern "C"
 {
@@ -223,6 +224,8 @@ neutfillvect(char *filename, char *treename, char *branchname)
   nv->NuceffFactorPIQELKin = neffpr_.fefcohf; 
   nv->NuceffFactorPICXKin = neffpr_.fefcxhf; 
   nv->NuceffFactorPIAll = neffpr_.fefall;
+  
+  nv->NrintNucleonCascadeProb = nrint_.pcascprob;
 
   /****************************************************/
   nv->Mode = nework_.modene;
@@ -382,7 +385,7 @@ neutfillvect(char *filename, char *treename, char *branchname)
     nv->SetNnucFsiVert(1);
 	nucfsivinfo.fVertFlag      = -1;
 	nucfsivinfo.fVertFirstStep = -1;
-	
+
 	nucfsivinfo.fPos.SetXYZT(0.,0.,0.,0.);
 	nucfsivinfo.fMom.SetPxPyPzE(0.,0.,0.,0.);
 								
@@ -399,7 +402,24 @@ neutfillvect(char *filename, char *treename, char *branchname)
       
       nucfsisinfo.fECMS2 = nucleonfsihist_.nfecms2[i];
       nucfsisinfo.fProb  = nucleonfsihist_.nfptot[i];
-  
+      nucfsisinfo.fVertFlagStep = nucleonfsihist_.nfiflagstep[i];
+      nucfsisinfo.fVertFsiRhon = nucleonfsihist_.nfirhon[i];
+      nucfsisinfo.fStepPel = nucleonfsihist_.nfipel[i];
+      nucfsisinfo.fStepPsp = nucleonfsihist_.nfipsp[i];
+      nucfsisinfo.fStepPdp = nucleonfsihist_.nfipdp[i];
+
+      std::cout << "fvertflag step in neutfill.cc = " << nucfsisinfo.fVertFlagStep << std::endl;
+      std::cout << "Step number in neutfill.cc = " << i << std::endl;
+      nucfsisinfo.fPosStep.SetXYZT(nucleonfsihist_.nfxstep[i],
+			       nucleonfsihist_.nfystep[i],
+			       nucleonfsihist_.nfzstep[i],
+			       0.);
+      std::cout << "fvert fposstep = " << nucfsisinfo.fPosStep.X() << std::endl;
+      nucfsisinfo.fMomStep.SetPxPyPzE(nucleonfsihist_.nfpxstep[i],
+				  nucleonfsihist_.nfpystep[i],
+				  nucleonfsihist_.nfpzstep[i],
+				  nucleonfsihist_.nfestep[i]);
+      
       nv->SetNucFsiStepInfo(i, nucfsisinfo);
 
     }

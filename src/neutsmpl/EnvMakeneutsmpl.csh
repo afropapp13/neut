@@ -57,8 +57,8 @@ endif
 
 setenv CERN_ROOT ${CERN}/${CERN_LEVEL}
 
-#setenv ROOTSYS /vols/build/t2k/cvw09/root
-setenv ROOTSYS /usr/local/root_v5.34.36
+setenv ROOTSYS /vols/build/t2k/cvw09/root
+#setenv ROOTSYS /usr/local/root_v5.34.36
 #setenv ROOTSYS /usr/local/sklib_gcc4.8.5/root_v5.28.00h
 if (${?ROOTSYS} == 0) then
 	echo "set environmental variable ROOTSYS"

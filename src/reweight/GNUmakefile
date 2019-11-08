@@ -14,10 +14,7 @@ ifndef CERN_LEVEL
 endif
 
 # Check that we can find cernlib in shell
-ifeq "$(shell cernlib)" ""
-  $(error Looks like you havent set up CERNLIB, please fix this)
-  $(error I rely on being able to do cernlib in shell)
-endif
+
 
 #ifndef ROOTSYS
 # $(error ROOTSYS is not set!)

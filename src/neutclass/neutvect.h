@@ -112,6 +112,8 @@ class NeutVect : public TObject {
   Float_t        NuceffFactorPIQELKin;
   Float_t        NuceffFactorPICXKin;
 
+  Float_t        NrintNucleonCascadeProb;
+  
   /////////////////////////////////////////////////////////////////////////
   /* Ineraction mode */
   Int_t          Mode;

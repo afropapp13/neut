@@ -105,15 +105,30 @@ NFortFns * NFortFns::Instance()
 FUNCTION_RETURN NFortFns::evdifcrs()      {  return evdifcrs_(); }
 FUNCTION_RETURN NFortFns::evpiprob()      {  return evpiprob_(); }
 
-void  NFortFns::nrprton() {float anuc = 12; float stpi[3] = {-4.08858538,0.795933247,2.198463892}; float pi[4] = {1529.79456,0,0,1794.99097}; int idmc =2212; float po[4][20]; int ido; int no; float stpo[3][20]; int imode; int icont;
+void  NFortFns::nrprton() {//float anuc; float stpi[3]; float pi[4]; int idmc =2212; float po[4][20]; int ido; int no; float stpo[3][20]; int imode; int icont;
+    float anuc = 12; float stpi[3] = {-4.08858538,0.795933247,2.198463892}; float pi[4] = {1529.79456,0,0,1794.99097}; int idmc =2212; float po[4][20]; int ido; int no; float stpo[3][20]; int imode; int icont;
 
+
+  //  float anuc; float stpi[3]; float pi[4]; int idmc; float po[4][20]; int ido; int no; float stpo[3][20]; int imode; int icont;
   //set value of nfnvert here, then call nrprton.F below. The value is reset to 0 and the pointer changes
-  nucleonfsihist_.nfnvert = 87;
-  nrtaerget_.nrdfact=78;
-  
+    std::cout << "nfnstep NFortFns = " << nucleonfsihist_.nfnstep << std::endl;
 
 
-  nrprton_(&anuc, stpi, pi, &idmc, *po, &ido, *stpo, &no, &imode, &icont);}
+    nucleonfsihist_.nreweightflag = 1;
+  //fsinucleonreweight_.fsinfnucresflg = 1;
+  //nrtaerget_.nrdfact=78;
+
+
+
+    //nucleonfsihist_.nfnvert = 82;
+    std::cout << "now starting nrprton reweight:" <<std::endl;
+    std::cout << "xnucfact before nrprton = " << nucres_.xnucfact << std::endl;
+
+    nrprton_(&anuc, stpi, pi, &idmc, *po, &ido, *stpo, &no, &imode, &icont);
+
+    std::cout << "now finished nrprton" <<std::endl;
+}
+
 
 void  NFortFns::nesetfgparams() { nesetfgparams_(); }
 void  NFortFns::nefillmodel()   { nefillmodel_(); }

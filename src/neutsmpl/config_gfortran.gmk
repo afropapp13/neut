@@ -13,10 +13,11 @@ endif
 
 CERN_ROOT=${CERN}/${CERN_LEVEL}
 # Check that we can find cernlib in shell
-ifeq "$(shell cernlib)" ""
-  $(error Looks like you havent set up CERNLIB, please fix this)
-  $(error I rely on being able to do cernlib in shell)
-endif
+#ifeq "$(shell cernlib)" ""
+#  $(print ${CERN_ROOT})
+#  $(error Looks like you havent set up CERNLIB, please fix this)
+#  $(error I rely on being able to do cernlib in shell)
+#endif
 
 ## 
 NEUT_SRC = ${NEUT_ROOT}/src

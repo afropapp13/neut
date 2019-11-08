@@ -5,6 +5,7 @@
 #include "neworkC.h"
 #include "fsihistC.h"
 #include "nucleonfsihistC.h"
+#include "fsinucleonreweightC.h"
 #include "vcworkC.h"
 #include "posinnucC.h"
 #include "neutcrsC.h"

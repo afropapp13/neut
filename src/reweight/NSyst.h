@@ -184,7 +184,8 @@ typedef enum ENSyst {
   // 
 
   //kHadrAGKYTwkDial_xF1pi,         ///< tweak xF distribution for low multiplicity (N + pi) DIS f/s produced by AGKY
-  //kHadrAGKYTwkDial_pT1pi,         ///< tweak pT distribution for low multiplicity (N + pi) DIS f/s produced by AGKY
+  //kHadrAGKYTwkDial_pT1pi,         
+  ///< tweak pT distribution for low multiplicity (N + pi) DIS f/s produced by AGKY
 
 
   //
@@ -210,6 +211,8 @@ typedef enum ENSyst {
   kCascTwkDial_FrPiProd_pi,    ///< tweak pion (hadron) production (inelastic in NEUT) probability for pions
   kCascTwkDial_All_pi,         ///< tweak mean free path for pions
 
+  
+  
   kCascTwkDial_TotalProb,
   kCascTwkDial_ElasticProb,
   kCascTwkDial_SinglePiProb,
@@ -501,10 +504,10 @@ public:
        kCascTwkDial_FrCExHigh_pi,    
        kCascTwkDial_FrPiProd_pi,
 
-       kCascTwkDial_TotalProb,
-       kCascTwkDial_ElasticProb,
-       kCascTwkDial_SinglePiProb,
-       kCascTwkDial_DoublePiProb,
+       //kCascTwkDial_TotalProb,
+       //kCascTwkDial_ElasticProb,
+       //kCascTwkDial_SinglePiProb,
+       //kCascTwkDial_DoublePiProb,
        
        //kINukeTwkDial_MFP_N,       
        //kINukeTwkDial_FrCEx_N,    

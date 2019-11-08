@@ -18,7 +18,7 @@ OBJS =	nrcfd.o		nrazio.o 	nrinit.o 	nrroxy.o \
 		wgproton.o	vcmkvcbf.o  nrintr.o    nrsetxpos.o \
 		nrcard.o	nrlibver.o
 
-INCS = nrnuclparam.h nrcard.h nucleonfsihist.h nrint.h
+INCS = nrnuclparam.h nrcard.h nucleonfsihist.h nrint.h fsinucleonreweight.h
 
 all: lib${LIBNAME}.a
 

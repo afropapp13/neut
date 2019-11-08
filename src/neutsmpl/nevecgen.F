@@ -28,7 +28,7 @@
 C#include "mcgenpar.h"
 #include "necard.h"
 #include "fsihist.h"
-
+#include "nrint.h"
       INTEGER*4 IP
 
       INTEGER*4 IERR
@@ -92,6 +92,8 @@ C
 C
 C --  nucleon rescattering
 C
+      pcascprob =1
+      write(*,*) 'NRINTR HAPPENING, ICOUNTER = ',ICOUNTER
       call nrintr
 C      
 C --  nucleon ejection following pion/delta absorption
