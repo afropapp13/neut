@@ -14,7 +14,7 @@
           STFC, Rutherford Appleton Laboratory
 
           Patrick de Perio <pdeperio \at physics.utoronto.ca>
-	  University of Toronto
+          University of Toronto
 
 \created  Sep 10, 2009
 
@@ -31,64 +31,36 @@
 
 #include "NReWeightI.h"
 
-#include "NFortFns.h"
-
-using namespace neut::rew;
-using namespace neut;
-
 namespace neut {
-namespace rew   {
+namespace rew {
 
- class NReWeightCasc : public NReWeightI 
- {
- public:
-   NReWeightCasc();
+class NReWeightCasc : public NReWeightI {
+public:
+  NReWeightCasc();
   ~NReWeightCasc();
 
-   // implement the NReWeightI interface
-   bool   IsHandled      (NSyst_t syst);
-   void   SetSystematic  (NSyst_t syst, double val);
-   void   Reset          (void);
-   void   Reconfigure    (void);
-   double CalcWeight     ();
-   double CalcChisq      (void);
+  // implement the NReWeightI interface
+  bool IsHandled(NSyst_t syst);
+  void SetSystematic(NSyst_t syst, double val);
+  void Reset(void);
+  void Reconfigure(void);
+  double CalcWeight();
+  double CalcChisq(void);
 
-   vector<double> GetCurrParVals(void);
+  std::vector<double> GetCurrParVals(void);
 
- private:
-   
-   void   Init              (void);
+private:
+  void Init(void);
 
-   double fCExLowTwkDial;    ///<
-   double fInelLowTwkDial;   ///<
-   double fAbsTwkDial;       ///<
-   double fPiProdTwkDial;    ///<
-   double fCExHighTwkDial;   ///<
-   double fInelHighTwkDial;  ///<
-   double fAllTwkDial;       ///<
-   
-   double fCExLowCurr;       ///<
-   double fInelLowCurr;      ///<
-   double fAbsCurr;          ///<
-   double fPiProdCurr;       ///<
-   double fCExHighCurr;      ///<
-   double fInelHighCurr;     ///<
-   double fAllCurr;          ///<
-     
-   double fCExLowDef;        ///<
-   double fInelLowDef;       ///<
-   double fAbsDef;           ///<
-   double fPiProdDef;        ///<
-   double fCExHighDef;       ///<
-   double fInelHighDef;      ///< 
-   double fAllDef;           ///< 
+  NSYST_DECLAREDIALVARIABLES(kCascTwkDial_FrAbs_pi);
+  NSYST_DECLAREDIALVARIABLES(kCascTwkDial_FrInelLow_pi);
+  NSYST_DECLAREDIALVARIABLES(kCascTwkDial_FrCExLow_pi);
+  NSYST_DECLAREDIALVARIABLES(kCascTwkDial_FrInelHigh_pi);
+  NSYST_DECLAREDIALVARIABLES(kCascTwkDial_FrCExHigh_pi);
+  NSYST_DECLAREDIALVARIABLES(kCascTwkDial_FrPiProd_pi);
+};
 
-   NFortFns * fortFns;
-
- };
-
-} // rew
-} // neut
+} // namespace rew
+} // namespace neut
 
 #endif
-

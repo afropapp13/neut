@@ -12,7 +12,7 @@
           STFC, Rutherford Appleton Laboratory
 
           Patrick de Perio <pdeperio \at physics.utoronto.ca>
-	  University of Toronto
+          University of Toronto
 
 \created  Apr 5, 2011
 
@@ -25,47 +25,45 @@
 #ifndef _N_REWEIGHT_H_
 #define _N_REWEIGHT_H_
 
-#include <string>
 #include <map>
+#include <string>
 
-#include "NSystSet.h"
 #include "NReWeightI.h"
-
-using std::string;
-using std::map;
+#include "NSystSet.h"
 
 namespace neut {
+namespace rew {
 
-
-namespace rew   {
-
- class NReWeight
- {
- public:
-   NReWeight();
+class NReWeight {
+public:
+  NReWeight();
   ~NReWeight();
 
-   void        AdoptWghtCalc (string name, NReWeightI* wcalc);   ///< add concrete weight calculator, transfers ownership
-   NReWeightI* WghtCalc      (string name);                      ///< access a weight calculator by name
-   NSystSet &  Systematics   (void);                             ///< set of enabled systematic params & values
-   void        Reconfigure   (void);                             ///< reconfigure weight calculators with new params
-   double      CalcWeight    ();                                 ///< calculate weight for input event
-   double      CalcChisq     (void);                             ///< calculate penalty chisq for current values of tweaking dials
-   void        Print         (void);                             ///< print
+  /// Add concrete weight calculator, transfers ownership
+  void AdoptWghtCalc(std::string name, NReWeightI *wcalc);
 
-   double      GetWeightXsec () {return fWeightXsec;};           ///< weight from cross section variations only
-  private:
+  /// access a weight calculator by name
+  NReWeightI *WghtCalc(std::string name);
+  /// set of enabled systematic params & values
+  NSystSet &Systematics(void);
+  /// reconfigure weight calculators with new params
+  void Reconfigure(void);
+  /// calculate weight for input event
+  double CalcWeight();
+  /// calculate penalty chisq for current values of tweaking dials
+  double CalcChisq(void);
+  void Print(void);
 
-   void CleanUp (void);
+private:
+  void CleanUp(void);
 
-   NSystSet                  fSystSet;   ///< set of enabled nuisance parameters
-   map<string, NReWeightI *> fWghtCalc;  ///< concrete weight calculators
+  /// set of enabled nuisance parameters
+  NSystSet fSystSet;
+  /// concrete weight calculators
+  std::map<std::string, NReWeightI *> fWghtCalc;
+};
 
-   double fWeightXsec;                   ///< store weight from cross section variations only
- };
-
-} // rew   namespace
-} // neut namespace
+} // namespace rew
+} // namespace neut
 
 #endif
-

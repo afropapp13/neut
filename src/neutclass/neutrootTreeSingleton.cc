@@ -1,122 +1,82 @@
-#include <iostream>
-
 #include "neutrootTreeSingleton.h"
 
-using namespace std;
-using std::cout;
-using std::endl;
+#include <iostream>
+#include <stdexcept>
 
-NeutrootTreeSingleton * NeutrootTreeSingleton::fInstance = 0;
-//____________________________________________________________________________
-NeutrootTreeSingleton::NeutrootTreeSingleton()
-{
-}
-//____________________________________________________________________________
-NeutrootTreeSingleton::~NeutrootTreeSingleton()
-{
-  fInstance = 0;
-}
-//____________________________________________________________________________
+NeutrootTreeSingleton *NeutrootTreeSingleton::fInstance = 0;
+NeutrootTreeSingleton::NeutrootTreeSingleton() {}
+NeutrootTreeSingleton::~NeutrootTreeSingleton() { fInstance = 0; }
 
-NeutrootTreeSingleton * NeutrootTreeSingleton::Instance(string filename)
-{
-  if(fInstance == 0) {
-    cout << "NeutrootTreeSingleton initialization with filename: " << filename.c_str() << endl;
-    static NeutrootTreeSingleton::Cleaner cleaner;
-    cleaner.DummyMethodAndSilentCompiler();
+NeutrootTreeSingleton &
+NeutrootTreeSingleton::Initialize(std::string const &filename) {
+  if (fInstance == 0) {
+    std::cout << "[INFO]: NeutrootTreeSingleton initialization with filename: "
+              << filename << std::endl;
     fInstance = new NeutrootTreeSingleton;
     fInstance->LoadTree(filename);
+  } else {
+    throw std::runtime_error(
+        std::string(
+            "[ERROR]: NeutrootTreeSingleton already instantiated, cannot "
+            "re-instantiate with filename: ") +
+        filename);
   }
 
-  return fInstance;
+  return Get();
+  ;
 }
-//____________________________________________________________________________
 
-NeutrootTreeSingleton * NeutrootTreeSingleton::Instance(TTree *a_intree)
-{
-  if(fInstance == 0) {
-
-    cout << "NeutrootTreeSingleton::Instance(TTree) Error: Do not initialize with pre-loaded tree. Pass a filename instead." << endl;
-    exit (-1);
-
-    //cout << "NeutrootTreeSingleton late initialization" << endl;
-    //static NeutrootTreeSingleton::Cleaner cleaner;
-    //cleaner.DummyMethodAndSilentCompiler();
-    //fInstance = new NeutrootTreeSingleton;
-    //fInstance->LoadTree(a_intree);
+NeutrootTreeSingleton &NeutrootTreeSingleton::Get() {
+  if (!fInstance) {
+    throw std::runtime_error(
+        "[ERROR]: Attempted to get NeutrootTreeSingleton instance before "
+        "NeutrootTreeSingleton::Initialize was called.");
   }
 
-  return fInstance;
+  return *fInstance;
 }
-//____________________________________________________________________________
-void NeutrootTreeSingleton::LoadTree(string filename) {
 
-  tree_neutroot = new TChain("neuttree","");
-  f_nFiles = tree_neutroot->Add(Form("%s/neuttree",filename.c_str()));
+void NeutrootTreeSingleton::LoadTree(std::string const &filename) {
+
+  tree_neutroot = new TChain("neuttree", "");
+  f_nFiles = tree_neutroot->Add(Form("%s/neuttree", filename.c_str()));
 
   if (!f_nFiles) {
-    cout << "Error NeutrootTreeSingleton::LoadTree(string): No files/neuttree found in: " << filename.c_str() << endl;
-    exit (-1);
+    std::cout << "[ERROR]: NeutrootTreeSingleton::LoadTree(string): No "
+                 "files/neuttree "
+                 "found in: "
+              << filename << std::endl;
+    throw std::runtime_error(
+        std::string("[ERROR]: NeutrootTreeSingleton::LoadTree(string): No "
+                    "files/neuttree found in: ") +
+        filename);
   }
 
   f_nEvents = tree_neutroot->GetEntries();
 
-  cout << "Files added: " << f_nFiles << ", with number of events: " << f_nEvents << endl;
+  std::cout << "[INFO]: Files added: " << f_nFiles
+            << ", with number of events: " << f_nEvents << std::endl;
 
   br_neutvect = tree_neutroot->GetBranch("vectorbranch");
   nvect = NULL;
 
-  if(br_neutvect){
+  if (br_neutvect) {
     br_neutvect->SetAddress(&nvect);
 
   } else {
-    cout << "Error: NeutrootTreeSingleton::LoadTree(string) cannot find branch \"vectorbranch\". Are you using a neutroot generated file?" << endl;
-    exit (-1);
+    throw std::runtime_error(
+        "[ERROR]: NeutrootTreeSingleton::LoadTree(string) cannot find branch "
+        "\"vectorbranch\". Are you using a neutroot generated file?");
   }
-
 }
-//____________________________________________________________________________
-void NeutrootTreeSingleton::LoadTree(TTree *a_intree) {
-
-  //tree_neutroot = a_intree;
-  //
-  //if (!tree_neutroot) {
-  //  cout << "Error NeutrootTreeSingleton::LoadTree(TTree*): tree_neutroot is NULL" << endl;
-  //  exit (-1);
-  //}
-  //
-  //f_nFiles = tree_neutroot->GetNtrees();
-  //
-  //if (!f_nFiles) {
-  //  cout << "Error NeutrootTreeSingleton::LoadTree(TTree*): No files/neuttree passed" << endl;
-  //  exit (-1);
-  //}
-  //
-  //f_nEvents = tree_neutroot->GetEntries();
-  //
-  //cout << "Files added: " << f_nFiles << ", with number of events: " << f_nEvents << endl;
-  //
-  //br_neutvect = tree_neutroot->GetBranch("vectorbranch");
-  //nvect = NULL;
-  //
-  //if(br_neutvect){
-  //  br_neutvect->SetAddress(&nvect);
-  //
-  //} else {
-  //  cout << "Error NeutrootTreeSingleton::LoadTree(TTree*): cannot find branch \"vectorbranch\". Are you using a neutroot generated file?" << endl;
-  //  exit (-1);
-  //}
-
-}
-//____________________________________________________________________________
 
 Int_t NeutrootTreeSingleton::GetEntry(Long64_t entry, Int_t getall) {
 
   Int_t nbytes = 0;
 
   if (!tree_neutroot) {
-    cout << "Error NeutrootTreeSingleton::GetEntry(): tree_neutroot is NULL" << endl;
-    exit (-1);
+    throw std::runtime_error(
+        "[ERROR] NeutrootTreeSingleton::GetEntry(): tree_neutroot is NULL");
   }
 
   if (entry != tree_neutroot->GetReadEntry()) {
@@ -125,13 +85,13 @@ Int_t NeutrootTreeSingleton::GetEntry(Long64_t entry, Int_t getall) {
 
   return nbytes;
 }
-//____________________________________________________________________________
 
-NeutVect* NeutrootTreeSingleton::GetNeutVectAddress() {
+NeutVect *NeutrootTreeSingleton::GetNeutVectAddress() {
 
   if (!nvect) {
-    cout << "Error NeutrootTreeSingleton::GetNeutVectAddress(): Attempting to return NULL nvect" << endl;
-    exit (-1);
+    throw std::runtime_error(
+        "[ERROR] NeutrootTreeSingleton::GetNeutVectAddress(): Attempting to "
+        "return NULL nvect");
   }
 
   return nvect;

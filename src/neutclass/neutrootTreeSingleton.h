@@ -2,43 +2,33 @@
 #ifndef _N_NEUTROOTTREESINGLETON_H_
 #define _N_NEUTROOTTREESINGLETON_H_
 
-#include "TTree.h"
 #include "TChain.h"
+#include "TTree.h"
 #include "neutvect.h"
 
- class NeutrootTreeSingleton {
+class NeutrootTreeSingleton {
 
- public:
-   static NeutrootTreeSingleton* Instance (std::string filename);
-   static NeutrootTreeSingleton* Instance (TTree *a_intree);
+public:
+  static NeutrootTreeSingleton &Initialize(std::string const &filename);
+  static NeutrootTreeSingleton &Get();
 
-   NeutrootTreeSingleton();
-   ~NeutrootTreeSingleton();
+  NeutVect *GetNeutVectAddress();
+  Int_t GetEntry(Long64_t entry = 0, Int_t getall = 0);
 
-   NeutVect* GetNeutVectAddress();
-   Int_t GetEntry(Long64_t entry = 0, Int_t getall = 0);
-   void LoadTree(std::string filename);
-   void LoadTree(TTree *a_intree);
+private:
+  NeutrootTreeSingleton();
+  ~NeutrootTreeSingleton();
 
-   TChain *tree_neutroot;
-   TBranch *br_neutvect;
-   NeutVect *nvect;
+  void LoadTree(std::string const &filename);
 
-   int f_nEvents;
-   int f_nFiles;
+  TChain *tree_neutroot;
+  TBranch *br_neutvect;
+  NeutVect *nvect;
 
-   static NeutrootTreeSingleton * fInstance;
+  int f_nEvents;
+  int f_nFiles;
 
-   struct Cleaner {
-     void DummyMethodAndSilentCompiler() { }
-     ~Cleaner() {
-       if (NeutrootTreeSingleton::fInstance !=0) {
-	 delete NeutrootTreeSingleton::fInstance;
-	 NeutrootTreeSingleton::fInstance = 0;
-       }
-     }
-   };
-   friend struct Cleaner;
+  static NeutrootTreeSingleton *fInstance;
 };
 
 #endif

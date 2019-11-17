@@ -1,6 +1,7 @@
 *     -----------------------------------------------------
-      FUNCTION EFABRHO(R)
+      DOUBLE PRECISION FUNCTION EFABRHO(R)
 *     -----------------------------------------------------
+        DOUBLE PRECISION R
 *
 *     ( purpose )
 *       FUNCTION TO GIVE NUCLEAR DENSITY (UNIT : AT CENTER OF NULEI -- 1)

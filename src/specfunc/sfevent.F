@@ -42,7 +42,8 @@ c ----- temporary values to copy to output common block
 #include "neutmodel.h"
 #include "necardev.h"
 
-        real E, DIRNEU(3), theta_lab
+        real E, DIRNEU(3)
+        DOUBLE PRECISION theta_lab
         integer IPAR, IERR, mode
         logical single, nc, first
 

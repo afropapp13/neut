@@ -17,11 +17,17 @@ include_HEADERS = $(BUILT_SOURCES)
 if NEUT_LIBCOMPAT
 # Order here matters, should build core libraries, combine them in this dir (.), then build reweight, programs, and tools.
 # Cannot currently build neututils dirs in compat mode.
-SUBDIRS = neutcore nuccorspl nuceff n1p1h ht2p2h radcorr skmcsvc partnuck neutclass specfunc . neutsmpl reweight tools
+SUBDIRS = neutcore nuccorspl nuceff n1p1h ht2p2h radcorr skmcsvc partnuck neutclass specfunc . neutsmpl  tools test
 else
 # Order here matters, should build core libraries, combine them in this dir (.), then build reweight, programs, and tools.
-SUBDIRS = neutcore nuccorspl nuceff n1p1h mec ht2p2h radcorr skmcsvc partnuck neutclass specfunc . neutsmpl reweight tools neututils nuclsmpl pionsmpl neutgeom
+SUBDIRS = neutcore nuccorspl nuceff n1p1h mec ht2p2h radcorr skmcsvc partnuck neutclass specfunc . neutsmpl tools neututils nuclsmpl pionsmpl neutgeom test
 endif
+
+if !NEUT_NOREWEIGHT
+  SUBDIRS += reweight
+endif
+
+SUBDIRS += test
 
 # When I can get a hold of the zebra code I will add an --enable flag for the ZEBRA_SUBDIRS, but for the moment, disable them.
 ZEBRA_SUBDIRS = zbsfns

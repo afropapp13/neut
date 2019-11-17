@@ -113,7 +113,7 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_calc_nuc_dens_OBJECTS = integrate.$(OBJEXT) integrate_rho.$(OBJEXT)
+am_calc_nuc_dens_OBJECTS = integrate.$(OBJEXT)
 calc_nuc_dens_OBJECTS = $(am_calc_nuc_dens_OBJECTS)
 am__DEPENDENCIES_1 =
 am__DEPENDENCIES_2 = $(am__DEPENDENCIES_1)
@@ -143,24 +143,6 @@ DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
 am__mv = mv -f
-PPF77COMPILE = $(F77) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
-	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_FFLAGS) $(FFLAGS)
-LTPPF77COMPILE = $(LIBTOOL) $(AM_V_lt) --tag=F77 $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=compile $(F77) $(DEFS) \
-	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
-	$(AM_FFLAGS) $(FFLAGS)
-AM_V_PPF77 = $(am__v_PPF77_@AM_V@)
-am__v_PPF77_ = $(am__v_PPF77_@AM_DEFAULT_V@)
-am__v_PPF77_0 = @echo "  PPF77   " $@;
-am__v_PPF77_1 = 
-F77LD = $(F77)
-F77LINK = $(LIBTOOL) $(AM_V_lt) --tag=F77 $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(F77LD) $(AM_FFLAGS) $(FFLAGS) \
-	$(AM_LDFLAGS) $(LDFLAGS) -o $@
-AM_V_F77LD = $(am__v_F77LD_@AM_V@)
-am__v_F77LD_ = $(am__v_F77LD_@AM_DEFAULT_V@)
-am__v_F77LD_0 = @echo "  F77LD   " $@;
-am__v_F77LD_1 = 
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 LTCXXCOMPILE = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
@@ -179,24 +161,6 @@ AM_V_CXXLD = $(am__v_CXXLD_@AM_V@)
 am__v_CXXLD_ = $(am__v_CXXLD_@AM_DEFAULT_V@)
 am__v_CXXLD_0 = @echo "  CXXLD   " $@;
 am__v_CXXLD_1 = 
-COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
-	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
-LTCOMPILE = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) \
-	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
-	$(AM_CFLAGS) $(CFLAGS)
-AM_V_CC = $(am__v_CC_@AM_V@)
-am__v_CC_ = $(am__v_CC_@AM_DEFAULT_V@)
-am__v_CC_0 = @echo "  CC      " $@;
-am__v_CC_1 = 
-CCLD = $(CC)
-LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
-	$(AM_LDFLAGS) $(LDFLAGS) -o $@
-AM_V_CCLD = $(am__v_CCLD_@AM_V@)
-am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
-am__v_CCLD_0 = @echo "  CCLD    " $@;
-am__v_CCLD_1 = 
 SOURCES = $(calc_nuc_dens_SOURCES)
 DIST_SOURCES = $(calc_nuc_dens_SOURCES)
 am__can_run_installinfo = \
@@ -384,7 +348,7 @@ CERN_ROOT = $(CERN)/$(CERN_LEVEL)
 CERN_LINKFLAGS = -L$(CERN_ROOT)/lib
 CERN_LIBS = -ljetset74 -lpdflib804 -lphotos202 -lmathlib -lpacklib -lkernlib
 NEUT_DEFINES = -DgFortran $(am__append_2) $(am__append_3)
-NEUT_FFLAGS = -fno-backslash -fno-automatic -fno-second-underscore -ffixed-line-length-132 -fdollar-ok -fPIC -fbounds-check -Wall -W -ffpe-trap=invalid,zero,overflow -DstrictF77 -Df2cFortran $(NEUT_DEFINES)
+NEUT_FFLAGS = -fno-backslash -fno-automatic -fno-second-underscore -ffixed-line-length-132 -fdollar-ok -fPIC -fbounds-check -Wall -Wextra -Werror=conversion -ffpe-trap=invalid,zero,overflow -DstrictF77 -Df2cFortran $(NEUT_DEFINES)
 DEFAULT_FFLAGS = $(NEUT_FFLAGS) $(NEUT_INCLUDES) \
 	-I$(CERN_ROOT)/include $(am__append_4) $(am__append_7)
 DEFAULT_CXXFLAGS = -fPIC $(NEUT_DEFINES) $(NEUT_INCLUDES) \
@@ -402,13 +366,13 @@ EXE_LINKFLAGS = -fno-PIE -fno-pie -no-pie
 EXE_RTLIBS = -lstdc++ -lgfortran $(am__append_10)
 AM_FFLAGS = $(DEFAULT_FFLAGS)
 AM_CXXFLAGS = $(DEFAULT_CXXFLAGS)
-calc_nuc_dens_SOURCES = integrate.cc integrate_rho.F
+calc_nuc_dens_SOURCES = integrate.cc
 calc_nuc_dens_LDADD = $(NEUT_LIBS) $(CERN_LIBS) $(ROOT_LIBS) $(EXE_RTLIBS)
 calc_nuc_dens_LDFLAGS = $(EXE_LINKFLAGS) $(CERN_LINKFLAGS) $(ROOT_LINKFLAGS)
 all: all-am
 
 .SUFFIXES:
-.SUFFIXES: .F .cc .f .lo .o .obj
+.SUFFIXES: .cc .lo .o .obj
 $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am $(top_srcdir)/build.common $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
@@ -500,17 +464,6 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/integrate.Po@am__quote@
-
-.F.o:
-	$(AM_V_PPF77)$(PPF77COMPILE) -c -o $@ $<
-
-.F.obj:
-	$(AM_V_PPF77)$(PPF77COMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
-
-.F.lo:
-	$(AM_V_PPF77)$(LTPPF77COMPILE) -c -o $@ $<
-.F.f:
-	$(F77COMPILE) -F $<
 
 .cc.o:
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\

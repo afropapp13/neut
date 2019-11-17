@@ -636,6 +636,8 @@ LIBOBJS
 NEUT_GPERF
 NEUT_USE_GPERF_FALSE
 NEUT_USE_GPERF_TRUE
+NEUT_NOREWEIGHT_FALSE
+NEUT_NOREWEIGHT_TRUE
 NEUT_DEBUG_FALSE
 NEUT_DEBUG_TRUE
 NEUT_USE_TAUOLA_FALSE
@@ -796,6 +798,7 @@ enable_libtool_lock
 enable_compatnames
 enable_tauola
 enable_debug
+enable_noreweight
 with_gperf
 '
       ac_precious_vars='build_alias
@@ -1461,6 +1464,7 @@ Optional Features:
   --enable-compatnames    Enable 5.4.0 and previous library naming scheme
   --enable-tauola         Enable tauola, requires ZEBRA!
   --enable-debug          Compile with debug symbols
+  --enable-noreweight     Compile without reweighting
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -22630,6 +22634,21 @@ else
 fi
 
 
+######## Check reweight
+# Check whether --enable-noreweight was given.
+if test "${enable_noreweight+set}" = set; then :
+  enableval=$enable_noreweight;
+fi
+
+ if test "x$enable_noreweight" = "xyes"; then
+  NEUT_NOREWEIGHT_TRUE=
+  NEUT_NOREWEIGHT_FALSE='#'
+else
+  NEUT_NOREWEIGHT_TRUE='#'
+  NEUT_NOREWEIGHT_FALSE=
+fi
+
+
 ######## Check gprof
 
 # Check whether --with-gperf was given.
@@ -22662,7 +22681,7 @@ fi
 fi
 
 
-ac_config_files="$ac_config_files Makefile neutcore/Makefile nuccorspl/Makefile nuceff/Makefile n1p1h/Makefile ht2p2h/Makefile mec/Makefile radcorr/Makefile tauola/Makefile specfunc/Makefile skmcsvc/Makefile zbsfns/Makefile partnuck/Makefile neutclass/Makefile neutsmpl/Makefile nuclsmpl/Makefile pionsmpl/Makefile neutgeom/Makefile reweight/Makefile tools/Makefile neututils/Makefile neututils/calc_ccqe_crs/Makefile neututils/calc_coh_crs.rs/Makefile neututils/calc_dis_crs/Makefile neututils/calc_nuc_dens/Makefile neututils/calc_res_crs/Makefile neututils/make_SF_tables/Makefile"
+ac_config_files="$ac_config_files Makefile neutcore/Makefile nuccorspl/Makefile nuceff/Makefile n1p1h/Makefile ht2p2h/Makefile mec/Makefile radcorr/Makefile tauola/Makefile specfunc/Makefile skmcsvc/Makefile zbsfns/Makefile partnuck/Makefile neutclass/Makefile neutsmpl/Makefile nuclsmpl/Makefile pionsmpl/Makefile neutgeom/Makefile reweight/Makefile tools/Makefile neututils/Makefile neututils/calc_ccqe_crs/Makefile neututils/calc_coh_crs.rs/Makefile neututils/calc_dis_crs/Makefile neututils/calc_nuc_dens/Makefile neututils/calc_res_crs/Makefile neututils/make_SF_tables/Makefile test/Makefile"
 
 
 cat >confcache <<\_ACEOF
@@ -22852,6 +22871,10 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${NEUT_DEBUG_TRUE}" && test -z "${NEUT_DEBUG_FALSE}"; then
   as_fn_error $? "conditional \"NEUT_DEBUG\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${NEUT_NOREWEIGHT_TRUE}" && test -z "${NEUT_NOREWEIGHT_FALSE}"; then
+  as_fn_error $? "conditional \"NEUT_NOREWEIGHT\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${NEUT_USE_GPERF_TRUE}" && test -z "${NEUT_USE_GPERF_FALSE}"; then
@@ -24016,6 +24039,7 @@ do
     "neututils/calc_nuc_dens/Makefile") CONFIG_FILES="$CONFIG_FILES neututils/calc_nuc_dens/Makefile" ;;
     "neututils/calc_res_crs/Makefile") CONFIG_FILES="$CONFIG_FILES neututils/calc_res_crs/Makefile" ;;
     "neututils/make_SF_tables/Makefile") CONFIG_FILES="$CONFIG_FILES neututils/make_SF_tables/Makefile" ;;
+    "test/Makefile") CONFIG_FILES="$CONFIG_FILES test/Makefile" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac

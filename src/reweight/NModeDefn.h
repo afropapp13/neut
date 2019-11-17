@@ -1,115 +1,91 @@
-
-#include <cstdlib>
-
-
 #ifndef _N_MODEDEFN_H_
 #define _N_MODEDEFN_H_
 
+#include <cmath>
+
 namespace neut {
-  namespace rew   {
+namespace rew {
 
-    class NModeDefn
-    { 
-    public:
-  
-      NModeDefn();
-      //NModeDefn(const NModeDefn & err);
-      ~NModeDefn();
+namespace NModeDefn {
 
-      bool isCC(int imode) {
-	if ( 1<=abs(imode)&&abs(imode)<=26 ) return true;
-	else return false;
-      }
+  inline bool isCC(int imode) {
+    return ((1 <= std::abs(imode)) && (std::abs(imode) <= 26));
+  }
 
-      bool isNC(int imode) {
-	if ( 31<=abs(imode)&&abs(imode)<=52 ) return true;
-	else return false;
-      }
+  inline bool isNC(int imode) {
+    return ((31 <= std::abs(imode)) && (std::abs(imode) <= 52));
+  }
 
-      bool isNCEL(int imode) {
-	if (abs(imode)==51 || abs(imode)==52) return true;
-	else return false;
-      }
+  inline bool isNCEL(int imode) {
+    return ((std::abs(imode) == 51) || (std::abs(imode) == 52));
+  }
 
-      bool isCCQE(int imode) {
-	if (abs(imode)==1) return true;
-	else return false;
-      }
+  inline bool isCCQE(int imode) {
+    return (std::abs(imode) == 1);
+  }
 
-      bool isCCRES(int imode) {
-	if ( (11<=abs(imode)&&abs(imode)<=13) || abs(imode)==17 || abs(imode)==22 || abs(imode)==23  ) return true;
-	else return false;
-      }
+  inline bool isCCRES(int imode) {
+    return (((11 <= std::abs(imode)) && (std::abs(imode) <= 13)) ||
+            (std::abs(imode) == 17) || (std::abs(imode) == 22) ||
+            (std::abs(imode) == 23));
+  }
 
-      bool isCC1PI(int imode) {
-	if ( (11<=abs(imode)&&abs(imode)<=13) ) return true;
-	else return false;
-      }
+  inline bool isCC1PI(int imode) {
+    return ((11 <= std::abs(imode)) && (std::abs(imode) <= 13));
+  }
 
-      bool isCC1PI0(int imode) {
-	if ( abs(imode)==12 ) return true;
-	else return false;
-      }
+  inline bool isCC1PI0(int imode) {
+    return (std::abs(imode) == 12);
+  }
 
-      bool isCC1PIP(int imode) {
-	if ( (11==abs(imode)||abs(imode)==13) ) return true;
-	else return false;
-      }
+  inline bool isCC1PIP(int imode) {
+    return ((11 == std::abs(imode)) || (std::abs(imode) == 13));
+  }
 
-      bool isCCCOH(int imode) {
-	if ( abs(imode)==16 ) return true;
-	else return false;
-      }
+  inline bool isCCCOH(int imode) {
+    return (std::abs(imode) == 16);
+  }
 
-      bool isNCRES(int imode) {
-	if ( (31<=abs(imode)&&abs(imode)<=34) || abs(imode)==38 || abs(imode)==39 || (42<=abs(imode)&&abs(imode)<=45)  ) return true;
-	else return false;
-      }
+  inline bool isNCRES(int imode) {
+    return (((31 <= std::abs(imode)) && (std::abs(imode) <= 34)) ||
+            (std::abs(imode) == 38) || (std::abs(imode) == 39) ||
+            ((42 <= std::abs(imode)) && (std::abs(imode) <= 45)));
+  }
 
-      bool isNC1PI(int imode) {
-	if ( (31<=abs(imode)&&abs(imode)<=34) ) return true;
-	else return false;
-      }
+  inline bool isNC1PI(int imode) {
+    return ((31 <= std::abs(imode)) && (std::abs(imode) <= 34));
+  }
 
-      bool isNC1PI0(int imode) {
-	if ( (31<=abs(imode)&&abs(imode)<=32) ) return true;
-	else return false;
-      }
+  inline bool isNC1PI0(int imode) {
+    return ((31 <= std::abs(imode)) && (std::abs(imode) <= 32));
+  }
 
-      bool isNCCOH(int imode) {
-	if ( abs(imode)==36 ) return true;
-	else return false;
-      }
+  inline bool isNCCOH(int imode) {
+    return (std::abs(imode) == 36);
+  }
 
-      bool isCOH(int imode) {
-	if ( abs(imode)==16 || abs(imode)==36 ) return true;
-	else return false;
-      }
+  inline bool isCOH(int imode) {
+    return ((std::abs(imode) == 16) || (std::abs(imode) == 36));
+  }
 
-      bool isDIS(int imode) {
-	if ( abs(imode)==26 || abs(imode)==46 ) return true;
-	else return false;
-      }
+  inline bool isDIS(int imode) {
+    return ((std::abs(imode) == 26) || (std::abs(imode) == 46));
+  }
 
-      bool isMPI(int imode) {
-	if ( abs(imode)==21 || abs(imode)==41 ) return true;
-	else return false;
-      }
+  inline bool isMPI(int imode) {
+    return ((std::abs(imode) == 21) || (std::abs(imode) == 41));
+  }
 
-      bool isRES(int imode) {
-	if ( isCCRES(imode) || isNCRES(imode) ) return true;
-	else return false;
-      }
-      
-      bool is1PI(int imode) {
-	if ( isCC1PI(imode) || isNC1PI(imode) ) return true;
-	else return false;
-      }
+  inline bool isRES(int imode) {
+    return (isCCRES(imode) || isNCRES(imode));
+  }
 
-    };
+  inline bool is1PI(int imode) {
+    return (isCC1PI(imode) || isNC1PI(imode));
+  }
+}
 
-  } // rew   namespace
-} // neut namespace
+} // namespace rew
+} // namespace neut
 
 #endif
-

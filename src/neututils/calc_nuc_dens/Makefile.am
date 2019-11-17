@@ -5,7 +5,7 @@ AM_CXXFLAGS = $(DEFAULT_CXXFLAGS)
 
 bin_PROGRAMS = calc_nuc_dens
 
-calc_nuc_dens_SOURCES = integrate.cc integrate_rho.F
+calc_nuc_dens_SOURCES = integrate.cc
 
 calc_nuc_dens_LDADD = $(NEUT_LIBS) $(CERN_LIBS) $(ROOT_LIBS) $(EXE_RTLIBS)
 

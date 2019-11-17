@@ -19,63 +19,50 @@
 #ifndef _N_SET_OF_SYSTEMATICS_H_
 #define _N_SET_OF_SYSTEMATICS_H_
 
-#include <string>
 #include <map>
+#include <string>
 #include <vector>
 
 #include "NSyst.h"
 
-using std::string;
-using std::map;
-using std::vector;
-
 namespace neut {
-namespace rew   {
+namespace rew {
 
 class NSystInfo;
 
 class NSystSet {
 
-public:  
+public:
   NSystSet();
-  NSystSet(const NSystSet & syst_set);
- ~NSystSet();
+  NSystSet(const NSystSet &syst_set);
+  ~NSystSet();
 
-  void Init    (NSyst_t syst, double init=0., double min=-1., double max=+1., double step=0.05);
-  void Remove  (NSyst_t syst);
-  void Set     (NSyst_t syst, double current_value);
+  void Init(NSyst_t syst, double init = 0., double min = -1., double max = +1.,
+            double step = 0.05);
+  void Remove(NSyst_t syst);
+  void Set(NSyst_t syst, double current_value);
 
-  int  Size    (void) const;
-  bool Added   (NSyst_t syst) const;
-  void Print   (void);
-  void Copy    (const NSystSet & syst_set);
+  int Size(void) const;
+  bool Added(NSyst_t syst) const;
+  void Print(void);
+  void Copy(const NSystSet &syst_set);
 
-  const NSystInfo * Info(NSyst_t syst) const;
+  const NSystInfo *Info(NSyst_t syst) const;
 
-  vector<neut::rew::NSyst_t> AllIncluded (void);
+  std::vector<neut::rew::NSyst_t> AllIncluded(void);
 
 private:
-  
-  map<NSyst_t, NSystInfo *>  fSystematics;  
+  std::map<NSyst_t, NSystInfo *> fSystematics;
 };
 
 class NSystInfo {
 
 public:
-  NSystInfo() : 
-     CurValue(0), InitValue(0), MinValue(0), MaxValue(0), Step(0) 
-  { 
-
-  }
-  NSystInfo(double init, double min, double max, double step) : 
-     CurValue(init), InitValue(init), MinValue(min), MaxValue(max), Step(step) 
-  {
- 
-  }
- ~NSystInfo() 
-  { 
-
-  }
+  NSystInfo() : CurValue(0), InitValue(0), MinValue(0), MaxValue(0), Step(0) {}
+  NSystInfo(double init, double min, double max, double step)
+      : CurValue(init), InitValue(init), MinValue(min), MaxValue(max),
+        Step(step) {}
+  ~NSystInfo() {}
 
   double CurValue;
   double InitValue;
@@ -84,8 +71,7 @@ public:
   double Step;
 };
 
-} // rew   namespace
-} // neut namespace
+} // namespace rew
+} // namespace neut
 
-#endif 
-
+#endif

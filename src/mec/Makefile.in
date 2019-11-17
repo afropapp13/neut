@@ -370,7 +370,7 @@ top_srcdir = @top_srcdir@
 @NEUT_LIBCOMPAT_FALSE@CERN_LIBS = -ljetset74 -lpdflib804 -lphotos202 -lmathlib -lpacklib -lkernlib
 @NEUT_LIBCOMPAT_FALSE@NEUT_DEFINES = -DgFortran $(am__append_1) \
 @NEUT_LIBCOMPAT_FALSE@	$(am__append_2)
-@NEUT_LIBCOMPAT_FALSE@NEUT_FFLAGS = -fno-backslash -fno-automatic -fno-second-underscore -ffixed-line-length-132 -fdollar-ok -fPIC -fbounds-check -Wall -W -ffpe-trap=invalid,zero,overflow -DstrictF77 -Df2cFortran $(NEUT_DEFINES)
+@NEUT_LIBCOMPAT_FALSE@NEUT_FFLAGS = -fno-backslash -fno-automatic -fno-second-underscore -ffixed-line-length-132 -fdollar-ok -fPIC -fbounds-check -Wall -Wextra -Werror=conversion -ffpe-trap=invalid,zero,overflow -DstrictF77 -Df2cFortran $(NEUT_DEFINES)
 @NEUT_LIBCOMPAT_FALSE@DEFAULT_FFLAGS = $(NEUT_FFLAGS) $(NEUT_INCLUDES) \
 @NEUT_LIBCOMPAT_FALSE@	-I$(CERN_ROOT)/include $(am__append_3) \
 @NEUT_LIBCOMPAT_FALSE@	$(am__append_6)

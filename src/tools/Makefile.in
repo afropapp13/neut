@@ -291,7 +291,7 @@ CERN_ROOT = $(CERN)/$(CERN_LEVEL)
 CERN_LINKFLAGS = -L$(CERN_ROOT)/lib
 CERN_LIBS = -ljetset74 -lpdflib804 -lphotos202 -lmathlib -lpacklib -lkernlib
 NEUT_DEFINES = -DgFortran $(am__append_2) $(am__append_3)
-NEUT_FFLAGS = -fno-backslash -fno-automatic -fno-second-underscore -ffixed-line-length-132 -fdollar-ok -fPIC -fbounds-check -Wall -W -ffpe-trap=invalid,zero,overflow -DstrictF77 -Df2cFortran $(NEUT_DEFINES)
+NEUT_FFLAGS = -fno-backslash -fno-automatic -fno-second-underscore -ffixed-line-length-132 -fdollar-ok -fPIC -fbounds-check -Wall -Wextra -Werror=conversion -ffpe-trap=invalid,zero,overflow -DstrictF77 -Df2cFortran $(NEUT_DEFINES)
 DEFAULT_FFLAGS = $(NEUT_FFLAGS) $(NEUT_INCLUDES) \
 	-I$(CERN_ROOT)/include $(am__append_4) $(am__append_7)
 DEFAULT_CXXFLAGS = -fPIC $(NEUT_DEFINES) $(NEUT_INCLUDES) \
@@ -312,9 +312,9 @@ INST_ROOT = $(prefix)
 @NEUT_LIBCOMPAT_TRUE@IO_LIB_LIST = neutrootTreeSingleton.so neutctrl.so neutfsipart.so neutfsivert.so neutnucfsistep.so neutnucfsivert.so neutpart.so neutvect.so neutvtx.so
 @NEUT_LIBCOMPAT_FALSE@IO_LIB_FLAGS = -lNEUTClassUtils -lNEUTClass
 @NEUT_LIBCOMPAT_TRUE@IO_LIB_FLAGS = $(INST_ROOT)/lib/neutrootTreeSingleton.so $(INST_ROOT)/lib/neutctrl.so $(INST_ROOT)/lib/neutfsipart.so $(INST_ROOT)/lib/neutfsivert.so $(INST_ROOT)/lib/neutnucfsistep.so $(INST_ROOT)/lib/neutnucfsivert.so $(INST_ROOT)/lib/neutpart.so $(INST_ROOT)/lib/neutvect.so $(INST_ROOT)/lib/neutvtx.so
-@NEUT_LIBCOMPAT_FALSE@LIB_LIST = libNEUT.a
+@NEUT_LIBCOMPAT_FALSE@LIB_LIST = libNEUT.a libNEUTn1p1h.a libNEUTht2p2h.a
 @NEUT_LIBCOMPAT_TRUE@LIB_LIST = $(IO_LIB_LIST) libneutcore.a libnuccorspl.a libnuceff.a libn1p1h.a libht2p2h.a libradcorr.a libtauola.a libspecfunc.a libskmcsvc.a libzbsfns.a libpartnuck.a
-@NEUT_LIBCOMPAT_FALSE@LIB_FLAGS = -lNEUT
+@NEUT_LIBCOMPAT_FALSE@LIB_FLAGS = -lNEUT -lNEUTn1p1h -lNEUTht2p2h
 @NEUT_LIBCOMPAT_TRUE@LIB_FLAGS = $(IO_LIB_FLAGS) -lneutcore -lnuccorspl -lnuceff -ln1p1h -lht2p2h -lradcorr -ltauola -lspecfunc -lskmcsvc -lzbsfns -lpartnuck
 @NEUT_LIBCOMPAT_FALSE@RW_LIB = libNEUTReWeight.so
 @NEUT_LIBCOMPAT_TRUE@RW_LIB = libNReWeight.so

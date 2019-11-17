@@ -1,6 +1,6 @@
 ************************************************************************
 *     ------------------------
-      FUNCTION FNTOTPAU(IPAR,E)
+      DOUBLE PRECISION FUNCTION FNTOTPAU(IPAR,E)
 *     ------------------------
 *
 *     (Purpose)
@@ -9,13 +9,13 @@
 *     (Input)
 *       IPAR   : NEUTRINO TYPE
 *                  12 : NEU-E
-*                 -12 : NEU-E-BAR            
+*                 -12 : NEU-E-BAR
 *                  14 : NEU-MU
-*                 -14 : NEU-MU-BAR            
+*                 -14 : NEU-MU-BAR
 *                  16 : NEU-TAU
 *                 -16 : NEU-TAU-BAR
 *       E      : NEUTRINO ENERGY ( GEV )
-*     
+*
 *     (Output)
 *       FNTOTPAU : CROSS SECTION ( 10^-38cm^2 )
 *
@@ -26,8 +26,8 @@
 *       1988.10.08 ; T.Kajita   N.C. ELASTIC INT
 *       1995.05.10 ; K. KANEYUKI  FOR S.K.
 *                    TOTPAU -> FNTOTPAU
-*       1996.05.26 ; Y.Hayato   ADD COHERENT PION PRODUCTION      
-*       1997.12.10 ; J.Kameda   ADD single eta production 
+*       1996.05.26 ; Y.Hayato   ADD COHERENT PION PRODUCTION
+*       1997.12.10 ; J.Kameda   ADD single eta production
 *       1997.12.10 ; J.Kameda   ADD single  K  production
 *       2007.08.23 ; G.Mitsuka  add delta->gamma decay
 *       2007.11.05 ; G.Mitsuka  support target nucleus besides 16O
@@ -41,7 +41,7 @@ C    MEANING OF DATA
 C    RATN   : NEUTRON RATIO IN TARGET
 C    RATP   : PROTON RATIO IN TARGET
 C    RATFRE : FREE PROTON RATIO IN TARGET
-C     
+C
 #include "necard.h"
 #include "neutmodel.h"
 
@@ -66,12 +66,12 @@ C     --ENERGY UPPER LIMIT FOR 1PI
          ETMP=999.999
       ENDIF
 
-C     
+C
       TOTCRS=0.
       IF (IPAR.GT.0) THEN
-C     
+C
 C     -- FOR NEUTRINO
-C     
+C
 #ifdef UPMU_RCK
          APICRSCC=FNAPICRS(E,IPAR,1,RATP,R1320CC)
          APICRSNC=FNAPICRS(E,IPAR,0,RATN,R1320NC)
@@ -112,15 +112,15 @@ C
          TOTCRS=TOTCRS+RSSGCRS(E,IPAR, 1)*RATN*CRSNEUT(25)
          TOTCRS=TOTCRS+RSSGCRS(E,IPAR,11)*RATN*CRSNEUT(26)
          TOTCRS=TOTCRS+RSSGCRS(E,IPAR,12)*RATP*CRSNEUT(27)
-         TOTCRS=TOTCRS+FNMEC_SELECT(E,IPAR)*CRSNEUT(28) 
+         TOTCRS=TOTCRS+FNMEC_SELECT(E,IPAR)*CRSNEUT(28)
          TOTCRS=TOTCRS+DIFCRSNE(E,IPAR,1)*RATFRE*CRSNEUT(29)
          TOTCRS=TOTCRS+DIFCRSNE(E,IPAR,0)*RATFRE*CRSNEUT(30)
          FNTOTPAU=TOTCRS
 
       ELSE
-C     
+C
 C     -- FOR ANTI NEUTRINO
-C     
+C
 #ifdef UPMU_RCK
          APICRSCC=FNAPICRS(E,IPAR,1,RATP,R1320CC)
          APICRSNC=FNAPICRS(E,IPAR,0,RATN,R1320NC)

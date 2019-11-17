@@ -10,8 +10,8 @@
           Jim Dobson <J.Dobson07 \at imperial.ac.uk>
           Imperial College London
 
-	  Patrick de Perio <pdeperio \at physics.utoronto.ca>
-	  University of Toronto
+          Patrick de Perio <pdeperio \at physics.utoronto.ca>
+          University of Toronto
 
  For the class documentation see the corresponding header file.
 
@@ -25,386 +25,149 @@
 */
 //____________________________________________________________________________
 
-#include <iostream>
-
-#include <TMath.h>
-
-#include "NReWeightControls.h"
+#include "CommonBlockIFace.h"
 #include "NReWeightCasc.h"
-#include "NSystSet.h"
 #include "NSystUncertainty.h"
-#include "NReWeightUtils.h"
+
+#include "vcworkC.h"
+
+#include "posinnucC.h"
+
+#include <iostream>
+#include <cmath>
 
 //#define _N_REWEIGHT_CASC_DEBUG_
 
-using namespace neut;
-using namespace neut::rew;
+namespace neut {
+namespace rew {
 
-using std::cout;
-using std::endl;
+NReWeightCasc::NReWeightCasc() { this->Init(); }
+NReWeightCasc::~NReWeightCasc() {}
 
-//_______________________________________________________________________________________
-NReWeightCasc::NReWeightCasc()
-{
-  this->Init();
+void NReWeightCasc::Init(void) {
+  NSYST_SETDEF(kCascTwkDial_FrAbs_pi, neffpr_.fefabs);
+  NSYST_SETDEF(kCascTwkDial_FrInelLow_pi, neffpr_.fefqe);
+  NSYST_SETDEF(kCascTwkDial_FrCExLow_pi, neffpr_.fefcx);
+  NSYST_SETDEF(kCascTwkDial_FrInelHigh_pi, neffpr_.fefinel);
+  NSYST_SETDEF(kCascTwkDial_FrCExHigh_pi, neffpr_.fefcxh);
+  NSYST_SETDEF(kCascTwkDial_FrPiProd_pi, neffpr_.fefqeh);
 }
-//_______________________________________________________________________________________
-NReWeightCasc::~NReWeightCasc()
-{
-}
-//_______________________________________________________________________________________
-void NReWeightCasc::Init(void)
-{
-  fortFns = NFortFns::Instance();
 
-  fInelLowDef  = 0.;
-  fInelHighDef = 0.;
-  fPiProdDef   = 0.;
-  fAbsDef      = 0.;
-  fCExLowDef   = 0.;
-  fCExHighDef  = 0.;
-  fAllDef      = 0.;
-  
-  fInelLowCurr  = fInelLowDef  ;   
-  fInelHighCurr = fInelHighDef ;  
-  fPiProdCurr   = fPiProdDef   ;      
-  fAbsCurr      = fAbsDef      ;   
-  fCExLowCurr   = fCExLowDef   ;  
-  fCExHighCurr  = fCExHighDef  ; 
-  fAllCurr      = fAllDef  ;
+bool NReWeightCasc::IsHandled(NSyst_t syst) {
+  NSYST_USESDIAL(syst, kCascTwkDial_FrAbs_pi);
+  NSYST_USESDIAL(syst, kCascTwkDial_FrInelLow_pi);
+  NSYST_USESDIAL(syst, kCascTwkDial_FrCExLow_pi);
+  NSYST_USESDIAL(syst, kCascTwkDial_FrInelHigh_pi);
+  NSYST_USESDIAL(syst, kCascTwkDial_FrCExHigh_pi);
+  NSYST_USESDIAL(syst, kCascTwkDial_FrPiProd_pi);
+
+  return false;
+}
+
+void NReWeightCasc::SetSystematic(NSyst_t syst, double twk_dial) {
+  NSYST_UPDATEVALUE(kCascTwkDial_FrAbs_pi, syst, twk_dial);
+  NSYST_UPDATEVALUE(kCascTwkDial_FrInelLow_pi, syst, twk_dial);
+  NSYST_UPDATEVALUE(kCascTwkDial_FrCExLow_pi, syst, twk_dial);
+  NSYST_UPDATEVALUE(kCascTwkDial_FrInelHigh_pi, syst, twk_dial);
+  NSYST_UPDATEVALUE(kCascTwkDial_FrCExHigh_pi, syst, twk_dial);
+  NSYST_UPDATEVALUE(kCascTwkDial_FrPiProd_pi, syst, twk_dial);
+}
+
+void NReWeightCasc::Reset(void) {
+  NSYST_SETTODEF(kCascTwkDial_FrAbs_pi);
+  NSYST_SETTODEF(kCascTwkDial_FrInelLow_pi);
+  NSYST_SETTODEF(kCascTwkDial_FrCExLow_pi);
+  NSYST_SETTODEF(kCascTwkDial_FrInelHigh_pi);
+  NSYST_SETTODEF(kCascTwkDial_FrCExHigh_pi);
+  NSYST_SETTODEF(kCascTwkDial_FrPiProd_pi);
+}
+
+void NReWeightCasc::Reconfigure(void) {
 
   // For 1-sigma change
-  fInelLowTwkDial  = 0;   
-  fInelHighTwkDial = 0;  
-  fPiProdTwkDial   = 0;      
-  fAbsTwkDial      = 0;   
-  fCExLowTwkDial   = 0;  
-  fCExHighTwkDial  = 0; 
-  fAllTwkDial      = 0; 
+  NSystUncertainty *fracerr = NSystUncertainty::Instance();
 
-  // For absolute change
-  //fInelLowTwkDial  = fInelLowDef ;   
-  //fInelHighTwkDial = fInelHighDef; 
-  //fPiProdTwkDial   = fPiProdDef  ; 
-  //fAbsTwkDial      = fAbsDef     ; 
-  //fCExLowTwkDial   = fCExLowDef  ; 
-  //fCExHighTwkDial  = fCExHighDef ; 
+  NSYST_RECONFCURRVALUE(kCascTwkDial_FrAbs_pi, fracerr);
+  NSYST_RECONFCURRVALUE(kCascTwkDial_FrInelLow_pi, fracerr);
+  NSYST_RECONFCURRVALUE(kCascTwkDial_FrCExLow_pi, fracerr);
+  NSYST_RECONFCURRVALUE(kCascTwkDial_FrInelHigh_pi, fracerr);
+  NSYST_RECONFCURRVALUE(kCascTwkDial_FrCExHigh_pi, fracerr);
+  NSYST_RECONFCURRVALUE(kCascTwkDial_FrPiProd_pi, fracerr);
 }
-//_______________________________________________________________________________________
-bool NReWeightCasc::IsHandled(NSyst_t syst)
-{
-   bool handle;
 
-   switch(syst) {
-     case ( kCascTwkDial_FrCExLow_pi    ) :
-     case ( kCascTwkDial_FrInelLow_pi   ) :
-     case ( kCascTwkDial_FrAbs_pi       ) :
-     case ( kCascTwkDial_FrPiProd_pi    ) :
-     case ( kCascTwkDial_FrCExHigh_pi   ) :
-     case ( kCascTwkDial_FrInelHigh_pi  ) :
-     case ( kCascTwkDial_All_pi         ) :
-     //case ( kINukeTwkDial_MFP_N       ) :
-     //case ( kINukeTwkDial_FrCEx_N     ) :
-     //case ( kINukeTwkDial_FrElas_N    ) :
-     //case ( kINukeTwkDial_FrInel_N    ) :
-     //case ( kINukeTwkDial_FrAbs_N     ) :
-     //case ( kINukeTwkDial_FrPiProd_N  ) :
-          handle = true;
-          break;
+double NReWeightCasc::CalcWeight() {
 
-     default:
-          handle = false;
-	  break;
-   }
+  bool tweaked = NSYST_ISTWKD(kCascTwkDial_FrAbs_pi) ||
+                 NSYST_ISTWKD(kCascTwkDial_FrInelLow_pi) ||
+                 NSYST_ISTWKD(kCascTwkDial_FrCExLow_pi) ||
+                 NSYST_ISTWKD(kCascTwkDial_FrInelHigh_pi) ||
+                 NSYST_ISTWKD(kCascTwkDial_FrCExHigh_pi) ||
+                 NSYST_ISTWKD(kCascTwkDial_FrPiProd_pi);
 
-   return handle;
-}
-//_______________________________________________________________________________________
-void NReWeightCasc::SetSystematic(NSyst_t syst, double twk_dial)
-{
-  switch(syst) {
-  case ( kCascTwkDial_FrCExLow_pi    ) :
-    fCExLowTwkDial   =  twk_dial ;  
-    break;
-
-  case ( kCascTwkDial_FrInelLow_pi   ) :
-    fInelLowTwkDial  =  twk_dial ;   
-    break;
-
-  case ( kCascTwkDial_FrAbs_pi       ) :
-    fAbsTwkDial      =  twk_dial ;   
-    break;
-
-  case ( kCascTwkDial_FrPiProd_pi    ) :
-    fPiProdTwkDial   =  twk_dial ;      
-    break;
-
-  case ( kCascTwkDial_FrCExHigh_pi   ) :
-    fCExHighTwkDial  =  twk_dial ; 
-    break;
-
-  case ( kCascTwkDial_FrInelHigh_pi  ) :
-    fInelHighTwkDial =  twk_dial  ;  
-    break;
-
-  case ( kCascTwkDial_All_pi  ) :
-    fAllTwkDial =  twk_dial  ;  
-    break;
-
-  default:
-    break;
+  if (!tweaked) {
+    return 1.0;
   }
-}
-//_______________________________________________________________________________________
-void NReWeightCasc::Reset(void)
-{
-  fInelLowCurr  = fInelLowDef ;   
-  fInelHighCurr = fInelHighDef;  
-  fPiProdCurr   = fPiProdDef  ;      
-  fAbsCurr      = fAbsDef     ;   
-  fCExLowCurr   = fCExLowDef  ;  
-  fCExHighCurr  = fCExHighDef ; 
-  fAllCurr      = fAllDef ; 
 
-  // For 1-sigma change
-  fInelLowTwkDial  = 0;   
-  fInelHighTwkDial = 0;  
-  fPiProdTwkDial   = 0;      
-  fAbsTwkDial      = 0;   
-  fCExLowTwkDial   = 0;  
-  fCExHighTwkDial  = 0;
-  fAllTwkDial      = 0;
-
-  // For absolute change
-  //fInelLowTwkDial  = fInelLowDef ;   
-  //fInelHighTwkDial = fInelHighDef; 
-  //fPiProdTwkDial   = fPiProdDef  ; 
-  //fAbsTwkDial      = fAbsDef     ; 
-  //fCExLowTwkDial   = fCExLowDef  ; 
-  //fCExHighTwkDial  = fCExHighDef ; 
-
-
- 
-  this->Reconfigure();
-}
-//_______________________________________________________________________________________
-void NReWeightCasc::Reconfigure(void)
-{
-
-  // For 1-sigma change
-  NSystUncertainty * fracerr = NSystUncertainty::Instance();
-  
-  int    sign_InelLowtwk = utils::rew::Sign(fInelLowTwkDial);
-  double fracerr_InelLow = fracerr->OneSigmaErr(kCascTwkDial_FrInelLow_pi, sign_InelLowtwk);
-  fInelLowCurr = fInelLowDef * (1. + fInelLowTwkDial * fracerr_InelLow);
-  fInelLowCurr = TMath::Max(0., fInelLowCurr  );
-  
-  int    sign_InelHightwk = utils::rew::Sign(fInelHighTwkDial);
-  double fracerr_InelHigh = fracerr->OneSigmaErr(kCascTwkDial_FrInelHigh_pi, sign_InelHightwk);
-  fInelHighCurr = fInelHighDef * (1. + fInelHighTwkDial * fracerr_InelHigh);
-  fInelHighCurr   = TMath::Max(0., fInelHighCurr  );
-  
-  int    sign_PiProdtwk = utils::rew::Sign(fPiProdTwkDial);
-  double fracerr_PiProd = fracerr->OneSigmaErr(kCascTwkDial_FrPiProd_pi, sign_PiProdtwk);
-  fPiProdDef * (1. + fPiProdTwkDial * fracerr_PiProd);
-  fPiProdCurr   = TMath::Max(0., fPiProdCurr  );
-  
-  int    sign_Abstwk = utils::rew::Sign(fAbsTwkDial);
-  double fracerr_Abs = fracerr->OneSigmaErr(kCascTwkDial_FrAbs_pi, sign_Abstwk);
-  fAbsCurr = fAbsDef * (1. + fAbsTwkDial * fracerr_Abs);
-  fAbsCurr   = TMath::Max(0., fAbsCurr  );
-  
-  int    sign_CExLowtwk = utils::rew::Sign(fCExLowTwkDial);
-  double fracerr_CExLow = fracerr->OneSigmaErr(kCascTwkDial_FrCExLow_pi, sign_CExLowtwk);
-  fCExLowCurr = fCExLowDef * (1. + fCExLowTwkDial * fracerr_CExLow);
-  fCExLowCurr   = TMath::Max(0., fCExLowCurr  );  
-
-  int    sign_CExHightwk = utils::rew::Sign(fCExHighTwkDial);
-  double fracerr_CExHigh = fracerr->OneSigmaErr(kCascTwkDial_FrCExHigh_pi, sign_CExHightwk);
-  fCExHighDef * (1. + fCExHighTwkDial * fracerr_CExHigh);
-  fCExHighCurr   = TMath::Max(0., fCExHighCurr  );
-
-  int    sign_Alltwk = utils::rew::Sign(fAllTwkDial);
-  double fracerr_All = fracerr->OneSigmaErr(kCascTwkDial_All_pi, sign_Alltwk);
-  fAllCurr = fAllDef * (1. + fAllTwkDial * fracerr_All);
-  fAllCurr   = TMath::Max(0., fAllCurr  );
-
-  // For absolute change
-  //fInelLowCurr =  fInelLowTwkDial ;
-  //
-  //fInelHighCurr = fInelHighTwkDial;
-  //
-  //fPiProdCurr =  fPiProdTwkDial   ;
-  //
-  //fAbsCurr = fAbsTwkDial          ;
-  //
-  //fCExLowCurr =  fCExLowTwkDial   ;
-  //
-  //fCExHighCurr = fCExHighTwkDial;  
-
-}
-//_______________________________________________________________________________________
-double NReWeightCasc::CalcWeight() 
-{ 
-  // For 1-sigma change
-  bool tweaked = ( (TMath::Abs(fInelLowTwkDial) > controls::kASmallNum) ||
-				   (TMath::Abs(fInelHighTwkDial) > controls::kASmallNum) ||
-				   (TMath::Abs(fAbsTwkDial) > controls::kASmallNum) ||
-				   (TMath::Abs(fPiProdTwkDial) > controls::kASmallNum) ||
-				   (TMath::Abs(fCExLowTwkDial) > controls::kASmallNum) ||
-				   (TMath::Abs(fCExHighTwkDial) > controls::kASmallNum)||
-				   (TMath::Abs(fAllTwkDial) > controls::kASmallNum) );
-
-
-  //cout << fInelLowCurr << " " <<  fInelLowDef    << endl;
-  //cout << fInelHighCurr << " " <<  fInelHighDef  << endl;
-  //cout << fAbsCurr << " " <<  fAbsDef  		 << endl;
-  //cout << fPiProdCurr << " " <<  fPiProdDef 	 << endl;  
-  //cout << fCExLowCurr << " " <<  fCExLowDef 	 << endl;  
-  //cout << fCExHighCurr << " " <<  fCExHighDef    << endl;
-
-  // For absolute change
-  //bool tweaked = ( fInelLowCurr != fInelLowDef ||
-  //		   fInelHighCurr != fInelHighDef ||
-  //		   fAbsCurr != fAbsDef ||
-  //		   fPiProdCurr != fPiProdDef ||
-  //		   fCExLowCurr != fCExLowDef ||
-  //		   fCExHighCurr != fCExHighDef );  
-  if(!tweaked) return 1.0;
-
-
-  fortFns->SetDefaults();
-  fortFns->Reconfigure();
-
-#ifdef _N_REWEIGHT_CASC_DEBUG_
-  fortFns->print_allevent();
-  fortFns->print_allparams();
-#endif 
+  CommonBlockIFace const &cbfa = CommonBlockIFace::Get();
+  cbfa.ResetGenValues();
 
   // Not bound
-  if (posinnuc_.ibound == 0) return 1;
-  
-  float old_xsec;
-
-  //cout << "NReWeightCasc FsiProb = " << fsihist_.fsiprob << endl;
-
-  // Assume FSIPROB <= 0 if not filled properly
-  // Currently in ND280 MCP4 only (set in ${T2KREWEIGHT}/src/T2KNeutUtils.cxx)
-  if (fsihist_.fsiprob <= 0) {  
-    old_xsec = fortFns->evpiprob();
-  
-  // evpiprob not passing properly with g77 64-bit so grab from common block
-#if defined(f2cFortran)&&!defined(gFortran)
-    old_xsec = fsihist_.fsiprob;
-#endif
-  }
-  
-  // Following should work for SK >=11b (NEUT >= 5.1.2) and neutroot/piscat
-
-  // FSIPROB was not pre-calculated properly during event generation
-  else if (fsihist_.fsiprob == 1) 
-    return 1;
-  
-  // Good FSIPROB pre-calculation
-  else
-    old_xsec = fsihist_.fsiprob;
-
-  if (old_xsec<=0) {
-    cout << "NReWeightCasc() Warning: evpiprob old_xsec <= 0, returning weight = 1" << endl;
+  if (!posinnuc_.ibound) {
     return 1;
   }
 
+  double old_xsec = NEUTGetPiCascProb();
 
-#ifdef _N_REWEIGHT_CASC_DEBUG_
-  cout << "FSI Probability (old) = " << old_xsec << endl;
-  fortFns->evpiprob();
-  cout << "FSI Probability (old, evpiprob) = " << fsihist_.fsiprob << endl;
-
-  if (fabs( fsihist_.fsiprob - old_xsec ) > 0.00005) {
-    cout << "NReWeightCasc() Error: Previously calculated FSIPROB inconsistent" << endl;
-    //int cin_tmp;
-    //std::cin >> cin_tmp;
-  }
-#endif
-
-  fInelLowDef = neffpr_.fefqe;
-  fInelHighDef= neffpr_.fefqeh;
-  fPiProdDef  = neffpr_.fefinel;
-  fAbsDef     = neffpr_.fefabs;
-  fCExLowDef  = neffpr_.fefcx;
-  fCExHighDef = neffpr_.fefcxh;
-  fAllDef     = neffpr_.fefall;
-
-  neffpr_.fefqe   = TMath::Max(float(0.),float(fInelLowCurr*fInelLowCurr));
-  neffpr_.fefqeh  = TMath::Max(float(0.),float(fInelHighCurr*fInelHighCurr));
-  neffpr_.fefinel = TMath::Max(float(0.),float(fPiProdCurr*fPiProdCurr));
-  neffpr_.fefabs  = TMath::Max(float(0.),float(fAbsCurr*fAbsCurr));
-  neffpr_.fefcx   = TMath::Max(float(0.),float(fCExLowCurr*fCExLowCurr));
-  neffpr_.fefcxh  = TMath::Max(float(0.),float(fCExHighCurr*fCExHighCurr));  
-  //  neffpr_.feffall = TMath::Max(float(0.),float(fAllCurr*fAllCurr));  
-
-  fortFns->Reconfigure();
-
-#ifdef _N_REWEIGHT_CASC_DEBUG_
-  fortFns->print_allparams();
-#endif
-  
-  //cout << "NReWeightCasc(): evpiprob = " <<  fortFns->evpiprob() << ", FSIPROB= " << fsihist_.fsiprob << endl;
-  float new_xsec   = fortFns->evpiprob();
-
-  // evpiprob not passing properly with g77 64-bit so grab from common block
-#if defined(f2cFortran)&&!defined(gFortran)
-  //if (new_xsec) {
-  //cout << "NReWeightCasc() Error: new_xsec=" << new_xsec << " when 0 expected for g77 compiled Fortran code on 64-bit machine" << endl;
-  //exit (-1);
-  //}
-  new_xsec = fsihist_.fsiprob;
-#endif
-  float new_weight = (new_xsec/old_xsec);
-
-#ifdef _N_REWEIGHT_CASC_DEBUG_
-  cout << "FSI Probability (new) = " << new_xsec << endl;
-#endif
-
-  if (isinf(new_weight) || isnan(new_weight) || new_weight<0) {
-    cout << "NReWeightCasc::CalcWeight() Warning: new_weight is infinite or negative (" << new_weight << "), setting to 1" << endl;
-    new_weight = 1;
+  if (old_xsec <= 0) {
+    std::cout << "[WARN]: NReWeightCasc() evpiprob old_xsec <= 0, returning "
+                 "weight = 1"
+              << std::endl;
+    return 1;
   }
 
-#ifdef _N_REWEIGHT_CASC_DEBUG_  
-  cout << "new weight = " << new_weight << endl;
-#endif
+  // Why are these squared?
+  neffpr_.fefabs = pow(NSYST_CURRVAR(kCascTwkDial_FrAbs_pi), 2);
+  neffpr_.fefqe = pow(NSYST_CURRVAR(kCascTwkDial_FrInelLow_pi), 2);
+  neffpr_.fefcx = pow(NSYST_CURRVAR(kCascTwkDial_FrCExLow_pi), 2);
+  neffpr_.fefinel = pow(NSYST_CURRVAR(kCascTwkDial_FrInelHigh_pi), 2);
+  neffpr_.fefcxh = pow(NSYST_CURRVAR(kCascTwkDial_FrCExHigh_pi), 2);
+  neffpr_.fefqeh = pow(NSYST_CURRVAR(kCascTwkDial_FrPiProd_pi), 2);
 
-  return new_weight;
+  NEUTSetParams();
+
+  double new_xsec = NEUTGetPiCascProb();
+#ifdef _N_REWEIGHT_CASC_DEBUG_
+  cout << "pion cascade probability (old) = " << old_xsec << endl;
+  cout << "pion cascade probability (new) = " << new_xsec << endl;
+#endif
+  NREWCHECKRETURN(new_xsec / old_xsec);
 }
-//_______________________________________________________________________________________
-double NReWeightCasc::CalcChisq(void)
-{
+
+double NReWeightCasc::CalcChisq(void) {
   double chisq = 0.;
 
   // For 1-sigma change
-  chisq += TMath::Power(fInelLowTwkDial, 2.);
-  chisq += TMath::Power(fInelHighTwkDial, 2.);
-  chisq += TMath::Power(fAbsTwkDial, 2.);
-  chisq += TMath::Power(fPiProdTwkDial, 2.);
-  chisq += TMath::Power(fCExLowTwkDial, 2.);
-  chisq += TMath::Power(fCExHighTwkDial, 2.);
-  chisq += TMath::Power(fAllTwkDial, 2.);
+  chisq += std::pow(NSYST_TWKVAR(kCascTwkDial_FrAbs_pi), 2.);
+  chisq += std::pow(NSYST_TWKVAR(kCascTwkDial_FrInelLow_pi), 2.);
+  chisq += std::pow(NSYST_TWKVAR(kCascTwkDial_FrCExLow_pi), 2.);
+  chisq += std::pow(NSYST_TWKVAR(kCascTwkDial_FrInelHigh_pi), 2.);
+  chisq += std::pow(NSYST_TWKVAR(kCascTwkDial_FrCExHigh_pi), 2.);
+  chisq += std::pow(NSYST_TWKVAR(kCascTwkDial_FrPiProd_pi), 2.);
 
   return chisq;
 }
-//_______________________________________________________________________________________
-vector<double> NReWeightCasc::GetCurrParVals(void)
-{
-  vector<double> parVals;
-  // This must be in the same order as ${T2KREWEIGHT}/src/T2KSyst.h
-  parVals.push_back(fAbsCurr);   
-  parVals.push_back(fInelLowCurr); 
-  parVals.push_back(fCExLowCurr);  
-  parVals.push_back(fInelHighCurr);
-  parVals.push_back(fCExHighCurr);   
-  parVals.push_back(fPiProdCurr);	   
-  parVals.push_back(fAllCurr);
-  return parVals;  
+
+std::vector<double> NReWeightCasc::GetCurrParVals(void) {
+  std::vector<double> parVals;
+  parVals.push_back(NSYST_TWKVAR(kCascTwkDial_FrAbs_pi));
+  parVals.push_back(NSYST_TWKVAR(kCascTwkDial_FrInelLow_pi));
+  parVals.push_back(NSYST_TWKVAR(kCascTwkDial_FrCExLow_pi));
+  parVals.push_back(NSYST_TWKVAR(kCascTwkDial_FrInelHigh_pi));
+  parVals.push_back(NSYST_TWKVAR(kCascTwkDial_FrCExHigh_pi));
+  parVals.push_back(NSYST_TWKVAR(kCascTwkDial_FrPiProd_pi));
+
+  return parVals;
 }
-//_______________________________________________________________________________________
+
+} // namespace rew
+} // namespace neut

@@ -17,8 +17,8 @@ else
 
 IO_LIB_LIST = libNEUTClassUtils.a libNEUTClass.so
 IO_LIB_FLAGS = -lNEUTClassUtils -lNEUTClass
-LIB_LIST = libNEUT.a
-LIB_FLAGS = -lNEUT
+LIB_LIST = libNEUT.a libNEUTn1p1h.a libNEUTht2p2h.a
+LIB_FLAGS = -lNEUT -lNEUTn1p1h -lNEUTht2p2h
 RW_LIB = libNEUTReWeight.so
 RW_FLAGS = -lNEUTReWeight
 endif

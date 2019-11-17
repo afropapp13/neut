@@ -79,7 +79,7 @@ c        if (mag .GT. 200) then
 c          val = 0.5 * val
 c        endif
 
-        pBin = (mag) / (p_Array(nuc,2) - p_Array(nuc,1))
+        pBin = int((mag) / (p_Array(nuc,2) - p_Array(nuc,1)))
         if (pBin .GE. 200) then
           pBin = 199
         endif
@@ -114,7 +114,7 @@ c        if (ETilde .GT. 100) then
 c          val = 0.5 * val
 c        endif
 
-        EBin = (ETilde) / (E_Array(nuc,2) - E_Array(nuc,1))
+        EBin = int((ETilde) / (E_Array(nuc,2) - E_Array(nuc,1)))
 
         if (EBin .GE. 200) then
           EBin = 199

@@ -11,8 +11,8 @@
           Jim Dobson <J.Dobson07 \at imperial.ac.uk>
           Imperial College London
 
-	  Patrick de Perio <pdeperio \at physics.utoronto.ca>
-	  University of Toronto
+          Patrick de Perio <pdeperio \at physics.utoronto.ca>
+          University of Toronto
 
 \created  Aug 1, 2009
 
@@ -28,156 +28,50 @@
 #include <iostream>
 
 #include "NReWeightI.h"
-#include "NFortFns.h"
-#include "NModeDefn.h"
-#include "NTotCrs.h"
 
 namespace neut {
-namespace rew   {
+namespace rew {
 
- class NReWeightNuXSecCCQE : public NReWeightI 
- {
- public:
-   static const int kModeMa             = 0;
-   static const int kModeNormAndMaShape = 1;
-   static const int kMode1overMa2 = 2;
-
-   NReWeightNuXSecCCQE();
+class NReWeightNuXSecCCQE : public NReWeightI {
+public:
+  NReWeightNuXSecCCQE();
   ~NReWeightNuXSecCCQE();
 
-   // implement the NReWeightI interface
-   bool   IsHandled      (NSyst_t syst);
-   void   SetSystematic  (NSyst_t syst, double val);
-   void   Reset          (void);
-   void   Reconfigure    (void);
-   double CalcWeight     ();
-   double CalcChisq      (void);
+  // implement the NReWeightI interface
+  bool IsHandled(NSyst_t syst);
+  void SetSystematic(NSyst_t syst, double val);
+  void Reset();
+  void Reconfigure();
+  double CalcWeight();
+  double CalcChisq();
 
-   // various config options
-   void SetMode     (int mode) { fMode       = mode; }
-   void RewNue      (bool tf ) { fRewNue     = tf;   }
-   void RewNuebar   (bool tf ) { fRewNuebar  = tf;   }
-   void RewNumu     (bool tf ) { fRewNumu    = tf;   }
-   void RewNumubar  (bool tf ) { fRewNumubar = tf;   }
+private:
+  void Init();
+  double CalcWeightMa();
 
- private:
+  NSYST_DECLAREDIALVARIABLES(kXSecTwkDial_MaCCQE);
+  NSYST_DECLAREDIALVARIABLES(kXSecTwkDial_AxlFFCCQE);
+  NSYST_DECLAREDIALVARIABLES(kXSecTwkDial_VecFFCCQE);
+  NSYST_DECLAREDIALVARIABLES(kXSecTwkDial_SCCVecQE);
+  NSYST_DECLAREDIALVARIABLES(kXSecTwkDial_SCCAxlQE);
+  NSYST_DECLAREDIALVARIABLES(kXSecTwkDial_PsFF);
+  NSYST_DECLAREDIALVARIABLES(kXSecTwkDial_AxlDipToAlt);
+  NSYST_DECLAREDIALVARIABLES(kXSecTwkDial_FAxlCCQEAlpha);
+  NSYST_DECLAREDIALVARIABLES(kXSecTwkDial_FAxlCCQEGamma);
+  NSYST_DECLAREDIALVARIABLES(kXSecTwkDial_FAxlCCQEBeta);
+  NSYST_DECLAREDIALVARIABLES(kXSecTwkDial_FAxlCCQETheta);
+  // NSYST_DECLAREDIALVARIABLES(kXSecTwkDial_FAZExp_NTerms);
+  // NSYST_DECLAREDIALVARIABLES(kXSecTwkDial_FAZExp_TCut);
+  // NSYST_DECLAREDIALVARIABLES(kXSecTwkDial_FAZExp_T0);
+  // NSYST_DECLAREDIALVARIABLES(kXSecTwkDial_FAZExp_Q4Cut);
+  NSYST_DECLAREDIALVARIABLES(kXSecTwkDial_FAZExp_A1);
+  NSYST_DECLAREDIALVARIABLES(kXSecTwkDial_FAZExp_A2);
+  NSYST_DECLAREDIALVARIABLES(kXSecTwkDial_FAZExp_A3);
+  NSYST_DECLAREDIALVARIABLES(kXSecTwkDial_FAZExp_A4);
 
-   void   Init              (void);
-   double CalcWeightNorm    ();
-   double CalcWeightMaShape ();
-   double CalcWeightMa      ();
+};
 
-
-   int    fMode;         ///< 0: Ma, 1: Norm and MaShape, 2: 1/Ma^2
-   bool   fRewNue;       ///< reweight nu_e CC?
-   bool   fRewNuebar;    ///< reweight nu_e_bar CC?
-   bool   fRewNumu;      ///< reweight nu_mu CC?
-   bool   fRewNumubar;   ///< reweight nu_mu_bar CC?
-
-   double fNormTwkDial;  ///<
-   double fNormDef;      ///<
-   double fNormCurr;     ///<
-
-   double fMaTwkDial;    ///<
-   double fMaDef;        ///<
-   double fMaCurr;       ///<
-
-   float fAxlFFTwkDial;    ///<
-   float fAxlFFDef;        ///<
-   float fAxlFFCurr;       ///<
-
-   float fVecFFTwkDial;    ///<
-   float fVecFFDef;        ///<
-   float fVecFFCurr;       ///<
-
-   // These are used to reweight to another MDLQE.
-   float fVecFFOutTwkDial;    ///<
-   float fVecFFOutDef;        ///<
-   float fVecFFOutCurr;       ///<
-
-   double fPfTwkDial;    ///<
-   double fPfDef;        ///<
-   double fPfCurr;       ///<
-
-   double fEbTwkDial;    ///<
-   double fEbDef;        ///<
-   double fEbCurr;       ///<
-
-   double fKapTwkDial;    ///<
-   double fKapDef;        ///<
-   double fKapCurr;       ///<
-
-   float fSCCVecTwkDial;    ///<
-   float fSCCVecDef;        ///<
-   float fSCCVecCurr;       ///<
-
-   float fSCCAxlTwkDial;    ///<
-   float fSCCAxlDef;        ///<
-   float fSCCAxlCurr;       ///<
-
-   double fPsFFTwkDial;    ///<
-   double fPsFFDef;        ///<
-   double fPsFFCurr;       ///<
-
-   // Alternative FA RW
-   bool fDipToAltFA;
-   int fAltMDLQEAF;
-
-   // 2 Component dials
-   float fTwk_3CompAlpha;
-   float fDef_3CompAlpha;
-   float fCurr_3CompAlpha;
-   float fErr_3CompAlpha;
-
-   float fTwk_3CompGamma;
-   float fDef_3CompGamma;
-   float fCurr_3CompGamma;
-   float fErr_3CompGamma;
-
-   // 3 Component Dials
-   float fTwk_3CompTheta;
-   float fDef_3CompTheta;
-   float fCurr_3CompTheta;
-   float fErr_3CompTheta;
-
-   float fTwk_3CompBeta;
-   float fDef_3CompBeta;
-   float fCurr_3CompBeta;
-   float fErr_3CompBeta;
-   
-   // ZExp Dials
-   int    fCurr_ZExp_NTerms;
-   int    fDef_ZExp_NTerms;
-   
-   int    fCurr_ZExp_Q4Cut;
-   int    fDef_ZExp_Q4Cut;
-
-   float fTwk_ZExp_TCut;
-   float fDef_ZExp_TCut;
-   float fCurr_ZExp_TCut;
-   float fErr_ZExp_TCut;
-
-   float fTwk_ZExp_T0;
-   float fDef_ZExp_T0;
-   float fCurr_ZExp_T0;
-   float fErr_ZExp_T0;
-
-   int kMaxZExpA;
-   
-   float fTwk_ZExp_ATerms[10];
-   float fDef_ZExp_ATerms[10];
-   float fCurr_ZExp_ATerms[10];
-   float fErr_ZExp_ATerms[10];
-   
-   // FF Objects
-   NFortFns * fortFns;
-   NModeDefn modeDefn;
-
-   NTotCrs *neutTotCrs;
- };
-
-} // rew   namespace
-} // neut namespace
+} // namespace rew
+} // namespace neut
 
 #endif
-

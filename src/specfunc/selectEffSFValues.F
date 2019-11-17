@@ -18,7 +18,7 @@ c ----- include spectral function arrays, variables etc
 
         external modMomentum, RLU
 
-        integer Pbin 
+        integer Pbin
 
         integer nuc
 
@@ -49,7 +49,7 @@ C     CW: I think I need to ignore Fermi momentum for the moment
         else if (NUMATOM .EQ. 20 )then
           nuc = 6
           fermiMomentum = 230
-          Etilde = 16.6        
+          Etilde = 16.6
        else if (NUMATOM .EQ. 27 )then
           nuc = 7
           fermiMomentum = 236
@@ -96,7 +96,7 @@ C     CW: only need to pick this value, remember momentum < 0.65 GeV by construc
         mag = RLU(dummy) * p_Array(nuc, nBinsP(nuc))
         val = RLU(dummy) * maxValuep
 
-        pBin = (mag) / (p_Array(nuc,2) - p_Array(nuc,1))
+        pBin = int((mag) / (p_Array(nuc,2) - p_Array(nuc,1)))
         if (pBin .GE. 651) then
           pBin = 650
         endif
@@ -110,12 +110,12 @@ C     CW: is this interpolation correct?
         interpVal = SFArray(nuc,pBin) +
      &       (mag - p_Array(nuc,pBin))*(SFArray(nuc,pBin+1)-
      &       SFArray(nuc,pBin))/(p_Array(nuc,pBin+1)-p_Array(nuc,pBin))
-        
+
         if (val .GT. interpVal) then
 c ------- momentum value not selected
           goto 11
         endif
-        
+
         p(1) = 0
         p(2) = mag*sin(theta)*cos(phi)
         p(3) = mag*sin(theta)*sin(phi)

@@ -1,597 +1,215 @@
-//____________________________________________________________________________
-/*!
-
-\class    neut::rew::NSyst_t
-
-\brief    An enumeration of systematic parameters
-
-\author   Costas Andreopoulos <costas.andreopoulos \at stfc.ac.uk>
-          STFC, Rutherford Appleton Laboratory
-
-	  Patrick de Perio <pdeperio \at physics.utoronto.ca>
-	  University of Toronto
-
-\created  Aug 1, 2009
-
-\cpright  Copyright (c) 2003-2010, GENIE Neutrino MC Generator Collaboration
-          For the full text of the license visit http://copyright.genie-mc.org
-          or see $GENIE/LICENSE
-*/
-//____________________________________________________________________________
-
 #ifndef _N_SYSTEMATIC_PARAM_H_
 #define _N_SYSTEMATIC_PARAM_H_
 
-#include <string>
+#ifdef X
+#error NSyst.h uses X macros and as such 'X' cannot be defined before preprocessing.
+#endif
 
-using std::string;
+#include <string>
+// This semantically highlights that the uncertainty for the a dial has no
+// meaning
+#define NOUNCERT 0
+
+// This uses an 'X macro' pattern to make sure various helper methods do not get
+// out of synch, you must be careful to include a new-line escape if modifying
+// the below list, and two-forward-slash style comments will break everything!
+// The 'columns' are: [enum name, stringified version, neg-uncert, pos-uncert]
+#define NEUTREWEIGHT_DIAL_LIST                                                 \
+  /******************************** (Q)El dials *****************************/ \
+  /*Tweak Ma NCEL, affects dsigma(NCEL)/dQ2 both in shape and normalization */ \
+  X(kXSecTwkDial_MaNCEL, MaNCEL, 0.165289256, 0.165289256)                     \
+  /*Tweak elastic nucleon form factors (default/dipole -> BBBA07) */           \
+  X(kXSecTwkDial_AxlFFNCEL, AxlFFNCEL, NOUNCERT, NOUNCERT)                     \
+  /*Tweak elastic nucleon form factors (default/dipole -> BBBA05)*/            \
+  X(kXSecTwkDial_VecFFNCEL, VecFFNCEL, NOUNCERT, NOUNCERT)                     \
+  /*Tweak Ma CCQE, affects dsigma(CCQE)/dQ2 both in shape and normalization*/  \
+  X(kXSecTwkDial_MaCCQE, MaCCQE, 0.165289256, 0.165289256)                     \
+  /*Tweak elastic nucleon form factors (default/dipole -> BBBA07)*/            \
+  X(kXSecTwkDial_AxlFFCCQE, AxlFFCCQE, NOUNCERT, NOUNCERT)                     \
+  /*Tweak the MDLQE used in the calculation (default is MDLQE = 402)*/         \
+  X(kXSecTwkDial_VecFFCCQE, VecFFCCQE, NOUNCERT, NOUNCERT)                     \
+  /*Tweak vector 2nd class current FF*/                                        \
+  X(kXSecTwkDial_SCCVecQE, SCCVecQE, 1.0, 1.0)                                 \
+  /*Tweak axial 2nd class current FF*/                                         \
+  X(kXSecTwkDial_SCCAxlQE, SCCAxlQE, 1.0, 1.0)                                 \
+  /*Tweak pseudoscalar FF at Q2=0*/                                            \
+  X(kXSecTwkDial_PsFF, PsFF, 0.03, 0.03)                                       \
+  /*dial to do dipole->alternate fa*/                                          \
+  X(kXSecTwkDial_AxlDipToAlt, AxlDipToAlt, NOUNCERT, NOUNCERT)                 \
+  /*2 Component Alpha*/                                                        \
+  X(kXSecTwkDial_FAxlCCQEAlpha, FAxlCCQEAlpha, 0.547374419586, 0.547374419586) \
+  /*2 Component Gamma*/                                                        \
+  X(kXSecTwkDial_FAxlCCQEGamma, FAxlCCQEGamma, 0.276619847554, 0.276619847554) \
+  /*3 Component Beta*/                                                         \
+  X(kXSecTwkDial_FAxlCCQEBeta, FAxlCCQEBeta, 0.164910087277, 0.164910087277)   \
+  /*3 Component Theta*/                                                        \
+  X(kXSecTwkDial_FAxlCCQETheta, FAxlCCQETheta, 0.179147035786, 0.179147035786) \
+  /*N Coeff in ZEx*/                                                           \
+  X(kXSecTwkDial_FAZExp_NTerms, FAZExp_NTerms, NOUNCERT, NOUNCERT)             \
+  /*Q2 Cut of in z definition*/                                                \
+  X(kXSecTwkDial_FAZExp_TCut, FAZExp_TCut, 1.0, 1.0)                           \
+  /*Q2 Optimal Value in z definition*/                                         \
+  X(kXSecTwkDial_FAZExp_T0, FAZExp_T0, 1.0, 1.0)                               \
+  /*Apply Q^{-4} constraint flag*/                                             \
+  X(kXSecTwkDial_FAZExp_Q4Cut, FAZExp_Q4Cut, NOUNCERT, NOUNCERT)               \
+  /*Z-Expansion A0 Co-eff (keep fixed for now)*/                               \
+  X(kXSecTwkDial_FAZExp_A0, FAZExp_A0, 1.0, 1.0)                               \
+  /*Z-Expansion A1 Co-eff*/                                                    \
+  X(kXSecTwkDial_FAZExp_A1, FAZExp_A1, 0.0809326542131, 0.0809326542131)       \
+  /*Z-Expansion A2 Co-eff*/                                                    \
+  X(kXSecTwkDial_FAZExp_A2, FAZExp_A2, 1.44337567298, 1.44337567298)           \
+  /*Z-Expansion A3 Co-eff*/                                                    \
+  X(kXSecTwkDial_FAZExp_A3, FAZExp_A3, 1.00947725152, 1.00947725152)           \
+  /*Z-Expansion A4 Co-eff*/                                                    \
+  X(kXSecTwkDial_FAZExp_A4, FAZExp_A4, 1.77410484897, 1.77410484897)           \
+  /*Z-Expansion A5 Co-eff (keep fixed for now)*/                               \
+  X(kXSecTwkDial_FAZExp_A5, FAZExp_A5, 1.0, 1.0)                               \
+  /*Z-Expansion A6 Co-eff (keep fixed for now)*/                               \
+  X(kXSecTwkDial_FAZExp_A6, FAZExp_A6, 1.0, 1.0)                               \
+  /*Z-Expansion A7 Co-eff (keep fixed for now)*/                               \
+  X(kXSecTwkDial_FAZExp_A7, FAZExp_A7, 1.0, 1.0)                               \
+  /*Z-Expansion A8 Co-eff (keep fixed for now)*/                               \
+  X(kXSecTwkDial_FAZExp_A8, FAZExp_A8, 1.0, 1.0)                               \
+  /*Z-Expansion A9 Co-eff (keep fixed for now)*/                               \
+  X(kXSecTwkDial_FAZExp_A9, FAZExp_A9, 1.0, 1.0)                               \
+  /****************************** SPP dials**** *****************************/ \
+  /*Tweak Ma CCRES, affects d2sigma(CCRES)/dWdQ2 both in shape and*/           \
+  /* normalization*/                                                           \
+  X(kXSecTwkDial_MaRES, MaRES, 0.165289256, 0.165289256)                       \
+  /*Tweak Mv CCRES, affects d2sigma(CCRES)/dWdQ2 both in shape and */          \
+  /* normalization*/                                                           \
+  X(kXSecTwkDial_MvRES, MvRES, 0.119047619, 0.119047619)                       \
+  X(kXSecTwkDial_FFRES, FFRES, NOUNCERT, NOUNCERT)                             \
+  X(kXSecTwkDial_TypeRES, TypeRES, NOUNCERT, NOUNCERT)                         \
+  X(kXSecTwkDial_CA5RES, CA5RES, 0.247524752, 0.247524752)                     \
+  X(kXSecTwkDial_BgSclRES, BgSclRES, 0.153846154, 0.153846154)                 \
+  X(kXSecTwkDial_MaNFFRES, MaNFFRES, 0.157894737, 0.157894737)                 \
+  X(kXSecTwkDial_MvNFFRES, MvNFFRES, 0.119047619, 0.119047619)                 \
+  X(kXSecTwkDial_MaRSRES, MaRSRES, 0.165289256, 0.165289256)                   \
+  X(kXSecTwkDial_MvRSRES, MvRSRES, 0.119047619, 0.119047619)                   \
+  X(kXSecTwkDial_UseSeparateBgSclLMCPiBar, UseSeparateBgSclLMCPiBar, NOUNCERT, \
+    NOUNCERT)                                                                  \
+  /*A logically separate BgScl parameter for low momentum single pion */       \
+  /* events from anti-neutrinos where the pion is below Cherenkov threshold.*/ \
+  X(kXSecTwkDial_BgSclLMCPiBarRES, BgSclLMCPiBarRES, 1, 1)                     \
+  /*Tweak the model of coherent pion production*/                              \
+  X(kXSecTwkDial_NECOHEPI, NECOHEPI, NOUNCERT, NOUNCERT)                       \
+  /*Tweak A1 coef for COH pion production (Berger&Sehgal)*/                    \
+  X(kXSecTwkDial_fA1COHpi, fA1COHpi, 0.10, 0.10)                               \
+  /*Tweak b1 coef for COH pion production (Berger&Sehgal)*/                    \
+  X(kXSecTwkDial_fb1COHpi, fb1COHpi, 0.10, 0.10)                               \
+  /*Tweak Ma for COH pion production*/                                         \
+  X(kXSecTwkDial_MaCOHpi, MaCOHpi, 0.50, 0.50)                                 \
+  /*Tweak R0 for COH pion production*/                                         \
+  X(kXSecTwkDial_R0COHpi, R0COHpi, 0.10, 0.10)                                 \
+  /*Tweak the inclusive DIS CC normalization*/                                 \
+  X(kXSecTwkDial_BYOnOffDIS, BYOnOffDIS, NOUNCERT, NOUNCERT)                   \
+  /*Tweak absorption probability for low energy pions*/                        \
+  X(kCascTwkDial_FrAbs_pi, FrAbs_pi, 0.50, 0.50)                               \
+  /*Tweak inelastic (QE in NEUT) probability for low energy pions*/            \
+  X(kCascTwkDial_FrInelLow_pi, FrInelLow_pi, 0.50, 0.50)                       \
+  /*Tweak charge exchange probability for low energy pions*/                   \
+  X(kCascTwkDial_FrCExLow_pi, FrCExLow_pi, 0.50, 0.50)                         \
+  /*Tweak absorption probability for high energy pions*/                       \
+  X(kCascTwkDial_FrInelHigh_pi, FrInelHigh_pi, 0.30, 0.30)                     \
+  /*Tweak inelastic (QE in NEUT) probability for high energy pions*/           \
+  X(kCascTwkDial_FrCExHigh_pi, FrCExHigh_pi, 0.30, 0.30)                       \
+  /*Tweak charge exchange probability for high energy pions*/                  \
+  X(kCascTwkDial_FrPiProd_pi, FrPiProd_pi, 0.50, 0.50)
 
 namespace neut {
-namespace rew   {
+namespace rew {
+
+#define X(A, B, C, D) A,
 
 typedef enum ENSyst {
 
   kNullSystematic = 0,
 
-  //
-  // Neutrino cross section systematics
-  // 
-  // Note: This list comes from GENIE systematics, many of which are 
-  //       not currently implemented in NEUT (commented out)
-  //
-  //
-
-  // NCEL tweaking parameters:
-  kXSecTwkDial_NormNCEL,          ///< tweak NCEL normalization (energy independent)
-  //kXSecTwkDial_NormNCELenu,       ///< tweak NCEL normalization (maintains dependence on neutrino energy)
-  kXSecTwkDial_MaNCELshape,       ///< tweak Ma NCEL, affects dsigma(NCEL)/dQ2 in shape only (normalized to constant integral). Warning: This overrides kXSecTwkDial_MaNCEL below
-  kXSecTwkDial_1overMaNCEL2,       ///< tweak 1/MaNCEL^2, affects dsigma(NCEL)/dQ2. More symmetric response in cross section when assuming Gaussian errors on this parameter
-  kXSecTwkDial_MaNCEL,            ///< tweak Ma NCEL, affects dsigma(NCEL)/dQ2 both in shape and normalization
-  kXSecTwkDial_AxlFFNCEL,    ///< tweak elastic nucleon form factors (default/dipole -> BBBA07) NOT VALIDATED
-  kXSecTwkDial_VecFFNCEL,    ///< tweak elastic nucleon form factors (default/dipole -> BBBA05)
-  //kXSecTwkDial_VecFFNCELshape,    ///< tweak elastic nucleon form factors (BBA/default -> dipole) - shape only effect of dsigma(NCEL)/dQ2
-  //kXSecTwkDial_EtaNCEL,           ///< tweak NCEL strange axial form factor eta, affects dsigma(NCEL)/dQ2 both in shape and normalization
-
-  // CCQE tweaking parameters:
-  kXSecTwkDial_NormCCQE,          ///< tweak CCQE normalization (energy independent)
-  //kXSecTwkDial_NormCCQEenu,       ///< tweak CCQE normalization (maintains dependence on neutrino energy)
-  kXSecTwkDial_MaCCQEshape,       ///< tweak Ma CCQE, affects dsigma(CCQE)/dQ2 in shape only (normalized to constant integral). Warning: This overrides kXSecTwkDial_MaCCQE below
-  kXSecTwkDial_1overMaCCQE2,       ///< tweak 1/MaCCQE^2, affects dsigma(CCQE)/dQ2. More symmetric response in cross section when assuming Gaussian errors on this parameter
-  kXSecTwkDial_MaCCQE,            ///< tweak Ma CCQE, affects dsigma(CCQE)/dQ2 both in shape and normalization
-  kXSecTwkDial_AxlFFCCQE,    ///< tweak elastic nucleon form factors (default/dipole -> BBBA07) NOT VALIDATED
-  kXSecTwkDial_VecFFCCQE,      ///< tweak the MDLQE used in the calculation (default is MDLQE = 402) 
-/// Note that this affects the default calculation, so should be changed to whatever was used to generate the file.
-  kXSecTwkDial_VecFFCCQE_out,  ///< tweak the MDLQE used to calculate the output. Use in conjunction with kXSecTwkDial_VecFFCCQE for all possibilities.
-  //kXSecTwkDial_VecFFCCQEshape,    ///< tweak elastic nucleon form factors (BBA/default -> dipole) - shape only effect of dsigma(CCQE)/dQ2
-
-  // Axial FF Dials
-  kXSecTwkDial_AxlDipToAlt, ///< Dial for RW to Axial Alt Model (default/dipole -> Alt) (DUPLICATE!)
-  
-  kXSecTwkDial_SCCVecQE,    ///< tweak vector 2nd class current FF
-  kXSecTwkDial_SCCAxlQE,    ///< tweak axial 2nd class current FF
-  kXSecTwkDial_PsFF,    ///< tweak pseudoscalar FF at Q2=0
-
-  // Resonance neutrino-production tweaking parameters:
-
-  kXSecTwkDial_NormRES,         ///< tweak CCRES normalization
-  kXSecTwkDial_MaRES,           ///< tweak Ma CCRES, affects d2sigma(CCRES)/dWdQ2 both in shape and normalization
-  kXSecTwkDial_MaRESshape,      ///< tweak Ma RES, affects d2sigma(RES)/dWdQ2 in shape only (normalized to constant integral)
-  kXSecTwkDial_MvRES,           ///< tweak Mv CCRES, affects d2sigma(CCRES)/dWdQ2 both in shape and normalization
-
-  kXSecTwkDial_FFRES,
-  kXSecTwkDial_TypeRES,
-  kXSecTwkDial_CA5RES,
-  kXSecTwkDial_BgSclRES,
-  kXSecTwkDial_MaNFFRES,
-  kXSecTwkDial_MvNFFRES,
-  kXSecTwkDial_MaRSRES,
-  kXSecTwkDial_MvRSRES,
-
-  kXSecTwkDial_NormCCRES,         ///< tweak CCRES normalization
-  kXSecTwkDial_MaCCRESshape,      ///< tweak Ma CCRES, affects d2sigma(CCRES)/dWdQ2 in shape only (normalized to constant integral)
-  //kXSecTwkDial_MvCCRESshape,      ///< tweak Mv CCRES, affects d2sigma(CCRES)/dWdQ2 in shape only (normalized to constant integral)
-  kXSecTwkDial_MaCCRES,           ///< tweak Ma CCRES, affects d2sigma(CCRES)/dWdQ2 both in shape and normalization
-  kXSecTwkDial_MvCCRES,           ///< tweak Mv CCRES, affects d2sigma(CCRES)/dWdQ2 both in shape and normalization
-
-  kXSecTwkDial_FFCCRES,
-  kXSecTwkDial_TypeCCRES,
-  kXSecTwkDial_CA5CCRES,
-  kXSecTwkDial_BgSclCCRES,
-  kXSecTwkDial_MaNFFCCRES,
-  kXSecTwkDial_MvNFFCCRES,
-  kXSecTwkDial_MaRSCCRES,
-  kXSecTwkDial_MvRSCCRES,
-
-  kXSecTwkDial_NormNCRES,         ///< tweak NCRES normalization
-  kXSecTwkDial_MaNCRESshape,      ///< tweak Ma NCRES, affects d2sigma(NCRES)/dWdQ2 in shape only (normalized to constant integral)
-  //kXSecTwkDial_MvNCRESshape,      ///< tweak Mv NCRES, affects d2sigma(NCRES)/dWdQ2 in shape only (normalized to constant integral)
-  kXSecTwkDial_MaNCRES,           ///< tweak Ma NCRES, affects d2sigma(NCRES)/dWdQ2 both in shape and normalization
-  kXSecTwkDial_MvNCRES,           ///< tweak Mv NCRES, affects d2sigma(NCRES)/dWdQ2 both in shape and normalization
-
-  kXSecTwkDial_FFNCRES,
-  kXSecTwkDial_TypeNCRES,
-  kXSecTwkDial_CA5NCRES,
-  kXSecTwkDial_BgSclNCRES,
-  kXSecTwkDial_MaNFFNCRES,
-  kXSecTwkDial_MvNFFNCRES,
-  kXSecTwkDial_MaRSNCRES,
-  kXSecTwkDial_MvRSNCRES,
-
-  // Coherent pion production tweaking parameters:
-  kXSecTwkDial_NECOHEPI,          ///< tweak the model of coherent pion production
-  kXSecTwkDial_MaCOHpi,           ///< tweak Ma for COH pion production
-  kXSecTwkDial_R0COHpi,           ///< tweak R0 for COH pion production
-  kXSecTwkDial_fA1COHpi,          ///< tweak A1 coef for COH pion production (Berger&Sehgal)
-  kXSecTwkDial_fb1COHpi,          ///< tweak b1 coef for COH pion production (Berger&Sehgal)
-
-  // Non-resonance background tweaking parameters:
-  //kXSecTwkDial_RvpCC1pi,          ///< tweak the 1pi non-RES bkg in the RES region, for v+p CC
-  //kXSecTwkDial_RvpCC2pi,          ///< tweak the 2pi non-RES bkg in the RES region, for v+p CC
-  //kXSecTwkDial_RvpNC1pi,          ///< tweak the 1pi non-RES bkg in the RES region, for v+p NC
-  //kXSecTwkDial_RvpNC2pi,          ///< tweak the 2pi non-RES bkg in the RES region, for v+p NC
-  //kXSecTwkDial_RvnCC1pi,          ///< tweak the 1pi non-RES bkg in the RES region, for v+n CC
-  //kXSecTwkDial_RvnCC2pi,          ///< tweak the 2pi non-RES bkg in the RES region, for v+n CC
-  //kXSecTwkDial_RvnNC1pi,          ///< tweak the 1pi non-RES bkg in the RES region, for v+n NC
-  //kXSecTwkDial_RvnNC2pi,          ///< tweak the 2pi non-RES bkg in the RES region, for v+n NC
-  //kXSecTwkDial_RvbarpCC1pi,       ///< tweak the 1pi non-RES bkg in the RES region, for vbar+p CC
-  //kXSecTwkDial_RvbarpCC2pi,       ///< tweak the 2pi non-RES bkg in the RES region, for vbar+p CC
-  //kXSecTwkDial_RvbarpNC1pi,       ///< tweak the 1pi non-RES bkg in the RES region, for vbar+p NC
-  //kXSecTwkDial_RvbarpNC2pi,       ///< tweak the 2pi non-RES bkg in the RES region, for vbar+p NC
-  //kXSecTwkDial_RvbarnCC1pi,       ///< tweak the 1pi non-RES bkg in the RES region, for vbar+n CC
-  //kXSecTwkDial_RvbarnCC2pi,       ///< tweak the 2pi non-RES bkg in the RES region, for vbar+n CC
-  //kXSecTwkDial_RvbarnNC1pi,       ///< tweak the 1pi non-RES bkg in the RES region, for vbar+n NC
-  //kXSecTwkDial_RvbarnNC2pi,       ///< tweak the 2pi non-RES bkg in the RES region, for vbar+n NC
-  //// DIS tweaking parameters - applied for DIS events with (Q2>Q2o, W>Wo), typically Q2o=1GeV^2, Wo=1.7-2.0GeV
-  //kXSecTwkDial_AhtBY,             ///< tweak the Bodek-Yang model parameter A_{ht} - incl. both shape and normalization effect
-  //kXSecTwkDial_BhtBY,             ///< tweak the Bodek-Yang model parameter B_{ht} - incl. both shape and normalization effect 
-  //kXSecTwkDial_CV1uBY,            ///< tweak the Bodek-Yang model parameter CV1u - incl. both shape and normalization effect 
-  //kXSecTwkDial_CV2uBY,            ///< tweak the Bodek-Yang model parameter CV2u - incl. both shape and normalization effect 
-  //kXSecTwkDial_AhtBYshape,        ///< tweak the Bodek-Yang model parameter A_{ht} - shape only effect to d2sigma(DIS)/dxdy
-  //kXSecTwkDial_BhtBYshape,        ///< tweak the Bodek-Yang model parameter B_{ht} - shape only effect to d2sigma(DIS)/dxdy
-  //kXSecTwkDial_CV1uBYshape,       ///< tweak the Bodek-Yang model parameter CV1u - shape only effect to d2sigma(DIS)/dxdy
-  //kXSecTwkDial_CV2uBYshape,       ///< tweak the Bodek-Yang model parameter CV2u - shape only effect to d2sigma(DIS)/dxdy
-  kXSecTwkDial_NormDIS,         ///< tweak the inclusive DIS CC normalization
-  kXSecTwkDial_BYOnOffDIS,         ///< tweak the inclusive DIS CC normalization
-  //kXSecTwkDial_RnubarnuCC,        ///< tweak the ratio of \sigma(\bar\nu CC) / \sigma(\nu CC)
-  //kXSecTwkDial_DISNuclMod,        ///< tweak DIS nuclear modification (shadowing, anti-shadowing, EMC)
-  //
-  kXSecTwkDial_NC,                ///< tweak the inclusive NC normalization
-
-  // Form Factor Dials
-  kXSecTwkDial_FAxlCCQEAlpha,   ///< 2 Component Alpha
-  kXSecTwkDial_FAxlCCQEGamma,   ///< 2 Component Gamma
-  kXSecTwkDial_FAxlCCQEBeta,    ///< 3 Component Beta
-  kXSecTwkDial_FAxlCCQETheta,   ///< 3 Component Theta
-
-  // Z-Exp Terms
-  kXSecTwkDial_FAZExp_NTerms,  ///< N Coeff in ZExp
-  kXSecTwkDial_FAZExp_TCut,    
-  kXSecTwkDial_FAZExp_T0,
-  kXSecTwkDial_FAZExp_Q4Cut,
-  kXSecTwkDial_FAZExp_A0,
-  kXSecTwkDial_FAZExp_A1,
-  kXSecTwkDial_FAZExp_A2,
-  kXSecTwkDial_FAZExp_A3,
-  kXSecTwkDial_FAZExp_A4,
-  kXSecTwkDial_FAZExp_A5,
-  kXSecTwkDial_FAZExp_A6,
-  kXSecTwkDial_FAZExp_A7,
-  kXSecTwkDial_FAZExp_A8,
-  kXSecTwkDial_FAZExp_A9,
-  
-  //
-  // Hadronization (free nucleon target)
-  // 
-
-  //kHadrAGKYTwkDial_xF1pi,         ///< tweak xF distribution for low multiplicity (N + pi) DIS f/s produced by AGKY
-  //kHadrAGKYTwkDial_pT1pi,         ///< tweak pT distribution for low multiplicity (N + pi) DIS f/s produced by AGKY
-
-
-  //
-  // Medium-effects to hadronization
-  // 
-
-  //kHadrNuclTwkDial_FormZone,         ///< tweak formation zone
-
-
-  //
-  // Intranuclear rescattering systematics.
-  // There are 2 sets of parameters:
-  // - parameters that control the total rescattering probability, P(total)
-  // - parameters that control the fraction of each process (`fate'), given a total rescat. prob., P(fate|total)
-  // These parameters are considered separately for pions and nucleons.
-  //
-
-  kCascTwkDial_FrAbs_pi,       ///< tweak absorption      probability for pions		    
-  kCascTwkDial_FrInelLow_pi,   ///< tweak inelastic (QE in NEUT) probability for low energy pions 
-  kCascTwkDial_FrCExLow_pi,    ///< tweak charge exchange probability for low energy pions	    
-  kCascTwkDial_FrInelHigh_pi,  ///< tweak inelastic (QE in NEUT) probability for high energy pions
-  kCascTwkDial_FrCExHigh_pi,   ///< tweak charge exchange probability for high energy pions	    
-  kCascTwkDial_FrPiProd_pi,    ///< tweak pion (hadron) production (inelastic in NEUT) probability for pions
-  kCascTwkDial_All_pi,         ///< tweak mean free path for pions
-
-  kINukeTwkDial_MFP_N,       ///< tweak mean free path for nucleons
-  //kINukeTwkDial_FrCEx_N,     ///< tweak charge exchange probability for nucleons, for given total rescattering probability
-  //kINukeTwkDial_FrElas_N,    ///< tweak elastic         probability for nucleons, for given total rescattering probability
-  //kINukeTwkDial_FrInel_N,    ///< tweak inelastic       probability for nucleons, for given total rescattering probability
-  //kINukeTwkDial_FrAbs_N,     ///< tweak absorption      probability for nucleons, for given total rescattering probability
-  //kINukeTwkDial_FrPiProd_N,  ///< tweak pion production probability for nucleons, for given total rescattering probability
-
-  //
-  // Nuclear model
-  // 
-
-  kSystNucl_CCQEPauliSupViaKF,   ///<
-  kSystNucl_CCQEFermiSurfMom,   ///<
-  kSystNucl_CCQEBindingEnergy,   ///<
-  //kSystNucl_CCQEMomDistroFGtoSF, ///<
-
-  //
-  // Resonance decays
-  // 
-
-  //kRDcyTwkDial_BR1gamma,        ///< tweak Resonance -> X + gamma branching ratio, eg Delta+(1232) -> p gamma
-  //kRDcyTwkDial_BR1eta,          ///< tweak Resonance -> X + eta   branching ratio, eg N+(1440) -> p eta
-  //kRDcyTwkDial_Theta_Delta2Npi  ///< distort pi angular distribution in Delta -> N + pi
-
-  
-  kSystNucl_PilessDcyRES
-  
-
-  //
-  // Misc
-  // 
-
+  NEUTREWEIGHT_DIAL_LIST
 
 } NSyst_t;
 
+#undef X
 
 class NSyst {
 public:
-  //......................................................................................
-  static string AsString(NSyst_t syst) 
-  {
-    switch(syst) {
-    case ( kXSecTwkDial_NormNCEL         ) : return "NormNCEL";             break;
-      //case ( kXSecTwkDial_NormNCELenu      ) : return "NormNCELenu";          break;
-    case ( kXSecTwkDial_MaNCEL           ) : return "MaNCEL";               break;
-    case ( kXSecTwkDial_MaNCELshape      ) : return "MaNCELshape";          break;
-    case ( kXSecTwkDial_1overMaNCEL2      ) : return "1overMaNCEL2";          break;
-    case ( kXSecTwkDial_AxlFFNCEL   ) : return "AxlFFNCEL";       break;
-    case ( kXSecTwkDial_VecFFNCEL   ) : return "VecFFNCEL";       break;
-      //case ( kXSecTwkDial_VecFFNCELshape   ) : return "VecFFNCELshape";       break;
-      //case ( kXSecTwkDial_EtaNCEL          ) : return "EtaNCEL";              break;
+#define X(A, B, C, D)                                                          \
+  case A:                                                                      \
+    return #B;
 
-    case ( kXSecTwkDial_NormCCQE         ) : return "NormCCQE";             break;
-      //case ( kXSecTwkDial_NormCCQEenu      ) : return "NormCCQEenu";          break;
-    case ( kXSecTwkDial_MaCCQE           ) : return "MaCCQE";               break;
-    case ( kXSecTwkDial_MaCCQEshape      ) : return "MaCCQEshape";          break;
-    case ( kXSecTwkDial_1overMaCCQE2      ) : return "1overMaCCQE2";          break;
-    case ( kXSecTwkDial_AxlFFCCQE     ) : return "AxlFFCCQE";       break;
-    case ( kXSecTwkDial_VecFFCCQE     ) : return "VecFFCCQE";       break;
-    case ( kXSecTwkDial_VecFFCCQE_out ) : return "VecFFCCQE_out";   break;
-      //case ( kXSecTwkDial_VecFFCCQEshape   ) : return "VecFFCCQEshape";       break;
+  static std::string AsString(NSyst_t syst) {
+    switch (syst) {
 
-    case ( kXSecTwkDial_AxlDipToAlt ) : return "AxlDipToAlt"; break;
-            
-    case ( kXSecTwkDial_SCCVecQE   ) : return "SCCVecQE";       break;
-    case ( kXSecTwkDial_SCCAxlQE   ) : return "SCCAxlQE";       break;
-    case ( kXSecTwkDial_PsFF   ) : return "PsFF";       break;
+      NEUTREWEIGHT_DIAL_LIST
 
-
-    case ( kXSecTwkDial_NormRES        ) : return "NormRES";            break;
-    case ( kXSecTwkDial_MaRES          ) : return "MaRES";              break;
-    case ( kXSecTwkDial_MaRESshape     ) : return "MaRESshape";         break;
-    case ( kXSecTwkDial_MvRES          ) : return "MvRES";              break;
-
-    case ( kXSecTwkDial_NormCCRES        ) : return "NormCCRES";            break;
-    case ( kXSecTwkDial_MaCCRESshape     ) : return "MaCCRESshape";         break;
-      //case ( kXSecTwkDial_MvCCRESshape     ) : return "MvCCRESshape";         break;
-    case ( kXSecTwkDial_MaCCRES          ) : return "MaCCRES";              break;
-    case ( kXSecTwkDial_MvCCRES          ) : return "MvCCRES";              break;
-
-    case ( kXSecTwkDial_NormNCRES        ) : return "NormNCRES";            break;
-    case ( kXSecTwkDial_MaNCRESshape     ) : return "MaNCRESshape";         break;
-      //case ( kXSecTwkDial_MvNCRESshape     ) : return "MvNCRESshape";         break;
-    case ( kXSecTwkDial_MaNCRES          ) : return "MaNCRES";              break;
-    case ( kXSecTwkDial_MvNCRES          ) : return "MvNCRES";              break;
-
-    case ( kXSecTwkDial_NECOHEPI         ) : return "NECOHEPI";             break;
-    case ( kXSecTwkDial_MaCOHpi          ) : return "MaCOHpi";              break;
-    case ( kXSecTwkDial_R0COHpi          ) : return "R0COHpi";              break;
-    case ( kXSecTwkDial_fA1COHpi          ) : return "A1COHpi";              break;
-    case ( kXSecTwkDial_fb1COHpi          ) : return "b1COHpi";              break;
-
-      //case ( kXSecTwkDial_RvpCC1pi         ) : return "NonRESBGvpCC1pi";      break;
-      //case ( kXSecTwkDial_RvpCC2pi         ) : return "NonRESBGvpCC2pi";      break;
-      //case ( kXSecTwkDial_RvpNC1pi         ) : return "NonRESBGvpNC1pi";      break;
-      //case ( kXSecTwkDial_RvpNC2pi         ) : return "NonRESBGvpNC2pi";      break;
-      //case ( kXSecTwkDial_RvnCC1pi         ) : return "NonRESBGvnCC1pi";      break;
-      //case ( kXSecTwkDial_RvnCC2pi         ) : return "NonRESBGvnCC2pi";      break;
-      //case ( kXSecTwkDial_RvnNC1pi         ) : return "NonRESBGvnNC1pi";      break;
-      //case ( kXSecTwkDial_RvnNC2pi         ) : return "NonRESBGvnNC2pi";      break;
-      //case ( kXSecTwkDial_RvbarpCC1pi      ) : return "NonRESBGvbarpCC1pi";   break;
-      //case ( kXSecTwkDial_RvbarpCC2pi      ) : return "NonRESBGvbarpCC2pi";   break;
-      //case ( kXSecTwkDial_RvbarpNC1pi      ) : return "NonRESBGvbarpNC1pi";   break;
-      //case ( kXSecTwkDial_RvbarpNC2pi      ) : return "NonRESBGvbarpNC2pi";   break;
-      //case ( kXSecTwkDial_RvbarnCC1pi      ) : return "NonRESBGvbarnCC1pi";   break;
-      //case ( kXSecTwkDial_RvbarnCC2pi      ) : return "NonRESBGvbarnCC2pi";   break;
-      //case ( kXSecTwkDial_RvbarnNC1pi      ) : return "NonRESBGvbarnNC1pi";   break;
-      //case ( kXSecTwkDial_RvbarnNC2pi      ) : return "NonRESBGvbarnNC2pi";   break;
-      //case ( kXSecTwkDial_AhtBY            ) : return "AhtBY";                break;
-      //case ( kXSecTwkDial_BhtBY            ) : return "BhtBY";                break;
-      //case ( kXSecTwkDial_CV1uBY           ) : return "CV1uBY";               break;
-      //case ( kXSecTwkDial_CV2uBY           ) : return "CV2uBY";               break;
-      //case ( kXSecTwkDial_AhtBYshape       ) : return "AhtBYshape";           break;
-      //case ( kXSecTwkDial_BhtBYshape       ) : return "BhtBYshape";           break;
-      //case ( kXSecTwkDial_CV1uBYshape      ) : return "CV1uBYshape";          break;
-      //case ( kXSecTwkDial_CV2uBYshape      ) : return "CV2uBYshape";          break;
-    case ( kXSecTwkDial_NormDIS            ) : return "NormDIS";              break;
-    case ( kXSecTwkDial_BYOnOffDIS            ) : return "ByOnOffDIS";              break;
-      //case ( kXSecTwkDial_RnubarnuCC       ) : return "RnubarnuCC";           break;
-      //case ( kXSecTwkDial_DISNuclMod       ) : return "DISNuclMod";           break;
-    case ( kXSecTwkDial_NC                 ) : return "NC";            break;
-
-    case ( kXSecTwkDial_FAxlCCQEAlpha     ) : return "FAAxlQEAlpha"; break;
-    case ( kXSecTwkDial_FAxlCCQEGamma     ) : return "FAAxlQEGamma"; break;
-    case ( kXSecTwkDial_FAxlCCQEBeta      ) : return "FAAxlQEBeta";  break;
-    case ( kXSecTwkDial_FAxlCCQETheta     ) : return "FAAxlQETheta"; break;
-
-    case ( kXSecTwkDial_FAZExp_NTerms    ) : return "FAZExp_NTerms"; break;
-    case ( kXSecTwkDial_FAZExp_TCut      ) : return "FAZExp_TCut";  break;
-    case ( kXSecTwkDial_FAZExp_T0        ) : return "FAZExp_T0";    break;
-    case ( kXSecTwkDial_FAZExp_Q4Cut     ) : return "FAZExp_Q4Cut"; break;
-    case ( kXSecTwkDial_FAZExp_A0        ) : return "FAZExp_A0";    break;
-    case ( kXSecTwkDial_FAZExp_A1        ) : return "FAZExp_A1";  break;
-    case ( kXSecTwkDial_FAZExp_A2        ) : return "FAZExp_A2";  break;
-    case ( kXSecTwkDial_FAZExp_A3        ) : return "FAZExp_A3";  break;
-    case ( kXSecTwkDial_FAZExp_A4        ) : return "FAZExp_A4";  break;
-    case ( kXSecTwkDial_FAZExp_A5        ) : return "FAZExp_A5";  break;
-    case ( kXSecTwkDial_FAZExp_A6        ) : return "FAZExp_A6";  break;
-    case ( kXSecTwkDial_FAZExp_A7        ) : return "FAZExp_A7";  break;
-    case ( kXSecTwkDial_FAZExp_A8        ) : return "FAZExp_A8";  break;
-    case ( kXSecTwkDial_FAZExp_A9        ) : return "FAZExp_A9";  break;
-	      
-      //case ( kHadrAGKYTwkDial_xF1pi        ) : return "AGKYxF1pi";            break;
-      //case ( kHadrAGKYTwkDial_pT1pi        ) : return "AGKYpT1pi";            break;
-      //case ( kHadrNuclTwkDial_FormZone     ) : return "FormZone";             break;
-    case ( kCascTwkDial_FrAbs_pi           ) : return "FrAbs_pi";             break;
-    case ( kCascTwkDial_FrInelLow_pi       ) : return "FrInelLow_pi";         break;
-    case ( kCascTwkDial_FrCExLow_pi        ) : return "FrCExLow_pi";          break;
-    case ( kCascTwkDial_FrInelHigh_pi      ) : return "FrInelHigh_pi";        break;
-    case ( kCascTwkDial_FrCExHigh_pi       ) : return "FrCExHigh_pi";         break;
-    case ( kCascTwkDial_FrPiProd_pi        ) : return "FrPiProd_pi";          break;
-      //case ( kINukeTwkDial_MFP_N           ) : return "MFP_N";                break;
-      //case ( kINukeTwkDial_FrCEx_N         ) : return "FrCEx_N";              break;
-      //case ( kINukeTwkDial_FrElas_N        ) : return "FrElas_N";             break;
-      //case ( kINukeTwkDial_FrInel_N        ) : return "FrInel_N";             break;
-      //case ( kINukeTwkDial_FrAbs_N         ) : return "FrAbs_N";              break;
-      //case ( kINukeTwkDial_FrPiProd_N      ) : return "FrPiProd_N";           break;
-    case ( kSystNucl_CCQEPauliSupViaKF   ) : return "CCQEPauliSupViaKF";    break;
-    case ( kSystNucl_CCQEFermiSurfMom   ) : return "CCQEFermiSurfMom";    break;
-    case ( kSystNucl_CCQEBindingEnergy   ) : return "CCQEBindingEnergy";    break;
-      //case ( kSystNucl_CCQEMomDistroFGtoSF ) : return "CCQEMomDistroFGtoSF";  break;
-      //case ( kRDcyTwkDial_BR1gamma         ) : return "RDecBR1gamma";         break;
-      //case ( kRDcyTwkDial_BR1eta           ) : return "RDecBR1eta";           break;
-      //case ( kRDcyTwkDial_Theta_Delta2Npi  ) : return "Theta_Delta2Npi";      break;
-
-    default: 
+    default:
       return "-";
     }
-    return "";
   }
- //......................................................................................
- static NSyst_t FromString(string syst)
- {
-   NSyst_t systematics[] = 
-     {
-       kXSecTwkDial_NormNCEL,   
-       //kXSecTwkDial_NormNCELenu,   
-       kXSecTwkDial_MaNCEL,        
-       kXSecTwkDial_MaNCELshape,   
-       kXSecTwkDial_1overMaNCEL2,   
-       kXSecTwkDial_AxlFFNCEL,
-       kXSecTwkDial_VecFFNCEL,
-       //kXSecTwkDial_VecFFNCELshape,
-       //kXSecTwkDial_EtaNCEL,
 
-       kXSecTwkDial_NormCCQE,   
-       //kXSecTwkDial_NormCCQEenu,   
-       kXSecTwkDial_MaCCQE,        
-       kXSecTwkDial_MaCCQEshape,   
-       kXSecTwkDial_1overMaCCQE2,   
-       kXSecTwkDial_AxlFFCCQE,
-       kXSecTwkDial_VecFFCCQE,
-       kXSecTwkDial_VecFFCCQE_out,
+#undef X
 
-       kXSecTwkDial_AxlDipToAlt,
-       
-       //kXSecTwkDial_VecFFCCQEshape,
-       kXSecTwkDial_SCCVecQE,
-       kXSecTwkDial_SCCAxlQE,
-       kXSecTwkDial_PsFF,
+#define X(A, B, C, D)                                                          \
+  else if (syst == #B) {                                                       \
+    return A;                                                                  \
+  }
 
-       kXSecTwkDial_NormRES,
-       kXSecTwkDial_MaRESshape,   
-       kXSecTwkDial_MaRES,      
-       kXSecTwkDial_MvRES,      
+  static NSyst_t FromString(std::string syst) {
 
-       kXSecTwkDial_NormCCRES,    
-       kXSecTwkDial_MaCCRESshape, 
-       //kXSecTwkDial_MvCCRESshape, 
-       kXSecTwkDial_MaCCRES,      
-       kXSecTwkDial_MvCCRES,      
+    if (syst == "Null") {
+      return kNullSystematic;
+    }
+    NEUTREWEIGHT_DIAL_LIST
+    else {
+      throw std::string("Unknown systematic: ") + syst;
+    }
+  }
 
-       kXSecTwkDial_NormNCRES,    
-       kXSecTwkDial_MaNCRESshape, 
-       //kXSecTwkDial_MvNCRESshape, 
-       kXSecTwkDial_MaNCRES,      
-       kXSecTwkDial_MvNCRES, 
-     
-       kXSecTwkDial_NECOHEPI,
-       kXSecTwkDial_MaCOHpi,      
-       kXSecTwkDial_R0COHpi,    
-       kXSecTwkDial_fA1COHpi,      
-       kXSecTwkDial_fb1COHpi,      
-
-       //kXSecTwkDial_RvpCC1pi,   
-       //kXSecTwkDial_RvpCC2pi,   
-       //kXSecTwkDial_RvpNC1pi,    
-       //kXSecTwkDial_RvpNC2pi,     
-       //kXSecTwkDial_RvnCC1pi,     
-       //kXSecTwkDial_RvnCC2pi,     
-       //kXSecTwkDial_RvnNC1pi,     
-       //kXSecTwkDial_RvnNC2pi,     
-       //kXSecTwkDial_RvbarpCC1pi,  
-       //kXSecTwkDial_RvbarpCC2pi,  
-       //kXSecTwkDial_RvbarpNC1pi,  
-       //kXSecTwkDial_RvbarpNC2pi,  
-       //kXSecTwkDial_RvbarnCC1pi,  
-       //kXSecTwkDial_RvbarnCC2pi,  
-       //kXSecTwkDial_RvbarnNC1pi,  
-       //kXSecTwkDial_RvbarnNC2pi,  
-       //kXSecTwkDial_AhtBY,        
-       //kXSecTwkDial_BhtBY,        
-       //kXSecTwkDial_CV1uBY,       
-       //kXSecTwkDial_CV2uBY,       
-       //kXSecTwkDial_AhtBYshape,   
-       //kXSecTwkDial_BhtBYshape,   
-       //kXSecTwkDial_CV1uBYshape,  
-       //kXSecTwkDial_CV2uBYshape,  
-       kXSecTwkDial_NormDIS,    
-       kXSecTwkDial_BYOnOffDIS,    
-       //kXSecTwkDial_RnubarnuCC,   
-       //kXSecTwkDial_DISNuclMod, 
-       kXSecTwkDial_NC,
-
-       kXSecTwkDial_FAxlCCQEAlpha,
-       kXSecTwkDial_FAxlCCQEGamma,
-       kXSecTwkDial_FAxlCCQEBeta,
-       kXSecTwkDial_FAxlCCQETheta,
-
-       // Z-Exp Terms
-       kXSecTwkDial_FAZExp_NTerms,
-       kXSecTwkDial_FAZExp_TCut,
-       kXSecTwkDial_FAZExp_T0,
-       kXSecTwkDial_FAZExp_Q4Cut,
-       kXSecTwkDial_FAZExp_A0,
-       kXSecTwkDial_FAZExp_A1,
-       kXSecTwkDial_FAZExp_A2,
-       kXSecTwkDial_FAZExp_A3,
-       kXSecTwkDial_FAZExp_A4,
-       kXSecTwkDial_FAZExp_A5,
-       kXSecTwkDial_FAZExp_A6,
-       kXSecTwkDial_FAZExp_A7,
-       kXSecTwkDial_FAZExp_A8,
-       kXSecTwkDial_FAZExp_A9,
-       
-       //kHadrAGKYTwkDial_xF1pi,    
-       //kHadrAGKYTwkDial_pT1pi,    
-       //kHadrNuclTwkDial_FormZone, 
-       kCascTwkDial_FrAbs_pi,    
-       kCascTwkDial_FrInelLow_pi,   
-       kCascTwkDial_FrCExLow_pi,    
-       kCascTwkDial_FrInelHigh_pi,   
-       kCascTwkDial_FrCExHigh_pi,    
-       kCascTwkDial_FrPiProd_pi, 
-       //kINukeTwkDial_MFP_N,       
-       //kINukeTwkDial_FrCEx_N,    
-       //kINukeTwkDial_FrElas_N,   
-       //kINukeTwkDial_FrInel_N,   
-       //kINukeTwkDial_FrAbs_N,    
-       //kINukeTwkDial_FrPiProd_N, 
-       kSystNucl_CCQEPauliSupViaKF,   
-       kSystNucl_CCQEFermiSurfMom,   
-       kSystNucl_CCQEBindingEnergy,   
-       //kSystNucl_CCQEMomDistroFGtoSF,
-       //kRDcyTwkDial_BR1gamma,       
-       //kRDcyTwkDial_BR1eta,         
-       //kRDcyTwkDial_Theta_Delta2Npi,
-       kSystNucl_PilessDcyRES,
-       kNullSystematic
-   };
-
-   int isyst=0;
-   while(systematics[isyst]!=kNullSystematic) {
-     if( AsString(systematics[isyst]) == syst ) {
-        return systematics[isyst];
-     }
-     isyst++;
-   }
-
-   return kNullSystematic;
- }
- /*
- //......................................................................................
- static bool IsINukeNuclFateSystematic(NSyst_t syst) 
- {
-   switch(syst) {
-     case ( kINukeTwkDial_FrCEx_N   ) : 
-     case ( kINukeTwkDial_FrElas_N  ) : 
-     case ( kINukeTwkDial_FrInel_N  ) : 
-     case ( kINukeTwkDial_FrAbs_N   ) : 
-     case ( kINukeTwkDial_FrPiProd_N) : 
-        return true;
-        break;
-     default: 
-        return false;
-        break;
-   }
-   return false;
- }
- //......................................................................................
- static bool IsINukeFateSystematic(NSyst_t syst)
- {
-   switch(syst) {
-     case ( kINukeTwkDial_FrCEx_N     ) : 
-     case ( kINukeTwkDial_FrElas_N    ) :
-     case ( kINukeTwkDial_FrInel_N    ) :
-     case ( kINukeTwkDial_FrAbs_N     ) :
-     case ( kINukeTwkDial_FrPiProd_N  ) :
-       return true;
-       break;
-     
-     default:
-       return false;
-       break;
-   }
-   return false;
- }
- //......................................................................................
- static bool IsINukeNuclMeanFreePathSystematic(NSyst_t syst)
- {
-   switch(syst) {
-     case ( kINukeTwkDial_MFP_N  ) : 
-       return true;
-       break;
-     
-     default:
-       return false;
-       break;
-   }
-   return false;
- }
- //......................................................................................
- static bool IsINukeMeanFreePathSystematic(NSyst_t syst)
- {
-   switch(syst) {
-     case ( kINukeTwkDial_MFP_N  ) : 
-       return true;
-       break;
-     
-     default:
-       return false;
-       break;
-   }
-   return false;
- }
- //......................................................................................
- 
- */
+#undef X
 };
 
-} // rew   namespace
-} // neut namespace
+} // namespace rew
+} // namespace neut
 
-#endif 
+// Kind of awful set of macros but standardises the use of common reweight
+// tooling across the reweighter implementations
+#define NSYST_USESDIAL(syst, DN)                                               \
+  if (syst == DN) {                                                            \
+    return true;                                                               \
+  }
+#define NSYST_CATVARNAME(VN, DN) VN##DN
+#define NSYST_CURRVAR(DN) NSYST_CATVARNAME(fCurr, DN)
+#define NSYST_DEFVAR(DN) NSYST_CATVARNAME(fDef, DN)
+#define NSYST_TWKVAR(DN) NSYST_CATVARNAME(fTwk, DN)
+#define NSYST_ISTWKD(DN) bool(NSYST_TWKVAR(DN) > 1E-8)
+#define NSYST_DECLAREDIALVARIABLES(DN)                                         \
+  double NSYST_CURRVAR(DN);                                                    \
+  double NSYST_DEFVAR(DN);                                                     \
+  double NSYST_TWKVAR(DN);
+#define NSYST_SETDEF(DN, def)                                                  \
+  NSYST_DEFVAR(DN) = def;                                                      \
+  NSYST_CURRVAR(DN) = NSYST_DEFVAR(DN);                                        \
+  NSYST_TWKVAR(DN) = 0;
+#define NSYST_UPDATEVALUE(DN, syst, val)                                       \
+  if (syst == DN) {                                                            \
+    NSYST_TWKVAR(DN) = val;                                                    \
+    return;                                                                    \
+  }
+#define NSYST_SETTODEF(DN)                                                     \
+  NSYST_CURRVAR(DN) = NSYST_DEFVAR(DN);                                        \
+  NSYST_TWKVAR(DN) = 0;
+#define NSYST_RECONFCURRVALUE(DN, err)                                         \
+  NSYST_CURRVAR(DN) =                                                          \
+      (1. + NSYST_TWKVAR(DN) *                                                 \
+                err->OneSigmaErr(DN, ((NSYST_TWKVAR(DN) > 0) ? +1 : -1)));
+#define NSYST_RECONFCURRVALUE_NOUNCERT(DN) NSYST_CURRVAR(DN) = NSYST_TWKVAR(DN);
 
+// Unless explicitly asked for (for use in xmacros in other TUs) these should be
+// undefined before the end of this header
+#ifndef NEUTREWEIGHT_LEAVE_DIALS_DEFINED
+#undef NOUNCERT
+#undef NEUTREWEIGHT_DIAL_LIST
+#endif
+
+#endif

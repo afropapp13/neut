@@ -2,11 +2,7 @@ include $(top_srcdir)/build.common
 
 LIBNAME = lib@LIBPREFIX@n1p1h.@NEUT_VERSION_NUM@.a
 
-if NEUT_LIBCOMPAT
 lib_LIBRARIES = $(LIBNAME)
-else
-noinst_LIBRARIES = $(LIBNAME)
-endif
 
 N1p1hDEFINES = -DWITH_NEUT
 

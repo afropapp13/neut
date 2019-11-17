@@ -6,7 +6,7 @@ C#include <f77/f77_floatingpoint.h>
 
 #include "necard.h"
 #include "necardev.h"
-#include "nework.h"      
+#include "nework.h"
 #include "vcwork.h"
 #include "vcvrtx.h"
 #include "posinnuc.h"
@@ -19,8 +19,8 @@ C#include <f77/f77_floatingpoint.h>
       REAL*4    RLU
       external  RLU
 
-      real*4    EVPIPROB
-      external  EVPIPROB
+      DOUBLE PRECISION EVPIPROB
+      external EVPIPROB
 
       INTEGER*4 I,J,IDUM,IERR,N1,N2,IVERT,IVCVERT
 
@@ -91,7 +91,7 @@ C
 
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C-- Initialize ntuple
-      
+
       CALL HLIMIT(ISIZE)
 
       out_fname='sample.hb'
@@ -134,14 +134,14 @@ C--Read card files
       CALL NECARDEV
 
 C--Main loop
-      
+
 C      RMAX = C * 2.5
       RMAX = C * 2.
 
       DO 100 I=1,NEVTEVCT
 
 C      if ( MOD(I,1000).EQ.0 ) WRITE(*,*) 'Processing event: ',I
-        
+
 C--Set vertex
  110     continue
             posv(2)=-RMAX+RLU(IDUM)*RMAX*2.
@@ -164,7 +164,7 @@ C--Set energy
             write(*,*) 'NEUT : MPV is not set to 1 or 2.'
             stop
          endif
-         
+
 
          CALL VCCLCM
          NVC      = 4
@@ -200,23 +200,23 @@ C        -- dummy parameter to pass the check
          IBOUND   = 1
 
 C-- Generate event
-         CALL EFCLFSI 
+         CALL EFCLFSI
 C         CALL NEFFECT
          CALL NRINTR
 
 C --  Fill VCWORK
          NPARVEC=NVC
-         
+
          DO 40 N1=2,NVC
             IPVEC(N1)    = IPVC(N1)
             ICHVEC(N1)   = ICRNVC(N1)
             IORGVEC(N1)  = IORGVC(N1)
             IFLVEC(N1)   = IFLGVC(N1)
-            
+
             ABSPVEC(N1)  = sqrt( PVC(1,N1)**2
      $                          +PVC(2,N1)**2
      $                          +PVC(3,N1)**2)
-            
+
             PVEC(1,N1)   = PVC(1,N1)
             PVEC(2,N1)   = PVC(2,N1)
             PVEC(3,N1)   = PVC(3,N1)
@@ -227,14 +227,14 @@ C --   FILL FSI history
          oNFNVERT=NFnvert
 
          DO 50 IVERT=1,NFnvert
-            oNFiflag(IVERT)     =NFiflag(IVERT)     
-            oNFx(IVERT)         =NFx(IVERT)         
-            oNFy(IVERT)         =NFy(IVERT)         
-            oNFz(IVERT)         =NFz(IVERT)         
-            oNFpx(IVERT)        =NFpx(IVERT)        
-            oNFpy(IVERT)        =NFpy(IVERT)        
-            oNFpz(IVERT)        =NFpz(IVERT)        
-            oNFe(IVERT)         =NFe(IVERT)         
+            oNFiflag(IVERT)     =NFiflag(IVERT)
+            oNFx(IVERT)         =NFx(IVERT)
+            oNFy(IVERT)         =NFy(IVERT)
+            oNFz(IVERT)         =NFz(IVERT)
+            oNFpx(IVERT)        =NFpx(IVERT)
+            oNFpy(IVERT)        =NFpy(IVERT)
+            oNFpz(IVERT)        =NFpz(IVERT)
+            oNFe(IVERT)         =NFe(IVERT)
             oNFfirststep(IVERT) =NFfirststep(IVERT)
  50      CONTINUE
 
@@ -245,7 +245,7 @@ C --   FILL FSI history
             oNFptot(IVCVERT)  = NFptot(IVCVERT)
  60      CONTINUE
 
-         oNUMBNDN = NUMBNDN         
+         oNUMBNDN = NUMBNDN
          oNUMBNDP = NUMBNDP
          oNUMFREP = NUMFREP
          oNUMATOM = NUMATOM

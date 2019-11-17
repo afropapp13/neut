@@ -138,7 +138,7 @@ am__uninstall_files_from_dir = { \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
 am__installdirs = "$(DESTDIR)$(libdir)"
-LIBRARIES = $(lib_LIBRARIES) $(noinst_LIBRARIES)
+LIBRARIES = $(lib_LIBRARIES)
 ARFLAGS = cru
 AM_V_AR = $(am__v_AR_@AM_V@)
 am__v_AR_ = $(am__v_AR_@AM_DEFAULT_V@)
@@ -359,7 +359,7 @@ CERN_ROOT = $(CERN)/$(CERN_LEVEL)
 CERN_LINKFLAGS = -L$(CERN_ROOT)/lib
 CERN_LIBS = -ljetset74 -lpdflib804 -lphotos202 -lmathlib -lpacklib -lkernlib
 NEUT_DEFINES = -DgFortran $(am__append_2) $(am__append_3)
-NEUT_FFLAGS = -fno-backslash -fno-automatic -fno-second-underscore -ffixed-line-length-132 -fdollar-ok -fPIC -fbounds-check -Wall -W -ffpe-trap=invalid,zero,overflow -DstrictF77 -Df2cFortran $(NEUT_DEFINES)
+NEUT_FFLAGS = -fno-backslash -fno-automatic -fno-second-underscore -ffixed-line-length-132 -fdollar-ok -fPIC -fbounds-check -Wall -Wextra -Werror=conversion -ffpe-trap=invalid,zero,overflow -DstrictF77 -Df2cFortran $(NEUT_DEFINES)
 DEFAULT_FFLAGS = $(NEUT_FFLAGS) $(NEUT_INCLUDES) \
 	-I$(CERN_ROOT)/include $(am__append_4) $(am__append_7)
 DEFAULT_CXXFLAGS = -fPIC $(NEUT_DEFINES) $(NEUT_INCLUDES) \
@@ -376,8 +376,7 @@ ROOT_LINKFLAGS = $(shell root-config --ldflags) -pthread -rdynamic -L$(shell roo
 EXE_LINKFLAGS = -fno-PIE -fno-pie -no-pie
 EXE_RTLIBS = -lstdc++ -lgfortran $(am__append_10)
 LIBNAME = lib@LIBPREFIX@ht2p2h.@NEUT_VERSION_NUM@.a
-@NEUT_LIBCOMPAT_TRUE@lib_LIBRARIES = $(LIBNAME)
-@NEUT_LIBCOMPAT_FALSE@noinst_LIBRARIES = $(LIBNAME)
+lib_LIBRARIES = $(LIBNAME)
 AM_CXXFLAGS = -DHT2P2HVER=@NEUT_VERSION_NUM@ $(DEFAULT_CXXFLAGS)
 lib@LIBPREFIX@ht2p2h_@NEUT_VERSION_NUM@_a_SOURCES = src/HadronTensor.C src/HT2p2h.C src/HT2p2hFotranInterface.C src/Nucleus2p2h.C
 
@@ -448,9 +447,6 @@ uninstall-libLIBRARIES:
 
 clean-libLIBRARIES:
 	-test -z "$(lib_LIBRARIES)" || rm -f $(lib_LIBRARIES)
-
-clean-noinstLIBRARIES:
-	-test -z "$(noinst_LIBRARIES)" || rm -f $(noinst_LIBRARIES)
 src/$(am__dirstamp):
 	@$(MKDIR_P) src
 	@: > src/$(am__dirstamp)
@@ -593,7 +589,7 @@ maintainer-clean-generic:
 clean: clean-am
 
 clean-am: clean-generic clean-libLIBRARIES clean-libtool \
-	clean-noinstLIBRARIES mostlyclean-am
+	mostlyclean-am
 
 distclean: distclean-am
 	-rm -rf src/$(DEPDIR)
@@ -665,19 +661,19 @@ uninstall-am: uninstall-libLIBRARIES
 .MAKE: install-am install-exec-am install-strip uninstall-am
 
 .PHONY: all all-am check check-am clean clean-generic \
-	clean-libLIBRARIES clean-libtool clean-noinstLIBRARIES \
-	cscopelist-am ctags-am distclean distclean-compile \
-	distclean-generic distclean-libtool distdir dvi dvi-am html \
-	html-am info info-am install install-am install-data \
-	install-data-am install-dvi install-dvi-am install-exec \
-	install-exec-am install-exec-hook install-html install-html-am \
-	install-info install-info-am install-libLIBRARIES install-man \
-	install-pdf install-pdf-am install-ps install-ps-am \
-	install-strip installcheck installcheck-am installdirs \
-	maintainer-clean maintainer-clean-generic mostlyclean \
-	mostlyclean-compile mostlyclean-generic mostlyclean-libtool \
-	pdf pdf-am ps ps-am tags-am uninstall uninstall-am \
-	uninstall-hook uninstall-libLIBRARIES
+	clean-libLIBRARIES clean-libtool cscopelist-am ctags-am \
+	distclean distclean-compile distclean-generic \
+	distclean-libtool distdir dvi dvi-am html html-am info info-am \
+	install install-am install-data install-data-am install-dvi \
+	install-dvi-am install-exec install-exec-am install-exec-hook \
+	install-html install-html-am install-info install-info-am \
+	install-libLIBRARIES install-man install-pdf install-pdf-am \
+	install-ps install-ps-am install-strip installcheck \
+	installcheck-am installdirs maintainer-clean \
+	maintainer-clean-generic mostlyclean mostlyclean-compile \
+	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
+	tags-am uninstall uninstall-am uninstall-hook \
+	uninstall-libLIBRARIES
 
 .PRECIOUS: Makefile
 

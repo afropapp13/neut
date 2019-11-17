@@ -18,20 +18,20 @@
 
 c ----- neutrino type, energy
         integer IPAR
-        real E
-        real DIRNEU(3)
+        DOUBLE PRECISION E
+        DOUBLE PRECISION DIRNEU(3)
         integer IERR, mode
         logical nc, single, first
 
         integer i
 
-        double precision norm
+        DOUBLE PRECISION norm
         integer nBins
-        double precision electronEnergy(210)
-        double precision muonEnergy(210)
-        double precision tauEnergy(125)
-        
-        double precision mean, maxValue, meanNC(2), maxValueNC(2)
+        DOUBLE PRECISION electronEnergy(210)
+        DOUBLE PRECISION muonEnergy(210)
+        DOUBLE PRECISION tauEnergy(125)
+
+        DOUBLE PRECISION mean, maxValue, meanNC(2), maxValueNC(2)
         integer N_tries
         common /makeTable/ mean, maxValue, N_tries, meanNC, maxValueNC
 
@@ -86,7 +86,7 @@ c ----- if commandline arguments given then read them in
 c ----- run makeTables.exe IPAR(PDG) Nucleus(e.g C12) NC/CC
         if (iargc() .GT. 0) then
           call GETARG(1, argument)
-c ------- neutrino pdg first          
+c ------- neutrino pdg first
           if (argument .EQ. "14") then
             IPAR = 14
           else if (argument .EQ. "-14") then
@@ -148,7 +148,7 @@ c ------- finally, nc
             stop
           endif
         endif
-          
+
 
         write (*,*) "creating maxDiff table"
         write (*,*) "creating total xsec table"
@@ -179,11 +179,11 @@ c ----- set variables in filename - neutrino type, interaction type, target code
 c ----- create output fileNames
 C        write(maxFile, "(A18,A1, I2, A1, I10, A1, A2, A4)")
 C     &  "qelSfData/maxDiff/",sgn,abs(ipar),
-c     &  "_",targ,"_",interaction,".csv" 
+c     &  "_",targ,"_",interaction,".csv"
         write(maxFile, "(A10,F4.2,A9,A1, I2, A1, I10, A1, A2, A4)")
      &       "qelSfData.",XMAQE,"/maxDiff/",sgn,abs(ipar),
-     &       "_",targ,"_",interaction,".csv" 
-        
+     &       "_",targ,"_",interaction,".csv"
+
 C        write (totFile, "(A18,A1, I2, A1, I10, A1, A2, A4)")
 C     &  "qelSfData/totXsec/",sgn,abs(ipar),
 C     &  "_",targ,"_",interaction,".csv"
@@ -194,7 +194,7 @@ C     &  "_",targ,"_",interaction,".csv"
         write (*,"(A1, I2, A1, I10, A1, A2)")
      &  sgn,abs(ipar),"_",targ,"_",interaction
 
-c ----- open files     
+c ----- open files
         open(27, file=maxFile,status="new")
         open(35, file=totFile,status="new")
 
@@ -335,7 +335,7 @@ c ----- pick array for correct neutrino
           else
             E = electronEnergy(i)/1000
           endif
-            
+
           if (nc .EQV..TRUE.) then
             E = i*0.05 - 0.025
           endif
@@ -356,7 +356,7 @@ c            write (*,*) mean*norm*10
             write (35, "(F10.4, F12.6, F12.6)") dble(e), meanNC(1)*
      & norm, meanNC(2)*norm
           endif
-c ----- reset values for next pass          
+c ----- reset values for next pass
           mean = 0
           maxValue = 0
           meanNC(1) = 0
@@ -365,6 +365,6 @@ c ----- reset values for next pass
           maxValueNC(2) = 0
           N_tries = 0
         enddo
-      
+
       stop
       end

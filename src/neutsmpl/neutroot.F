@@ -15,14 +15,14 @@ C#include <f77/f77_floatingpoint.h>
 #include "necardev.h"
 #include "neutmodel.h"
 
-      REAL*4    POS(3),DIR(3),PNEU(3)
-      REAL*4    ENEU
+      DOUBLE PRECISION    POS(3),DIR(3),PNEU(3)
+      DOUBLE PRECISION    ENEU
 
-      REAL*4    rndenuevtrt
-      external  rndenuevtrt
+      DOUBLE PRECISION  rndenuevtrt
+      external          rndenuevtrt
 
-      REAL*4    fntotpau
-      external  fntotpau
+      DOUBLE PRECISION  fntotpau
+      external          fntotpau
 
       INTEGER*4 loadflx,neutfillnorm
       external  loadflx,neutfillnorm

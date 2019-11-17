@@ -5,7 +5,7 @@
  or see $NEUT/LICENSE
 
  Author: Costas Andreopoulos <costas.andreopoulos \at stfc.ac.uk>
-         STFC, Rutherford Appleton Laboratory 
+         STFC, Rutherford Appleton Laboratory
 
  For the class documentation see the corresponding header file.
 
@@ -21,118 +21,96 @@
 
 #include "NSystSet.h"
 
-using std::cout;
-using std::endl;
+namespace neut {
+namespace rew {
 
-using namespace neut;
-using namespace neut::rew;
+NSystSet::NSystSet() {}
 
-//_______________________________________________________________________________________
-NSystSet::NSystSet()
-{
+NSystSet::NSystSet(const NSystSet &syst) { this->Copy(syst); }
 
-}
-//_______________________________________________________________________________________
-NSystSet::NSystSet(const NSystSet & syst)
-{
-  this->Copy(syst);
-}
-//_______________________________________________________________________________________
-NSystSet::~NSystSet()
-{
-  fSystematics.clear();
-}
-//_______________________________________________________________________________________
-void NSystSet::Init(NSyst_t syst, double init, double min, double max, double step)
-{
-  if(syst == kNullSystematic) return;
+NSystSet::~NSystSet() { fSystematics.clear(); }
 
-  if(this->Added(syst)) {
-    this->Remove(syst);    
+void NSystSet::Init(NSyst_t syst, double init, double min, double max,
+                    double step) {
+  if (syst == kNullSystematic)
+    return;
+
+  if (this->Added(syst)) {
+    this->Remove(syst);
   }
 
-  NSystInfo * syst_info = new NSystInfo(init,min,max,step);
-  fSystematics.insert( map<NSyst_t, NSystInfo*>::value_type(syst, syst_info) );     
+  NSystInfo *syst_info = new NSystInfo(init, min, max, step);
+  fSystematics.insert(
+      std::map<NSyst_t, NSystInfo *>::value_type(syst, syst_info));
 }
-//_______________________________________________________________________________________
-void NSystSet::Remove(NSyst_t syst)
-{
-  fSystematics.erase(syst);
-}
-//_______________________________________________________________________________________
-int NSystSet::Size(void) const
-{
-  return fSystematics.size();
-}
-//_______________________________________________________________________________________
-bool NSystSet::Added(NSyst_t syst) const
-{
+
+void NSystSet::Remove(NSyst_t syst) { fSystematics.erase(syst); }
+
+int NSystSet::Size(void) const { return fSystematics.size(); }
+
+bool NSystSet::Added(NSyst_t syst) const {
   return (fSystematics.find(syst) != fSystematics.end());
 }
-//_______________________________________________________________________________________
-vector<neut::rew::NSyst_t> NSystSet::AllIncluded(void)
-{
-  vector<NSyst_t> svec;
 
-  map<NSyst_t, NSystInfo*>::const_iterator it = fSystematics.begin();
-  for( ; it != fSystematics.end(); ++it) {
+std::vector<neut::rew::NSyst_t> NSystSet::AllIncluded(void) {
+  std::vector<NSyst_t> svec;
+
+  std::map<NSyst_t, NSystInfo *>::const_iterator it = fSystematics.begin();
+  for (; it != fSystematics.end(); ++it) {
     NSyst_t syst = it->first;
     svec.push_back(syst);
   }
   return svec;
 }
-//_______________________________________________________________________________________
-const NSystInfo * NSystSet::Info(NSyst_t syst) const
-{
-  if ( this->Added(syst) ) {
+
+const NSystInfo *NSystSet::Info(NSyst_t syst) const {
+  if (this->Added(syst)) {
     return fSystematics.find(syst)->second;
   }
   return 0;
 }
-//_______________________________________________________________________________________
-void NSystSet::Set(NSyst_t syst, double val)
-{
-  if ( this->Added(syst) ) {
-    fSystematics[syst]->CurValue = val;
-  }
-  else {
-    this->Init(syst);
-    this->Set(syst,val);
-  }
-}
-//_______________________________________________________________________________________
-void NSystSet::Print(void)
-{
-  cout 
-     << "Considering " << this->Size() << " systematics";
-				    
-  vector<neut::rew::NSyst_t> svec = this->AllIncluded();
 
-  unsigned int i=0;
-  vector<neut::rew::NSyst_t>::const_iterator it = svec.begin();
-  for( ; it != svec.end(); ++it) {
+void NSystSet::Set(NSyst_t syst, double val) {
+  if (this->Added(syst)) {
+    fSystematics[syst]->CurValue = val;
+  } else {
+    this->Init(syst);
+    this->Set(syst, val);
+  }
+}
+
+void NSystSet::Print(void) {
+  std::cout << "Considering " << this->Size() << " systematics";
+
+  std::vector<neut::rew::NSyst_t> svec = this->AllIncluded();
+
+  unsigned int i = 0;
+  std::vector<neut::rew::NSyst_t>::const_iterator it = svec.begin();
+  for (; it != svec.end(); ++it) {
     NSyst_t syst = *it;
-    cout << "(" << i++ << ") : " << NSyst::AsString(syst);
+    std::cout << "(" << i++ << ") : " << NSyst::AsString(syst);
   }
 }
 //_______________________________________________________________________________________
-void NSystSet::Copy(const NSystSet & syst_set)
-{
+void NSystSet::Copy(const NSystSet &syst_set) {
   return fSystematics.clear();
 
-  map<NSyst_t, NSystInfo*>::const_iterator it = syst_set.fSystematics.begin();
-  for( ; it != syst_set.fSystematics.end(); ++it) {
-    NSyst_t     syst       = it->first;
-    NSystInfo * syst_info  = it->second;
+  std::map<NSyst_t, NSystInfo *>::const_iterator it =
+      syst_set.fSystematics.begin();
+  for (; it != syst_set.fSystematics.end(); ++it) {
+    NSyst_t syst = it->first;
+    NSystInfo *syst_info = it->second;
 
-    double cur  = syst_info->CurValue;
+    double cur = syst_info->CurValue;
     double init = syst_info->InitValue;
-    double min  = syst_info->MinValue;
-    double max  = syst_info->MaxValue;
+    double min = syst_info->MinValue;
+    double max = syst_info->MaxValue;
     double step = syst_info->Step;
 
-    this->Init(syst,init,min,max,step);
-    this->Set(syst,cur);
+    this->Init(syst, init, min, max, step);
+    this->Set(syst, cur);
   }
 }
-//_______________________________________________________________________________________
+
+} // namespace rew
+} // namespace neut

@@ -18,20 +18,20 @@
 
 c ----- neutrino type, energy
         integer IPAR
-        real E
-        real DIRNEU(3)
+        DOUBLE PRECISION E
+        DOUBLE PRECISION DIRNEU(3)
         integer IERR, mode
         logical nc, single, first
 
         integer i
 
-        double precision norm
+        DOUBLE PRECISION norm
         integer nBins
-        double precision electronEnergy(210)
-        double precision muonEnergy(210)
-        double precision tauEnergy(125)
-        
-        double precision mean, maxValue, meanNC(2), maxValueNC(2)
+        DOUBLE PRECISION electronEnergy(210)
+        DOUBLE PRECISION muonEnergy(210)
+        DOUBLE PRECISION tauEnergy(125)
+
+        DOUBLE PRECISION mean, maxValue, meanNC(2), maxValueNC(2)
         integer N_tries
         common /makeEffSFTable/ mean,maxValue,meanNC,maxValueNC, N_tries
 
@@ -87,7 +87,7 @@ c ----- if commandline arguments given then read them in
 c ----- run makeTables.exe IPAR(PDG) Nucleus(e.g C12) NC/CC
         if (iargc() .GT. 0) then
           call GETARG(1, argument)
-c ------- neutrino pdg first          
+c ------- neutrino pdg first
           if (argument .EQ. "14") then
             IPAR = 14
           else if (argument .EQ. "-14") then
@@ -194,7 +194,7 @@ c ------- finally, nc
              MDLQE = 702
           endif
         endif
-          
+
 
         write (*,*) "creating effective SF maxDiff table"
         write (*,*) "creating effective SF total xsec table"
@@ -226,11 +226,11 @@ c ----- create output fileNames
         if (mod(MDLQE,1000)/100 .EQ. 7) then
 C           write(maxFile, "(A23,A1, I2, A1, I10, A1, A2, A4)")
 C     &          "qelSfData/temSFMaxDiff/",sgn,abs(ipar),
-C     &          "_",targ,"_",interaction,".csv" 
+C     &          "_",targ,"_",interaction,".csv"
            write(maxFile, "(A10,F4.2,A14,A1, I2, A1, I10, A1, A2, A4)")
      &          "qelSfData.",XMAQE,"/temSFMaxDiff/",sgn,abs(ipar),
-     &          "_",targ,"_",interaction,".csv" 
-           
+     &          "_",targ,"_",interaction,".csv"
+
 C           write (totFile, "(A23,A1, I2, A1, I10, A1, A2, A4)")
 C     &          "qelSfData/temSFTotXsec/",sgn,abs(ipar),
 C     &          "_",targ,"_",interaction,".csv"
@@ -241,11 +241,11 @@ C     &          "_",targ,"_",interaction,".csv"
         else
 C           write(maxFile, "(A23,A1, I2, A1, I10, A1, A2, A4)")
 C     &          "qelSfData/effSFMaxDiff/",sgn,abs(ipar),
-C     &          "_",targ,"_",interaction,".csv" 
+C     &          "_",targ,"_",interaction,".csv"
            write(maxFile, "(A10,F4.2,A14,A1, I2, A1, I10, A1, A2, A4)")
      &          "qelSfData.",XMAQE,"/effSFMaxDiff/",sgn,abs(ipar),
-     &          "_",targ,"_",interaction,".csv" 
-           
+     &          "_",targ,"_",interaction,".csv"
+
 C           write (totFile, "(A23,A1, I2, A1, I10, A1, A2, A4)")
 C     &          "qelSfData/effSFTotXsec/",sgn,abs(ipar),
 C     &          "_",targ,"_",interaction,".csv"
@@ -253,11 +253,11 @@ C     &          "_",targ,"_",interaction,".csv"
      &          "qelSfData.",XMAQE,"/effSFTotXsec/",sgn,abs(ipar),
      &          "_",targ,"_",interaction,".csv"
         endif
-        
+
         write (*,"(A1, I2, A1, I10, A1, A2)")
      &  sgn,abs(ipar),"_",targ,"_",interaction
 
-c ----- open files     
+c ----- open files
         open(27, file=maxFile,status="new")
         open(35, file=totFile,status="new")
 
@@ -398,7 +398,7 @@ c ----- pick array for correct neutrino
           else
             E = electronEnergy(i)/1000
           endif
-            
+
           if (nc .EQV..TRUE.) then
             E = i*0.05 - 0.025
           endif
@@ -420,7 +420,7 @@ c ----- run calculation
             write (35, "(F10.4, F12.6, F12.6)") dble(e), meanNC(1)*
      & norm, meanNC(2)*norm
           endif
-c ----- reset values for next pass          
+c ----- reset values for next pass
           mean = 0
           maxValue = 0
           meanNC(1) = 0
@@ -429,6 +429,6 @@ c ----- reset values for next pass
           maxValueNC(2) = 0
           N_tries = 0
         enddo
-      
+
       stop
       end

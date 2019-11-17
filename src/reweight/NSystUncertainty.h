@@ -3,7 +3,7 @@
 
 \class    neut::rew::NSystUncertainty
 
-\brief    
+\brief
 
 \author   Costas Andreopoulos <costas.andreopoulos \at stfc.ac.uk>
           STFC, Rutherford Appleton Laboratory
@@ -11,8 +11,8 @@
           Jim Dobson <J.Dobson07 \at imperial.ac.uk>
           Imperial College London
 
-	  Patrick de Perio <pdeperio \at physics.utoronto.ca>
-	  University of Toronto
+          Patrick de Perio <pdeperio \at physics.utoronto.ca>
+          University of Toronto
 
 \created  Sep 1, 2009
 
@@ -25,50 +25,36 @@
 #ifndef _N_SYST_UNCERTAINTY_H_
 #define _N_SYST_UNCERTAINTY_H_
 
-#include <map>
 #include "NSyst.h"
 
-using std::map;
+#include <map>
 
 namespace neut {
-namespace rew   {
+namespace rew {
 
 class NSystUncertainty {
 
-public:  
-  static NSystUncertainty * Instance (void);
+public:
+  static NSystUncertainty *Instance(void);
 
-  double OneSigmaErr    (NSyst_t syst, int sign=0) const;
-  void   SetUncertainty (NSyst_t syst, double plus_err, double minus_err);
-  void   GetUncertainty (NSyst_t syst, double& plus_err, double& minus_err);
+  double OneSigmaErr(NSyst_t syst, int sign = 0) const;
+  void SetUncertainty(NSyst_t syst, double plus_err, double minus_err);
+  void GetUncertainty(NSyst_t syst, double &plus_err, double &minus_err);
 
 private:
-
   void SetDefaults(void);
 
-  map<NSyst_t, double> fOneSigPlusErrMap; // + err
-  map<NSyst_t, double> fOneSigMnusErrMap; // - err
+  std::map<NSyst_t, double> fOneSigPlusErrMap; // + err
+  std::map<NSyst_t, double> fOneSigMnusErrMap; // - err
 
   NSystUncertainty();
-  NSystUncertainty(const NSystUncertainty & err);
- ~NSystUncertainty();
-  
-  static NSystUncertainty * fInstance;
+  NSystUncertainty(const NSystUncertainty &err);
+  ~NSystUncertainty();
 
-  struct Cleaner {
-      void DummyMethodAndSilentCompiler() { }
-      ~Cleaner() {
-         if (NSystUncertainty::fInstance !=0) {
-            delete NSystUncertainty::fInstance;
-            NSystUncertainty::fInstance = 0;
-         }
-      }
-  };
-  friend struct Cleaner;
+  static NSystUncertainty *fInstance;
 };
 
-} // rew   namespace
-} // neut namespace
+} // namespace rew
+} // namespace neut
 
-#endif 
-
+#endif
