@@ -42,10 +42,13 @@ C    RATN   : NEUTRON RATIO IN TARGET
 C    RATP   : PROTON RATIO IN TARGET
 C    RATFRE : FREE PROTON RATIO IN TARGET
 C
+      IMPLICIT NONE
 #include "necard.h"
 #include "neutmodel.h"
 
-      REAL MOLECULE
+      DOUBLE PRECISION E, RATN, RATP, RATFRE, MOLECULE
+      INTEGER*4 IPAR
+
 #ifdef UPMU_RCK
       DATA RATN/0.5/
       DATA RATP/0.5/
@@ -58,6 +61,10 @@ C     NUMBNDN, NUMBNDN etc. are set in necard (2007 Nov G.Mitsuka)
       RATFRE=float(NUMFREP)/float(NUMBNDN+NUMBNDP+NUMFREP)
       MOLECULE=float(NUMBNDN+NUMBNDP+NUMFREP)
 #endif
+
+      WRITE(*,*) "E: ", E
+      STOP
+
 
 C     --ENERGY UPPER LIMIT FOR 1PI
       IF(E.LE.1000.) THEN

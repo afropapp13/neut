@@ -19,11 +19,11 @@
       IMPLICIT NONE
 
 #include "necardbm.h"
+#include "cardname.h"
 
-      CHARACTER*80 FCARD
       CHARACTER*40 TMPFIL, COMMAND
       INTEGER*4 IRET
-      
+
 
 C --  Initialize
 
@@ -40,17 +40,13 @@ C-- Detector ID ( ND 1 to X, SK = 0 )
       IDBMDET  = -2
 C-- Maximum Radius ( maybe limited by the flux ) in cm
       BMRADMX = 0.
-      
+
 C --- get card file name (1st argument of the program)
 
       WRITE(6,*)
-      IF (IARGC() .GE. 1) THEN
-         CALL GETARG(1, FCARD)
-      ELSE
-         FCARD = 'neut.card'
-      END IF
+      CALL RESOLVECARDNAME
       WRITE(6,*) '======= CONFIGURATION FOR ATMPD VECT ======='
-      WRITE(6,*) 'NEUT(NEBM) card file you read is ',FCARD
+      WRITE(6,*) 'NEUT(NEBM) card file you read is ', FCARD(1:LEN_TRIM(FCARD))
 
 C -- extract NEUT card
 
@@ -87,7 +83,7 @@ C -- extract NEUT card
       else
          WRITE(6,*) 'NECARDBM : FLUX FLAVOR =',IDBMFLX
       endif
-      
+
       IF ((ABS(IDBMPID).ne.12).and.(ABS(IDBMPID).ne.14)) then
          WRITE(6,*) 'NECARDBM : INVALID particle ',IDBMPID,
      $        ' was specified.'

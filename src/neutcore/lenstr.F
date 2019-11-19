@@ -28,6 +28,3 @@
       lenstr  = i - 1
       return
       end
-      
-      
-      

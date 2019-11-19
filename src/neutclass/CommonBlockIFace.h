@@ -1,9 +1,11 @@
-#ifndef _N_FORTFNS_H_
-#define _N_FORTFNS_H_
+#ifndef _N_COMMONBLOCKIFACE_H_
+#define _N_COMMONBLOCKIFACE_H_
 
 #include "necardC.h"
 #include "neutmodelC.h"
 #include "neutparamsC.h"
+
+#include "neutvect.h"
 
 #include <string>
 
@@ -16,7 +18,6 @@ double evpiprob_();
 }
 
 namespace neut {
-namespace rew {
 
 inline double NEUTGetXSec() { return evdifcrs_(); }
 inline double NEUTGetPiCascProb() { return evpiprob_(); }
@@ -55,10 +56,19 @@ public:
   static CommonBlockIFace const &Get();
 
   void ResetGenValues() const;
-  std::string ToString() const;
+
+  // Reads event properties straight into the common blocks
+  static void ReadNEWORK(NeutVect *);
+  static void ReadVCWORK(NeutVect *);
+  static void ReadPOSINNUC(NeutVect *);
+  static void ReadNEUTCRS(NeutVect *);
+  static void ReadFSIHIST(NeutVect *);
+  static void ReadNUCLEONFSIHIST(NeutVect *);
+  static void ReadVect(NeutVect *);
+
+  static std::string ParamsToString(bool isinstance = false);
 };
 
-} // namespace rew
 } // namespace neut
 
 #endif

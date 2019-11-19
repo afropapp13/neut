@@ -5,27 +5,22 @@ C#include "nesolact.h"
 
       IMPLICIT NONE
 
-      REAL*4 COST,PHI
-      REAL*4    POS(3),DIR(3)
+      DOUBLE PRECISION COST,PHI
+      DOUBLE PRECISION    POS(3),DIR(3)
 
-      real*4     ENERGY
+      DOUBLE PRECISION     ENERGY
       INTEGER*4  IPAR
 
       INTEGER*4  IPRTBL(4)
       DATA IPRTBL/  14, -14,  12, -12 /
 
       integer i,j
-C      EXTERNAL FNELSPAU,FNELSCRN,FNELSPAN,RSSPICRS,
-C     $         RSETCRS,RSSKCRS,FNELSCRS,FNAPICRS,cohcrsne
-C      REAL*4   FNELSPAU,FNELSCRN,FNELSPAN,RSSPICRS,
-C     $         RSETCRS,RSSKCRS,FNELSCRS,fnapicrs,cohcrsne
-C      REAL*4   R1314
 
       EXTERNAL FNTOTPAU
-      REAL*4   FNTOTPAU
+      DOUBLE PRECISION FNTOTPAU
 
-      REAL*4   TCRS(4)
-          
+      DOUBLE PRECISION   TCRS(4)
+
       character*80 FILENAME
       FILENAME='totpau.tbl'
 
@@ -65,5 +60,3 @@ C
 C      write(*,*) "RMARIN: Dummy routine"
 C      return
 C      end
-
-      

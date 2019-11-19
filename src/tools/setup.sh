@@ -51,7 +51,7 @@ fi
 
 export NEUT=${SETUPDIR}
 export NEUT_CARDS=${SETUPDIR}/share/neut/Cards
-export NEUT_CRSDAT=${SETUPDIR}/share/neut/crsdat
+export NEUT_CRSPATH=${SETUPDIR}/share/neut/crsdat
 
 add_to_PATH ${NEUT}/bin
 add_to_LD_LIBRARY_PATH ${NEUT}/lib

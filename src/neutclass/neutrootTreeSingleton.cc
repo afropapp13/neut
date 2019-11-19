@@ -5,7 +5,10 @@
 
 NeutrootTreeSingleton *NeutrootTreeSingleton::fInstance = 0;
 NeutrootTreeSingleton::NeutrootTreeSingleton() {}
-NeutrootTreeSingleton::~NeutrootTreeSingleton() { fInstance = 0; }
+NeutrootTreeSingleton::~NeutrootTreeSingleton() {
+  delete tree_neutroot;
+  fInstance = 0;
+}
 
 NeutrootTreeSingleton &
 NeutrootTreeSingleton::Initialize(std::string const &filename) {
@@ -84,6 +87,13 @@ Int_t NeutrootTreeSingleton::GetEntry(Long64_t entry, Int_t getall) {
   }
 
   return nbytes;
+}
+Long64_t NeutrootTreeSingleton::GetEntries() {
+  if (!tree_neutroot) {
+    throw std::runtime_error(
+        "[ERROR] NeutrootTreeSingleton::GetEntries(): tree_neutroot is NULL");
+  }
+  return tree_neutroot->GetEntries();
 }
 
 NeutVect *NeutrootTreeSingleton::GetNeutVectAddress() {

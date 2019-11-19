@@ -3,7 +3,7 @@ include $(top_srcdir)/build.common
 AM_CXXFLAGS = -DNEUTCLASSVER=@NEUT_VERSION_NUM@ $(DEFAULT_CXXFLAGS)
 AM_LDFLAGS = $(ROOT_LINKFLAGS) $(DEFAULT_LINKFLAGS)
 
-NEUTCLASSUTILS_SRCS = neutrootfortwrapper.cc NeutRootHandlers.cc neutrootTreeSingleton.cc neutfill.cc fill_dsdq2.cc
+NEUTCLASSUTILS_SRCS = neutrootfortwrapper.cc NeutRootHandlers.cc neutrootTreeSingleton.cc neutfill.cc fill_dsdq2.cc CommonBlockIFace.cc
 
 ######### ROOT Standalone I/O library
 
@@ -102,7 +102,7 @@ endif
 BUILT_SOURCES = neutclassDict.cc
 CLEANFILES = $(BUILT_SOURCES)
 
-include_HEADERS = neutctrl.h neutfsipart.h neutfsivert.h neutnucfsistep.h neutnucfsivert.h neutpart.h NeutRootHandlers.h neutrootTreeSingleton.h neutvect.h neutvtx.h
+include_HEADERS = neutctrl.h neutfsipart.h neutfsivert.h neutnucfsistep.h neutnucfsivert.h neutpart.h NeutRootHandlers.h neutrootTreeSingleton.h neutvect.h neutvtx.h CommonBlockIFace.h
 
 lib_LTLIBRARIES = libNEUTClass.la
 

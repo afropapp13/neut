@@ -12,7 +12,7 @@ lib_LIBRARIES = $(LIBNAME)
 
 # Don't seem to be able to have canonical names easily build from makefile variables, this is ugly, but works
 
-SRCLIST = NReWeightCasc.cc NReWeightNuXSecCCQE.cc NReWeight.cc CommonBlockIFace.cc NSystSet.cc NSystUncertainty.cc
+SRCLIST = NReWeightCasc.cc NReWeightNuXSecCCQE.cc NReWeightFactory.cc NReWeight.cc NSystSet.cc NSystUncertainty.cc
 
 if NEUT_LIBCOMPAT
 libNReWeight_@NEUT_VERSION_NUM@_a_SOURCES = $(SRCLIST)
@@ -20,7 +20,7 @@ else
 libNEUTReWeight_@NEUT_VERSION_NUM@_a_SOURCES = $(SRCLIST)
 endif
 
-include_HEADERS = CommonBlockIFace.h NModeDefn.h NReWeightCasc.h NReWeight.h NReWeightI.h NReWeightNuclPiless.h NReWeightNuXSecCCQE.h NReWeightNuXSecCOH.h NReWeightNuXSecDIS.h NReWeightNuXSecNCEL.h NReWeightNuXSecRES.h NSyst.h NSystSet.h NSystUncertainty.h PDGCodes.h
+include_HEADERS = NModeDefn.h NReWeightCasc.h NReWeightNuclPiless.h NReWeightNuXSecCCQE.h NReWeightNuXSecCOH.h NReWeightNuXSecDIS.h NReWeightNuXSecNCEL.h NReWeightNuXSecRES.h NReWeightFactory.h NReWeight.h NReWeightI.h NSyst.h NSystSet.h NSystUncertainty.h PDGCodes.h
 
 # Unused sources that live in the directory
 UNUSED_srcs = NReWeightNuclPiless.cc NReWeightNuXSecCCRES.cc NReWeightNuXSecCOH.cc NReWeightNuXSecDIS.cc NReWeightNuXSecNCEL.cc

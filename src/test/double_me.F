@@ -12,6 +12,6 @@
 
       REAL FUNCTION double_me_auto(argin)
         REAL argin
-        double_me_f = argin * 2
+        double_me_auto = argin * 2
         RETURN
       END

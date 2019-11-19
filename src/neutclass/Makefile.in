@@ -153,10 +153,12 @@ libNEUTClassUtils_@NEUT_VERSION_NUM@_a_AR = $(AR) $(ARFLAGS)
 libNEUTClassUtils_@NEUT_VERSION_NUM@_a_LIBADD =
 am__libNEUTClassUtils_@NEUT_VERSION_NUM@_a_SOURCES_DIST =  \
 	neutrootfortwrapper.cc NeutRootHandlers.cc \
-	neutrootTreeSingleton.cc neutfill.cc fill_dsdq2.cc
+	neutrootTreeSingleton.cc neutfill.cc fill_dsdq2.cc \
+	CommonBlockIFace.cc
 am__objects_1 = neutrootfortwrapper.$(OBJEXT) \
 	NeutRootHandlers.$(OBJEXT) neutrootTreeSingleton.$(OBJEXT) \
-	neutfill.$(OBJEXT) fill_dsdq2.$(OBJEXT)
+	neutfill.$(OBJEXT) fill_dsdq2.$(OBJEXT) \
+	CommonBlockIFace.$(OBJEXT)
 @NEUT_LIBCOMPAT_FALSE@am_libNEUTClassUtils_@NEUT_VERSION_NUM@_a_OBJECTS =  \
 @NEUT_LIBCOMPAT_FALSE@	$(am__objects_1)
 libNEUTClassUtils_@NEUT_VERSION_NUM@_a_OBJECTS =  \
@@ -218,12 +220,13 @@ libneutpart_la_OBJECTS = $(am_libneutpart_la_OBJECTS)
 libneutrootTreeSingleton_la_LIBADD =
 am__libneutrootTreeSingleton_la_SOURCES_DIST = neutrootfortwrapper.cc \
 	NeutRootHandlers.cc neutrootTreeSingleton.cc neutfill.cc \
-	fill_dsdq2.cc
+	fill_dsdq2.cc CommonBlockIFace.cc
 am__objects_2 = libneutrootTreeSingleton_la-neutrootfortwrapper.lo \
 	libneutrootTreeSingleton_la-NeutRootHandlers.lo \
 	libneutrootTreeSingleton_la-neutrootTreeSingleton.lo \
 	libneutrootTreeSingleton_la-neutfill.lo \
-	libneutrootTreeSingleton_la-fill_dsdq2.lo
+	libneutrootTreeSingleton_la-fill_dsdq2.lo \
+	libneutrootTreeSingleton_la-CommonBlockIFace.lo
 @NEUT_LIBCOMPAT_TRUE@am_libneutrootTreeSingleton_la_OBJECTS =  \
 @NEUT_LIBCOMPAT_TRUE@	$(am__objects_2)
 libneutrootTreeSingleton_la_OBJECTS =  \
@@ -308,7 +311,7 @@ DATA = $(pcm_DATA)
 am__include_HEADERS_DIST = neutctrl.h neutfsipart.h neutfsivert.h \
 	neutnucfsistep.h neutnucfsivert.h neutpart.h \
 	NeutRootHandlers.h neutrootTreeSingleton.h neutvect.h \
-	neutvtx.h
+	neutvtx.h CommonBlockIFace.h
 HEADERS = $(include_HEADERS)
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
 # Read a list of newline-separated strings from the standard input,
@@ -490,7 +493,7 @@ CERN_ROOT = $(CERN)/$(CERN_LEVEL)
 CERN_LINKFLAGS = -L$(CERN_ROOT)/lib
 CERN_LIBS = -ljetset74 -lpdflib804 -lphotos202 -lmathlib -lpacklib -lkernlib
 NEUT_DEFINES = -DgFortran $(am__append_2) $(am__append_3)
-NEUT_FFLAGS = -fno-backslash -fno-automatic -fno-second-underscore -ffixed-line-length-132 -fdollar-ok -fPIC -fbounds-check -Wall -Wextra -Werror=conversion -ffpe-trap=invalid,zero,overflow -DstrictF77 -Df2cFortran $(NEUT_DEFINES)
+NEUT_FFLAGS = -fno-backslash -fno-automatic -fno-second-underscore -ffixed-line-length-132 -fdollar-ok -fPIC -fbounds-check -Wall -Wextra -ffpe-trap=invalid,zero,overflow -DstrictF77 -Df2cFortran $(NEUT_DEFINES)
 DEFAULT_FFLAGS = $(NEUT_FFLAGS) $(NEUT_INCLUDES) \
 	-I$(CERN_ROOT)/include $(am__append_4) $(am__append_7)
 DEFAULT_CXXFLAGS = -fPIC $(NEUT_DEFINES) $(NEUT_INCLUDES) \
@@ -508,7 +511,7 @@ EXE_LINKFLAGS = -fno-PIE -fno-pie -no-pie
 EXE_RTLIBS = -lstdc++ -lgfortran $(am__append_10)
 AM_CXXFLAGS = -DNEUTCLASSVER=@NEUT_VERSION_NUM@ $(DEFAULT_CXXFLAGS)
 AM_LDFLAGS = $(ROOT_LINKFLAGS) $(DEFAULT_LINKFLAGS)
-NEUTCLASSUTILS_SRCS = neutrootfortwrapper.cc NeutRootHandlers.cc neutrootTreeSingleton.cc neutfill.cc fill_dsdq2.cc
+NEUTCLASSUTILS_SRCS = neutrootfortwrapper.cc NeutRootHandlers.cc neutrootTreeSingleton.cc neutfill.cc fill_dsdq2.cc CommonBlockIFace.cc
 @NEUT_LIBCOMPAT_FALSE@@ROOT_MAJOR_IS_SIX_TRUE@pcmdir = $(prefix)/lib
 @NEUT_LIBCOMPAT_TRUE@@ROOT_MAJOR_IS_SIX_TRUE@pcmdir = $(prefix)/lib
 @NEUT_LIBCOMPAT_FALSE@@ROOT_MAJOR_IS_SIX_TRUE@pcm_DATA = neutclassDict_rdict.pcm
@@ -532,7 +535,7 @@ NEUTCLASSUTILS_SRCS = neutrootfortwrapper.cc NeutRootHandlers.cc neutrootTreeSin
 @NEUT_LIBCOMPAT_FALSE@NEUTCLASSHEADERS = neutctrl.h neutfsipart.h neutfsivert.h neutnucfsistep.h neutnucfsivert.h neutpart.h neutvect.h neutvtx.h
 @NEUT_LIBCOMPAT_FALSE@BUILT_SOURCES = neutclassDict.cc
 @NEUT_LIBCOMPAT_FALSE@CLEANFILES = $(BUILT_SOURCES)
-@NEUT_LIBCOMPAT_FALSE@include_HEADERS = neutctrl.h neutfsipart.h neutfsivert.h neutnucfsistep.h neutnucfsivert.h neutpart.h NeutRootHandlers.h neutrootTreeSingleton.h neutvect.h neutvtx.h
+@NEUT_LIBCOMPAT_FALSE@include_HEADERS = neutctrl.h neutfsipart.h neutfsivert.h neutnucfsistep.h neutnucfsivert.h neutpart.h NeutRootHandlers.h neutrootTreeSingleton.h neutvect.h neutvtx.h CommonBlockIFace.h
 @NEUT_LIBCOMPAT_FALSE@libNEUTClass_la_SOURCES = neutclassDict.cc neutctrl.cc neutfsipart.cc neutfsivert.cc neutnucfsistep.cc neutnucfsivert.cc neutpart.cc neutvect.cc neutvtx.cc
 #
 @NEUT_LIBCOMPAT_FALSE@LIBNAME = libNEUTClassUtils.@NEUT_VERSION_NUM@.a
@@ -686,8 +689,10 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/CommonBlockIFace.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NeutRootHandlers.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fill_dsdq2.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libneutrootTreeSingleton_la-CommonBlockIFace.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libneutrootTreeSingleton_la-NeutRootHandlers.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libneutrootTreeSingleton_la-fill_dsdq2.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libneutrootTreeSingleton_la-neutfill.Plo@am__quote@
@@ -772,6 +777,13 @@ libneutrootTreeSingleton_la-fill_dsdq2.lo: fill_dsdq2.cc
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='fill_dsdq2.cc' object='libneutrootTreeSingleton_la-fill_dsdq2.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libneutrootTreeSingleton_la_CXXFLAGS) $(CXXFLAGS) -c -o libneutrootTreeSingleton_la-fill_dsdq2.lo `test -f 'fill_dsdq2.cc' || echo '$(srcdir)/'`fill_dsdq2.cc
+
+libneutrootTreeSingleton_la-CommonBlockIFace.lo: CommonBlockIFace.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libneutrootTreeSingleton_la_CXXFLAGS) $(CXXFLAGS) -MT libneutrootTreeSingleton_la-CommonBlockIFace.lo -MD -MP -MF $(DEPDIR)/libneutrootTreeSingleton_la-CommonBlockIFace.Tpo -c -o libneutrootTreeSingleton_la-CommonBlockIFace.lo `test -f 'CommonBlockIFace.cc' || echo '$(srcdir)/'`CommonBlockIFace.cc
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libneutrootTreeSingleton_la-CommonBlockIFace.Tpo $(DEPDIR)/libneutrootTreeSingleton_la-CommonBlockIFace.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='CommonBlockIFace.cc' object='libneutrootTreeSingleton_la-CommonBlockIFace.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libneutrootTreeSingleton_la_CXXFLAGS) $(CXXFLAGS) -c -o libneutrootTreeSingleton_la-CommonBlockIFace.lo `test -f 'CommonBlockIFace.cc' || echo '$(srcdir)/'`CommonBlockIFace.cc
 
 mostlyclean-libtool:
 	-rm -f *.lo

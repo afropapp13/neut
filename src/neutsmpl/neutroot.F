@@ -137,6 +137,7 @@ C--Set direction
 C--Set energy
          IRETRY = 0
  30      continue
+
          if (MPVEVCT.eq.1) then
             ENEU=PVEVCT(1)
          else if (MPVEVCT.eq.2) then
@@ -149,6 +150,7 @@ C--Draw ENEU from event rate (flux*cross-section) distribution
             write(*,*) 'NEUT : MPV is not set to 1, 2 or 3.'
             stop
          endif
+
          if (fntotpau(IDPTEVCT,ENEU/1000.).le.1.e-7) then
             IRETRY = IRETRY + 1
             if (IRETRY .gt. 100000) then

@@ -8,6 +8,9 @@
       real*4     ranf
       external   ranf
 
+      integer*4      LENSTR
+      external       lenstr
+
       INTEGER*4  ISEED
       INTEGER*4  ISEED1,ISEED2,istau1,istau2,istau3
       CHARACTER*80 RANFILE
@@ -16,7 +19,14 @@
 
 
       call getenv('RANFILE',ranfile)
-      write(*,*) "Now opening random seed file(",ranfile,")"
+
+*     Generate a new seed if the ranfile isn't set.
+      IF (LENSTR(ranfile) .EQ. 0) THEN
+        CALL NEGENSEED
+        RETURN
+      endif
+
+      write(*,*) "Now opening random seed file(",ranfile,", len = ",LEN(ranfile),")"
       open(unit=99,file=ranfile,status='unknown')
       READ(99,*) ISEED1,ISEED2,istau1,istau2,istau3
 

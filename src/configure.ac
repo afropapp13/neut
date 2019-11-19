@@ -129,6 +129,7 @@ AC_CONFIG_FILES([
   nuclsmpl/Makefile
   pionsmpl/Makefile
   neutgeom/Makefile
+  escat/Makefile
   reweight/Makefile
   tools/Makefile
   neututils/Makefile

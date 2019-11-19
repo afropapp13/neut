@@ -187,8 +187,8 @@ am__lib@LIBPREFIX@neutcore_@NEUT_VERSION_NUM@_a_SOURCES_DIST =  \
 	nudeex_n.F rsifl4g.F fnelspau_intpol.F neelsspf.F nudeex_org.F \
 	rsifl5.F fnelspau_select.F neelsspff.F nudeex_p.F rsifl6.F \
 	structg.f bbba07.cc fa3comp.cc fazexp.cc ddifnerein.c \
-	qedifcrs.c nemechad.F nemeclpv.F nemecvcp.F neranbll2.F \
-	fnmec_nieves.F fnmec_select.F
+	qedifcrs.c resolvecardname.F nemechad.F nemeclpv.F nemecvcp.F \
+	neranbll2.F fnmec_nieves.F fnmec_select.F
 @NEUT_LIBCOMPAT_TRUE@am__objects_1 = nemechad.$(OBJEXT) \
 @NEUT_LIBCOMPAT_TRUE@	nemeclpv.$(OBJEXT) nemecvcp.$(OBJEXT) \
 @NEUT_LIBCOMPAT_TRUE@	neranbll2.$(OBJEXT) \
@@ -265,7 +265,8 @@ am_lib@LIBPREFIX@neutcore_@NEUT_VERSION_NUM@_a_OBJECTS =  \
 	fnelspau_select.$(OBJEXT) neelsspff.$(OBJEXT) \
 	nudeex_p.$(OBJEXT) rsifl6.$(OBJEXT) structg.$(OBJEXT) \
 	bbba07.$(OBJEXT) fa3comp.$(OBJEXT) fazexp.$(OBJEXT) \
-	ddifnerein.$(OBJEXT) qedifcrs.$(OBJEXT) $(am__objects_1)
+	ddifnerein.$(OBJEXT) qedifcrs.$(OBJEXT) \
+	resolvecardname.$(OBJEXT) $(am__objects_1)
 lib@LIBPREFIX@neutcore_@NEUT_VERSION_NUM@_a_OBJECTS =  \
 	$(am_lib@LIBPREFIX@neutcore_@NEUT_VERSION_NUM@_a_OBJECTS)
 AM_V_P = $(am__v_P_@AM_V@)
@@ -518,7 +519,7 @@ CERN_ROOT = $(CERN)/$(CERN_LEVEL)
 CERN_LINKFLAGS = -L$(CERN_ROOT)/lib
 CERN_LIBS = -ljetset74 -lpdflib804 -lphotos202 -lmathlib -lpacklib -lkernlib
 NEUT_DEFINES = -DgFortran $(am__append_2) $(am__append_3)
-NEUT_FFLAGS = -fno-backslash -fno-automatic -fno-second-underscore -ffixed-line-length-132 -fdollar-ok -fPIC -fbounds-check -Wall -Wextra -Werror=conversion -ffpe-trap=invalid,zero,overflow -DstrictF77 -Df2cFortran $(NEUT_DEFINES)
+NEUT_FFLAGS = -fno-backslash -fno-automatic -fno-second-underscore -ffixed-line-length-132 -fdollar-ok -fPIC -fbounds-check -Wall -Wextra -ffpe-trap=invalid,zero,overflow -DstrictF77 -Df2cFortran $(NEUT_DEFINES)
 DEFAULT_FFLAGS = $(NEUT_FFLAGS) $(NEUT_INCLUDES) \
 	-I$(CERN_ROOT)/include $(am__append_4) $(am__append_7)
 DEFAULT_CXXFLAGS = -fPIC $(NEUT_DEFINES) $(NEUT_INCLUDES) \
@@ -581,7 +582,7 @@ lib@LIBPREFIX@neutcore_@NEUT_VERSION_NUM@_a_SOURCES = bbba05.F \
 	nudeex_n.F rsifl4g.F fnelspau_intpol.F neelsspf.F nudeex_org.F \
 	rsifl5.F fnelspau_select.F neelsspff.F nudeex_p.F rsifl6.F \
 	structg.f bbba07.cc fa3comp.cc fazexp.cc ddifnerein.c \
-	qedifcrs.c $(am__append_11)
+	qedifcrs.c resolvecardname.F $(am__append_11)
 
 # Unused sources that live in the directory
 UNUSED_srcs = calcqecrs.F rs.tcrsdump.F nencelsvct.F fnelspau.F rs.wdist.F

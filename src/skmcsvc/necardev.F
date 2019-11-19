@@ -17,10 +17,9 @@
       IMPLICIT NONE
 
 #include "necardev.h"
+#include "cardname.h"
 
       CHARACTER*40 TMPFIL, COMMAND
-
-      character*128 FCARD
 
       INTEGER*4     IRET
 
@@ -51,13 +50,8 @@ C --  Initialize
 C --- get card file name (1st argument of the program)
 
       WRITE(6,*)
-      IF (IARGC() .GE. 1) THEN
-         CALL GETARG(1, FCARD)
-      ELSE
-         FCARD = 'neut.card'
-      END IF
-
-      WRITE(6,*) 'NEUT(EVCT) card file you read is ',FCARD
+      CALL RESOLVECARDNAME
+      WRITE(6,*) 'NEUT(EVCT) card file you read is ', FCARD(1:LEN_TRIM(FCARD))
 
 C -- extract NEUT card
 
@@ -157,5 +151,6 @@ C -- extract NEUT card
           stop
         endif
       endif
+
       RETURN
       END

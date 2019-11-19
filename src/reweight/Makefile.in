@@ -152,10 +152,10 @@ am__v_AR_1 =
 libNEUTReWeight_@NEUT_VERSION_NUM@_a_AR = $(AR) $(ARFLAGS)
 libNEUTReWeight_@NEUT_VERSION_NUM@_a_LIBADD =
 am__libNEUTReWeight_@NEUT_VERSION_NUM@_a_SOURCES_DIST =  \
-	NReWeightCasc.cc NReWeightNuXSecCCQE.cc NReWeight.cc \
-	CommonBlockIFace.cc NSystSet.cc NSystUncertainty.cc
+	NReWeightCasc.cc NReWeightNuXSecCCQE.cc NReWeightFactory.cc \
+	NReWeight.cc NSystSet.cc NSystUncertainty.cc
 am__objects_1 = NReWeightCasc.$(OBJEXT) NReWeightNuXSecCCQE.$(OBJEXT) \
-	NReWeight.$(OBJEXT) CommonBlockIFace.$(OBJEXT) \
+	NReWeightFactory.$(OBJEXT) NReWeight.$(OBJEXT) \
 	NSystSet.$(OBJEXT) NSystUncertainty.$(OBJEXT)
 @NEUT_LIBCOMPAT_FALSE@am_libNEUTReWeight_@NEUT_VERSION_NUM@_a_OBJECTS =  \
 @NEUT_LIBCOMPAT_FALSE@	$(am__objects_1)
@@ -164,7 +164,7 @@ libNEUTReWeight_@NEUT_VERSION_NUM@_a_OBJECTS =  \
 libNReWeight_@NEUT_VERSION_NUM@_a_AR = $(AR) $(ARFLAGS)
 libNReWeight_@NEUT_VERSION_NUM@_a_LIBADD =
 am__libNReWeight_@NEUT_VERSION_NUM@_a_SOURCES_DIST = NReWeightCasc.cc \
-	NReWeightNuXSecCCQE.cc NReWeight.cc CommonBlockIFace.cc \
+	NReWeightNuXSecCCQE.cc NReWeightFactory.cc NReWeight.cc \
 	NSystSet.cc NSystUncertainty.cc
 @NEUT_LIBCOMPAT_TRUE@am_libNReWeight_@NEUT_VERSION_NUM@_a_OBJECTS =  \
 @NEUT_LIBCOMPAT_TRUE@	$(am__objects_1)
@@ -413,7 +413,7 @@ CERN_ROOT = $(CERN)/$(CERN_LEVEL)
 CERN_LINKFLAGS = -L$(CERN_ROOT)/lib
 CERN_LIBS = -ljetset74 -lpdflib804 -lphotos202 -lmathlib -lpacklib -lkernlib
 NEUT_DEFINES = -DgFortran $(am__append_2) $(am__append_3)
-NEUT_FFLAGS = -fno-backslash -fno-automatic -fno-second-underscore -ffixed-line-length-132 -fdollar-ok -fPIC -fbounds-check -Wall -Wextra -Werror=conversion -ffpe-trap=invalid,zero,overflow -DstrictF77 -Df2cFortran $(NEUT_DEFINES)
+NEUT_FFLAGS = -fno-backslash -fno-automatic -fno-second-underscore -ffixed-line-length-132 -fdollar-ok -fPIC -fbounds-check -Wall -Wextra -ffpe-trap=invalid,zero,overflow -DstrictF77 -Df2cFortran $(NEUT_DEFINES)
 DEFAULT_FFLAGS = $(NEUT_FFLAGS) $(NEUT_INCLUDES) \
 	-I$(CERN_ROOT)/include $(am__append_4) $(am__append_7)
 DEFAULT_CXXFLAGS = -fPIC $(NEUT_DEFINES) $(NEUT_INCLUDES) \
@@ -435,10 +435,10 @@ AM_CXXFLAGS = -DNREWEIGHT_VERSION=@NEUT_VERSION_NUM@ $(DEFAULT_CXXFLAGS) $(NEUT_
 lib_LIBRARIES = $(LIBNAME)
 
 # Don't seem to be able to have canonical names easily build from makefile variables, this is ugly, but works
-SRCLIST = NReWeightCasc.cc NReWeightNuXSecCCQE.cc NReWeight.cc CommonBlockIFace.cc NSystSet.cc NSystUncertainty.cc
+SRCLIST = NReWeightCasc.cc NReWeightNuXSecCCQE.cc NReWeightFactory.cc NReWeight.cc NSystSet.cc NSystUncertainty.cc
 @NEUT_LIBCOMPAT_TRUE@libNReWeight_@NEUT_VERSION_NUM@_a_SOURCES = $(SRCLIST)
 @NEUT_LIBCOMPAT_FALSE@libNEUTReWeight_@NEUT_VERSION_NUM@_a_SOURCES = $(SRCLIST)
-include_HEADERS = CommonBlockIFace.h NModeDefn.h NReWeightCasc.h NReWeight.h NReWeightI.h NReWeightNuclPiless.h NReWeightNuXSecCCQE.h NReWeightNuXSecCOH.h NReWeightNuXSecDIS.h NReWeightNuXSecNCEL.h NReWeightNuXSecRES.h NSyst.h NSystSet.h NSystUncertainty.h PDGCodes.h
+include_HEADERS = NModeDefn.h NReWeightCasc.h NReWeightNuclPiless.h NReWeightNuXSecCCQE.h NReWeightNuXSecCOH.h NReWeightNuXSecDIS.h NReWeightNuXSecNCEL.h NReWeightNuXSecRES.h NReWeightFactory.h NReWeight.h NReWeightI.h NSyst.h NSystSet.h NSystUncertainty.h PDGCodes.h
 
 # Unused sources that live in the directory
 UNUSED_srcs = NReWeightNuclPiless.cc NReWeightNuXSecCCRES.cc NReWeightNuXSecCOH.cc NReWeightNuXSecDIS.cc NReWeightNuXSecNCEL.cc
@@ -580,9 +580,9 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/CommonBlockIFace.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NReWeight.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NReWeightCasc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NReWeightFactory.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NReWeightNuXSecCCQE.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NSystSet.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NSystUncertainty.Po@am__quote@
