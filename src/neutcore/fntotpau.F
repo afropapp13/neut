@@ -1,6 +1,6 @@
 ************************************************************************
 *     ------------------------
-      DOUBLE PRECISION FUNCTION FNTOTPAU(IPAR,E)
+      FUNCTION FNTOTPAU(IPAR,E)
 *     ------------------------
 *
 *     (Purpose)
@@ -42,12 +42,27 @@ C    RATN   : NEUTRON RATIO IN TARGET
 C    RATP   : PROTON RATIO IN TARGET
 C    RATFRE : FREE PROTON RATIO IN TARGET
 C
-      IMPLICIT NONE
 #include "necard.h"
 #include "neutmodel.h"
 
-      DOUBLE PRECISION E, RATN, RATP, RATFRE, MOLECULE
-      INTEGER*4 IPAR
+      REAL MOLECULE
+      REAL CRSSUM
+
+      IF (NEMODFLG.EQ.-1) THEN
+        CRSSUM = 0
+        DO 2207 I=1,30
+          IF (IPAR.gt.0) THEN
+            CRSSUM = CRSSUM + CRSNEUT(I)
+          ELSE
+            CRSSUM = CRSSUM + CRSNEUTB(I)
+          ENDIF
+          IF (CRSSUM.lt.1E-2) THEN
+            WRITE(*,*) "NEUT is run in NEMODE -1, but the total sum of the xscale arrays is: ", CRSSUM
+            WRITE(*,*) ". Assuming that this is a misconfiguration."
+            STOP
+          ENDIF
+ 2207    CONTINUE
+      ENDIF
 
 #ifdef UPMU_RCK
       DATA RATN/0.5/
@@ -62,17 +77,12 @@ C     NUMBNDN, NUMBNDN etc. are set in necard (2007 Nov G.Mitsuka)
       MOLECULE=float(NUMBNDN+NUMBNDP+NUMFREP)
 #endif
 
-      WRITE(*,*) "E: ", E
-      STOP
-
-
 C     --ENERGY UPPER LIMIT FOR 1PI
       IF(E.LE.1000.) THEN
          ETMP=E
       ELSE
          ETMP=999.999
       ENDIF
-
 C
       TOTCRS=0.
       IF (IPAR.GT.0) THEN

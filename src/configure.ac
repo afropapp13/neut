@@ -92,11 +92,6 @@ CXXFLAGS=""
 FFLAGS=""
 AM_CONDITIONAL([NEUT_DEBUG], [test "x$enable_debug" = "xyes"])
 
-######## Check reweight
-AC_ARG_ENABLE([noreweight],
-    AS_HELP_STRING([--enable-noreweight], [Compile without reweighting]))
-AM_CONDITIONAL([NEUT_NOREWEIGHT], [test "x$enable_noreweight" = "xyes"])
-
 ######## Check gprof
 AC_ARG_WITH([gperf],
   AS_HELP_STRING([--with-gperf=<lib>],

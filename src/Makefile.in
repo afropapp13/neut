@@ -99,9 +99,7 @@ host_triplet = @host@
 @NEUT_DEBUG_FALSE@am__append_8 = -O2
 @NEUT_DEBUG_FALSE@am__append_9 = -O2
 @NEUT_USE_GPERF_TRUE@am__append_10 = -L@NEUT_GPERF@ -lprofiler
-@NEUT_NOREWEIGHT_FALSE@am__append_11 = reweight
-# endif
-@NEUT_LIBCOMPAT_FALSE@@NEUT_USE_TAUOLA_TRUE@am__append_12 = $(top_builddir)/tauola/*.o
+@NEUT_LIBCOMPAT_FALSE@@NEUT_USE_TAUOLA_TRUE@am__append_11 = $(top_builddir)/tauola/*.o
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
@@ -464,14 +462,14 @@ include_HEADERS = $(BUILT_SOURCES)
 @NEUT_LIBCOMPAT_FALSE@	ht2p2h radcorr skmcsvc partnuck \
 @NEUT_LIBCOMPAT_FALSE@	neutclass specfunc . neutsmpl tools \
 @NEUT_LIBCOMPAT_FALSE@	neututils nuclsmpl pionsmpl neutgeom \
-@NEUT_LIBCOMPAT_FALSE@	escat $(am__append_11) test
+@NEUT_LIBCOMPAT_FALSE@	escat reweight test
 
 # Order here matters, should build core libraries, combine them in this dir (.), then build reweight, programs, and tools.
 # Cannot currently build neututils dirs in compat mode.
 @NEUT_LIBCOMPAT_TRUE@SUBDIRS = neutcore nuccorspl nuceff n1p1h ht2p2h \
 @NEUT_LIBCOMPAT_TRUE@	radcorr skmcsvc partnuck neutclass \
-@NEUT_LIBCOMPAT_TRUE@	specfunc . neutsmpl tools escat \
-@NEUT_LIBCOMPAT_TRUE@	$(am__append_11) test
+@NEUT_LIBCOMPAT_TRUE@	specfunc . neutsmpl tools escat reweight \
+@NEUT_LIBCOMPAT_TRUE@	test
 
 # When I can get a hold of the zebra code I will add an --enable flag for the ZEBRA_SUBDIRS, but for the moment, disable them.
 ZEBRA_SUBDIRS = zbsfns
@@ -484,8 +482,6 @@ ZEBRA_SUBDIRS = zbsfns
 @NEUT_LIBCOMPAT_FALSE@LIBNAME = libNEUT.@NEUT_VERSION_NUM@.a
 @NEUT_LIBCOMPAT_FALSE@lib_LIBRARIES = $(LIBNAME)
 @NEUT_LIBCOMPAT_FALSE@libNEUT_@NEUT_VERSION_NUM@_a_SOURCES = 
-
-# if !NEUT_SEPARATE_NIEVES_LIBS
 @NEUT_LIBCOMPAT_FALSE@ALLCOREOBJS = $(top_builddir)/nuccorspl/*.o \
 @NEUT_LIBCOMPAT_FALSE@	$(top_builddir)/nuceff/*.o \
 @NEUT_LIBCOMPAT_FALSE@	$(top_builddir)/radcorr/*.o $ \
@@ -496,7 +492,7 @@ ZEBRA_SUBDIRS = zbsfns
 @NEUT_LIBCOMPAT_FALSE@	$(top_builddir)/mec/*.o \
 @NEUT_LIBCOMPAT_FALSE@	$(top_builddir)/n1p1h/src/*.o \
 @NEUT_LIBCOMPAT_FALSE@	$(top_builddir)/ht2p2h/src/*.o \
-@NEUT_LIBCOMPAT_FALSE@	$(am__append_12)
+@NEUT_LIBCOMPAT_FALSE@	$(am__append_11)
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 

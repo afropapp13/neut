@@ -74,6 +74,9 @@
       integer*4     LENSTR
       external      LENSTR
 
+      logical HaveSpecFuncForNuclei
+      external HaveSpecFuncForNuclei
+
 C --  Initialize
 
       CALL MCMASSGV(2112, XMN)
@@ -151,9 +154,11 @@ C      VNUINI = -0.027 ! defined below
       IFORMLEN= 110 ! default ; skip CCQE/Elastic
       FZMU2 = 0.08
 
+      SFEBSHIFT = 0
+
       NUSIM   = 1
       NEFKINVER= 0
-      QUIET = 0
+      QUIET = 2
       ITAUFLGCORE = 0           ! dummy
 
       NUMBNDN = 8
@@ -363,24 +368,20 @@ C Set VNUINI here ( when PFSURF is fixed)
       CALL FFKEY('IRADCORR',IRADCORR,1,'INTEGER')
       CALL FFKEY('QUIET',QUIET,1,'INTEGER')
 
+      CALL FFKEY('SFEBSHIFT',SFEBSHIFT,1,'REAL')
+
       CALL FFGO
       CLOSE(UNIT=91)
       COMMAND = '/bin/rm '//TMPFIL
       CALL SYSTEM(COMMAND)
 
       IF (mod(MDLQE, 1000)/100 .EQ. 4) THEN
-        IF (NUMATOM .EQ. 12) THEN
-          write (6,*) "Using Spectral Function for elastic events"
-          GOTO 200
-        ELSE IF (NUMATOM .EQ. 16) THEN
-          write (6,*) "Using Spectral Function for elastic events"
-          GOTO 200
-        ELSE IF (NUMATOM .EQ. 56) THEN
+        IF (HaveSpecFuncForNuclei()) THEN
           write (6,*) "Using Spectral Function for elastic events"
           GOTO 200
         ELSE
-          write (6,*) "Spectral Function not available - use RFG"
-          MDLQE = MDLQE - 400
+          write (6,*) "Spectral Function not available - use RFG (NEUT-MDLQE 002)"
+          STOP
         ENDIF
       ENDIF
 200   CONTINUE
@@ -464,6 +465,7 @@ C      WRITE(6,*) 'NECARD : MVSPI  = ',XMVSPI
       WRITE(6,*) 'NECARD : PFMAX  = ',PFMAX
       WRITE(6,*) 'NECARD : VNUINI = ',VNUINI
       WRITE(6,*) 'NECARD : VNUFIN = ',VNUFIN
+      WRITE(6,*) 'NECARD : SFEBSHIFT = ',SFEBSHIFT
       WRITE(6,*) 'NECARD : IFORMLEN = ',IFORMLEN
       WRITE(6,*) 'NECARD : FZMU2 = ',FZMU2
       WRITE(6,*) 'NECARD : ABSPIEMIT = ',NEABSPIEMIT

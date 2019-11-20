@@ -15,13 +15,13 @@ C#include <f77/f77_floatingpoint.h>
 #include "necardev.h"
 #include "neutmodel.h"
 
-      DOUBLE PRECISION    POS(3),DIR(3),PNEU(3)
-      DOUBLE PRECISION    ENEU
+      REAL*4    POS(3),DIR(3),PNEU(3)
+      REAL*4    ENEU
 
-      DOUBLE PRECISION  rndenuevtrt
+      REAL*4  rndenuevtrt
       external          rndenuevtrt
 
-      DOUBLE PRECISION  fntotpau
+      REAL*4  fntotpau
       external          fntotpau
 
       INTEGER*4 loadflx,neutfillnorm
@@ -31,6 +31,8 @@ C#include <f77/f77_floatingpoint.h>
       external  RLU
 
       REAL*4    RNDTMP
+
+      REAL*4 XSEC
 
       INTEGER*4 I,J,IDUM,IERR
       INTEGER*4 IRETRY
@@ -151,7 +153,8 @@ C--Draw ENEU from event rate (flux*cross-section) distribution
             stop
          endif
 
-         if (fntotpau(IDPTEVCT,ENEU/1000.).le.1.e-7) then
+         XSEC = fntotpau(IDPTEVCT,ENEU/1000.)
+         if (XSEC.le.1.e-7) then
             IRETRY = IRETRY + 1
             if (IRETRY .gt. 100000) then
                write(*,*)

@@ -41,9 +41,9 @@ c ----- temporary values to copy to output common block
 #include "necard.h"
 #include "neutmodel.h"
 #include "necardev.h"
+#include "neutparams.h"
 
-        real E, DIRNEU(3)
-        DOUBLE PRECISION theta_lab
+        real E, DIRNEU(3), theta_lab
         integer IPAR, IERR, mode
         logical single, nc, first
 
@@ -291,7 +291,7 @@ C ----- temp_vector is the c.o.m 4-momentum
           temp_vector(i) = k(i) + p(i)
         enddo
 c ----- energy conservation from spectral function definition
-        temp_vector(1) = k(1) + inNucleonMass - ETilde
+        temp_vector(1) = k(1) + inNucleonMass - (ETilde + SFEBSHIFT*1.E3)
 
         if (dotProduct(temp_vector, temp_vector) .LT.
      +  (leptonMass + outNucleonMass)**2 ) then

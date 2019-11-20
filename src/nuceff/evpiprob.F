@@ -1,5 +1,5 @@
 *     -----------------------------------------------------
-      DOUBLE PRECISION FUNCTION EVPIPROB()
+      FUNCTION EVPIPROB()
 *     -----------------------------------------------------
 *
 *     ( purpose )
@@ -22,15 +22,13 @@ C
 
 C#define DEBUG
 
-      implicit none
+      REAL*4 PROB
 
-      DOUBLE PRECISION PROB
-
-      DOUBLE PRECISION PPI(3)
+      REAL*4 PPI(3)
 
       INTEGER I,J, iNuc
 
-      DOUBLE PRECISION POSDIFF
+      REAL*4 POSDIFF
 
 #include "vcwork.h"
 #include "posinnuc.h"

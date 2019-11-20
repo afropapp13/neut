@@ -15,14 +15,14 @@ using namespace std;
 extern "C"
 {
 
-  double fntotpau_(int *,float *);
+  float fntotpau_(int *,float *);
 
   void nulltermstr(char *, int);
 
   int loadflx_(int *, char *, char *, int *,
 			   int, int);
 
-  double rndenuevtrt_(float *);
+  float rndenuevtrt_(float *);
 
 }
 
@@ -151,10 +151,10 @@ int loadflx_(int *IDPTEVCT, char *filename, char *histname, int *inMeV,
   return 0;
 }
 
-double rndenuevtrt_(float *Rnd)
+float rndenuevtrt_(float *Rnd)
 {
-  double Enu;
-  double rnum=*Rnd;
+  float Enu;
+  float rnum=*Rnd;
   Enu=EnuEvtrt.GetValue(rnum);
   return Enu*1e3;//Enu in MeV
 }

@@ -13,13 +13,13 @@ C#include <f77/f77_floatingpoint.h>
 #include "posinnuc.h"
 #include "fsihist.h"
 
-      DOUBLE PRECISION    POS(3),DIR(3),PNEU(3)
-      DOUBLE PRECISION    ENEU
+      REAL*4    POS(3),DIR(3),PNEU(3)
+      REAL*4    ENEU
 
       REAL*4    RLU
       external  RLU
 
-      DOUBLE PRECISION EVPIPROB
+      REAL*4 EVPIPROB
       external EVPIPROB
 
       INTEGER*4 I,J,IDUM,IERR,N1,N2,IVERT,IVCVERT
@@ -28,9 +28,9 @@ C#include <f77/f77_floatingpoint.h>
 
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
-      DOUBLE PRECISION COST,PHI
+      REAL*4 COST,PHI
 
-      DOUBLE PRECISION RMAX,RAD,PTOT
+      REAL*4 RMAX,RAD,PTOT
 
       INTEGER*4 IDPION
 

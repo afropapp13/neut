@@ -19,7 +19,7 @@ C#include <f77/f77_floatingpoint.h>
       REAL*4    RLU
       external  RLU
 
-      DOUBLE PRECISION EVPIPROB
+      REAL*4 EVPIPROB
       external EVPIPROB
 
       INTEGER*4 I,J,IDUM,IERR,N1,N2,IVERT,IVCVERT

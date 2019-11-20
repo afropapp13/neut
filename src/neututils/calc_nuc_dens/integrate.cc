@@ -19,7 +19,7 @@
 using namespace std;
 
 extern "C" {
-double efabrho_(double *r);
+float efabrho_(double *r);
 void nesettarg_();
 }
 

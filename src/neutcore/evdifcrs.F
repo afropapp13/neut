@@ -1,6 +1,6 @@
 **********************************************************************
 *     -------------------------
-      DOUBLE PRECISION FUNCTION EVDIFCRS()
+      FUNCTION EVDIFCRS()
 *     -------------------------
 *
 *     ( purpose )
@@ -205,6 +205,8 @@ C
 
 C -- For boosting
 C      real *4 PNEU(3),PFABS,AMIN,BETA,EV(3),GM
+
+      real*4 evdifcrs
 
       real*8   qedifcrs
       external qedifcrs

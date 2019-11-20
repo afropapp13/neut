@@ -8,9 +8,6 @@
       real*4     ranf
       external   ranf
 
-      integer*4      LENSTR
-      external       lenstr
-
       INTEGER*4  ISEED
       INTEGER*4  ISEED1,ISEED2,istau1,istau2,istau3
       CHARACTER*80 RANFILE
@@ -21,7 +18,7 @@
       call getenv('RANFILE',ranfile)
 
 *     Generate a new seed if the ranfile isn't set.
-      IF (LENSTR(ranfile) .EQ. 0) THEN
+      IF (LEN_TRIM(ranfile) .EQ. 0) THEN
         CALL NEGENSEED
         RETURN
       endif

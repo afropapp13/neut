@@ -636,8 +636,6 @@ LIBOBJS
 NEUT_GPERF
 NEUT_USE_GPERF_FALSE
 NEUT_USE_GPERF_TRUE
-NEUT_NOREWEIGHT_FALSE
-NEUT_NOREWEIGHT_TRUE
 NEUT_DEBUG_FALSE
 NEUT_DEBUG_TRUE
 NEUT_USE_TAUOLA_FALSE
@@ -798,7 +796,6 @@ enable_libtool_lock
 enable_compatnames
 enable_tauola
 enable_debug
-enable_noreweight
 with_gperf
 '
       ac_precious_vars='build_alias
@@ -1464,7 +1461,6 @@ Optional Features:
   --enable-compatnames    Enable 5.4.0 and previous library naming scheme
   --enable-tauola         Enable tauola, requires ZEBRA!
   --enable-debug          Compile with debug symbols
-  --enable-noreweight     Compile without reweighting
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -22634,21 +22630,6 @@ else
 fi
 
 
-######## Check reweight
-# Check whether --enable-noreweight was given.
-if test "${enable_noreweight+set}" = set; then :
-  enableval=$enable_noreweight;
-fi
-
- if test "x$enable_noreweight" = "xyes"; then
-  NEUT_NOREWEIGHT_TRUE=
-  NEUT_NOREWEIGHT_FALSE='#'
-else
-  NEUT_NOREWEIGHT_TRUE='#'
-  NEUT_NOREWEIGHT_FALSE=
-fi
-
-
 ######## Check gprof
 
 # Check whether --with-gperf was given.
@@ -22871,10 +22852,6 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${NEUT_DEBUG_TRUE}" && test -z "${NEUT_DEBUG_FALSE}"; then
   as_fn_error $? "conditional \"NEUT_DEBUG\" was never defined.
-Usually this means the macro was only invoked conditionally." "$LINENO" 5
-fi
-if test -z "${NEUT_NOREWEIGHT_TRUE}" && test -z "${NEUT_NOREWEIGHT_FALSE}"; then
-  as_fn_error $? "conditional \"NEUT_NOREWEIGHT\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${NEUT_USE_GPERF_TRUE}" && test -z "${NEUT_USE_GPERF_FALSE}"; then

@@ -18,8 +18,7 @@ C       process, so value "step" supposed to be very small.
 C--------------------------------------------------------------------
       implicit none
 C - function
-      DOUBLE PRECISION efabrho
-      real rlu,efxsctom
+      real rlu,efxsctom,efabrho
 
 C - argument input
       real absp,distance,step

@@ -18,8 +18,8 @@
 
 c ----- neutrino type, energy
         integer IPAR
-        DOUBLE PRECISION E
-        DOUBLE PRECISION DIRNEU(3)
+        REAL*4 E
+        REAL*4 DIRNEU(3)
         integer IERR, mode
         logical nc, single, first
 

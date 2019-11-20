@@ -23,9 +23,7 @@ else
 SUBDIRS = neutcore nuccorspl nuceff n1p1h mec ht2p2h radcorr skmcsvc partnuck neutclass specfunc . neutsmpl tools neututils nuclsmpl pionsmpl neutgeom escat
 endif
 
-if !NEUT_NOREWEIGHT
-  SUBDIRS += reweight
-endif
+SUBDIRS += reweight
 
 SUBDIRS += test
 
@@ -45,11 +43,7 @@ lib_LIBRARIES = $(LIBNAME)
 
 libNEUT_@NEUT_VERSION_NUM@_a_SOURCES =
 
-ALLCOREOBJS = $(top_builddir)/nuccorspl/*.o $(top_builddir)/nuceff/*.o $(top_builddir)/radcorr/*.o $ $(top_builddir)/specfunc/*.o $(top_builddir)/skmcsvc/*.o $(top_builddir)/partnuck/*.o $(top_builddir)/neutcore/*.o $(top_builddir)/mec/*.o
-
-# if !NEUT_SEPARATE_NIEVES_LIBS
-ALLCOREOBJS += $(top_builddir)/n1p1h/src/*.o $(top_builddir)/ht2p2h/src/*.o
-# endif
+ALLCOREOBJS = $(top_builddir)/nuccorspl/*.o $(top_builddir)/nuceff/*.o $(top_builddir)/radcorr/*.o $ $(top_builddir)/specfunc/*.o $(top_builddir)/skmcsvc/*.o $(top_builddir)/partnuck/*.o $(top_builddir)/neutcore/*.o $(top_builddir)/mec/*.o $(top_builddir)/n1p1h/src/*.o $(top_builddir)/ht2p2h/src/*.o
 
 if NEUT_USE_TAUOLA
 ALLCOREOBJS += $(top_builddir)/tauola/*.o

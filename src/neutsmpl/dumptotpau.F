@@ -5,10 +5,10 @@ C#include "nesolact.h"
 
       IMPLICIT NONE
 
-      DOUBLE PRECISION COST,PHI
-      DOUBLE PRECISION    POS(3),DIR(3)
+      REAL*4 COST,PHI
+      REAL*4    POS(3),DIR(3)
 
-      DOUBLE PRECISION     ENERGY
+      REAL*4     ENERGY
       INTEGER*4  IPAR
 
       INTEGER*4  IPRTBL(4)
@@ -17,9 +17,9 @@ C#include "nesolact.h"
       integer i,j
 
       EXTERNAL FNTOTPAU
-      DOUBLE PRECISION FNTOTPAU
+      REAL*4 FNTOTPAU
 
-      DOUBLE PRECISION   TCRS(4)
+      REAL*4   TCRS(4)
 
       character*80 FILENAME
       FILENAME='totpau.tbl'
