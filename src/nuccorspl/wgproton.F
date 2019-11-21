@@ -55,7 +55,7 @@ C        amn = 4000
       no=0
       
       
-        print *,'Calling nrprton.F'
+c        print *,'Calling nrprton.F'
 c     this call happens once for every particle in the nvect
 c     and then a complete cascade is performed within nrprton
       call nrprton ( anuc,     !A of the nucleus =16 for Oxygen

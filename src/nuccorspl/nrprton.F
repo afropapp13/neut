@@ -156,19 +156,19 @@ C      pelnuc =1
 C      pspnuc =1 
 C      pdpnuc =1
 c     initialise before loop
-      write (*,*) "nfnstep start of nrprton = " , NFNStep
+c      write (*,*) "nfnstep start of nrprton = " , NFNStep
 
-      write (*,*) "Start of nrprton"
-      write (*,*) "NReWeightFlag = ", NReweightFlag
-      write (*,*) "Step numberA nfnstep ", NFnstep
+c      write (*,*) "Start of nrprton"
+c      write (*,*) "NReWeightFlag = ", NReweightFlag
+c      write (*,*) "Step numberA nfnstep ", NFnstep
 
       if(NReweightFlag.eq.1) then
 
 c     NFnstep = 0
          RW_step_i =0
 
-         write (*,*) "RW StepA  ", RW_step_i
-         write (*,*) "Step numberA nfnstep ", NFnstep
+c         write (*,*) "RW StepA  ", RW_step_i
+c         write (*,*) "Step numberA nfnstep ", NFnstep
          nucresflg=1
          
 
@@ -305,11 +305,11 @@ c!!!!!OD!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 c     loop over input tracks
       NFnstep = NFnstep+1       ! increase number of steps                                                                                                                                 
-      write (*,*) "nfstep increased line 308", NFnstep
+c      write (*,*) "nfstep increased line 308", NFnstep
 
-      write (*,*) "before 300  "
+c      write (*,*) "before 300  "
  300  continue                  ! loop thru the input tracks
-      write (*,*) "after 300  "
+c      write (*,*) "after 300  "
 c     loop counter itdone
       itdone=itdone+1
 c     if the counter goes beyond ntracks, QUIT
@@ -438,9 +438,9 @@ c     write (*,*) "Step numberC nfnstep ", NFnstep
 !     
       RW_step_i =0
 c     Event loop time. Loop over steps through the nucleus
-      write (*,*) "before 200  "
+c      write (*,*) "before 200  "
  200  continue
-      write (*,*) "after 200  "
+c      write (*,*) "after 200  "
 c     set r from xtr and step*direction. Does upin stay the same throughout?
       if(NReweightFlag.eq.1) then
          
@@ -489,7 +489,7 @@ c     write (*,*) "IDES = ", ides
 
 
          else
-            write (*,*) "finished number of steps for event", NFnstep
+c            write (*,*) "finished number of steps for event", NFnstep
             goto 300
          end if
          
@@ -503,9 +503,9 @@ c     write (*,*) "IDES = ", ides
       do j=1,3
          xtr(j)=xtr(j)+upin(j)*step
          r=r+xtr(j)**2
-         write (*,*) "xtr(j) = ", xtr(j)   
-         write (*,*) "upin(j) = ", upin(j)
-         write (*,*) "step = ", step
+c         write (*,*) "xtr(j) = ", xtr(j)   
+c         write (*,*) "upin(j) = ", upin(j)
+c         write (*,*) "step = ", step
       end do
       r=sqrt(r)
 
@@ -583,7 +583,7 @@ c     write (*,*) "r = ", r
 C     if(NReweightFlag.eq.1) then
 C     write (*,*) "NFIflag = ", ides
 C     endif
-      write (*,*) "r before nfermi = ", r
+c      write (*,*) "r before nfermi = ", r
 
       call nrfermi(r)           !set target nucleon
 C     if(ecms2.lt.(2*amn)**2) goto 200  ! kinematically impossible / test is done inside nrnuc!
@@ -600,7 +600,7 @@ c     write (*,*) "track number before nrnuc = ", ntrack
 
       call nrnuc(ides)          ! make interaction
 c     if ides was set to 11,12,13 then it was pauli blocked
-      write (*,*) "nfnstep coming out of nrnuc = ", NFnStep
+c      write (*,*) "nfnstep coming out of nrnuc = ", NFnStep
 
       
 c     write (*,*) "Interaction flag =" , ecms2
@@ -614,7 +614,7 @@ c     write (*,*) "NFiflagStep after nrnuc" , NFiflagStep(NFnstep)
             if(NFnvert.lt.maxnucleonvert.and.NFnstep.lt.maxnucleonstep) then
 c     assuming we're still below max vert and step
                NFnvert = NFnvert+1 ! increase number of vertices
-               write (*,*) "nfnvert2 is here to stay", NFnvert
+c               write (*,*) "nfnvert2 is here to stay", NFnvert
                NFiflag(NFnvert) = ides-10 + chint*100 + 1000 ! Pauli-blocked interaction type and charge of propagated nucleon
 c     previously we set NFiFlag to chint*100.
 c     now we need to set 1000 for Pauli times
@@ -632,7 +632,7 @@ c     now set position and momentum as per usual
                NFfirststep(NFnvert) = NFnstep+1 ! index of first step of track segment
                
                NFnstep = NFnstep+1 ! increase number of steps
-               write (*,*) "nfstep increased line 606", NFnstep
+c               write (*,*) "nfstep increased line 606", NFnstep
 
 c     write (*,*) "nfnstep2 is here to stay", NFnstep
 
@@ -674,7 +674,7 @@ c     ides was set to -1,-2,-3 for interactions, or 1 for survival
 c     therefore if ides is +ve, there's no interaction, head to next step
             if(NFnstep.lt.maxnucleonstep) then ! save per-step information
                NFnstep = NFnstep+1 ! increase number of steps
-               write (*,*) "nfstep increased line 648", NFnstep
+c               write (*,*) "nfstep increased line 648", NFnstep
 
 c     write (*,*) "nfnstep3 is here to stay", NFnstep
 
@@ -775,7 +775,7 @@ c     write (*,*) "nfnvert3 is here to stay", NFnvert
             NFfirststep(NFnvert) = NFnstep+1 ! index of first step of track segment
 
             NFnstep = NFnstep+1 ! increase number of steps
-            write (*,*) "nfstep increased line 748", NFnstep
+c            write (*,*) "nfstep increased line 748", NFnstep
 
 c     write (*,*) "nfnstep4 is here to stay", NFnstep
 
@@ -848,7 +848,7 @@ C     no = no + 1
          else
             ido(no) = 2212
          end if
-         write (*,*) "heading back to 300  "
+c         write (*,*) "heading back to 300  "
       end if
 
       if(no.lt.20) goto 300     !-------^ take next from the stack
