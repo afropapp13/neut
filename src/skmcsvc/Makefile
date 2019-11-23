@@ -9,7 +9,8 @@ LIBBASE	= skmcsvc
 LIBNAME = ${LIBBASE}_$(SKMCSVCVER)
 
 ## physics related fucntions taken from SK
-POBJ =	mcvecbst.o vcphsvct.o vcwtrmbo.o vcrambo.o mcmass.o mcmassgv.o
+POBJ =	nechadir.o mcvecbst.o vcphsvct.o vcwtrmbo.o vcrambo.o \
+		mcmass.o mcmassgv.o
 
 ## random number functions taken from SK 
 ROBJ =	nesetpos.o rlu.o rndir.o \
@@ -19,9 +20,13 @@ ROBJ =	nesetpos.o rlu.o rndir.o \
 MOBJ =	getuni.o excard.o
 
 ## common handing functions taken from SK 
-COBJ =	necardev.o vcclcm.o
+COBJ =	necardev.o vcclcm.o 
 
-OBJS = $(POBJ) $(IOBJ) $(ROBJ) $(MOBJ) $(COBJ)
+## misc. functions from iolib
+IOBJ =	lcase.o ucase.o   lenchr.o getvar.o skopenf.o \
+		ccopen.o ccopnf.o iolib_get_tapemode.o charterm.o
+
+OBJS = $(POBJ) $(IOBJ) $(ROBJ) $(MOBJ) $(COBJ) $(IOBJ)
 
 INCS = vcvrtx.h vcwork.h necardev.h
 
