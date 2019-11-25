@@ -11,8 +11,8 @@
           Jim Dobson <J.Dobson07 \at imperial.ac.uk>
           Imperial College London
 
-	  Patrick de Perio <pdeperio \at physics.utoronto.ca>
-	  University of Toronto
+          Patrick de Perio <pdeperio \at physics.utoronto.ca>
+          University of Toronto
 
 \created  Aug 1, 2009
 
@@ -26,92 +26,42 @@
 #define _N_REWEIGHT_NU_XSEC_RES_H_
 
 #include "NReWeightI.h"
-#include "NFortFns.h"
-#include "NModeDefn.h"
-#include "NTotCrs.h"
+#include "NSyst.h"
 
 namespace neut {
-namespace rew   {
+namespace rew {
 
- class NReWeightNuXSecRES : public NReWeightI 
- {
- public:
-   static const int kModeMaMv           = 0;
-   static const int kModeNormAndMaShape = 1;
-
-   NReWeightNuXSecRES();
+class NReWeightNuXSecRES : public NReWeightI {
+public:
+  NReWeightNuXSecRES();
   ~NReWeightNuXSecRES();
 
-   // implement the NReWeightI interface
-   bool   IsHandled      (NSyst_t syst);
-   void   SetSystematic  (NSyst_t syst, double val);
-   void   Reset          (void);
-   void   Reconfigure    (void);
-   double CalcWeight     ();
-   double CalcChisq      (void);
+  // implement the NReWeightI interface
+  bool IsHandled(NSyst_t syst);
+  void SetSystematic(NSyst_t syst, double val);
+  void Reset(void);
+  void Reconfigure(void);
+  double CalcWeight();
+  double CalcChisq(void);
 
-   // various config options
-   void SetMode     (int mode) { fMode       = mode; }
-   void RewNue      (bool tf ) { fRewNue     = tf;   }
-   void RewNuebar   (bool tf ) { fRewNuebar  = tf;   }
-   void RewNumu     (bool tf ) { fRewNumu    = tf;   }
-   void RewNumubar  (bool tf ) { fRewNumubar = tf;   }
+private:
+  void Init(void);
 
- private:
+  NSYST_DECLAREDIALVARIABLES(kXSecTwkDial_MaRES);
+  NSYST_DECLAREDIALVARIABLES(kXSecTwkDial_MvRES);
+  NSYST_DECLAREDIALVARIABLES(kXSecTwkDial_FFRES);
+  NSYST_DECLAREDIALVARIABLES(kXSecTwkDial_TypeRES);
+  NSYST_DECLAREDIALVARIABLES(kXSecTwkDial_CA5RES);
+  NSYST_DECLAREDIALVARIABLES(kXSecTwkDial_BgSclRES);
+  NSYST_DECLAREDIALVARIABLES(kXSecTwkDial_MaNFFRES);
+  NSYST_DECLAREDIALVARIABLES(kXSecTwkDial_MvNFFRES);
+  NSYST_DECLAREDIALVARIABLES(kXSecTwkDial_MaRSRES);
+  NSYST_DECLAREDIALVARIABLES(kXSecTwkDial_MvRSRES);
+  NSYST_DECLAREDIALVARIABLES(kXSecTwkDial_UseSeparateBgSclLMCPiBar);
+  NSYST_DECLAREDIALVARIABLES(kXSecTwkDial_BgSclLMCPiBarRES);
+};
 
-   void   Init                (void);
-   double CalcWeightNorm      ();
-   double CalcWeightMaMvShape ();
-   double CalcWeightMaMv      ();
-
-   int    fMode;         ///< 0: Ma/Mv, 1: Norm and MaShape/MvShape
-   bool   fRewNue;       ///< reweight nu_e CC?
-   bool   fRewNuebar;    ///< reweight nu_e_bar CC?
-   bool   fRewNumu;      ///< reweight nu_mu CC?
-   bool   fRewNumubar;   ///< reweight nu_mu_bar CC?
-   double fNormTwkDial;  ///<
-   double fNormDef;      ///<
-   double fNormCurr;     ///<
-   double fMaTwkDial;    ///<
-   double fMaDef;        ///<
-   double fMaCurr;       ///<
-   double fMvTwkDial;    ///<
-   double fMvDef;        ///<
-   double fMvCurr;       ///<
-
-   double fMaNFFTwkDial;
-   double fMaNFFDef;
-   double fMaNFFCurr;
-   double fMvNFFTwkDial;
-   double fMvNFFDef;
-   double fMvNFFCurr;
-   double fMaRSTwkDial;
-   double fMaRSDef;
-   double fMaRSCurr;
-   double fMvRSTwkDial;
-   double fMvRSDef;
-   double fMvRSCurr;
-   double fCA5TwkDial;
-   double fCA5Def;
-   double fCA5Curr;
-   double fBgSclTwkDial;
-   double fBgSclDef;
-   double fBgSclCurr;
-   int fIFFTwkDial;
-   int fIFFDef;
-   int fIFFCurr;
-   int fNRTypeTwkDial;
-   int fNRTypeDef;
-   int fNRTypeCurr;
-
-   NFortFns * fortFns;
-   NModeDefn modeDefn;
-
-   NTotCrs *neutTotCrs;
- };
-
-} // rew   namespace
-} // neut namespace
+} // namespace rew
+} // namespace neut
 
 #endif
-

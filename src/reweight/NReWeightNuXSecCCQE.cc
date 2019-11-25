@@ -45,8 +45,8 @@
 
 //#define _N_REWEIGHT_CCQE_DEBUG_
 
-using namespace neut;
-using namespace rew;
+namespace neut {
+namespace rew {
 
 NReWeightNuXSecCCQE::NReWeightNuXSecCCQE() { this->Init(); }
 
@@ -59,11 +59,9 @@ void NReWeightNuXSecCCQE::Init() {
 
   NSYST_SETDEF(kXSecTwkDial_MaCCQE, cbfa.fnemdls_gen.xmaqe);
   NSYST_SETDEF(kXSecTwkDial_AxlFFCCQE, cbfa.fnemdls_gen.mdlqeaf);
-  NSYST_SETDEF(kXSecTwkDial_VecFFCCQE, cbfa.fnemdls_gen.mdlqe);
   NSYST_SETDEF(kXSecTwkDial_SCCVecQE, cbfa.fnemdls_gen.sccfv);
   NSYST_SETDEF(kXSecTwkDial_SCCAxlQE, cbfa.fnemdls_gen.sccfa);
   NSYST_SETDEF(kXSecTwkDial_PsFF, cbfa.fnemdls_gen.fpqe);
-  NSYST_SETDEF(kXSecTwkDial_AxlDipToAlt, 0);
   NSYST_SETDEF(kXSecTwkDial_FAxlCCQEAlpha, cbfa.fnemdls_gen.axffalpha);
   NSYST_SETDEF(kXSecTwkDial_FAxlCCQEGamma, cbfa.fnemdls_gen.axffgamma);
   NSYST_SETDEF(kXSecTwkDial_FAxlCCQEBeta, cbfa.fnemdls_gen.axffbeta);
@@ -81,11 +79,9 @@ void NReWeightNuXSecCCQE::Init() {
 bool NReWeightNuXSecCCQE::IsHandled(NSyst_t syst) {
   NSYST_USESDIAL(syst, kXSecTwkDial_MaCCQE);
   NSYST_USESDIAL(syst, kXSecTwkDial_AxlFFCCQE);
-  NSYST_USESDIAL(syst, kXSecTwkDial_VecFFCCQE);
   NSYST_USESDIAL(syst, kXSecTwkDial_SCCVecQE);
   NSYST_USESDIAL(syst, kXSecTwkDial_SCCAxlQE);
   NSYST_USESDIAL(syst, kXSecTwkDial_PsFF);
-  NSYST_USESDIAL(syst, kXSecTwkDial_AxlDipToAlt);
   NSYST_USESDIAL(syst, kXSecTwkDial_FAxlCCQEAlpha);
   NSYST_USESDIAL(syst, kXSecTwkDial_FAxlCCQEGamma);
   NSYST_USESDIAL(syst, kXSecTwkDial_FAxlCCQEBeta);
@@ -106,11 +102,9 @@ bool NReWeightNuXSecCCQE::IsHandled(NSyst_t syst) {
 void NReWeightNuXSecCCQE::SetSystematic(NSyst_t syst, double twk_dial) {
   NSYST_UPDATEVALUE(kXSecTwkDial_MaCCQE, syst, twk_dial);
   NSYST_UPDATEVALUE(kXSecTwkDial_AxlFFCCQE, syst, twk_dial);
-  NSYST_UPDATEVALUE(kXSecTwkDial_VecFFCCQE, syst, twk_dial);
   NSYST_UPDATEVALUE(kXSecTwkDial_SCCVecQE, syst, twk_dial);
   NSYST_UPDATEVALUE(kXSecTwkDial_SCCAxlQE, syst, twk_dial);
   NSYST_UPDATEVALUE(kXSecTwkDial_PsFF, syst, twk_dial);
-  NSYST_UPDATEVALUE(kXSecTwkDial_AxlDipToAlt, syst, twk_dial);
   NSYST_UPDATEVALUE(kXSecTwkDial_FAxlCCQEAlpha, syst, twk_dial);
   NSYST_UPDATEVALUE(kXSecTwkDial_FAxlCCQEGamma, syst, twk_dial);
   NSYST_UPDATEVALUE(kXSecTwkDial_FAxlCCQEBeta, syst, twk_dial);
@@ -128,11 +122,9 @@ void NReWeightNuXSecCCQE::SetSystematic(NSyst_t syst, double twk_dial) {
 void NReWeightNuXSecCCQE::Reset() {
   NSYST_SETTODEF(kXSecTwkDial_MaCCQE);
   NSYST_SETTODEF(kXSecTwkDial_AxlFFCCQE);
-  NSYST_SETTODEF(kXSecTwkDial_VecFFCCQE);
   NSYST_SETTODEF(kXSecTwkDial_SCCVecQE);
   NSYST_SETTODEF(kXSecTwkDial_SCCAxlQE);
   NSYST_SETTODEF(kXSecTwkDial_PsFF);
-  NSYST_SETTODEF(kXSecTwkDial_AxlDipToAlt);
   NSYST_SETTODEF(kXSecTwkDial_FAxlCCQEAlpha);
   NSYST_SETTODEF(kXSecTwkDial_FAxlCCQEGamma);
   NSYST_SETTODEF(kXSecTwkDial_FAxlCCQEBeta);
@@ -145,6 +137,8 @@ void NReWeightNuXSecCCQE::Reset() {
   NSYST_SETTODEF(kXSecTwkDial_FAZExp_A2);
   NSYST_SETTODEF(kXSecTwkDial_FAZExp_A3);
   NSYST_SETTODEF(kXSecTwkDial_FAZExp_A4);
+
+  Reconfigure();
 }
 
 void NReWeightNuXSecCCQE::Reconfigure() {
@@ -152,11 +146,9 @@ void NReWeightNuXSecCCQE::Reconfigure() {
 
   NSYST_RECONFCURRVALUE(kXSecTwkDial_MaCCQE, fracerr);
   NSYST_RECONFCURRVALUE_NOUNCERT(kXSecTwkDial_AxlFFCCQE);
-  NSYST_RECONFCURRVALUE_NOUNCERT(kXSecTwkDial_VecFFCCQE);
   NSYST_RECONFCURRVALUE(kXSecTwkDial_SCCVecQE, fracerr);
   NSYST_RECONFCURRVALUE(kXSecTwkDial_SCCAxlQE, fracerr);
   NSYST_RECONFCURRVALUE(kXSecTwkDial_PsFF, fracerr);
-  NSYST_RECONFCURRVALUE_NOUNCERT(kXSecTwkDial_AxlDipToAlt);
   NSYST_RECONFCURRVALUE(kXSecTwkDial_FAxlCCQEAlpha, fracerr);
   NSYST_RECONFCURRVALUE(kXSecTwkDial_FAxlCCQEGamma, fracerr);
   NSYST_RECONFCURRVALUE(kXSecTwkDial_FAxlCCQEBeta, fracerr);
@@ -177,41 +169,21 @@ void NReWeightNuXSecCCQE::Reconfigure() {
               << std::endl;
     throw;
   }
-  if (NSYST_CURRVAR(kXSecTwkDial_AxlDipToAlt) &&
-      (NSYST_CURRVAR(kXSecTwkDial_AxlDipToAlt) > 5)) {
-    std::cout << "ERROR: AxlDipToAlt can only go between 0 and 5\n\t0. Disable "
-                 "alternate AxFF reweight.\n\t1. Dipole\n\t2. BBBA07\n\t3. 2 "
-                 "Comp\n\t4. 3 Comp.\n\t5. Z Exp."
-              << std::endl;
-    throw;
-  }
-  if (!NSYST_CURRVAR(kXSecTwkDial_VecFFCCQE)) {
-    std::cout << "ERROR: VecFFCCQE must be set:\n\t2: BBA05\n402: SF"
-              << std::endl;
-    throw;
-  }
-}
-
-double NReWeightNuXSecCCQE::CalcWeight() {
-  if (!NModeDefn::isCCQE(nework_.modene)) {
-    return 1;
-  }
-
-  return CalcWeightMa();
 }
 
 double NReWeightNuXSecCCQE::CalcChisq() {
   return std::pow(NSYST_TWKVAR(kXSecTwkDial_MaCCQE), 2);
 }
 
-double NReWeightNuXSecCCQE::CalcWeightMa() {
+double NReWeightNuXSecCCQE::CalcWeight() {
+  if (!NModeDefn::isCCQE(nework_.modene)) {
+    return 1;
+  }
   bool tweaked = NSYST_ISTWKD(kXSecTwkDial_MaCCQE) ||
                  NSYST_ISTWKD(kXSecTwkDial_AxlFFCCQE) ||
-                 NSYST_ISTWKD(kXSecTwkDial_VecFFCCQE) ||
                  NSYST_ISTWKD(kXSecTwkDial_SCCVecQE) ||
                  NSYST_ISTWKD(kXSecTwkDial_SCCAxlQE) ||
                  NSYST_ISTWKD(kXSecTwkDial_PsFF) ||
-                 NSYST_ISTWKD(kXSecTwkDial_AxlDipToAlt) ||
                  NSYST_ISTWKD(kXSecTwkDial_FAxlCCQEAlpha) ||
                  NSYST_ISTWKD(kXSecTwkDial_FAxlCCQEGamma) ||
                  NSYST_ISTWKD(kXSecTwkDial_FAxlCCQEBeta) ||
@@ -236,16 +208,13 @@ double NReWeightNuXSecCCQE::CalcWeightMa() {
 
   if (old_xsec == 0) {
     std::cout
-        << "NReWeightNuXSecCCQE::CalcWeightMa() Warning: old_xsec==0, setting "
+        << "NReWeightNuXSecCCQE::CalcWeight() Warning: old_xsec==0, setting "
            "weight to 1"
         << std::endl;
     return 1;
   }
 
-  nemdls_.mdlqe = NSYST_CURRVAR(kXSecTwkDial_VecFFCCQE);
-  nemdls_.mdlqeaf = NSYST_CURRVAR(kXSecTwkDial_AxlDipToAlt)
-                        ? NSYST_CURRVAR(kXSecTwkDial_AxlDipToAlt)
-                        : NSYST_CURRVAR(kXSecTwkDial_AxlFFCCQE);
+  nemdls_.mdlqeaf = NSYST_CURRVAR(kXSecTwkDial_AxlFFCCQE);
 
   nemdls_.xmaqe = NSYST_CURRVAR(kXSecTwkDial_MaCCQE);
 
@@ -260,12 +229,6 @@ double NReWeightNuXSecCCQE::CalcWeightMa() {
   nemdls_.axffgamma = NSYST_CURRVAR(kXSecTwkDial_FAxlCCQEGamma);
   nemdls_.axfftheta = NSYST_CURRVAR(kXSecTwkDial_FAxlCCQETheta);
   nemdls_.axffbeta = NSYST_CURRVAR(kXSecTwkDial_FAxlCCQEBeta);
-
-  // nemdls_.axzexpnt = fCurr_ZExp_NTerms;
-  // nemdls_.axzexpq4 = fCurr_ZExp_Q4Cut;
-
-  // nemdls_.axzexptc = fCurr_ZExp_TCut;
-  // nemdls_.axzexpt0 = fCurr_ZExp_T0;
 
   nemdls_.axzexpa1 = NSYST_CURRVAR(kXSecTwkDial_FAZExp_A1);
   nemdls_.axzexpa2 = NSYST_CURRVAR(kXSecTwkDial_FAZExp_A2);
@@ -282,3 +245,6 @@ double NReWeightNuXSecCCQE::CalcWeightMa() {
 #endif
   NREWCHECKRETURN(new_xsec / old_xsec);
 }
+
+} // namespace rew
+} // namespace neut

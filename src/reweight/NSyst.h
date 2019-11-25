@@ -17,25 +17,19 @@
 #define NEUTREWEIGHT_DIAL_LIST                                                 \
   /******************************** (Q)El dials *****************************/ \
   /*Tweak Ma NCEL, affects dsigma(NCEL)/dQ2 both in shape and normalization */ \
-  X(kXSecTwkDial_MaNCEL, MaNCEL, 0.165289256, 0.165289256)                     \
+  /*X(kXSecTwkDial_MaNCEL, MaNCEL, 0.165289256, 0.165289256)    */             \
   /*Tweak elastic nucleon form factors (default/dipole -> BBBA07) */           \
-  X(kXSecTwkDial_AxlFFNCEL, AxlFFNCEL, NOUNCERT, NOUNCERT)                     \
-  /*Tweak elastic nucleon form factors (default/dipole -> BBBA05)*/            \
-  X(kXSecTwkDial_VecFFNCEL, VecFFNCEL, NOUNCERT, NOUNCERT)                     \
+  /*X(kXSecTwkDial_AxlFFNCEL, AxlFFNCEL, NOUNCERT, NOUNCERT) */                \
   /*Tweak Ma CCQE, affects dsigma(CCQE)/dQ2 both in shape and normalization*/  \
   X(kXSecTwkDial_MaCCQE, MaCCQE, 0.165289256, 0.165289256)                     \
   /*Tweak elastic nucleon form factors (default/dipole -> BBBA07)*/            \
   X(kXSecTwkDial_AxlFFCCQE, AxlFFCCQE, NOUNCERT, NOUNCERT)                     \
-  /*Tweak the MDLQE used in the calculation (default is MDLQE = 402)*/         \
-  X(kXSecTwkDial_VecFFCCQE, VecFFCCQE, NOUNCERT, NOUNCERT)                     \
   /*Tweak vector 2nd class current FF*/                                        \
   X(kXSecTwkDial_SCCVecQE, SCCVecQE, 1.0, 1.0)                                 \
   /*Tweak axial 2nd class current FF*/                                         \
   X(kXSecTwkDial_SCCAxlQE, SCCAxlQE, 1.0, 1.0)                                 \
   /*Tweak pseudoscalar FF at Q2=0*/                                            \
   X(kXSecTwkDial_PsFF, PsFF, 0.03, 0.03)                                       \
-  /*dial to do dipole->alternate fa*/                                          \
-  X(kXSecTwkDial_AxlDipToAlt, AxlDipToAlt, NOUNCERT, NOUNCERT)                 \
   /*2 Component Alpha*/                                                        \
   X(kXSecTwkDial_FAxlCCQEAlpha, FAxlCCQEAlpha, 0.547374419586, 0.547374419586) \
   /*2 Component Gamma*/                                                        \
@@ -45,15 +39,15 @@
   /*3 Component Theta*/                                                        \
   X(kXSecTwkDial_FAxlCCQETheta, FAxlCCQETheta, 0.179147035786, 0.179147035786) \
   /*N Coeff in ZEx*/                                                           \
-  X(kXSecTwkDial_FAZExp_NTerms, FAZExp_NTerms, NOUNCERT, NOUNCERT)             \
+  /* X(kXSecTwkDial_FAZExp_NTerms, FAZExp_NTerms, NOUNCERT, NOUNCERT) */       \
   /*Q2 Cut of in z definition*/                                                \
-  X(kXSecTwkDial_FAZExp_TCut, FAZExp_TCut, 1.0, 1.0)                           \
+  /* X(kXSecTwkDial_FAZExp_TCut, FAZExp_TCut, 1.0, 1.0) */                     \
   /*Q2 Optimal Value in z definition*/                                         \
-  X(kXSecTwkDial_FAZExp_T0, FAZExp_T0, 1.0, 1.0)                               \
+  /* X(kXSecTwkDial_FAZExp_T0, FAZExp_T0, 1.0, 1.0) */                         \
   /*Apply Q^{-4} constraint flag*/                                             \
-  X(kXSecTwkDial_FAZExp_Q4Cut, FAZExp_Q4Cut, NOUNCERT, NOUNCERT)               \
+  /* X(kXSecTwkDial_FAZExp_Q4Cut, FAZExp_Q4Cut, NOUNCERT, NOUNCERT)  */        \
   /*Z-Expansion A0 Co-eff (keep fixed for now)*/                               \
-  X(kXSecTwkDial_FAZExp_A0, FAZExp_A0, 1.0, 1.0)                               \
+  /* X(kXSecTwkDial_FAZExp_A0, FAZExp_A0, 1.0, 1.0) */                         \
   /*Z-Expansion A1 Co-eff*/                                                    \
   X(kXSecTwkDial_FAZExp_A1, FAZExp_A1, 0.0809326542131, 0.0809326542131)       \
   /*Z-Expansion A2 Co-eff*/                                                    \
@@ -63,47 +57,42 @@
   /*Z-Expansion A4 Co-eff*/                                                    \
   X(kXSecTwkDial_FAZExp_A4, FAZExp_A4, 1.77410484897, 1.77410484897)           \
   /*Z-Expansion A5 Co-eff (keep fixed for now)*/                               \
-  X(kXSecTwkDial_FAZExp_A5, FAZExp_A5, 1.0, 1.0)                               \
+  /* X(kXSecTwkDial_FAZExp_A5, FAZExp_A5, 1.0, 1.0) */                         \
   /*Z-Expansion A6 Co-eff (keep fixed for now)*/                               \
-  X(kXSecTwkDial_FAZExp_A6, FAZExp_A6, 1.0, 1.0)                               \
+  /* X(kXSecTwkDial_FAZExp_A6, FAZExp_A6, 1.0, 1.0) */                         \
   /*Z-Expansion A7 Co-eff (keep fixed for now)*/                               \
-  X(kXSecTwkDial_FAZExp_A7, FAZExp_A7, 1.0, 1.0)                               \
+  /* X(kXSecTwkDial_FAZExp_A7, FAZExp_A7, 1.0, 1.0) */                         \
   /*Z-Expansion A8 Co-eff (keep fixed for now)*/                               \
-  X(kXSecTwkDial_FAZExp_A8, FAZExp_A8, 1.0, 1.0)                               \
+  /* X(kXSecTwkDial_FAZExp_A8, FAZExp_A8, 1.0, 1.0) */                         \
   /*Z-Expansion A9 Co-eff (keep fixed for now)*/                               \
-  X(kXSecTwkDial_FAZExp_A9, FAZExp_A9, 1.0, 1.0)                               \
+  /* X(kXSecTwkDial_FAZExp_A9, FAZExp_A9, 1.0, 1.0) */                         \
   /****************************** SPP dials**** *****************************/ \
   /*Tweak Ma CCRES, affects d2sigma(CCRES)/dWdQ2 both in shape and*/           \
   /* normalization*/                                                           \
-  X(kXSecTwkDial_MaRES, MaRES, 0.165289256, 0.165289256)                       \
+  X(kXSecTwkDial_MaRES, MaRES, 0.157894737, 0.157894737)                       \
   /*Tweak Mv CCRES, affects d2sigma(CCRES)/dWdQ2 both in shape and */          \
   /* normalization*/                                                           \
   X(kXSecTwkDial_MvRES, MvRES, 0.119047619, 0.119047619)                       \
-  X(kXSecTwkDial_FFRES, FFRES, NOUNCERT, NOUNCERT)                             \
-  X(kXSecTwkDial_TypeRES, TypeRES, NOUNCERT, NOUNCERT)                         \
   X(kXSecTwkDial_CA5RES, CA5RES, 0.247524752, 0.247524752)                     \
   X(kXSecTwkDial_BgSclRES, BgSclRES, 0.153846154, 0.153846154)                 \
-  X(kXSecTwkDial_MaNFFRES, MaNFFRES, 0.157894737, 0.157894737)                 \
-  X(kXSecTwkDial_MvNFFRES, MvNFFRES, 0.119047619, 0.119047619)                 \
-  X(kXSecTwkDial_MaRSRES, MaRSRES, 0.165289256, 0.165289256)                   \
-  X(kXSecTwkDial_MvRSRES, MvRSRES, 0.119047619, 0.119047619)                   \
   X(kXSecTwkDial_UseSeparateBgSclLMCPiBar, UseSeparateBgSclLMCPiBar, NOUNCERT, \
     NOUNCERT)                                                                  \
   /*A logically separate BgScl parameter for low momentum single pion */       \
   /* events from anti-neutrinos where the pion is below Cherenkov threshold.*/ \
-  X(kXSecTwkDial_BgSclLMCPiBarRES, BgSclLMCPiBarRES, 1, 1)                     \
+  X(kXSecTwkDial_BgSclLMCPiBarRES, BgSclLMCPiBarRES, 0.153846154 * 3,          \
+    0.153846154 * 3)                                                           \
   /*Tweak the model of coherent pion production*/                              \
-  X(kXSecTwkDial_NECOHEPI, NECOHEPI, NOUNCERT, NOUNCERT)                       \
+  /* X(kXSecTwkDial_NECOHEPI, NECOHEPI, NOUNCERT, NOUNCERT)   */               \
   /*Tweak A1 coef for COH pion production (Berger&Sehgal)*/                    \
-  X(kXSecTwkDial_fA1COHpi, fA1COHpi, 0.10, 0.10)                               \
+  /* X(kXSecTwkDial_fA1COHpi, fA1COHpi, 0.10, 0.10)         */                 \
   /*Tweak b1 coef for COH pion production (Berger&Sehgal)*/                    \
-  X(kXSecTwkDial_fb1COHpi, fb1COHpi, 0.10, 0.10)                               \
+  /* X(kXSecTwkDial_fb1COHpi, fb1COHpi, 0.10, 0.10)   */                       \
   /*Tweak Ma for COH pion production*/                                         \
-  X(kXSecTwkDial_MaCOHpi, MaCOHpi, 0.50, 0.50)                                 \
+  /* X(kXSecTwkDial_MaCOHpi, MaCOHpi, 0.50, 0.50) */                           \
   /*Tweak R0 for COH pion production*/                                         \
-  X(kXSecTwkDial_R0COHpi, R0COHpi, 0.10, 0.10)                                 \
+  /* X(kXSecTwkDial_R0COHpi, R0COHpi, 0.10, 0.10) */                           \
   /*Tweak the inclusive DIS CC normalization*/                                 \
-  X(kXSecTwkDial_BYOnOffDIS, BYOnOffDIS, NOUNCERT, NOUNCERT)                   \
+  /* X(kXSecTwkDial_BYOnOffDIS, BYOnOffDIS, NOUNCERT, NOUNCERT)   */           \
   /*Tweak absorption probability for low energy pions*/                        \
   X(kCascTwkDial_FrAbs_pi, FrAbs_pi, 0.50, 0.50)                               \
   /*Tweak inelastic (QE in NEUT) probability for low energy pions*/            \
@@ -201,6 +190,7 @@ public:
   NSYST_TWKVAR(DN) = 0;
 #define NSYST_RECONFCURRVALUE(DN, err)                                         \
   NSYST_CURRVAR(DN) =                                                          \
+      NSYST_DEFVAR(DN) *                                                       \
       (1. + NSYST_TWKVAR(DN) *                                                 \
                 err->OneSigmaErr(DN, ((NSYST_TWKVAR(DN) > 0) ? +1 : -1)));
 #define NSYST_RECONFCURRVALUE_NOUNCERT(DN) NSYST_CURRVAR(DN) = NSYST_TWKVAR(DN);

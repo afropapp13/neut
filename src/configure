@@ -646,6 +646,8 @@ NEUT_LIBCOMPAT_TRUE
 ROOT_MAJOR_IS_SIX_FALSE
 ROOT_MAJOR_IS_SIX_TRUE
 FOUND_ROOTCONFIG
+FC_HAS_PIE_FALSE
+FC_HAS_PIE_TRUE
 CXXCPP
 CPP
 LT_SYS_LIBRARY_PATH
@@ -22506,6 +22508,23 @@ fi
 
 
 
+########## Check --enable-default-pie
+
+FC_PIE_CHECK="$(${FC} -v 2>&1 | grep 'enable-default-pie' | wc -c)"
+
+if test ! ${FC_PIE_CHECK} -eq 0; then
+  echo "${FC} was compiled with --enable-default-pie, must pass -no-pie"
+fi
+
+ if test ! ${FC_PIE_CHECK} -eq 0; then
+  FC_HAS_PIE_TRUE=
+  FC_HAS_PIE_FALSE='#'
+else
+  FC_HAS_PIE_TRUE='#'
+  FC_HAS_PIE_FALSE=
+fi
+
+
 ########## Check ROOT
 # Extract the first word of "root-config", so it can be a program name with args.
 set dummy root-config; ac_word=$2
@@ -22585,7 +22604,7 @@ fi
 
 if test "x$enable_compatnames" = "xyes"; then :
 
-
+  echo "Using old-style library names."
 
 else
 
@@ -22836,6 +22855,10 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${am__fastdepCXX_TRUE}" && test -z "${am__fastdepCXX_FALSE}"; then
   as_fn_error $? "conditional \"am__fastdepCXX\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${FC_HAS_PIE_TRUE}" && test -z "${FC_HAS_PIE_FALSE}"; then
+  as_fn_error $? "conditional \"FC_HAS_PIE\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${ROOT_MAJOR_IS_SIX_TRUE}" && test -z "${ROOT_MAJOR_IS_SIX_FALSE}"; then

@@ -80,6 +80,8 @@ void NReWeightCasc::Reset(void) {
   NSYST_SETTODEF(kCascTwkDial_FrInelHigh_pi);
   NSYST_SETTODEF(kCascTwkDial_FrCExHigh_pi);
   NSYST_SETTODEF(kCascTwkDial_FrPiProd_pi);
+
+  Reconfigure();
 }
 
 void NReWeightCasc::Reconfigure(void) {
