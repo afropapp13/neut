@@ -162,8 +162,9 @@ void NReWeightNuXSecCCQE::Reconfigure() {
   NSYST_RECONFCURRVALUE(kXSecTwkDial_FAZExp_A3, fracerr);
   NSYST_RECONFCURRVALUE(kXSecTwkDial_FAZExp_A4, fracerr);
 
-  if (!NSYST_CURRVAR(kXSecTwkDial_AxlFFCCQE) ||
-      (NSYST_CURRVAR(kXSecTwkDial_AxlFFCCQE) > 5)) {
+  if (NSYST_ISTWKD(kXSecTwkDial_AxlFFCCQE) &&
+      ((NSYST_CURRVAR(kXSecTwkDial_AxlFFCCQE) > 5) ||
+       (NSYST_CURRVAR(kXSecTwkDial_AxlFFCCQE) < 1))) {
     std::cout << "ERROR: AxlFFCCQE can only go between 1 and 5\n\t1. "
                  "Dipole\n\t2. BBBA07\n\t3. 2 Comp\n\t4. 3 Comp.\n\t5. Z Exp."
               << std::endl;
@@ -214,26 +215,26 @@ double NReWeightNuXSecCCQE::CalcWeight() {
     return 1;
   }
 
-  nemdls_.mdlqeaf = NSYST_CURRVAR(kXSecTwkDial_AxlFFCCQE);
+  NSYST_ASSIGNIFTWKD(nemdls_.mdlqeaf, kXSecTwkDial_AxlFFCCQE);
 
-  nemdls_.xmaqe = NSYST_CURRVAR(kXSecTwkDial_MaCCQE);
+  NSYST_ASSIGNIFTWKD(nemdls_.xmaqe, kXSecTwkDial_MaCCQE);
 
-  nemdls_.sccfv = NSYST_CURRVAR(kXSecTwkDial_SCCVecQE);
-  nemdls_.sccfa = NSYST_CURRVAR(kXSecTwkDial_SCCAxlQE);
-  nemdls_.fpqe = NSYST_CURRVAR(kXSecTwkDial_PsFF);
+  NSYST_ASSIGNIFTWKD(nemdls_.sccfv, kXSecTwkDial_SCCVecQE);
+  NSYST_ASSIGNIFTWKD(nemdls_.sccfa, kXSecTwkDial_SCCAxlQE);
+  NSYST_ASSIGNIFTWKD(nemdls_.fpqe, kXSecTwkDial_PsFF);
 
-  nemdls_.axffalpha = NSYST_CURRVAR(kXSecTwkDial_FAxlCCQEAlpha);
-  nemdls_.axffgamma = NSYST_CURRVAR(kXSecTwkDial_FAxlCCQEGamma);
+  NSYST_ASSIGNIFTWKD(nemdls_.axffalpha, kXSecTwkDial_FAxlCCQEAlpha);
+  NSYST_ASSIGNIFTWKD(nemdls_.axffgamma, kXSecTwkDial_FAxlCCQEGamma);
 
-  nemdls_.axffalpha = NSYST_CURRVAR(kXSecTwkDial_FAxlCCQEAlpha);
-  nemdls_.axffgamma = NSYST_CURRVAR(kXSecTwkDial_FAxlCCQEGamma);
-  nemdls_.axfftheta = NSYST_CURRVAR(kXSecTwkDial_FAxlCCQETheta);
-  nemdls_.axffbeta = NSYST_CURRVAR(kXSecTwkDial_FAxlCCQEBeta);
+  NSYST_ASSIGNIFTWKD(nemdls_.axffalpha, kXSecTwkDial_FAxlCCQEAlpha);
+  NSYST_ASSIGNIFTWKD(nemdls_.axffgamma, kXSecTwkDial_FAxlCCQEGamma);
+  NSYST_ASSIGNIFTWKD(nemdls_.axfftheta, kXSecTwkDial_FAxlCCQETheta);
+  NSYST_ASSIGNIFTWKD(nemdls_.axffbeta, kXSecTwkDial_FAxlCCQEBeta);
 
-  nemdls_.axzexpa1 = NSYST_CURRVAR(kXSecTwkDial_FAZExp_A1);
-  nemdls_.axzexpa2 = NSYST_CURRVAR(kXSecTwkDial_FAZExp_A2);
-  nemdls_.axzexpa3 = NSYST_CURRVAR(kXSecTwkDial_FAZExp_A3);
-  nemdls_.axzexpa4 = NSYST_CURRVAR(kXSecTwkDial_FAZExp_A4);
+  NSYST_ASSIGNIFTWKD(nemdls_.axzexpa1, kXSecTwkDial_FAZExp_A1);
+  NSYST_ASSIGNIFTWKD(nemdls_.axzexpa2, kXSecTwkDial_FAZExp_A2);
+  NSYST_ASSIGNIFTWKD(nemdls_.axzexpa3, kXSecTwkDial_FAZExp_A3);
+  NSYST_ASSIGNIFTWKD(nemdls_.axzexpa4, kXSecTwkDial_FAZExp_A4);
 
   NEUTSetParams();
 

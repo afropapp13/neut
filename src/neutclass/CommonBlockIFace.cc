@@ -26,8 +26,20 @@ namespace neut {
 static CommonBlockIFace *gCommonBlockIFace = NULL;
 
 void CommonBlockIFace::SetGenCard(std::string const &GenCardLocation) {
+  if (!GenCardLocation.size()) {
+    std::cout << "[ERROR]: CommonBlockIFace::SetGenCard passed empty string as "
+                 "card location to read."
+              << std::endl;
+    throw;
+  }
   // Set Card
-  std::strncpy(necardname_.fcard, GenCardLocation.c_str(), 1023);
+  //Set the whole array to spaces first
+  std::memset(necardname_.fcard, ' ', 1024);
+  //Copy just the string characters without null termination as FORTRAN doesn't
+  //do null termination...
+  std::strncpy(necardname_.fcard, GenCardLocation.c_str(),
+               std::min(size_t(1023), GenCardLocation.size()));
+  necardname_.isset = true;
   // Read Card
   necard_();
   necardev_();
@@ -504,6 +516,87 @@ std::string CommonBlockIFace::ParamsToString(bool isinstance) {
 
   ss << "neutradcorr:\n"
      << "\tiradcorr: " << neutradcorr.iradcorr << "\n";
+
+  nemdls_common const &nemdls =
+      isinstance ? CommonBlockIFace::Get().fnemdls_gen : nemdls_;
+
+  ss << "nemdls:\n"
+     << "\tmdlqe: " << nemdls.mdlqe << "\n"
+     << "\tmdlspi: " << nemdls.mdlspi << "\n"
+     << "\tmdldis: " << nemdls.mdldis << "\n"
+     << "\tmdlcoh: " << nemdls.mdlcoh << "\n"
+     << "\tmdldif: " << nemdls.mdldif << "\n"
+     << "\tmdlqeaf: " << nemdls.mdlqeaf << "\n"
+     << "\txmaqe: " << nemdls.xmaqe << "\n"
+     << "\txmaspi: " << nemdls.xmaspi << "\n"
+     << "\txmvqe: " << nemdls.xmvqe << "\n"
+     << "\txmvspi: " << nemdls.xmvspi << "\n"
+     << "\tkapp: " << nemdls.kapp << "\n"
+     << "\txmacoh: " << nemdls.xmacoh << "\n"
+     << "\trad0nu: " << nemdls.rad0nu << "\n"
+     << "\tfa1coh: " << nemdls.fa1coh << "\n"
+     << "\tfb1coh: " << nemdls.fb1coh << "\n"
+     << "\tiffspi: " << nemdls.iffspi << "\n"
+     << "\tnrtypespi: " << nemdls.nrtypespi << "\n"
+     << "\trca5ispi: " << nemdls.rca5ispi << "\n"
+     << "\trbgsclspi: " << nemdls.rbgsclspi << "\n"
+     << "\txmares: " << nemdls.xmares << "\n"
+     << "\txmvres: " << nemdls.xmvres << "\n"
+     << "\tsccfv: " << nemdls.sccfv << "\n"
+     << "\tsccfa: " << nemdls.sccfa << "\n"
+     << "\tfpqe: " << nemdls.fpqe << "\n"
+     << "\tpfsf: " << nemdls.pfsf << "\n"
+     << "\txmadif: " << nemdls.xmadif << "\n"
+     << "\tnucvoldif: " << nemdls.nucvoldif << "\n"
+     << "\taxffalpha: " << nemdls.axffalpha << "\n"
+     << "\taxffgamma: " << nemdls.axffgamma << "\n"
+     << "\taxfftheta: " << nemdls.axfftheta << "\n"
+     << "\taxffbeta: " << nemdls.axffbeta << "\n"
+     << "\taxzexpq4: " << nemdls.axzexpq4 << "\n"
+     << "\taxzexpnt: " << nemdls.axzexpnt << "\n"
+     << "\taxzexpt0: " << nemdls.axzexpt0 << "\n"
+     << "\taxzexptc: " << nemdls.axzexptc << "\n"
+     << "\taxzexpa0: " << nemdls.axzexpa0 << "\n"
+     << "\taxzexpa1: " << nemdls.axzexpa1 << "\n"
+     << "\taxzexpa2: " << nemdls.axzexpa2 << "\n"
+     << "\taxzexpa3: " << nemdls.axzexpa3 << "\n"
+     << "\taxzexpa4: " << nemdls.axzexpa4 << "\n"
+     << "\taxzexpa5: " << nemdls.axzexpa5 << "\n"
+     << "\taxzexpa6: " << nemdls.axzexpa6 << "\n"
+     << "\taxzexpa7: " << nemdls.axzexpa7 << "\n"
+     << "\taxzexpa8: " << nemdls.axzexpa8 << "\n"
+     << "\taxzexpa9: " << nemdls.axzexpa9 << "\n"
+     << "\tmdl2p2h: " << nemdls.mdl2p2h << "\n"
+     << "\txmancel: " << nemdls.xmancel << "\n";
+
+  nenupr_common const &nenupr =
+      isinstance ? CommonBlockIFace::Get().fnenupr_gen : nenupr_;
+
+  ss << "nenupr:\n"
+     << "\tpfsurf: " << nenupr.pfsurf << "\n"
+     << "\tpfmax: " << nenupr.pfmax << "\n"
+     << "\tvnuini: " << nenupr.vnuini << "\n"
+     << "\tvnufin: " << nenupr.vnufin << "\n"
+     << "\tiformlen: " << nenupr.iformlen << "\n"
+     << "\tfzmu2: " << nenupr.fzmu2 << "\n"
+     << "\tsfebshift: " << nenupr.sfebshift << "\n";
+
+  neffpr_common const &neffpr =
+      isinstance ? CommonBlockIFace::Get().fneffpr_gen : neffpr_;
+
+  ss << "neffpr:\n"
+     << "\tfefqe: " << neffpr.fefqe << "\n"
+     << "\tfefqeh: " << neffpr.fefqeh << "\n"
+     << "\tfefinel: " << neffpr.fefinel << "\n"
+     << "\tfefabs: " << neffpr.fefabs << "\n"
+     << "\tfefcoh: " << neffpr.fefcoh << "\n"
+     << "\tfefqehf: " << neffpr.fefqehf << "\n"
+     << "\tfefcohf: " << neffpr.fefcohf << "\n"
+     << "\tfefcx: " << neffpr.fefcx << "\n"
+     << "\tfefcxhf: " << neffpr.fefcxhf << "\n"
+     << "\tfefcxh: " << neffpr.fefcxh << "\n"
+     << "\tfefcoul: " << neffpr.fefcoul << "\n"
+     << "\tfefall: " << neffpr.fefall << "\n";
 
   return ss.str();
 }

@@ -5,7 +5,11 @@
 #error NSyst.h uses X macros and as such 'X' cannot be defined before preprocessing.
 #endif
 
+#define NSYST_DEBUG
+
+#include <cmath>
 #include <string>
+
 // This semantically highlights that the uncertainty for the a dial has no
 // meaning
 #define NOUNCERT 0
@@ -171,7 +175,7 @@ public:
 #define NSYST_CURRVAR(DN) NSYST_CATVARNAME(fCurr, DN)
 #define NSYST_DEFVAR(DN) NSYST_CATVARNAME(fDef, DN)
 #define NSYST_TWKVAR(DN) NSYST_CATVARNAME(fTwk, DN)
-#define NSYST_ISTWKD(DN) bool(NSYST_TWKVAR(DN) > 1E-8)
+#define NSYST_ISTWKD(DN) bool(std::abs(NSYST_TWKVAR(DN)) > 1E-8)
 #define NSYST_DECLAREDIALVARIABLES(DN)                                         \
   double NSYST_CURRVAR(DN);                                                    \
   double NSYST_DEFVAR(DN);                                                     \
@@ -188,13 +192,36 @@ public:
 #define NSYST_SETTODEF(DN)                                                     \
   NSYST_CURRVAR(DN) = NSYST_DEFVAR(DN);                                        \
   NSYST_TWKVAR(DN) = 0;
+
+#define NSYST_ASSIGNIFTWKD(TGT, DN)                                            \
+  if (NSYST_ISTWKD(DN)) {                                                      \
+    TGT = NSYST_CURRVAR(DN);                                                   \
+  }
+
+#ifndef NSYST_DEBUG
 #define NSYST_RECONFCURRVALUE(DN, err)                                         \
   NSYST_CURRVAR(DN) =                                                          \
       NSYST_DEFVAR(DN) *                                                       \
       (1. + NSYST_TWKVAR(DN) *                                                 \
                 err->OneSigmaErr(DN, ((NSYST_TWKVAR(DN) > 0) ? +1 : -1)));
 #define NSYST_RECONFCURRVALUE_NOUNCERT(DN) NSYST_CURRVAR(DN) = NSYST_TWKVAR(DN);
-
+#else
+#define NSYST_RECONFCURRVALUE(DN, err)                                         \
+  NSYST_CURRVAR(DN) =                                                          \
+      NSYST_DEFVAR(DN) *                                                       \
+      (1. + NSYST_TWKVAR(DN) *                                                 \
+                err->OneSigmaErr(DN, ((NSYST_TWKVAR(DN) > 0) ? +1 : -1)));     \
+  std::cout << "dial: " << #DN << ", tweak: " << NSYST_TWKVAR(DN)              \
+            << ", def: " << NSYST_DEFVAR(DN) << " set to "                     \
+            << NSYST_CURRVAR(DN) << " (err = "                                 \
+            << err->OneSigmaErr(DN, ((NSYST_TWKVAR(DN) > 0) ? +1 : -1)) << ")" \
+            << std::endl;
+#define NSYST_RECONFCURRVALUE_NOUNCERT(DN)                                     \
+  NSYST_CURRVAR(DN) = NSYST_TWKVAR(DN);                                        \
+  std::cout << "dial: " << #DN << ", tweak: " << NSYST_TWKVAR(DN)              \
+            << ", def: " << NSYST_DEFVAR(DN) << " set to "                     \
+            << NSYST_CURRVAR(DN) << std::endl;
+#endif
 // Unless explicitly asked for (for use in xmacros in other TUs) these should be
 // undefined before the end of this header
 #ifndef NEUTREWEIGHT_LEAVE_DIALS_DEFINED

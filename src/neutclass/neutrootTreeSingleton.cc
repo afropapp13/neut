@@ -7,6 +7,7 @@ NeutrootTreeSingleton *NeutrootTreeSingleton::fInstance = 0;
 NeutrootTreeSingleton::NeutrootTreeSingleton() {}
 NeutrootTreeSingleton::~NeutrootTreeSingleton() {
   delete tree_neutroot;
+  delete nvect;
   fInstance = 0;
 }
 
@@ -61,7 +62,7 @@ void NeutrootTreeSingleton::LoadTree(std::string const &filename) {
             << ", with number of events: " << f_nEvents << std::endl;
 
   br_neutvect = tree_neutroot->GetBranch("vectorbranch");
-  nvect = NULL;
+  nvect = new NeutVect();
 
   if (br_neutvect) {
     br_neutvect->SetAddress(&nvect);

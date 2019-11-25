@@ -47,8 +47,8 @@ NSystUncertainty::NSystUncertainty() {}
 NSystUncertainty::~NSystUncertainty() { fInstance = 0; }
 NSystUncertainty *NSystUncertainty::Instance() {
   if (fInstance == 0) {
-    std::cout << std::endl
-              << "NSystUncertainty late initialization" << std::endl;
+    fInstance = new NSystUncertainty();
+    fInstance->SetDefaults();
   }
   return fInstance;
 }

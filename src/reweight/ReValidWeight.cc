@@ -33,6 +33,7 @@ int main(int argc, char const *argv[]) {
 
   NeutVect *nvct = neutRdr.GetNeutVectAddress();
   for (Long64_t ent = 0; ent < Nents; ++ent) {
+    std::cout << "Getting entry: " << ent << std::endl;
     neutRdr.GetEntry(ent);
 
     CommonBlockIFace::ReadVect(nvct);
