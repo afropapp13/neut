@@ -25,16 +25,16 @@
 */
 //____________________________________________________________________________
 
-#include "CommonBlockIFace.h"
 #include "NReWeightCasc.h"
+#include "CommonBlockIFace.h"
 #include "NSystUncertainty.h"
 
 #include "vcworkC.h"
 
 #include "posinnucC.h"
 
-#include <iostream>
 #include <cmath>
+#include <iostream>
 
 //#define _N_REWEIGHT_CASC_DEBUG_
 
@@ -127,13 +127,15 @@ double NReWeightCasc::CalcWeight() {
     return 1;
   }
 
-  // Why are these squared?
-  neffpr_.fefabs = pow(NSYST_CURRVAR(kCascTwkDial_FrAbs_pi), 2);
-  neffpr_.fefqe = pow(NSYST_CURRVAR(kCascTwkDial_FrInelLow_pi), 2);
-  neffpr_.fefcx = pow(NSYST_CURRVAR(kCascTwkDial_FrCExLow_pi), 2);
-  neffpr_.fefinel = pow(NSYST_CURRVAR(kCascTwkDial_FrInelHigh_pi), 2);
-  neffpr_.fefcxh = pow(NSYST_CURRVAR(kCascTwkDial_FrCExHigh_pi), 2);
-  neffpr_.fefqeh = pow(NSYST_CURRVAR(kCascTwkDial_FrPiProd_pi), 2);
+  neffpr_.fefabs = NSYST_CURRVAR(kCascTwkDial_FrAbs_pi);
+
+  neffpr_.fefqe = NSYST_CURRVAR(kCascTwkDial_FrInelLow_pi);
+  neffpr_.fefqeh = NSYST_CURRVAR(kCascTwkDial_FrInelHigh_pi);
+
+  neffpr_.fefcx = NSYST_CURRVAR(kCascTwkDial_FrCExLow_pi);
+  neffpr_.fefcxh = NSYST_CURRVAR(kCascTwkDial_FrCExHigh_pi);
+
+  neffpr_.fefinel = NSYST_CURRVAR(kCascTwkDial_FrPiProd_pi);
 
   NEUTSetParams();
 

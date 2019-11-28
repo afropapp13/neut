@@ -151,10 +151,16 @@ int main(int argc, char const *argv[]) {
   std::vector<NSyst_t> Dials;
   std::vector<std::string> DialNames;
 
-  // Dials.push_back(kXSecTwkDial_MaCCQE);
+  Dials.push_back(kXSecTwkDial_MaCCQE);
   Dials.push_back(kXSecTwkDial_MaRES);
-  // Dials.push_back(kXSecTwkDial_CA5RES);
-  // Dials.push_back(kXSecTwkDial_BgSclRES);
+  Dials.push_back(kXSecTwkDial_CA5RES);
+  Dials.push_back(kXSecTwkDial_BgSclRES);
+  Dials.push_back(kCascTwkDial_FrAbs_pi);
+  Dials.push_back(kCascTwkDial_FrInelLow_pi);
+  Dials.push_back(kCascTwkDial_FrInelHigh_pi);
+  Dials.push_back(kCascTwkDial_FrCExLow_pi);
+  Dials.push_back(kCascTwkDial_FrCExHigh_pi);
+  Dials.push_back(kCascTwkDial_FrPiProd_pi);
 
   size_t NDials = Dials.size();
 
