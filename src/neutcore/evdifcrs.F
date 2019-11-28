@@ -1,6 +1,6 @@
 **********************************************************************
 *     -------------------------
-      FUNCTION EVDIFCRS()
+      DOUBLE PRECISION FUNCTION EVDIFCRS()
 *     -------------------------
 *
 *     ( purpose )
@@ -204,9 +204,7 @@ C
       real*4 dcm,    dc33m
 
 C -- For boosting
-C      real *4 PNEU(3),PFABS,AMIN,BETA,EV(3),GM
-
-      real*4 evdifcrs
+      real*4 PNEU(3),PFABS,AMIN,BETA,EV(3),GM
 
       real*8   qedifcrs
       external qedifcrs
@@ -376,19 +374,6 @@ C --  FOR NEUTRINO
 C
       if (abs(modene).eq.1) then
 
-C      Boost neutrino to nucleon rest frame
-C         PFABS=SQRT(pne(1,2)**2+pne(2,2)**2+pne(3,2)**2)
-C         IF (PFABS.NE.0.) THEN
-C            BETA=PFABS/enuc1
-C            GM=1./SQRT(1.-BETA**2)
-C            do i =1,3
-C               PNEU(i) = pne(i,1)
-C               EV(i)=-pne(i,2)/PFABS
-C            enddo
-C            CALL MCVECBST(PNEU,0.,EV,GM)
-C            e = SQRT(PNEU(1)**2+PNEU(2)**2+PNEU(3)**2)
-C         ENDIF
-
          ccnc = 1
 
          if (IBOUND .eq. 1) then
@@ -426,8 +411,22 @@ c     endif
      $         .or.((abs(modene).ge.31).and.(abs(modene).le.34)))
      $        then
          if ( w.le.XMN+XMPI ) then
+            WRITE(*,*) "Resetting W: ", w, " -> ", XMN+XMPI
             w = XMN+XMPI
          endif
+C     Boost neutrino to nucleon rest frame
+        PFABS=SQRT(pne(1,2)**2+pne(2,2)**2+pne(3,2)**2)
+        IF (PFABS.NE.0.) THEN
+          BETA=PFABS/enuc1
+          GM=1./SQRT(1.-BETA**2)
+          do i =1,3
+              PNEU(i) = pne(i,1)
+              EV(i)=-pne(i,2)/PFABS
+          enddo
+          CALL MCVECBST(PNEU,0.,EV,GM)
+          e = SQRT(PNEU(1)**2+PNEU(2)**2+PNEU(3)**2)
+        ENDIF
+
          call rsdcrs(IMOD,IORIG,1, xmlep,e,q2,w,dcp,dc33p);
          call rsdcrs(IMOD,IORIG,-1,xmlep,e,q2,w,dcm,dc33m);
          evdifcrs = dcp + dcm
@@ -502,7 +501,7 @@ C     $ ' ipar=',ipar,' x=',CRSX,' y=',CRSX,' z=',CRSX,' phi=',CRSPHI
 C         stop
       endif
 
-C      write(*,*) evdifcrs
+c      write(*,*) "evdifcrs: ", evdifcrs
 
       RETURN
       END

@@ -41,7 +41,7 @@
       SAVE      ICOUNTER
       DATA ICOUNTER/0/
 
-      real*4 EVPIPROB
+      DOUBLE PRECISION EVPIPROB
       external EVPIPROB
 C
       IERR = 1

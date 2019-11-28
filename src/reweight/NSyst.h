@@ -5,7 +5,7 @@
 #error NSyst.h uses X macros and as such 'X' cannot be defined before preprocessing.
 #endif
 
-#define NSYST_DEBUG
+// #define NSYST_DEBUG
 
 #include <cmath>
 #include <string>
@@ -212,6 +212,7 @@ public:
       (1. + NSYST_TWKVAR(DN) *                                                 \
                 err->OneSigmaErr(DN, ((NSYST_TWKVAR(DN) > 0) ? +1 : -1)));     \
   std::cout << "dial: " << #DN << ", tweak: " << NSYST_TWKVAR(DN)              \
+            << " (istwk?" << NSYST_ISTWKD(DN) << ")"                           \
             << ", def: " << NSYST_DEFVAR(DN) << " set to "                     \
             << NSYST_CURRVAR(DN) << " (err = "                                 \
             << err->OneSigmaErr(DN, ((NSYST_TWKVAR(DN) > 0) ? +1 : -1)) << ")" \
@@ -219,6 +220,7 @@ public:
 #define NSYST_RECONFCURRVALUE_NOUNCERT(DN)                                     \
   NSYST_CURRVAR(DN) = NSYST_TWKVAR(DN);                                        \
   std::cout << "dial: " << #DN << ", tweak: " << NSYST_TWKVAR(DN)              \
+            << " (istwk?" << NSYST_ISTWKD(DN) << ")"                           \
             << ", def: " << NSYST_DEFVAR(DN) << " set to "                     \
             << NSYST_CURRVAR(DN) << std::endl;
 #endif

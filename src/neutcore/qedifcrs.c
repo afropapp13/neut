@@ -117,7 +117,7 @@ double qedifcrs_(int *ip, int *iscc, float *energy_GeV, float *elep_GeV,
   Q2_GeV2 = Q_GeV * Q_GeV - W_GeV * W_GeV;
   Q2EF = Q_GeV * Q_GeV - WEF * WEF - DMN;
 
-  //--- Form factor
+  //--- Vector Form factor
   if ((nemdls_.mdlqe % 10) == 2) {
     // printf("qedifcrs.c Q2_GeV2 = %g\n",Q2_GeV2);
     bbba05_(&Q2_GeV2, &GPE, &GPM, &GNE, &GNM);

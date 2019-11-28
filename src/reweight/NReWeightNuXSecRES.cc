@@ -179,19 +179,19 @@ double NReWeightNuXSecRES::CalcWeight() {
   }
 
   if (cbfa.fneut1pi_gen.neiff != 0) {
-    neut1pi_.xmanffres = NSYST_CURRVAR(kXSecTwkDial_MaRES);
-    neut1pi_.xmvnffres = NSYST_CURRVAR(kXSecTwkDial_MvRES);
+    NSYST_ASSIGNIFTWKD(neut1pi_.xmanffres, kXSecTwkDial_MaRES);
+    NSYST_ASSIGNIFTWKD(neut1pi_.xmvnffres, kXSecTwkDial_MvRES);
   } else {
-    neut1pi_.xmarsres = NSYST_CURRVAR(kXSecTwkDial_MaRES);
-    neut1pi_.xmvrsres = NSYST_CURRVAR(kXSecTwkDial_MvRES);
+    NSYST_ASSIGNIFTWKD(neut1pi_.xmarsres, kXSecTwkDial_MaRES);
+    NSYST_ASSIGNIFTWKD(neut1pi_.xmvrsres, kXSecTwkDial_MvRES);
   }
 
-  neut1pi_.rneca5i = NSYST_CURRVAR(kXSecTwkDial_CA5RES);
+  NSYST_ASSIGNIFTWKD(neut1pi_.rneca5i, kXSecTwkDial_CA5RES);
   if (NSYST_CURRVAR(kXSecTwkDial_UseSeparateBgSclLMCPiBar) &&
       EventIsLMCPiBar()) {
-    neut1pi_.rnebgscl = NSYST_CURRVAR(kXSecTwkDial_BgSclLMCPiBarRES);
+    NSYST_ASSIGNIFTWKD(neut1pi_.rnebgscl, kXSecTwkDial_BgSclLMCPiBarRES);
   } else {
-    neut1pi_.rnebgscl = NSYST_CURRVAR(kXSecTwkDial_BgSclRES);
+    NSYST_ASSIGNIFTWKD(neut1pi_.rnebgscl, kXSecTwkDial_BgSclRES);
   }
 
   NEUTSetParams();

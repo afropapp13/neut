@@ -51,6 +51,8 @@ public:
 
   std::vector<neut::rew::NSyst_t> AllIncluded(void);
 
+  void Clear() { fSystematics.clear(); }
+
 private:
   std::map<NSyst_t, NSystInfo *> fSystematics;
 };

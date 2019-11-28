@@ -25,7 +25,7 @@
 *                   (Based on Rein and Sehgal's code)
 *
 *       2007.Dec. ; add lepton mass effects by G.Mitsuka
-*       2013.10    ; P.Rodrigues & A.Bercellieadd 
+*       2013.10    ; P.Rodrigues & A.Bercellieadd
 *                              new form facor for Rein&Sehgal 1pi
 *
 *     ( comment )
@@ -301,7 +301,7 @@ C      REAL FIM3,FI0M,FI0P,BR,FBW,FBWNO,ETA,XE,RV,FFV,R,TA,FFA,T
       EQUIVALENCE ( ASUM( 2 , 6 , 14 ) ,  F170MN )
 
       REAL RESSGN(31)
-      DATA RESSGN/1, -1, -1, -1, -1, 1, 1, 1, -1, -1, 1, 1, 1, 1, 1, 
+      DATA RESSGN/1, -1, -1, -1, -1, 1, 1, 1, -1, -1, 1, 1, 1, 1, 1,
      $     1, 1, 1, 1, 1, 1, 1, -1, -1, 1, 1, 1, 1, 1, 1, 1. /
 
       REAL PAR(14)
@@ -330,7 +330,7 @@ C-------------------------------------------------------------------------
 
       XMASPI2= XMASPI * XMASPI
       XMVSPI2= XMVSPI * XMVSPI
- 
+
       Original = OriginalF
 
       IF (IMODE.GT.10) THEN
@@ -348,7 +348,12 @@ C-------------------------------------------------------------------------
       W2 = W**2
 
       IF ( ((2 * XMN * E) * (2 * XMN * E + XMN2 - W2) /
-     $     (2 * XMN * E + XMN2)).LT.(-Q2) ) GOTO 999
+     $     (2 * XMN * E + XMN2)).LT.(-Q2) ) THEN
+C        WRITE(*,*) "RSDCRS: Kinematically disallowed: ", ((2 * XMN * E) *
+C     $  (2 * XMN * E + XMN2 - W2) / (2 * XMN * E + XMN2)), ".LT.", -Q2
+C        WRITE(*,*) "XMN: ", XMN , "E: ", E, "W2: ", W2, "Q2: ", -Q2
+        GOTO 999
+      ENDIF
 
 C     -------------------------------------------------------
 C     NOW  W  AND  E  ARE FIXED
@@ -360,7 +365,10 @@ C     KINEMATICAL QUANTITIES
       XNU = (W2 - XMN2 - Q2) / (2 * XMN)
       X = -Q2 / (2 * XMN * XNU)
 
-      IF(XNU.GE.E) GOTO 999
+      IF(XNU.GE.E) THEN
+C        WRITE(*,*) "RSDCRS: Kinematically disallowed: ", XNU, ".GE.", E
+        GOTO 999
+      ENDIF
 
       XNU2 = XNU**2
       ES = E-XNU
@@ -477,7 +485,7 @@ C     SUMMATION OVER RESONANCES
          XMR = XMRR(IB)
          BR = BRR(IB)
 C        SETS UP NORMALIZATION CONSTANTS
-C        G&S don't use the BW normalizing factors for their model 
+C        G&S don't use the BW normalizing factors for their model
 C        NOTE: This should only work for G&S form factors only
 
          if(IFFSPI.ne.0.and.IB.eq.1) then
@@ -500,48 +508,48 @@ C     FORMFACTORS AND RELATED QUANTITIES
 
 C       K.M. Graczyk and J.T. Sobczyk, Phys.Rev.D 77,053001 (2008)
 C       Equations are correction in erratum
-C       CA5(0) and XMA are set by user 
+C       CA5(0) and XMA are set by user
 
             CA5=   RCA5ISPI/((1-Q2/XMASPI2)**2)
-            
+
 C     J.A. Nowak, arXiv:0909.3659
 C     Vector Form Factors
 C     CV1, CV2 are for simplicity, not true form factors
 C     Added the proportional factors of the vector form factors GV
 C     to CV3,CV4,CV5
-            
+
 C     (PAR) Yargh, the variable Q2 here has a minus sign relative to
 C     Q2 in the Nowak/Graczyk & Sobczyk papers
-            
-            CV1=  1./((1.-Q2/(4.*XMVSPI2)) 
+
+            CV1=  1./((1.-Q2/(4.*XMVSPI2))
      $           * ((1.-Q2/XMVSPI2)**2))
-            CV2=  1./((1.-Q2/(4.*XMVSPI2)) 
+            CV2=  1./((1.-Q2/(4.*XMVSPI2))
      $           * ((1.-Q2/(0.766*XMVSPI2))**2))
             CV3A= 2.13*CV1*((W+XMN)/XMN)
             CV3B= 2.13*CV1*((XMN2-Q2+XMN*W)/(XMN*W))
             CV4= -1.51*CV1*((W2+Q2-XMN2)/(2.*XMN2))
             CV5=  0.48*CV2*((W2-Q2-XMN2)/(2.*XMN2))
-            
+
             GV3=  (.5/SQRT(3.))*(CV4+CV5+CV3A)
             GV1=  (-.5/SQRT(3.))*(CV4+CV5-CV3B)
-            
+
             NFF=  SQRT((3.*(GV3)**2)+GV1**2)
-            
+
 C     Note, J.A. Nowak has different form factors that those quoted
 C     in G&S (eq. 58). G&S seems to match previous MC better
-            
+
             FFV = 0.5 * (1 - Q2/(XMN+W)**2)**0.5
      &           * (1 - Q2/(4*XMN2))**(-1*NR)
      &           * NFF
-            
+
 C     Axial. Divide by Z, the arbitrary Rein-Sehgal factor, because
 C     we multiply by it later
-            
+
             FFA = 0.5 * SQRT(3.0) * (1 - Q2/(XMN+W)**2)**0.5
      &           * (1 - Q2/(4*XMN2))**(-1*NR)
      &           * (1 - (W2 + Q2 - XMN2)/(8*XMN2))
      &           * CA5 / Z
-            
+
 C     Rein-Seghal form factors
 C     Difference between Rein-Seghal form factors are shown in
 C     Phys Rev D 77 (053001), equation 12, 13
@@ -560,7 +568,7 @@ C     Phys Rev D 77 (053001), equation 12, 13
          endif
 
 C     ATTENTION: NR CHANGED INTO NR/2.
-         
+
          RV = SQRT(2.)*FFV*QVS*(W+XMN)/(2.*W*A)
          RA = SQRT(2.)*FFA*Z*(W+XMN+NR*OMEG/A)/(6.*W)
          R  = RV

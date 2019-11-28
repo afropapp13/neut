@@ -41,6 +41,8 @@ c ----- sgn is negative for an incoming neutron - applies to NC events only
         endif
 
 
+c        WRITE(*,*) "In LH: Q2_GeV", Q2_GeV, ", k_MeV[4]: ", k_MeV(4), ", p_MeV[4]: ",p_MeV(4), "qTilde_MeV[4]: ", qTilde_MeV(4)
+
 cRT: set masses for NC & CC interactions
 C cwret: but the Rein-Sehgal values are in GeV
 C        spectral function calculations assumes MeV
@@ -174,6 +176,7 @@ c LH calculated here
 c        LH = 0
       endif
 
+c      WRITE(*,*) "LH: ", LH
       return
       end
 
@@ -232,7 +235,7 @@ c pseudo-scalar form factor
         double precision q(4)
         logical nc
         integer sgn
-        double precision protonMass, PiMass2, q2_GeV
+        double precision protonMass, PiMass2, Q2_GeV
         double precision dotProduct, CalcFA
 
         external dotProduct
@@ -241,9 +244,14 @@ c pseudo-scalar form factor
         protonMass = dble(dummy)
         call MCMASS(211, dummy)
         piMass2 = dble(dummy)**2
-        q2_GeV = dotProduct(q, q)
 
-        CalcFP = CalcFA(q,nc,sgn)*(protonMass**2) * 2.0/(PiMass2 - q2_GeV)
+#ifdef __GFORTRAN__
+          Q2_GeV = real(-dotProduct(q, q)/1000000.0,8)
+#else
+          Q2_GeV = dble(-dotProduct(q, q)/1000000.0)
+#endif
+
+        CalcFP = CalcFA(Q2_GeV,nc,sgn)*(protonMass**2) * 2.0/(PiMass2 - Q2_GeV)
 
         if (nc .EQV. .TRUE.)then
           CalcFP = 0
@@ -369,5 +377,6 @@ c GMn_di - neutron magnetic FF - dipole
 2207    continue
 
         LH_GeV = LH(k_MeV,kPrime_MeV,p_MeV,qTilde_MeV,IPAR,nc,nucPdg, NUMATOM)
+c        WRITE(*,*) "LH_GeV: ", LH_GeV
         return
         end

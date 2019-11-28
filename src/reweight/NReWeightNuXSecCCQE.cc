@@ -40,6 +40,7 @@
 #include "NSystUncertainty.h"
 
 #include "neworkC.h"
+#include "neutcrsC.h"
 
 #include <iostream>
 
@@ -205,6 +206,7 @@ double NReWeightNuXSecCCQE::CalcWeight() {
   CommonBlockIFace const &cbfa = CommonBlockIFace::Get();
   cbfa.ResetGenValues();
 
+  // std::cout << "GetOldXSec!"<<std::endl;
   double old_xsec = NEUTGetXSec();
 
   if (old_xsec == 0) {
@@ -238,7 +240,10 @@ double NReWeightNuXSecCCQE::CalcWeight() {
 
   NEUTSetParams();
 
+  // std::cout << "GetNewXSec!"<<std::endl;
   double new_xsec = NEUTGetXSec();
+
+  // std::cout << "common block: " << neutcrscom_.crsq2 << ", old " << old_xsec << ", new: " << new_xsec << std::endl;
 
 #ifdef _N_REWEIGHT_CCQE_DEBUG_
   cout << "differential cross section (old) = " << old_xsec << endl;
