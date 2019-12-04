@@ -390,7 +390,7 @@ C
      $              = qedifcrs(ipar, ccnc, e, elep, coslep)
             endif
          else
-            evdifcrs = dnelsq2(e,ipar,q2)
+            evdifcrs = dnelsq2(REAL(e,8),ipar,REAL(q2,8))
          endif
 c         if (mdlqe.lt.400) then
 c            write(*,*) "model less than 400"
