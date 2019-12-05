@@ -86,11 +86,7 @@ c ----- decide here whether to use dipole, or BBBA fits for form factors
           BBBA7 = .FALSE.
         endif
 
-#ifdef __GFORTRAN__
-          Q2_GeV = real(-dotProduct(qTilde_MeV, qTilde_MeV)/1000000.0,8)
-#else
-          Q2_GeV = dble(-dotProduct(qTilde_MeV, qTilde_MeV)/1000000.0)
-#endif
+        Q2_GeV = real(-dotProduct(qTilde_MeV, qTilde_MeV)/1E6,8)
 
         if (BBBA5 .EQV. .TRUE.) then
           call BBBA05(Q2_GeV, gep, gmp,
@@ -124,7 +120,7 @@ c form factors
         fa = CalcFa(Q2_GeV,nc,sgn)
 
 c RT:Allow for error term on fp as well for this form factor
-        fp = FPQE * CalcFp(qTilde_MeV,nc,sgn)
+        fp = FPQE * CalcFp(Q2_GeV,nc,sgn)
 
 c second-class form factors - off by default.  Use card parameter SCC to turn on
 c fv3 is treated as a dipole (using same vector mass)
@@ -229,29 +225,23 @@ C
         end
 
 c pseudo-scalar form factor
-      double precision function CalcFP(q,nc,sgn)
+      double precision function CalcFP(Q2_GeV,nc,sgn)
         implicit none
-        real dummy
-        double precision q(4)
+        real partMass_MeV
         logical nc
         integer sgn
-        double precision protonMass, PiMass2, Q2_GeV
+        double precision protonMass2_GeV, PiMass2_GeV, Q2_GeV
         double precision dotProduct, CalcFA
 
         external dotProduct
 
-        call MCMASS(2212, dummy)
-        protonMass = dble(dummy)
-        call MCMASS(211, dummy)
-        piMass2 = dble(dummy)**2
+        call MCMASS(2212, partMass_MeV)
+        protonMass2_GeV = real(partMass_MeV/1E3,8)**2
+        call MCMASS(211, partMass_MeV)
+        piMass2_GeV = real(partMass_MeV/1E3,8)**2
 
-#ifdef __GFORTRAN__
-          Q2_GeV = real(-dotProduct(q, q)/1000000.0,8)
-#else
-          Q2_GeV = dble(-dotProduct(q, q)/1000000.0)
-#endif
-
-        CalcFP = CalcFA(Q2_GeV,nc,sgn)*(protonMass**2) * 2.0/(PiMass2 - Q2_GeV)
+        CalcFP = CalcFA(Q2_GeV,nc,sgn)*protonMass2_GeV
+     $           * (2.0/(PiMass2_GeV + Q2_GeV))
 
         if (nc .EQV. .TRUE.)then
           CalcFP = 0
