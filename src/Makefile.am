@@ -1,5 +1,8 @@
 include build.common
 
+F77 = $(FC)
+FFLAGS = $(FCFLAGS)
+
 %C.h: %.h
 	$(top_srcdir)/tools/fh2h.pl $< > $@
 
