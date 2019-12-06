@@ -196,7 +196,7 @@ C -- Preparation
 C
       real*4 plep,   elep,   xmlep
       real*4 xmn01,  xmn02,  enuc1, enuc2
-      real*4 q2,     coslep
+      real*4 q2,     coslep, Q2Nudge
       real*4 w,      x,      xcoh,  y
       real*8 e8,     x8,     y8,    q28
 
@@ -380,6 +380,9 @@ C
             if ( (mod(mdlqe,1000)/100 .EQ. 4) .AND.
      $           HaveSpecFuncForNuclei() ) then
               evdifcrs = LH_GeV(k_GeV,kPrime_GeV,p_GeV,qTilde_GeV,IPAR,nc,nucPdg, NUMATOM)
+              if(evdifcrs.LE.0) THEN
+                write(*,*) "DO NOT IGNORE!!!! BAD EVDIFCRS, SF proton"
+              endif
             else if (((mod(mdlqe,1000)/100 .EQ. 6 ) .or.
      $                (mod(mdlqe,1000)/100 .EQ. 7 )      ).AND.
      &           HaveEffSpecFuncForNuclei() ) then
@@ -388,25 +391,17 @@ C
             else
                evdifcrs
      $              = qedifcrs(ipar, ccnc, e, elep, coslep)
+              if(evdifcrs.LE.0) THEN
+                write(*,*) "DO NOT IGNORE!!!! BAD EVDIFCRS, FG proton"
+              endif
+
             endif
          else
-            evdifcrs = dnelsq2(REAL(e,8),ipar,REAL(q2,8))
+            evdifcrs = dnelsq2(e8,ipar,-q28)
+            if(evdifcrs.LE.0) THEN
+              write(*,*) "DO NOT IGNORE!!!! BAD EVDIFCRS, Free proton"
+            endif
          endif
-c         if (mdlqe.lt.400) then
-c            write(*,*) "model less than 400"
-c            evdifcrs
-C     $        = qedifcrs(ipar, ccnc, e*1000., elep*1000., coslep)
-c     $           = qedifcrs(ipar, ccnc, e, elep, coslep)
-C         write(*,*) "New   :",evdifcrs
-C         write(*,*) "Old   :",
-C     $        ddifcrs(e*1000.,coslep,elep*1000.,ipar)
-C         write(*,*) "ratio :",
-C     $        evdifcrs/ddifcrs(e*1000.,coslep,elep*1000.,ipar)
-c         else
-c            write(*,*) "model greater than 400"
-c         evdifcrs
-c     $        = LH_GeV(k_GeV,kPrime_GeV,p_GeV,qTilde_GeV,IPAR,nc,nucPdg)
-c     endif
       else if (    ((abs(modene).ge.11).and.(abs(modene).le.13))
      $         .or.((abs(modene).ge.31).and.(abs(modene).le.34)))
      $        then
@@ -427,8 +422,28 @@ C     Boost neutrino to nucleon rest frame
           e = SQRT(PNEU(1)**2+PNEU(2)**2+PNEU(3)**2)
         ENDIF
 
-         call rsdcrs(IMOD,IORIG,1, xmlep,e,q2,w,dcp,dc33p);
-         call rsdcrs(IMOD,IORIG,-1,xmlep,e,q2,w,dcm,dc33m);
+C     Check if just outside Q2 PS
+C     Should abstract this check as it is copied verbatim from rsdcrs
+         IF ( ((2 * XMN * E) * (2 * XMN * E + XMN2 - W**2) /
+     $        (2 * XMN * E + XMN2)).LT.(-Q2) ) THEN
+           WRITE(*,*) "RSDCRS: Q2 Kinematically disallowed: ", ((2 * XMN * E) *
+     $       (2 * XMN * E + XMN2 - W**2) / (2 * XMN * E + XMN2)), ".LT.", -Q2
+           IF (ABS(((2 * XMN * E) * (2 * XMN * E + XMN2 - W**2) /
+     $          (2 * XMN * E + XMN2)) - (-Q2)).LT.1E-3) THEN
+            Q2Nudge = ((2 * XMN * E) * (2 * XMN * E + XMN2 - W**2) /
+     $          (2 * XMN * E + XMN2)) + 1E-4
+            WRITE(*,*) "--But its close so we'll allow it."
+            call rsdcrs(IMOD,IORIG,1, xmlep,e,Q2Nudge,w,dcp,dc33p);
+            call rsdcrs(IMOD,IORIG,-1,xmlep,e,Q2Nudge,w,dcm,dc33m);
+          ELSE
+            dcp = 0
+            dcm = 0
+          ENDIF
+         ELSE
+          call rsdcrs(IMOD,IORIG,1, xmlep,e,q2,w,dcp,dc33p);
+          call rsdcrs(IMOD,IORIG,-1,xmlep,e,q2,w,dcm,dc33m);
+         ENDIF
+
          evdifcrs = dcp + dcm
       else if ((abs(modene).eq.21).or.(abs(modene).eq.26)) then
          evdifcrs = dndxdy(IPAR,IPNE(2),1,E8,X8,Y8)

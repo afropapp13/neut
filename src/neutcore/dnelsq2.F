@@ -99,14 +99,15 @@ C      DATA TM/1.7842/
 C-------
       EE=E_GeV
       Q2T1=FNQ2MIN(EE,IPAR)
+      Q2T2=FNQ2MAX(EE,IPAR)
+
       IF(Q2_GeV.LT.Q2T1) THEN
-CRT         write(*,*) "Q2_GeV<Q2min"
+         write(*,*) "Q2_GeV<Q2min, ", Q2_GeV, ", ", Q2T1
          DNELSQ2=0.
          RETURN
       END IF
-      Q2T2=FNQ2MAX(EE,IPAR)
       IF(Q2_GeV.GT.Q2T2) THEN
-CRT         write(*,*) "Q2_GeV>Q2max"
+         write(*,*) "Q2_GeV>Q2max, ", Q2_GeV, ", ", Q2T2
          DNELSQ2=0.
          RETURN
       END IF
@@ -166,6 +167,10 @@ C      &     -AM**2/PM**2*((F1V+F2VG)**2+FA**2))
       ENDIF
 
 CRT      write(*,*) "xsec = ",DNELSQ2
+
+      if(DNELSQ2.LE.0) THEN
+        write(*,*) "BAD DNELSQ2, Free proton"
+      endif
 
       RETURN
       END

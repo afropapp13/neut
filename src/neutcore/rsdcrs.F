@@ -349,9 +349,8 @@ C-------------------------------------------------------------------------
 
       IF ( ((2 * XMN * E) * (2 * XMN * E + XMN2 - W2) /
      $     (2 * XMN * E + XMN2)).LT.(-Q2) ) THEN
-C        WRITE(*,*) "RSDCRS: Kinematically disallowed: ", ((2 * XMN * E) *
+C        WRITE(*,*) "RSDCRS: Q2 Kinematically disallowed: ", ((2 * XMN * E) *
 C     $  (2 * XMN * E + XMN2 - W2) / (2 * XMN * E + XMN2)), ".LT.", -Q2
-C        WRITE(*,*) "XMN: ", XMN , "E: ", E, "W2: ", W2, "Q2: ", -Q2
         GOTO 999
       ENDIF
 
@@ -366,7 +365,7 @@ C     KINEMATICAL QUANTITIES
       X = -Q2 / (2 * XMN * XNU)
 
       IF(XNU.GE.E) THEN
-C        WRITE(*,*) "RSDCRS: Kinematically disallowed: ", XNU, ".GE.", E
+C        WRITE(*,*) "RSDCRS: Energy Kinematically disallowed: ", XNU, ".GE.", E
         GOTO 999
       ENDIF
 
@@ -817,7 +816,7 @@ C     dsigma/(dQ2*dW)
       GOTO 100
 
  999  CONTINUE
-C      write(*,*) "Wrong arguments."
+c      write(*,*) "Wrong arguments."
       DSI = -0.0000000E1
       DSI0 = -0.0000000E1
       GOTO 100
