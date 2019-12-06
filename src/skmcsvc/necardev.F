@@ -44,9 +44,6 @@ C --  Initialize
       MPVEVCT    = 0
       CALL VZERO(2,PVEVCT)
 
-      ANGDEG = -1
-      ANGWIDTH = 0
-
 C --- get card file name (1st argument of the program)
 
       WRITE(6,*)
@@ -84,8 +81,6 @@ C -- extract NEUT card
       CALL FFKEY('FILENM',FILENMEVCT,80,'MIXED')
       CALL FFKEY('HISTNM',HISTNMEVCT,80,'MIXED')
       CALL FFKEY('INMEV' ,INMEVEVCT ,1,'INTEGER')
-      CALL FFKEY('ANGDEG' ,ANGDEG ,1,'REAL')
-      CALL FFKEY('ANGWIDTH' ,ANGWIDTH ,1,'REAL')
 
       CALL FFGO
       CLOSE(UNIT=91)
@@ -137,19 +132,6 @@ C -- extract NEUT card
          WRITE(6,*) 'NECARDEV : MPV in the card was set to ',
      $              MPVEVCT,' but this should be 1, 2 or 3.'
          stop
-      endif
-
-      if(ANGDEG.ge.0) then
-        WRITE(6,*) 'NECARDEV : ANGDEG = ',ANGDEG
-        WRITE(6,*) 'NECARDEV : ANGWIDTH = ',ANGWIDTH
-        if(ANGDEG.gt.180) then
-          WRITE(6,*) 'Cannot have a fixed angle greater than 180 degrees.'
-          stop
-        endif
-        if(ANGWIDTH.eq.0) then
-          WRITE(6,*) 'Cannot have a 0 angular bite. Set EVCT-ANGWIDTH to > 0'
-          stop
-        endif
       endif
 
       RETURN

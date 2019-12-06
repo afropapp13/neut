@@ -40,7 +40,6 @@ c ----- temporary values to copy to output common block
 
 #include "necard.h"
 #include "neutmodel.h"
-#include "necardev.h"
 #include "neutparams.h"
 
         real E, DIRNEU(3), theta_lab
@@ -91,6 +90,8 @@ C ----- external functions
         real RLU, FNELS_RPASCL
         external modMomentum, LH, dotProduct, RLU, maxDiff,
      &  FNELS_RPASCL
+        logical HaveSpecFuncForNuclei
+        external HaveSpecFuncForNuclei
 C ----- parameters
         double precision Gf, cosThetaC, Pi
 
@@ -101,8 +102,7 @@ c        write (*,*) "MAKING CCQE EVENT"
 c        write (*,*) numbndp,numatom, mode, E
 c ----- E is in GeV here - change it to MeV for the calculation
 
-        if ((NUMBNDP .ne. 6) .AND. (NUMBNDP .ne. 8) .AND.
-     &      (NUMBNDP .ne. 26)) then
+        if ( .NOT.HaveSpecFuncForNuclei() ) then
          write (*,*) "using RFG for nucleus with atomic mass", NUMATOM
          if (abs(mode) .eq.1) then
            call NEELSVCP(IPAR,E,DIRNEU,IERR)
@@ -319,17 +319,6 @@ c temp_vector contains c.o.m momentum and energy
 
         call boost(kPrime, comVel)
         call boost(pPrime, comVel)
-
-        if(ANGDEG.gt.-1) then
-          theta_lab = abs(getTheta(kPrime))*(90.0/acos(0.0))
-          if ((theta_lab.lt.(ANGDEG - 0.5*ANGWIDTH)) .or.
-     &        (theta_lab.gt.(ANGDEG + 0.5*ANGWIDTH))) then
-            write(6,*) 'Thrown angle ', theta_lab, ' outside of allowed range.'
-            goto 2207
-          else
-            write(6,*) 'Accepting thrown angle ', theta_lab
-          endif
-        endif
 
 C ----- calculate q and qTilde
         do i = 1, 4

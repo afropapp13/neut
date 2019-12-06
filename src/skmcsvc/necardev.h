@@ -29,12 +29,6 @@
 *                     2 : Random ( Momentum = [PEVCT(1),PEVCT(2)] )
 *       PVEVCT(2)  : ( EVCT-PV  ) Momentum
 *
-*       ANGDEG     : ( EVCT-ANGDEG   ) Central FS lepton angle in degrees,
-*                                       only works with SF events
-*
-*       ANGWIDTH   : ( EVCT-ANGWIDTH ) FS lepton angle bite in degrees,
-*                                       only works with SF events
-*
 *     (Creation Date and Author)
 *       2007.01.02 ; Y.Hayato
 *

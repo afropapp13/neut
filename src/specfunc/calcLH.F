@@ -12,8 +12,8 @@ c ----- neutrino pdg, nucleon pdg, nc logical flag
         integer nucPdg, NUMATOM
         logical nc
         double precision k_MeV(4), kPrime_MeV(4), p_MeV(4), qTilde_MeV(4)
-        double precision leptonMass, inNucleonMass, outNucleonMass
-        common /Masses/ leptonMass, inNucleonMass, outNucleonMass
+        double precision leptonMass_MeV, inNucleonMass_MeV, outNucleonMass_MeV
+        common /Masses/ leptonMass_MeV, inNucleonMass_MeV, outNucleonMass_MeV
         double precision GEp_di, GEn_di, GMp_di, GMn_di
         logical BBBA5, BBBA7
         real*8 gep, gmp, gen, gmn
@@ -48,29 +48,29 @@ C cwret: but the Rein-Sehgal values are in GeV
 C        spectral function calculations assumes MeV
         if (nc .eqv. .FALSE.) then
            if (abs(IPAR) .eq. 12) then
-              leptonMass = XME*1000.
+              leptonMass_MeV = XME*1000.
            else if (abs(IPAR) .eq. 14) then
-              leptonMass = XMMU*1000.
+              leptonMass_MeV = XMMU*1000.
            else if (abs(IPAR) .eq. 16) then
-              leptonMass = XMTAU*1000.
+              leptonMass_MeV = XMTAU*1000.
            else
-              leptonMass = 0
+              leptonMass_MeV = 0
            endif
            if (IPAR .gt. 0) then
-              inNucleonMass = XMNE*1000.
-              outNucleonMass = XMP*1000.
+              inNucleonMass_MeV = XMNE*1000.
+              outNucleonMass_MeV = XMP*1000.
            else
-              inNucleonMass = XMP*1000.
-              outNucleonMass = XMNE*1000.
+              inNucleonMass_MeV = XMP*1000.
+              outNucleonMass_MeV = XMNE*1000.
            endif
         else
-           leptonMass = 0
+           leptonMass_MeV = 0
            if (nucPDG.eq.2212) then
-              inNucleonMass = XMP*1000.
-              outNucleonMass = XMP*1000.
+              inNucleonMass_MeV = XMP*1000.
+              outNucleonMass_MeV = XMP*1000.
            else
-              inNucleonMass = XMNE*1000.
-              outNucleonMass = XMNE*1000.
+              inNucleonMass_MeV = XMNE*1000.
+              outNucleonMass_MeV = XMNE*1000.
            endif
         endif
 
@@ -89,25 +89,22 @@ c ----- decide here whether to use dipole, or BBBA fits for form factors
         Q2_GeV = real(-dotProduct(qTilde_MeV, qTilde_MeV)/1E6,8)
 
         if (BBBA5 .EQV. .TRUE.) then
-          call BBBA05(Q2_GeV, gep, gmp,
-     &    gen, gmn)
-c          write (*,*) gep, gmp, gen, gmn
+          call BBBA05(Q2_GeV, gep, gmp, gen, gmn)
         else if (BBBA7 .EQV. .TRUE.) then
           call BBBA07(Q2_GeV, gep, gmp, gen, gmn)
-c          write (*,*) gep, gmp, gen, gmn
         else
           gep = GEp_di(qTilde_MeV)
           gmp = GMp_di(qTilde_MeV)
           gen = GEn_di(qTilde_MeV)
           gmn = GMn_di(qTilde_MeV)
-c          write (*,*) gep, gmp, gen, gmn
         endif
 
-        tau = -1 * dotProduct( qTilde_MeV, qTilde_MeV )/(4 * outNucleonMass**2)
+        tau = -dotProduct( qTilde_MeV, qTilde_MeV )
+     $        / (4 * outNucleonMass_MeV**2)
 
 C     Transverse enhancement -- Modify the magnetic FFs
         if (mod(MDLQE, 1000)/100 .EQ. 7 .AND. NUMATOM .GT. 11) then
-           temVal = sqrt(1 + 5.19*q2_GeV*EXP(-q2_GeV/0.376))
+           temVal = sqrt(1 + 5.19*Q2_GeV*EXP(-Q2_GeV/0.376))
            gmp = gmp*temVal
            gmn = gmn*temVal
         endif
@@ -128,9 +125,6 @@ c fa3 is treated as a scaling of fa
         fv3 = SCCFV*  (-1.) /( (1. + Q2_GeV/0.71)**2)
         fa3 = SCCFA * fa
 
-c        write (*,*) "FPQE,SCC V,A"
-c        write (*,*) FPQE,SCCFV,SCCFA
-
 c  terms from free nucleon tensor
         h1 = fa**2 *(1.0 + tau) + tau*(f1 + f2)*(f1 + f2)
         h2 = fa**2 + f1**2 + tau*(f2**2 + 4*fa3**2)
@@ -140,7 +134,7 @@ c  terms from free nucleon tensor
         h5 = h2 + 2*(fv3*(f1 - tau*f2) - fa3*(fa - 2*tau*fp))
 
 c calculate 5 individual terms for LH
-        term1 = 2.0*dotProduct(k_MeV, kPrime_MeV)*(inNucleonMass**2)
+        term1 = 2.0*dotProduct(k_MeV, kPrime_MeV)*(inNucleonMass_MeV**2)
 
         term2 = 2.0*dotProduct(k_MeV, p_MeV)*dotProduct(kPrime_MeV, p_MeV)
      +          - dotProduct(k_MeV, kPrime_MeV)*dotProduct(p_MeV, p_MeV)
@@ -172,55 +166,21 @@ c LH calculated here
 c        LH = 0
       endif
 
-c      WRITE(*,*) "LH: ", LH
       return
       end
 
 c function to calculate Axial form factor
       double precision function CalcFA(Q2_GeV,nc,sgn)
         implicit none
-C#include "necard.h"
-C#include "neutmodel.h"
-C        logical BBBA5, BBBA7, BBBA7af
-C        real*8 gep, gmp, gen, gmn
-C        real*8 fabbba07, q2_GeV
-C        common /ff/ gep, gmp, gen, gmn, BBBA5, BBBA7, BBBA7af
         logical nc
         integer sgn
 C
         double precision Q2_GeV
-C        double precision dotProduct
-C        double precision MA, gA
-
-C -- Use neutcore FA Elastic picker24 2019/08/15
         double precision ELAXFF
         external ELAXFF
+
         CalcFA = ELAXFF(Q2_GeV,nc,sgn)
 
-C
-C        external dotProduct, fabbba07
-C
-Cc ----- read in value of MA (and convert units)
-C        MA = 1000 * dble(XMAQE)
-C        if ( nc .eqv. .true. ) then
-C           MA = 1000 * dble(XMANCEL)
-C        endif
-Cc        MA = 1000
-C
-C        gA = -1.2673
-C        q2_GeV = dotProduct(q, q)
-C
-C        CalcFA = gA / (( 1 -( q2_GeV /( MA**2 ) ) )**2)
-C
-C        if (BBBA7af .EQV. .TRUE.)then
-C           write(*,*) "BBBA7 axial FF"
-C           CalcFA = fabbba07(-q2_GeV)
-C        endif
-C
-C        if (nc .EQV. .TRUE.) then
-C           CalcFA = sgn*(0.5 * CalcFA)
-C        endif
-C
         return
         end
 
@@ -231,7 +191,7 @@ c pseudo-scalar form factor
         logical nc
         integer sgn
         double precision protonMass2_GeV, PiMass2_GeV, Q2_GeV
-        double precision dotProduct, CalcFA
+        double precision CalcFA
 
         external dotProduct
 
@@ -251,7 +211,6 @@ c pseudo-scalar form factor
         end
 
 c functions calculate electric and magnetic form factors for F1 and F2
-c GE = GEp - GEn
       double precision function GE(q,nc,sgn)
         implicit none
         double precision q(4)
@@ -367,6 +326,5 @@ c GMn_di - neutron magnetic FF - dipole
 2207    continue
 
         LH_GeV = LH(k_MeV,kPrime_MeV,p_MeV,qTilde_MeV,IPAR,nc,nucPdg, NUMATOM)
-c        WRITE(*,*) "LH_GeV: ", LH_GeV
         return
         end
