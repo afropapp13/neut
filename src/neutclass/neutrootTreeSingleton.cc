@@ -1,5 +1,8 @@
 #include "neutrootTreeSingleton.h"
 
+#include "TFile.h"
+#include "TH1.h"
+
 #include <iostream>
 #include <stdexcept>
 
@@ -61,12 +64,15 @@ void NeutrootTreeSingleton::LoadTree(std::string const &filename) {
   std::cout << "[INFO]: Files added: " << f_nFiles
             << ", with number of events: " << f_nEvents << std::endl;
 
+  tree_neutroot->SetBranchStatus("*", false);
+  tree_neutroot->SetBranchStatus("vectorbranch", true);
+
   br_neutvect = tree_neutroot->GetBranch("vectorbranch");
   nvect = new NeutVect();
 
   if (br_neutvect) {
     br_neutvect->SetAddress(&nvect);
-
+    br_neutvect->SetAutoDelete(true);
   } else {
     throw std::runtime_error(
         "[ERROR]: NeutrootTreeSingleton::LoadTree(string) cannot find branch "
@@ -106,4 +112,36 @@ NeutVect *NeutrootTreeSingleton::GetNeutVectAddress() {
   }
 
   return nvect;
+}
+
+double NeutrootTreeSingleton::GetXsecWeight() {
+  TFile *cfile = tree_neutroot->GetCurrentFile();
+  double weight = 1;
+  if (cfile) {
+    TH1 *evtrt, *fluxhisto;
+    cfile->GetObject("ratehisto", evtrt);
+    cfile->GetObject("fluxhisto", fluxhisto);
+    if (evtrt && fluxhisto) {
+      weight = 1E-38 * (evtrt->Integral() /
+                        (fluxhisto->Integral() * double(GetEntries())));
+    } else {
+      Long64_t cent = tree_neutroot->GetReadEntry();
+      NeutVect *nv = GetNeutVectAddress();
+      GetEntry(0);
+      double e = nv->PartInfo(0)->fP.E();
+      bool ismono = true;
+      for (int i = 1; i < 1000; ++i) {
+        GetEntry(i);
+        if(std::abs(e-nv->PartInfo(0)->fP.E())>1E-6){
+          ismono = false;
+          break;
+        }
+      }
+      if(ismono){
+        weight = nv->Totcrs*1E-38/double(GetEntries());
+      }
+      GetEntry(cent);
+    }
+  }
+  return weight;
 }

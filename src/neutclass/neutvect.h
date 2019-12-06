@@ -35,14 +35,14 @@ class NeutVect : public TObject {
 
   /* Nuclear potentials */
   Double_t       VNuclIni;  // Nuclear potential for the initial state (MeV)
-                            //                                     
+                            //
   Double_t       VNuclFin;  // Nuclear potential for the final state (MeV)
-                            //                                     
+                            //
 
   /* Fermi momentum related */
   Double_t       PFSurf;    // Fermi surface momentum (MeV/c)
   Double_t       PFMax;     // Maximum value of the Fermi momentum (MeV/c)
-                            //                                 
+                            //
 
   /* Flux ID including detector code?*/
   Int_t          FluxID;    // Flux ID code
@@ -74,12 +74,12 @@ class NeutVect : public TObject {
   Float_t        COHR0;
   Float_t        COHA1err;
   Float_t        COHb1err;
-  
+
 
   // 1 pi CA5I and BG scale
   Float_t        SPICA5I;
   Float_t        SPIBGScale;
-	
+
 
   // NEUT version
   Int_t          COREVer;
@@ -116,7 +116,7 @@ class NeutVect : public TObject {
   /* Nieves 1p1h model parameters */
 
   Int_t          NVQERFG;
-  Int_t          NVQEBind;     
+  Int_t          NVQEBind;
   Int_t          NVQERPA;
   Float_t        XNVRPAFP0in;
   Float_t        XNVRPAPF0ex;
@@ -206,7 +206,7 @@ class NeutVect : public TObject {
   void SetNucFsiVertInfo(Int_t nnucvert , NeutNucFsiVert *VInfo_array);
 
   /* Number of Nucleon FSI Steps */
-  Int_t          NnucFsiStep(void)        const {return fNnucFsiStep; }  
+  Int_t          NnucFsiStep(void)        const {return fNnucFsiStep; }
   void           SetNnucFsiStep(Int_t nnucstep);
 
   /* Nucleon FSI Step Information */
@@ -217,13 +217,13 @@ class NeutVect : public TObject {
 
  private:
 
-  Int_t          fNpart;     // Number of particles 
+  Int_t          fNpart;     // Number of particles
 
   Int_t          fNprimary;  // Number of primary particles
 
   TObjArray      *fPartInfo; // ->
 
-  TArrayI        fVertexID;  //         Vertex Index ID 
+  TArrayI        fVertexID;  //         Vertex Index ID
                              //         ( To refer NeutVertex )
 
   TArrayI        fParentIdx;  //        Idx of parent particle
@@ -243,8 +243,8 @@ class NeutVect : public TObject {
   TObjArray      *fNucFsiStepInfo; // ->
 
   TLorentzVector fZeroVect;  // !
-  
-  ClassDef(NeutVect, 5)
+
+  ClassDef(NeutVect, 6)
 };
 
 #endif

@@ -17,6 +17,8 @@ public:
   Int_t GetEntry(Long64_t entry = 0, Int_t getall = 0);
   Long64_t GetEntries();
 
+  double GetXsecWeight();
+
 private:
   NeutrootTreeSingleton();
   ~NeutrootTreeSingleton();
