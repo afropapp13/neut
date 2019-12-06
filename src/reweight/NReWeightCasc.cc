@@ -126,6 +126,10 @@ double NReWeightCasc::CalcWeight() {
               << std::endl;
     return 1;
   }
+  // else if (old_xsec != 1) {
+  //   std::cout << "[INFO]: evpiprob old_xsec non zero! " << old_xsec
+  //             << std::endl;
+  // }
 
   neffpr_.fefabs = NSYST_CURRVAR(kCascTwkDial_FrAbs_pi);
 
@@ -140,6 +144,10 @@ double NReWeightCasc::CalcWeight() {
   NEUTSetParams();
 
   double new_xsec = NEUTGetPiCascProb();
+
+  // if (old_xsec != 1) {
+  //   std::cout << "[INFO]: evpiprob new_xsec = " << new_xsec << ", weight = " << (new_xsec/old_xsec) << std::endl;
+  // }
 #ifdef _N_REWEIGHT_CASC_DEBUG_
   cout << "pion cascade probability (old) = " << old_xsec << endl;
   cout << "pion cascade probability (new) = " << new_xsec << endl;

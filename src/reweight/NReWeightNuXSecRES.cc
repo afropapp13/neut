@@ -158,8 +158,8 @@ double NReWeightNuXSecRES::CalcWeight() {
                  NSYST_ISTWKD(kXSecTwkDial_MvRES) ||
                  NSYST_ISTWKD(kXSecTwkDial_CA5RES) ||
                  NSYST_ISTWKD(kXSecTwkDial_BgSclRES) ||
-                 NSYST_ISTWKD(kXSecTwkDial_UseSeparateBgSclLMCPiBar) ||
-                 NSYST_ISTWKD(kXSecTwkDial_BgSclLMCPiBarRES);
+                 (NSYST_ISTWKD(kXSecTwkDial_UseSeparateBgSclLMCPiBar) &&
+                  NSYST_ISTWKD(kXSecTwkDial_BgSclLMCPiBarRES));
 
   if (!tweaked) {
     return 1.0;

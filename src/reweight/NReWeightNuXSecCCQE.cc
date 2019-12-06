@@ -39,8 +39,8 @@
 #include "NModeDefn.h"
 #include "NSystUncertainty.h"
 
-#include "neworkC.h"
 #include "neutcrsC.h"
+#include "neworkC.h"
 
 #include <iostream>
 
@@ -243,12 +243,14 @@ double NReWeightNuXSecCCQE::CalcWeight() {
   // std::cout << "GetNewXSec!"<<std::endl;
   double new_xsec = NEUTGetXSec();
 
-  // std::cout << "common block: " << neutcrscom_.crsq2 << ", old " << old_xsec << ", new: " << new_xsec << std::endl;
+  // std::cout << "common block: " << neutcrscom_.crsq2 << ", old " << old_xsec
+  // << ", new: " << new_xsec << std::endl;
 
 #ifdef _N_REWEIGHT_CCQE_DEBUG_
   cout << "differential cross section (old) = " << old_xsec << endl;
   cout << "differential cross section (new) = " << new_xsec << endl;
 #endif
+
   NREWCHECKRETURN(new_xsec / old_xsec);
 }
 
