@@ -20,16 +20,24 @@ else
 libNEUTReWeight_@NEUT_VERSION_NUM@_a_SOURCES = $(SRCLIST)
 endif
 
-include_HEADERS = NModeDefn.h NReWeightCasc.h  NReWeightNuXSecCCQE.h    NReWeightNuXSecRES.h NReWeightFactory.h NReWeight.h NReWeightI.h NSyst.h NSystSet.h NSystUncertainty.h PDGCodes.h
+include_HEADERS = NModeDefn.h NReWeightCasc.h  NReWeightNuXSecCCQE.h    NReWeightNuXSecRES.h NReWeightFactory.h NReWeight.h NReWeightI.h NSyst.h NSystSet.h NSystUncertainty.h PDGCodes.h EventSummaryHelper.h
 
 # Unused sources that live in the directory
 UNUSED_srcs = NReWeightNuclPiless.cc NReWeightNuXSecCOH.cc NReWeightNuXSecDIS.cc NReWeightNuXSecNCEL.cc
 UNUSED_headers = NReWeightNuclPiless.h NReWeightNuXSecCOH.h NReWeightNuXSecDIS.h NReWeightNuXSecNCEL.h
 
-bin_PROGRAMS = ReValidWeight
+bin_PROGRAMS = ReValidWeight SummaryPlots PlotReValidWeight
 ReValidWeight_SOURCES = ReValidWeight.cc
 ReValidWeight_LDADD = $(LIBNAME) $(NEUT_LIBS) $(CERN_LIBS) $(ROOT_LIBS) $(EXE_RTLIBS)
 ReValidWeight_LDFLAGS = $(EXE_LINKFLAGS) $(CERN_LINKFLAGS) $(ROOT_LINKFLAGS)
+
+PlotReValidWeight_SOURCES = PlotReValidWeight.cc
+PlotReValidWeight_LDADD = $(LIBNAME) $(NEUT_LIBS) $(CERN_LIBS) $(ROOT_LIBS) $(EXE_RTLIBS)
+PlotReValidWeight_LDFLAGS = $(EXE_LINKFLAGS) $(CERN_LINKFLAGS) $(ROOT_LINKFLAGS)
+
+SummaryPlots_SOURCES = SummaryPlots.cc
+SummaryPlots_LDADD = $(LIBNAME) $(NEUT_LIBS) $(CERN_LIBS) $(ROOT_LIBS) $(EXE_RTLIBS)
+SummaryPlots_LDFLAGS = $(EXE_LINKFLAGS) $(CERN_LINKFLAGS) $(ROOT_LINKFLAGS)
 
 install-exec-hook:
 	-(cd ${libdir}; $(LN_S) $(LIBNAME) $(shell echo $(LIBNAME) | cut -d . -f 1).a)

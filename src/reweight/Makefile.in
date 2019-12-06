@@ -101,7 +101,8 @@ host_triplet = @host@
 @NEUT_DEBUG_FALSE@am__append_9 = -O2
 @FC_HAS_PIE_TRUE@am__append_10 = -no-pie
 @NEUT_USE_GPERF_TRUE@am__append_11 = -L@NEUT_GPERF@ -lprofiler
-bin_PROGRAMS = ReValidWeight$(EXEEXT)
+bin_PROGRAMS = ReValidWeight$(EXEEXT) SummaryPlots$(EXEEXT) \
+	PlotReValidWeight$(EXEEXT)
 subdir = reweight
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
@@ -175,21 +176,38 @@ am__libNReWeight_@NEUT_VERSION_NUM@_a_SOURCES_DIST = NReWeightCasc.cc \
 libNReWeight_@NEUT_VERSION_NUM@_a_OBJECTS =  \
 	$(am_libNReWeight_@NEUT_VERSION_NUM@_a_OBJECTS)
 PROGRAMS = $(bin_PROGRAMS)
-am_ReValidWeight_OBJECTS = ReValidWeight.$(OBJEXT)
-ReValidWeight_OBJECTS = $(am_ReValidWeight_OBJECTS)
+am_PlotReValidWeight_OBJECTS = PlotReValidWeight.$(OBJEXT)
+PlotReValidWeight_OBJECTS = $(am_PlotReValidWeight_OBJECTS)
 am__DEPENDENCIES_1 =
 am__DEPENDENCIES_2 = $(am__DEPENDENCIES_1)
-ReValidWeight_DEPENDENCIES = $(LIBNAME) $(NEUT_LIBS) \
+PlotReValidWeight_DEPENDENCIES = $(LIBNAME) $(NEUT_LIBS) \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_2)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
 am__v_lt_1 = 
+PlotReValidWeight_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
+	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CXXLD) \
+	$(AM_CXXFLAGS) $(CXXFLAGS) $(PlotReValidWeight_LDFLAGS) \
+	$(LDFLAGS) -o $@
+am_ReValidWeight_OBJECTS = ReValidWeight.$(OBJEXT)
+ReValidWeight_OBJECTS = $(am_ReValidWeight_OBJECTS)
+ReValidWeight_DEPENDENCIES = $(LIBNAME) $(NEUT_LIBS) \
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_2)
 ReValidWeight_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CXXLD) \
 	$(AM_CXXFLAGS) $(CXXFLAGS) $(ReValidWeight_LDFLAGS) $(LDFLAGS) \
 	-o $@
+am_SummaryPlots_OBJECTS = SummaryPlots.$(OBJEXT)
+SummaryPlots_OBJECTS = $(am_SummaryPlots_OBJECTS)
+SummaryPlots_DEPENDENCIES = $(LIBNAME) $(NEUT_LIBS) \
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_2)
+SummaryPlots_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
+	$(CXXFLAGS) $(SummaryPlots_LDFLAGS) $(LDFLAGS) -o $@
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -226,11 +244,13 @@ am__v_CXXLD_0 = @echo "  CXXLD   " $@;
 am__v_CXXLD_1 = 
 SOURCES = $(libNEUTReWeight_@NEUT_VERSION_NUM@_a_SOURCES) \
 	$(libNReWeight_@NEUT_VERSION_NUM@_a_SOURCES) \
-	$(ReValidWeight_SOURCES)
+	$(PlotReValidWeight_SOURCES) $(ReValidWeight_SOURCES) \
+	$(SummaryPlots_SOURCES)
 DIST_SOURCES =  \
 	$(am__libNEUTReWeight_@NEUT_VERSION_NUM@_a_SOURCES_DIST) \
 	$(am__libNReWeight_@NEUT_VERSION_NUM@_a_SOURCES_DIST) \
-	$(ReValidWeight_SOURCES)
+	$(PlotReValidWeight_SOURCES) $(ReValidWeight_SOURCES) \
+	$(SummaryPlots_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -443,7 +463,7 @@ lib_LIBRARIES = $(LIBNAME)
 SRCLIST = NReWeightCasc.cc NReWeightNuXSecCCQE.cc NReWeightNuXSecRES.cc NReWeightFactory.cc NReWeight.cc NSystSet.cc NSystUncertainty.cc
 @NEUT_LIBCOMPAT_TRUE@libNReWeight_@NEUT_VERSION_NUM@_a_SOURCES = $(SRCLIST)
 @NEUT_LIBCOMPAT_FALSE@libNEUTReWeight_@NEUT_VERSION_NUM@_a_SOURCES = $(SRCLIST)
-include_HEADERS = NModeDefn.h NReWeightCasc.h  NReWeightNuXSecCCQE.h    NReWeightNuXSecRES.h NReWeightFactory.h NReWeight.h NReWeightI.h NSyst.h NSystSet.h NSystUncertainty.h PDGCodes.h
+include_HEADERS = NModeDefn.h NReWeightCasc.h  NReWeightNuXSecCCQE.h    NReWeightNuXSecRES.h NReWeightFactory.h NReWeight.h NReWeightI.h NSyst.h NSystSet.h NSystUncertainty.h PDGCodes.h EventSummaryHelper.h
 
 # Unused sources that live in the directory
 UNUSED_srcs = NReWeightNuclPiless.cc NReWeightNuXSecCOH.cc NReWeightNuXSecDIS.cc NReWeightNuXSecNCEL.cc
@@ -451,6 +471,12 @@ UNUSED_headers = NReWeightNuclPiless.h NReWeightNuXSecCOH.h NReWeightNuXSecDIS.h
 ReValidWeight_SOURCES = ReValidWeight.cc
 ReValidWeight_LDADD = $(LIBNAME) $(NEUT_LIBS) $(CERN_LIBS) $(ROOT_LIBS) $(EXE_RTLIBS)
 ReValidWeight_LDFLAGS = $(EXE_LINKFLAGS) $(CERN_LINKFLAGS) $(ROOT_LINKFLAGS)
+PlotReValidWeight_SOURCES = PlotReValidWeight.cc
+PlotReValidWeight_LDADD = $(LIBNAME) $(NEUT_LIBS) $(CERN_LIBS) $(ROOT_LIBS) $(EXE_RTLIBS)
+PlotReValidWeight_LDFLAGS = $(EXE_LINKFLAGS) $(CERN_LINKFLAGS) $(ROOT_LINKFLAGS)
+SummaryPlots_SOURCES = SummaryPlots.cc
+SummaryPlots_LDADD = $(LIBNAME) $(NEUT_LIBS) $(CERN_LIBS) $(ROOT_LIBS) $(EXE_RTLIBS)
+SummaryPlots_LDFLAGS = $(EXE_LINKFLAGS) $(CERN_LINKFLAGS) $(ROOT_LINKFLAGS)
 all: all-am
 
 .SUFFIXES:
@@ -576,9 +602,17 @@ clean-binPROGRAMS:
 	echo " rm -f" $$list; \
 	rm -f $$list
 
+PlotReValidWeight$(EXEEXT): $(PlotReValidWeight_OBJECTS) $(PlotReValidWeight_DEPENDENCIES) $(EXTRA_PlotReValidWeight_DEPENDENCIES) 
+	@rm -f PlotReValidWeight$(EXEEXT)
+	$(AM_V_CXXLD)$(PlotReValidWeight_LINK) $(PlotReValidWeight_OBJECTS) $(PlotReValidWeight_LDADD) $(LIBS)
+
 ReValidWeight$(EXEEXT): $(ReValidWeight_OBJECTS) $(ReValidWeight_DEPENDENCIES) $(EXTRA_ReValidWeight_DEPENDENCIES) 
 	@rm -f ReValidWeight$(EXEEXT)
 	$(AM_V_CXXLD)$(ReValidWeight_LINK) $(ReValidWeight_OBJECTS) $(ReValidWeight_LDADD) $(LIBS)
+
+SummaryPlots$(EXEEXT): $(SummaryPlots_OBJECTS) $(SummaryPlots_DEPENDENCIES) $(EXTRA_SummaryPlots_DEPENDENCIES) 
+	@rm -f SummaryPlots$(EXEEXT)
+	$(AM_V_CXXLD)$(SummaryPlots_LINK) $(SummaryPlots_OBJECTS) $(SummaryPlots_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -593,7 +627,9 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NReWeightNuXSecRES.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NSystSet.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NSystUncertainty.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/PlotReValidWeight.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ReValidWeight.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/SummaryPlots.Po@am__quote@
 
 .cc.o:
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
