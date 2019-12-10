@@ -48,8 +48,8 @@ int main(int argc, char const *argv[]) {
     file2name = file2name.substr(0, file2name.find_first_of(':'));
   }
 
-  std::vector<std::vector<std::map<int, HistReadBlob>>> AllTheHists1;
-  std::vector<std::vector<std::map<int, HistReadBlob>>> AllTheHists2;
+  std::vector<std::vector<std::map<int, HistReadBlob> > > AllTheHists1;
+  std::vector<std::vector<std::map<int, HistReadBlob> > > AllTheHists2;
 
   TFile *f1 = TFile::Open(file1name.c_str(), "READ");
   TFile *f2 = TFile::Open(file2name.c_str(), "READ");
@@ -69,7 +69,7 @@ int main(int argc, char const *argv[]) {
   // Dials.push_back(kCascTwkDial_FrCExHigh_pi);
   // Dials.push_back(kCascTwkDial_FrPiProd_pi);
 
-  std::map<NSyst_t, std::vector<int>> RelevantModes;
+  std::map<NSyst_t, std::vector<int> > RelevantModes;
 
   RelevantModes[kXSecTwkDial_MaCCQE].push_back(1);
   RelevantModes[kXSecTwkDial_MaCCQE].push_back(-1);
