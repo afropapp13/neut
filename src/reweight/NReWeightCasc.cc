@@ -146,7 +146,8 @@ double NReWeightCasc::CalcWeight() {
   double new_xsec = NEUTGetPiCascProb();
 
   // if (old_xsec != 1) {
-  //   std::cout << "[INFO]: evpiprob new_xsec = " << new_xsec << ", weight = " << (new_xsec/old_xsec) << std::endl;
+  //   std::cout << "[INFO]: evpiprob new_xsec = " << new_xsec << ", weight = "
+  //   << (new_xsec/old_xsec) << std::endl;
   // }
 #ifdef _N_REWEIGHT_CASC_DEBUG_
   cout << "pion cascade probability (old) = " << old_xsec << endl;

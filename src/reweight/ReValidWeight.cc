@@ -6,6 +6,7 @@
 #include "TFile.h"
 
 #include <iostream>
+#include <sstream>
 
 using namespace neut;
 using namespace neut::rew;
@@ -32,7 +33,7 @@ int main(int argc, char const *argv[]) {
 
   std::cout << cbfa.ParamsToString() << std::endl;
 
-  std::vector<std::vector<std::map<int, HistBlob>>> AllTheHists;
+  std::vector<std::vector<std::map<int, HistBlob> > > AllTheHists;
   std::vector<NSyst_t> Dials;
   std::vector<std::string> DialNames;
 
