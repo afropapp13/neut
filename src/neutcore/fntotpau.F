@@ -57,7 +57,8 @@ C
             CRSSUM = CRSSUM + CRSNEUTB(I)
           ENDIF
           IF (CRSSUM.lt.1E-2) THEN
-            WRITE(*,*) "NEUT is run in NEMODE -1, but the total sum of the xscale arrays is: ", CRSSUM
+            WRITE(*,*) "NEUT is run in NEMODE -1, but the total sum of"
+            write(*,*) " the xscale arrays is: ", CRSSUM
             WRITE(*,*) ". Assuming that this is a misconfiguration."
             STOP
           ENDIF

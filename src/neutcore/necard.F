@@ -380,7 +380,8 @@ C Set VNUINI here ( when PFSURF is fixed)
           write (6,*) "Using Spectral Function for elastic events"
           GOTO 200
         ELSE
-          write (6,*) "Spectral Function not available - use RFG (NEUT-MDLQE 002)"
+          write (6,*) "Spectral Function not available"
+          write (6,*) "- use RFG (NEUT-MDLQE 002)"
           STOP
         ENDIF
       ENDIF
@@ -388,7 +389,9 @@ C Set VNUINI here ( when PFSURF is fixed)
 
       LENCRSPATH = LENSTR(CRSTBLPATH)
       if (LENCRSPATH.eq.0) THEN
-        write(*,*) 'Cross section table path undefined. Set NEUT_CRSPATH environment variable or NEUT-CRSPATH in card file.'
+        write(*,*) 'Cross section table path undefined.'
+        write(*,*) 'Set NEUT_CRSPATH environment variable'
+        write (*,*) 'or NEUT-CRSPATH in card file.'
         STOP
       endif
       if (CRSTBLPATH(LENCRSPATH:LENCRSPATH).ne.'/') THEN
