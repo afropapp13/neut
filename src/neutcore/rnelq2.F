@@ -26,19 +26,25 @@
 *       1995.02.03 ; K. KANEYUKI  BUG FIX
 *     
 ************************************************************************
-      EXTERNAL FNQ2MAX, DNELSQ2
+      EXTERNAL FNQ2MAX, DNELSQ2, FNQ2MIN
       REAL*8   DNELSQ2, DBQ2, DBE
+      REAL EQ2MIN, EQ2MAX, DQ2
+      REAL BMAX, BLAST, SIGMA
+      INTEGER I
 
       DBE=E
+      EQ2MIN=FNQ2MIN(E,IPAR)
       EQ2MAX=FNQ2MAX(E,IPAR)
-      DQ2=EQ2MAX/50.
+      DQ2=(EQ2MAX-EQ2MIN)/50.
       BMAX=0.E+0
       BLAST=0.E+0
 C
 C --  SEARCH PEAK ROUGHLY
 C      
+C Let's start at the minimum Q2 instead of 0 (eq2min)
+C
       DO 10 I=0,50
-         DBQ2=FLOAT(I)*DQ2
+         DBQ2=EQ2MIN+FLOAT(I)*DQ2
          SIGMA=DNELSQ2(DBE,IPAR,DBQ2)
 C         write(6,*) i,dbq2,sigma
          IF(SIGMA.GT.BMAX) BMAX=SIGMA
@@ -50,7 +56,7 @@ C         write(6,*) i,dbq2,sigma
 C
 C --  SEARCH PEAK CLOSELY
 C      
-      DBQ2=FLOAT(ILAST)*DQ2+DQ2*0.02
+      DBQ2=EQ2MIN+FLOAT(ILAST)*DQ2+DQ2*0.02
       SIGMA=DNELSQ2(DBE,IPAR,DBQ2)
       IF (SIGMA.GT.BLAST) THEN
 C
@@ -59,7 +65,7 @@ C
          BMAX=SIGMA
          BLAST=SIGMA
          DO 30 I=2,50
-            DBQ2=FLOAT(ILAST)*DQ2+FLOAT(I)*DQ2*0.02
+            DBQ2=EQ2MIN+FLOAT(ILAST)*DQ2+FLOAT(I)*DQ2*0.02
             SIGMA=DNELSQ2(DBE,IPAR,DBQ2)
 C           write(6,*) i,dbq2,sigma
             IF(SIGMA.GT.BMAX) BMAX=SIGMA
@@ -71,7 +77,7 @@ C
 C --     BACKWORD
 C         
          DO 40 I=1,50
-            DBQ2=FLOAT(ILAST)*DQ2-FLOAT(I)*DQ2*0.02
+            DBQ2=EQ2MIN+FLOAT(ILAST)*DQ2-FLOAT(I)*DQ2*0.02
             SIGMA=DNELSQ2(DBE,IPAR,DBQ2)
 C           write(6,*) i,dbq2,sigma
             IF(SIGMA.GT.BMAX) BMAX=SIGMA
@@ -83,7 +89,7 @@ C           write(6,*) i,dbq2,sigma
 C
 C --  THROW DICE
 C      
- 200  DBQ2=RLU(DUM)*EQ2MAX
+ 200  DBQ2=EQ2MIN+RLU(DUM)*(EQ2MAX-EQ2MIN)
       HIT=RLU(DUM)*BMAX
       SIGMA=DNELSQ2(DBE,IPAR,DBQ2)
       IF(SIGMA.LE.HIT)GO TO 200
