@@ -265,6 +265,17 @@ C      IFREE=0
       IBOUND=1
 
       NEMODSEL=0
+C If the user has chosen to only generate one interaction mode
+         IF (NEMODFLG.NE.0 .AND. NEMODFLG.NE.-1) THEN
+           i = nemodflg
+           nemodsel = i
+           IF (I.EQ.11 .OR. I.EQ.14 .OR. I.EQ.15) IBOUND=0
+           IF (I.EQ.2 .OR. I.EQ.7 .OR. I.EQ.9 .OR. I.EQ.18 .OR.
+     &        I.EQ.21 .OR. I.EQ.27) THEN
+                  IF (RLU(DUM).LT.(RATFRE/RATP)) IBOUND = 0
+           ENDIF
+           return
+         endif
 C     
 C --  FOR NEUTRINO
 C     
@@ -319,10 +330,12 @@ C                         (=0:NC,   NE.0:CC)   T.KAJITA 06-SEP-94
          TOTCRSNE = BUF(30)
 
  10      RAN=RLU(DUM)*BUF(30)
+
+
          DO 20 I=1,30
             IF (BUF(I).GE.RAN) THEN
-               IF (NEMODFLG.NE.0 .AND. NEMODFLG.NE.-1 .AND.
-     &             NEMODFLG.NE.ABS(MODNEU(I))) GOTO 10
+C              IF (NEMODFLG.NE.0 .AND. NEMODFLG.NE.-1 .AND.
+C    &             NEMODFLG.NE.ABS(MODNEU(I))) GOTO 10
                NEMODSEL=MODNEU(I)
 C              IF (I.EQ.11 .OR. I.EQ.14 .OR. I.EQ.15) IFREE=1
               IF (I.EQ.11 .OR. I.EQ.14 .OR. I.EQ.15 .OR. I.EQ.29
@@ -393,8 +406,8 @@ C                         (=0:NC,   NE.0:CC)   T.KAJITA 06-SEP-94
  110     RAN=RLU(DUM)*BUF(30)
          DO 120 I=1,30
             IF (BUF(I).GE.RAN) THEN
-               IF (NEMODFLG.NE.0 .AND. NEMODFLG.NE.-1 .AND.
-     &             NEMODFLG.NE.ABS(MODNEUB(I))) GOTO 110
+C              IF (NEMODFLG.NE.0 .AND. NEMODFLG.NE.-1 .AND.
+C    &             NEMODFLG.NE.ABS(MODNEUB(I))) GOTO 110
                NEMODSEL=MODNEUB(I)
 C               IF (I.EQ.1 .OR. I.EQ.12. OR. I.EQ.15 .OR. I.EQ.16)IFREE=1
                IF (I.EQ.1 .OR. I.EQ.12. OR. I.EQ.15 .OR. I.EQ.16
