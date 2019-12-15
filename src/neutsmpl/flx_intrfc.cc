@@ -133,6 +133,16 @@ int loadflx_(int *IDPTEVCT, char *filename, char *histname, int *inMeV,
     hrate->SetBinContent(i,hflxr->GetBinContent(i)*tcrs);
   }
 
+  if (hrate->Integral() == 0 && hflx->Integral() != 0) {
+    std::cerr << "******************" << std::endl;
+    std::cerr << "Calculated an empty event rate histogram" << std::endl;
+    std::cerr << "But the flux histogram seems to make sense" << std::endl;
+    std::cerr << "Looks like there's no cross-section in your provided energy range!" << std::endl;
+    std::cerr << "Check if you're trying to calculate a cross-section for a mode which doesn't have one in this energy!" << std::endl;
+    std::cerr << "******************" << std::endl;
+    throw;
+  }
+
   EnuEvtrt.Init(hrate);//Initialize using event rate histogram
 
   h_flux = (TH1D *)hflx->Clone("fluxhisto");
