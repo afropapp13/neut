@@ -56,13 +56,14 @@ C
           ELSE
             CRSSUM = CRSSUM + CRSNEUTB(I)
           ENDIF
+
+ 2207    CONTINUE
           IF (CRSSUM.lt.1E-2) THEN
             WRITE(*,*) "NEUT is run in NEMODE -1, but the total sum of"
             write(*,*) " the xscale arrays is: ", CRSSUM
             WRITE(*,*) ". Assuming that this is a misconfiguration."
             STOP
           ENDIF
- 2207    CONTINUE
       ENDIF
 
 #ifdef UPMU_RCK
