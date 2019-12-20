@@ -264,18 +264,45 @@ C
 C      IFREE=0
       IBOUND=1
 
+C     The return interaction
       NEMODSEL=0
+
 C If the user has chosen to only generate one interaction mode
-         IF (NEMODFLG.NE.0 .AND. NEMODFLG.NE.-1) THEN
-           i = nemodflg
-           nemodsel = i
-           IF (I.EQ.11 .OR. I.EQ.14 .OR. I.EQ.15) IBOUND=0
-           IF (I.EQ.2 .OR. I.EQ.7 .OR. I.EQ.9 .OR. I.EQ.18 .OR.
+      IF (NEMODFLG.NE.0 .AND. NEMODFLG.NE.-1) THEN
+
+        IF (NEMODFLG.LT.0) THEN
+          write(*,*) "MODE was less than zero, which doesn't make sense"
+          write(*,*) "If you want to generate anti-neutrino, use the
+     &    numbering in NEUT-CRS and put into NEUT-MODE, e.g. NEUT-MODE
+     &    11 with anti-neutrino produces CCQE"
+          stop
+        endif
+
+C       Neutrino case
+        IF (IPAR.GT.0) THEN
+          nemodsel = MODNEU(abs(nemodflg))
+          IF (I.EQ.11 .OR. I.EQ.14 .OR. I.EQ.15) IBOUND=0
+          IF (I.EQ.2 .OR. I.EQ.7 .OR. I.EQ.9 .OR. I.EQ.18 .OR.
      &        I.EQ.21 .OR. I.EQ.27) THEN
-                  IF (RLU(DUM).LT.(RATFRE/RATP)) IBOUND = 0
-           ENDIF
-           return
-         endif
+            IF (RLU(DUM).LT.(RATFRE/RATP)) IBOUND = 0
+          ENDIF
+
+C       Anti-neutrino case
+        ELSE
+          nemodsel = MODNEUB(abs(nemodflg))
+          IF (I.EQ.1 .OR. I.EQ.12. OR. I.EQ.15 .OR. I.EQ.16
+     $        .OR. I.eq.29 .OR. I.eq.30) THEN
+            IBOUND=0
+          endif
+          IF (I.EQ.3 .OR. I.EQ.4 .OR. I.EQ.7 .OR. I.EQ.9 .OR. 
+     &        I.EQ.17 .OR. I.EQ.19 .OR. I.EQ.20 .OR. I.EQ.22
+     &        .OR. I.EQ.25 .OR. I.EQ.27) THEN
+            IF (RLU(DUM).LT.(RATFRE/RATP)) IBOUND = 0
+          ENDIF
+        ENDIF
+C       Now have interaction mode and bound/not bound, so return
+        return
+      endif
 C     
 C --  FOR NEUTRINO
 C     
