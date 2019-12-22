@@ -164,8 +164,11 @@ C      HIT=XMAX*RNDM(DUM)
       COA=(COST+1.)/0.4
       NP=IFIX(PFA)+1
       NC=IFIX(COA)+1
-      IF(NP.GE.7 .OR. NC.GE.6)WRITE(6,600)
-  600 FORMAT(' *** ERROR IN SETPF ***')
+      IF(NP.GE.7 .OR. NC.GE.6) THEN 
+C         WRITE(6,600)
+C 600     FORMAT(' *** ERROR IN SETPF ***')
+         goto 330
+      endif
       DPF=PFA+1.-FLOAT(NP)
       DCO=COA+1.-FLOAT(NC)
       DAT1=(1.-DPF)*XMAP(NP,NC,K)+DPF*XMAP(NP+1,NC,K)
