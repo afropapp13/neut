@@ -39,14 +39,17 @@ DIST_COMMON = $(am__include_HEADERS_DIST) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(top_srcdir)/build.common
 @NEUT_LIBCOMPAT_FALSE@@NEUT_USE_TAUOLA_TRUE@am__append_1 = -DNEUT_USE_TAUOLA
 @NEUT_LIBCOMPAT_FALSE@@NEUT_USE_GPERF_TRUE@am__append_2 = -DNEUT_USE_GPERF
-@NEUT_DEBUG_TRUE@@NEUT_LIBCOMPAT_FALSE@am__append_3 = -O0 -g
-@NEUT_DEBUG_TRUE@@NEUT_LIBCOMPAT_FALSE@am__append_4 = -O0 -g
+@NEUT_HEPMC_TRUE@@NEUT_LIBCOMPAT_FALSE@am__append_3 = -DUSE_HEPMC
+@NEUT_HEPMC_TRUE@@NEUT_LIBCOMPAT_FALSE@am__append_4 = $(shell HepMC3-config --cflags)
 @NEUT_DEBUG_TRUE@@NEUT_LIBCOMPAT_FALSE@am__append_5 = -O0 -g
-@NEUT_DEBUG_FALSE@@NEUT_LIBCOMPAT_FALSE@am__append_6 = -O2
-@NEUT_DEBUG_FALSE@@NEUT_LIBCOMPAT_FALSE@am__append_7 = -O2
+@NEUT_DEBUG_TRUE@@NEUT_LIBCOMPAT_FALSE@am__append_6 = -O0 -g
+@NEUT_DEBUG_TRUE@@NEUT_LIBCOMPAT_FALSE@am__append_7 = -O0 -g
 @NEUT_DEBUG_FALSE@@NEUT_LIBCOMPAT_FALSE@am__append_8 = -O2
-@FC_HAS_PIE_TRUE@@NEUT_LIBCOMPAT_FALSE@am__append_9 = -no-pie
-@NEUT_LIBCOMPAT_FALSE@@NEUT_USE_GPERF_TRUE@am__append_10 = -L@NEUT_GPERF@ -lprofiler
+@NEUT_DEBUG_FALSE@@NEUT_LIBCOMPAT_FALSE@am__append_9 = -O2
+@NEUT_DEBUG_FALSE@@NEUT_LIBCOMPAT_FALSE@am__append_10 = -O2
+@FC_HAS_PIE_TRUE@@NEUT_LIBCOMPAT_FALSE@am__append_11 = -no-pie
+@NEUT_LIBCOMPAT_FALSE@@NEUT_USE_GPERF_TRUE@am__append_12 = -L@NEUT_GPERF@ -lprofiler
+@NEUT_HEPMC_TRUE@@NEUT_LIBCOMPAT_FALSE@am__append_13 = $(HEPMC_LINKFLAGS) $(HEPMC_LIBS)
 subdir = mec
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -248,28 +251,35 @@ top_srcdir = @top_srcdir@
 @NEUT_LIBCOMPAT_FALSE@CERN_LINKFLAGS = -L$(CERN_ROOT)/lib
 @NEUT_LIBCOMPAT_FALSE@CERN_LIBS = -ljetset74 -lpdflib804 -lphotos202 -lmathlib -lpacklib -lkernlib
 @NEUT_LIBCOMPAT_FALSE@NEUT_DEFINES = -DgFortran $(am__append_1) \
-@NEUT_LIBCOMPAT_FALSE@	$(am__append_2)
+@NEUT_LIBCOMPAT_FALSE@	$(am__append_2) $(am__append_3)
+@NEUT_HEPMC_FALSE@@NEUT_LIBCOMPAT_FALSE@USE_HEPMC = no
+@NEUT_HEPMC_TRUE@@NEUT_LIBCOMPAT_FALSE@USE_HEPMC = yes
 @NEUT_LIBCOMPAT_FALSE@NEUT_FFLAGS = -fno-backslash -fno-automatic -fno-second-underscore -ffixed-line-length-132 -fdollar-ok -fPIC -fbounds-check -Wall -Wextra -ffpe-trap=invalid,zero,overflow -DstrictF77 -Df2cFortran $(NEUT_DEFINES)
 @NEUT_LIBCOMPAT_FALSE@DEFAULT_FFLAGS = $(NEUT_FFLAGS) $(NEUT_INCLUDES) \
-@NEUT_LIBCOMPAT_FALSE@	-I$(CERN_ROOT)/include $(am__append_3) \
-@NEUT_LIBCOMPAT_FALSE@	$(am__append_6)
+@NEUT_LIBCOMPAT_FALSE@	-I$(CERN_ROOT)/include $(am__append_5) \
+@NEUT_LIBCOMPAT_FALSE@	$(am__append_8)
 @NEUT_LIBCOMPAT_FALSE@DEFAULT_CXXFLAGS = -fPIC $(NEUT_DEFINES) \
 @NEUT_LIBCOMPAT_FALSE@	$(NEUT_INCLUDES) -I$(CERN_ROOT)/include \
 @NEUT_LIBCOMPAT_FALSE@	$(shell root-config --cflags) \
-@NEUT_LIBCOMPAT_FALSE@	$(am__append_4) $(am__append_7)
+@NEUT_LIBCOMPAT_FALSE@	$(am__append_4) $(am__append_6) \
+@NEUT_LIBCOMPAT_FALSE@	$(am__append_9)
 @NEUT_LIBCOMPAT_FALSE@DEFAULT_CFLAGS = -fPIC $(NEUT_DEFINES) \
 @NEUT_LIBCOMPAT_FALSE@	$(NEUT_INCLUDES) -I$(CERN_ROOT)/include \
-@NEUT_LIBCOMPAT_FALSE@	$(am__append_5) $(am__append_8)
+@NEUT_LIBCOMPAT_FALSE@	$(am__append_7) $(am__append_10)
 @NEUT_LIBCOMPAT_FALSE@DEFAULT_LINKFLAGS = -version-info @NEUT_VERSION_NUM@
 @NEUT_LIBCOMPAT_FALSE@ROOT_LINKFLAGS = $(shell root-config --ldflags) -pthread -rdynamic -L$(shell root-config --libdir)
 @NEUT_LIBCOMPAT_FALSE@@ROOT_MAJOR_IS_SIX_FALSE@ROOT_LIBS = -lCore -lCint -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lm -ldl
 @NEUT_LIBCOMPAT_FALSE@@ROOT_MAJOR_IS_SIX_TRUE@ROOT_LIBS = -lCore -lImt -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lTreePlayer -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lMultiProc
+@NEUT_HEPMC_FALSE@@NEUT_LIBCOMPAT_FALSE@HEPMC_LIBDIR = 
+@NEUT_HEPMC_TRUE@@NEUT_LIBCOMPAT_FALSE@HEPMC_LIBDIR = $(shell HepMC3-config --libdir)
+@NEUT_HEPMC_TRUE@@NEUT_LIBCOMPAT_FALSE@HEPMC_LINKFLAGS = -L$(HEPMC_LIBDIR)
+@NEUT_HEPMC_TRUE@@NEUT_LIBCOMPAT_FALSE@HEPMC_LIBS = -lHepMC3 -lHepMC3rootIO
 
 # I know... but this seems to work
 @NEUT_LIBCOMPAT_FALSE@EXE_LINKFLAGS = -fno-PIE -fno-pie \
-@NEUT_LIBCOMPAT_FALSE@	$(am__append_9)
+@NEUT_LIBCOMPAT_FALSE@	$(am__append_11) $(am__append_13)
 @NEUT_LIBCOMPAT_FALSE@EXE_RTLIBS = -lstdc++ -lgfortran \
-@NEUT_LIBCOMPAT_FALSE@	$(am__append_10)
+@NEUT_LIBCOMPAT_FALSE@	$(am__append_12)
 @NEUT_LIBCOMPAT_FALSE@AM_FFLAGS = -DNEMEC_VERSION=@NEUT_VERSION_NUM@ $(DEFAULT_FFLAGS)
 @NEUT_LIBCOMPAT_FALSE@LIBNAME = lib@LIBPREFIX@neutmec.@NEUT_VERSION_NUM@.a
 @NEUT_LIBCOMPAT_FALSE@noinst_LIBRARIES = $(LIBNAME)

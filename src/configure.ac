@@ -88,6 +88,12 @@ AS_IF([test "x$enable_compatnames" = "xyes"], [
   AC_SUBST(LIBPREFIX, [NEUT])
 ])
 
+######## Check use HepMC
+AC_ARG_ENABLE([hepmc],
+    AS_HELP_STRING([--enable-hepmc], [Enable HepMC as an output format, expect to find HepMC-config in PATH.]))
+
+AM_CONDITIONAL([NEUT_HEPMC], [test "x$enable_hepmc" = "xyes"])
+
 ######## Check use tauola
 AC_ARG_ENABLE([tauola],
     AS_HELP_STRING([--enable-tauola], [Enable tauola, requires ZEBRA!]))

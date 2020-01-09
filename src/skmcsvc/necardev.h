@@ -34,7 +34,7 @@
 *
 ************************************************************************
       INTEGER         NEVTEVCT,IDPTEVCT,MPOSEVCT,MDIREVCT,MPVEVCT,
-     $                INMEVEVCT
+     $                INMEVEVCT, OUTPUTFORMAT
       REAL            POSEVCT(3),RADEVCT,DIREVCT(3),PVEVCT(2), ANGDEG,ANGWIDTH
       character*80    FILENMEVCT,HISTNMEVCT
 
@@ -42,4 +42,4 @@
      $                MPOSEVCT, POSEVCT, RADEVCT,
      $                MDIREVCT, DIREVCT,
      $                MPVEVCT,  PVEVCT, ANGDEG,ANGWIDTH,
-     $                FILENMEVCT, HISTNMEVCT, INMEVEVCT
+     $                FILENMEVCT, HISTNMEVCT, INMEVEVCT, OUTPUTFORMAT

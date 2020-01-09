@@ -32,9 +32,12 @@ neut-config: neut-config.in
 	cat ${top_srcdir}/tools/neut-config.in | sed "s|__INST_ROOT__|$(INST_ROOT)|g" | sed "s|__LIB_LIST__|$(LIB_LIST)|g" | sed "s|__IO_LIB_LIST__|$(IO_LIB_LIST)|g" | sed "s|__RW_LIB__|$(RW_LIB)|g" | sed "s|__LIB_FLAGS__|$(LIB_FLAGS)|g" | sed "s|__IO_LIB_FLAGS__|$(IO_LIB_FLAGS)|g" | sed "s|__RW_FLAGS__|$(RW_FLAGS)|g" | sed "s|__NEUT_VERSION__|$(NEUT_VERSION)|g" | sed "s|__ROOT_FLAGS__|$(ROOT_FLAGS)|g" | sed "s|__CERN_FLAGS__|$(CERN_FLAGS)|g" > neut-config
 	chmod +x neut-config
 
-install-exec-hook: neut-config
+setup.sh: setup.sh.in
+	cat ${top_srcdir}/tools/setup.sh.in | sed "s|__USE_HEPMC__|$(USE_HEPMC)|g" | sed "s|__HEPMC_LIBDIR__|$(HEPMC_LIBDIR)|g" > setup.sh
+
+install-exec-hook: neut-config setup.sh
 	-cp neut-config ${bindir}/
-	-cp ${top_srcdir}/tools/setup.sh ${prefix}/
+	-cp setup.sh ${prefix}/
 	chmod +x ${prefix}/setup.sh
 
 uninstall-hook:

@@ -36,6 +36,10 @@ C#include <f77/f77_floatingpoint.h>
 
       INTEGER*4 I,J,IDUM,IERR
       INTEGER*4 IRETRY
+      INTEGER*8 OUTPUTFID
+
+      INTEGER*8 hepmcopen
+      external hepmcopen
 
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
@@ -86,13 +90,24 @@ C--open file
          CALL GETARG(2, FILENAME)
       ENDIF
 
-      iret = rootopen(FILENAME,OPTION)
+      IF (OUTPUTFORMAT .EQ. 1) THEN
+        iret = rootopen(FILENAME,OPTION)
 
-      if (iret .ne. 0) then
+        if (iret .ne. 0) then
          write(*,*) 'Failed to open file ',FILENAME,
      $              ' with option', OPTION ,'.'
          stop
-      endif
+        endif
+
+#ifdef USE_HEPMC
+      ELSEIF (OUTPUTFORMAT .EQ. 2) THEN
+        OUTPUTFID = hepmcopen(FILENAME, 80)
+        write(*,*) 'Opened output file, ID: ', OUTPUTFID
+#endif
+      ELSE
+        write(*,*) 'Unknown Output format', OUTPUTFORMAT, ' specified.'
+        STOP
+      ENDIF
 
       call trapfpe
 
@@ -184,28 +199,43 @@ C--Generate event
             goto 20
          endif
 
+        IF (OUTPUTFORMAT .EQ. 1) THEN
          iret = neutfill(filename,tree,vecbranch,vtxbranch)
          if (iret .ne. 0) then
             write(*,*) 'Failed in filling vector.'
             stop
          endif
+#ifdef USE_HEPMC
+        ELSEIF (OUTPUTFORMAT .EQ. 2) THEN
+          CALL hepmcfill(OUTPUTFID)
+#endif
+        ENDIF
+
 C         iret = neutfilldsdq2(filename,tree,vecbranch,vtxbranch)
 
  100  continue
 
-      iret = rootwrite(FILENAME)
 
-      if (iret .ne. 0) then
-         write(*,*) 'Failed to write file ',FILENAME
-         stop
-      endif
+        IF (OUTPUTFORMAT .EQ. 1) THEN
+          iret = rootwrite(FILENAME)
+          if (iret .ne. 0) then
+            write(*,*) 'Failed to write file ',FILENAME
+            stop
+          endif
+          iret = rootclose(FILENAME)
+          if (iret .ne. 0) then
+            write(*,*) 'Failed to close file ',FILENAME
+            stop
+          endif
+#ifdef USE_HEPMC
+        ELSEIF (OUTPUTFORMAT .EQ. 2) THEN
+          CALL hepmcclose(OUTPUTFID);
+#endif
+        ENDIF
 
-      iret = rootclose(FILENAME)
 
-      if (iret .ne. 0) then
-         write(*,*) 'Failed to close file ',FILENAME
-         stop
-      endif
+
+
 
       CALL NECHADIR(COST,PHI,DIR,POS)
 

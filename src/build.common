@@ -36,11 +36,23 @@ if NEUT_USE_GPERF
 NEUT_DEFINES += -DNEUT_USE_GPERF
 endif
 
+if NEUT_HEPMC
+NEUT_DEFINES += -DUSE_HEPMC
+USE_HEPMC = yes
+else
+USE_HEPMC = no
+endif
+
+
 NEUT_FFLAGS = -fno-backslash -fno-automatic -fno-second-underscore -ffixed-line-length-132 -fdollar-ok -fPIC -fbounds-check -Wall -Wextra -ffpe-trap=invalid,zero,overflow -DstrictF77 -Df2cFortran $(NEUT_DEFINES)
 
 DEFAULT_FFLAGS = $(NEUT_FFLAGS) $(NEUT_INCLUDES) -I$(CERN_ROOT)/include
 
 DEFAULT_CXXFLAGS = -fPIC $(NEUT_DEFINES) $(NEUT_INCLUDES) -I$(CERN_ROOT)/include $(shell root-config --cflags)
+
+if NEUT_HEPMC
+DEFAULT_CXXFLAGS += $(shell HepMC3-config --cflags)
+endif
 
 DEFAULT_CFLAGS = -fPIC $(NEUT_DEFINES) $(NEUT_INCLUDES) -I$(CERN_ROOT)/include
 
@@ -64,6 +76,14 @@ else
 ROOT_LIBS = -lCore -lCint -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lm -ldl
 endif
 
+if NEUT_HEPMC
+HEPMC_LIBDIR = $(shell HepMC3-config --libdir)
+HEPMC_LINKFLAGS = -L$(HEPMC_LIBDIR)
+HEPMC_LIBS = -lHepMC3 -lHepMC3rootIO
+else
+HEPMC_LIBDIR =
+endif
+
 # I know... but this seems to work
 EXE_LINKFLAGS = -fno-PIE -fno-pie
 if FC_HAS_PIE
@@ -72,4 +92,8 @@ endif
 EXE_RTLIBS =  -lstdc++ -lgfortran
 if NEUT_USE_GPERF
 EXE_RTLIBS += -L@NEUT_GPERF@ -lprofiler
+endif
+
+if NEUT_HEPMC
+EXE_LINKFLAGS += $(HEPMC_LINKFLAGS) $(HEPMC_LIBS)
 endif

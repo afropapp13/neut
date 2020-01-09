@@ -50,12 +50,12 @@ extern "C"
 
 
 int
-neutfill_(char *filename,      char *treename, 
+neutfill_(char *filename,      char *treename,
 		  char *vecbranchname, char *vtxbranchname,
-		  int len_fname,int len_tname, 
+		  int len_fname,int len_tname,
 		  int len_vecbname, int len_vtxbname)
 {
-  NeutRootHandlers nrh;  
+  NeutRootHandlers nrh;
 
   nrh.nulltermstr(filename,      len_fname);
   nrh.nulltermstr(treename,      len_tname);
@@ -66,10 +66,10 @@ neutfill_(char *filename,      char *treename,
 }
 
 int
-neutfill(char *filename,      char *treename, 
+neutfill(char *filename,      char *treename,
 		  char *vecbranchname, char *vtxbranchname)
 {
-  NeutRootHandlers nrh;  
+  NeutRootHandlers nrh;
   static TTree   *t   = NULL;
 
   int ret;
@@ -78,11 +78,11 @@ neutfill(char *filename,      char *treename,
   if (ret != 0){
 	return -1;
   }
-  ret = neutfillvtx(filename, treename,  vtxbranchname);  
+  ret = neutfillvtx(filename, treename,  vtxbranchname);
   if (ret != 0){
 	return -2;
   }
-  
+
   if (t == NULL){
 	t = nrh.attachtree(filename, treename);
 	if (t == NULL){
@@ -100,7 +100,7 @@ int
 neutfillvect_(char *filename, char *treename, char *branchname,
 			  int len_fname,int len_tname, int len_bname)
 {
-  NeutRootHandlers nrh;  
+  NeutRootHandlers nrh;
 
   nrh.nulltermstr(filename,   len_fname);
   nrh.nulltermstr(treename,   len_tname);
@@ -121,12 +121,12 @@ neutfillvect(char *filename, char *treename, char *branchname)
   static Int_t event_no= 1;
 
   NeutPart pinfo;
-  
+
   NeutFsiVert fsivinfo;
   NeutFsiPart fsipinfo;
 
   NeutNucFsiVert nucfsivinfo;
-  NeutNucFsiStep nucfsisinfo;  
+  NeutNucFsiStep nucfsisinfo;
 
   int i,j;
 
@@ -139,16 +139,16 @@ neutfillvect(char *filename, char *treename, char *branchname)
 	nv = new NeutVect();
 	t->Branch(branchname,"NeutVect",&nv,1024,99);
   }
-  
+
   nv->SetNpart(0);
   nv->SetNfsiPart(0);
   nv->SetNfsiVert(0);
   nv->SetNnucFsiVert(0);
   nv->SetNnucFsiStep(0);
-  
+
   /****************************************************/
   nv->EventNo = event_no++;
-  
+
   nv->TargetA  = neuttarget_.numatom;
   nv->TargetZ  = neuttarget_.numbndp;
   nv->TargetH  = neuttarget_.numfrep;
@@ -157,9 +157,9 @@ neutfillvect(char *filename, char *treename, char *branchname)
   nv->PFSurf   = nenupr_.pfsurf;
   nv->PFMax    = nenupr_.pfmax;
   nv->Ibound   = posinnuc_.ibound;
-  
+
   nv->FluxID   = 0;
-  
+
   /****************************************************/
   // interaction model and some parameters
   nv->QEModel  = nemdls_.mdlqe;
@@ -173,7 +173,7 @@ neutfillvect(char *filename, char *treename, char *branchname)
 
   nv->SPIForm  = neut1pi_.neiff;
   nv->RESForm  = 0;
-  
+
   nv->SPINRType= neut1pi_.nenrtype;
   nv->RESNRType= 0;
 
@@ -213,16 +213,16 @@ neutfillvect(char *filename, char *treename, char *branchname)
 
   nv->NuceffKinVersion = nuceffver_.nefkinver;
 
-  nv->NuceffFactorPIQE = neffpr_.fefqe;	  
-  nv->NuceffFactorPIInel = neffpr_.fefinel;  
-  nv->NuceffFactorPIAbs = neffpr_.fefabs;  
+  nv->NuceffFactorPIQE = neffpr_.fefqe;
+  nv->NuceffFactorPIInel = neffpr_.fefinel;
+  nv->NuceffFactorPIAbs = neffpr_.fefabs;
   nv->NuceffFactorPIQEH = neffpr_.fefqeh;
-  nv->NuceffFactorPICX = neffpr_.fefcx;  
-  nv->NuceffFactorPICXH = neffpr_.fefcxh;  
+  nv->NuceffFactorPICX = neffpr_.fefcx;
+  nv->NuceffFactorPICXH = neffpr_.fefcxh;
   nv->NuceffFactorPICoh = neffpr_.fefcoh;
-  nv->NuceffFactorPIQEHKin = neffpr_.fefqehf; 	  
-  nv->NuceffFactorPIQELKin = neffpr_.fefcohf; 
-  nv->NuceffFactorPICXKin = neffpr_.fefcxhf; 
+  nv->NuceffFactorPIQEHKin = neffpr_.fefqehf;
+  nv->NuceffFactorPIQELKin = neffpr_.fefcohf;
+  nv->NuceffFactorPICXKin = neffpr_.fefcxhf;
   nv->NuceffFactorPIAll = neffpr_.fefall;
 
   /****************************************************/
@@ -249,7 +249,7 @@ neutfillvect(char *filename, char *treename, char *branchname)
   nv->Totcrs = neutcrscom_.totcrsne;
 
   nv->CrsEnergy = neutcrscom_.crsenergy;
-  
+
   for ( i = 0 ; i < 8 ; i++ ){
 	nv->DifCrsNE[i] = neutcrscom_.difcrsne[i];
   }
@@ -271,13 +271,13 @@ neutfillvect(char *filename, char *treename, char *branchname)
 	nv->SetVertexID(i, vcwork_.ivtivc[i]);
 
 	nv->SetParentIdx(i, vcwork_.iorgvc[i]);
-	  
+
 	pinfo.fPID = vcwork_.ipvc[i];
 	mass       = vcwork_.amasvc[i];
 	pinfo.fMass = mass;
 	pinfo.fIsAlive = vcwork_.icrnvc[i];
 	pinfo.fStatus  = vcwork_.iflgvc[i];
-	
+
 	pinfo.fP.SetXYZM(vcwork_.pvc[i][0],
 					 vcwork_.pvc[i][1],
 					 vcwork_.pvc[i][2],
@@ -287,25 +287,25 @@ neutfillvect(char *filename, char *treename, char *branchname)
 						  posinnuc_.posnuc[i][1],
 						  posinnuc_.posnuc[i][2],
 						  0.);
-	
+
 	pinfo.fPosFin.SetXYZT(posinnuc_.posnuc[i][0],
 						  posinnuc_.posnuc[i][1],
-						  posinnuc_.posnuc[i][2],						  
+						  posinnuc_.posnuc[i][2],
 						  0.);
-	  
+
 	nv->SetPartInfo(i, pinfo);
-	  
+
   }
-  
+
 
   // FSI Particles
   Int_t nfsip = fsihist_.nvcvert;
-  
+
   if (nfsip) {
     nv->SetNfsiPart(nfsip);
 
     for ( i = 0 ; i < nfsip ; i++ ){
-    
+
       fsipinfo.fPID = fsihist_.ipvert[i];
       fsipinfo.fDir.SetXYZT(fsihist_.dirvert[i][0],
 			    fsihist_.dirvert[i][1],
@@ -315,7 +315,7 @@ neutfillvect(char *filename, char *treename, char *branchname)
       fsipinfo.fMomNuc = fsihist_.abstpvert[i];
       fsipinfo.fVertStart = fsihist_.iverti[i];
       fsipinfo.fVertEnd = fsihist_.ivertf[i];
-  
+
       nv->SetFsiPartInfo(i, fsipinfo);
     }
   }
@@ -324,39 +324,39 @@ neutfillvect(char *filename, char *treename, char *branchname)
   // (You'll need to take care of this in downstream routines)
   else {
     nv->SetNfsiPart(1);
-    
+
     fsipinfo.fPID = -1;
     fsipinfo.fDir.SetXYZT(0, 0, 0, 0);
     fsipinfo.fMomLab = -1;
     fsipinfo.fMomNuc = -1;
     fsipinfo.fVertStart = -1;
     fsipinfo.fVertEnd = -1;
-    
+
     nv->SetFsiPartInfo(0, fsipinfo);
   }
 
 
   // FSI Vertices
   Int_t nfsiv = fsihist_.nvert;
-  
+
   if (nfsiv) {
     nv->SetNfsiVert(nfsiv);
 
     for ( i = 0 ; i < nfsiv ; i++ ){
-      
+
       fsivinfo.fPos.SetXYZT(fsihist_.posvert[i][0],
 			    fsihist_.posvert[i][1],
 			    fsihist_.posvert[i][2],
 			    0.);
 
       fsivinfo.fVertID = fsihist_.iflgvert[i];
-  
+
       nv->SetFsiVertInfo(i, fsivinfo);
 
     }
 
     nv->Fsiprob = fsihist_.fsiprob;
-  } 
+  }
   // Generate dummy object for no FSI block (no pion) events
   // to protect from memory leak when reading from the tree
   // (You'll need to take care of this in downstream routines)
@@ -366,7 +366,7 @@ neutfillvect(char *filename, char *treename, char *branchname)
     fsivinfo.fPos.SetXYZT(0,0,0,0);
 
     fsivinfo.fVertID = -99999;
-  
+
     nv->SetFsiVertInfo(0, fsivinfo);
 
     nv->Fsiprob = -1;
@@ -374,12 +374,12 @@ neutfillvect(char *filename, char *treename, char *branchname)
 
   // Nucleon FSI Verticies
   Int_t nnucfsivert = nucleonfsihist_.nfnvert;
-  
+
   if (nnucfsivert) {
     nv->SetNnucFsiVert(nnucfsivert);
 
     for ( i = 0 ; i < nnucfsivert ; i++ ){
-    
+
       nucfsivinfo.fVertFlag      = nucleonfsihist_.nfiflag[i];
       nucfsivinfo.fVertFirstStep = nucleonfsihist_.nffirststep[i];
 
@@ -402,29 +402,29 @@ neutfillvect(char *filename, char *treename, char *branchname)
     nv->SetNnucFsiVert(1);
 	nucfsivinfo.fVertFlag      = -1;
 	nucfsivinfo.fVertFirstStep = -1;
-	
+
 	nucfsivinfo.fPos.SetXYZT(0.,0.,0.,0.);
 	nucfsivinfo.fMom.SetPxPyPzE(0.,0.,0.,0.);
-								
+
     nv->SetNucFsiVertInfo(0, nucfsivinfo);
   }
 
   // Nucleon FSI Step
   Int_t nnucfsis = nucleonfsihist_.nfnstep;
-  
+
   if ( nnucfsis ) {
     nv->SetNnucFsiStep(nnucfsis);
 
     for ( i = 0 ; i < nnucfsis ; i++ ){
-      
+
       nucfsisinfo.fECMS2 = nucleonfsihist_.nfecms2[i];
       nucfsisinfo.fProb  = nucleonfsihist_.nfptot[i];
-  
+
       nv->SetNucFsiStepInfo(i, nucfsisinfo);
 
     }
 
-  } 
+  }
   // Generate dummy object for no FSI block (no pion) events
   // to protect from memory leak when reading from the tree
   // (You'll need to take care of this in downstream routines)
@@ -433,7 +433,7 @@ neutfillvect(char *filename, char *treename, char *branchname)
 
 	nucfsisinfo.fECMS2 =  0.;
 	nucfsisinfo.fProb  = -1.;
-  
+
     nv->SetNucFsiStepInfo(0, nucfsisinfo);
 
   }
@@ -449,7 +449,7 @@ int
 neutfillvtx_(char *filename, char *treename, char *branchname,
 			  int len_fname,int len_tname, int len_bname)
 {
-  NeutRootHandlers nrh;  
+  NeutRootHandlers nrh;
 
   nrh.nulltermstr(filename,   len_fname);
   nrh.nulltermstr(treename,   len_tname);
@@ -482,10 +482,10 @@ neutfillvtx(char *filename, char *treename, char *branchname)
   }
 
   nv->SetNvtx(0);
-  
+
   /****************************************************/
   nv->EventNo = event_no++;
-  
+
   nvtx  = vcvrtx_.nvtxvc;
   nv->SetNvtx(nvtx);
 
@@ -496,7 +496,7 @@ neutfillvtx(char *filename, char *treename, char *branchname)
 				vcvrtx_.timvvc[i]);
 
 	nv->SetPos(i, tlv);
-	  
+
   }
   if (!(neutcard_.quiet)){
 	nv->Dump();

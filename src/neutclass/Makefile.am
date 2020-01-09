@@ -107,6 +107,13 @@ include_HEADERS = neutctrl.h neutfsipart.h neutfsivert.h neutnucfsistep.h neutnu
 lib_LTLIBRARIES = libNEUTClass.la
 
 libNEUTClass_la_SOURCES = neutclassDict.cc neutctrl.cc neutfsipart.cc neutfsivert.cc neutnucfsistep.cc neutnucfsivert.cc neutpart.cc neutvect.cc neutvtx.cc
+
+if NEUT_HEPMC
+libNEUTClass_la_SOURCES += HepMCWriter.cc
+libNEUTClass_la_LDFLAGS = $(HEPMC_LINKFLAGS)
+libNEUTClass_la_LIBADD = $(HEPMC_LIBS)
+endif
+
 #
 LIBNAME = libNEUTClassUtils.@NEUT_VERSION_NUM@.a
 #
