@@ -92,6 +92,22 @@ AS_IF([test "x$enable_compatnames" = "xyes"], [
 AC_ARG_ENABLE([hepmc],
     AS_HELP_STRING([--enable-hepmc], [Enable HepMC as an output format, expect to find HepMC-config in PATH.]))
 
+AS_IF([test "x$enable_hepmc" = "xyes"], [
+  AC_CHECK_PROG(FOUND_HEPMC3CONFIG,HepMC3-config,"FOUND","NOT-FOUND")
+
+  case "${FOUND_HEPMC3CONFIG}" in
+    "FOUND") AC_MSG_RESULT(Found HepMC3-config.);;
+    *) AC_MSG_ERROR(Failed to find HepMC3-config. Is HepMC3 set up?);
+  esac
+
+  AC_CHECK_FILE(["${HEPMCNUEVTTOOLSROOT}/include/HepMCNuEvtTools/WriterTools"],
+    [],
+    [AC_MSG_ERROR("${HEPMCNUEVTTOOLSROOT}/include/HepMCNuEvtTools/WriterTools does not exist. Is HepMCNuEvtTools built correctly?")]
+  )
+], [
+  :
+])
+
 AM_CONDITIONAL([NEUT_HEPMC], [test "x$enable_hepmc" = "xyes"])
 
 ######## Check use tauola

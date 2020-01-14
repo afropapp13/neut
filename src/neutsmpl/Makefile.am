@@ -16,7 +16,7 @@ if NEUT_USE_GPERF
 libNEUTROOTIFace_a_SOURCES += gperfstart.cc
 endif
 
-neutroot_SOURCES = neutroot.F 
+neutroot_SOURCES = neutroot.F
 neutroot_LDADD = $(NEUTSMPL_PROGLDADD) libNEUTROOTIFace.a
 neutroot_LDFLAGS = $(NEUTSMPL_PROGLDFLAGS)
 

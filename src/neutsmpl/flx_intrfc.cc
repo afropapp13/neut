@@ -24,6 +24,8 @@ extern "C"
 
   float rndenuevtrt_(float *);
 
+  double getflxavgtotcrs_();
+
 }
 
 const char
@@ -57,6 +59,8 @@ nulltermstr(char *str, int len)
     }
   }
 }
+
+double FlxAvgTotCrs = 0;
 
 int loadflx_(int *IDPTEVCT, char *filename, char *histname, int *inMeV,
 			 int fnlen, int hnlen)
@@ -143,6 +147,9 @@ int loadflx_(int *IDPTEVCT, char *filename, char *histname, int *inMeV,
     throw;
   }
 
+  FlxAvgTotCrs = hrate->Integral() * 1.0E-38 /
+                  hflx->Integral();
+
   EnuEvtrt.Init(hrate);//Initialize using event rate histogram
 
   h_flux = (TH1D *)hflx->Clone("fluxhisto");
@@ -159,6 +166,10 @@ int loadflx_(int *IDPTEVCT, char *filename, char *histname, int *inMeV,
   delete [] BEdgs;
 
   return 0;
+}
+
+double getflxavgtotcrs_(){
+  return FlxAvgTotCrs;
 }
 
 float rndenuevtrt_(float *Rnd)

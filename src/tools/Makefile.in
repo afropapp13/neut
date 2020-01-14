@@ -41,16 +41,17 @@ DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 @NEUT_USE_TAUOLA_TRUE@am__append_2 = -DNEUT_USE_TAUOLA
 @NEUT_USE_GPERF_TRUE@am__append_3 = -DNEUT_USE_GPERF
 @NEUT_HEPMC_TRUE@am__append_4 = -DUSE_HEPMC
-@NEUT_HEPMC_TRUE@am__append_5 = $(shell HepMC3-config --cflags)
+@NEUT_HEPMC_TRUE@am__append_5 = $(shell HepMC3-config --cflags) -I$(shell printenv HEPMCNUEVTTOOLSROOT)/include
 @NEUT_DEBUG_TRUE@am__append_6 = -O0 -g
 @NEUT_DEBUG_TRUE@am__append_7 = -O0 -g
 @NEUT_DEBUG_TRUE@am__append_8 = -O0 -g
 @NEUT_DEBUG_FALSE@am__append_9 = -O2
 @NEUT_DEBUG_FALSE@am__append_10 = -O2
 @NEUT_DEBUG_FALSE@am__append_11 = -O2
-@FC_HAS_PIE_TRUE@am__append_12 = -no-pie
-@NEUT_USE_GPERF_TRUE@am__append_13 = -L@NEUT_GPERF@ -lprofiler
-@NEUT_HEPMC_TRUE@am__append_14 = $(HEPMC_LINKFLAGS) $(HEPMC_LIBS)
+@NEUT_HEPMC_TRUE@am__append_12 = -L$(HEPMC_LIBDIR) -L$(shell printenv HEPMCNUEVTTOOLSROOT)/lib
+@NEUT_HEPMC_TRUE@am__append_13 = -lHepMCNuEvtTools -lHepMC3 -lHepMC3rootIO
+@FC_HAS_PIE_TRUE@am__append_14 = -no-pie
+@NEUT_USE_GPERF_TRUE@am__append_15 = -L@NEUT_GPERF@ -lprofiler
 subdir = tools
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -95,6 +96,7 @@ FC = @FC@
 FCFLAGS = @FCFLAGS@
 FFLAGS = @FFLAGS@
 FGREP = @FGREP@
+FOUND_HEPMC3CONFIG = @FOUND_HEPMC3CONFIG@
 FOUND_ROOTCONFIG = @FOUND_ROOTCONFIG@
 GREP = @GREP@
 INSTALL = @INSTALL@
@@ -208,8 +210,12 @@ NEUT_STATIC_LIBS = $(top_builddir)/neutcore/lib@LIBPREFIX@neutcore.@NEUT_VERSION
 	$(top_builddir)/partnuck/lib@LIBPREFIX@partnuck.@NEUT_VERSION_NUM@.a \
 	$(am__append_1)
 @NEUT_LIBCOMPAT_TRUE@NEUTCLASS_LIBS = $(top_builddir)/neutclass/libneutrootTreeSingleton.la $(top_builddir)/neutclass/libneutctrl.la $(top_builddir)/neutclass/libneutfsipart.la $(top_builddir)/neutclass/libneutfsivert.la $(top_builddir)/neutclass/libneutnucfsistep.la $(top_builddir)/neutclass/libneutnucfsivert.la $(top_builddir)/neutclass/libneutpart.la $(top_builddir)/neutclass/libneutvect.la $(top_builddir)/neutclass/libneutvtx.la
-@NEUT_LIBCOMPAT_FALSE@NEUT_LIBS = $(top_builddir)/neutclass/libNEUTClassUtils.@NEUT_VERSION_NUM@.a $(top_builddir)/neutclass/libNEUTClass.la $(top_builddir)/libNEUT.@NEUT_VERSION_NUM@.a
-@NEUT_LIBCOMPAT_TRUE@NEUT_LIBS = $(NEUTCLASS_LIBS) $(NEUT_STATIC_LIBS)
+@NEUT_LIBCOMPAT_FALSE@NEUT_LIBS = $(top_builddir)/neutclass/libNEUTClassUtils.@NEUT_VERSION_NUM@.a \
+@NEUT_LIBCOMPAT_FALSE@	$(top_builddir)/neutclass/libNEUTClass.la \
+@NEUT_LIBCOMPAT_FALSE@	$(top_builddir)/libNEUT.@NEUT_VERSION_NUM@.a \
+@NEUT_LIBCOMPAT_FALSE@	$(am__append_13)
+@NEUT_LIBCOMPAT_TRUE@NEUT_LIBS = $(NEUTCLASS_LIBS) $(NEUT_STATIC_LIBS) \
+@NEUT_LIBCOMPAT_TRUE@	$(am__append_13)
 CERN_ROOT = $(CERN)/$(CERN_LEVEL)
 CERN_LINKFLAGS = -L$(CERN_ROOT)/lib
 CERN_LIBS = -ljetset74 -lpdflib804 -lphotos202 -lmathlib -lpacklib -lkernlib
@@ -226,17 +232,15 @@ DEFAULT_CXXFLAGS = -fPIC $(NEUT_DEFINES) $(NEUT_INCLUDES) \
 DEFAULT_CFLAGS = -fPIC $(NEUT_DEFINES) $(NEUT_INCLUDES) \
 	-I$(CERN_ROOT)/include $(am__append_8) $(am__append_11)
 DEFAULT_LINKFLAGS = -version-info @NEUT_VERSION_NUM@
-ROOT_LINKFLAGS = $(shell root-config --ldflags) -pthread -rdynamic -L$(shell root-config --libdir)
+ROOT_LINKFLAGS = $(shell root-config --ldflags) -pthread -rdynamic \
+	-L$(shell root-config --libdir) $(am__append_12)
 @ROOT_MAJOR_IS_SIX_FALSE@ROOT_LIBS = -lCore -lCint -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lm -ldl
 @ROOT_MAJOR_IS_SIX_TRUE@ROOT_LIBS = -lCore -lImt -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lTreePlayer -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lMultiProc
-@NEUT_HEPMC_FALSE@HEPMC_LIBDIR = 
 @NEUT_HEPMC_TRUE@HEPMC_LIBDIR = $(shell HepMC3-config --libdir)
-@NEUT_HEPMC_TRUE@HEPMC_LINKFLAGS = -L$(HEPMC_LIBDIR)
-@NEUT_HEPMC_TRUE@HEPMC_LIBS = -lHepMC3 -lHepMC3rootIO
 
 # I know... but this seems to work
-EXE_LINKFLAGS = -fno-PIE -fno-pie $(am__append_12) $(am__append_14)
-EXE_RTLIBS = -lstdc++ -lgfortran $(am__append_13)
+EXE_LINKFLAGS = -fno-PIE -fno-pie $(am__append_14)
+EXE_RTLIBS = -lstdc++ -lgfortran $(am__append_15)
 INST_ROOT = $(prefix)
 @NEUT_LIBCOMPAT_FALSE@IO_LIB_LIST = libNEUTClassUtils.a libNEUTClass.so
 @NEUT_LIBCOMPAT_TRUE@IO_LIB_LIST = neutrootTreeSingleton.so neutctrl.so neutfsipart.so neutfsivert.so neutnucfsistep.so neutnucfsivert.so neutpart.so neutvect.so neutvtx.so

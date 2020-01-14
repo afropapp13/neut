@@ -30,6 +30,9 @@ C#include <f77/f77_floatingpoint.h>
       REAL*4    RLU
       external  RLU
 
+      REAL*8 FLUXAVGTOTCRS, getflxavgtotcrs
+      external getflxavgtotcrs
+
       REAL*4    RNDTMP
 
       REAL*4 XSEC
@@ -101,8 +104,7 @@ C--open file
 
 #ifdef USE_HEPMC
       ELSEIF (OUTPUTFORMAT .EQ. 2) THEN
-        OUTPUTFID = hepmcopen(FILENAME, 80)
-        write(*,*) 'Opened output file, ID: ', OUTPUTFID
+        write(*,*) 'Writing out to HepMC3NuEvt format.'
 #endif
       ELSE
         write(*,*) 'Unknown Output format', OUTPUTFORMAT, ' specified.'
@@ -114,14 +116,27 @@ C--open file
 C--Read flux histogram from ROOT file
       if (MPVEVCT.eq.3) then
          iret = loadflx(IDPTEVCT,FILENMEVCT,HISTNMEVCT,INMEVEVCT)
+         FLUXAVGTOTCRS = getflxavgtotcrs()
          if (iret .ne. 0) then
             write(*,*) 'Failed in reading flux histogram.'
             stop
          endif
       else
+         if (MPVEVCT.eq.1) then
+           FLUXAVGTOTCRS = fntotpau(IDPTEVCT,PVEVCT(1)/1000.)
+           FLUXAVGTOTCRS = FLUXAVGTOTCRS*1E-38
+         endif
          flux_integ = nevtevct
          rate_integ = nevtevct
       endif
+
+C- need the FATC first
+#ifdef USE_HEPMC
+      IF (OUTPUTFORMAT .EQ. 2) THEN
+        OUTPUTFID = hepmcopen(FILENAME, 80, FLUXAVGTOTCRS)
+        write(*,*) 'Opened output file, ID: ', OUTPUTFID
+      ENDIF
+#endif
 
 C--Main loop
 

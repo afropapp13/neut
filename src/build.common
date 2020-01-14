@@ -51,7 +51,7 @@ DEFAULT_FFLAGS = $(NEUT_FFLAGS) $(NEUT_INCLUDES) -I$(CERN_ROOT)/include
 DEFAULT_CXXFLAGS = -fPIC $(NEUT_DEFINES) $(NEUT_INCLUDES) -I$(CERN_ROOT)/include $(shell root-config --cflags)
 
 if NEUT_HEPMC
-DEFAULT_CXXFLAGS += $(shell HepMC3-config --cflags)
+DEFAULT_CXXFLAGS += $(shell HepMC3-config --cflags) -I$(shell printenv HEPMCNUEVTTOOLSROOT)/include
 endif
 
 DEFAULT_CFLAGS = -fPIC $(NEUT_DEFINES) $(NEUT_INCLUDES) -I$(CERN_ROOT)/include
@@ -78,10 +78,9 @@ endif
 
 if NEUT_HEPMC
 HEPMC_LIBDIR = $(shell HepMC3-config --libdir)
-HEPMC_LINKFLAGS = -L$(HEPMC_LIBDIR)
-HEPMC_LIBS = -lHepMC3 -lHepMC3rootIO
+ROOT_LINKFLAGS += -L$(HEPMC_LIBDIR) -L$(shell printenv HEPMCNUEVTTOOLSROOT)/lib
+NEUT_LIBS += -lHepMCNuEvtTools -lHepMC3 -lHepMC3rootIO
 else
-HEPMC_LIBDIR =
 endif
 
 # I know... but this seems to work
@@ -92,8 +91,4 @@ endif
 EXE_RTLIBS =  -lstdc++ -lgfortran
 if NEUT_USE_GPERF
 EXE_RTLIBS += -L@NEUT_GPERF@ -lprofiler
-endif
-
-if NEUT_HEPMC
-EXE_LINKFLAGS += $(HEPMC_LINKFLAGS) $(HEPMC_LIBS)
 endif
