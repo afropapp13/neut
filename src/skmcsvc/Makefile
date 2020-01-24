@@ -23,7 +23,7 @@ MOBJ =	getuni.o excard.o
 COBJ =	necardev.o vcclcm.o 
 
 ## misc. functions from iolib
-IOBJ =	lcase.o ucase.o   lenchr.o getvar.o skopenf.o \
+IOBJ =	lcase.o ucase.o   lenchar.o getvar.o skopenf.o \
 		ccopen.o ccopnf.o iolib_get_tapemode.o charterm.o
 
 OBJS = $(POBJ) $(IOBJ) $(ROBJ) $(MOBJ) $(COBJ) $(IOBJ)
