@@ -19,16 +19,18 @@ MAKEEFFSFTABLES = makeEffSFTables.o combineEffSFTables.o
 
 OBJD = tauvect_dummy.o
 
+FLAGS      = $(FOPTFLAGS) $(FCOPTIONS) $(FCFLAGS) $(EXEFLAGS)
+
 library: lib${LIBNAME}.a
 
 exec: makeTables makeEffSFTables
 
 makeTables: $(MAKETABLES) $(OBJD)
-	$(FC) $(FCOPTIONS) $(FCOPTFLAGS) -o makeTables.exe $(MAKETABLES) $(OBJD) \
+	$(FC) -o makeTables.exe $(FLAGS) $(MAKETABLES) $(OBJD) \
 			$(NEUTLIBS) $(ROOTLIBS) $(CERNLIBS) 
 
 makeEffSFTables: $(MAKEEFFSFTABLES) $(OBJD)
-	$(FC) $(FLAGS) -o makeEffSFTables.exe $(MAKEEFFSFTABLES) $(OBJD) \
+	$(FC) -o makeEffSFTables.exe $(FLAGS) $(MAKEEFFSFTABLES) $(OBJD) \
 			$(NEUTLIBS) $(ROOTLIBS) $(CERNLIBS)
 
 lib${LIBNAME}.a: ${OBJS}
