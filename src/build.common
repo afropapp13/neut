@@ -51,7 +51,7 @@ DEFAULT_FFLAGS = $(NEUT_FFLAGS) $(NEUT_INCLUDES) -I$(CERN_ROOT)/include
 DEFAULT_CXXFLAGS = -fPIC $(NEUT_DEFINES) $(NEUT_INCLUDES) -I$(CERN_ROOT)/include $(shell root-config --cflags)
 
 if NEUT_HEPMC
-DEFAULT_CXXFLAGS += $(shell HepMC3-config --cflags) -I$(shell printenv HEPMCNUEVTTOOLSROOT)/include
+DEFAULT_CXXFLAGS += $(shell HepMC3-config --cflags) -I$(shell NuHepMC-config --incdir)
 endif
 
 DEFAULT_CFLAGS = -fPIC $(NEUT_DEFINES) $(NEUT_INCLUDES) -I$(CERN_ROOT)/include
@@ -78,8 +78,9 @@ endif
 
 if NEUT_HEPMC
 HEPMC_LIBDIR = $(shell HepMC3-config --libdir)
-ROOT_LINKFLAGS += -L$(HEPMC_LIBDIR) -L$(shell printenv HEPMCNUEVTTOOLSROOT)/lib
-NEUT_LIBS += -lHepMCNuEvtTools -lHepMC3 -lHepMC3rootIO
+NUHEPMC_LIBDIR = $(shell NuHepMC-config --libdir)
+ROOT_LINKFLAGS += -L$(HEPMC_LIBDIR) -L$(NUHEPMC_LIBDIR)
+NEUT_LIBS += -lNuHepMC -lHepMC3 -lHepMC3rootIO
 else
 endif
 

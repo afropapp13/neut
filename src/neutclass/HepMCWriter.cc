@@ -1,5 +1,6 @@
 #include "NeutRootHandlers.h"
 
+#include "necardC.h"
 #include "neutmodelC.h"
 #include "neworkC.h"
 #include "vcvrtxC.h"
@@ -14,14 +15,14 @@
 #include "HepMC3/GenParticle.h"
 #include "HepMC3/GenVertex.h"
 
-#include "HepMCNuEvtTools/WriterTools"
+#include "NuHepMC/WriterTools"
 
 #include <cstdint>
 #include <iostream>
 #include <map>
 #include <memory>
 
-std::map<int, std::unique_ptr<HepMC3Nu::WriterRootTree> > HepMCWriters;
+std::map<int, std::unique_ptr<NuHepMC::WriterRootTree> > HepMCWriters;
 std::map<int, size_t> EventCounts;
 int id = 0;
 
@@ -49,11 +50,11 @@ int hepmcopen_(char *filename, int *filename_len, double *FATC) {
   std::cout << "[INFO]: Opened file: " << filename << ", at ID: " << id
             << std::endl;
 
-  std::shared_ptr<HepMC3::GenRunInfo> gri = HepMC3Nu::genruninfo::GRIFactory(
+  std::shared_ptr<HepMC3::GenRunInfo> gri = NuHepMC::genruninfo::GRIFactory(
       "NEUT", VERSION, "The NEUT neutrino interaction generator");
 
-  HepMC3Nu::genruninfo::SetVertexEnumStandard(gri, "1.0");
-  HepMC3Nu::genruninfo::SetParticleEnumStandard(gri, "1.0");
+  NuHepMC::genruninfo::SetVertexEnumStandard(gri, "1.0");
+  NuHepMC::genruninfo::SetParticleEnumStandard(gri, "1.0");
 
   std::map<int, std::string> ModeNames;
 
@@ -66,12 +67,12 @@ int hepmcopen_(char *filename, int *filename_len, double *FATC) {
         std::string("anti-neutrino ") + neutModeTitle[i];
   }
 
-  HepMC3Nu::genruninfo::SetHardScatterModeDefinitions(gri, ModeNames);
+  NuHepMC::genruninfo::SetHardScatterModeDefinitions(gri, ModeNames);
 
-  HepMC3Nu::genruninfo::SetFluxAveragedTotalCrossSection(gri, *FATC);
+  NuHepMC::genruninfo::SetFluxAveragedTotalCrossSection(gri, *FATC);
 
-  HepMCWriters[id] = std::unique_ptr<HepMC3Nu::WriterRootTree>(
-      new HepMC3Nu::WriterRootTree(filename, gri));
+  HepMCWriters[id] = std::unique_ptr<NuHepMC::WriterRootTree>(
+      new NuHepMC::WriterRootTree(filename, gri));
 
   return id++;
 }
@@ -81,29 +82,33 @@ void hepmcclose_(int *fid) {
   HepMCWriters.erase(*fid);
 }
 
-HepMC3Nu::labels::ParticleState GetHepMCNuEvtParticleEnum(int status,
-                                                          int chase) {
+NuHepMC::labels::ParticleState GetHepMCNuEvtParticleEnum(int status,
+                                                         int chase) {
   if (chase == 0) {
     switch (status) {
     case -1: {
-      return HepMC3Nu::labels::ParticleState::kInitialState;
+      return NuHepMC::labels::ParticleState::kInitialState;
     }
     case 1: {
-      return HepMC3Nu::labels::ParticleState::kDecayed;
+      return NuHepMC::labels::ParticleState::kDecayed;
     }
-    default: { return HepMC3Nu::labels::ParticleState::kIntermediate; }
+    default: {
+      return NuHepMC::labels::ParticleState::kIntermediate;
+    }
     }
   } else if (chase == 1) {
     switch (status) {
     case 0:
     case 2: {
-      return HepMC3Nu::labels::ParticleState::kFinalState;
+      return NuHepMC::labels::ParticleState::kFinalState;
     }
-    default: { return HepMC3Nu::labels::ParticleState::kOther; }
+    default: {
+      return NuHepMC::labels::ParticleState::kOther;
+    }
     }
 
   } else {
-    return HepMC3Nu::labels::ParticleState::kIntermediate;
+    return NuHepMC::labels::ParticleState::kIntermediate;
   }
 }
 
@@ -112,18 +117,25 @@ void hepmcfill_(int *fid) {
   HepMC3::GenEvent evt(HepMC3::Units::MEV, HepMC3::Units::CM);
   evt.set_event_number(EventCounts[*fid]++);
 
-  evt.add_attribute("HardScatterMode",
-                    std::make_shared<HepMC3::IntAttribute>(nework_.modene));
+  NuHepMC::genevent::SetHardScatterMode(evt, nework_.modene);
 
   HepMC3::GenVertexPtr LabFrameVtx =
       std::make_shared<HepMC3::GenVertex>(HepMC3::FourVector::ZERO_VECTOR());
   LabFrameVtx->set_status(
-      HepMC3Nu::labels::e2i(HepMC3Nu::labels::VertexState::kLabFrame));
+      NuHepMC::labels::e2i(NuHepMC::labels::VertexState::kLabFrame));
+
+  if (posinnuc_.ibound) {
+    int A = neuttarget_.numbndp + neuttarget_.numbndn;
+    LabFrameVtx->add_particle_in(
+        NuHepMC::genevent::MakeNuclearParticle(neuttarget_.numbndp, A));
+  } else {
+    LabFrameVtx->add_particle_in(NuHepMC::genevent::MakeNuclearParticle(1, 1));
+  }
 
   HepMC3::GenVertexPtr HardScatterVtx =
       std::make_shared<HepMC3::GenVertex>(HepMC3::FourVector::ZERO_VECTOR());
   HardScatterVtx->set_status(
-      HepMC3Nu::labels::e2i(HepMC3Nu::labels::VertexState::kHardScatter));
+      NuHepMC::labels::e2i(NuHepMC::labels::VertexState::kHardScatter));
 
   // std::vector<HepMC3::GenVertexPtr> vertices;
 
@@ -134,7 +146,7 @@ void hepmcfill_(int *fid) {
   //                          vcvrtx_.pvtxvc[vtx_it][2],
   //                          vcvrtx_.timvvc[vtx_it])));
   //   vertices.back()->set_status(
-  //       HepMC3Nu::labels::e2i(HepMC3Nu::labels::VertexState::kLabFrame));
+  //       NuHepMC::labels::e2i(NuHepMC::labels::VertexState::kLabFrame));
   // }
 
   for (int p_it = 0; p_it < vcwork_.nvc; p_it++) {
@@ -150,13 +162,13 @@ void hepmcfill_(int *fid) {
         sqrt(pow(vcwork_.amasvc[p_it], 2) + pow(vcwork_.pvc[p_it][0], 2) +
              pow(vcwork_.pvc[p_it][1], 2) + pow(vcwork_.pvc[p_it][2], 2));
 
-    HepMC3Nu::labels::ParticleState state =
+    NuHepMC::labels::ParticleState state =
         GetHepMCNuEvtParticleEnum(vcwork_.iflgvc[p_it], vcwork_.icrnvc[p_it]);
 
     HepMC3::GenParticlePtr p1 = std::make_shared<HepMC3::GenParticle>(
         HepMC3::FourVector(vcwork_.pvc[p_it][0], vcwork_.pvc[p_it][1],
                            vcwork_.pvc[p_it][2], p_E),
-        vcwork_.ipvc[p_it], HepMC3Nu::labels::e2i(state));
+        vcwork_.ipvc[p_it], NuHepMC::labels::e2i(state));
     p1->set_generated_mass(vcwork_.amasvc[p_it]);
 
     // std::cout << "[PART]: " << vcwork_.ipvc[p_it]
@@ -166,9 +178,9 @@ void hepmcfill_(int *fid) {
 
     // For now, only fill out lab frame vertex.
     switch (state) {
-    case HepMC3Nu::labels::ParticleState::kInitialState: {
+    case NuHepMC::labels::ParticleState::kInitialState: {
       // Fill out hard scatter vertex.
-      if (HepMC3Nu::pid::IsLepton(p1->pid())) {
+      if (NuHepMC::pid::IsLepton(p1->pid())) {
         LabFrameVtx->add_particle_in(
             std::make_shared<HepMC3::GenParticle>(p1->data()));
       }
@@ -176,12 +188,9 @@ void hepmcfill_(int *fid) {
           std::make_shared<HepMC3::GenParticle>(p1->data()));
       break;
     }
-    case HepMC3Nu::labels::ParticleState::kFinalState: {
-      // Fill out hard scatter vertex.
-      if (HepMC3Nu::pid::IsLepton(p1->pid())) {
-        LabFrameVtx->add_particle_out(
-            std::make_shared<HepMC3::GenParticle>(p1->data()));
-      }
+    case NuHepMC::labels::ParticleState::kFinalState: {
+      LabFrameVtx->add_particle_out(
+          std::make_shared<HepMC3::GenParticle>(p1->data()));
       HardScatterVtx->add_particle_out(
           std::make_shared<HepMC3::GenParticle>(p1->data()));
       break;

@@ -100,10 +100,13 @@ AS_IF([test "x$enable_hepmc" = "xyes"], [
     *) AC_MSG_ERROR(Failed to find HepMC3-config. Is HepMC3 set up?);
   esac
 
-  AC_CHECK_FILE(["${HEPMCNUEVTTOOLSROOT}/include/HepMCNuEvtTools/WriterTools"],
-    [],
-    [AC_MSG_ERROR("${HEPMCNUEVTTOOLSROOT}/include/HepMCNuEvtTools/WriterTools does not exist. Is HepMCNuEvtTools built correctly?")]
-  )
+  AC_CHECK_PROG(FOUND_NuHepMCCONFIG,NuHepMC-config,"FOUND","NOT-FOUND")
+
+  case "${FOUND_NuHepMCCONFIG}" in
+    "FOUND") AC_MSG_RESULT(Found NuHepMC-config.);;
+    *) AC_MSG_ERROR(Failed to find NuHepMC-config. Is NuHepMC set up?);
+  esac
+
 ], [
   :
 ])
