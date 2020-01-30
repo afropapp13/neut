@@ -331,7 +331,7 @@ ROOT_FLAGS = $(HEPMC_FLAGS) $(ROOT_LINKFLAGS) $(ROOT_LIBS)
 CERN_FLAGS = $(CERN_LINKFLAGS) $(CERN_LIBS)
 @NEUT_LIBCOMPAT_FALSE@IO_LIB_LIST = libNEUTClassUtils.a libNEUTClass.so
 @NEUT_LIBCOMPAT_TRUE@IO_LIB_LIST = neutrootTreeSingleton.so neutctrl.so neutfsipart.so neutfsivert.so neutnucfsistep.so neutnucfsivert.so neutpart.so neutvect.so neutvtx.so
-@NEUT_LIBCOMPAT_FALSE@IO_LIB_FLAGS = -lNEUTClassUtils -lNEUTClass
+@NEUT_LIBCOMPAT_FALSE@IO_LIB_FLAGS = $(JUST_IO_LIB_FLAGS) $(ROOT_FLAGS)
 @NEUT_LIBCOMPAT_TRUE@IO_LIB_FLAGS = $(INST_ROOT)/lib/neutrootTreeSingleton.so $(INST_ROOT)/lib/neutctrl.so $(INST_ROOT)/lib/neutfsipart.so $(INST_ROOT)/lib/neutfsivert.so $(INST_ROOT)/lib/neutnucfsistep.so $(INST_ROOT)/lib/neutnucfsivert.so $(INST_ROOT)/lib/neutpart.so $(INST_ROOT)/lib/neutvect.so $(INST_ROOT)/lib/neutvtx.so
 @NEUT_LIBCOMPAT_FALSE@RW_LIB = libNEUTReWeight.so
 @NEUT_LIBCOMPAT_TRUE@RW_LIB = libNReWeight.so
@@ -339,8 +339,9 @@ CERN_FLAGS = $(CERN_LINKFLAGS) $(CERN_LIBS)
 @NEUT_LIBCOMPAT_TRUE@RW_FLAGS = -lNReWeight
 @NEUT_LIBCOMPAT_FALSE@LIB_LIST = $(RW_LIB) $(IO_LIB_LIST) libNEUT.a
 @NEUT_LIBCOMPAT_TRUE@LIB_LIST = $(RW_LIB) $(IO_LIB_LIST) libneutcore.a libnuccorspl.a libnuceff.a libn1p1h.a libht2p2h.a libradcorr.a libtauola.a libspecfunc.a libskmcsvc.a libzbsfns.a libpartnuck.a
-@NEUT_LIBCOMPAT_FALSE@LIB_FLAGS = $(RW_FLAGS) $(IO_LIB_FLAGS) -lNEUT $(ROOT_FLAGS) $(CERN_FLAGS)
+@NEUT_LIBCOMPAT_FALSE@LIB_FLAGS = $(RW_FLAGS) $(JUST_IO_LIB_FLAGS) -lNEUT $(ROOT_FLAGS) $(CERN_FLAGS)
 @NEUT_LIBCOMPAT_TRUE@LIB_FLAGS = $(RW_FLAGS) $(IO_LIB_FLAGS) -lneutcore -lnuccorspl -lnuceff -ln1p1h -lht2p2h -lradcorr -ltauola -lspecfunc -lskmcsvc -lzbsfns -lpartnuck $(ROOT_FLAGS) $(CERN_FLAGS)
+@NEUT_LIBCOMPAT_FALSE@JUST_IO_LIB_FLAGS = -lNEUTClassUtils -lNEUTClass
 all: all-am
 
 .SUFFIXES:

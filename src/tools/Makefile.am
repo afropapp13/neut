@@ -27,11 +27,12 @@ LIB_FLAGS = $(RW_FLAGS) $(IO_LIB_FLAGS) -lneutcore -lnuccorspl -lnuceff -ln1p1h 
 else
 
 IO_LIB_LIST = libNEUTClassUtils.a libNEUTClass.so
-IO_LIB_FLAGS = -lNEUTClassUtils -lNEUTClass
+JUST_IO_LIB_FLAGS = -lNEUTClassUtils -lNEUTClass
+IO_LIB_FLAGS = $(JUST_IO_LIB_FLAGS) $(ROOT_FLAGS)
 RW_LIB = libNEUTReWeight.so
 RW_FLAGS = -lNEUTReWeight
 LIB_LIST = $(RW_LIB) $(IO_LIB_LIST) libNEUT.a
-LIB_FLAGS = $(RW_FLAGS) $(IO_LIB_FLAGS) -lNEUT $(ROOT_FLAGS) $(CERN_FLAGS)
+LIB_FLAGS = $(RW_FLAGS) $(JUST_IO_LIB_FLAGS) -lNEUT $(ROOT_FLAGS) $(CERN_FLAGS)
 
 endif
 
