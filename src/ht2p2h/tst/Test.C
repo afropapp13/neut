@@ -5,6 +5,7 @@
 #include <TH2D.h>
 #include <TTree.h>
 #include <TFile.h>
+
 #include "HT2p2h.h"
 #include <math.h>
 
@@ -17,16 +18,16 @@ extern"C" {
 
   //  void diffcrosssection_(int *inu,double *Enu,double *Tmu,double *xcos,double *xCrossSect);
 
-
-float rlu_(int *dummy){
-
-  #define RNDMX  ((double) 0x7fffffff)
+  struct nieves2p2hpar_common nieves2p2hpar_;
+  
+  float rlu_(int *dummy){
+	
+#define RNDMX  ((double) 0x7fffffff)
     double a = random()/RNDMX;
-    
+	
     return a; 
-
-
-}
+	
+  }
   
 }
 #endif 
@@ -52,6 +53,9 @@ int main(int argc, char **argv) {
  double val = 0.0 ;
  
  bool applybind = true;
+
+ // nieves2p2hpar_.nv2p2hqval = 1; /* qval is set to 0 */
+ nieves2p2hpar_.nv2p2hqval = 2; /* r-dependent qval */
 
  int hmode = 0; 
  

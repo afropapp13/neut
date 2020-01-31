@@ -164,10 +164,10 @@ C--Draw ENEU from event rate (flux*cross-section) distribution
 C--Generate event
          CALL RLUXAT(LUX,ISEED1,K1,K2)
          CALL RM48UT(ISEED2,K3,K4)
-         IF (MOD(I,INT(NEVTEVCT/20)) .eq. 0) THEN
+C         IF (MOD(I,INT(NEVTEVCT/20)) .eq. 0) THEN
            WRITE(6,'(A4,I7,A7,I10,I10,I10,I10,I10,I10)')
      $        'Ev.#',I, ' SEEDS ',ISEED1,K1,K2,ISEED2,K3,K4
-       ENDIF
+C       ENDIF
 
          call NEVECGEN(IDPTEVCT,POS,PNEU,IERR)
 

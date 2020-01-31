@@ -1,10 +1,12 @@
-all: bin/Test 
+all: install.include install.library bin/Test 
 
 include ${NEUT_ROOT}/src/neutsmpl/config_neut.gmk
 
 LIBNAME=HT2p2h_$(HT2P2HVER)
 $(shell mkdir -p lib)
 $(shell mkdir -p bin)
+
+INCS = inc/nieves2p2h.fh
 
 #CFLAGS = -pthread -stdlib=libc++ -std=c++11 -m64 -I/Applications/root-6.04.00/include -Iinc
 #LDFLAGS =-L/Applications/root-6.04.00/lib -lCore -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lpthread -Wl,-rpath,/Applications/root-6.04.00/lib -stdlib=libc++ -lm -ldl
@@ -13,7 +15,7 @@ $(shell mkdir -p bin)
 #LDFLAGS = `root-config --glibs` -lminuit -lm -ldl -lgfortran
 
 #CFLAGS=$(COPTFLAGS) $(CXXOPTIONS) $(ROOTINCDIR) -pthread -std=c++11 -m64 -Iinc
-CFLAGS=$(COPTFLAGS) $(CXXOPTIONS) $(ROOTINCDIR) -pthread -m64 -Iinc -fPIC
+CFLAGS=$(COPTFLAGS) $(CXXOPTIONS) $(ROOTINCDIR) -pthread -m64 -Iinc
 LDFLAGS=$(ROOTLIBS)
 
 lib/Nucleus2p2h.o: src/Nucleus2p2h.C
@@ -44,6 +46,8 @@ install.library: ./lib/lib${LIBNAME}.a
 	${INSTALL} -d -m 0755 ${NEUT_ROOT}/lib
 	${INSTALL} -m 0644 $? ${NEUT_ROOT}/lib
 
-install.include:
-	echo nothing to do in 2p2h
+install.include: $(INCS)
+	for i in $? ;do ${FH2H} $$i > `echo $$i | sed "s/\.fh$$/C.h/"`; done
+	${INSTALL} -m 0644 ${INCS} ${NEUT_ROOT}/include
+	${INSTALL} -m 0644 ${INCS:.fh=C.h} ${NEUT_ROOT}/include
 

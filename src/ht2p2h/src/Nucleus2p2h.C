@@ -249,7 +249,6 @@ double Nucleus2p2h::Density(int nuclei,int isospin, double R){
   // if( N[nuclei] != (Nuclei*) 0 ) return 0.; // Already initalized. 
 
   Nuclei *Nl = N[nuclei];
-
   
   double density = 0; 
   
@@ -274,11 +273,10 @@ double Nucleus2p2h::Density(int nuclei,int isospin, double R){
     }
   }
 
+  if( density < 0. ) density = 0.;
+
   return density; 
 }
-
-
-
 
 
 double Nucleus2p2h::GenerateR(int nuclei, int isospin ) {
