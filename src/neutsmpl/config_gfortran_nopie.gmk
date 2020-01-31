@@ -108,7 +108,7 @@ NEUTSKLIBS  = ${NEUTLIBS} \
 .SUFFIXES: .so
 
 GENROOTSO = env COPTFLAGS="${COPTIONS} ${COPTFLAGS}" \
-		    INCDIRS="${NEUTINCDIR} ${ROOTINC} ${CERNINC}" \
+		    INCDIRS="${NEUTINCDIR} ${ROOTINC} ${CERNINCDIR}" \
 			${NEUT_SRC}/neutsmpl/bin/gen_root_so.sh
 
 .F.o:
@@ -121,15 +121,15 @@ GENROOTSO = env COPTFLAGS="${COPTIONS} ${COPTFLAGS}" \
 
 .c.o:
 	$(CC)  -c -D$(FC) $(CXXOPTFLAGS) $(CXXOPTIONS) $(CXXFLAGS) \
-		   $(NEUTINCDIR) $(ROOTINC) $(CERNINC) -o $@ $<
+		   $(NEUTINCDIR) $(ROOTINC) $(CERNINCDIR) -o $@ $<
 
 .cc.o:
 	$(CXX) -c -D$(FC) $(CXXOPTFLAGS) $(CXXOPTIONS) $(CXXFLAGS) \
-		   $(NEUTINCDIR) $(ROOTINC) $(CERNINC) -o $@ $<
+		   $(NEUTINCDIR) $(ROOTINC) $(CERNINCDIR) -o $@ $<
 
 .cxx.o:
 	$(CXX) -c -D$(FC) $(CXXOPTFLAGS) $(CXXOPTIONS) $(CXXFLAGS) \
-		   $(NEUTINCDIR) $(ROOTINC) $(CERNINC) -o $@ $<
+		   $(NEUTINCDIR) $(ROOTINC) $(CERNINCDIR) -o $@ $<
 
 .cc.so:
 	$(GENROOTSO) $(basename $<)
