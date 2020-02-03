@@ -2,6 +2,8 @@
 #define _HT2p2h_
 
 #include <iostream>
+#include <iomanip>
+#include <limits>
 #include <map>
 #include <vector> 
 #include <fstream>

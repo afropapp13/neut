@@ -160,43 +160,48 @@ int HT2p2h::ReadIntegrals(int nuclei){
 			<< fname << std::endl; 
 
   int crstbl_exists = 0;
-  /* search for the Cross-sections block  */
-  while(infile.getline(line,LOCALBUFSIZ)){
-	if (strstr (line,"#Cross-section Table")){
-	  crstbl_exists = 1;
-	  break;
-	}
-  }
-  if (crstbl_exists == 0){
-	free(line);
-	free(item);
-	return -1;
-  }
-
-  /* search for the parameters block  */
   int param_agreed = 0;
-  while(infile.getline(line,LOCALBUFSIZ)){
-	if ( strstr(line,"#PARAMSTART") ){
-	  break;
-	}
-  }
-  /* search for the table with same parameter value */
-  while(infile.getline(line,LOCALBUFSIZ)){  
-	if (line[0] == 0) continue;
-	if (line[0] != '#') break;
-	if (strncmp (line,"#NV2P2HQVAL",11)==0){
-	  sscanf(line,"%s %d",item, &ipar);
-	  if (ipar == nieves2p2hpar_.nv2p2hqval){
-		param_agreed = 1;
+
+  while (param_agreed==0){
+	/* search for the Cross-sections block  */
+	while(infile.getline(line,LOCALBUFSIZ)){
+	  if (strstr (line,"#Cross-section Table")){
+		crstbl_exists = 1;
 		break;
 	  }
 	}
-  }  
+	if ((crstbl_exists == 0)||(infile.eof())){
+	  free(line);
+	  free(item);
+	  return -1;
+	}
+
+	/* search for the parameters block  */
+	while(infile.getline(line,LOCALBUFSIZ)){
+	  if ( strstr(line,"#PARAMSTART") ){
+		break;
+	  }
+	}
+	/* search for the table with same parameter value */
+	while(infile.getline(line,LOCALBUFSIZ)){  
+	  if (line[0] == 0) continue;
+	  if (line[0] != '#') break;
+	  if (strncmp (line,"#NV2P2HQVAL",11)==0){
+		sscanf(line,"%s %d",item, &ipar);
+		if (ipar == nieves2p2hpar_.nv2p2hqval){
+		  param_agreed = 1;
+		  break;
+		}
+	  }
+	}  
+  }
+  
   if (param_agreed == 0){
 	free(line);
 	free(item);
 	return -1;
   }
+
 
   int    nuclei_file;
   int    ebinmax;
@@ -339,12 +344,31 @@ void HT2p2h::ComputeIntegrals(int nuclei){
 	  
 	  double xs = 0.;
 
-	  for(  int i = 0; i < 20; i++ ) {
-	    double R = GenerateR(nuclei,-1);
-	    double lxs = DoubleDifferential(id,nuclei,Enu,tl,xcos,R);
-	    if( lxs > 0. ) 
-	      xs += lxs/20.;
-	    if( lxs > MaxXsect ) MaxXsect = lxs*1.05; 
+	  switch (nieves2p2hpar_.nv2p2hqval){
+	  case 1:
+		{
+		  double R = 0.01;
+		  xs = DoubleDifferential(id,nuclei,Enu,tl,xcos,R);
+		}
+		if (xs > MaxXsect ) MaxXsect = xs*1.05; 		
+		break;
+	  case 2:
+		if (nieves2p2hpar_.nv2p2hqval == 2){
+		  for(  int i = 0; i < 20; i++ ) {
+			double R = GenerateR(nuclei,-1);
+			double lxs = DoubleDifferential(id,nuclei,Enu,tl,xcos,R);
+			if( lxs > 0. ) 
+			  xs += lxs/20.;
+			if( lxs > MaxXsect ) MaxXsect = lxs*1.05; 
+		  }
+		}
+		break;
+	  default:
+		std::cout << "HT2p2h Error : " 
+				  << "Config param. nv2p2hqval is not properly set"
+				  << "nv2p2hqval is " << nieves2p2hpar_.nv2p2hqval
+				  << std::endl;
+		exit(1);
 	  }
 
 	  double Jacobian = Q3; 
@@ -401,7 +425,9 @@ void HT2p2h::ComputeIntegrals(int nuclei){
 	offile << i << " ";
 	offile << (double)i*Enubin+Enubin*0.5 << " ";
 	for( unsigned int il = 0; il < neutrinoIdlist.size(); il++ ) {
-	  offile << integral_dump[il][i] << " "
+	  offile << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+			 << integral_dump[il][i] << " "
+			 << std::setprecision(std::numeric_limits<double>::digits10 + 1)
 			 << maximal_dump[il][i] << " ";
 	}
 	offile << std::endl;
@@ -1077,9 +1103,15 @@ void HT2p2h::CheckNuclei_2(int nuclei){
 
 double HT2p2h::GetQ0Fermivalue(int nuclei,int id,double R){
   
+  double qval;
+  if (nieves2p2hpar_.nv2p2hqval == 1){
+	qval = 0.;
+	return qval; 
+  }
+  
   double pfermi = GetFermiLFG(R,nuclei,-1);
   
-  double qval = pfermi*pfermi/2.*(1./protonmass+1./neutronmass);
+  qval = pfermi*pfermi/2.*(1./protonmass+1./neutronmass);
 
   if ((nieves2p2hpar_.nv2p2hqval != 1) &&
 	  (nieves2p2hpar_.nv2p2hqval != 2)){
@@ -1088,10 +1120,6 @@ double HT2p2h::GetQ0Fermivalue(int nuclei,int id,double R){
 			  << std::endl;
 	exit(1);
   }
-
-  if (nieves2p2hpar_.nv2p2hqval == 1){
-	qval = 0.;
-  }else
 
   return qval; 
 }
