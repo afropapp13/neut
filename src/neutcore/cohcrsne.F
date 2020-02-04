@@ -17,6 +17,7 @@
 *      
 *     (Creation Date and Author)
 *       2006.01.08  G.Mitsuka
+*       2020.02.04  Y.Hayato (return 0 for E_nu > 999 GeV)
 *
 *     (Comment)
 *       Original cohcrsne.F was renamed to cohcrsnerein.F,
@@ -35,6 +36,11 @@
       external cohcrsnerein,cohcrsnekart,cohcrsneberger
 
       if ((numbndp+numbndn).le.1) then
+         cohcrsne = 0.
+         return
+      endif
+
+      if (e.ge.999.) then
          cohcrsne = 0.
          return
       endif
