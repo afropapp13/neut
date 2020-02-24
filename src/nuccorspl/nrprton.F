@@ -164,6 +164,7 @@ c      write (*,*) "Step numberA nfnstep ", NFnstep
 
       if(NReweightFlag.eq.1) then
 
+
 c     NFnstep = 0
          RW_step_i =0
 
@@ -175,6 +176,9 @@ c         write (*,*) "Step numberA nfnstep ", NFnstep
 c     NFnstep = 0
          goto 200
       endif
+
+C      print *,"information about current particle",idmc
+ 
 
 C     are we reweighting? flag 1 if we are! (this might need to go higher up)                                                                                       C     I think we need to this right at the beginning - might be possible to kove it a bit further down later 
       if(NReweightFlag.eq.0) then
@@ -307,9 +311,9 @@ c     loop over input tracks
       NFnstep = NFnstep+1       ! increase number of steps                                                                                                                                 
 c      write (*,*) "nfstep increased line 308", NFnstep
 
-c      write (*,*) "before 300  "
+      write (*,*) "before 300  "
  300  continue                  ! loop thru the input tracks
-c      write (*,*) "after 300  "
+      write (*,*) "after 300  "
 c     loop counter itdone
       itdone=itdone+1
 c     if the counter goes beyond ntracks, QUIT
@@ -489,7 +493,7 @@ c     write (*,*) "IDES = ", ides
 
 
          else
-c            write (*,*) "finished number of steps for event", NFnstep
+            write (*,*) "finished number of steps for event", NFnstep
             goto 300
          end if
          
@@ -597,7 +601,19 @@ c     write (*,*) "amn before nrnc = ", amn
 c     write (*,*) "itdone number before nrnuc = ", itdone    
 c     write (*,*) "no number before nrnuc = ", no
 c     write (*,*) "track number before nrnuc = ", ntrack
-
+      
+C      print *,"Current particle info NFNstep:",NFNstep
+C      print *,"Current particle info RW_step_i:",RW_step_i
+C      print *,"Current particle info ido:",ido
+C      print *,"Current particle info idmc",idmc
+C      print *,"Calling nrnuc"
+C      print *,"current track",ntrack
+      
+C      if(ntrack.ge.1) then
+C         print *,"charge of track",chtrack(ntrack)
+C         print *,"mass of track",amass(ntrack)
+C      endif
+      
       call nrnuc(ides)          ! make interaction
 c     if ides was set to 11,12,13 then it was pauli blocked
 c      write (*,*) "nfnstep coming out of nrnuc = ", NFnStep

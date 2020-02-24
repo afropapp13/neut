@@ -270,7 +270,7 @@ void NReWeightCascNucleon::Reconfigure(void)
   std::cout << "ReconfTotalProbTwkDial " << fTotalProbTwkDial << std::endl;
   std::cout << "ReconfracerrTotProb " << fracerr_TotProb << std::endl;
   
-    fracerr_TotProb = 0.0;
+  //    fracerr_TotProb = 0.0;
   
   
   fTotalProbCurr = fTotalProbDef * (1. + fTotalProbTwkDial * fracerr_TotProb);

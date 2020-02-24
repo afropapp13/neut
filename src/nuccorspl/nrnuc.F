@@ -158,6 +158,9 @@ c     not sure what 1 is (I'm guessing it will turn out to be survival)
       idec=1
 c      write (*,*) "ecms2 = " , ecms2
 c      write (*,*) "(2*amn)^2 = " , (2.*amn)**2
+
+      write (*,*) "logical prot= " ,prot
+
       if(NReweightFlag.eq.0) then
          if(ecms2.le.(2.*amn)**2) then
          
@@ -185,6 +188,7 @@ c            print *,"generated pdpnuc = ", pdpnuc
 
       endif
       if(NReweightFlag.eq.1) then
+         print *,"Performing reweight of nrnuc.F"                                                                                                                                                     
          if( NFiflagStep(RW_step_i).eq.5) then
          
 c            print *,"Kinematic failure"

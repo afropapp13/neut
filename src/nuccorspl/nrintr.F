@@ -94,6 +94,7 @@ C
 
       NPARTL=0
       NVC2=NVC
+C     from 3rd particle to end of vect
       DO 1000 I=3,NVC
 
 
