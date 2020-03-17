@@ -74,7 +74,6 @@
 #include "posinnuc.h"
 
       REAL*4 X(3),PIN(3),POUT(3),PO1(3),PO2(3)
-      REAL*4 PING(3),POUTG(3)
       INTEGER KIN,KFI,NFLAG
 
       INTEGER NPARTL_PRE
@@ -413,19 +412,8 @@ C-- skip K with momentum > 10GeV ( 2017/11/24 )
 
             DO J=1,3
                X(J)=POSNUC(J,I)
-C-- add to convert from MeV to GeV(2020/03/15)
-               PING(J)=PIN(J)/1000. 
             ENDDO
-
-C            CALL EFTRCKA(PIN,KIN,POUT,KO,X) 
-
-C-- call with GeV(2020/03/15)
-            CALL EFTRCKA(PING,KIN,POUTG,KO,X) 
-
-C-- add to convert back from GeV to MeV (2020/03/15)
-            DO J=1,3
-               POUT(J)=POUTG(J)*1000.
-            ENDDO
+            CALL EFTRCKA(PIN,KIN,POUT,KO,X) 
 
             IF (KIN.EQ.KO) then
                if ((( abs(pin(1)-pout(1)) ).gt.0.01 ).or.
