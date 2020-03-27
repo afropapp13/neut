@@ -531,7 +531,19 @@ bool tweaked = ( (TMath::Abs(fTotalProbTwkDial) > controls::kASmallNum) ||
   new_xsec = nrint_.pcascprob;
 #endif
   float new_weight = (new_xsec/old_xsec);
+  if(old_xsec == 1)
+    {
 
+
+      new_weight =1;
+    }
+  if(new_xsec!=1 ||old_xsec!=1)
+    {
+
+      std::cout << "for this mode, there is a weight not equal to 1 " << std::endl;
+      std::cout << "new_xsec = " << new_xsec << "old_xsec = " << old_xsec << std::endl;
+    }
+  
 #ifdef _N_REWEIGHT_CASC_DEBUG_
   cout << "FSI Probability (new) = " << new_xsec << endl;
 #endif
@@ -542,9 +554,9 @@ bool tweaked = ( (TMath::Abs(fTotalProbTwkDial) > controls::kASmallNum) ||
     new_weight = -9999;
   }
 
-#ifdef _N_REWEIGHT_CASC_DEBUG_  
+
   cout << "new weight = " << new_weight << endl;
-#endif
+  cout << "Neut Mode = " << 
 
   std::cout << "old prob = " << old_xsec << " new prob = " << new_xsec << std::endl;
   return new_weight;

@@ -38,7 +38,7 @@ C      parameter (pcut=amn+8.)
       if(idmc.eq.2212) then     !put the input track on stack                                                                                                             
 C        amn = 4000
       amn = 938.28
-
+ 
 
 c     or if it's a neutron set charge 0                                                                                                                             
       else if(idmc.eq.2112) then

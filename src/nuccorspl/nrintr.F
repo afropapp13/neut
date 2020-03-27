@@ -79,9 +79,13 @@ C
 C
 C     Check Free or not
 C
+
+
       IF  ((PVC(1,2)**2+PVC(2,2)**2+PVC(3,2)**2).lt.1.e-5) THEN
          return
       endif
+
+
 
 !
 !     reset nucleon fsi common block
@@ -119,10 +123,7 @@ C
 C            write(*,'(A,I3,A,I5,A,F12.7,A,F12.7,A,F12.7,A)')
 C     $           'Initial:nvc=',nvc,':IP=',ipvc(I),
 C     $           ':(',pvc(1,I),',',pvc(2,I),',',pvc(3,I),')'
-             write(*,*) 'WGPROTON HAPPENING'
-             write(*,*) "nvc = ",nvc
-             write(*,*) "nvc2 = ",nvc2
-             write(*,*) "I = ",I
+
             CALL wgproton(i,xpos,apn,nvc2)
 
 C            write(*,'(A,I3,A,I5,A,F12.7,A,F12.7,A,F12.7,A)')

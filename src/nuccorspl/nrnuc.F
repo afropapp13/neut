@@ -40,6 +40,7 @@ c     p-p elastic
      $     1350.,1335.,1325.,1315.,1300.,1295.,1280.,1270.,1260.,1250.,
      $     1240.,1225.,1210.,1200.,1195.,1175./
 
+
 c     p-n elastic
       data xepn/
      $     196500.,47500.,22000.,13000.,9180.,7300.,6030.,5180.,4680.,
@@ -150,7 +151,7 @@ c     p-n double pi production
       common /martindebug/  ptot,A,B,C
 
 
-      
+     
 C      write (*,*) "nfnstep start of nrnuc = " , RW_step_i
 C      write (*,*) "ecms2 = " ,ecms2
 C      write (*,*) "2 amn**2 = " ,(2.*amn)**2
@@ -158,8 +159,8 @@ c     not sure what 1 is (I'm guessing it will turn out to be survival)
       idec=1
 c      write (*,*) "ecms2 = " , ecms2
 c      write (*,*) "(2*amn)^2 = " , (2.*amn)**2
+      
 
-      write (*,*) "logical prot= " ,prot
 
       if(NReweightFlag.eq.0) then
          if(ecms2.le.(2.*amn)**2) then
@@ -188,7 +189,7 @@ c            print *,"generated pdpnuc = ", pdpnuc
 
       endif
       if(NReweightFlag.eq.1) then
-         print *,"Performing reweight of nrnuc.F"                                                                                                                                                     
+
          if( NFiflagStep(RW_step_i).eq.5) then
          
 c            print *,"Kinematic failure"
@@ -284,6 +285,14 @@ c     apply nucleon fsi dials
          pel= nfipel(RW_step_i)
          psp=nfipsp(RW_step_i)
          pdp=nfipdp(RW_step_i)
+
+C      print *,"Reweight: supplying pel,psp,pdp"                                                                                                                                         
+C      print *,"RW_step_i = ", RW_step_i
+C      print *,"prot? ",  prot
+C      print *,"pel regen= ",  pel
+C      print *,"psp regen = ", psp                                                                                                                                                          
+C      print *,"pdp regen = ", pdp 
+C      print *," "
       endif
 
 c      print *,"pel before = ", pel
@@ -297,10 +306,29 @@ c      print *,"fac before= ", fac
 
       if(NReweightFlag.eq.0) then
 
+C      print *,"Regeneration: storing pel,psp,pdp"                                                                                                                                          
+C      print *,"nfnstep = ", nfnstep
+C      print *,"prot? ",  prot
+c      print *,"pel regen= ",  pel
+C      print *,"psp regen = ", psp                                                                                                                                                      
+C      print *,"pdp regen = ", pdp                                                                                                                                                          C 
+C      print *," "
          nfipel(nfnstep) = pel
          nfipsp(nfnstep)=psp
          nfipdp(nfnstep)=pdp
       endif
+
+
+      
+
+C      print *,"are we generating? (0 = yes): ", NReweightFlag                                                                                                                               
+C      print *,"nfnstep = ", nfnstep                                                                                                                                                         
+C      print *,"RW_step_i = ", RW_step_i
+C      print *,"ichint? ",  ichint
+C      print *,"pel = ", pel
+C      print *,"psp = ", psp
+C      print *,"pdp = ",pdp
+C      print *,"pcascprob = ",pcascprob
 
 
 C  Toby Nonnenmacher change april 2018
@@ -315,10 +343,10 @@ c      print *,"pel = ", pel
 c      print *,"psp = ", psp
 c      print *,"pdp = ", pdp
 c      print *,"fac = ", fac
-c      print *,"xnucfact = ", xnucfact
-c      print *,"xnucelafact = ", xnucelafact
-c      print *,"xnucspifact = ", xnucspifact
-c      print *,"xnucdpifact = ", xnucdpifact
+C      print *,"xnucfact = ", xnucfact
+C     print *,"xnucelafact = ", xnucelafact
+C     print *,"xnucspifact = ", xnucspifact
+C     print *,"xnucdpifact = ", xnucdpifact
 
 
       ptot=pel+psp+pdp
@@ -638,4 +666,5 @@ C             print *,"Uh oh, the flag is 0 NFiflagStep(NFNStep)",NFiflagStep(NF
           endif
        endif
        end
+      
       

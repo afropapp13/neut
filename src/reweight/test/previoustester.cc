@@ -37,6 +37,7 @@
 
 
 void FillNeutCommons(NeutVect* nvect) {
+  //  TH1::SetDefaultSumw2(true);
   
   // WARNING: This has only been implemented for a neuttree and not GENIE                                                                                            
   // This should be kept in sync with T2KNIWGUtils::GetNIWGEvent(TTree)                                                                                              
@@ -84,7 +85,7 @@ void FillNeutCommons(NeutVect* nvect) {
   neut1pi_.nenrtype = nvect->SPINRType;
   neut1pi_.rneca5i = nvect->SPICA5I;
   neut1pi_.rnebgscl = nvect->SPIBGScale;
-
+ 
   nemdls_.xmacoh = nvect->COHMA;
   nemdls_.rad0nu = nvect->COHR0;
   // nemdls_.fa1coh = nvect->COHA1err;                                                                                                                               
@@ -185,6 +186,7 @@ void FillNeutCommons(NeutVect* nvect) {
 	*/
 
       }
+
     for (int j =0; j<nucleonfsihist_.nfnvert; j++)
     {
       nucleonfsihist_.nfiflag[j] = nvect->NucFsiVertInfo(j)->fVertFlag;
@@ -240,7 +242,7 @@ void FillNeutCommons(NeutVect* nvect) {
       fsihist_.posvert[ivert][1] = (float)nvect->FsiVertInfo(ivert)->fPos.Y();
       fsihist_.posvert[ivert][2] = (float)nvect->FsiVertInfo(ivert)->fPos.Z();
     }
-
+ 
     fsihist_.nvcvert = nvect->NfsiPart();
     for (int ip = 0; ip < fsihist_.nvcvert; ip++) {
       fsihist_.abspvert[ip] = (float)nvect->FsiPartInfo(ip)->fMomLab;
@@ -363,26 +365,32 @@ int main(int argc, char *argv[]) {
 
 
   else if (variation == 4) {
-    ReWeightVals[0] = 0.00000001;
+    ReWeightVals[0] = -2.0;
   }
   else if (variation == 5) {
-    ReWeightVals[0] = -1;
+    ReWeightVals[1] = 2.0;
   }
   else if (variation == 6) {
-    ReWeightVals[3] = 10;
+    ReWeightVals[1] = -2.0;
   }
   else if (variation == 7) {
-    ReWeightVals[1] = 2.0;
+    ReWeightVals[2] = 2.0;
 
   }
   else if (variation == 8) {
-    ReWeightVals[2] = 2.0;
+    ReWeightVals[2] = -2.0;
 
   }
   else if (variation == 9) {
     ReWeightVals[3] = 2.0;
 
   }
+
+  else if (variation == 10) {
+    ReWeightVals[3] = -2.0;
+
+  }
+
 
   /*   // Number of reweights                                                                                                                                             
        const int nSysts = 1;
@@ -404,10 +412,16 @@ int main(int argc, char *argv[]) {
     ReWeightVals[1] = 0.28169004;
     ReWeightVals[2] = 1.428571429;
   }
-  
+
+
   */
+
+
+  
+  
   // Make some 1D distributions for each mode
   const int nNEUTmodes = 53;
+  TH1D *Weights = new TH1D("Weights", "Weights", 100, 0, 3);
   TH1D *Weighted[nNEUTmodes];
   TH1D *UnWeighted[nNEUTmodes];
   TH1D *WeightedAllParticles[nNEUTmodes];
@@ -465,88 +479,101 @@ int main(int argc, char *argv[]) {
   TH1D *PionMultiplicityWeighted[nNEUTmodes];
   TH1D *PionMultiplicityUnWeighted[nNEUTmodes];
 
+  TH2D *AngleVSEnergyWeighted[nNEUTmodes];
+  TH2D *AngleVSEnergyUnWeighted[nNEUTmodes];
+  TH2D *LeadingNucleonAngleVSEnergyWeighted[nNEUTmodes];
+  TH2D *LeadingNucleonAngleVSEnergyUnWeighted[nNEUTmodes];
 
-
-
+  
 
   for (int i = 0; i < nNEUTmodes; ++i) {
     std::stringstream ss;
     ss << "_" << i;
-    Weighted[i] = new TH1D((std::string("Weighted")+ss.str()).c_str(), (std::string("Weighted")+ss.str()+";E_{nucleon} (GeV);d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 20, 0, 2);
-    UnWeighted[i] = new TH1D((std::string("UnWeighted")+ss.str()).c_str(), (std::string("UnWeighted")+ss.str()+";E_{nucleon} (GeV);d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 20, 0, 2);
-    WeightedAllParticles[i] = new TH1D((std::string("WeightedAllParticles")+ss.str()).c_str(), (std::string("WeightedAllParticles")+ss.str()+";E_{nucleon} (GeV);d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 20, 0, 2);
-    UnWeightedAllParticles[i] = new TH1D((std::string("UnWeightedAllParticles")+ss.str()).c_str(), (std::string("UnWeightedAllParticles")+ss.str()+";E_{nucleon} (GeV);d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 20, 0, 2);
-
-    WeightedAngle[i] = new TH1D((std::string("WeightedAngle")+ss.str()).c_str(), (std::string("WeightedAngle")+ss.str()+";costheta_{nucleon} ;d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 20, -1, 1);
-    UnWeightedAngle[i] = new TH1D((std::string("UnWeightedAngle")+ss.str()).c_str(), (std::string("UnWeightedAngle")+ss.str()+";costheta_{nucleon} ;d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 20, -1, 1);
-    WeightedAngleAllParticles[i] = new TH1D((std::string("WeightedAngleAllParticles")+ss.str()).c_str(), (std::string("WeightedAngleAllParticles")+ss.str()+";costheta_{nucleon} ;d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 20, -1, 1);    
-    UnWeightedAngleAllParticles[i] = new TH1D((std::string("UnWeightedAngleAllParticles")+ss.str()).c_str(), (std::string("UnWeightedAngleAllParticles")+ss.str()+";costheta_{nucleon} ;d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 20, -1, 1);
-
-    NeutronWeighted[i] = new TH1D((std::string("NeutronWeighted")+ss.str()).c_str(), (std::string("NeutronWeighted")+ss.str()+";E_{Neutron} (GeV);d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 20, 0, 2);
-    NeutronUnWeighted[i] = new TH1D((std::string("NeutronUnWeighted")+ss.str()).c_str(), (std::string("NeutronUnWeighted")+ss.str()+";E_{Neutron} (GeV);d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 20, 0, 2);
-    NeutronWeightedAllParticles[i] = new TH1D((std::string("NeutronWeightedAllParticles")+ss.str()).c_str(), (std::string("NeutronWeightedAllParticles")+ss.str()+";E_{Neutron} (GeV);d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 20, 0, 2);
-    NeutronUnWeightedAllParticles[i] = new TH1D((std::string("NeutronUnWeightedAllParticles")+ss.str()).c_str(), (std::string("NeutronUnWeightedAllParticles")+ss.str()+";E_{Neutron} (GeV);d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 20, 0, 2);
-
-    NeutronWeightedAngle[i] = new TH1D((std::string("NeutronWeightedAngle")+ss.str()).c_str(), (std::string("NeutronWeightedAngle")+ss.str()+";costheta_{Neutron} ;d#sigma/dp (cm^2/nucleon/GeV)").c_str(),20, -1, 1);   
-    NeutronUnWeightedAngle[i] = new TH1D((std::string("NeutronUnWeightedAngle")+ss.str()).c_str(), (std::string("NeutronUnWeightedAngle")+ss.str()+";costheta_{Neutron} ;d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 20, -1, 1);
-    NeutronWeightedAngleAllParticles[i] = new TH1D((std::string("NeutronWeightedAngleAllParticles")+ss.str()).c_str(), (std::string("NeutronWeightedAngleAllParticles")+ss.str()+";costheta_{Neutron} ;d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 20, -1, 1);
-    NeutronUnWeightedAngleAllParticles[i] = new TH1D((std::string("NeutronUnWeightedAngleAllParticles")+ss.str()).c_str(), (std::string("NeutronUnWeightedAngleAllParticles")+ss.str()+";costheta_{Neutron} ;d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 20, -1, 1);
+    AngleVSEnergyWeighted[i]= new TH2D( (std::string("AngleVSEnergyWeighted")+ss.str()).c_str(),"",10,0,2,10,-1,1);
+    AngleVSEnergyUnWeighted[i]= new TH2D( (std::string("AngleVSEnergyUnWeighted")+ss.str()).c_str(),"",10,0,2,10,-1,1);
+    LeadingNucleonAngleVSEnergyWeighted[i]= new TH2D( (std::string("LeadingNucleonAngleVSEnergyWeighted")+ss.str()).c_str(),"",10,0,2,10,-1,1);
+    LeadingNucleonAngleVSEnergyUnWeighted[i]= new TH2D( (std::string("LeadingNucleonAngleVSEnergyUnWeighted")+ss.str()).c_str(),"",10,0,2,10,-1,1);
+    
 
 
 
-    ProtonWeighted[i] = new TH1D((std::string("ProtonWeighted")+ss.str()).c_str(), (std::string("ProtonWeighted")+ss.str()+";E_{Proton} (GeV);d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 20, 0, 2);
-    ProtonUnWeighted[i] = new TH1D((std::string("ProtonUnWeighted")+ss.str()).c_str(), (std::string("ProtonUnWeighted")+ss.str()+";E_{Proton} (GeV);d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 20,0, 2);
-    ProtonWeightedAllParticles[i] = new TH1D((std::string("ProtonWeightedAllParticles")+ss.str()).c_str(), (std::string("ProtonWeightedAllParticles")+ss.str()+";E_{Proton} (GeV);d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 20, 0, 2);
-    ProtonUnWeightedAllParticles[i] = new TH1D((std::string("ProtonUnWeightedAllParticles")+ss.str()).c_str(), (std::string("ProtonUnWeightedAllParticles")+ss.str()+";E_{Proton} (GeV);d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 20, 0, 2);
+    
+    
+    Weighted[i] = new TH1D((std::string("Weighted")+ss.str()).c_str(), (std::string("Weighted")+ss.str()+";E_{nucleon} (GeV);d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 50, 0, 2);
+    UnWeighted[i] = new TH1D((std::string("UnWeighted")+ss.str()).c_str(), (std::string("UnWeighted")+ss.str()+";E_{nucleon} (GeV);d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 50, 0, 2);
+    WeightedAllParticles[i] = new TH1D((std::string("WeightedAllParticles")+ss.str()).c_str(), (std::string("WeightedAllParticles")+ss.str()+";E_{nucleon} (GeV);d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 50, 0, 2);
+    UnWeightedAllParticles[i] = new TH1D((std::string("UnWeightedAllParticles")+ss.str()).c_str(), (std::string("UnWeightedAllParticles")+ss.str()+";E_{nucleon} (GeV);d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 50, 0, 2);
+    
+    WeightedAngle[i] = new TH1D((std::string("WeightedAngle")+ss.str()).c_str(), (std::string("WeightedAngle")+ss.str()+";costheta_{nucleon} ;d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 50, -1, 1);
+    UnWeightedAngle[i] = new TH1D((std::string("UnWeightedAngle")+ss.str()).c_str(), (std::string("UnWeightedAngle")+ss.str()+";costheta_{nucleon} ;d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 50, -1, 1);
+    WeightedAngleAllParticles[i] = new TH1D((std::string("WeightedAngleAllParticles")+ss.str()).c_str(), (std::string("WeightedAngleAllParticles")+ss.str()+";costheta_{nucleon} ;d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 50, -1, 1);    
+    UnWeightedAngleAllParticles[i] = new TH1D((std::string("UnWeightedAngleAllParticles")+ss.str()).c_str(), (std::string("UnWeightedAngleAllParticles")+ss.str()+";costheta_{nucleon} ;d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 50, -1, 1);
 
-    ProtonWeightedAngle[i] = new TH1D((std::string("ProtonWeightedAngle")+ss.str()).c_str(), (std::string("ProtonWeightedAngle")+ss.str()+";costheta_{Proton} ;d#sigma/dp (cm^2/nucleon/GeV)").c_str(),20, -1, 1);
-    ProtonUnWeightedAngle[i] = new TH1D((std::string("ProtonUnWeightedAngle")+ss.str()).c_str(), (std::string("ProtonUnWeightedAngle")+ss.str()+";costheta_{Proton} ;d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 20, -1, 1);
-    ProtonWeightedAngleAllParticles[i] = new TH1D((std::string("ProtonWeightedAngleAllParticles")+ss.str()).c_str(), (std::string("ProtonWeightedAngleAllParticles")+ss.str()+";costheta_{Proton} ;d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 20, -1, 1);
-    ProtonUnWeightedAngleAllParticles[i] = new TH1D((std::string("ProtonUnWeightedAngleAllParticles")+ss.str()).c_str(), (std::string("ProtonUnWeightedAngleAllParticles")+ss.str()+";costheta_{Proton} ;d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 20, -1, 1);
+    NeutronWeighted[i] = new TH1D((std::string("NeutronWeighted")+ss.str()).c_str(), (std::string("NeutronWeighted")+ss.str()+";E_{Neutron} (GeV);d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 50, 0, 2);
+    NeutronUnWeighted[i] = new TH1D((std::string("NeutronUnWeighted")+ss.str()).c_str(), (std::string("NeutronUnWeighted")+ss.str()+";E_{Neutron} (GeV);d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 50, 0, 2);
+    NeutronWeightedAllParticles[i] = new TH1D((std::string("NeutronWeightedAllParticles")+ss.str()).c_str(), (std::string("NeutronWeightedAllParticles")+ss.str()+";E_{Neutron} (GeV);d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 50, 0, 2);
+    NeutronUnWeightedAllParticles[i] = new TH1D((std::string("NeutronUnWeightedAllParticles")+ss.str()).c_str(), (std::string("NeutronUnWeightedAllParticles")+ss.str()+";E_{Neutron} (GeV);d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 50, 0, 2);
 
-    PionWeighted[i] = new TH1D((std::string("PionWeighted")+ss.str()).c_str(), (std::string("PionWeighted")+ss.str()+";E_{Pion} (GeV);d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 20, 0, 1);
-    PionUnWeighted[i] = new TH1D((std::string("PionUnWeighted")+ss.str()).c_str(), (std::string("PionUnWeighted")+ss.str()+";E_{Pion} (GeV);d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 20, 0, 1);
-    PionWeightedAllParticles[i] = new TH1D((std::string("PionWeightedAllParticles")+ss.str()).c_str(), (std::string("PionWeightedAllParticles")+ss.str()+";E_{Pion} (GeV);d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 20, 0, 1);
-    PionUnWeightedAllParticles[i] = new TH1D((std::string("PionUnWeightedAllParticles")+ss.str()).c_str(), (std::string("PionUnWeightedAllParticles")+ss.str()+";E_{Pion} (GeV);d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 20, 0, 1);
-    PionWeightedAngle[i] = new TH1D((std::string("PionWeightedAngle")+ss.str()).c_str(), (std::string("PionWeightedAngle")+ss.str()+";costheta_{Pion} ;d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 20, -1, 1);
-    PionUnWeightedAngle[i] = new TH1D((std::string("PionUnWeightedAngle")+ss.str()).c_str(), (std::string("PionUnWeightedAngle")+ss.str()+";costheta_{Pion} ;d#sigma/dp (cm^2/nucleon/GeV)").c_str(),20, -1, 1);
-    PionWeightedAngleAllParticles[i] = new TH1D((std::string("PionWeightedAngleAllParticles")+ss.str()).c_str(), (std::string("PionWeightedAngleAllParticles")+ss.str()+";costheta_{Pion} ;d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 20, -1, 1);
-    PionUnWeightedAngleAllParticles[i] = new TH1D((std::string("PionUnWeightedAngleAllParticles")+ss.str()).c_str(), (std::string("PionUnWeightedAngleAllParticles")+ss.str()+";costheta_{Pion} ;d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 20, -1, 1);
-
-
-
-
-
+    NeutronWeightedAngle[i] = new TH1D((std::string("NeutronWeightedAngle")+ss.str()).c_str(), (std::string("NeutronWeightedAngle")+ss.str()+";costheta_{Neutron} ;d#sigma/dp (cm^2/nucleon/GeV)").c_str(),50, -1, 1);   
+    NeutronUnWeightedAngle[i] = new TH1D((std::string("NeutronUnWeightedAngle")+ss.str()).c_str(), (std::string("NeutronUnWeightedAngle")+ss.str()+";costheta_{Neutron} ;d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 50, -1, 1);
+    NeutronWeightedAngleAllParticles[i] = new TH1D((std::string("NeutronWeightedAngleAllParticles")+ss.str()).c_str(), (std::string("NeutronWeightedAngleAllParticles")+ss.str()+";costheta_{Neutron} ;d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 50, -1, 1);
+    NeutronUnWeightedAngleAllParticles[i] = new TH1D((std::string("NeutronUnWeightedAngleAllParticles")+ss.str()).c_str(), (std::string("NeutronUnWeightedAngleAllParticles")+ss.str()+";costheta_{Neutron} ;d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 50, -1, 1);
 
 
 
-    LeptonWeighted[i] = new TH1D((std::string("LeptonWeighted")+ss.str()).c_str(), (std::string("LeptonWeighted")+ss.str()+";E_{Lepton} (GeV);d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 20, 0, 1);
-    LeptonUnWeighted[i] = new TH1D((std::string("LeptonUnWeighted")+ss.str()).c_str(), (std::string("LeptonUnWeighted")+ss.str()+";E_{Lepton} (GeV);d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 20,0, 1);
-    LeptonWeightedAllParticles[i] = new TH1D((std::string("LeptonWeightedAllParticles")+ss.str()).c_str(), (std::string("LeptonWeightedAllParticles")+ss.str()+";E_{Lepton} (GeV);d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 20, 0, 1);
-    LeptonUnWeightedAllParticles[i] = new TH1D((std::string("LeptonUnWeightedAllParticles")+ss.str()).c_str(), (std::string("LeptonUnWeightedAllParticles")+ss.str()+";E_{Lepton} (GeV);d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 20, 0, 1);
+    ProtonWeighted[i] = new TH1D((std::string("ProtonWeighted")+ss.str()).c_str(), (std::string("ProtonWeighted")+ss.str()+";E_{Proton} (GeV);d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 50, 0, 2);
+    ProtonUnWeighted[i] = new TH1D((std::string("ProtonUnWeighted")+ss.str()).c_str(), (std::string("ProtonUnWeighted")+ss.str()+";E_{Proton} (GeV);d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 50,0, 2);
+    ProtonWeightedAllParticles[i] = new TH1D((std::string("ProtonWeightedAllParticles")+ss.str()).c_str(), (std::string("ProtonWeightedAllParticles")+ss.str()+";E_{Proton} (GeV);d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 50, 0, 2);
+    ProtonUnWeightedAllParticles[i] = new TH1D((std::string("ProtonUnWeightedAllParticles")+ss.str()).c_str(), (std::string("ProtonUnWeightedAllParticles")+ss.str()+";E_{Proton} (GeV);d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 50, 0, 2);
 
-    LeptonWeightedAngle[i] = new TH1D((std::string("LeptonWeightedAngle")+ss.str()).c_str(), (std::string("LeptonWeightedAngle")+ss.str()+";costheta_{Lepton} ;d#sigma/dp (cm^2/nucleon/GeV)").c_str(),20, -1, 1);
-    LeptonUnWeightedAngle[i] = new TH1D((std::string("LeptonUnWeightedAngle")+ss.str()).c_str(), (std::string("LeptonUnWeightedAngle")+ss.str()+";costheta_{Lepton} ;d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 20, -1, 1);
-    LeptonWeightedAngleAllParticles[i] = new TH1D((std::string("LeptonWeightedAngleAllParticles")+ss.str()).c_str(), (std::string("LeptonWeightedAngleAllParticles")+ss.str()+";costheta_{Lepton} ;d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 20, -1, 1);
-    LeptonUnWeightedAngleAllParticles[i] = new TH1D((std::string("LeptonUnWeightedAngleAllParticles")+ss.str()).c_str(), (std::string("LeptonUnWeightedAngleAllParticles")+ss.str()+";costheta_{Lepton} ;d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 20, -1, 1);
+    ProtonWeightedAngle[i] = new TH1D((std::string("ProtonWeightedAngle")+ss.str()).c_str(), (std::string("ProtonWeightedAngle")+ss.str()+";costheta_{Proton} ;d#sigma/dp (cm^2/nucleon/GeV)").c_str(),50, -1, 1);
+    ProtonUnWeightedAngle[i] = new TH1D((std::string("ProtonUnWeightedAngle")+ss.str()).c_str(), (std::string("ProtonUnWeightedAngle")+ss.str()+";costheta_{Proton} ;d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 50, -1, 1);
+    ProtonWeightedAngleAllParticles[i] = new TH1D((std::string("ProtonWeightedAngleAllParticles")+ss.str()).c_str(), (std::string("ProtonWeightedAngleAllParticles")+ss.str()+";costheta_{Proton} ;d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 50, -1, 1);
+    ProtonUnWeightedAngleAllParticles[i] = new TH1D((std::string("ProtonUnWeightedAngleAllParticles")+ss.str()).c_str(), (std::string("ProtonUnWeightedAngleAllParticles")+ss.str()+";costheta_{Proton} ;d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 50, -1, 1);
+
+    PionWeighted[i] = new TH1D((std::string("PionWeighted")+ss.str()).c_str(), (std::string("PionWeighted")+ss.str()+";E_{Pion} (GeV);d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 50, 0, 1);
+    PionUnWeighted[i] = new TH1D((std::string("PionUnWeighted")+ss.str()).c_str(), (std::string("PionUnWeighted")+ss.str()+";E_{Pion} (GeV);d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 50, 0, 1);
+    PionWeightedAllParticles[i] = new TH1D((std::string("PionWeightedAllParticles")+ss.str()).c_str(), (std::string("PionWeightedAllParticles")+ss.str()+";E_{Pion} (GeV);d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 50, 0, 1);
+    PionUnWeightedAllParticles[i] = new TH1D((std::string("PionUnWeightedAllParticles")+ss.str()).c_str(), (std::string("PionUnWeightedAllParticles")+ss.str()+";E_{Pion} (GeV);d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 50, 0, 1);
+    PionWeightedAngle[i] = new TH1D((std::string("PionWeightedAngle")+ss.str()).c_str(), (std::string("PionWeightedAngle")+ss.str()+";costheta_{Pion} ;d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 50, -1, 1);
+    PionUnWeightedAngle[i] = new TH1D((std::string("PionUnWeightedAngle")+ss.str()).c_str(), (std::string("PionUnWeightedAngle")+ss.str()+";costheta_{Pion} ;d#sigma/dp (cm^2/nucleon/GeV)").c_str(),50, -1, 1);
+    PionWeightedAngleAllParticles[i] = new TH1D((std::string("PionWeightedAngleAllParticles")+ss.str()).c_str(), (std::string("PionWeightedAngleAllParticles")+ss.str()+";costheta_{Pion} ;d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 50, -1, 1);
+    PionUnWeightedAngleAllParticles[i] = new TH1D((std::string("PionUnWeightedAngleAllParticles")+ss.str()).c_str(), (std::string("PionUnWeightedAngleAllParticles")+ss.str()+";costheta_{Pion} ;d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 50, -1, 1);
 
 
 
 
-    NucleonMultiplicityWeighted[i] = new TH1D((std::string("NucleonMultiplicityWeighted")+ss.str()).c_str(), (std::string("NucleonMultiplicityWeighted")+ss.str()+";Number of nucleons;d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 20, 0, 20);
-    NucleonMultiplicityUnWeighted[i] = new TH1D((std::string("NucleonMultiplicityUnWeighted")+ss.str()).c_str(), (std::string("NucleonMultiplicityUnWeighted")+ss.str()+";Number of nucleons;d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 20, 0, 20);
-
-    ProtonMultiplicityWeighted[i] = new TH1D((std::string("ProtonMultiplicityWeighted")+ss.str()).c_str(), (std::string("ProtonMultiplicityWeighted")+ss.str()+";Number of protons;d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 20, 0, 20);
-    ProtonMultiplicityUnWeighted[i] = new TH1D((std::string("ProtonMultiplicityUnWeighted")+ss.str()).c_str(), (std::string("ProtonMultiplicityUnWeighted")+ss.str()+";Number of protons;d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 20, 0, 20);
-
-    NeutronMultiplicityWeighted[i] = new TH1D((std::string("NeutronMultiplicityWeighted")+ss.str()).c_str(), (std::string("NeutronMultiplicityWeighted")+ss.str()+";Number of neutrons;d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 20, 0, 20);
-    NeutronMultiplicityUnWeighted[i] = new TH1D((std::string("NeutronMultiplicityUnWeighted")+ss.str()).c_str(), (std::string("NeutronMultiplicityUnWeighted")+ss.str()+";Number of neutrons;d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 20, 0, 20);
 
 
 
 
-    PionMultiplicityWeighted[i] = new TH1D((std::string("PionMultiplicityWeighted")+ss.str()).c_str(), (std::string("PionMultiplicityWeighted")+ss.str()+";Number of pions;d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 20, 0, 20);
-    PionMultiplicityUnWeighted[i] = new TH1D((std::string("PionMultiplicityUnWeighted")+ss.str()).c_str(), (std::string("PionMultiplicityUnWeighted")+ss.str()+";Number of pions;d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 20, 0, 20);
+    LeptonWeighted[i] = new TH1D((std::string("LeptonWeighted")+ss.str()).c_str(), (std::string("LeptonWeighted")+ss.str()+";E_{Lepton} (GeV);d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 50, 0, 3);
+    LeptonUnWeighted[i] = new TH1D((std::string("LeptonUnWeighted")+ss.str()).c_str(), (std::string("LeptonUnWeighted")+ss.str()+";E_{Lepton} (GeV);d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 50,0, 3);
+    LeptonWeightedAllParticles[i] = new TH1D((std::string("LeptonWeightedAllParticles")+ss.str()).c_str(), (std::string("LeptonWeightedAllParticles")+ss.str()+";E_{Lepton} (GeV);d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 50, 0, 3);
+    LeptonUnWeightedAllParticles[i] = new TH1D((std::string("LeptonUnWeightedAllParticles")+ss.str()).c_str(), (std::string("LeptonUnWeightedAllParticles")+ss.str()+";E_{Lepton} (GeV);d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 50, 0, 3);
+
+    LeptonWeightedAngle[i] = new TH1D((std::string("LeptonWeightedAngle")+ss.str()).c_str(), (std::string("LeptonWeightedAngle")+ss.str()+";costheta_{Lepton} ;d#sigma/dp (cm^2/nucleon/GeV)").c_str(),50, -1, 1);
+    LeptonUnWeightedAngle[i] = new TH1D((std::string("LeptonUnWeightedAngle")+ss.str()).c_str(), (std::string("LeptonUnWeightedAngle")+ss.str()+";costheta_{Lepton} ;d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 50, -1, 1);
+    LeptonWeightedAngleAllParticles[i] = new TH1D((std::string("LeptonWeightedAngleAllParticles")+ss.str()).c_str(), (std::string("LeptonWeightedAngleAllParticles")+ss.str()+";costheta_{Lepton} ;d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 50, -1, 1);
+    LeptonUnWeightedAngleAllParticles[i] = new TH1D((std::string("LeptonUnWeightedAngleAllParticles")+ss.str()).c_str(), (std::string("LeptonUnWeightedAngleAllParticles")+ss.str()+";costheta_{Lepton} ;d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 50, -1, 1);
+
+
+
+
+    NucleonMultiplicityWeighted[i] = new TH1D((std::string("NucleonMultiplicityWeighted")+ss.str()).c_str(), (std::string("NucleonMultiplicityWeighted")+ss.str()+";Number of nucleons;d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 50, 0, 20);
+    NucleonMultiplicityUnWeighted[i] = new TH1D((std::string("NucleonMultiplicityUnWeighted")+ss.str()).c_str(), (std::string("NucleonMultiplicityUnWeighted")+ss.str()+";Number of nucleons;d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 50, 0, 20);
+
+    ProtonMultiplicityWeighted[i] = new TH1D((std::string("ProtonMultiplicityWeighted")+ss.str()).c_str(), (std::string("ProtonMultiplicityWeighted")+ss.str()+";Number of protons;d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 50, 0, 20);
+    ProtonMultiplicityUnWeighted[i] = new TH1D((std::string("ProtonMultiplicityUnWeighted")+ss.str()).c_str(), (std::string("ProtonMultiplicityUnWeighted")+ss.str()+";Number of protons;d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 50, 0, 20);
+
+    NeutronMultiplicityWeighted[i] = new TH1D((std::string("NeutronMultiplicityWeighted")+ss.str()).c_str(), (std::string("NeutronMultiplicityWeighted")+ss.str()+";Number of neutrons;d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 50, 0, 20);
+    NeutronMultiplicityUnWeighted[i] = new TH1D((std::string("NeutronMultiplicityUnWeighted")+ss.str()).c_str(), (std::string("NeutronMultiplicityUnWeighted")+ss.str()+";Number of neutrons;d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 50, 0, 20);
+
+
+
+
+    PionMultiplicityWeighted[i] = new TH1D((std::string("PionMultiplicityWeighted")+ss.str()).c_str(), (std::string("PionMultiplicityWeighted")+ss.str()+";Number of pions;d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 50, 0, 20);
+    PionMultiplicityUnWeighted[i] = new TH1D((std::string("PionMultiplicityUnWeighted")+ss.str()).c_str(), (std::string("PionMultiplicityUnWeighted")+ss.str()+";Number of pions;d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 50, 0, 20);
 
 
   }
@@ -569,13 +596,13 @@ int main(int argc, char *argv[]) {
   
 
   // Setup the output variables
-  double Q2, EnuTrue, W, ppi, Eout,lastbiggestEout,pionlastbiggestEout,leptonlastbiggestEout,costheta,lastbiggestcostheta,pionlastbiggestcostheta,leptonlastbiggestcostheta,pinit, pn, costhlep, costhpinu, costhpimu, costhpin, weight, ScaleFactor = -999;
+  double Q2, EnuTrue, W, ppi, Eout,lastbiggestEout,pionlastbiggestEout,leptonlastbiggestEout,costheta,lastbiggestcostheta,pionlastbiggestcostheta,leptonlastbiggestcostheta,pinit, pn, costhlep, costhpinu, costhpimu, costhpin, weight, ScaleFactor, Unity = -999;
   int mode, bestmode,pionbestmode,leptonbestmode, leppdg, nupdg, pipdg, nucpdg,protonmultiplicity,neutronmultiplicity,nucleonmultiplicity,pionmultiplicity = -999;
   int npart, npi, nnuc, nbad = 0;
   bool isproton, isneutron;
   std::stringstream ss;
   ss << "var" << variation;
-  TFile *OutputFile = new TFile((InputName+"_to_"+ss.str()+".root").c_str(), "RECREATE");
+  TFile *OutputFile = new TFile((InputName+"_to_"+ss.str()+"EvenLowerRatioBinning.root").c_str(), "RECREATE");
   
 
   OutputFile->cd();
@@ -639,7 +666,11 @@ int main(int argc, char *argv[]) {
   //ScaleFactor = ((Eventrate->Integral("width")*1.E-38)/(nEvents))/Flux->Integral("width");
  
   Tree->GetEntry(0);
-  ScaleFactor = nvect->Totcrs * 1E-38 /double(Tree->GetEntries());
+  //ScaleFactor = nvect->Totcrs * 1E-38 /double(Tree->GetEntries());
+  //Unity = 1;
+  Unity = nvect->Totcrs * 1E-38 /double(Tree->GetEntries());                                                                                                                        
+ 
+  ScaleFactor = 1;
   // And each event
   //  for (int j = 0; j < nEvents; ++j) {
 
@@ -695,13 +726,14 @@ int main(int argc, char *argv[]) {
     //rw.PrintNeutAll();
     //    rw.nrnuc(j);
     weight = rw.CalcWeight();
+    
     std::cout << "weight = " <<    weight << std::endl;
     // Count how many bad events
     if (weight == 1.0) nbad++;
     
     
     if (weight !=1.0)
-      {    std::cout << "weight = " << weight << std::endl;
+      {    std::cout << "weight (not equal to 1) = " << weight << std::endl;
       }
     
     // Now get some distributions
@@ -747,6 +779,7 @@ int main(int argc, char *argv[]) {
     nucleonmultiplicity = 0;
     pionmultiplicity = 0;
 
+    Weights->Fill(weight);
     for (int k = 2; k < nvect->Npart(); ++k) {
 
       Pout = nvect->PartInfo(k)->fP;
@@ -756,16 +789,22 @@ int main(int argc, char *argv[]) {
 	{
 	  nucleonmultiplicity++;
 	  
-	  UnWeightedAllParticles[mode]->Fill(Eout);                                                                                                                                                       // std::cout << "weight = " << weight << std::endl;                                                                                                      
-	  WeightedAllParticles[mode]->Fill(Eout, weight);                                                                                                                          
-	  UnWeightedAllParticles[7]->Fill(Eout);                                                                                                                         
-	  WeightedAllParticles[7]->Fill(Eout, weight);
+	  UnWeightedAllParticles[mode]->Fill(Eout,ScaleFactor);                                                                                                                                                       // std::cout << "weight = " << weight << std::endl;                                                                                                      
+	  WeightedAllParticles[mode]->Fill(Eout, weight*ScaleFactor);                                                                                                                          
+	  UnWeightedAllParticles[7]->Fill(Eout,ScaleFactor);                                                                                                                         
+	  WeightedAllParticles[7]->Fill(Eout, weight*ScaleFactor);
 
-	  UnWeightedAngleAllParticles[mode]->Fill(costheta);
+	  UnWeightedAngleAllParticles[mode]->Fill(costheta,ScaleFactor);
 	  // std::cout << "weight = " << weight << std::endl;                                                                                                                            
-          WeightedAngleAllParticles[mode]->Fill(costheta, weight);
-          UnWeightedAngleAllParticles[7]->Fill(costheta);
-          WeightedAngleAllParticles[7]->Fill(costheta, weight);
+          WeightedAngleAllParticles[mode]->Fill(costheta, weight*ScaleFactor);
+          UnWeightedAngleAllParticles[7]->Fill(costheta,ScaleFactor);
+          WeightedAngleAllParticles[7]->Fill(costheta, weight*ScaleFactor);
+	  AngleVSEnergyWeighted[7]->Fill(Eout,costheta,weight*ScaleFactor);
+	  AngleVSEnergyUnWeighted[7]->Fill(Eout,costheta,ScaleFactor); 
+	  AngleVSEnergyWeighted[mode]->Fill(Eout,costheta,weight*ScaleFactor);
+          AngleVSEnergyUnWeighted[mode]->Fill(Eout,costheta,ScaleFactor);
+
+
 
 
 	  if( (nvect->PartInfo(k))->fPID == 2112)
@@ -773,17 +812,17 @@ int main(int argc, char *argv[]) {
 	      
 	      neutronmultiplicity++;
 
-	      NeutronUnWeightedAllParticles[mode]->Fill(Eout);                                                                                                                              
+	      NeutronUnWeightedAllParticles[mode]->Fill(Eout,ScaleFactor);                                                                                                
 	      // std::cout << "weight = " << weight << std::endl;                                                                                                                           
-	      NeutronWeightedAllParticles[mode]->Fill(Eout, weight);
-	      NeutronUnWeightedAllParticles[7]->Fill(Eout);
-	      NeutronWeightedAllParticles[7]->Fill(Eout, weight);
+	      NeutronWeightedAllParticles[mode]->Fill(Eout, weight*ScaleFactor);
+	      NeutronUnWeightedAllParticles[7]->Fill(Eout,ScaleFactor);
+	      NeutronWeightedAllParticles[7]->Fill(Eout, weight*ScaleFactor);
 	      
-	      NeutronUnWeightedAngleAllParticles[mode]->Fill(costheta);
+	      NeutronUnWeightedAngleAllParticles[mode]->Fill(costheta,ScaleFactor);
 	      // std::cout << "weight = " << weight << std::endl;                                                                                                                          
-	      NeutronWeightedAngleAllParticles[mode]->Fill(costheta, weight);
-	      NeutronUnWeightedAngleAllParticles[7]->Fill(costheta);
-	      NeutronWeightedAngleAllParticles[7]->Fill(costheta, weight);
+	      NeutronWeightedAngleAllParticles[mode]->Fill(costheta, weight*ScaleFactor);
+	      NeutronUnWeightedAngleAllParticles[7]->Fill(costheta,ScaleFactor);
+	      NeutronWeightedAngleAllParticles[7]->Fill(costheta, weight*ScaleFactor);
 	  
 	  
 	    }
@@ -791,17 +830,17 @@ int main(int argc, char *argv[]) {
             {
 	      protonmultiplicity++;
 		
-	      ProtonUnWeightedAllParticles[mode]->Fill(Eout);
+	      ProtonUnWeightedAllParticles[mode]->Fill(Eout,ScaleFactor);
 	      // std::cout << "weight = " << weight << std::endl;                                                                                                                          
-	      ProtonWeightedAllParticles[mode]->Fill(Eout, weight);
-	      ProtonUnWeightedAllParticles[7]->Fill(Eout);
-	      ProtonWeightedAllParticles[7]->Fill(Eout, weight);
+	      ProtonWeightedAllParticles[mode]->Fill(Eout, weight*ScaleFactor);
+	      ProtonUnWeightedAllParticles[7]->Fill(Eout,ScaleFactor);
+	      ProtonWeightedAllParticles[7]->Fill(Eout, weight*ScaleFactor);
 
-	      ProtonUnWeightedAngleAllParticles[mode]->Fill(costheta);
+	      ProtonUnWeightedAngleAllParticles[mode]->Fill(costheta,ScaleFactor);
 	      // std::cout << "weight = " << weight << std::endl;                                                                                                                           
-	      ProtonWeightedAngleAllParticles[mode]->Fill(costheta, weight);
-	      ProtonUnWeightedAngleAllParticles[7]->Fill(costheta);
-	      ProtonWeightedAngleAllParticles[7]->Fill(costheta, weight);
+	      ProtonWeightedAngleAllParticles[mode]->Fill(costheta, weight*ScaleFactor);
+	      ProtonUnWeightedAngleAllParticles[7]->Fill(costheta,ScaleFactor);
+	      ProtonWeightedAngleAllParticles[7]->Fill(costheta, weight*ScaleFactor);
 	    }
 
 	  if(lastbiggestEout<Eout)
@@ -826,21 +865,22 @@ int main(int argc, char *argv[]) {
 	      
 	    }
 	}
+
       if( (abs((nvect->PartInfo(k))->fPID) == 211 ||(nvect->PartInfo(k))->fPID == 111 ) && (nvect->PartInfo(k))->fIsAlive == 1)
 	{
 	  
 	  pionmultiplicity++;
 	  
-	  PionUnWeightedAllParticles[mode]->Fill(Eout);                                                                                                                                  
+	  PionUnWeightedAllParticles[mode]->Fill(Eout,ScaleFactor);                                                                                                                                  
 	  // std::cout << "weight = " << weight << std::endl;                                                                                                                         
-          PionWeightedAllParticles[mode]->Fill(Eout, weight);
-          PionUnWeightedAllParticles[7]->Fill(Eout);
-          PionWeightedAllParticles[7]->Fill(Eout, weight);
-          PionUnWeightedAngleAllParticles[mode]->Fill(costheta);
+          PionWeightedAllParticles[mode]->Fill(Eout, weight*ScaleFactor);
+          PionUnWeightedAllParticles[7]->Fill(Eout,ScaleFactor);
+          PionWeightedAllParticles[7]->Fill(Eout, weight*ScaleFactor);
+          PionUnWeightedAngleAllParticles[mode]->Fill(costheta,ScaleFactor);
           // std::cout << "weight = " << weight << std::endl;                                                                                                                               
-          PionWeightedAngleAllParticles[mode]->Fill(costheta, weight);
-          PionUnWeightedAngleAllParticles[7]->Fill(costheta);
-          PionWeightedAngleAllParticles[7]->Fill(costheta, weight);
+          PionWeightedAngleAllParticles[mode]->Fill(costheta, weight*ScaleFactor);
+          PionUnWeightedAngleAllParticles[7]->Fill(costheta,ScaleFactor);
+          PionWeightedAngleAllParticles[7]->Fill(costheta, weight*ScaleFactor);
 	  
 	  if(pionlastbiggestEout<Eout)
             {
@@ -859,16 +899,16 @@ int main(int argc, char *argv[]) {
       if( (abs((nvect->PartInfo(k))->fPID) == 11 || abs((nvect->PartInfo(k))->fPID) == 13 ||abs((nvect->PartInfo(k))->fPID) == 15 ) && (nvect->PartInfo(k))->fIsAlive == 1)
         {
 
-          LeptonUnWeightedAllParticles[mode]->Fill(Eout);
+          LeptonUnWeightedAllParticles[mode]->Fill(Eout,ScaleFactor);
           // std::cout << "weight = " << weight << std::endl;                                                                                                                               
-          LeptonWeightedAllParticles[mode]->Fill(Eout, weight);
-          LeptonUnWeightedAllParticles[7]->Fill(Eout);
-          LeptonWeightedAllParticles[7]->Fill(Eout, weight);
-          LeptonUnWeightedAngleAllParticles[mode]->Fill(costheta);
+          LeptonWeightedAllParticles[mode]->Fill(Eout, weight*ScaleFactor);
+          LeptonUnWeightedAllParticles[7]->Fill(Eout,ScaleFactor);
+          LeptonWeightedAllParticles[7]->Fill(Eout, weight*ScaleFactor);
+          LeptonUnWeightedAngleAllParticles[mode]->Fill(costheta,ScaleFactor);
           // std::cout << "weight = " << weight << std::endl;                                                                                                                               
-          LeptonWeightedAngleAllParticles[mode]->Fill(costheta, weight);
-          LeptonUnWeightedAngleAllParticles[7]->Fill(costheta);
-          LeptonWeightedAngleAllParticles[7]->Fill(costheta, weight);
+          LeptonWeightedAngleAllParticles[mode]->Fill(costheta, weight*ScaleFactor);
+          LeptonUnWeightedAngleAllParticles[7]->Fill(costheta,ScaleFactor);
+          LeptonWeightedAngleAllParticles[7]->Fill(costheta, weight*ScaleFactor);
 
           if(leptonlastbiggestEout<Eout)
             {
@@ -888,9 +928,9 @@ int main(int argc, char *argv[]) {
       /*
 	UnWeighted[mode]->Fill(Eout);
 	// std::cout << "weight = " << weight << std::endl;                                                                                                                               
-	Weighted[mode]->Fill(Eout, weight);
+	Weighted[mode]->Fill(Eout, weight*ScaleFactor);
 	UnWeighted[7]->Fill(Eout);
-	Weighted[7]->Fill(Eout, weight);
+	Weighted[7]->Fill(Eout, weight*ScaleFactor);
       */
 
 	
@@ -915,57 +955,61 @@ int main(int argc, char *argv[]) {
     
     } // Finished scanning for pions and nucleons
     
-    NucleonMultiplicityUnWeighted[mode]->Fill(nucleonmultiplicity);
-    NucleonMultiplicityWeighted[mode]->Fill(nucleonmultiplicity,weight);
-    NucleonMultiplicityUnWeighted[7]->Fill(nucleonmultiplicity);
-    NucleonMultiplicityWeighted[7]->Fill(nucleonmultiplicity,weight);
+    NucleonMultiplicityUnWeighted[mode]->Fill(nucleonmultiplicity,ScaleFactor);
+    NucleonMultiplicityWeighted[mode]->Fill(nucleonmultiplicity,weight*ScaleFactor);
+    NucleonMultiplicityUnWeighted[7]->Fill(nucleonmultiplicity,ScaleFactor);
+    NucleonMultiplicityWeighted[7]->Fill(nucleonmultiplicity,weight*ScaleFactor);
 
-    ProtonMultiplicityUnWeighted[mode]->Fill(protonmultiplicity);
-    ProtonMultiplicityWeighted[mode]->Fill(protonmultiplicity,weight);
-    ProtonMultiplicityUnWeighted[7]->Fill(protonmultiplicity);
-    ProtonMultiplicityWeighted[7]->Fill(protonmultiplicity,weight);
+    ProtonMultiplicityUnWeighted[mode]->Fill(protonmultiplicity,ScaleFactor);
+    ProtonMultiplicityWeighted[mode]->Fill(protonmultiplicity,weight*ScaleFactor);
+    ProtonMultiplicityUnWeighted[7]->Fill(protonmultiplicity,ScaleFactor);
+    ProtonMultiplicityWeighted[7]->Fill(protonmultiplicity,weight*ScaleFactor);
 
-    NeutronMultiplicityUnWeighted[mode]->Fill(neutronmultiplicity);
-    NeutronMultiplicityWeighted[mode]->Fill(neutronmultiplicity,weight);
-    NeutronMultiplicityUnWeighted[7]->Fill(neutronmultiplicity);
-    NeutronMultiplicityWeighted[7]->Fill(neutronmultiplicity,weight);
+    NeutronMultiplicityUnWeighted[mode]->Fill(neutronmultiplicity,ScaleFactor);
+    NeutronMultiplicityWeighted[mode]->Fill(neutronmultiplicity,weight*ScaleFactor);
+    NeutronMultiplicityUnWeighted[7]->Fill(neutronmultiplicity,ScaleFactor);
+    NeutronMultiplicityWeighted[7]->Fill(neutronmultiplicity,weight*ScaleFactor);
 
-    PionMultiplicityUnWeighted[mode]->Fill(pionmultiplicity);
-    PionMultiplicityWeighted[mode]->Fill(pionmultiplicity,weight);
-    PionMultiplicityUnWeighted[7]->Fill(pionmultiplicity);
-    PionMultiplicityWeighted[7]->Fill(pionmultiplicity,weight);
+    PionMultiplicityUnWeighted[mode]->Fill(pionmultiplicity,ScaleFactor);
+    PionMultiplicityWeighted[mode]->Fill(pionmultiplicity,weight*ScaleFactor);
+    PionMultiplicityUnWeighted[7]->Fill(pionmultiplicity,ScaleFactor);
+    PionMultiplicityWeighted[7]->Fill(pionmultiplicity,weight*ScaleFactor);
 
 
     //will have to tidy this up when doing pions and leptons
     if(lastbiggestEout >= 0)
       {
-	UnWeighted[bestmode]->Fill(lastbiggestEout);
+	UnWeighted[bestmode]->Fill(lastbiggestEout,ScaleFactor);
 	// std::cout << "weight = " << weight << std::endl;                                                                                                                               
-	Weighted[bestmode]->Fill(lastbiggestEout, weight);
-	UnWeighted[7]->Fill(lastbiggestEout);
-	Weighted[7]->Fill(lastbiggestEout, weight);
+	Weighted[bestmode]->Fill(lastbiggestEout, weight*ScaleFactor);
+	UnWeighted[7]->Fill(lastbiggestEout,ScaleFactor);
+	Weighted[7]->Fill(lastbiggestEout, weight*ScaleFactor);
 
-	UnWeightedAngle[bestmode]->Fill(lastbiggestcostheta);
+	UnWeightedAngle[bestmode]->Fill(lastbiggestcostheta,ScaleFactor);
 	// std::cout << "weight = " << weight << std::endl;                                                                                                                                    
-	WeightedAngle[bestmode]->Fill(lastbiggestcostheta, weight);
-	UnWeightedAngle[7]->Fill(lastbiggestcostheta);
-	WeightedAngle[7]->Fill(lastbiggestcostheta, weight);
-
+	WeightedAngle[bestmode]->Fill(lastbiggestcostheta, weight*ScaleFactor);
+	UnWeightedAngle[7]->Fill(lastbiggestcostheta,ScaleFactor);
+	WeightedAngle[7]->Fill(lastbiggestcostheta, weight*ScaleFactor);
+	
+	LeadingNucleonAngleVSEnergyWeighted[7]->Fill(lastbiggestEout,lastbiggestcostheta,weight*ScaleFactor);
+	LeadingNucleonAngleVSEnergyUnWeighted[7]->Fill(lastbiggestEout,lastbiggestcostheta,ScaleFactor);
+	LeadingNucleonAngleVSEnergyWeighted[bestmode]->Fill(lastbiggestEout,lastbiggestcostheta,weight*ScaleFactor);
+	LeadingNucleonAngleVSEnergyUnWeighted[bestmode]->Fill(lastbiggestEout,lastbiggestcostheta,ScaleFactor);
 
 	if( isneutron == true)
 	  {
 
-	    NeutronUnWeighted[bestmode]->Fill(lastbiggestEout);
+	    NeutronUnWeighted[bestmode]->Fill(lastbiggestEout,ScaleFactor);
 	    // std::cout << "weight = " << weight << std::endl;                                                                                                                                 
-	    NeutronWeighted[bestmode]->Fill(lastbiggestEout, weight);
-	    NeutronUnWeighted[7]->Fill(lastbiggestEout);
-	    NeutronWeighted[7]->Fill(lastbiggestEout, weight);
+	    NeutronWeighted[bestmode]->Fill(lastbiggestEout, weight*ScaleFactor);
+	    NeutronUnWeighted[7]->Fill(lastbiggestEout,ScaleFactor);
+	    NeutronWeighted[7]->Fill(lastbiggestEout, weight*ScaleFactor);
 	
-	    NeutronUnWeightedAngle[bestmode]->Fill(lastbiggestcostheta);
+	    NeutronUnWeightedAngle[bestmode]->Fill(lastbiggestcostheta,ScaleFactor);
 	    // std::cout << "weight = " << weight << std::endl;                                                                                                                                 
-	    NeutronWeightedAngle[bestmode]->Fill(lastbiggestcostheta, weight);
-	    NeutronUnWeightedAngle[7]->Fill(lastbiggestcostheta);
-	    NeutronWeightedAngle[7]->Fill(lastbiggestcostheta, weight);
+	    NeutronWeightedAngle[bestmode]->Fill(lastbiggestcostheta, weight*ScaleFactor);
+	    NeutronUnWeightedAngle[7]->Fill(lastbiggestcostheta,ScaleFactor);
+	    NeutronWeightedAngle[7]->Fill(lastbiggestcostheta, weight*ScaleFactor);
 	
 	  }
       
@@ -973,16 +1017,16 @@ int main(int argc, char *argv[]) {
 	  {
 
 
-	    ProtonUnWeighted[bestmode]->Fill(lastbiggestEout);
+	    ProtonUnWeighted[bestmode]->Fill(lastbiggestEout,ScaleFactor);
 	    // std::cout << "weight = " << weight << std::endl;                                                                                                                                 
-	    ProtonWeighted[bestmode]->Fill(lastbiggestEout, weight);
-	    ProtonUnWeighted[7]->Fill(lastbiggestEout);
-	    ProtonWeighted[7]->Fill(lastbiggestEout, weight);
-	    ProtonUnWeightedAngle[bestmode]->Fill(lastbiggestcostheta);
+	    ProtonWeighted[bestmode]->Fill(lastbiggestEout, weight*ScaleFactor);
+	    ProtonUnWeighted[7]->Fill(lastbiggestEout,ScaleFactor);
+	    ProtonWeighted[7]->Fill(lastbiggestEout, weight*ScaleFactor);
+	    ProtonUnWeightedAngle[bestmode]->Fill(lastbiggestcostheta,ScaleFactor);
 	    // std::cout << "weight = " << weight << std::endl;                                                                                                                                 
-	    ProtonWeightedAngle[bestmode]->Fill(lastbiggestcostheta, weight);
-	    ProtonUnWeightedAngle[7]->Fill(lastbiggestcostheta);
-	    ProtonWeightedAngle[7]->Fill(lastbiggestcostheta, weight);
+	    ProtonWeightedAngle[bestmode]->Fill(lastbiggestcostheta, weight*ScaleFactor);
+	    ProtonUnWeightedAngle[7]->Fill(lastbiggestcostheta,ScaleFactor);
+	    ProtonWeightedAngle[7]->Fill(lastbiggestcostheta, weight*ScaleFactor);
 
 	  }
 
@@ -990,32 +1034,32 @@ int main(int argc, char *argv[]) {
 
     if(pionlastbiggestEout >= 0)
       {
-	PionUnWeighted[pionbestmode]->Fill(pionlastbiggestEout);
+	PionUnWeighted[pionbestmode]->Fill(pionlastbiggestEout,ScaleFactor);
 	// std::cout << "weight = " << weight << std::endl;                                                                                                                               
-	PionWeighted[pionbestmode]->Fill(pionlastbiggestEout, weight);
-	PionUnWeighted[7]->Fill(pionlastbiggestEout);
-	PionWeighted[7]->Fill(pionlastbiggestEout, weight);
-	PionUnWeightedAngle[pionbestmode]->Fill(pionlastbiggestcostheta);
+	PionWeighted[pionbestmode]->Fill(pionlastbiggestEout, weight*ScaleFactor);
+	PionUnWeighted[7]->Fill(pionlastbiggestEout,ScaleFactor);
+	PionWeighted[7]->Fill(pionlastbiggestEout, weight*ScaleFactor);
+	PionUnWeightedAngle[pionbestmode]->Fill(pionlastbiggestcostheta,ScaleFactor);
 	// std::cout << "weight = " << weight << std::endl;                                                                                                                                
-	PionWeightedAngle[pionbestmode]->Fill(pionlastbiggestcostheta, weight);
-	PionUnWeightedAngle[7]->Fill(pionlastbiggestcostheta);
-	PionWeightedAngle[7]->Fill(pionlastbiggestcostheta, weight);
+	PionWeightedAngle[pionbestmode]->Fill(pionlastbiggestcostheta, weight*ScaleFactor);
+	PionUnWeightedAngle[7]->Fill(pionlastbiggestcostheta,ScaleFactor);
+	PionWeightedAngle[7]->Fill(pionlastbiggestcostheta, weight*ScaleFactor);
       }
 
 
 
     if(leptonlastbiggestEout >= 0)
       {
-        LeptonUnWeighted[leptonbestmode]->Fill(leptonlastbiggestEout);
+        LeptonUnWeighted[leptonbestmode]->Fill(leptonlastbiggestEout,ScaleFactor);
         // std::cout << "weight = " << weight << std::endl;                                                                                                                                  
-        LeptonWeighted[leptonbestmode]->Fill(leptonlastbiggestEout, weight);
-        LeptonUnWeighted[7]->Fill(leptonlastbiggestEout);
-        LeptonWeighted[7]->Fill(leptonlastbiggestEout, weight);
-        LeptonUnWeightedAngle[leptonbestmode]->Fill(leptonlastbiggestcostheta);
+        LeptonWeighted[leptonbestmode]->Fill(leptonlastbiggestEout, weight*ScaleFactor);
+        LeptonUnWeighted[7]->Fill(leptonlastbiggestEout,ScaleFactor);
+        LeptonWeighted[7]->Fill(leptonlastbiggestEout, weight*ScaleFactor);
+        LeptonUnWeightedAngle[leptonbestmode]->Fill(leptonlastbiggestcostheta,ScaleFactor);
         // std::cout << "weight = " << weight << std::endl;                                                                                                                                  
-        LeptonWeightedAngle[leptonbestmode]->Fill(leptonlastbiggestcostheta, weight);
-        LeptonUnWeightedAngle[7]->Fill(leptonlastbiggestcostheta);
-        LeptonWeightedAngle[7]->Fill(leptonlastbiggestcostheta, weight);
+        LeptonWeightedAngle[leptonbestmode]->Fill(leptonlastbiggestcostheta, weight*ScaleFactor);
+        LeptonUnWeightedAngle[7]->Fill(leptonlastbiggestcostheta,ScaleFactor);
+        LeptonWeightedAngle[7]->Fill(leptonlastbiggestcostheta, weight*ScaleFactor);
       }
   
 
@@ -1039,6 +1083,7 @@ int main(int argc, char *argv[]) {
   for (int j = 0; j < nNEUTmodes; ++j) {
     // Set Poisson errors
     //requires all have same number of bins!
+    
     for (int i = 0; i < Weighted[j]->GetNbinsX()+1; ++i) {
       double content1 = Weighted[j]->GetBinContent(i+1);
       double error1 = sqrt(content1);
@@ -1220,52 +1265,63 @@ int main(int argc, char *argv[]) {
       double content48 = PionMultiplicityUnWeighted[j]->GetBinContent(i+1);
       double error48 = sqrt(content48);
       PionMultiplicityUnWeighted[j]->SetBinError(i+1, error48);
+}
 
       
 
-    }
     
-    Weighted[j]->Scale(ScaleFactor, "width");
-    UnWeighted[j]->Scale(ScaleFactor, "width");
+    
+    Weighted[j]->Scale(Unity, "width");
+    UnWeighted[j]->Scale(Unity, "width");
     if (Weighted[j]->Integral() > 0) Weighted[j]->Write();
     if (UnWeighted[j]->Integral() > 0) UnWeighted[j]->Write();
 
-    WeightedAllParticles[j]->Scale(ScaleFactor, "width");
-    UnWeightedAllParticles[j]->Scale(ScaleFactor, "width");
+    WeightedAllParticles[j]->Scale(Unity, "width");
+    UnWeightedAllParticles[j]->Scale(Unity, "width");
     if (WeightedAllParticles[j]->Integral() > 0) WeightedAllParticles[j]->Write();
     if (UnWeightedAllParticles[j]->Integral() > 0) UnWeightedAllParticles[j]->Write();
 
-    WeightedAngle[j]->Scale(ScaleFactor, "width");
-    UnWeightedAngle[j]->Scale(ScaleFactor, "width");
+    WeightedAngle[j]->Scale(Unity, "width");
+    UnWeightedAngle[j]->Scale(Unity, "width");
     if (WeightedAngle[j]->Integral() > 0) WeightedAngle[j]->Write();
     if (UnWeightedAngle[j]->Integral() > 0) UnWeightedAngle[j]->Write();
 
-    WeightedAngleAllParticles[j]->Scale(ScaleFactor, "width");
-    UnWeightedAngleAllParticles[j]->Scale(ScaleFactor, "width");
+    WeightedAngleAllParticles[j]->Scale(Unity, "width");
+    UnWeightedAngleAllParticles[j]->Scale(Unity, "width");
     if (WeightedAngleAllParticles[j]->Integral() > 0) WeightedAngleAllParticles[j]->Write();
     if (UnWeightedAngleAllParticles[j]->Integral() > 0) UnWeightedAngleAllParticles[j]->Write();
 
 
+    AngleVSEnergyWeighted[j]->Scale(Unity, "width");
+    AngleVSEnergyUnWeighted[j]->Scale(Unity, "width");
+    if (AngleVSEnergyWeighted[j]->Integral() > 0) AngleVSEnergyWeighted[j]->Write();
+    if (AngleVSEnergyUnWeighted[j]->Integral() > 0) AngleVSEnergyUnWeighted[j]->Write();
+
+    LeadingNucleonAngleVSEnergyWeighted[j]->Scale(Unity, "width");
+    LeadingNucleonAngleVSEnergyUnWeighted[j]->Scale(Unity, "width");
+    if (LeadingNucleonAngleVSEnergyWeighted[j]->Integral() > 0) LeadingNucleonAngleVSEnergyWeighted[j]->Write();
+    if (LeadingNucleonAngleVSEnergyUnWeighted[j]->Integral() > 0) LeadingNucleonAngleVSEnergyUnWeighted[j]->Write();
 
 
 
-    NeutronWeighted[j]->Scale(ScaleFactor, "width");
-    NeutronUnWeighted[j]->Scale(ScaleFactor, "width");
+
+    NeutronWeighted[j]->Scale(Unity, "width");
+    NeutronUnWeighted[j]->Scale(Unity, "width");
     if (NeutronWeighted[j]->Integral() > 0) NeutronWeighted[j]->Write();
     if (NeutronUnWeighted[j]->Integral() > 0) NeutronUnWeighted[j]->Write();
 
-    NeutronWeightedAllParticles[j]->Scale(ScaleFactor, "width");
-    NeutronUnWeightedAllParticles[j]->Scale(ScaleFactor, "width");
+    NeutronWeightedAllParticles[j]->Scale(Unity, "width");
+    NeutronUnWeightedAllParticles[j]->Scale(Unity, "width");
     if (NeutronWeightedAllParticles[j]->Integral() > 0) NeutronWeightedAllParticles[j]->Write();
     if (NeutronUnWeightedAllParticles[j]->Integral() > 0) NeutronUnWeightedAllParticles[j]->Write();
 
-    NeutronWeightedAngle[j]->Scale(ScaleFactor, "width");
-    NeutronUnWeightedAngle[j]->Scale(ScaleFactor, "width");
+    NeutronWeightedAngle[j]->Scale(Unity, "width");
+    NeutronUnWeightedAngle[j]->Scale(Unity, "width");
     if (NeutronWeightedAngle[j]->Integral() > 0) NeutronWeightedAngle[j]->Write();
     if (NeutronUnWeightedAngle[j]->Integral() > 0) NeutronUnWeightedAngle[j]->Write();
 
-    NeutronWeightedAngleAllParticles[j]->Scale(ScaleFactor, "width");
-    NeutronUnWeightedAngleAllParticles[j]->Scale(ScaleFactor, "width");
+    NeutronWeightedAngleAllParticles[j]->Scale(Unity, "width");
+    NeutronUnWeightedAngleAllParticles[j]->Scale(Unity, "width");
     if (NeutronWeightedAngleAllParticles[j]->Integral() > 0) NeutronWeightedAngleAllParticles[j]->Write();
     if (NeutronUnWeightedAngleAllParticles[j]->Integral() > 0) NeutronUnWeightedAngleAllParticles[j]->Write();
   
@@ -1273,85 +1329,85 @@ int main(int argc, char *argv[]) {
 
 
     //    std::cout << "protonweighted integral = " << ProtonWeighted[j]->Integral() << std::endl;
-    ProtonWeighted[j]->Scale(ScaleFactor, "width");
-    ProtonUnWeighted[j]->Scale(ScaleFactor, "width");
+    ProtonWeighted[j]->Scale(Unity, "width");
+    ProtonUnWeighted[j]->Scale(Unity, "width");
     if (ProtonWeighted[j]->Integral() > 0) ProtonWeighted[j]->Write();
     if (ProtonUnWeighted[j]->Integral() > 0) ProtonUnWeighted[j]->Write();
 
-    ProtonWeightedAllParticles[j]->Scale(ScaleFactor, "width");
-    ProtonUnWeightedAllParticles[j]->Scale(ScaleFactor, "width");
+    ProtonWeightedAllParticles[j]->Scale(Unity, "width");
+    ProtonUnWeightedAllParticles[j]->Scale(Unity, "width");
     if (ProtonWeightedAllParticles[j]->Integral() > 0) ProtonWeightedAllParticles[j]->Write();
     if (ProtonUnWeightedAllParticles[j]->Integral() > 0) ProtonUnWeightedAllParticles[j]->Write();
 
-    ProtonWeightedAngle[j]->Scale(ScaleFactor, "width");
-    ProtonUnWeightedAngle[j]->Scale(ScaleFactor, "width");
+    ProtonWeightedAngle[j]->Scale(Unity, "width");
+    ProtonUnWeightedAngle[j]->Scale(Unity, "width");
     if (ProtonWeightedAngle[j]->Integral() > 0) ProtonWeightedAngle[j]->Write();
     if (ProtonUnWeightedAngle[j]->Integral() > 0) ProtonUnWeightedAngle[j]->Write();
 
-    ProtonWeightedAngleAllParticles[j]->Scale(ScaleFactor, "width");
-    ProtonUnWeightedAngleAllParticles[j]->Scale(ScaleFactor, "width");
+    ProtonWeightedAngleAllParticles[j]->Scale(Unity, "width");
+    ProtonUnWeightedAngleAllParticles[j]->Scale(Unity, "width");
     if (ProtonWeightedAngleAllParticles[j]->Integral() > 0) ProtonWeightedAngleAllParticles[j]->Write();
     if (ProtonUnWeightedAngleAllParticles[j]->Integral() > 0) ProtonUnWeightedAngleAllParticles[j]->Write();
 
-    PionWeighted[j]->Scale(ScaleFactor, "width");
-    PionUnWeighted[j]->Scale(ScaleFactor, "width");
+    PionWeighted[j]->Scale(Unity, "width");
+    PionUnWeighted[j]->Scale(Unity, "width");
     if (PionWeighted[j]->Integral() > 0) PionWeighted[j]->Write();
     if (PionUnWeighted[j]->Integral() > 0) PionUnWeighted[j]->Write();
 
-    PionWeightedAllParticles[j]->Scale(ScaleFactor, "width");
-    PionUnWeightedAllParticles[j]->Scale(ScaleFactor, "width");
+    PionWeightedAllParticles[j]->Scale(Unity, "width");
+    PionUnWeightedAllParticles[j]->Scale(Unity, "width");
     if (PionWeightedAllParticles[j]->Integral() > 0) PionWeightedAllParticles[j]->Write();
     if (PionUnWeightedAllParticles[j]->Integral() > 0) PionUnWeightedAllParticles[j]->Write();
 
-    PionWeightedAngle[j]->Scale(ScaleFactor, "width");
-    PionUnWeightedAngle[j]->Scale(ScaleFactor, "width");
+    PionWeightedAngle[j]->Scale(Unity, "width");
+    PionUnWeightedAngle[j]->Scale(Unity, "width");
     if (PionWeightedAngle[j]->Integral() > 0) PionWeightedAngle[j]->Write();
     if (PionUnWeightedAngle[j]->Integral() > 0) PionUnWeightedAngle[j]->Write();
 
-    PionWeightedAngleAllParticles[j]->Scale(ScaleFactor, "width");
-    PionUnWeightedAngleAllParticles[j]->Scale(ScaleFactor, "width");
+    PionWeightedAngleAllParticles[j]->Scale(Unity, "width");
+    PionUnWeightedAngleAllParticles[j]->Scale(Unity, "width");
     if (PionWeightedAngleAllParticles[j]->Integral() > 0) PionWeightedAngleAllParticles[j]->Write();
     if (PionUnWeightedAngleAllParticles[j]->Integral() > 0) PionUnWeightedAngleAllParticles[j]->Write();
 
 
 
-    LeptonWeighted[j]->Scale(ScaleFactor, "width");
-    LeptonUnWeighted[j]->Scale(ScaleFactor, "width");
+    LeptonWeighted[j]->Scale(Unity, "width");
+    LeptonUnWeighted[j]->Scale(Unity, "width");
     if (LeptonWeighted[j]->Integral() > 0) LeptonWeighted[j]->Write();
     if (LeptonUnWeighted[j]->Integral() > 0) LeptonUnWeighted[j]->Write();
 
-    LeptonWeightedAllParticles[j]->Scale(ScaleFactor, "width");
-    LeptonUnWeightedAllParticles[j]->Scale(ScaleFactor, "width");
+    LeptonWeightedAllParticles[j]->Scale(Unity, "width");
+    LeptonUnWeightedAllParticles[j]->Scale(Unity, "width");
     if (LeptonWeightedAllParticles[j]->Integral() > 0) LeptonWeightedAllParticles[j]->Write();
     if (LeptonUnWeightedAllParticles[j]->Integral() > 0) LeptonUnWeightedAllParticles[j]->Write();
 
-    LeptonWeightedAngle[j]->Scale(ScaleFactor, "width");
-    LeptonUnWeightedAngle[j]->Scale(ScaleFactor, "width");
+    LeptonWeightedAngle[j]->Scale(Unity, "width");
+    LeptonUnWeightedAngle[j]->Scale(Unity, "width");
     if (LeptonWeightedAngle[j]->Integral() > 0) LeptonWeightedAngle[j]->Write();
     if (LeptonUnWeightedAngle[j]->Integral() > 0) LeptonUnWeightedAngle[j]->Write();
 
-    LeptonWeightedAngleAllParticles[j]->Scale(ScaleFactor, "width");
-    LeptonUnWeightedAngleAllParticles[j]->Scale(ScaleFactor, "width");
+    LeptonWeightedAngleAllParticles[j]->Scale(Unity, "width");
+    LeptonUnWeightedAngleAllParticles[j]->Scale(Unity, "width");
     if (LeptonWeightedAngleAllParticles[j]->Integral() > 0) LeptonWeightedAngleAllParticles[j]->Write();
     if (LeptonUnWeightedAngleAllParticles[j]->Integral() > 0) LeptonUnWeightedAngleAllParticles[j]->Write();
 
-    NucleonMultiplicityWeighted[j]->Scale(ScaleFactor, "width");
-    NucleonMultiplicityUnWeighted[j]->Scale(ScaleFactor, "width");
+    NucleonMultiplicityWeighted[j]->Scale(Unity, "width");
+    NucleonMultiplicityUnWeighted[j]->Scale(Unity, "width");
     if (NucleonMultiplicityWeighted[j]->Integral() > 0) NucleonMultiplicityWeighted[j]->Write();
     if (NucleonMultiplicityUnWeighted[j]->Integral() > 0) NucleonMultiplicityUnWeighted[j]->Write();
 
-    ProtonMultiplicityWeighted[j]->Scale(ScaleFactor, "width");
-    ProtonMultiplicityUnWeighted[j]->Scale(ScaleFactor, "width");
+    ProtonMultiplicityWeighted[j]->Scale(Unity, "width");
+    ProtonMultiplicityUnWeighted[j]->Scale(Unity, "width");
     if (ProtonMultiplicityWeighted[j]->Integral() > 0) ProtonMultiplicityWeighted[j]->Write();
     if (ProtonMultiplicityUnWeighted[j]->Integral() > 0) ProtonMultiplicityUnWeighted[j]->Write();
 
-    NeutronMultiplicityWeighted[j]->Scale(ScaleFactor, "width");
-    NeutronMultiplicityUnWeighted[j]->Scale(ScaleFactor, "width");
+    NeutronMultiplicityWeighted[j]->Scale(Unity, "width");
+    NeutronMultiplicityUnWeighted[j]->Scale(Unity, "width");
     if (NeutronMultiplicityWeighted[j]->Integral() > 0) NeutronMultiplicityWeighted[j]->Write();
     if (NeutronMultiplicityUnWeighted[j]->Integral() > 0) NeutronMultiplicityUnWeighted[j]->Write();
 
-    PionMultiplicityWeighted[j]->Scale(ScaleFactor, "width");
-    PionMultiplicityUnWeighted[j]->Scale(ScaleFactor, "width");
+    PionMultiplicityWeighted[j]->Scale(Unity, "width");
+    PionMultiplicityUnWeighted[j]->Scale(Unity, "width");
     if (PionMultiplicityWeighted[j]->Integral() > 0) PionMultiplicityWeighted[j]->Write();
     if (PionMultiplicityUnWeighted[j]->Integral() > 0) PionMultiplicityUnWeighted[j]->Write();
 
@@ -1359,7 +1415,7 @@ int main(int argc, char *argv[]) {
 
   }
 
-
+  Weights->Write();
   std::cout << "Finished looping events" << std::endl;
 
   return 0;
