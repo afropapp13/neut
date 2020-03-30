@@ -227,9 +227,6 @@ double NReWeightNuXSecCCQE::CalcWeight() {
 
   NSYST_ASSIGNIFTWKD(nemdls_.axffalpha, kXSecTwkDial_FAxlCCQEAlpha);
   NSYST_ASSIGNIFTWKD(nemdls_.axffgamma, kXSecTwkDial_FAxlCCQEGamma);
-
-  NSYST_ASSIGNIFTWKD(nemdls_.axffalpha, kXSecTwkDial_FAxlCCQEAlpha);
-  NSYST_ASSIGNIFTWKD(nemdls_.axffgamma, kXSecTwkDial_FAxlCCQEGamma);
   NSYST_ASSIGNIFTWKD(nemdls_.axfftheta, kXSecTwkDial_FAxlCCQETheta);
   NSYST_ASSIGNIFTWKD(nemdls_.axffbeta, kXSecTwkDial_FAxlCCQEBeta);
 
