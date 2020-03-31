@@ -125,8 +125,37 @@ C     For form factors for Rein-Seighal update
       fA1COH  = 0.0
       fb1COH  = 0.0
 
+C Default CCQE model and axial form factor parameterisation
       MDLQE     = 2002
       MDLQEAF   = 1
+
+C 2/3 component, TN 315 p 25
+      AXFFALPHA = 0.11
+      AXFFBETA = 0.41
+      AXFFGAMMA = 1.04
+      AXFFTHETA = -0.26
+
+C Z-expansion TN 315 p 21
+C Use official z-expansion parameters, not Patrick's results
+      AXZEXPQ4 = 0
+      AXZEXPNT = 8
+      AXZEXPT0 = -0.280
+      AXZEXPTC = 0.1764
+
+C This is automatically set
+      AXZEXPA0 = 0.5
+C Up to the user
+      AXZEXPA1 = 2.30
+      AXZEXPA2 = -0.60
+      AXZEXPA3 = -3.80
+      AXZEXPA4 = 2.30
+C These are automatically set
+      AXZEXPA5 = 0.5
+      AXZEXPA6 = 0.5
+      AXZEXPA7 = 0.5
+      AXZEXPA8 = 0.5
+      AXZEXPA9 = 0.5
+C End of z-expansion parameters
 
       NVQERFG        = 0
       NVQEBIND       = 1
@@ -360,8 +389,8 @@ C-- Initialize parameters here to allow override
       CALL FFKEY('AXFFGAMMA',AXFFGAMMA, 1, 'REAL')
       CALL FFKEY('AXFFTHETA',AXFFTHETA, 1, 'REAL')
 C Clarence hack, z exp
-      CALL FFKEY('AXZEXPQ4',AXZEXPQ4, 1, 'REAL')
-      CALL FFKEY('AXZEXPNT',AXZEXPNT, 1, 'REAL')
+      CALL FFKEY('AXZEXPQ4',AXZEXPQ4, 1, 'INTEGER')
+      CALL FFKEY('AXZEXPNT',AXZEXPNT, 1, 'INTEGER')
       CALL FFKEY('AXZEXPT0',AXZEXPT0, 1, 'REAL')
       CALL FFKEY('AXZEXPTC',AXZEXPTC, 1, 'REAL')
       CALL FFKEY('AXZEXPA0',AXZEXPA0, 1, 'REAL')
@@ -457,6 +486,27 @@ C      WRITE(6,*) 'NECARD : MVSPI  = ',XMVSPI
       WRITE(6,*) 'NECARD : FPQE      = ',FPQE
       WRITE(6,*) 'NECARD : PFSF      = ',PFSF
 
+      WRITE(6,*) '*** axial form factor alterations ***'
+      WRITE(6,*) 'NECARD : AXFFALPHA =',AXFFALPHA
+      WRITE(6,*) 'NECARD : AXFFBETA=',AXFFBETA
+      WRITE(6,*) 'NECARD : AXFFGAMMA=',AXFFGAMMA
+      WRITE(6,*) 'NECARD : AXFFTHETA=',AXFFTHETA
+C Clarence hack, z exp
+      WRITE(6,*) 'NECARD : AXZEXPQ4=',AXZEXPQ4
+      WRITE(6,*) 'NECARD : AXZEXPNT=',AXZEXPNT
+      WRITE(6,*) 'NECARD : AXZEXPT0=',AXZEXPT0
+      WRITE(6,*) 'NECARD : AXZEXPTC=',AXZEXPTC
+      WRITE(6,*) 'NECARD : AXZEXPA0=',AXZEXPA0
+      WRITE(6,*) 'NECARD : AXZEXPA1=',AXZEXPA1
+      WRITE(6,*) 'NECARD : AXZEXPA2=',AXZEXPA2
+      WRITE(6,*) 'NECARD : AXZEXPA3=',AXZEXPA3
+      WRITE(6,*) 'NECARD : AXZEXPA4=',AXZEXPA4
+      WRITE(6,*) 'NECARD : AXZEXPA5=',AXZEXPA5
+      WRITE(6,*) 'NECARD : AXZEXPA6=',AXZEXPA6
+      WRITE(6,*) 'NECARD : AXZEXPA7=',AXZEXPA7
+      WRITE(6,*) 'NECARD : AXZEXPA8=',AXZEXPA8
+      WRITE(6,*) 'NECARD : AXZEXPA9=',AXZEXPA9
+
       IF (NEMODFLG.EQ.-1) THEN
          WRITE(6,*) 'NECARD : CRS  = ',CRSNEUT
          WRITE(6,*) 'NECARD : CRSB = ',CRSNEUTB
@@ -517,25 +567,6 @@ C      WRITE(6,*) 'NECARD : MVSPI  = ',XMVSPI
 
       WRITE(6,*) 'NECARD : IRADCORR =',IRADCORR
 
-      WRITE(*,*) 'NECARD: AXFFALPHA =',AXFFALPHA
-      WRITE(*,*) 'AXFFBETA=',AXFFBETA
-      WRITE(*,*) 'AXFFGAMMA=',AXFFGAMMA
-      WRITE(*,*) 'AXFFTHETA=',AXFFTHETA
-C Clarence hack, z exp
-      WRITE(*,*) 'AXZEXPQ4=',AXZEXPQ4
-      WRITE(*,*) 'AXZEXPNT=',AXZEXPNT
-      WRITE(*,*) 'AXZEXPT0=',AXZEXPT0
-      WRITE(*,*) 'AXZEXPTC=',AXZEXPTC
-      WRITE(*,*) 'AXZEXPA0=',AXZEXPA0
-      WRITE(*,*) 'AXZEXPA1=',AXZEXPA1
-      WRITE(*,*) 'AXZEXPA2=',AXZEXPA2
-      WRITE(*,*) 'AXZEXPA3=',AXZEXPA3
-      WRITE(*,*) 'AXZEXPA4=',AXZEXPA4
-      WRITE(*,*) 'AXZEXPA5=',AXZEXPA5
-      WRITE(*,*) 'AXZEXPA6=',AXZEXPA6
-      WRITE(*,*) 'AXZEXPA7=',AXZEXPA7
-      WRITE(*,*) 'AXZEXPA8=',AXZEXPA8
-      WRITE(*,*) 'AXZEXPA9=',AXZEXPA9
 
 C     Parameter checks
 
