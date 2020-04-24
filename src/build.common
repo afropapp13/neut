@@ -78,7 +78,9 @@ endif
 
 if NEUT_HEPMC
 HEPMC_LIBDIR = $(shell HepMC3-config --libdir)
+HEPMC_INCDIR = $(shell HepMC3-config --incdir)
 NUHEPMC_LIBDIR = $(shell NuHepMC-config --libdir)
+NUHEPMC_INCDIR = $(shell NuHepMC-config --incdir)
 ROOT_LINKFLAGS += -L$(HEPMC_LIBDIR) -L$(NUHEPMC_LIBDIR)
 NEUT_LIBS += -lNuHepMC -lHepMC3 -lHepMC3rootIO
 else
