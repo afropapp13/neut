@@ -151,16 +151,6 @@ c     ptot - total probability, ABC seemingly unused
       real*4 ptot, A,B,C
       common /martindebug/  ptot,A,B,C
 
-c      pcascprob = 1
-C      pelnuc =1
-C      pspnuc =1 
-C      pdpnuc =1
-c     initialise before loop
-c      write (*,*) "nfnstep start of nrprton = " , NFNStep
-C       write (*,*) "Start of nrprton"
-c      write (*,*) "NReWeightFlag = ", NReweightFlag
-c      write (*,*) "Step numberA nfnstep ", NFnstep
-      
 
       if(NReweightFlag.eq.1) then
 
@@ -168,8 +158,7 @@ c      write (*,*) "Step numberA nfnstep ", NFnstep
 c     NFnstep = 0
          RW_step_i =0
 
-c         write (*,*) "RW StepA  ", RW_step_i
-c         write (*,*) "Step numberA nfnstep ", NFnstep
+
          nucresflg=1
          
 
@@ -177,20 +166,13 @@ c     NFnstep = 0
          goto 200
       endif
 
-C      print *,"information about current particle",idmc
- 
 
-C     are we reweighting? flag 1 if we are! (this might need to go higher up)                                                                                       C     I think we need to this right at the beginning - might be possible to kove it a bit further down later 
-      if(NReweightFlag.eq.0) then
-C     if not, then set fsiNFnucresflg from nucresflg                                                                                                                 
-         NFnucresflg = 0;
-c     if so, then other way around                                                                                                                                   
-      else if(NReweightFlag.eq.1) then
-c     ie. nucresflg should equal 1
+
+
 
          nucresflg=1;
-      endif
-c     this is a bit silly, just keeping it here for now
+
+
 
 
 
@@ -308,13 +290,10 @@ c     itrans iterates with every new track (itdone)
 c!!!!!OD!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 c     loop over input tracks
-C      NFnstep = NFnstep+1       ! increase number of steps                                                                                                                                 
-C      write (*,*) "nfstep not increased line 308", NFnstep
-C      write (*,*) "pcascprob = ", pcascprob
-      
-C      write (*,*) "before 300  "
+
+
  300  continue                  ! loop thru the input tracks
-C      write (*,*) "after 300  "
+
 c     loop counter itdone
       itdone=itdone+1
 c     if the counter goes beyond ntracks, QUIT
@@ -326,11 +305,10 @@ c     if this is the first track, reset nel and ihap interaction marker
          nel(2)=0
          nel(3)=0
       end if
-C     write (*,*) "RW Step B  ", RW_step_i
-C     write (*,*) "Step numberB nfnstep ", NFnstep
 
 c     For Reweight: amass/chtrack/stpt should be set in nrstack.h common block (check this)
 C     For Reweight: pptrack set from pi (input) above
+C     not sure any of that is necessary
 c     set uin to mass of current track
       uin=amass(itdone)         !put a new track to follow
 c     set chint to charge of current track
@@ -348,29 +326,6 @@ c     For NOT Reweight: only want to set position and momentum this way if not r
             pinss=pinss+pin(j)**2
          end do
 
-c     For Reweight: if we are reweighting, set x,mom, and ein from common block
-C     else  if(NReweightFlag.eq.1) then
-C     NFnvert = NFnvert+1                                   ! increase number of vertices                                                                      
-c     Set NFiflag to 100*chint (presumably 100 for proton 000 for pion)                                                                                            
-C     NFiflag(NFnvert) = 0 + chint*100                      ! interaction type and charge of propagated nucleon                                                 
-         
-c     set xyx position, momentum, and then energy                                                                                                                   
-C     NFx(NFnvert) = xtr(1)  ! vertex position inside nucleus                                                                       
-C     NFy(NFnvert) = xtr(2)
-C     NFz(NFnvert) = xtr(3)
-C     NFpx(NFnvert) = pin(1) ! momentum                                                                                             
-C     NFpy(NFnvert) = pin(2)
-C     NFpz(NFnvert) = pin(3)
-C     NFe(NFnvert) = ein     ! energy                                                                                               
-c     set first step of track to nfnstep+1                                                                                                                           
-C     NFfirststep(NFnvert) = NFnstep+1 ! index of first step of track segment                                                                 
-
-
-C     NFnstep = NFnstep+1                                   ! increase number of steps                                                                             
-c     set cms2 to 0 because it's not a collision                                                                                                                     
-C     NFecms2(NFnstep) = 0.                                 ! CMS energy squared (not a collision, so it's zero)                                                   
-c     conservation of momentum when there's no interaction                                                                                                           
-C     NFptot(NFnstep) = 0.
       endif
       pinm=sqrt(pinss)
 c     normalise momentum for this track
@@ -392,7 +347,6 @@ c     still outside event loop, but if NFnvert and NFnstep are below maximum, st
       if(NFnvert.lt.maxnucleonvert.and.NFnstep.lt.maxnucleonstep) then
 c     increase NFNvert and NFNstep by 1
          NFnvert = NFnvert+1    ! increase number of vertices
-c     write (*,*) "nfnvert1 is here to stay", NFnvert
 
 c     Set NFiflag to 100*chint (presumably 100 for proton 000 for pion)
          NFiflag(NFnvert) = 0 + chint*100 ! interaction type and charge of propagated nucleon
@@ -404,49 +358,29 @@ c     set xyx position, momentum, and then energy
          NFpy(NFnvert) = pin(2)
          NFpz(NFnvert) = pin(3)
          NFe(NFnvert) = ein     ! energy
-c     set first step of track to nfnstep+1
+c     set first step of track to nfnstep
          NFfirststep(NFnvert) = NFnstep ! index of first step of track segment
 
-c         NFnstep = NFnstep+1    ! increase number of steps
-c         write (*,*) "nfstep increased line 401", NFnstep
 
-c     write (*,*) "nfnstep1 is here to stay", NFnstep
-c     write (*,*) "NfiFlagStep = ", NfiFlagStep(NFnstep)
-
-
-C         NFxStep(NFnstep) = xtr(1)   
-c         NFyStep(NFnstep) = xtr(2)
-C         NFzStep(NFnstep) = xtr(3)
-C         NFpxStep(NFnstep) = pin(1)  
-C         NFpyStep(NFnstep) = pin(2)
-C         NFpzStep(NFnstep) = pin(3)
-C         NFeStep(NFnstep) = ein 
-C     NFiflagStep(NFnstep)=ides
-C     write (*,*) "NFiFlagStep (generated)3= ", NFiflagStep(NFnstep)
-
-c     set cms2 to 0 because it's not a collision
-C         NFecms2(NFnstep) = 0.  ! CMS energy squared (not a collision, so it's zero)
-c     conservation of momentum when there's no interaction
-C         NFptot(NFnstep) = 0.   ! total probability (to be removed)
       else
 c     if we're over the limit of maxnucleonvert/step, kick off and throw a message
          print *,'nrprton.F: too many nucleon FSI vertices (',NFnvert,')
      &or steps (',NFnstep,'), not saving all of them!'
       end if
 
-c     write (*,*) "RW StepC  ", RW_step_i
-c     write (*,*) "Step numberC nfnstep ", NFnstep
+
 
 
 !     
 !     track nuclon through nucleus
 !     
       RW_step_i =0
+
 c     Event loop time. Loop over steps through the nucleus
-c      write (*,*) "before 200  "
  200  continue
-c      write (*,*) "after 200  "
+
 c     set r from xtr and step*direction. Does upin stay the same throughout?
+c     is this crucial? Do we need energy, position, momentum?
       if(NReweightFlag.eq.1) then
          
          if(RW_step_i.lt.NFnstep) then
@@ -457,40 +391,12 @@ c     set r from xtr and step*direction. Does upin stay the same throughout?
             xtr(1) = NFxStep(RW_step_i)
             xtr(2) = NFyStep(RW_step_i)
             xtr(3) = NFzStep(RW_step_i)
-            pin(1) = NFpxStep(RW_step_i)
-            pin(2) = NFpyStep(RW_step_i)
-            pin(3) = NFpzStep(RW_step_i)
-            ein = NFeStep(RW_step_i)
+c            pin(1) = NFpxStep(RW_step_i)
+c            pin(2) = NFpyStep(RW_step_i)
+c            pin(3) = NFpzStep(RW_step_i)
+c            ein = NFeStep(RW_step_i)
 c     possibly needs a +/- distinction for protons and pions                                                                                                         
             ecms2 = NFecms2(RW_step_i)
-c     ides = NFiflagstep(RW_step_i)
-            
-C            do j=1,3
-C               if(itdone.gt.1)start(j)=0.
-C               xtr(j)=stpt(j,itdone)+start(j)
-C               pin(j)=pptrack(j,itdone)
-C               pinss=pinss+pin(j)**2
-C            end do
-
-
-C            pinm=sqrt(pinss)
-c     normalise momentum for this track                                                                                                                                                      
-C            do j=1,3
-C               upin(j)=pin(j)/pinm
-C            end do
-      
-c     write (*,*) "RW Step  ", RW_step_i
-c     write (*,*) "Step number nfnstep ", NFnstep
-c     write (*,*) "xtr1 = ", xtr(1)
-c     write (*,*) "xtr2 = ", xtr(2)
-c     write (*,*) "xtr3 = ", xtr(3)
-c     write (*,*) "pin1 = ", pin(1)
-c     write (*,*) "pin2 = ", pin(2)
-c     write (*,*) "pin3 = ", pin(3)
-c     write (*,*) "ein = ", ein
-c     write (*,*) "ecms2 = ", ecms2
-c     write (*,*) "IDES = ", ides
-
 
 
          else
@@ -508,9 +414,7 @@ c     write (*,*) "IDES = ", ides
       do j=1,3
          xtr(j)=xtr(j)+upin(j)*step
          r=r+xtr(j)**2
-c         write (*,*) "xtr(j) = ", xtr(j)   
-c         write (*,*) "upin(j) = ", upin(j)
-c         write (*,*) "step = ", step
+
       end do
       r=sqrt(r)
 
@@ -562,79 +466,25 @@ c     pretty sure nel(1/2/3)= pel/psp/pdp. maybe ihap is survival?
          end if
       end if
 
-C     if(NReweightFlag.eq.1) then
-C     xtr(1) = NFxStep(RW_step_i)
-C     xtr(2) = NFyStep(RW_step_i) 
-C     xtr(3) = NFzStep(RW_step_i) 
-C     pin(1) = NFpxStep(RW_step_i) 
-C     pin(2) = NFpyStep(RW_step_i)
-C     pin(3) = NFpzStep(RW_step_i)
-C     ein = NFeStep(RW_step_i)
-c     possibly needs a +/- distinction for protons and pions
-C     ecms2 = NFecms2(RW_step_i) 
-      
-C     end if
-c     write (*,*) "RW Step  ", RW_step_i
-c     write (*,*) "Step number nfnstep ", NFnstep
-c     write (*,*) "xtr1 = ", xtr(1)
-c     write (*,*) "xtr2 = ", xtr(2)
-c     write (*,*) "xtr3 = ", xtr(3)
-c     write (*,*) "pin1 = ", pin(1)
-c     write (*,*) "pin2 = ", pin(2)
-c     write (*,*) "pin3 = ", pin(3)
-c     write (*,*) "ein = ", ein
-c     write (*,*) "ecms2 = ", ecms2          
-c     write (*,*) "r = ", r
-C     if(NReweightFlag.eq.1) then
-C     write (*,*) "NFIflag = ", ides
-C     endif
-c      write (*,*) "r before nfermi = ", r
+
 
       call nrfermi(r)           !set target nucleon
 C     if(ecms2.lt.(2*amn)**2) goto 200  ! kinematically impossible / test is done inside nrnuc!
 
-c     NFiflagStep(NFnstep) = 99999
+
       if(NReweightFlag.eq.1) then
-c     write (*,*) "I HAVE MADE IT THIS FAR HOORAY"
+
          ides = NFiflagStep(RW_step_i)
       endif
-c     write (*,*) "amn before nrnc = ", amn
-c     write (*,*) "itdone number before nrnuc = ", itdone    
-c     write (*,*) "no number before nrnuc = ", no
-c     write (*,*) "track number before nrnuc = ", ntrack
-      
-C      print *,"Current particle info NFNstep:",NFNstep
-C      print *,"Current particle info RW_step_i:",RW_step_i
-C      print *,"Current particle info ido:",ido
-C      print *,"Current particle info idmc",idmc
-C      print *,"Calling nrnuc"
-C      print *,"current track",ntrack
-      
-C      if(ntrack.ge.1) then
-C         print *,"charge of track",chtrack(ntrack)
-C         print *,"mass of track",amass(ntrack)
-C      endif
-      
-
-C      write (*,*) "step number = ", nfnstep                                                                                                                                                
-C      write (*,*) "itdone number before nrnuc = ", itdone                                                                                                                                 
-C      write (*,*) "chtrack = ", chtrack                                                                                                                                         
-C      write (*,*) "track number before nrnuc = ", ntrack                                                                                                                                    
-
-C      print *,"Current particle info idmc",idmc                                                                                                                                             
-C      print *,"p cascprob = ", pcascprob                                                                                                                                                    
-C      print *,"current track",ntrack                                                                                                                                                      
 
       if(NReweightFlag.eq.0) then
          NFnstep = NFnstep+1    ! increase number of steps                                                                                                                                   
-C         write (*,*) "nfstep increased line 636", NFnstep
-C         write (*,*) "pcascprob = ", pcascprob
+
          
       endif
 
       call nrnuc(ides)          ! make interaction
-c     if ides was set to 11,12,13 then it was pauli blocked
-c      write (*,*) "nfnstep coming out of nrnuc = ", NFnStep
+
 
       
       
@@ -643,10 +493,10 @@ c      write (*,*) "nfnstep coming out of nrnuc = ", NFnStep
          NFxStep(NFnstep) = xtr(1)
          NFyStep(NFnstep) = xtr(2)
          NFzStep(NFnstep) = xtr(3)
-         NFpxStep(NFnstep) = pin(1)
-         NFpyStep(NFnstep) = pin(2)
-         NFpzStep(NFnstep) = pin(3)
-         NFeStep(NFnstep) = ein
+c         NFpxStep(NFnstep) = pin(1)
+c         NFpyStep(NFnstep) = pin(2)
+c         NFpzStep(NFnstep) = pin(3)
+c         NFeStep(NFnstep) = ein
 
          if(prot) then
             NFecms2(NFnstep) = ecms2 ! CMS energy squared (positive: proton)                                                                                                           
@@ -657,8 +507,7 @@ c     I think this is just something Martin did for debugging
          NFptot(NFnstep) = ptot ! total probability (to be removed) 
                
       endif
-c     write (*,*) "Interaction flag =" , ecms2
-c     write (*,*) "NFiflagStep after nrnuc" , NFiflagStep(NFnstep)
+
       if(NReweightFlag.eq.1) then
          
          goto 200
@@ -668,7 +517,7 @@ c     write (*,*) "NFiflagStep after nrnuc" , NFiflagStep(NFnstep)
             if(NFnvert.lt.maxnucleonvert.and.NFnstep.lt.maxnucleonstep) then
 c     assuming we're still below max vert and step
                NFnvert = NFnvert+1 ! increase number of vertices
-c               write (*,*) "nfnvert2 is here to stay", NFnvert
+
                NFiflag(NFnvert) = ides-10 + chint*100 + 1000 ! Pauli-blocked interaction type and charge of propagated nucleon
 c     previously we set NFiFlag to chint*100.
 c     now we need to set 1000 for Pauli times
@@ -685,33 +534,19 @@ c     now set position and momentum as per usual
                NFe(NFnvert) = ein ! energy
                NFfirststep(NFnvert) = NFnstep+1 ! index of first step of track segment
                
-C               NFnstep = NFnstep+1 ! increase number of steps
-C               write (*,*) "nfstep increased line 606", NFnstep
-C               write (*,*) "pcascprob = ", pcascprob
-c     write (*,*) "nfnstep2 is here to stay", NFnstep
 
-c     write (*,*) "NfiFlagStep = ", NfiFlagStep(NFnstep)
 
-c     NFiflagStep(NFnstep)=ides
-c     write (*,*) "NFiFlagStep (generated) = ", NFiflagStep(NFnstep)
-C               NFxStep(NFnstep) = xtr(1)
-C               NFyStep(NFnstep) = xtr(2)
-C               NFzStep(NFnstep) = xtr(3)
-C               NFpxStep(NFnstep) = pin(1)
-C               NFpyStep(NFnstep) = pin(2)
-C               NFpzStep(NFnstep) = pin(3)
-C               NFeStep(NFnstep) = ein
                
                
 
 c     why is cms^2 positive for protons, and negative for pions
-C               if(prot) then
-C                  NFecms2(NFnstep) = ecms2 ! CMS energy squared (positive: proton)
-C               else
-C                  NFecms2(NFnstep) = -ecms2 ! CMS energy squared (negative: neutron)
-C               end if
+               if(prot) then
+                  NFecms2(NFnstep) = ecms2 ! CMS energy squared (positive: proton)
+               else
+                  NFecms2(NFnstep) = -ecms2 ! CMS energy squared (negative: neutron)
+               end if
 c     I think this is just something Martin did for debugging 
-c               NFptot(NFnstep) = ptot ! total probability (to be removed)
+               NFptot(NFnstep) = ptot ! total probability (to be removed)
 c     kick off if we've gone over max vert and step
             else
                print *,'nrprton.F: too many nucleon FSI vertices (',NFnvert,')
@@ -727,29 +562,13 @@ c     ides was set to -1,-2,-3 for interactions, or 1 for survival
          if(ides.gt.0) then     ! no interaction: do next step
 c     therefore if ides is +ve, there's no interaction, head to next step
             if(NFnstep.lt.maxnucleonstep) then ! save per-step information
-C               NFnstep = NFnstep+1 ! increase number of steps
-C               write (*,*) "nfstep increased line 648", NFnstep
-C               write (*,*) "pcascprob = ", pcascprob
-c     write (*,*) "nfnstep3 is here to stay", NFnstep
 
-c     write (*,*) "NfiFlagStep = ", NfiFlagStep(NFnstep)
-
-C               NFxStep(NFnstep) = xtr(1)
-C               NFyStep(NFnstep) = xtr(2)
-C               NFzStep(NFnstep) = xtr(3)
-C               NFpxStep(NFnstep) = pin(1)
-C               NFpyStep(NFnstep) = pin(2)
-C               NFpzStep(NFnstep) = pin(3)
-C               NFeStep(NFnstep) = ein
-c     NFiflagStep(NFnstep)=ides
-c     write (*,*) "NFiFlagStep (generated2) = ", NFiflagStep(NFnstep)
-
-C               if(prot) then
-C                  NFecms2(NFnstep) = ecms2 ! CMS energy squared (positive: proton)
-C               else
-C                  NFecms2(NFnstep) = -ecms2 ! CMS energy squared (negative: neutron)
-C               end if
-C               NFptot(NFnstep) = ptot ! total probability (to be removed)
+               if(prot) then
+                  NFecms2(NFnstep) = ecms2 ! CMS energy squared (positive: proton)
+               else
+                  NFecms2(NFnstep) = -ecms2 ! CMS energy squared (negative: neutron)
+               end if
+               NFptot(NFnstep) = ptot ! total probability (to be removed)
             else
                print *,'nrprton.F: too many
      &nucleon FSI steps, not saving all of them!'
@@ -815,7 +634,7 @@ c     continue with the first nucleon, put second on stack
 !     
          if(NFnvert.lt.maxnucleonvert.and.NFnstep.lt.maxnucleonstep) then
             NFnvert = NFnvert+1 ! increase number of vertices
-c     write (*,*) "nfnvert3 is here to stay", NFnvert
+
 
             NFiflag(NFnvert) = abs(ides) + chint*100 ! interaction type and charge of propagated nucleon
             if(prot) NFiflag(NFnvert) = NFiflag(NFnvert) + 10 ! charge of target nucleon
@@ -828,30 +647,7 @@ c     write (*,*) "nfnvert3 is here to stay", NFnvert
             NFe(NFnvert) = ein  ! energy
             NFfirststep(NFnvert) = NFnstep+1 ! index of first step of track segment
 
-C            NFnstep = NFnstep+1 ! increase number of steps
-C            write (*,*) "nfstep increased line 748", NFnstep
-C            write (*,*) "pcascprob = ", pcascprob
-c     write (*,*) "nfnstep4 is here to stay", NFnstep
 
-c     write (*,*) "NfiFlagStep = ", NfiFlagStep(NFnstep)
-
-C            NFxStep(NFnstep) = xtr(1)
-c            NFyStep(NFnstep) = xtr(2)
-C            NFzStep(NFnstep) = xtr(3)
-C            NFpxStep(NFnstep) = pin(1)
-C            NFpyStep(NFnstep) = pin(2)
-C            NFpzStep(NFnstep) = pin(3)
-C            NFeStep(NFnstep) = ein
-c     NFiflagStep(NFnstep)=ides
-c     write (*,*) "NFiFlagStep (generated) = ", NFiflagStep(NFnstep)
-
-
-C            if(prot) then
-C               NFecms2(NFnstep) = ecms2 ! CMS energy squared (positive: proton)
-C            else
-C               NFecms2(NFnstep) = -ecms2 ! CMS energy squared (negative: neutron)
-C            end if
-C            NFptot(NFnstep) = ptot ! total probability (to be removed)
          else
 c     print *,'nrprton.F: too many nucleon FSI vertices 
 c     & (',NFnvert,') or steps (',NFnstep,'), not saving all of them!'
@@ -869,7 +665,7 @@ c     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       if(abs(uin-amn).le.5.) then ! only fill fsi stack if dealing with a nucleon
          if(NFnvert.lt.maxnucleonvert.and.NFnstep.lt.maxnucleonstep) then
             NFnvert = NFnvert+1 ! increase number of vertices
-c     write (*,*) "nfnvert4 is here to stay", NFnvert
+
             NFiflag(NFnvert) = 4 + chint*100 ! interaction type and charge of propagated nucleon
             NFx(NFnvert) = xtr(1) ! vertex position inside nucleus
             NFy(NFnvert) = xtr(2)
@@ -902,7 +698,7 @@ C     no = no + 1
          else
             ido(no) = 2212
          end if
-c         write (*,*) "heading back to 300  "
+
       end if
 
       if(no.lt.20) goto 300     !-------^ take next from the stack
