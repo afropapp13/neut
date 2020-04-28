@@ -152,13 +152,10 @@ c     p-n double pi production
 
 
      
-C      write (*,*) "nfnstep start of nrnuc = " , RW_step_i
-C      write (*,*) "ecms2 = " ,ecms2
-C      write (*,*) "2 amn**2 = " ,(2.*amn)**2
+
 c     not sure what 1 is (I'm guessing it will turn out to be survival)
       idec=1
-c      write (*,*) "ecms2 = " , ecms2
-c      write (*,*) "(2*amn)^2 = " , (2.*amn)**2
+
       
 
 
@@ -172,16 +169,7 @@ C            print *,"NFiFlagstep recorded at ",NFNstep
 
 c     maybe don't need iqq = 4
 c     treat kinematic failure as survival, however also need a multiplier?  
-c            print *,"Kinematic failure"        
-c            print *,"ecms2",ecms2
-c            print *,"(2.*amn)**2 = ", (2.*amn)**2
-c            print *,"NFiflagStep(NFNStep)",NFiflagStep(NFNStep)
-c            print *,"generated step = ", NFNStep
-c            print *,"generated pcascprob1 = ", pcascprob
-c            print *,"generated psurvnuc = ", psurvnuc
-c            print *,"generated pelnuc = ", pelnuc
-c            print *,"generated pspnuc = ", pspnuc
-c            print *,"generated pdpnuc = ", pdpnuc
+
             goto 200            ! check if kinematically possible    
          endif
       
@@ -192,16 +180,7 @@ c            print *,"generated pdpnuc = ", pdpnuc
 
          if( NFiflagStep(RW_step_i).eq.5) then
          
-c            print *,"Kinematic failure"
-c            print *,"ecms2",ecms2
-c            print *,"(2.*amn)**2 = ", (2.*amn)**2
-c            print *,"NFiflagStep(RW_step_i)",NFiflagStep(RW_step_i)
-c            print *,"reweighted RW_step_i = ", RW_step_i
-c            print *,"reweighted pcascprob1 = ", pcascprob
-c            print *,"reweighted psurvnuc = ", psurvnuc
-c            print *,"reweighted pelnuc = ", pelnuc
-c            print *,"reweighted pspnuc = ", pspnuc
-c            print *,"reweighted pdpnuc = ", pdpnuc
+
             goto 200
          endif
       end if
@@ -226,7 +205,7 @@ c     set charge from chint from nrprton.F
          
 c     if the kinetic energy is less than 360
 c     then we will not produce pions (why 360?)
-c     write (*,*) "ekin " , ekin
+
          if( ekin  .lt. 360. .or.
      $        ecms2 .lt. (amn+amn+ampi)**2 ) then
             psp = 0.
@@ -274,10 +253,7 @@ c     calculate pel, psp, pdp
             end if
          end if
       end if
-c     write (*,*) "xnucfact = " , xnucfact
-c      write (*,*) "xnucelafact = " , xnucelafact
-c      write (*,*) "xnucspifact = " , xnucspifact
-c      write (*,*) "xnucdpifact = " , xnucdpifact
+
 c     apply nucleon fsi dials
 
       if(NReweightFlag.eq.1) then
@@ -286,33 +262,13 @@ c     apply nucleon fsi dials
          psp=nfipsp(RW_step_i)
          pdp=nfipdp(RW_step_i)
 
-C      print *,"Reweight: supplying pel,psp,pdp"                                                                                                                                         
-C      print *,"RW_step_i = ", RW_step_i
-C      print *,"prot? ",  prot
-C      print *,"pel regen= ",  pel
-C      print *,"psp regen = ", psp                                                                                                                                                          
-C      print *,"pdp regen = ", pdp 
-C      print *," "
+
       endif
 
-c      print *,"pel before = ", pel
-c      print *,"erem = ", erem
-c      print *,"ka = ", ka
-c      print *,"ichint = ", ichint
-c      print *,"ekin = ", ekin
-c      print *,"psp before = ", psp
-c      print *,"pdp before= ", pdp
-c      print *,"fac before= ", fac
+
 
       if(NReweightFlag.eq.0) then
 
-C      print *,"Regeneration: storing pel,psp,pdp"                                                                                                                                          
-C      print *,"nfnstep = ", nfnstep
-C      print *,"prot? ",  prot
-c      print *,"pel regen= ",  pel
-C      print *,"psp regen = ", psp                                                                                                                                                      
-C      print *,"pdp regen = ", pdp                                                                                                                                                          C 
-C      print *," "
          nfipel(nfnstep) = pel
          nfipsp(nfnstep)=psp
          nfipdp(nfnstep)=pdp
@@ -320,15 +276,6 @@ C      print *," "
 
 
       
-
-C      print *,"are we generating? (0 = yes): ", NReweightFlag                                                                                                                               
-C      print *,"nfnstep = ", nfnstep                                                                                                                                                         
-C      print *,"RW_step_i = ", RW_step_i
-C      print *,"ichint? ",  ichint
-C      print *,"pel = ", pel
-C      print *,"psp = ", psp
-C      print *,"pdp = ",pdp
-C      print *,"pcascprob = ",pcascprob
 
 
 C  Toby Nonnenmacher change april 2018
@@ -339,43 +286,16 @@ C      psp=psp*fac*xnucfact
 C      pdp=pdp*fac*xnucfact
       pdp=pdp*fac*(xnucfact * xnucdpifact) ! xnucfact changed to xnucfact * xnucdpifact with default xnucfact of 1 
 
-c      print *,"pel = ", pel
-c      print *,"psp = ", psp
-c      print *,"pdp = ", pdp
-c      print *,"fac = ", fac
-C      print *,"xnucfact = ", xnucfact
-C     print *,"xnucelafact = ", xnucelafact
-C     print *,"xnucspifact = ", xnucspifact
-C     print *,"xnucdpifact = ", xnucdpifact
-
+ 
 
       ptot=pel+psp+pdp
 c     calculate ptot
-c      write (*,*) "ptot = " , ptot
+
 
 
 c     if ptot is 0, have a break down, QUIT, and return idec 1 
       if(ptot.eq.0) then
-         if(NReweightFlag.eq.0) then
-c            print *,"ptot = 0 error"
-c            print *,"NFiflagStep(NFNStep)",NFiflagStep(NFNStep)
-c            print *,"generated step = ", NFNStep
-c            print *,"generated pcascprob2 = ", pcascprob
-c            print *,"generated psurvnuc = ", psurvnuc
-c            print *,"generated pelnuc = ", pelnuc
-c            print *,"generated pspnuc = ", pspnuc
-c            print *,"generated pdpnuc = ", pdpnuc
-         endif
-         if(NReweightFlag.eq.1) then
-c            print *,"ptot = 0"
-c             print *,"NFiflagStep(RW_step_i)",NFiflagStep(RW_step_i)
-c           print *,"reweighted RW_step_i = ", RW_step_i
-c            print *,"reweighted pcascprob2 = ", pcascprob
-c            print *,"reweighted psurvnuc = ", psurvnuc
-c            print *,"reweighted pelnuc = ", pelnuc
-c            print *,"reweighted pspnuc = ", pspnuc
-c            print *,"reweighted pdpnuc = ", pdpnuc
-         endif
+
          goto 200
       endif
 c     set random xr between 0 and 1 and y between 0 and ptot
@@ -390,25 +310,17 @@ c     ptot multiplied by rhon (Which is set in nrfermi.F)
       ENDIF
 
       ptot=ptot*rhon
-c      print *,"rhon = ", rhon
+
 
 c     set mean free path type distance according to how cascades are calculated
       dist=-log(xr)/ptot
 c     count number of times we go through here
-      pnuccounter = pnuccounter +1;
+c      pnuccounter = pnuccounter +1;
 c     caluclate probability of survival
-c      print *,"ptot = ", ptot
-c      print *,"step = ", step
+
 
       psurvnuc = exp(-ptot*step);
-c      print *,"psurvnuc = ", psurvnuc
 
-c      print *,"psurvnuc = ", psurvnuc
-c      print *,"pel = ", pel
-c      print *,"psp = ", psp
-c      print *,"pdp = ", pdp
-c      print *,"ekin = ", ekin
-c      print *,"erem = ", erem
       ptotnuc = ptotnuc*ptot
 c     ptotnuc multiplied by ptot at every single step
 
@@ -421,52 +333,23 @@ c     ptotalprob is now normalised and should equal 1
       ptotalprob = psurvnuc + pelnuc + pspnuc + pdpnuc
 C     Still need to do everything above this point for reweighting, which will depend on table
 C     dial values, and energies: (maybe kinetic, total, centre of mass squared?)
-C       print *,"step = ", NFNStep
-C     print *,"pcascprob = ", pcascprob
-C     print *,"psurvnuc = ", psurvnuc
-C     print *,"pelnuc = ", pelnuc
-C     print *,"pspnuc = ", pspnuc
-C      print *,"pdpnuc = ", pdpnuc
+
 
       if(NReweightFlag.eq.0) then
 
 
-c     if suriva;
+c     if surival;
       If(step.lt.dist) then
 c     increment pcascprob by psurvnuc for this step
-c         print *,"step less than dist. step = ", step
-c         print *,"dist = ", dist
+
 
          pcascprob = pcascprob * psurvnuc
 c     count a survival
-         survivalcounter = survivalcounter + 1
+c         survivalcounter = survivalcounter + 1
          NFiflagStep(NFNStep) = 4;
-c         print *,"NFiFlagstep recorded at ",NFNstep
 
 
-         if(NReweightFlag.eq.0) then
-c         print *,"NFiflagStep(NFNStep)",NFiflagStep(NFNStep)
-c         print *,"generated nfnstep = ", NFNStep
-c         print *,"generated pcascprob3 = ", pcascprob
-c         print *,"generated psurvnuc = ", psurvnuc
-c         print *,"ptot = ", ptot
-c         print *,"step = ", step
-c         print *,"rhon = ", rhon
-c         print *,"nfnstep = ", NFNstep
-c         print *,"generated pelnuc = ", pelnuc
-c         print *,"generated pspnuc = ", pspnuc
-c         print *,"generated pdpnuc = ", pdpnuc
-      endif
-      if(NReweightFlag.eq.1) then
-c         print *,"NFiflagStep(RW_step_i)",NFiflagStep(RW_step_i)
-c         print *,"reweighted RW_step_i = ", RW_step_i
-c         print *,"reweighted pcascprob3 = ", pcascprob
-c         print *,"reweighted psurvnuc = ", psurvnuc
-c         print *,"reweighted pelnuc = ", pelnuc
-c         print *,"reweighted pspnuc = ", pspnuc
-c         print *,"reweighted pdpnuc = ", pdpnuc
-      endif
-         
+
 
 
       end if
@@ -474,25 +357,22 @@ c     then QUIT
       if(step.lt.dist) goto 200 ! no interaction
 
 c     if non-survival interaction
-c      print *,"yr = ", yr
-c      print *,"pel = ", pel 
-c      print *,"pel+psp = ", pel+psp
-c      print *,"pel+psp+pdp = ", pel+psp+pdp 
+
 c     determine the event, using the random number
       if(yr.le.pel) then
          iqq=1                  !elastic
          NFiflagStep(NFNStep) = 1
-c         print *,"NFiFlagstep recorded at ",NFNstep
+
       else if(yr.le.pel+psp) then
          iqq=2                  !single production
          NFiflagStep(NFNStep) = 2
-c         print *,"NFiFlagstep recorded at ",NFNstep
+
       else
          iqq=3                 !double production
          NFiflagStep(NFNStep) = 3
-c         print *,"NFiFlagstep recorded at ",NFNstep
+
       end if
-c      print *,"iqq = ", iqq 
+
       
       endif
       
@@ -502,36 +382,13 @@ C     Depending which interaction occurs, pcascprob gets multiplied by the now n
 c     we also keep a record of which event occurred
 
       if(NReweightFlag.eq.1) then
-c         print *,"RW_step_i = ",RW_step_i
-c         print *,"type 1,2,3,4 Flag(RW_step_i)",NFiflagStep(RW_step_i)
+
 
          if(NFiflagStep(RW_step_i).eq.4) then
             iqq =4              !survival
             pcascprob = pcascprob * psurvnuc
-            survivalcounter = survivalcounter + 1
-                 if(NReweightFlag.eq.0) then
-c                    print *,"NFiflagStep(NFNStep)",NFiflagStep(NFNStep)
-c                    print *,"generated step = ", NFNStep
-c                    print *,"generated pcascprob4 = ", pcascprob
-c                    print *,"generated psurvnuc = ", psurvnuc
-c                    print *,"generated pelnuc = ", pelnuc
-c                    print *,"generated pspnuc = ", pspnuc
-c                    print *,"generated pdpnuc = ", pdpnuc
-                 endif
-                 if(NReweightFlag.eq.1) then
-c                    print *,"NFiflagStep(RW_step_i) survival"
-c                    print *,"NFiflagStep(RW_step_i)",NFiflagStep(RW_step_i)
-c                    print *,"reweighted step = ", RW_step_i
-c                    print *,"reweighted pcascprob4 = ", pcascprob
-c                    print *,"reweighted psurvnuc = ", psurvnuc
-c                    print *,"ptot = ", ptot
-c                    print *,"step = ", step
-c                    print *,"rhon = ", rhon
-c                    print *,"RW_step_i = ", RW_step_i
-c                    print *,"reweighted pelnuc = ", pelnuc
-c                    print *,"reweighted pspnuc = ", pspnuc
-c                    print *,"reweighted pdpnuc = ", pdpnuc
-                 endif
+c            survivalcounter = survivalcounter + 1
+
 
             goto 200
          elseif(NFiflagStep(RW_step_i).eq.1) then
@@ -541,56 +398,45 @@ c                    print *,"reweighted pdpnuc = ", pdpnuc
          elseif(NFiflagStep(RW_step_i).eq.3) then
             iqq =3              !double pi 
          else
-c            print *,"Error, NFIFlag = ", NFiflagStep(RW_step_i)
-c            print *," At step number ", RW_step_i
+
          endif
 c     if suriva;                                                                                                                                                                            
 
 c     if non-survival interaction                                                                                                                                                            
-C      print *,"yr = ", yr
-C      print *,"pel = ", pel
-C      print *,"pel+psp = ", pel+psp
-C      print *,"pel+psp+pdp = ", pel+psp+pdp
 c     determine the event, using the random number                                                                                                                                           
  
 
-C      print *,"iqq = ", iqq
-
-
-
 
       endif
-c      print *,"iqq = ", iqq
+
 
       If(iqq==1) then 
          pcascprob = pcascprob * pelnuc;
-         elasticcounter = elasticcounter +1;
+c         elasticcounter = elasticcounter +1;
       else If(iqq==2) then
          pcascprob = pcascprob * pspnuc;
-         singlepicounter = singlepicounter +1;
+c         singlepicounter = singlepicounter +1;
       else If(iqq==3) then
          pcascprob = pcascprob * pdpnuc;
-         twopicounter = twopicounter +1;
+c         twopicounter = twopicounter +1;
       else
          unknowntype = unknowntype +1;
-c      print *,"unknowntype iqq = ", iqq 
-c     (bit awkward)
+
       endif
 
 
-C      print *,"Step Number = ", NFNStep         
-C      print *," interaction type = ", iqq  
+
 c     make kinematics and final state
 
 C     interaction type, total energy, charge, momentum, charge
-c      print *,"GOT THIS FAR TODAY pre nrprd"
+
       if(NReweightFlag.eq.0) then
 
       
 
       call nrprd(iqq,eineq,ichint,piso,chiso) 
       endif
-c      print *,"GOT THIS FAR TODAY post nrprd"
+
 
 c     only piso and chiso get set
 
@@ -606,27 +452,7 @@ c     if these are smaller than pfermi, set idec to 11,12,13 amd QUIT
 
       if(p1.lt.pfermi.or.p2.lt.pfermi) then
         idec=10+iqq             ! return code for interaction that would have taken place, needed for reweighting systematics
-c        print *,"p1 lt pfermi or p2 lt pfermi"
-        if(NReweightFlag.eq.0) then
-c           print *,"NFiflagStep(NFNStep)",NFiflagStep(NFNStep)
-c           print *,"generated nfnstep = ", NFNStep
-c           print *,"generated pcascprob5 = ", pcascprob
-c           print *,"generated psurvnuc = ", psurvnuc
-c           print *,"generated pelnuc = ", pelnuc
-c           print *,"generated pspnuc = ", pspnuc
-c           print *,"generated pdpnuc = ", pdpnuc
-        endif
-        if(NReweightFlag.eq.1) then
-c           print *,"NFiflagStep(RW_step_i)",NFiflagStep(RW_step_i)
-c           print *,"reweighted RW_step_i = ", RW_step_i
-c           print *,"reweighted pcascprob5 = ", pcascprob
-c           print *,"reweighted psurvnuc = ", psurvnuc
-c           print *,"reweighted pelnuc = ", pelnuc
-c           print *,"reweighted pspnuc = ", pspnuc
-c           print *,"reweighted pdpnuc = ", pdpnuc
-           
 
-        endif
 
         goto 200
       end if
@@ -637,34 +463,9 @@ c     otherwise set idec to -1,-2,-3 and increment nel for the interaction type 
       nel(iqq)=nel(iqq)+1
 c     idec only set to 1 if survival, I think
 
-      if(NReweightFlag.eq.0) then
-c         print *,"NFiflagStep(NFNStep)",NFiflagStep(NFNStep)
-c         print *,"generated nfnstep = ", NFNStep
-c         print *,"generated pcascprob6 = ", pcascprob
-c         print *,"generated psurvnuc = ", psurvnuc
-c         print *,"generated pelnuc = ", pelnuc
-c         print *,"generated pspnuc = ", pspnuc
-c         print *,"generated pdpnuc = ", pdpnuc
-      endif
-      if(NReweightFlag.eq.1) then
-c         print *,"NFiflagStep(RW_step_i)",NFiflagStep(RW_step_i)
-c         print *,"reweighted RW_step_i = ", RW_step_i
-c         print *,"reweighted pcascprob6 = ", pcascprob
-c         print *,"reweighted psurvnuc = ", psurvnuc
-c         print *,"reweighted pelnuc = ", pelnuc
-c         print *,"reweighted pspnuc = ", pspnuc
-c         print *,"reweighted pdpnuc = ", pdpnuc
 
-
-      endif
  200  return
-       if(NReweightFlag.eq.0) then
-          if(NFiFlagStep(NFNStep).eq.0) then
-             
-C             print *,"Uh oh, the flag is 0 NFiflagStep(NFNStep)",NFiflagStep(NFNStep)
-             
-          endif
-       endif
+
        end
       
       
