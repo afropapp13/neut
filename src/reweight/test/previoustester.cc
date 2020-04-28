@@ -145,21 +145,21 @@ void FillNeutCommons(NeutVect* nvect) {
 
     for(int k =0; k<nucleonfsihist_.nfnstep; k++)
       {
-	nucleonfsihist_.nfecms2[k]= nvect->NucFsiStepInfo(k)->fECMS2;
+		nucleonfsihist_.nfecms2[k]= nvect->NucFsiStepInfo(k)->fECMS2;
 
 
 	//	std::cout <<"fecms2 = " << nvect->NucFsiStepInfo(k)->fECMS2 << std::endl;
 	//	nucleonfsihist_.nfiflag[j] = nvect->NucFsiVertInfo(j)->fVertFlag;
 
 
-	nucleonfsihist_.nfxstep[k] = (float)nvect->NucFsiStepInfo(k)->fPosStep.X();
-	nucleonfsihist_.nfystep[k] = (float)nvect->NucFsiStepInfo(k)->fPosStep.Y();
-	nucleonfsihist_.nfzstep[k] = (float)nvect->NucFsiStepInfo(k)->fPosStep.Z(); //divide by 1000?                                                               
-        nucleonfsihist_.nfpxstep[k] = (float)nvect->NucFsiStepInfo(k)->fMomStep.Px();
-        nucleonfsihist_.nfpystep[k] = (float)nvect->NucFsiStepInfo(k)->fMomStep.Py();
-        nucleonfsihist_.nfpzstep[k] = (float)nvect->NucFsiStepInfo(k)->fMomStep.Pz(); //divide by 1000?   
-	nucleonfsihist_.nfestep[k] = (float)nvect->NucFsiStepInfo(k)->fMomStep.E();
-	nucleonfsihist_.nfiflagstep[k] = (float)nvect->NucFsiStepInfo(k)->fVertFlagStep;
+		nucleonfsihist_.nfxstep[k] = (float)nvect->NucFsiStepInfo(k)->fPosStep.X();
+		nucleonfsihist_.nfystep[k] = (float)nvect->NucFsiStepInfo(k)->fPosStep.Y();
+		nucleonfsihist_.nfzstep[k] = (float)nvect->NucFsiStepInfo(k)->fPosStep.Z(); //divide by 1000?                                                               
+	//        nucleonfsihist_.nfpxstep[k] = (float)nvect->NucFsiStepInfo(k)->fMomStep.Px();
+	//        nucleonfsihist_.nfpystep[k] = (float)nvect->NucFsiStepInfo(k)->fMomStep.Py();
+	//        nucleonfsihist_.nfpzstep[k] = (float)nvect->NucFsiStepInfo(k)->fMomStep.Pz(); //divide by 1000?   
+	//	nucleonfsihist_.nfestep[k] = (float)nvect->NucFsiStepInfo(k)->fMomStep.E();
+	//	nucleonfsihist_.nfiflagstep[k] = (float)nvect->NucFsiStepInfo(k)->fVertFlagStep;
 	nucleonfsihist_.nfirhon[k]= (float)nvect->NucFsiStepInfo(k)->fVertFsiRhon;
 	nucleonfsihist_.nfipel[k]= (float)nvect->NucFsiStepInfo(k)->fStepPel;
 	nucleonfsihist_.nfipsp[k]= (float)nvect->NucFsiStepInfo(k)->fStepPsp;
@@ -167,15 +167,15 @@ void FillNeutCommons(NeutVect* nvect) {
 
 	
 
-	std::cout << "step number = " << k << std::endl;
+	//	std::cout << "step number = " << k << std::endl;
 	
-	std::cout <<  "nfipel = " << (float)nvect->NucFsiStepInfo(k)->fStepPel << std::endl;
-	std::cout <<  "nfipsp = " << (float)nvect->NucFsiStepInfo(k)->fStepPsp << std::endl;
-	std::cout <<  "nfipdp = " << (float)nvect->NucFsiStepInfo(k)->fStepPdp << std::endl;
+	//std::cout <<  "nfipel = " << (float)nvect->NucFsiStepInfo(k)->fStepPel << std::endl;
+	//	std::cout <<  "nfipsp = " << (float)nvect->NucFsiStepInfo(k)->fStepPsp << std::endl;
+	//std::cout <<  "nfipdp = " << (float)nvect->NucFsiStepInfo(k)->fStepPdp << std::endl;
 
 	
-	std::cout << "nfxstep = " << (float)nvect->NucFsiStepInfo(k)->fPosStep.X() << " nfiflagstep = " << (float)nvect->NucFsiStepInfo(k)->fVertFlagStep << std::endl;
-	std::cout <<  "nfiRHON = " << (float)nvect->NucFsiStepInfo(k)->fVertFsiRhon << std::endl;
+	//std::cout << "nfxstep = " << (float)nvect->NucFsiStepInfo(k)->fPosStep.X() << " nfiflagstep = " << (float)nvect->NucFsiStepInfo(k)->fVertFlagStep << std::endl;
+	//std::cout <<  "nfiRHON = " << (float)nvect->NucFsiStepInfo(k)->fVertFsiRhon << std::endl;
 	/*
 	nucleonfsihist_.nfpx[j] = (float)nvect->NucFsiVertInfo(j)->fMom.X();
 	nucleonfsihist_.nfpy[j] = (float)nvect->NucFsiVertInfo(j)->fMom.Y();
