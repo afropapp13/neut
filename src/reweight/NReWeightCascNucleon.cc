@@ -354,7 +354,7 @@ bool tweaked = ( (TMath::Abs(fTotalProbTwkDial) > controls::kASmallNum) ||
 		 (TMath::Abs(fElasticProbTwkDial) > controls::kASmallNum) ||
 		 (TMath::Abs(fSinglePiProbTwkDial) > controls::kASmallNum) ||
 		 (TMath::Abs(fDoublePiProbTwkDial) > controls::kASmallNum) );
- std::cout << "nfnstep calcweight = " << nucleonfsihist_.nfnstep << std::endl;
+// std::cout << "nfnstep calcweight = " << nucleonfsihist_.nfnstep << std::endl;
 
 
   //cout << fInelLowCurr << " " <<  fInelLowDef    << endl;
@@ -403,7 +403,7 @@ bool tweaked = ( (TMath::Abs(fTotalProbTwkDial) > controls::kASmallNum) ||
   // Currently in ND280 MCP4 only (set in ${T2KREWEIGHT}/src/T2KNeutUtils.cxx)
 
 
-  std::cout << "fsihist_.fsiprob = " << fsihist_.fsiprob << std::endl;
+    std::cout << "fsihist_.fsiprob = " << fsihist_.fsiprob << std::endl;
   if (fsihist_.fsiprob <= 0) {  
 
     //    fortFns->nrprton();
@@ -423,14 +423,14 @@ bool tweaked = ( (TMath::Abs(fTotalProbTwkDial) > controls::kASmallNum) ||
   // FSIPROB was not pre-calculated properly during event generation
   else if (fsihist_.fsiprob == 1) 
     {
-      std::cout << "fsihist_.fsiprob = 1" << std::endl;
+      //    std::cout << "fsihist_.fsiprob = 1" << std::endl;
     return 1;
     }
   // Good FSIPROB pre-calculation
   else
-    std::cout << "nrint_.pcascprob = " << nrint_.pcascprob << std::endl;
-  std::cout << "nrint_.pnuccounter = " << nrint_.pnuccounter << std::endl;
-  std::cout << "nrint_.survivalcounter = " << nrint_.survivalcounter << std::endl;
+    //std::cout << "nrint_.pcascprob = " << nrint_.pcascprob << std::endl;
+    //std::cout << "nrint_.pnuccounter = " << nrint_.pnuccounter << std::endl;
+    //std::cout << "nrint_.survivalcounter = " << nrint_.survivalcounter << std::endl;
     old_xsec = nrint_.pcascprob;
 
   if (old_xsec<=0) {
