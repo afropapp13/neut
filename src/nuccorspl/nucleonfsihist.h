@@ -58,11 +58,11 @@
 !          FSI uncertainties, only the probabilities of the scattering processes have to be
 !          calculated, so it is not important to know which tracks belong to each other.
 !
-!
+!       NFeStep is not currently used, but removing stops nfirhon from working; it is very unclear to me why this is the case
 
         integer*4   NFnvert, NFiflag,NFnstep,NFfirststep,NReweightFlag,NFnucresflg,NFiflagStep,NFStepNumber,RW_step_i
         real*4      NFx,NFy,NFz,NFpx,NFpy,NFpz,NFe,NFecms2,NFiPel,NFiPsp,NFiPdp,
-     &   NFptot,NFxStep,NFyStep,NFzStep,NFpxStep,NFpyStep,NFpzStep,NFeStep,NFfirststepStep,NFiRhon
+     &   NFptot,NFfirststepStep,NFeStep,NFiRhon
 	common /nucleonfsihist/ NFnvert, NFiflag(maxnucleonvert),NReweightFlag,
      &   NFnucresflg,NFiflagStep(maxnucleonstep),NFStepNumber(maxnucleonstep),RW_step_i,
      &   NFx(maxnucleonvert),NFy(maxnucleonvert),NFz(maxnucleonvert),
@@ -70,7 +70,5 @@
      &   NFe(maxnucleonvert),NFfirststep(maxnucleonvert),
      &   NFnstep, NFecms2(maxnucleonstep),NFiPel(maxnucleonstep),NFiPsp(maxnucleonstep),
      &   NFiPdp(maxnucleonstep),NFptot(maxnucleonstep),
-     &   NFxStep(maxnucleonstep),NFyStep(maxnucleonstep),NFzStep(maxnucleonstep),
-     &   NFpxStep(maxnucleonstep),NFpyStep(maxnucleonstep),NFpzStep(maxnucleonstep),
-     &   NFeStep(maxnucleonstep),NFfirststepStep(maxnucleonstep),NFiRhon(maxnucleonstep)
+     &   NFfirststepStep(maxnucleonstep),NFeStep(maxnucleonstep),NFiRhon(maxnucleonstep)
 

@@ -2,11 +2,11 @@
 
 NeutNucFsiStep::NeutNucFsiStep(){
 
-  fECMS2     = 0.;     
+    fECMS2     = 0.;     
   fProb      = -1.;  
 
-  fPosStep.SetXYZT(0.,0.,0.,0.);
-  fMomStep.SetPxPyPzE(0.,0.,0.,0.);
+  //fPosStep.SetXYZT(0.,0.,0.,0.);
+  //  fMomStep.SetPxPyPzE(0.,0.,0.,0.);
   //fVertFirstStep = -1;
   //fVertFlag      = -1;
   fVertFlagStep      = -999;

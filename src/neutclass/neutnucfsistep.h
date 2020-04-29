@@ -25,8 +25,8 @@ class NeutNucFsiStep : public TObject {
 
   //Int_t          fVertFlagStep;   // Vertex flag                                                                                                                 
   //Int_t          fVertFirstStepStep;  // ID of the First step                                                                                                      
-  TLorentzVector fPosStep;            // Vertex position                                                                                                            
-  TLorentzVector fMomStep;            // 4 momentum
+  //TLorentzVector fPosStep;            // Vertex position                                                                                                            
+   //  TLorentzVector fMomStep;            // 4 momentum
   
   
   ClassDef(NeutNucFsiStep, 1)
