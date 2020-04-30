@@ -154,15 +154,8 @@ c     ptot - total probability, ABC seemingly unused
 
       if(NReweightFlag.eq.1) then
 
-
-c     NFnstep = 0
          RW_step_i =0
-
-
          nucresflg=1
-         
-
-c     NFnstep = 0
          goto 200
       endif
 
@@ -294,6 +287,9 @@ c     loop over input tracks
 
  300  continue                  ! loop thru the input tracks
 
+      
+      
+      RW_step_i =0
 c     loop counter itdone
       itdone=itdone+1
 c     if the counter goes beyond ntracks, QUIT
@@ -305,7 +301,9 @@ c     if this is the first track, reset nel and ihap interaction marker
          nel(2)=0
          nel(3)=0
       end if
-
+      if(NReweightFlag.eq.1) then
+         goto 200
+      endif     
 c     For Reweight: amass/chtrack/stpt should be set in nrstack.h common block (check this)
 C     For Reweight: pptrack set from pi (input) above
 C     not sure any of that is necessary
@@ -374,7 +372,7 @@ c     if we're over the limit of maxnucleonvert/step, kick off and throw a messa
 !     
 !     track nuclon through nucleus
 !     
-      RW_step_i =0
+    
 
 c     Event loop time. Loop over steps through the nucleus
  200  continue
@@ -388,13 +386,13 @@ c     is this crucial? Do we need energy, position, momentum?
             
 
 
-            xtr(1) = NFxStep(RW_step_i)
-            xtr(2) = NFyStep(RW_step_i)
-            xtr(3) = NFzStep(RW_step_i)
+c            xtr(1) = NFxStep(RW_step_i)
+c            xtr(2) = NFyStep(RW_step_i)
+c            xtr(3) = NFzStep(RW_step_i)
 c            pin(1) = NFpxStep(RW_step_i)
 c            pin(2) = NFpyStep(RW_step_i)
 c            pin(3) = NFpzStep(RW_step_i)
-c            ein = NFeStep(RW_step_i)
+            ein = NFeStep(RW_step_i)
 c     possibly needs a +/- distinction for protons and pions                                                                                                         
             ecms2 = NFecms2(RW_step_i)
 
@@ -408,21 +406,22 @@ c     possibly needs a +/- distinction for protons and pions
 
 
 
-
-
-      r=0
-      do j=1,3
-         xtr(j)=xtr(j)+upin(j)*step
-         r=r+xtr(j)**2
-
-      end do
-      r=sqrt(r)
-
-
-
       if(NReweightFlag.eq.0) then
 
 
+         r=0
+         do j=1,3
+            xtr(j)=xtr(j)+upin(j)*step
+            r=r+xtr(j)**2
+            
+         end do
+         r=sqrt(r)
+         
+         
+         
+         
+
+         
 c     if surface mode
          if(imode.eq.1)then
 c     and if in nucleus flag=0 and r bigger than rmax
@@ -464,14 +463,16 @@ c     pretty sure nel(1/2/3)= pel/psp/pdp. maybe ihap is survival?
             end if
             goto 99             ! ------>  put on output stack
          end if
+      
+
+
       end if
+c      if(NReweightFlag.eq.0) then
 
-
-
-      call nrfermi(r)           !set target nucleon
+         call nrfermi(r)        !set target nucleon
 C     if(ecms2.lt.(2*amn)**2) goto 200  ! kinematically impossible / test is done inside nrnuc!
-
-
+      
+c      endif
       if(NReweightFlag.eq.1) then
 
          ides = NFiflagStep(RW_step_i)
@@ -483,16 +484,24 @@ C     if(ecms2.lt.(2*amn)**2) goto 200  ! kinematically impossible / test is don
          
       endif
 
+
+
+
       call nrnuc(ides)          ! make interaction
 
+
+      if(NReweightFlag.eq.1) then
+
+         goto 200
+      endif
 
       
       
       if(NReweightFlag.eq.0) then
          
-         NFxStep(NFnstep) = xtr(1)
-         NFyStep(NFnstep) = xtr(2)
-         NFzStep(NFnstep) = xtr(3)
+c         NFxStep(NFnstep) = xtr(1)
+c         NFyStep(NFnstep) = xtr(2)
+c         NFzStep(NFnstep) = xtr(3)
 c         NFpxStep(NFnstep) = pin(1)
 c         NFpyStep(NFnstep) = pin(2)
 c         NFpzStep(NFnstep) = pin(3)
@@ -508,10 +517,7 @@ c     I think this is just something Martin did for debugging
                
       endif
 
-      if(NReweightFlag.eq.1) then
-         
-         goto 200
-      endif
+
       if(NReweightFlag.eq.0) then
          if(ides.ge.10) then    ! Paulu blocked interaction: save to fsi history stack
             if(NFnvert.lt.maxnucleonvert.and.NFnstep.lt.maxnucleonstep) then

@@ -456,9 +456,12 @@ c     if these are smaller than pfermi, set idec to 11,12,13 amd QUIT
 
         goto 200
       end if
+      if(NReweightFlag.eq.1) then
+         goto 200
+      endif
 c     otherwise set idec to -1,-2,-3 and increment nel for the interaction type we did      
       idec=-iqq                 !tell what took place
-      
+c      print *,"iqq = ",iqq      
       ihap=1                    !make some bookkeep
       nel(iqq)=nel(iqq)+1
 c     idec only set to 1 if survival, I think
