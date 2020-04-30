@@ -141,25 +141,25 @@ void FillNeutCommons(NeutVect* nvect) {
   nucleonfsihist_.nfnstep = nvect->NnucFsiStep();
     nucleonfsihist_.nfnvert = nvect->NnucFsiVert();
     //    std::cout << "nfnstep = " << nucleonfsihist_.nfnstep << " nfnvert = " << nucleonfsihist_.nfnvert << std::endl;
-    std::cout << "nfnstep prevtest = " << nucleonfsihist_.nfnstep << std::endl;
+    //    std::cout << "nfnstep prevtest = " << nucleonfsihist_.nfnstep << std::endl;
 
     for(int k =0; k<nucleonfsihist_.nfnstep; k++)
       {
-		nucleonfsihist_.nfecms2[k]= nvect->NucFsiStepInfo(k)->fECMS2;
+	//	nucleonfsihist_.nfecms2[k]= nvect->NucFsiStepInfo(k)->fECMS2;
 
 
-		std::cout <<"fecms2 = " << nvect->NucFsiStepInfo(k)->fECMS2 << std::endl;
+	//		std::cout <<"fecms2 = " << nvect->NucFsiStepInfo(k)->fECMS2 << std::endl;
 		//		nucleonfsihist_.nfiflag[j] = nvect->NucFsiVertInfo(j)->fVertFlag;
 
 
-		nucleonfsihist_.nfxstep[k] = (float)nvect->NucFsiStepInfo(k)->fPosStep.X();
-		nucleonfsihist_.nfystep[k] = (float)nvect->NucFsiStepInfo(k)->fPosStep.Y();
-		nucleonfsihist_.nfzstep[k] = (float)nvect->NucFsiStepInfo(k)->fPosStep.Z(); //divide by 1000?                                                               
-	        nucleonfsihist_.nfpxstep[k] = (float)nvect->NucFsiStepInfo(k)->fMomStep.Px();
-	        nucleonfsihist_.nfpystep[k] = (float)nvect->NucFsiStepInfo(k)->fMomStep.Py();
-		nucleonfsihist_.nfpzstep[k] = (float)nvect->NucFsiStepInfo(k)->fMomStep.Pz(); //divide by 1000?   
-		nucleonfsihist_.nfestep[k] = (float)nvect->NucFsiStepInfo(k)->fMomStep.E();
-		nucleonfsihist_.nfiflagstep[k] = (float)nvect->NucFsiStepInfo(k)->fVertFlagStep;
+	//		nucleonfsihist_.nfxstep[k] = (float)nvect->NucFsiStepInfo(k)->fPosStep.X();
+	//	nucleonfsihist_.nfystep[k] = (float)nvect->NucFsiStepInfo(k)->fPosStep.Y();
+	//	nucleonfsihist_.nfzstep[k] = (float)nvect->NucFsiStepInfo(k)->fPosStep.Z(); //divide by 1000?                                                               
+		//	        nucleonfsihist_.nfpxstep[k] = (float)nvect->NucFsiStepInfo(k)->fMomStep.Px();
+		//	        nucleonfsihist_.nfpystep[k] = (float)nvect->NucFsiStepInfo(k)->fMomStep.Py();
+		//		nucleonfsihist_.nfpzstep[k] = (float)nvect->NucFsiStepInfo(k)->fMomStep.Pz(); //divide by 1000?   
+
+      		nucleonfsihist_.nfiflagstep[k] = (float)nvect->NucFsiStepInfo(k)->fVertFlagStep;
 	nucleonfsihist_.nfirhon[k]= (float)nvect->NucFsiStepInfo(k)->fVertFsiRhon;
 	nucleonfsihist_.nfipel[k]= (float)nvect->NucFsiStepInfo(k)->fStepPel;
 	nucleonfsihist_.nfipsp[k]= (float)nvect->NucFsiStepInfo(k)->fStepPsp;
@@ -202,7 +202,7 @@ void FillNeutCommons(NeutVect* nvect) {
       nucleonfsihist_.nffirststep[j] = (float)nvect->NucFsiVertInfo(j)->fVertFirstStep;
       //      nucleonfsihist_.nfecms2[j] = (float)nvect->NucFsiStepInfo(j)->fECMS2;
 
-      //      nucleonfsihist_.nfreweightnucleonflag = 1;
+      //nucleonfsihist_.nfreweightnucleonflag = 1;
       //      std::cout << "fecms2 =" << nucleonfsihist_.nfecms2[j] << std::endl;
 }
 
@@ -221,8 +221,8 @@ void FillNeutCommons(NeutVect* nvect) {
   // neutroot fills a dummy object for events with no FSI to prevent memory leak                                                                                     
   // when                                                                                                                                                            
   // reading the TTree, so check for it here                                                                                                                         
-  std::cout<<"nvect->NFsiVert = "<<nvect->NfsiVert() << std::endl;
-  std::cout<<"fsiprob = "<<  nvect->Fsiprob << std::endl;
+  //  std::cout<<"nvect->NFsiVert = "<<nvect->NfsiVert() << std::endl;
+  //std::cout<<"fsiprob = "<<  nvect->Fsiprob << std::endl;
   //I believe only one vertex is required for nucleon FSI
   //Pion FSI requires 2
   if ((int)nvect->NfsiVert() ==      0) 
@@ -675,7 +675,7 @@ int main(int argc, char *argv[]) {
   //  for (int j = 0; j < nEvents; ++j) {
 
   for (int j = 0; j < nEvents; ++j) {
-    std::cout << "Event, j, in previoustester = " << j << std::endl;
+    //    std::cout << "Event, j, in previoustester = " << j << std::endl;
           
 
 
@@ -716,7 +716,7 @@ int main(int argc, char *argv[]) {
     nbad = 0;
 
     if (j % PrintWidth == 0) {
-      std::cout << "On event " << j << "/" << nEvents << " (" << int(double(j)/double(nEvents)*100.0) << "%)" << std::endl;
+            std::cout << "On event " << j << "/" << nEvents << " (" << int(double(j)/double(nEvents)*100.0) << "%)" << std::endl;
     }
 
     Tree->GetEntry(j);
@@ -727,13 +727,13 @@ int main(int argc, char *argv[]) {
     //    rw.nrnuc(j);
     weight = rw.CalcWeight();
     
-    std::cout << "weight = " <<    weight << std::endl;
+    //    std::cout << "weight = " <<    weight << std::endl;
     // Count how many bad events
     if (weight == 1.0) nbad++;
     
     
     if (weight !=1.0)
-      {    std::cout << "weight (not equal to 1) = " << weight << std::endl;
+      {    //std::cout << "weight (not equal to 1) = " << weight << std::endl;
       }
     
     // Now get some distributions
@@ -754,7 +754,7 @@ int main(int argc, char *argv[]) {
     Q2 = -1*(Pnu-Pout)*(Pnu-Pout)/1.E6;
     W = sqrt((Pnu+Pinit-Pout)*(Pnu+Pinit-Pout))/1.E3;
     pinit = Pinit.Vect().Mag();
-    std::cout << "Eout = " << Eout << std::endl;
+
     /*    if((nvect->PartInfo(3))->fPID == 2212 || (nvect->PartInfo(3))->fPID == 2112)
 	  {
 	  UnWeighted[mode]->Fill(Eout);
@@ -1416,7 +1416,7 @@ int main(int argc, char *argv[]) {
   }
 
   Weights->Write();
-  std::cout << "Finished looping events" << std::endl;
+
 
   return 0;
 }
