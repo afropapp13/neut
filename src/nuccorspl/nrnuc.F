@@ -155,7 +155,15 @@ c     p-n double pi production
 
 c     not sure what 1 is (I'm guessing it will turn out to be survival)
       idec=1
+      if(NReweightFlag.eq.1) then
 
+         if( NFiflagStep(RW_step_i).eq.5) then
+            
+
+            goto 200
+         endif
+      end if
+      
       
 
 
@@ -175,15 +183,8 @@ c     treat kinematic failure as survival, however also need a multiplier?
       
          
 
-      endif
-      if(NReweightFlag.eq.1) then
-
-         if( NFiflagStep(RW_step_i).eq.5) then
-         
-
-            goto 200
-         endif
-      end if
+C      endif
+      
 c     if not kinematically possible QUIT and return 1
 
 c     calculate total and kinetic energy
@@ -201,7 +202,7 @@ c     set ka for proton or neutron
 c     set charge from chint from nrprton.F
       ichint=chint
 
-      if(NReweightFlag.eq.0) then
+C      if(NReweightFlag.eq.0) then
          
 c     if the kinetic energy is less than 360
 c     then we will not produce pions (why 360?)
