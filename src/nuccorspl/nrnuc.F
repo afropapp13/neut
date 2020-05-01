@@ -13,7 +13,8 @@ C     common/nucnewprd/piso(4,4),chiso(4)
 C     common/nuchad/ihap,nel(3)
 #include "nucleonfsihist.h"
 
-
+c     A single trip to this subroutine corresponds to a single 
+c     step (not vertex) in a nucleon cascade (regen or reweight)
 
       real*4    xspp(158),xspn(158),xdpp(130),xdpn(130)
       real*4    xepp(176),xepn(176)
@@ -150,11 +151,16 @@ c     p-n double pi production
       real*4 A,B,C
       common /martindebug/  ptot,A,B,C
 
+c     REWEIGHTING: ratio of pcascprob in regen and reweight gives the weight
+c     pcascprob is the product of the probability of each step
+c     REWEIGHTING: NFiflagStep gives the interaction type of a step:
+c     5 = non event, 4 = survival, 3 = douple pi, 2 = single pi, 1 = elastic
 
-     
+
 
 c     not sure what 1 is (I'm guessing it will turn out to be survival)
       idec=1
+c     REWEIGHTING: if reweighting, and the interaction type flag is 5, it's a non event
       if(NReweightFlag.eq.1) then
 
          if( NFiflagStep(RW_step_i).eq.5) then
@@ -175,8 +181,7 @@ c     not sure what 1 is (I'm guessing it will turn out to be survival)
             NFiflagStep(NFNStep) = 5;
 C            print *,"NFiFlagstep recorded at ",NFNstep
 
-c     maybe don't need iqq = 4
-c     treat kinematic failure as survival, however also need a multiplier?  
+c     treat kinematic failure as survival
 
             goto 200            ! check if kinematically possible    
          endif
@@ -256,7 +261,7 @@ c     calculate pel, psp, pdp
       end if
 
 c     apply nucleon fsi dials
-
+c     REWEIGHTING: get elastic, single pi, and double pi probs from generated
       if(NReweightFlag.eq.1) then
 
          pel= nfipel(RW_step_i)
@@ -267,7 +272,7 @@ c     apply nucleon fsi dials
       endif
 
 
-
+c     REWEIGHTING: set elastic, single pi, and double pi probs during generation 
       if(NReweightFlag.eq.0) then
 
          nfipel(nfnstep) = pel
@@ -278,7 +283,7 @@ c     apply nucleon fsi dials
 
       
 
-
+c     REWEIGHTING: reweight or generate apply the dial values to the probabilities
 C  Toby Nonnenmacher change april 2018
 C      pel=pel*fac*xnucfact
       pel=pel*fac*(xnucfact * xnucelafact) ! xnucfact changed to xnucfact * xnucelafact with default xnucfact of 1
@@ -290,7 +295,7 @@ C      pdp=pdp*fac*xnucfact
  
 
       ptot=pel+psp+pdp
-c     calculate ptot
+c     calculate ptot for normalisation
 
 
 
@@ -303,13 +308,15 @@ c     set random xr between 0 and 1 and y between 0 and ptot
       xr=ranf()+1.e-6
       yr=ranf()*ptot
 c     ptot multiplied by rhon (Which is set in nrfermi.F)
+c     REWEIGHTING: Store RHON for reweighting purposes
+c     This lets us skip nrfermi.F in the reweight
       if(NReweightFlag.eq.0) then
       nfirhon(nfnstep) = rhon
       ENDIF
       if(NReweightFlag.eq.1) then
       rhon = nfirhon(RW_step_i)
       ENDIF
-
+c     apply rhon to the probability
       ptot=ptot*rhon
 
 
@@ -360,6 +367,7 @@ c     then QUIT
 c     if non-survival interaction
 
 c     determine the event, using the random number
+c     REWEIGHTING: determine the event during generation and record the interaction type
       if(yr.le.pel) then
          iqq=1                  !elastic
          NFiflagStep(NFNStep) = 1
@@ -382,6 +390,7 @@ c     iqq has been set to 1,2,3 for our different interaction types
 C     Depending which interaction occurs, pcascprob gets multiplied by the now normalised factor
 c     we also keep a record of which event occurred
 
+c     REWEIGHTING: depending which event type occurred, change pcascprob by the right factor
       if(NReweightFlag.eq.1) then
 
 
@@ -410,7 +419,8 @@ c     determine the event, using the random number
 
       endif
 
-
+c     REWEIGHTING: as above multiply pcascprob by the right factor depending on 
+c     which interaction type occurred 
       If(iqq==1) then 
          pcascprob = pcascprob * pelnuc;
 c         elasticcounter = elasticcounter +1;
@@ -457,6 +467,7 @@ c     if these are smaller than pfermi, set idec to 11,12,13 amd QUIT
 
         goto 200
       end if
+c     REWEIGHTING: End without checking nel(iqq) because iqq can be 4 now - would give an error
       if(NReweightFlag.eq.1) then
          goto 200
       endif
