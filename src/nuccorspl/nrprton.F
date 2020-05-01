@@ -10,9 +10,12 @@ c     2007.11.05 ; G.Mitsuka - add support other target than Oxygen
 c     other target is treated by scaling to Oxygen
 c     
 c     2014.10.22 ; M.Hierholzer - add nucleon FSI history block to calculate systematics;
-c     also add some documentation of the variables used in this file
+c     also add some documentation of the variables used in this file??
 c     
-c     
+c     2020.05.01; T.Nonnenmacher - added entire nucleon reweighting that actually works; 
+c     added step level information recorded in nucleonfsihist.h to allow for reweight;
+c     added full documentation to file
+c
 c     icont =  0        generate interaction point
 c     1        start from stpt  (set start(i)=0)
 c     imode =  1        start on the surface
@@ -33,6 +36,8 @@ c     imode = (used in nrstp.F) 1 = surface mode, 2 = volume mode, other = Dover
 c     icont = (used in nrstp.F/nrranve.F) 0 = generate interaction point, 1 = start from 0,0,0 
 c     idmc = input paticle ID
 c     no = number of output tracks
+
+c     
 
       implicit none
       real*4 stpi(3),pi(4),anuc
@@ -70,6 +75,7 @@ C     integer inot,itrans,idec,ine1,ine2,iel,iabs,icx
 
 #include "nucleonfsihist.h"
 #include "fsinucleonreweight.h"
+c     REWEIGHTING: crucial reweighting variables are in fsinucleonreweight
 #include "necard.h"
 !     #include "ntest.h"
 !     Used external inputs from common blocks:
@@ -151,19 +157,20 @@ c     ptot - total probability, ABC seemingly unused
       real*4 ptot, A,B,C
       common /martindebug/  ptot,A,B,C
 
-
+C     REWEIGHTING: NReweightFlag is the only thing that differentiates reweighting and regenerating
+C     If it is equal to 1, we are reweighting, and perform only a small fraction of the cascade
       if(NReweightFlag.eq.1) then
 
-         RW_step_i =0
+         RW_step_i =0 !RW_step_i is the counter for steps in reweighting
          nucresflg=1
-         goto 200
+         goto 200 !head straight to main cascade
       endif
 
 
 
 
 
-         nucresflg=1;
+         nucresflg=1;!nucresflg is always set to 1
 
 
 
@@ -173,14 +180,14 @@ c     ptot - total probability, ABC seemingly unused
 
 C     rmax is set by scaling to 16 O (rmax=6. for Oxygen)
 c     nrrmsrad from nrnuclparam
-c     For Reweight: Should be ok?
+
       rmax = 6.*(NRRMSRAD/RMSRADOXY)
 
 
 
 
 
-c     For Reweight: idmc came from inputs, so should be set ok
+
 c     if it's a proton set charge 1
       if(idmc.eq.2212) then     !put the input track on stack
          chtrack(1)=1
@@ -195,13 +202,13 @@ c     otherwise have an existential crisis (and return)
          return
       end if
 
-c     For Reweight: amn const
+
 c     initialise mass to amn (set above in parameter), set r to 0 and pptot to 0, these will change soon
       amass(1) = amn
       pptot=0
       r=0
 c     from 1 to 3
-c     For Reweight: these come from input so should be ok
+
       do j=1,3
 c     set starting point of this track (1) to input starting points
          stpt(j,1)=stpi(j)
@@ -282,14 +289,12 @@ c     itrans iterates with every new track (itdone)
       itrans = 0
 c!!!!!OD!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-c     loop over input tracks
-
-
- 300  continue                  ! loop thru the input tracks
+c     loop over input tracks (restart the cascade for the next particle)
+ 300  continue                 
 
       
       
-      RW_step_i =0
+      RW_step_i =0 !REWEIGHTING: need to reset RW_step_i when we get the next track to reweight
 c     loop counter itdone
       itdone=itdone+1
 c     if the counter goes beyond ntracks, QUIT
@@ -301,12 +306,10 @@ c     if this is the first track, reset nel and ihap interaction marker
          nel(2)=0
          nel(3)=0
       end if
-      if(NReweightFlag.eq.1) then
+      if(NReweightFlag.eq.1) then !REWEIGHTING: can head straight back to the main cascade now for reweight
          goto 200
       endif     
-c     For Reweight: amass/chtrack/stpt should be set in nrstack.h common block (check this)
-C     For Reweight: pptrack set from pi (input) above
-C     not sure any of that is necessary
+
 c     set uin to mass of current track
       uin=amass(itdone)         !put a new track to follow
 c     set chint to charge of current track
@@ -315,7 +318,7 @@ c     set ein to energy of current track
       ein = pptrack(4,itdone)
       pinss=0
 c     set xtr/pinss to position and momentum squared of current track
-c     For NOT Reweight: only want to set position and momentum this way if not reweighting:
+c     For NOT Reweight: only want to set position and momentum this way if not reweighting
       if(NReweightFlag.eq.0) then
          do j=1,3
             if(itdone.gt.1)start(j)=0.
@@ -348,7 +351,7 @@ c     increase NFNvert and NFNstep by 1
 
 c     Set NFiflag to 100*chint (presumably 100 for proton 000 for pion)
          NFiflag(NFnvert) = 0 + chint*100 ! interaction type and charge of propagated nucleon
-c     set xyx position, momentum, and then energy
+c     set xyx position, momentum, and then energy on the vertex level
          NFx(NFnvert) = xtr(1)  ! vertex position inside nucleus
          NFy(NFnvert) = xtr(2)
          NFz(NFnvert) = xtr(3)
@@ -384,21 +387,16 @@ c     is this crucial? Do we need energy, position, momentum?
          if(RW_step_i.lt.NFnstep) then
             RW_step_i = RW_step_i+1
             
+c     REWEIGHTING: if we've not completed every step of generated cascade, keep going
 
 
-c            xtr(1) = NFxStep(RW_step_i)
-c            xtr(2) = NFyStep(RW_step_i)
-c            xtr(3) = NFzStep(RW_step_i)
-c            pin(1) = NFpxStep(RW_step_i)
-c            pin(2) = NFpyStep(RW_step_i)
-c            pin(3) = NFpzStep(RW_step_i)
             ein = NFeStep(RW_step_i)
-c     possibly needs a +/- distinction for protons and pions                                                                                                         
+
             ecms2 = NFecms2(RW_step_i)
 
 
          else
-            write (*,*) "finished number of steps for event", NFnstep
+c            write (*,*) "finished number of steps for event", NFnstep
             goto 300
          end if
          
@@ -467,31 +465,35 @@ c     pretty sure nel(1/2/3)= pel/psp/pdp. maybe ihap is survival?
 
 
       end if
-c      if(NReweightFlag.eq.0) then
+      if(NReweightFlag.eq.0) then !don't need to go into nrfermi when reweighting
 
          call nrfermi(r)        !set target nucleon
 C     if(ecms2.lt.(2*amn)**2) goto 200  ! kinematically impossible / test is done inside nrnuc!
       
-c      endif
+      endif
       if(NReweightFlag.eq.1) then
-
+c     REWEIGHTING: Need to set interaction type of the step before entering nrnuc.F
          ides = NFiflagStep(RW_step_i)
       endif
 
       if(NReweightFlag.eq.0) then
-         NFnstep = NFnstep+1    ! increase number of steps                                                                                                                                   
+         NFnstep = NFnstep+1    ! increase number of steps                                                                                                                                  c     REWEIGHTING: nfnstep is the step number for generation c.f. RW_step_i
+c     NFNStep will later be the value up to which RW_step_i counts
 
          
       endif
 
 
 
-
+c     REWEIGHTING: nrnuc is where the individual cascade step is handled
+c     this will occur once per step in the cascade, whether the step
+c     is survival or interaction for regen and reweight
+c      all the crucial variables to be saved in regen are in nrnuc (except nfnstep)
       call nrnuc(ides)          ! make interaction
-
+      
 
       if(NReweightFlag.eq.1) then
-
+c     REWEIGHTING: for reweight, go straight on to next step
          goto 200
       endif
 
@@ -499,14 +501,8 @@ c      endif
       
       if(NReweightFlag.eq.0) then
          
-c         NFxStep(NFnstep) = xtr(1)
-c         NFyStep(NFnstep) = xtr(2)
-c         NFzStep(NFnstep) = xtr(3)
-c         NFpxStep(NFnstep) = pin(1)
-c         NFpyStep(NFnstep) = pin(2)
-c         NFpzStep(NFnstep) = pin(3)
-c         NFeStep(NFnstep) = ein
-
+c     ecms2 and ptot were put here by Martin Hierholzer, and not used by Toby's reweighting
+c     however, they do seem to be used by other parts of neut, so I'm hesitant to remove them
          if(prot) then
             NFecms2(NFnstep) = ecms2 ! CMS energy squared (positive: proton)                                                                                                           
          else
