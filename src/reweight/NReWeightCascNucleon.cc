@@ -8,14 +8,9 @@ Based on code for Pion reweighting, to perform nucleon reweighting in place of I
 
  Authors: Costas Andreopoulos <costas.andreopoulos \at stfc.ac.uk>
           STFC, Rutherford Appleton Laboratory
+	  (pion version of the code)
 
-          Jim Dobson <J.Dobson07 \at imperial.ac.uk>
-          Imperial College London
-
-	  Patrick de Perio <pdeperio \at physics.utoronto.ca>
-	  University of Toronto
-
-	  Toby Nucleon
+	  Toby Nonnenmacher, Nucleon reweighting code
 
  For the class documentation see the corresponding header file.
 
@@ -64,7 +59,7 @@ void NReWeightCascNucleon::Init(void)
 {
   fortFns = NFortFns::Instance();
 
-  fInelLowDef  = 0.;
+  /*  fInelLowDef  = 0.;
   fInelHighDef = 0.;
   fPiProdDef   = 0.;
   fAbsDef      = 0.;
@@ -88,7 +83,7 @@ void NReWeightCascNucleon::Init(void)
   fCExLowTwkDial   = 0;  
   fCExHighTwkDial  = 0; 
   fAllTwkDial      = 0; 
-
+  */
   fTotalProbDef = 0;
   fElasticProbDef = 0;
   fSinglePiProbDef = 0;
@@ -151,6 +146,7 @@ bool NReWeightCascNucleon::IsHandled(NSyst_t syst)
 
 void NReWeightCascNucleon::SetSystematic(NSyst_t syst, double twk_dial)
 {
+  //4 dials for nucleon reweighting: total/elastic/single pi/double pi
   std::cout << "start of SetSystematic" <<std::endl;
   switch(syst) {
   case ( kCascTwkDial_TotalProb   ) :
@@ -348,7 +344,7 @@ void NReWeightCascNucleon::Reconfigure(void)
 double NReWeightCascNucleon::CalcWeight() 
 { 
 
-  std::cout <<"fTotalProbTwkDial = "<< TMath::Abs(fTotalProbTwkDial) << " fElasticProbTwkDial = " << TMath::Abs(fElasticProbTwkDial)<<" fSinglePiProbTwkDial= " << TMath::Abs(fSinglePiProbTwkDial)<<" fDoublePiProbTwkDial= " << TMath::Abs(fDoublePiProbTwkDial) << std::endl;
+  //  std::cout <<"fTotalProbTwkDial = "<< TMath::Abs(fTotalProbTwkDial) << " fElasticProbTwkDial = " << TMath::Abs(fElasticProbTwkDial)<<" fSinglePiProbTwkDial= " << TMath::Abs(fSinglePiProbTwkDial)<<" fDoublePiProbTwkDial= " << TMath::Abs(fDoublePiProbTwkDial) << std::endl;
   // For 1-sigma change  
 bool tweaked = ( (TMath::Abs(fTotalProbTwkDial) > controls::kASmallNum) ||
 		 (TMath::Abs(fElasticProbTwkDial) > controls::kASmallNum) ||
@@ -387,50 +383,29 @@ bool tweaked = ( (TMath::Abs(fTotalProbTwkDial) > controls::kASmallNum) ||
   fortFns->print_allparams();
 #endif 
 
-  //maybe comment out
-  // Not bound
-  //  if (posinnuc_.ibound == 0)
-  //  {
-  //    std::cout << "not bound" << std::endl;
-  //   return 1;
-  // }
 
   float old_xsec;
+  //weight will be new_xsec/old_xsec
 
-  //cout << "NReWeightCascNucleon FsiProb = " << fsihist_.fsiprob << endl;
-
-  // Assume FSIPROB <= 0 if not filled properly
-  // Currently in ND280 MCP4 only (set in ${T2KREWEIGHT}/src/T2KNeutUtils.cxx)
-
-
-    std::cout << "fsihist_.fsiprob = " << fsihist_.fsiprob << std::endl;
   if (fsihist_.fsiprob <= 0) {  
 
-    //    fortFns->nrprton();
-    //    fortFns->nrnuc();
-    //    fortFns->evpiprob_();
-    std::cout << "nrint_.pcascprob = " << nrint_.pcascprob << std::endl;
-    
     old_xsec = nrint_.pcascprob;
-  // evpiprob not passing properly with g77 64-bit so grab from common block
+    //set old_xsec from pcascprob stored in nrint (generated pcascprob)
+
 #if defined(f2cFortran)&&!defined(gFortran)
     old_xsec = nrint_.pcascprob;
 #endif
   }
   
-  // Following should work for SK >=11b (NEUT >= 5.1.2) and neutroot/piscat
 
-  // FSIPROB was not pre-calculated properly during event generation
   else if (fsihist_.fsiprob == 1) 
     {
-      //    std::cout << "fsihist_.fsiprob = 1" << std::endl;
+
     return 1;
     }
-  // Good FSIPROB pre-calculation
+
   else
-    //std::cout << "nrint_.pcascprob = " << nrint_.pcascprob << std::endl;
-    //std::cout << "nrint_.pnuccounter = " << nrint_.pnuccounter << std::endl;
-    //std::cout << "nrint_.survivalcounter = " << nrint_.survivalcounter << std::endl;
+
     old_xsec = nrint_.pcascprob;
 
   if (old_xsec<=0) {
@@ -440,10 +415,9 @@ bool tweaked = ( (TMath::Abs(fTotalProbTwkDial) > controls::kASmallNum) ||
 
 
 #ifdef _N_REWEIGHT_CASC_DEBUG_
-  cout << "FSI Probability (old) = " << old_xsec << endl;
-  //  int dummy = 8;
-  //fortFns->nrnuc(&dummy);
-  cout << "FSI Probability (old, evpiprob) = " << fsihist_.fsiprob << endl;
+  //    cout << "FSI Probability (old) = " << old_xsec << endl;
+
+
 
   if (fabs( fsihist_.fsiprob - old_xsec ) > 0.00005) {
     cout << "NReWeightCascNucleon() Error: Previously calculated FSIPROB inconsistent" << endl;
@@ -451,7 +425,7 @@ bool tweaked = ( (TMath::Abs(fTotalProbTwkDial) > controls::kASmallNum) ||
     //std::cin >> cin_tmp;
   }
 #endif
-
+  /*
   fInelLowDef = neffpr_.fefqe;
   fInelHighDef= neffpr_.fefqeh;
   fPiProdDef  = neffpr_.fefinel;
@@ -460,10 +434,8 @@ bool tweaked = ( (TMath::Abs(fTotalProbTwkDial) > controls::kASmallNum) ||
   fCExHighDef = neffpr_.fefcxh;
   fAllDef     = neffpr_.fefall;
 
-   
-  //  std::cout << "xnucfact in NReWeightCascNucleon = " << nucres_.xnucfact << std::endl;
-  //std::cout << "xnucelafact in NReWeightCascNucleon = " << nucres_.xnucelafact << std::endl;
-  //std::cout << "xnucspifact in NReWeightCascNucleon = " << nucres_.xnucspifact << std::endl;
+  */
+  
   //std::cout << "xnucdpifact in NReWeightCascNucleon = " << nucres_.xnucdpifact << std::endl;
 
   nucres_.xnucfact = 1;
@@ -478,10 +450,8 @@ bool tweaked = ( (TMath::Abs(fTotalProbTwkDial) > controls::kASmallNum) ||
 
   // std::cout << "fTotalProbDef " << fTotalProbDef << std::endl;
 
+  /*
   
-   std::cout << "2xnucfact in NReWeightCascNucleon = " << nucres_.xnucfact << std::endl;
-  //std::cout << "2xnucelafact in NReWeightCascNucleon = " << nucres_.xnucelafact << std::endl;
-  //std::cout << "2xnucspifact in NReWeightCascNucleon = " << nucres_.xnucspifact << std::endl;
   //std::cout << "2xnucdpifact in NReWeightCascNucleon = " << nucres_.xnucdpifact << std::endl; 
   neffpr_.fefqe   = TMath::Max(float(0.),float(fInelLowCurr*fInelLowCurr));
   neffpr_.fefqeh  = TMath::Max(float(0.),float(fInelHighCurr*fInelHighCurr));
@@ -490,47 +460,36 @@ bool tweaked = ( (TMath::Abs(fTotalProbTwkDial) > controls::kASmallNum) ||
   neffpr_.fefcx   = TMath::Max(float(0.),float(fCExLowCurr*fCExLowCurr));
   neffpr_.fefcxh  = TMath::Max(float(0.),float(fCExHighCurr*fCExHighCurr));  
   //  neffpr_.feffall = TMath::Max(float(0.),float(fAllCurr*fAllCurr));  
-  
+  */
   nucres_.xnucfact = TMath::Max(float(0.),float(fTotalProbCurr*fTotalProbCurr));
   nucres_.xnucelafact = TMath::Max(float(0.),float(fElasticProbCurr*fElasticProbCurr));
   nucres_.xnucspifact = TMath::Max(float(0.),float(fSinglePiProbCurr*fSinglePiProbCurr));
   nucres_.xnucdpifact = TMath::Max(float(0.),float(fDoublePiProbCurr*fDoublePiProbCurr));
 
-  std::cout << "3xnucfact in NReWeightCascNucleon = " << nucres_.xnucfact << std::endl;
-  //std::cout << "3xnucelafact in NReWeightCascNucleon = " << nucres_.xnucelafact << std::endl;
-  //std::cout << "3xnucspifact in NReWeightCascNucleon = " << nucres_.xnucspifact << std::endl;
-  //std::cout << "3xnucdpifact in NReWeightCascNucleon = " << nucres_.xnucdpifact << std::endl;
-  std::cout << "fTotalProbDef " << fTotalProbDef << std::endl;
-
-  fortFns->Reconfigure();
-  //  nucleonfsihist_.nfreweightnucleonflag = 1;
- 
-  //nrint_.ptotnuc = 5;
-  //nucleonfsihist_.nfnvert = 3876;
-
-  //fortFns->evdifcrs();
-  //fortFns->evpiprob();
-  nrint_.pcascprob = 1;
-  std::cout << "nrint_.pcascprob after reconfigure = " << nrint_.pcascprob << std::endl;
   
-  fortFns->nrprton(); //runs nfortfns code here to run nrprton and set value for nfnvert
-  //fortFns->nrnuc();
+  //set up to perform reweighting
+  fortFns->Reconfigure();
+  //reinitialise pcascprob to 1 (start of cascade)
+  nrint_.pcascprob = 1;
+  
+  //rerun nrprton.F to get pcascprob for reweight
+  fortFns->nrprton(); 
+
 #ifdef _N_REWEIGHT_CASC_DEBUG_
   fortFns->print_allparams();
 #endif
-  std::cout << "nrint_.pcascprob after nrprton = " << nrint_.pcascprob << std::endl;
-  //cout << "NReWeightCascNucleon(): evpiprob = " <<  fortFns->evpiprob() << ", FSIPROB= " << fsihist_.fsiprob << endl;
+
   float new_xsec  = nrint_.pcascprob;
-  
-  // evpiprob not passing properly with g77 64-bit so grab from common block
+  //set new_xsec
+
 #if defined(f2cFortran)&&!defined(gFortran)
-  //if (new_xsec) {
-  //cout << "NReWeightCascNucleon() Error: new_xsec=" << new_xsec << " when 0 expected for g77 compiled Fortran code on 64-bit machine" << endl;
-  //exit (-1);
-  //}
+
   new_xsec = nrint_.pcascprob;
 #endif
   float new_weight = (new_xsec/old_xsec);
+  //calculate weight
+
+  //if there was no cascade, just set weight to 1:
   if(old_xsec == 1)
     {
 
@@ -540,8 +499,7 @@ bool tweaked = ( (TMath::Abs(fTotalProbTwkDial) > controls::kASmallNum) ||
   if(new_xsec!=1 ||old_xsec!=1)
     {
 
-      std::cout << "for this mode, there is a weight not equal to 1 " << std::endl;
-      std::cout << "new_xsec = " << new_xsec << "old_xsec = " << old_xsec << std::endl;
+
     }
   
 #ifdef _N_REWEIGHT_CASC_DEBUG_
@@ -555,10 +513,10 @@ bool tweaked = ( (TMath::Abs(fTotalProbTwkDial) > controls::kASmallNum) ||
   }
 
 
-  cout << "new weight = " << new_weight << endl;
-  cout << "Neut Mode = " << 
+  //  cout << "new weight = " << new_weight << endl;
+  
 
-  std::cout << "old prob = " << old_xsec << " new prob = " << new_xsec << std::endl;
+  //std::cout << "old prob = " << old_xsec << " new prob = " << new_xsec << std::endl;
   return new_weight;
 }
 //_______________________________________________________________________________________
@@ -566,14 +524,7 @@ double NReWeightCascNucleon::CalcChisq(void)
 {
   double chisq = 0.;
 
-  // For 1-sigma change
-  //  chisq += TMath::Power(fInelLowTwkDial, 2.);
-  //chisq += TMath::Power(fInelHighTwkDial, 2.);
-  //chisq += TMath::Power(fAbsTwkDial, 2.);
-  //chisq += TMath::Power(fPiProdTwkDial, 2.);
-  //chisq += TMath::Power(fCExLowTwkDial, 2.);
-  //chisq += TMath::Power(fCExHighTwkDial, 2.);
-  //chisq += TMath::Power(fAllTwkDial, 2.);
+
   chisq += TMath::Power(fTotalProbTwkDial, 2.);
   chisq += TMath::Power(fElasticProbTwkDial, 2.);
   chisq += TMath::Power(fSinglePiProbTwkDial, 2.);
@@ -585,14 +536,8 @@ double NReWeightCascNucleon::CalcChisq(void)
 vector<double> NReWeightCascNucleon::GetCurrParVals(void)
 {
   vector<double> parVals;
-  // This must be in the same order as ${T2KREWEIGHT}/src/T2KSyst.h
-  //parVals.push_back(fAbsCurr);   
-  //parVals.push_back(fInelLowCurr); 
-  //parVals.push_back(fCExLowCurr);  
-  //parVals.push_back(fInelHighCurr);
-  //parVals.push_back(fCExHighCurr);   
-  //parVals.push_back(fPiProdCurr);	   
-  //parVals.push_back(fAllCurr);
+
+
   parVals.push_back(fTotalProbCurr);
   parVals.push_back(fElasticProbCurr);
   parVals.push_back(fSinglePiProbCurr);
