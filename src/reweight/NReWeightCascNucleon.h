@@ -59,14 +59,14 @@ namespace rew   {
    
    void   Init              (void);
 
-   double fCExLowTwkDial;    ///<
+   /*   double fCExLowTwkDial;    ///<
    double fInelLowTwkDial;   ///<
    double fAbsTwkDial;       ///<
    double fPiProdTwkDial;    ///<
    double fCExHighTwkDial;   ///<
    double fInelHighTwkDial;  ///<
    double fAllTwkDial;       ///<
-
+   */
    double fTotalProbTwkDial; 
    double fElasticProbTwkDial;
    double fSinglePiProbTwkDial;
@@ -81,7 +81,7 @@ namespace rew   {
    double fElasticProbCurr;
    double fSinglePiProbCurr;
    double fDoublePiProbCurr;
-
+   /*
    double fCExLowCurr;       ///<
    double fInelLowCurr;      ///<
    double fAbsCurr;          ///<
@@ -89,7 +89,7 @@ namespace rew   {
    double fCExHighCurr;      ///<
    double fInelHighCurr;     ///<
    double fAllCurr;          ///<
-     
+   
    double fCExLowDef;        ///<
    double fInelLowDef;       ///<
    double fAbsDef;           ///<
@@ -97,7 +97,7 @@ namespace rew   {
    double fCExHighDef;       ///<
    double fInelHighDef;      ///< 
    double fAllDef;           ///< 
-
+   */
    NFortFns * fortFns;
 
  };
