@@ -39,18 +39,6 @@
 void FillNeutCommons(NeutVect* nvect) {
   //  TH1::SetDefaultSumw2(true);
   
-  // WARNING: This has only been implemented for a neuttree and not GENIE                                                                                            
-  // This should be kept in sync with T2KNIWGUtils::GetNIWGEvent(TTree)                                                                                              
-
-  // NEUT version info.  Can't get it to compile properly with this yet                                                                                              
-  // neutversion_.corev  =   nvect->COREVer;                                                                                                                         
-  // neutversion_.nucev  =   nvect->NUCEVer;                                                                                                                         
-  // neutversion_.nuccv  =   nvect->NUCCVer;                                                                                                                         
-
-  // Documentation: See nework.h                                                 
-  //  nrint_.pcascprob = 0.5;
-  // nrint_.pnuccounter = 2;
-  //not sure about this initialisation yet
 
 
 
@@ -111,7 +99,7 @@ void FillNeutCommons(NeutVect* nvect) {
   neutpiless_.ipilessdcy = nvect->IPilessDcy;
   neutpiless_.rpilessdcy = nvect->RPilessDcy;
 
-  neffpr_.fefqe = nvect->NuceffFactorPIQE;
+  /*  neffpr_.fefqe = nvect->NuceffFactorPIQE;
   neffpr_.fefqeh = nvect->NuceffFactorPIQEH;
   neffpr_.fefinel = nvect->NuceffFactorPIInel;
   neffpr_.fefabs = nvect->NuceffFactorPIAbs;
@@ -122,7 +110,8 @@ void FillNeutCommons(NeutVect* nvect) {
   neffpr_.fefqehf = nvect->NuceffFactorPIQEHKin;
   neffpr_.fefcxhf = nvect->NuceffFactorPICXKin;
   neffpr_.fefcohf = nvect->NuceffFactorPIQELKin;
-
+  */
+  //Total cascade probability for nuckeon reweight
     nrint_.pcascprob = nvect->NrintNucleonCascadeProb;
 
   /*nucres_.xnucfact = nvect->NucresTotalNucleon;
@@ -138,27 +127,14 @@ void FillNeutCommons(NeutVect* nvect) {
 		throw;
 	      }
   */
-  nucleonfsihist_.nfnstep = nvect->NnucFsiStep();
+    //set number of steps and vertices
+    nucleonfsihist_.nfnstep = nvect->NnucFsiStep();
     nucleonfsihist_.nfnvert = nvect->NnucFsiVert();
-    //    std::cout << "nfnstep = " << nucleonfsihist_.nfnstep << " nfnvert = " << nucleonfsihist_.nfnvert << std::endl;
-    //    std::cout << "nfnstep prevtest = " << nucleonfsihist_.nfnstep << std::endl;
+
 
     for(int k =0; k<nucleonfsihist_.nfnstep; k++)
       {
-	//	nucleonfsihist_.nfecms2[k]= nvect->NucFsiStepInfo(k)->fECMS2;
-
-
-	//		std::cout <<"fecms2 = " << nvect->NucFsiStepInfo(k)->fECMS2 << std::endl;
-		//		nucleonfsihist_.nfiflag[j] = nvect->NucFsiVertInfo(j)->fVertFlag;
-
-
-	//		nucleonfsihist_.nfxstep[k] = (float)nvect->NucFsiStepInfo(k)->fPosStep.X();
-	//	nucleonfsihist_.nfystep[k] = (float)nvect->NucFsiStepInfo(k)->fPosStep.Y();
-	//	nucleonfsihist_.nfzstep[k] = (float)nvect->NucFsiStepInfo(k)->fPosStep.Z(); //divide by 1000?                                                               
-		//	        nucleonfsihist_.nfpxstep[k] = (float)nvect->NucFsiStepInfo(k)->fMomStep.Px();
-		//	        nucleonfsihist_.nfpystep[k] = (float)nvect->NucFsiStepInfo(k)->fMomStep.Py();
-		//		nucleonfsihist_.nfpzstep[k] = (float)nvect->NucFsiStepInfo(k)->fMomStep.Pz(); //divide by 1000?   
-
+	//set step level variables for reweight
       		nucleonfsihist_.nfiflagstep[k] = (float)nvect->NucFsiStepInfo(k)->fVertFlagStep;
 	nucleonfsihist_.nfirhon[k]= (float)nvect->NucFsiStepInfo(k)->fVertFsiRhon;
 	nucleonfsihist_.nfipel[k]= (float)nvect->NucFsiStepInfo(k)->fStepPel;
@@ -167,28 +143,12 @@ void FillNeutCommons(NeutVect* nvect) {
 
 	
 
-	//	std::cout << "step number = " << k << std::endl;
-	
-	//std::cout <<  "nfipel = " << (float)nvect->NucFsiStepInfo(k)->fStepPel << std::endl;
-	//	std::cout <<  "nfipsp = " << (float)nvect->NucFsiStepInfo(k)->fStepPsp << std::endl;
-	//std::cout <<  "nfipdp = " << (float)nvect->NucFsiStepInfo(k)->fStepPdp << std::endl;
-
-	
-	//std::cout << "nfxstep = " << (float)nvect->NucFsiStepInfo(k)->fPosStep.X() << " nfiflagstep = " << (float)nvect->NucFsiStepInfo(k)->fVertFlagStep << std::endl;
-	//std::cout <<  "nfiRHON = " << (float)nvect->NucFsiStepInfo(k)->fVertFsiRhon << std::endl;
-	/*
-	nucleonfsihist_.nfpx[j] = (float)nvect->NucFsiVertInfo(j)->fMom.X();
-	nucleonfsihist_.nfpy[j] = (float)nvect->NucFsiVertInfo(j)->fMom.Y();
-	nucleonfsihist_.nfpz[j] = (float)nvect->NucFsiVertInfo(j)->fMom.Z();
-
-	nucleonfsihist_.nfe[j] = (float)nvect->NucFsiVertInfo(j)->fMom.E();
-	nucleonfsihist_.nffirststep[j] = (float)nvect->NucFsiVertInfo(j)->fVertFirstStep;
-	*/
 
       }
 
     for (int j =0; j<nucleonfsihist_.nfnvert; j++)
     {
+      //set vertex level info for reweight
       nucleonfsihist_.nfiflag[j] = nvect->NucFsiVertInfo(j)->fVertFlag;
       nucleonfsihist_.nfx[j] = (float)nvect->NucFsiVertInfo(j)->fPos.X();
       nucleonfsihist_.nfy[j] = (float)nvect->NucFsiVertInfo(j)->fPos.Y();
@@ -200,13 +160,10 @@ void FillNeutCommons(NeutVect* nvect) {
      
       nucleonfsihist_.nfe[j] = (float)nvect->NucFsiVertInfo(j)->fMom.E();
       nucleonfsihist_.nffirststep[j] = (float)nvect->NucFsiVertInfo(j)->fVertFirstStep;
-      //      nucleonfsihist_.nfecms2[j] = (float)nvect->NucFsiStepInfo(j)->fECMS2;
 
-      //nucleonfsihist_.nfreweightnucleonflag = 1;
-      //      std::cout << "fecms2 =" << nucleonfsihist_.nfecms2[j] << std::endl;
 }
 
-
+    //set some other stuff, not sure if this is strictly needed
   for (int i = 0; i < nework_.numne; i++) {
     nework_.ipne[i] = nvect->PartInfo(i)->fPID;
     nework_.pne[i][0] =
@@ -218,18 +175,10 @@ void FillNeutCommons(NeutVect* nvect) {
   }
   // fsihist.h                                                                                                                                                       
 
-  // neutroot fills a dummy object for events with no FSI to prevent memory leak                                                                                     
-  // when                                                                                                                                                            
-  // reading the TTree, so check for it here                                                                                                                         
-  //  std::cout<<"nvect->NFsiVert = "<<nvect->NfsiVert() << std::endl;
-  //std::cout<<"fsiprob = "<<  nvect->Fsiprob << std::endl;
-  //I believe only one vertex is required for nucleon FSI
-  //Pion FSI requires 2
+
   if ((int)nvect->NfsiVert() ==      0) 
     {
-      //    if (nvect->NfsiPart()!=1 || nvect->Fsiprob!=-1)                                                                                                            
-      //      ERR(WRN) << "T2KNeutUtils::fill_neut_commons(TTree) NfsiPart!=1 or                                                                                       
-      //      Fsiprob!=-1 when NfsiVert==1" << std::endl;      
+
       
       fsihist_.nvert = 0;
       fsihist_.nvcvert = 0;
@@ -279,8 +228,8 @@ void FillNeutCommons(NeutVect* nvect) {
 
 
 int main(int argc, char *argv[]) {
-  
 
+  TH1::SetDefaultSumw2(true);
   if (argc != 2 && argc != 3) {
     std::cerr << "Syntax is: ./tester OUTPUT_NEUT_ROOT_FILE.root (variation)" << std::endl;
     std::cerr << "Variation 0, Variation 1, Variation 2, Variation 3" << std::endl;
@@ -310,27 +259,18 @@ int main(int argc, char *argv[]) {
   // NReWeightNuXSecPiless
 
   neut::rew::NReWeight rw;
-  // rw.AdoptWghtCalc("FSI", new neut::rew::NReWeightINuke);
-  //trying pion atm
-  //rw.AdoptWghtCalc("FSI", new neut::rew::NReWeightCasc);
+
   rw.AdoptWghtCalc("FSI", new neut::rew::NReWeightCascNucleon);
+  //Set NReWeightCascNucleon as the reweighting engine
+
 
   std::vector<neut::rew::NSyst_t> SystematicVector;
-  //   SystematicVector.push_back(kINukeTwkDial_MFP_N);
-   //SystematicVector.push_back(kXSecTwkDial_CA5CCRES);
-  //SystematicVector.push_back(kXSecTwkDial_MaBKGM);
-  //for pion, let's use:
-  //SystematicVector.push_back(kCascTwkDial_All_pi);
+
     SystematicVector.push_back(kCascTwkDial_TotalProb); 
     SystematicVector.push_back(kCascTwkDial_ElasticProb);
     SystematicVector.push_back(kCascTwkDial_SinglePiProb);
     SystematicVector.push_back(kCascTwkDial_DoublePiProb);
-  // Minoo background
-  //kXSecTwkDial_MaBKGM;
-  // Pion ejection method
-  //kXSecTwkDial_RSPiEj;
-  // Single pion model
-  //kXSecTwkDial_SPPModel;
+    //prepare the nucleon dials
 
   // Initialise the systematic
   for (std::vector<neut::rew::NSyst_t>::iterator it = SystematicVector.begin(); it != SystematicVector.end(); ++it) {
@@ -341,7 +281,7 @@ int main(int argc, char *argv[]) {
   // Number of reweights
   const int nSysts = 4;
   double ReWeightVals[nSysts] = {0.};
-  
+  //set a bunch of dial options
   if (variation == 0) {                                                                                                                                          
     ReWeightVals[0] = 0.5;                                                                                                                                 
     ReWeightVals[1] = 0.5;
@@ -357,69 +297,57 @@ int main(int argc, char *argv[]) {
     ReWeightVals[0] = 10;                                                                                                                                  
 
   }
+  //total dial 1.44
   else if (variation == 3) {                                                                                                                                      
     ReWeightVals[0] = 2.0;                                                                                                                              
 
   }                                                                                                                                                                  
 
 
-
+  //total dial 0.64
   else if (variation == 4) {
     ReWeightVals[0] = -2.0;
   }
+  //elastic dial 1.44
   else if (variation == 5) {
     ReWeightVals[1] = 2.0;
   }
+  //elastic dial 0.64
   else if (variation == 6) {
     ReWeightVals[1] = -2.0;
   }
+  //spi dial 1.44
   else if (variation == 7) {
     ReWeightVals[2] = 2.0;
-
   }
+  //spi dial 0.64
   else if (variation == 8) {
     ReWeightVals[2] = -2.0;
 
   }
+  //dpi dial 1.44
   else if (variation == 9) {
     ReWeightVals[3] = 2.0;
 
   }
-
+  //dpi dial 0.64
   else if (variation == 10) {
     ReWeightVals[3] = -2.0;
 
   }
 
 
-  /*   // Number of reweights                                                                                                                                             
-       const int nSysts = 1;
-       double ReWeightVals[nSysts] = {0., 0., 0.};
-    if (variation == 0) {
-    ReWeightVals[0] = -1.295074385;
-    ReWeightVals[1] = 0.28169004;
-    ReWeightVals[2] = 0.476190476;
-  } else if (variation == 1) {
-    ReWeightVals[0] = -1.295074385;
-    ReWeightVals[1] = -0.504066908;
-    ReWeightVals[2] = 0.476190476;
-  } else if (variation == 2) {
-    ReWeightVals[0] = 0.720229192;
-    ReWeightVals[1] = -0.30762618;
-    ReWeightVals[2] = -0.952380952;
-  } else if (variation == 3) {
-    ReWeightVals[0] = 0.720229192; 
-    ReWeightVals[1] = 0.28169004;
-    ReWeightVals[2] = 1.428571429;
-  }
 
-
-  */
 
 
   
   
   // Make some 1D distributions for each mode
+  //set up a bunch of validation plots for each neut mode
+  //obviously this is optional based on what you want to plot
+  //would probably be a good idea to just make root trees of the outputs
+
+  //NB All neut modes combined correspond to "neut mode 7"
   const int nNEUTmodes = 53;
   TH1D *Weights = new TH1D("Weights", "Weights", 100, 0, 3);
   TH1D *Weighted[nNEUTmodes];
@@ -478,27 +406,25 @@ int main(int argc, char *argv[]) {
   TH1D *NeutronMultiplicityUnWeighted[nNEUTmodes];
   TH1D *PionMultiplicityWeighted[nNEUTmodes];
   TH1D *PionMultiplicityUnWeighted[nNEUTmodes];
-
+  //make some 2D plots as well
   TH2D *AngleVSEnergyWeighted[nNEUTmodes];
   TH2D *AngleVSEnergyUnWeighted[nNEUTmodes];
   TH2D *LeadingNucleonAngleVSEnergyWeighted[nNEUTmodes];
   TH2D *LeadingNucleonAngleVSEnergyUnWeighted[nNEUTmodes];
 
   
-
+  //iterate over neutmode
   for (int i = 0; i < nNEUTmodes; ++i) {
     std::stringstream ss;
     ss << "_" << i;
+    //start with the 2D plots
     AngleVSEnergyWeighted[i]= new TH2D( (std::string("AngleVSEnergyWeighted")+ss.str()).c_str(),"",10,0,2,10,-1,1);
     AngleVSEnergyUnWeighted[i]= new TH2D( (std::string("AngleVSEnergyUnWeighted")+ss.str()).c_str(),"",10,0,2,10,-1,1);
     LeadingNucleonAngleVSEnergyWeighted[i]= new TH2D( (std::string("LeadingNucleonAngleVSEnergyWeighted")+ss.str()).c_str(),"",10,0,2,10,-1,1);
     LeadingNucleonAngleVSEnergyUnWeighted[i]= new TH2D( (std::string("LeadingNucleonAngleVSEnergyUnWeighted")+ss.str()).c_str(),"",10,0,2,10,-1,1);
+   
     
-
-
-
-    
-    
+    //then all the 1D plots
     Weighted[i] = new TH1D((std::string("Weighted")+ss.str()).c_str(), (std::string("Weighted")+ss.str()+";E_{nucleon} (GeV);d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 50, 0, 2);
     UnWeighted[i] = new TH1D((std::string("UnWeighted")+ss.str()).c_str(), (std::string("UnWeighted")+ss.str()+";E_{nucleon} (GeV);d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 50, 0, 2);
     WeightedAllParticles[i] = new TH1D((std::string("WeightedAllParticles")+ss.str()).c_str(), (std::string("WeightedAllParticles")+ss.str()+";E_{nucleon} (GeV);d#sigma/dp (cm^2/nucleon/GeV)").c_str(), 50, 0, 2);
@@ -602,9 +528,8 @@ int main(int argc, char *argv[]) {
   bool isproton, isneutron;
   std::stringstream ss;
   ss << "var" << variation;
-  TFile *OutputFile = new TFile((InputName+"_to_"+ss.str()+"EvenLowerRatioBinning.root").c_str(), "RECREATE");
-  
-
+  //set and name output file
+  TFile *OutputFile = new TFile((InputName+"_to_"+ss.str()+"sumw2working.root").c_str(), "RECREATE");
   OutputFile->cd();
   //  std::cout << "above treedef";
   TTree *OutputTree = new TTree("VARS", "VARS");
@@ -656,30 +581,25 @@ int main(int argc, char *argv[]) {
   Infile->cd();
   Tree->SetBranchAddress("vectorbranch", &nvect);
   int nEvents = Tree->GetEntriesFast();
-  // Print width
-  //  int PrintWidth = nEvents/20;
+
   int PrintWidth = 1;
-  std::cout << "survived this long" << std::endl ;
-  // Get the scaling factor
-  //  TH1D* Flux = (TH1D*)(Infile->Get("flux_numu")->Clone());
-  //TH1D* Eventrate = (TH1D*)(Infile->Get("evtrt_numu")->Clone());
-  //ScaleFactor = ((Eventrate->Integral("width")*1.E-38)/(nEvents))/Flux->Integral("width");
+
  
   Tree->GetEntry(0);
-  //ScaleFactor = nvect->Totcrs * 1E-38 /double(Tree->GetEntries());
-  //Unity = 1;
+
+  
+
+  //have to scale to the cross-section for mono-energetic
+  //this is done with a scaling "unity"
+  //this is not done with a modified weighting "scalefactor" which has been set to 1
   Unity = nvect->Totcrs * 1E-38 /double(Tree->GetEntries());                                                                                                                        
- 
-  ScaleFactor = 1;
-  // And each event
-  //  for (int j = 0; j < nEvents; ++j) {
+   ScaleFactor = 1;
+   
+
+ // And each event
 
   for (int j = 0; j < nEvents; ++j) {
-    //    std::cout << "Event, j, in previoustester = " << j << std::endl;
-          
 
-
-    // Reset variables
     Q2 = -999;
     EnuTrue = -999;
     W = -999;
@@ -723,12 +643,10 @@ int main(int argc, char *argv[]) {
     // Need to fill nework first
 
     FillNeutCommons(nvect);
-    //rw.PrintNeutAll();
-    //    rw.nrnuc(j);
+
     weight = rw.CalcWeight();
-    
-    //    std::cout << "weight = " <<    weight << std::endl;
-    // Count how many bad events
+    //calculate the weight - the magic happens hear
+
     if (weight == 1.0) nbad++;
     
     
@@ -736,7 +654,7 @@ int main(int argc, char *argv[]) {
       {    //std::cout << "weight (not equal to 1) = " << weight << std::endl;
       }
     
-    // Now get some distributions
+
     TLorentzVector Pnu = nvect->PartInfo(0)->fP;
     TLorentzVector Pinit = nvect->PartInfo(1)->fP;
     TLorentzVector Pout;
@@ -745,8 +663,7 @@ int main(int argc, char *argv[]) {
 
     npart = nvect->Npart();
     EnuTrue = Pnu.E()/1.E3;
-    //    Eout = Pout.E()/1.E3;
-    //    Eout = sqrt((Pout.Px())*(Pout.Px()) + (Pout.Py())*(Pout.Py()) +(Pout.Pz())*(Pout.Pz())) /1.E3 ;
+
     costhlep = cos(Pnu.Vect().Angle(Pout.Vect()));
     mode = nvect->Mode;
     nupdg = nvect->PartInfo(0)->fPID;
@@ -755,17 +672,7 @@ int main(int argc, char *argv[]) {
     W = sqrt((Pnu+Pinit-Pout)*(Pnu+Pinit-Pout))/1.E3;
     pinit = Pinit.Vect().Mag();
 
-    /*    if((nvect->PartInfo(3))->fPID == 2212 || (nvect->PartInfo(3))->fPID == 2112)
-	  {
-	  UnWeighted[mode]->Fill(Eout);
-	  // std::cout << "weight = " << weight << std::endl;
-   
-	  Weighted[mode]->Fill(Eout, weight);
-	  UnWeighted[7]->Fill(Eout);
-	  Weighted[7]->Fill(Eout, weight);
 
-	  }
-    */
     //over events
     lastbiggestEout = -999;
     lastbiggestcostheta = -999;
@@ -778,15 +685,19 @@ int main(int argc, char *argv[]) {
     neutronmultiplicity = 0;
     nucleonmultiplicity = 0;
     pionmultiplicity = 0;
-
+    
+    //produce a plot of just the weights
     Weights->Fill(weight);
     for (int k = 2; k < nvect->Npart(); ++k) {
-
+      
       Pout = nvect->PartInfo(k)->fP;
       Eout = sqrt((Pout.Px())*(Pout.Px()) + (Pout.Py())*(Pout.Py()) +(Pout.Pz())*(Pout.Pz())) /1.E3;
       costheta = nvect->PartInfo(k)->fP.CosTheta();
+      //All final state nucleons
+      //NB All neut modes combined correspond to "neut mode 7"
       if( ((nvect->PartInfo(k))->fPID == 2212 ||(nvect->PartInfo(k))->fPID == 2112  ) && (nvect->PartInfo(k))->fIsAlive == 1)
 	{
+	  
 	  nucleonmultiplicity++;
 	  
 	  UnWeightedAllParticles[mode]->Fill(Eout,ScaleFactor);                                                                                                                                                       // std::cout << "weight = " << weight << std::endl;                                                                                                      
@@ -806,7 +717,7 @@ int main(int argc, char *argv[]) {
 
 
 
-
+	  //of which neutrons
 	  if( (nvect->PartInfo(k))->fPID == 2112)
 	    {
 	      
@@ -826,10 +737,11 @@ int main(int argc, char *argv[]) {
 	  
 	  
 	    }
+	  //of which protons
 	  if( (nvect->PartInfo(k))->fPID == 2212)
             {
 	      protonmultiplicity++;
-		
+	      
 	      ProtonUnWeightedAllParticles[mode]->Fill(Eout,ScaleFactor);
 	      // std::cout << "weight = " << weight << std::endl;                                                                                                                          
 	      ProtonWeightedAllParticles[mode]->Fill(Eout, weight*ScaleFactor);
@@ -842,13 +754,14 @@ int main(int argc, char *argv[]) {
 	      ProtonUnWeightedAngleAllParticles[7]->Fill(costheta,ScaleFactor);
 	      ProtonWeightedAngleAllParticles[7]->Fill(costheta, weight*ScaleFactor);
 	    }
-
+	  //of which highest energy final state nucleon
 	  if(lastbiggestEout<Eout)
 	    {
 
 	      bestmode = mode;
 	      lastbiggestEout = Eout;
 	      lastbiggestcostheta = costheta;
+	      //of which protons
 	      if( (nvect->PartInfo(k))->fPID == 2212)
 		{
 
@@ -856,6 +769,7 @@ int main(int argc, char *argv[]) {
 		  isproton = true;
 		  isneutron = false;
 		}
+	      //of which neutrons
 	      if( (nvect->PartInfo(k))->fPID == 2112)
 		{
 
@@ -865,7 +779,8 @@ int main(int argc, char *argv[]) {
 	      
 	    }
 	}
-
+      //all final state pions
+      //NB All neut modes combined correspond to "neut mode 7"
       if( (abs((nvect->PartInfo(k))->fPID) == 211 ||(nvect->PartInfo(k))->fPID == 111 ) && (nvect->PartInfo(k))->fIsAlive == 1)
 	{
 	  
@@ -881,7 +796,7 @@ int main(int argc, char *argv[]) {
           PionWeightedAngleAllParticles[mode]->Fill(costheta, weight*ScaleFactor);
           PionUnWeightedAngleAllParticles[7]->Fill(costheta,ScaleFactor);
           PionWeightedAngleAllParticles[7]->Fill(costheta, weight*ScaleFactor);
-	  
+	  //of which highest energy pion
 	  if(pionlastbiggestEout<Eout)
             {
 
@@ -895,7 +810,8 @@ int main(int argc, char *argv[]) {
 
 
 	}
-    
+      //all final state leptons
+      //NB All neut modes combined correspond to "neut mode 7"
       if( (abs((nvect->PartInfo(k))->fPID) == 11 || abs((nvect->PartInfo(k))->fPID) == 13 ||abs((nvect->PartInfo(k))->fPID) == 15 ) && (nvect->PartInfo(k))->fIsAlive == 1)
         {
 
@@ -909,7 +825,7 @@ int main(int argc, char *argv[]) {
           LeptonWeightedAngleAllParticles[mode]->Fill(costheta, weight*ScaleFactor);
           LeptonUnWeightedAngleAllParticles[7]->Fill(costheta,ScaleFactor);
           LeptonWeightedAngleAllParticles[7]->Fill(costheta, weight*ScaleFactor);
-
+	  //highest energy leptons
           if(leptonlastbiggestEout<Eout)
             {
 
@@ -954,7 +870,7 @@ int main(int argc, char *argv[]) {
       }
     
     } // Finished scanning for pions and nucleons
-    
+    //Fill, with weights, scale factor just equals 1 so can be ignored
     NucleonMultiplicityUnWeighted[mode]->Fill(nucleonmultiplicity,ScaleFactor);
     NucleonMultiplicityWeighted[mode]->Fill(nucleonmultiplicity,weight*ScaleFactor);
     NucleonMultiplicityUnWeighted[7]->Fill(nucleonmultiplicity,ScaleFactor);
@@ -976,7 +892,7 @@ int main(int argc, char *argv[]) {
     PionMultiplicityWeighted[7]->Fill(pionmultiplicity,weight*ScaleFactor);
 
 
-    //will have to tidy this up when doing pions and leptons
+
     if(lastbiggestEout >= 0)
       {
 	UnWeighted[bestmode]->Fill(lastbiggestEout,ScaleFactor);
@@ -996,6 +912,7 @@ int main(int argc, char *argv[]) {
 	LeadingNucleonAngleVSEnergyWeighted[bestmode]->Fill(lastbiggestEout,lastbiggestcostheta,weight*ScaleFactor);
 	LeadingNucleonAngleVSEnergyUnWeighted[bestmode]->Fill(lastbiggestEout,lastbiggestcostheta,ScaleFactor);
 
+	//Handle all the highest energy particle only plots
 	if( isneutron == true)
 	  {
 
@@ -1084,7 +1001,7 @@ int main(int argc, char *argv[]) {
     // Set Poisson errors
     //requires all have same number of bins!
     
-    for (int i = 0; i < Weighted[j]->GetNbinsX()+1; ++i) {
+    /*for (int i = 0; i < Weighted[j]->GetNbinsX()+1; ++i) {
       double content1 = Weighted[j]->GetBinContent(i+1);
       double error1 = sqrt(content1);
       Weighted[j]->SetBinError(i+1, error1);
@@ -1267,10 +1184,11 @@ int main(int argc, char *argv[]) {
       PionMultiplicityUnWeighted[j]->SetBinError(i+1, error48);
 }
 
-      
+    */
 
-    
-    
+    //perform scaling to cross-section
+    //NB "Unity" != 1
+    //only write if there are more than 0 events
     Weighted[j]->Scale(Unity, "width");
     UnWeighted[j]->Scale(Unity, "width");
     if (Weighted[j]->Integral() > 0) Weighted[j]->Write();
