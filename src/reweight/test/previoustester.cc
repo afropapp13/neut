@@ -46,7 +46,7 @@ void FillNeutCommons(NeutVect* nvect) {
   nework_.numne = nvect->Npart();
 
   //  nemdls_.mdlqeaf = nvect->QEVForm;
-  nemdls_.mdlqe = nvect->QEModel;
+  /*  nemdls_.mdlqe = nvect->QEModel;
   nemdls_.mdlspi = nvect->SPIModel;
   nemdls_.mdldis = nvect->DISModel;
   nemdls_.mdlcoh = nvect->COHModel;
@@ -99,7 +99,7 @@ void FillNeutCommons(NeutVect* nvect) {
   neutpiless_.ipilessdcy = nvect->IPilessDcy;
   neutpiless_.rpilessdcy = nvect->RPilessDcy;
 
-  /*  neffpr_.fefqe = nvect->NuceffFactorPIQE;
+    neffpr_.fefqe = nvect->NuceffFactorPIQE;
   neffpr_.fefqeh = nvect->NuceffFactorPIQEH;
   neffpr_.fefinel = nvect->NuceffFactorPIInel;
   neffpr_.fefabs = nvect->NuceffFactorPIAbs;
@@ -163,7 +163,7 @@ void FillNeutCommons(NeutVect* nvect) {
 
 }
 
-    //set some other stuff, not sure if this is strictly needed
+    /*    //set some other stuff, not sure if this is strictly needed
   for (int i = 0; i < nework_.numne; i++) {
     nework_.ipne[i] = nvect->PartInfo(i)->fPID;
     nework_.pne[i][0] =
@@ -218,7 +218,7 @@ void FillNeutCommons(NeutVect* nvect) {
   neuttarget_.numfrep = nvect->TargetH;
   neuttarget_.numatom = nvect->TargetA;
   posinnuc_.ibound = nvect->Ibound;
-
+    */
   // put empty nucleon FSI history (since it is not saved in the NeutVect                                                                                            
   // format)                                                                                                                                                         
   // Comment out as NEUT does not have the necessary proton FSI information yet                                                                                      
