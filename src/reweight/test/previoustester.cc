@@ -212,13 +212,13 @@ void FillNeutCommons(NeutVect* nvect) {
   neutcrscom_.crsz = nvect->Crsz;
   neutcrscom_.crsphi = nvect->Crsphi;
   neutcrscom_.crsq2 = nvect->Crsq2;
-
+    */
   neuttarget_.numbndn = nvect->TargetA - nvect->TargetZ;
   neuttarget_.numbndp = nvect->TargetZ;
   neuttarget_.numfrep = nvect->TargetH;
   neuttarget_.numatom = nvect->TargetA;
   posinnuc_.ibound = nvect->Ibound;
-    */
+    
   // put empty nucleon FSI history (since it is not saved in the NeutVect                                                                                            
   // format)                                                                                                                                                         
   // Comment out as NEUT does not have the necessary proton FSI information yet                                                                                      
