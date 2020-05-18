@@ -14,6 +14,21 @@ make -j 8
 make install
 ```
 
+*N.B.* If you get autotools whinging about missing LIBTOOL or AM_CONDITIONAL macros, try:
+
+```
+cd /path/to/neut
+cd src
+rm aclocal.m4
+autoreconf -if
+cd ../build;
+../src/configure --prefix=$(readlink -f Linux)
+make -j 8
+make install
+```
+
+(Generally most autotools problems are solved by running  `autoreconf`)
+
 ### Sourcing the NEUT environment
 ```
 source /path/to/neut/build/Linux/setup.sh

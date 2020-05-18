@@ -48,9 +48,9 @@ void NReWeightCasc::Init(void) {
   NSYST_SETDEF(kCascTwkDial_FrAbs_pi, neffpr_.fefabs);
   NSYST_SETDEF(kCascTwkDial_FrInelLow_pi, neffpr_.fefqe);
   NSYST_SETDEF(kCascTwkDial_FrCExLow_pi, neffpr_.fefcx);
-  NSYST_SETDEF(kCascTwkDial_FrInelHigh_pi, neffpr_.fefinel);
+  NSYST_SETDEF(kCascTwkDial_FrInelHigh_pi, neffpr_.fefqeh);
   NSYST_SETDEF(kCascTwkDial_FrCExHigh_pi, neffpr_.fefcxh);
-  NSYST_SETDEF(kCascTwkDial_FrPiProd_pi, neffpr_.fefqeh);
+  NSYST_SETDEF(kCascTwkDial_FrPiProd_pi, neffpr_.fefinel);
 }
 
 bool NReWeightCasc::IsHandled(NSyst_t syst) {
@@ -150,8 +150,8 @@ double NReWeightCasc::CalcWeight() {
   //   << (new_xsec/old_xsec) << std::endl;
   // }
 #ifdef _N_REWEIGHT_CASC_DEBUG_
-  cout << "pion cascade probability (old) = " << old_xsec << endl;
-  cout << "pion cascade probability (new) = " << new_xsec << endl;
+  std::cout << "pion cascade probability (old) = " << old_xsec << std::endl;
+  std::cout << "pion cascade probability (new) = " << new_xsec << std::endl;
 #endif
   NREWCHECKRETURN(new_xsec / old_xsec);
 }

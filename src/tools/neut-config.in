@@ -5,7 +5,7 @@ INSTALL_ROOT="__INST_ROOT__"
 SCRIPTNAME=$0
 
 if [ ${#} -eq 0 ]; then
-  echo "${SCRIPTNAME} [--incdir] [--libdir] [--libs] [--iolibs] [--rwlibs] [--libflags] [--iolibflags] [--rwlibflags] [--rootflags] [--cernflags]"
+  echo "${SCRIPTNAME} [--features] [--has-feature <feature name>] [--incdir] [--libdir] [--libs] [--iolibs] [--rwlibs] [--libflags] [--iolibflags] [--rwlibflags] [--rootflags] [--cernflags]"
 fi
 
 while [[ ${#} -gt 0 ]]; do
@@ -53,6 +53,20 @@ while [[ ${#} -gt 0 ]]; do
       echo "__CERN_FLAGS__"
       ;;
 
+      --features)
+      echo "__FEATURES__"
+      ;;
+
+      --has-feature)
+      shift
+      TEST_FEATURE=$1
+        if [[ "__FEATURES__" =~ (^|[[:space:]])${TEST_FEATURE}($|[[:space:]]) ]]; then
+          exit 0
+        else 
+          exit 1
+        fi
+      ;;
+
       --version)
       echo "__NEUT_VERSION__"
       ;;
@@ -70,6 +84,8 @@ while [[ ${#} -gt 0 ]]; do
       echo -e "\t--rwlibflags               : Print list of NEUT reweight library linker flags."
       echo -e "\t--rootflags                : Print compiler flags used when compiling against ROOT"
       echo -e "\t--cernflags                : Print compiler flags used when compiling against CERNLIB."
+      echo -e "\t--features                 : Print list of features."
+      echo -e "\t--has-feature <feature>    : Returns 0 if has feature, 1 if not."
       echo -e "\t--version                  : Print NEUT version."
       echo -e "\t-?|--help                  : Print this message."
       exit 0

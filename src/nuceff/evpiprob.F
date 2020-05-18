@@ -62,6 +62,103 @@ C#define DEBUG
       EVPIPROB = 1
       FSIPROB  = 1
 
+C     Check FSI probabilities are greater than or equal to zero
+      IF (FEFQE.LT.0) THEN
+        write(*,*) "**** Pion FEFQE scattering probability < 0"
+        write(*,*) "FEFQE=", FEFQE
+c       write(*,*) "**** Returning weight 1"
+c       evpiprob=1
+c       goto 9999
+      endif
+
+      IF (FEFQEH.lt.0) THEN
+        write(*,*) "**** Pion FEFQEH scattering probability < 0"
+        write(*,*) "FEFQEH=", FEFQEH
+c       write(*,*) "**** Returning weight 1"
+c       evpiprob=1
+c       goto 9999
+      endif
+
+      IF (FEFINEL.lt.0) THEN
+        write(*,*) "**** Pion FEFINEL scattering probability < 0"
+        write(*,*) "FEFINEL=", FEFINEL
+c       write(*,*) "**** Returning weight 1"
+c       evpiprob=1
+c       goto 9999
+      endif
+
+      IF (FEFABS.lt.0) THEN
+        write(*,*) "**** Pion FEFABS scattering probability < 0"
+        write(*,*) "FEFABS=", FEFABS
+c       write(*,*) "**** Returning weight 1"
+c       evpiprob=1
+c       goto 9999
+      endif
+
+      IF (FEFCOH.lt.0) THEN
+        write(*,*) "**** Pion FEFCOH scattering probability < 0"
+        write(*,*) "FEFCOH=", FEFCOH
+c       write(*,*) "**** Returning weight 1"
+c       evpiprob=1
+c       goto 9999
+      endif
+
+      IF (FEFQEHF.lt.0) THEN
+        write(*,*) "**** Pion FEFQEH scattering probability < 0"
+        write(*,*) "FEFQEHF=", FEFQEHF
+c       write(*,*) "**** Returning weight 1"
+c       evpiprob=1
+c       goto 9999
+      endif
+
+      IF (FEFCOHF.lt.0) THEN
+        write(*,*) "**** Pion FEFCOHF scattering probability < 0"
+        write(*,*) "FEFCOHF=", FEFCOHF
+c       write(*,*) "**** Returning weight 1"
+c       evpiprob=1
+c       goto 9999
+      endif
+
+      IF (FEFCX.lt.0) THEN
+        write(*,*) "**** Pion FEFCX scattering probability < 0"
+        write(*,*) "FEFCX=", FEFCX
+c       write(*,*) "**** Returning weight 1"
+c       evpiprob=1
+c       goto 9999
+      endif
+
+      IF (FEFCXHF.lt.0) THEN
+        write(*,*) "**** Pion FEFCXHF scattering probability < 0"
+        write(*,*) "FEFCXHF=", FEFCXHF
+c       write(*,*) "**** Returning weight 1"
+c       evpiprob=1
+c       goto 9999
+      endif
+
+      IF (FEFCXH.lt.0) THEN
+        write(*,*) "**** Pion FEFCXH scattering probability < 0"
+        write(*,*) "FEFCXH=", FEFCXH
+c       write(*,*) "**** Returning weight 1"
+c       evpiprob=1
+c       goto 9999
+      endif
+
+      IF (FEFCOUL.lt.0) THEN
+        write(*,*) "**** Pion FEFCOUL scattering probability < 0"
+        write(*,*) "FEFCOUL=", FEFCOUL
+c       write(*,*) "**** Returning weight 1"
+c       evpiprob=1
+c       goto 9999
+      endif
+
+      IF (FEFALL.lt.0) THEN
+        write(*,*) "**** Pion FEFALL scattering probability < 0"
+        write(*,*) "FEFALL=", FEFALL
+c       write(*,*) "**** Returning weight 1"
+c       evpiprob=1
+c       goto 9999
+      endif
+
 C     No intermediate particle
       IF (NVERT.le.1 .or. NVCVERT.lt.1) return
 
@@ -70,7 +167,8 @@ C     Not bound target
 
 C     Not tuned FSI model
       IF (NENEFMODL.EQ.0 .or. NENEFMODH.EQ.0) THEN
-         write(*,*) "EVPIPROB Warning: Attemping to call with NENEFMODL!=0 and NENEFMODH!=0"
+         write(*,*) "EVPIPROB Warning: Attemping to call with"
+         write(*,*) "NENEFMODL!=0 and NENEFMODH!=0"
          return
       END IF
 
@@ -442,7 +540,7 @@ C     See neututils/calc_nuc_dens/coulomb_factor.xls
          EVPIPROB=1
       end if
 
-      FSIPROB = EVPIPROB
+C9999 FSIPROB = EVPIPROB
 
       RETURN
       END
