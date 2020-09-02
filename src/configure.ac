@@ -60,6 +60,24 @@ fi
 
 AM_CONDITIONAL([FC_HAS_PIE], [test ! ${FC_PIE_CHECK} -eq 0])
 
+########## Check gcc version
+
+NEED_ALLOW_ARG_MISMATCH=0
+if [ ${FC} == "gfortran" ]; then
+
+  FC_VERSION="$(gfortran -v 2>&1 | grep "^gcc version" | sed "s/^gcc version \([0-9]\+\).*/\1/g")"
+
+  if [ ${FC_VERSION} -ge 10 ]; then
+
+    echo "[INFO]: Using gcc version: ${FC_VERSION}, require: -fallow-argument-mismatch"
+    NEED_ALLOW_ARG_MISMATCH=1
+
+  fi
+
+fi
+
+AM_CONDITIONAL([FC_ALLOW_ARG_MISMATCH], [test ! ${NEED_ALLOW_ARG_MISMATCH} -eq 0])
+
 ########## Check ROOT
 AC_CHECK_PROG(FOUND_ROOTCONFIG,root-config,"FOUND","NOT-FOUND")
 

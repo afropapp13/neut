@@ -54,6 +54,10 @@ DEFAULT_CXXFLAGS += -O2
 DEFAULT_CFLAGS += -O2
 endif
 
+if FC_ALLOW_ARG_MISMATCH
+DEFAULT_FFLAGS += -fallow-argument-mismatch
+endif
+
 DEFAULT_LINKFLAGS = -version-info @NEUT_VERSION_NUM@
 
 ROOT_LINKFLAGS = $(shell root-config --ldflags) -pthread -rdynamic -L$(shell root-config --libdir)
