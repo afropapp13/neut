@@ -60,6 +60,11 @@ endif
 
 DEFAULT_LINKFLAGS = -version-info @NEUT_VERSION_NUM@
 
+if FC_COMMON
+DEFAULT_FFLAGS += -fcommon -Wl,--allow-multiple-definition
+DEFAULT_CXXFLAGS += -Wl,--allow-multiple-definition
+endif
+
 ROOT_LINKFLAGS = $(shell root-config --ldflags) -pthread -rdynamic -L$(shell root-config --libdir)
 
 if ROOT_MAJOR_IS_SIX
