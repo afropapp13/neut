@@ -130,7 +130,7 @@ C  Determine whether interaction is CC or NC
 
 C  Compute cross section on neutron and on proton
       PXSEC=FNAPICRS(E,IPAR,ITYPE,1.,R1320P)
-      NXSEC=FNAPICRS(E,IPAR,ITYPE,0,R1320N)
+      NXSEC=FNAPICRS(E,IPAR,ITYPE,0.,R1320N)
       If (abs(JMOD0).eq.21.or.abs(JMOD0).eq.41) then   ! --- multi-pi mode
          PXSEC=PXSEC*R1320P
          NXSEC=NXSEC*R1320N
