@@ -130,12 +130,18 @@ C Default CCQE model and axial form factor parameterisation
       MDLQEAF   = 1
 
 C 2/3 component, TN 315 p 25
-      AXFFALPHA = 0.11
-      AXFFBETA = 0.41
-      AXFFGAMMA = 1.04
+C ANL/BNL 'fixed' fit
+      AXFFALPHA = 0.23
+      AXFFBETA = 1.22
+      AXFFGAMMA = 0.44
       AXFFTHETA = -0.26
+C ANL/BNL 'free' fit
+C       AXFFALPHA = 0.11
+C       AXFFBETA = 1.04
+C       AXFFGAMMA = 0.41
+C       AXFFTHETA = -0.26
 
-C Z-expansion TN 315 p 21
+C Z-expansion TN 315 p 21 <3GeV as recommended
 C Use official z-expansion parameters, not Patrick's results
       AXZEXPQ4 = 0
       AXZEXPNT = 8
@@ -145,10 +151,10 @@ C Use official z-expansion parameters, not Patrick's results
 C This is automatically set
       AXZEXPA0 = 0.5
 C Up to the user
-      AXZEXPA1 = 2.30
-      AXZEXPA2 = -0.60
-      AXZEXPA3 = -3.80
-      AXZEXPA4 = 2.30
+      AXZEXPA1 = 2.28
+      AXZEXPA2 = 0.26
+      AXZEXPA3 = -5.20
+      AXZEXPA4 = 2.60
 C These are automatically set
       AXZEXPA5 = 0.5
       AXZEXPA6 = 0.5

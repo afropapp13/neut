@@ -72,7 +72,6 @@ void NeutrootTreeSingleton::LoadTree(std::string const &filename) {
 
   if (br_neutvect) {
     br_neutvect->SetAddress(&nvect);
-    br_neutvect->SetAutoDelete(true);
   } else {
     throw std::runtime_error(
         "[ERROR]: NeutrootTreeSingleton::LoadTree(string) cannot find branch "

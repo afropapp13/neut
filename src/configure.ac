@@ -60,6 +60,34 @@ fi
 
 AM_CONDITIONAL([FC_HAS_PIE], [test ! ${FC_PIE_CHECK} -eq 0])
 
+########## Check gcc version
+
+NEED_ALLOW_ARG_MISMATCH=0
+NEED_FC_COMMON=0
+if test x"${FC}" = x"gfortran"; then
+
+cat > comptest.F <<EOF
+      program comptest
+      a = 0
+      end
+EOF
+
+  FC_VERSION=$(cpp -dM comptest.F | grep __VERSION__ | cut -d" " -f3 | sed -s "s/\"//g" | cut -d . -f 1)
+
+  echo "gfortran version = ${FC_VERSION}"
+
+  if test "${FC_VERSION}" -ge "10"; then
+
+    echo "[INFO]: Using gcc version: ${FC_VERSION}, require: -fallow-argument-mismatch"
+    NEED_ALLOW_ARG_MISMATCH=1
+    NEED_FC_COMMON=1
+  fi
+
+fi
+
+AM_CONDITIONAL([FC_ALLOW_ARG_MISMATCH], [test ! ${NEED_ALLOW_ARG_MISMATCH} -eq 0])
+AM_CONDITIONAL([FC_COMMON], [test ! ${NEED_FC_COMMON} -eq 0])
+
 ########## Check ROOT
 AC_CHECK_PROG(FOUND_ROOTCONFIG,root-config,"FOUND","NOT-FOUND")
 

@@ -9,10 +9,10 @@
 
 #ifdef __cplusplus
 extern "C" {
-double elaxff_(double *Q2_GeV, bool *nc, int *sgn);
+double elaxff_(double *Q2_GeV, int *nc, int *sgn);
 }
 #else
-double elaxff_(double *Q2_GeV, _Bool *nc, int *sgn);
+double elaxff_(double *Q2_GeV, int *nc, int *sgn);
 #endif
 
 double qedifcrs_(int *ip, int *iscc, float *energy_GeV, float *elep_GeV,
@@ -68,11 +68,7 @@ double qedifcrs_(int *ip, int *iscc, float *energy_GeV, float *elep_GeV,
   DSIG = 0.;
   EL = 0.;
 
-#ifdef __cplusplus
-  bool isnc;
-#else
-  _Bool isnc;
-#endif
+  int isnc;
 
   if (*iscc) {
     isnc = 0;
@@ -95,12 +91,15 @@ double qedifcrs_(int *ip, int *iscc, float *energy_GeV, float *elep_GeV,
   }
 
   if ((*elep_GeV) < Mlep_GeV) {
+    printf("fail: elep too low: %f < %f\n", (*elep_GeV), Mlep_GeV);
+
     return 0;
   }
 
   //--- Kinematical variables
   W_GeV = *energy_GeV - (*elep_GeV);
   if (W_GeV <= 0) {
+    printf("fail: W too low: %f\n", W_GeV);
     return 0;
   }
   PLEP = sqrt(((*elep_GeV)) * ((*elep_GeV)) - Mlep_GeV * Mlep_GeV);
@@ -116,6 +115,7 @@ double qedifcrs_(int *ip, int *iscc, float *energy_GeV, float *elep_GeV,
   QVEC2 = Q_GeV * Q_GeV;
   Q2_GeV2 = Q_GeV * Q_GeV - W_GeV * W_GeV;
   Q2EF = Q_GeV * Q_GeV - WEF * WEF - DMN;
+
 
   //--- Vector Form factor
   if ((nemdls_.mdlqe % 10) == 2) {
@@ -150,8 +150,6 @@ double qedifcrs_(int *ip, int *iscc, float *energy_GeV, float *elep_GeV,
   F2 = 0.5 * (FGE - FGM) / XMNc / (1. + Q2_GeV2 / (XMNc * XMNc) / 4.);
 
   FA = elaxff_(&Q2_GeV2, &isnc, &nupdgsign);
-
-  // printf("qedifcrs: FA = %f\n",FA);
 
   // FP = 2.*XMNc*FA/(Q2_GeV2 + 139.57*139.57);
   FP = fperr * 2. * XMNc * FA / (Q2_GeV2 + 0.13957 * 0.13957);
