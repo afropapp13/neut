@@ -391,6 +391,7 @@ C
             else
                evdifcrs
      $              = qedifcrs(ipar, ccnc, e, elep, coslep)
+C               write(*,*) "evdifcrs: ", evdifcrs
               if(evdifcrs.LE.0) THEN
                 write(*,*) "DO NOT IGNORE!!!! BAD EVDIFCRS, FG proton"
               endif

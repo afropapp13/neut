@@ -205,6 +205,17 @@ public:
       (1. + NSYST_TWKVAR(DN) *                                                 \
                 err->OneSigmaErr(DN, ((NSYST_TWKVAR(DN) > 0) ? +1 : -1)));
 #define NSYST_RECONFCURRVALUE_NOUNCERT(DN) NSYST_CURRVAR(DN) = NSYST_TWKVAR(DN);
+#define NSYST_GETTWKFORABS(DN, syst, absval, err)                              \
+  if (syst == DN) {                                                            \
+    if (std::isnormal(                                                         \
+            err->OneSigmaErr(DN, ((NSYST_TWKVAR(DN) > 0) ? +1 : -1)))) {       \
+      return ((absval / NSYST_DEFVAR(DN)) - 1) /                               \
+             err->OneSigmaErr(DN, ((NSYST_TWKVAR(DN) > 0) ? +1 : -1));         \
+    } else {                                                                   \
+      std::cout << "[WARN] Cannot determine twkval for abs = " << absval       \
+                << " for dial " << #DN << std::endl;                           \
+    }                                                                          \
+  }
 #else
 #define NSYST_RECONFCURRVALUE(DN, err)                                         \
   NSYST_CURRVAR(DN) =                                                          \

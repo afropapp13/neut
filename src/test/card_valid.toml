@@ -1,0 +1,380 @@
+[neut]
+
+number_of_events = 10000 # the number of probe interactions to simulate
+
+cross_section_table_path = "/path/to/cross/section/tables" # this can be used to override $NEUT_CRSPATH
+
+# verbosity = "loud"
+# verbosity = "quiet"
+verbosity = "very_quiet"
+
+rng_seed = "time"
+# rng_seed = "file"
+
+[neut.vertex]
+
+# position_type options:
+#
+position_type = "origin" # place the vertex at [0.0, 0.0, 0.0]
+#
+# position_type = "fixed" # must be accompanied by position
+# position =  [0.0, 0.0, 0.0]
+#
+# position_type = "random" # must be accompanied by radius
+# radius =  100.5
+
+[neut.probe]
+
+# must be one of numu(bar), nue(bar), nutau(bar)
+species = "numu"
+
+# direction_type options:
+#
+direction_type = "z" # probe approaches target along [0.0, 0.0, 1.0]
+#
+# direction_type = "fixed" # probe approaches target along vector specified by direction
+# direction [0.0, 0.0, 1.0] # same as "z"
+#
+# direction_type = "random" # probe approaches target isotropically
+
+# energy_spectrum_type options:
+#
+# energy_spectrum_type = "fixed" # set fixed probe energy with "energy_mev"
+# energy_mev = 600.0
+#
+# energy_spectrum_type = "uniform" # set energy range for uniform random energy with @"nergy_range_mev" 
+# energy_range_mev = [100.0, 1000.0] 
+#
+energy_spectrum_type = "root"
+energy_histogram = [ "/path/to/longlonglong/directory/name/with/longlonglonglonglonglonglonglonglong/root/file/name.root", "myhist", "mev"]
+
+[neut.target]
+
+# example for H20, two free protons and an oxygen nuclei.
+num_nucleons = 16
+num_bound_protons = 8
+num_free_protons = 2
+
+[neut.target.hadron_rescattering]
+
+pion_model_low_energy = "salcedo"
+# pion_model_low_energy = "tuned"
+
+pion_model_high_energy = "salcedo"
+# pion_model_high_energy = "proton_neutron_separated"
+
+pion_kinematic_model = "isotropic_decay"
+# pion_kinematic_model = "SAID"
+
+# pion_coulomb_correction = 0 # off by default
+
+pion_rescattering = "off"
+pion_rescattering_nuclear_model = "data_driven"
+# pion_rescattering_nuclear_model = "lfg"
+
+nucleon_rescattering = "off"
+nucleon_rescattering_nuclear_model = "lfg"
+# nucleon_rescattering_nuclear_model = "gfg"
+
+[neut.target.hadron_rescattering.pion_cross_sections]
+
+# qe =
+# qe_high =
+# inelastic =
+# absorption =
+# coherent =
+# charge_exchange =
+# charge_exchange_high =
+
+# qe_fraction =
+# coh_fraction =
+# charge_exchange_fraction =
+
+# mean_free_path =
+
+[neut.target.hadron_rescattering.nucleon_cross_sections]
+
+# mean_free_path = 1
+
+[neut.target.nuclear_effects]
+
+fermi_motion = "on"
+pauli_blocking = "on"
+oxygen_nuclear_effects = "on"
+nucleon_ejection = "on"
+
+# fermi_surface_momentum_mev
+# fermi_surface_energy_mev
+# initial_potential_energy
+# final_potential_energy
+
+# formation_length = "on"
+# formation_length = "off"
+# formation_length = "on_except_qe"
+# formation_length = "on_multpi_DIS"
+# formation_zone_scat_parameter = 0.08
+
+[neut.interaction_model]
+
+mode_choice_type = "normal" # choose according to nominal cross-section prediction
+# mode_choice_type = "rescaled" # read mode rescalings from neut.interaction_model.mode_rescaling table
+# mode_choice_type = "single" # set a single NEUT mode to simulate with "mode"
+
+# mode = "CC_QE_nu"
+# mode = "CC_2p2h_nu"
+# mode = "CC_RES_ppi+_nu"
+# mode = "CC_RES_ppi0_nu"
+# mode = "CC_RES_npi+_nu"
+# mode = "CC_COH_nu"
+# mode = "CC_DIF_nu"
+# mode = "CC_eta_nu"
+# mode = "CC_kaon_nu"
+# mode = "CC_1gamma_nu"
+# mode = "CC_multi_pi_nu"
+# mode = "CC_DIS_nu"
+
+# mode = "NC_elastic_free_p_nu"
+# mode = "NC_elastic_bound_p_nu"
+# mode = "NC_elastic_n_nu"
+# mode = "NC_RES_npi0_nu"
+# mode = "NC_RES_ppi0_nu"
+# mode = "NC_RES_ppi-_nu"
+# mode = "NC_RES_npi+_nu"
+# mode = "NC_COH_nu"
+# mode = "NC_DIF_nu"
+# mode = "NC_eta_n_nu"
+# mode = "NC_eta_p_nu"
+# mode = "NC_kaon_n_nu"
+# mode = "NC_kaon_p_nu"
+# mode = "NC_multi_pi_nu"
+# mode = "NC_1gamma_n_nu"
+# mode = "NC_1gamma_p_nu"
+# mode = "NC_DIS_nu"
+
+# mode = "CC_QE_free_proton_nubar"
+# mode = "CC_QE_bound_proton_nubar"
+# mode = "CC_2p2h_nubar"
+# mode = "CC_RES_npi-_nubar"
+# mode = "CC_RES_ppi0_nubar"
+# mode = "CC_RES_ppi-_nubar"
+# mode = "CC_COH_nubar"
+# mode = "CC_DIF_nubar"
+# mode = "CC_eta_nubar"
+# mode = "CC_kaon_nubar"
+# mode = "CC_1gamma_nubar"
+# mode = "CC_multi_pi_nubar"
+# mode = "CC_DIS_nubar"
+
+# mode = "NC_elastic_free_p_nubar"
+# mode = "NC_elastic_bound_p_nubar"
+# mode = "NC_elastic_n_nubar"
+# mode = "NC_RES_npi0_nubar"
+# mode = "NC_RES_ppi0_nubar"
+# mode = "NC_RES_ppi-_nubar"
+# mode = "NC_RES_npi+_nubar"
+# mode = "NC_COH_nubar"
+# mode = "NC_DIF_nubar"
+# mode = "NC_eta_n_nubar"
+# mode = "NC_eta_p_nubar"
+# mode = "NC_kaon_n_nubar"
+# mode = "NC_kaon_p_nubar"
+# mode = "NC_1gamma_n_nubar"
+# mode = "NC_1gamma_p_nubar"
+# mode = "NC_multi_pi_nubar"
+# mode = "NC_DIS_nubar"
+
+radiative_corrections = "off"
+
+[neut.interaction_model.mode_rescaling]
+
+# quotes required for keys with +/- characters
+"CC_QE_nu" = 1.0
+"CC_2p2h_nu" = 1.0
+"CC_RES_ppi+_nu" = 1.0
+"CC_RES_ppi0_nu" = 1.0
+"CC_RES_npi+_nu" = 1.0
+"CC_COH_nu" = 1.0
+"CC_DIF_nu" = 1.0
+"CC_eta_nu" = 1.0
+"CC_kaon_nu" = 1.0
+"CC_1gamma_nu" = 1.0
+"CC_multi_pi_nu" = 5.0
+"CC_DIS_nu" = 1.0
+
+"NC_elastic_free_p_nu" = 1.0
+"NC_elastic_bound_p_nu" = 1.0
+"NC_elastic_n_nu" = 1.0
+"NC_RES_npi0_nu" = 1.0
+"NC_RES_ppi0_nu" = 1.0
+"NC_RES_ppi-_nu" = 1.0
+"NC_RES_npi+_nu" = 1.0
+"NC_COH_nu" = 1.0
+"NC_DIF_nu" = 1.0
+"NC_eta_n_nu" = 1.0
+"NC_eta_p_nu" = 1.0
+"NC_kaon_n_nu" = 1.0
+"NC_kaon_p_nu" = 1.0
+"NC_multi_pi_nu" = 1.0
+"NC_1gamma_n_nu" = 1.0
+"NC_1gamma_p_nu" = 1.0
+"NC_DIS_nu" = 1.0
+
+"CC_QE_free_proton_nubar" = 1.0
+"CC_QE_bound_proton_nubar" = 1.0
+"CC_2p2h_nubar" = 1.0
+"CC_RES_npi-_nubar" = 1.0
+"CC_RES_ppi0_nubar" = 1.0
+"CC_RES_ppi-_nubar" = 1.0
+"CC_COH_nubar" = 1.0
+"CC_DIF_nubar" = 1.0
+"CC_eta_nubar" = 1.0
+"CC_kaon_nubar" = 1.0
+"CC_1gamma_nubar" = 1.0
+"CC_multi_pi_nubar" = 1.0
+"CC_DIS_nubar" = 1.0
+
+"NC_elastic_free_p_nubar" = 1.0
+"NC_elastic_bound_p_nubar" = 1.0
+"NC_elastic_n_nubar" = 1.0
+"NC_RES_npi0_nubar" = 1.0
+"NC_RES_ppi0_nubar" = 1.0
+"NC_RES_ppi-_nubar" = 1.0
+"NC_RES_npi+_nubar" = 1.0
+"NC_COH_nubar" = 1.0
+"NC_DIF_nubar" = 1.0
+"NC_eta_n_nubar" = 1.0
+"NC_eta_p_nubar" = 1.0
+"NC_kaon_n_nubar" = 1.0
+"NC_kaon_p_nubar" = 1.0
+"NC_1gamma_n_nubar" = 1.0
+"NC_1gamma_p_nubar" = 1.0
+"NC_multi_pi_nubar" = 1.0
+"NC_DIS_nubar" = 1.0
+
+[neut.interaction_model.QE]
+
+model = "nieves"
+# model = "benhar"
+# model = "llewelyn-smith"
+
+# Set from nuclear target if not overriden here
+# benhar.fermi_surface_for_pauli_mev =
+
+# Shift SF inputs along the separation energy axis
+# benhar.separation_energy_shift_gev =
+
+# erpa = "off" # incompatible with model = "nieves", use nieves.rpa = "on" instead
+
+# kappa = 1.0 # c.f. Miniboone QE result
+
+# second_class_currents_vector_scale
+# second_class_currents_axial_scale
+# pseudo_scalar_scale
+
+# pionless_delta_decay = "off"
+# pionless_delta_decay_fraction = 0.0
+
+nieves.nuclear_model = "lfg"
+nieves.rpa = "on"
+
+# nieves.rpa_parameters.fp0in
+# nieves.rpa_parameters.fp0ex
+# nieves.rpa_parameters.fstar
+# nieves.rpa_parameters.af
+# nieves.rpa_parameters.pilambda
+# nieves.rpa_parameters.cr0
+# nieves.rpa_parameters.rholambda
+# nieves.rpa_parameters.gp
+# nieves.rpa_parameters.xmpi
+# nieves.rpa_parameters.xmrho
+# nieves.rpa_parameters.irel
+
+# nieves.binding_energy = "on"
+# nieves.binding_energy_shift
+
+[neut.interaction_model.QE.vector_form_factors]
+
+cc_form = "dipole"
+# cc_form = "BBBA05"
+# cc_form = "BBBA07"
+
+nc_form = "default"
+# nc_form = "dipole"
+# nc_form = "BBBA05"
+
+# vector_mass =
+
+[neut.interaction_model.QE.axial_form_factors]
+
+form = "dipole"
+# form = "BBBA07"
+# form = "two_component"
+# form = "three_component"
+# form = "z_expansion"
+
+dipole.axial_mass = 1.05
+dipole.nc_axial_mass = 1.05
+
+# n_component.alpha = 
+# n_component.beta =
+# n_component.gamma = 
+# n_component.theta = 
+
+# z_expansion.q4 =
+# z_expansion.num_terms =
+# z_expansion.t0 =
+# z_expansion.t_cut =
+# z_expansion.a0 =
+# z_expansion.a1 =
+# z_expansion.a2 =
+# z_expansion.a3 =
+# z_expansion.a4 =
+# z_expansion.a5 =
+# z_expansion.a6 =
+# z_expansion.a7 =
+# z_expansion.a8 =
+# z_expansion.a9 =
+
+[neut.interaction_model.2p2h]
+
+model = "nieves_table"
+# model = "nieves_hadron_tensor"
+
+[neut.interaction_model.RES]
+
+# form_factors = "rein_sehgal"
+form_factors = "graczyk_sobczyk"
+
+# nonresonant_background_scale = 1.3
+
+# rein_sehgal.nr_type = "original"
+# rein_sehgal.nr_type = "halved"
+# rein_sehgal.axial_mass
+# rein_sehgal.vector_mass
+
+# graczyk_sobczyk.axial_mass
+# graczyk_sobczyk.vector_mass
+# graczyk_sobczyk.ca5
+
+[neut.interaction_model.COH]
+
+# model = "rein_sehgal"
+# model = "kartavtsev"
+model = "berger_sehgal"
+
+[neut.interaction_model.DIF]
+
+model = "rein_w_cut"
+# model = "rein"
+
+[neut.interaction_model.DIS]
+
+# pdf_set = "grv94_di"
+pdf_set = "grv98_lo"
+
+bodek_yang_correction = "on"
+
+multiplicity_model = "neut"
+# multiplicity_model = "fit_to_bc"
+# multiplicity_model = "AGKY"
+

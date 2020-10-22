@@ -59,6 +59,7 @@ C      Dipole FA
             FA = gA / (( 1 +( Q2_GeV /( XMANCEL**2 ) ) )**2)
          else
             FA = gA / (( 1 +( Q2_GeV /( XMAQE**2 ) ) )**2)
+C             WRITE(*,*) "Dipole: MAQE = ", XMAQE, FA
          endif
 
 C     BBBA07 FF
@@ -90,6 +91,8 @@ C     Apply NC Scaling to FA
 
 C     RETURN FA
       ELAXFF = FA
+C       WRITE(*,*) "ELAXFF: Q2_GeV", ELAXFF, Q2_GeV
+C       WRITE(*,*) "ELAXFF: MDLQEAF, ISNC",  MDLQEAF, isNC
 
       RETURN
       END

@@ -15,3 +15,9 @@
         double_me_auto = argin * 2
         RETURN
       END
+
+
+      SUBROUTINE logical_test(argin)
+        LOGICAL argin
+        WRITE(*,*) "FORT: ", argin
+      END
