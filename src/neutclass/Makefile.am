@@ -1,6 +1,6 @@
 include $(top_srcdir)/build.common
 
-AM_CXXFLAGS = -DNEUTCLASSVER=@NEUT_VERSION_NUM@ $(DEFAULT_CXXFLAGS) -std=c++14
+AM_CXXFLAGS = -DNEUTCLASSVER=@NEUT_VERSION_NUM@ $(DEFAULT_CXXFLAGS)
 AM_LDFLAGS = $(ROOT_LINKFLAGS) $(DEFAULT_LINKFLAGS)
 
 NEUTCLASSUTILS_SRCS = neutrootfortwrapper.cc NeutRootHandlers.cc neutrootTreeSingleton.cc neutfill.cc fill_dsdq2.cc CommonBlockIFace.cc
@@ -109,7 +109,6 @@ lib_LTLIBRARIES = libNEUTClass.la
 libNEUTClass_la_SOURCES = neutclassDict.cc neutctrl.cc neutfsipart.cc neutfsivert.cc neutnucfsistep.cc neutnucfsivert.cc neutpart.cc neutvect.cc neutvtx.cc
 
 if NEUT_HEPMC
-libNEUTClass_la_SOURCES += HepMCWriter.cc
 libNEUTClass_la_LDFLAGS = $(HEPMC_LINKFLAGS)
 libNEUTClass_la_LIBADD = $(HEPMC_LIBS)
 endif
@@ -120,6 +119,10 @@ LIBNAME = libNEUTClassUtils.@NEUT_VERSION_NUM@.a
 lib_LIBRARIES = $(LIBNAME)
 #
 libNEUTClassUtils_@NEUT_VERSION_NUM@_a_SOURCES = $(NEUTCLASSUTILS_SRCS)
+
+if NEUT_HEPMC
+libNEUTClassUtils_@NEUT_VERSION_NUM@_a_SOURCES += HepMCWriter.cc HepMCReader.cc
+endif
 
 install-exec-hook:
 	-(cd ${libdir}; $(LN_S) $(LIBNAME) $(shell echo $(LIBNAME) | cut -d . -f 1).a)

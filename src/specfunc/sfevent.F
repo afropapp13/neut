@@ -242,6 +242,8 @@ c ----- setup temp values for output common block
 
 C ******************************************************************** C
 C ----- Begin event generation -----
+        N_tries = 0
+        IERR=0
 10      continue
         if (tmp_IPNE(2) < 0) then
           write(*,*) "in nucleon pdg < 0!"
@@ -369,22 +371,32 @@ c ----- Not used for total cross-section calculation, only vector generation
 
 c sent straight here if event is impossible
 20      continue
-        if (nc .EQV. .FALSE.)then
-          mean = mean + crossSection
-          maxValue = max(maxValue, crossSection)
-        else if (abs(tmp_MODENE) .EQ. 51) then
-          meanNC(1) = meanNC(1) + crossSection
-          maxValueNC(1) = max(maxValueNC(1), crossSection)
-        else
-          meanNC(2) = meanNC(2) + crossSection
-          maxValueNC(2) = max(maxValueNC(2), crossSection)
-        endif
         N_tries = N_tries + 1
+
+c We're having some trouble here
+        if (N_tries.GT.100000) then
+          IERR=1
+          WRITE(*,*) "Failed to generate SF Event for PDG: ", IPAR, 
+     &       " energy: ", E, "MeV"
+          E = E / 1000.0 ! turn back into GeV for the rest of neut so that the error message isn't too confusing
+          return
+        endif
 
 **********  For table generation only!
 **********  Once enough events generated, stop
 **********  This value can be changed to increase precision/speed
         if (single .EQV. .FALSE.) then
+          if (nc .EQV. .FALSE.)then
+            mean = mean + crossSection
+            maxValue = max(maxValue, crossSection)
+          else if (abs(tmp_MODENE) .EQ. 51) then
+            meanNC(1) = meanNC(1) + crossSection
+            maxValueNC(1) = max(maxValueNC(1), crossSection)
+          else
+            meanNC(2) = meanNC(2) + crossSection
+            maxValueNC(2) = max(maxValueNC(2), crossSection)
+          endif
+
           if (N_tries .GT. 1000000) then
             mean = mean / N_tries
             meanNC(1) = meanNC(1) *dble(NUMATOM) /

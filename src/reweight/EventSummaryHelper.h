@@ -4,6 +4,10 @@
 #include "neutpart.h"
 #include "neutvect.h"
 
+#ifdef USE_HEPMC
+#include "NuHepMC/ReaderTools"
+#endif
+
 #include "TDirectory.h"
 #include "TH1.h"
 #include "TH2.h"
@@ -24,7 +28,7 @@ struct Kine {
   double coshmfspi;
   double Tpi;
   double EMiss;
-  bool ibound;
+  int ibound;
   size_t npi;
   size_t npip;
   size_t npim;
@@ -263,5 +267,73 @@ inline Kine GetKine(NeutVect *nvect) {
 
   return k;
 }
+
+#ifdef USE_HEPMC
+inline TLorentzVector TLV(HepMC3::FourVector const &fv) {
+  return {fv.x(), fv.y(), fv.z(), fv.t()};
+}
+inline Kine GetKine(std::shared_ptr<HepMC3::GenEvent> evt) {
+
+  auto probe = NuHepMC::GetProbe(*evt);
+
+  auto ISNucleons = NuHepMC::GetISParticles(*evt, NuHepMC::pid::kNucleons);
+
+  TLorentzVector probe_mom = TLV(probe->momentum());
+  TLorentzVector ISP4 = probe_mom;
+
+  int NNuc = ISNucleons.size();
+  for (auto &nuc : ISNucleons) {
+    ISP4 += TLV(nuc->momentum());
+  }
+
+  Kine k;
+
+  k.Enu = probe_mom.E() * 1E-3;
+  k.mode = NuHepMC::genevent::GetHardScatterMode(*evt);
+  NuHepMC::FromAttribute(evt, "ibound", k.ibound);
+  int TargetA = 0;
+  NuHepMC::FromAttribute(evt, "numatom", TargetA);
+
+  double MassRemnant_MeV = (TargetA - NNuc) * 938;
+  double TRemnant_MeV =
+      sqrt(pow(MassRemnant_MeV, 2) + ISP4.Vect().Mag2()) - MassRemnant_MeV;
+  double EIS = k.Enu + NNuc * 938;
+  double EFS = TRemnant_MeV;
+
+  //'lab frame' particles
+  auto FSParticles = NuHepMC::GetFSParticles(*evt);
+
+  for (auto &part : FSParticles) {
+
+    TLorentzVector mom = TLV(part->momentum());
+    int pid = part->pid();
+    // Calculate Q2 from the first outgoing lepton in the stack (makes Q2 for
+    // MEC events correct)
+    EFS += mom.E();
+    if (!k.foundlep && (abs(pid) > 10 && abs(pid) <= 16)) {
+      k.Q2 = -(mom - probe_mom).Mag2() * 1E-6;
+      k.plep = mom.Vect().Mag() * 1E-3;
+      k.coslep = mom.Vect().CosTheta();
+      k.W = (ISP4 - mom).Mag() * 1E-3;
+      k.foundlep = true;
+    } else if ((std::abs(pid) == 211) || (pid == 111)) {
+      k.Tpi += (mom.E() - mom.M()) * 1E-3;
+      if (mom.Vect().Mag() > k.phmfspi) {
+        k.phmfspi = mom.Vect().Mag() * 1E-3;
+        k.coshmfspi = mom.Vect().CosTheta();
+      }
+      k.foundpi = true;
+      k.npi++;
+      k.npip += (pid == 211);
+      k.npim += (pid == -211);
+      k.npi0 += (pid == 111);
+    }
+  }
+
+  k.EMiss = EIS - EFS;
+
+  return k;
+}
+#endif
 
 #endif
