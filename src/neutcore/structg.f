@@ -26,6 +26,8 @@
 *       2016.07.21 ; C. Bronner
 *                    Separate CC and NC structure functions
 *                    Add CKM mixing for CC case, with check for charm quarks
+*      2017.05.15 ; C. Bronner
+*                   Put real expression of NC structure functions      
 *
 ************************************************************************
 
@@ -52,7 +54,17 @@ C      PARAMETER (Vus    = 0.2257D0)
 C      PARAMETER (Vcd    = 0.230D0)
 C      PARAMETER (Vcs    = 0.957D0)
 
+*     Electroweak couplings
+      PARAMETER (sin2w  = 0.2223D0)   !--CODATA2014 value
 
+      REAL*8 gau, gvu, gad, gvd
+      gau=0.5D0
+      gad=-0.5D0
+      gvu=0.5D0-4.D0/3.D0*sin2w
+      gvd=-0.5D0+2.D0/3.D0*sin2w
+
+C      PRINT *,' gvu, gau, gvd, gad',gvu,gau,gvd,gad
+      
 *     Square of the CKM matrix elements used to compute CC structure functions    
       Vud2=Vud*Vud
       Vus2=Vus*Vus
@@ -131,28 +143,20 @@ C     nubar-neutron
      &               -AS*(Vus2+Vcs2)-AB)
             endif
          endif
-      else                      ! Neutral current case
-         if(ipar.gt.0) then     ! neutrino
-            if(it.eq.2212) then 
-C     nu-proton
-               F2 = 2.D0*(D+S+B+AU+AC+AT)
-               xF3 = 2.D0*(D+S+B-AU-AC-AT)
-            else
-C     nu-neutron
-               F2 = 2.D0*(U+S+B+AD+AC+AT)
-               xF3 = 2.D0*(U+S+B-AD-AC-AT)
-            endif
-         else                   ! anti-neutrino
-            if(it.eq.2212) then
-C     nubar-proton
-               F2 = 2.D0*(U+C+T+AD+AS+AB)
-               xF3 = 2.D0*(U+C+T-AD-AS-AB)
-            else
-C     nubar-neutron
-               F2 = 2.D0*(D+C+T+AU+AS+AB)
-               xF3 = 2.D0*(D+C+T-AU-AS-AB)
-            endif
-         endif
+      else                      ! Neutral current case       
+         if(it.eq.2212) then 
+C     proton target
+            F2 = (gvu*gvu+gau*gau)*(U+C+T+AU+AC+AT)
+     &         + (gvd*gvd+gad*gad)*(D+S+B+AD+AS+AB)
+            xF3 = 2.D0*gvu*gau*(U+C+T-AU-AC-AT)
+     &          + 2.D0*gvd*gad*(D+S+B-AD-AS-AB)
+         else
+C     neutron target
+            F2 = (gvu*gvu+gau*gau)*(D+C+T+AD+AC+AT)
+     &           + (gvd*gvd+gad*gad)*(U+S+B+AU+AS+AB)
+            xF3 = 2.D0*gvu*gau*(D+C+T-AD-AC-AT)
+     &           + 2.D0*gvd*gad*(U+S+B-AU-AS-AB)
+         endif      
       endif
 
       RETURN

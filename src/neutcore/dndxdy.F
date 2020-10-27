@@ -30,6 +30,8 @@
 *                  If Bodek-Yang is not used, keep the target mass corrections
 *     2016.07.20 ; C. Bronner
 *                  Target mass corrections moved to PDF calculation (grv98_lo.F)
+*     2017.05.15 ; C. Bronner
+*                  Change to Z propagator for NC events
 ************************************************************************
       implicit none
 #include "necard.h"
@@ -48,8 +50,13 @@
 
       real*8 const
       real*8 f2,xf3
+      
       real*8 amw2
       parameter( amw2=80.2D0*80.2D0 )
+      real*8 amz2
+      parameter( amz2=91.1876D0*91.1876D0 )
+      real *8 amboson2
+      
 
       real*8 am,amlep
       real*8 cor1,cor2,corw
@@ -82,6 +89,15 @@ C     Assign lepton mass based on neutrino and interaction type
         return
       endif
 
+C     Assign exchanged boson mass based on interaction type
+       if(itype.eq.0) then
+          amboson2=amz2
+       elseif(itype.eq.1) then
+          amboson2=amw2
+       else
+          return
+       endif
+          
 C     Assign target nucleon mass
       if(it.eq.2212) then
         am = xmp
@@ -163,7 +179,7 @@ C     Formula taken from C.H. Albright and C. Jarlskog, Nucl. Phys B84, 467 (197
          COR1=COR1-(AMLEP**2)/(4.*E*E)-(AMLEP**2)/(2.*am*E*(X+1.E-30))
          COR2=-(AMLEP**2)/(4.*am*E*(X+1.E-30))
          
-         corw=(AMW2/(AMW2+Q2))**2
+         corw=(AMBOSON2/(AMBOSON2+Q2))**2
 *        Get structure functions
          call structg(ip,it,itype,e,x,y,f2,xf3)
 
@@ -187,7 +203,7 @@ C     Formula taken from C.H. Albright and C. Jarlskog, Nucl. Phys B84, 467 (197
          
          COR2=-(AMLEP**2)/(4.*am*E*(X+1.E-30))
          
-         corw=(AMW2/(AMW2+Q2))**2
+         corw=(AMBOSON2/(AMBOSON2+Q2))**2
 *        Get structure functions
          call structg(ip,it,itype,e,x,y,f2,xf3)
 
