@@ -71,7 +71,7 @@ C      SUBROUTINE GRV98PA (ISET, X, Q2, UV, DV, US, DS, SS, GL)
 *                used
 *   2019.10.11 ; J. Xia
 *                Moved most of the Bodek-Yang correction to structg.f
-*                Kept the epsilon scaling in here
+*                Kept the xi scaling in here
       
 ********************************************************************
 #include "pdf804/impdp.inc"
