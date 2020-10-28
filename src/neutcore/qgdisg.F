@@ -8,6 +8,7 @@
 *     ++ Gets PDF based on settings in card file
 *
 *     (Input)
+*       IT      : Nucleon species
 *       X0      : Q**2/(2Mv) BJORKEN x
 *       Q2      : Transferred 4-momentum
 *     
@@ -21,7 +22,8 @@
 *                    Support for different PDFs and Bodek-Yang corrections
 *       2016.07.22 ; C. Bronner
 *                    Cleaning and commenting
-*
+*       2019.10.12 ; J. Xia
+*                    Separating valence and sea u/d in the output      
 ************************************************************************
 
       IMPLICIT REAL*8(A-H,O-Z)
@@ -33,7 +35,7 @@
 C     Allowed Q2 range for the different PDFs
       ! ---> GRV94DI
       if(NEPDF.eq.7) then
-         if(NEBODEK.eq.1) then ! use corrections by Bodek and Yang          
+         if(NEBODEK.ge.1) then ! use corrections by Bodek and Yang          
             QMIN2=0.0D0
             QMAX2=1.0D6
          else if(NEBODEK.eq.0) then ! original         
@@ -42,7 +44,7 @@ C     Allowed Q2 range for the different PDFs
          endif
       ! ---> GRV98LO
       else if(NEPDF.eq.12) then
-         if(NEBODEK.eq.1) then ! use corrections by Bodek and Yang 
+         if(NEBODEK.ge.1) then ! use corrections by Bodek and Yang 
             QMIN2=0.0D0
             QMAX2=1.0D6
          else if(NEBODEK.eq.0) then ! original
@@ -80,14 +82,17 @@ C --- GRV98 Leading Order
 
 *     Probabilities to return
 *     Return total probability (valence+sea) for up and down quarks
-      U = UV+AU
-      D = DV+AD
+Cx      U = UV+AU
+Cx      D = DV+AD
+Cx     Disabled the combination of UV and AU since for the Type II BY special
+Cx     care has to be taken of for the valence part (J. Xia 10'2020)
+      U = UV
+      D = DV
       S = AS
       C = AC
       B = AB
       T = AT
       
-
-
+      
       Return
       End

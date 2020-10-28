@@ -156,7 +156,7 @@ C      CKIN(39)    = 0.
 C#else
 C      CKIN(39)    = 0.4
 C#endif
-      if(NEBODEK.eq.1) then
+      if(NEBODEK.ge.1) then
          CKIN(39)    = 0.
       elseif(NEBODEK.eq.0) then
          if(NEPDF.eq.7) then

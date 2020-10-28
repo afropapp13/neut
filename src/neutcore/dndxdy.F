@@ -30,39 +30,33 @@
 *                  If Bodek-Yang is not used, keep the target mass corrections
 *     2016.07.20 ; C. Bronner
 *                  Target mass corrections moved to PDF calculation (grv98_lo.F)
-*     2017.05.15 ; C. Bronner
-*                  Change to Z propagator for NC events
 ************************************************************************
       implicit none
 #include "necard.h"
       integer ip,it,itype
       REAL*8 EE,XX,YY
       real*8 hc,gf,pi
-      real*8 xmp,xmn
+      real*8 xmp,xmn,xmc
       real*8 consp,consn,u,d
       PARAMETER (HC    = 0.19732858D-13)
       PARAMETER (GF    = 1.16637D-5*HC)
       PARAMETER (PI    = 3.141592653589793238D0)
       PARAMETER (xmp    = 0.93827231D0)
       PARAMETER (xmn    = 0.93956563D0)
+      PARAMETER (xmc    = 1.2705D0)
       parameter (consp =  1.D+38*GF*GF*xmp/PI)
       parameter (consn =  1.D+38*GF*GF*xmn/PI)
 
       real*8 const
-      real*8 f2,xf3
-      
+      real*8 f2v,f2a,xf3
       real*8 amw2
       parameter( amw2=80.2D0*80.2D0 )
-      real*8 amz2
-      parameter( amz2=91.1876D0*91.1876D0 )
-      real *8 amboson2
-      
 
       real*8 am,amlep
       real*8 cor1,cor2,corw
-      real*8 COEFF2, COEFF2_1, COEFF2_2, R, fnrworld
+      real*8 COEFF2, COEFF2_1, COEFF2_2, R, fnrworld, fnr1998
 
-      real*8 q2, Qtmp
+      real*8 q2, Qtmp, Rtmp
       real*8 e,x,y
       real*8 a,b
       real*8 ymax,xmax
@@ -73,7 +67,7 @@
       E=EE
       X=XX
       Y=YY
-
+C      print *, 'In dndxdy.F: Input X is ', X
       DNDXDY=0.D0
 
 C     Assign lepton mass based on neutrino and interaction type
@@ -89,15 +83,6 @@ C     Assign lepton mass based on neutrino and interaction type
         return
       endif
 
-C     Assign exchanged boson mass based on interaction type
-       if(itype.eq.0) then
-          amboson2=amz2
-       elseif(itype.eq.1) then
-          amboson2=amw2
-       else
-          return
-       endif
-          
 C     Assign target nucleon mass
       if(it.eq.2212) then
         am = xmp
@@ -172,6 +157,7 @@ C     Check those values of x and y give meaningful lepton kinematics
 C     Compute double differential cross section in x and y.
 C     Formula taken from C.H. Albright and C. Jarlskog, Nucl. Phys B84, 467 (1975), modified as this paper looks at the case of heavy lepton.
       Q2=2.D0*am*e*y*x
+      
       if(nebodek.eq.0) then
 !     --> Original
 *        Factors in front of the structure functions
@@ -179,19 +165,38 @@ C     Formula taken from C.H. Albright and C. Jarlskog, Nucl. Phys B84, 467 (197
          COR1=COR1-(AMLEP**2)/(4.*E*E)-(AMLEP**2)/(2.*am*E*(X+1.E-30))
          COR2=-(AMLEP**2)/(4.*am*E*(X+1.E-30))
          
-         corw=(AMBOSON2/(AMBOSON2+Q2))**2
+         corw=(AMW2/(AMW2+Q2))**2
 *        Get structure functions
-         call structg(ip,it,itype,e,x,y,f2,xf3)
+         call structg(ip,it,itype,e,x,y,f2v,f2a,xf3)
 
-         A=(1.-Y+Y**2/2.+COR1)*f2
+         A=(1.-Y+Y**2/2.+COR1)*(f2v+f2a)
          B=Y*(1-Y/2.+COR2)*xf3
-      elseif(nebodek.eq.1) then
+      else if(nebodek.GE.1) then
 !     --> Bodek correction(Aug'06 G.Mitsuka)
-         if(Q2.ge.0.35) then
-            R = fnrworld(x,Q2)
-         else if(Q2.lt.0.35) then
-            Qtmp = 0.35
-            R = 3.207*Q2*fnrworld(x,Qtmp)/(Q2**2 + 1.)
+Cx         if(Q2.ge.0.35) then
+Cx            R = fnrworld(x,Q2)
+Cx         else if(Q2.lt.0.35) then
+Cx            Qtmp = 0.35
+Cx            R = 3.207*Q2*fnrworld(x,Qtmp)/(Q2**2 + 1.)
+Cx         endif
+         
+!     --> Bodek correction 2019(Jan'20 J.Xia)
+         if (Q2.ge.0.30) then
+            R = fnr1998(x,Q2)
+         else if(Q2.lt.0.30) then
+            Qtmp = 0.30
+            R = 3.633*Q2*fnr1998(x,Qtmp)/(Q2**2 + 1.)
+         endif
+C        Testing R related uncertainty
+Cx         R = R + 0.05
+Cx         if (R.le.0) then
+Cx            R = 0
+Cx         endif
+         
+!     --> Charm production modification from 2019 Bodek-Yang in prep.
+
+         if(nebodek.eq.6) then
+            R = Q2 / (Q2 + xmc*xmc) * R
          endif
 
          COEFF2_1 = 1. - Y - am*X*Y/(2.*E) - (AMLEP**2)/(4.*E**2)
@@ -203,11 +208,12 @@ C     Formula taken from C.H. Albright and C. Jarlskog, Nucl. Phys B84, 467 (197
          
          COR2=-(AMLEP**2)/(4.*am*E*(X+1.E-30))
          
-         corw=(AMBOSON2/(AMBOSON2+Q2))**2
+         corw=(AMW2/(AMW2+Q2))**2
 *        Get structure functions
-         call structg(ip,it,itype,e,x,y,f2,xf3)
+         call structg(ip,it,itype,e,x,y,f2v,f2a,xf3)
 
-         A=COEFF2*f2
+         A=COEFF2*(f2v+f2a)+COEFF2_2*(f2v-f2a)
+Cx         A=COEFF2*(f2v+f2a)
          B=Y*(1-Y/2.+COR2)*xf3
       endif
 
@@ -218,6 +224,5 @@ C     Formula taken from C.H. Albright and C. Jarlskog, Nucl. Phys B84, 467 (197
      & DNDXDY=CONST*E*(A-B)*corw
 *---
       IF(DNDXDY.LE.0.) DNDXDY=0.
-C     
       RETURN
       END
