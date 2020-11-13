@@ -28,7 +28,7 @@ OBJ =	dnela.o fnelscrn.o fnelscrs.o dnelsq2.o fnq2max.o  \
 		necpnewk.o rsdt33.o nejet.o structg.o qgdisg.o \
 		neelslpv.o neelsspff.o dnelsnl.o neomega.o \
 		nefrmmom.o nemknpos.o neclpos.o neclrcrs.o \
-		fnrworld.o \
+		fnrworld.o byabpar.o \
 		grv94di.o grv98_lo.o pdfset.o structm.o \
 		nesettarg.o nrsettarg.o nesetfgparams.o \
         bbba07.o ddifcrs.o evdifcrs.o qedifcrs.o cohma.o necrsmode.o elaxff.o \

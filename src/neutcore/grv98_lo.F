@@ -69,6 +69,8 @@ C      SUBROUTINE GRV98PA (ISET, X, Q2, UV, DV, US, DS, SS, GL)
 *   2016.07.20 ; C. Bronner
 *                Target mass corrections for the case when BY is not
 *                used
+*   2020.11.13 ; C. Bronner
+*                Use subroutine to get BY parameters       
 ********************************************************************
 #include "pdf804/impdp.inc"
 #include "pdf804/w50516.inc"      
@@ -3997,13 +3999,11 @@ C
      +   .9779E-05,  .3050E-06,  .0000E+00,  .0000E+00,  .0000E+00,
      +   .0000E+00 /
 C
-        if(NEBODEK.eq.1) then  ! -----> Bodek Correction
+        if(NEBODEK.ge.1) then  ! -----> Bodek Correction
            if(first) print *, '>>>> GRV98LO with Bodek corr.'
     
 *       Set Bodek-Yang parameters
 *    Parameters from arXiv:hep-ex/0301036 (default for NEUT 5.3.4)
-C           BY_A=0.419
-C           BY_B=0.223
 C           BY_C_val1_d=0.544
 C           BY_C_val1_u=0.544
 C           BY_C_val2_d=0.431
@@ -4012,8 +4012,6 @@ C           BY_C_sea_d=0.380
 C           BY_C_sea_u=0.380
 
 *    Updated parameters from arXiv:hep-ex/0508007
-           BY_A=0.538
-           BY_B=0.305
            BY_C_val1_d=0.202
            BY_C_val1_u=0.291
            BY_C_val2_d=0.255
@@ -4021,6 +4019,9 @@ C           BY_C_sea_u=0.380
            BY_C_sea_d=0.621
            BY_C_sea_u=0.363
 
+
+           CALL BYABPAR(BY_A,BY_B)
+           
 
 *       Compute scaling variable           
            X  = DX*(DQ**2 + BY_B + Mf**2)/(0.5*DQ**2*
