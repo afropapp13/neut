@@ -69,6 +69,11 @@ C      SUBROUTINE GRV98PA (ISET, X, Q2, UV, DV, US, DS, SS, GL)
 *   2016.07.20 ; C. Bronner
 *                Target mass corrections for the case when BY is not
 *                used
+*
+*   2019.10.11 ; J. Xia
+*                Moved most of the Bodek-Yang correction to structg.f
+*                Kept the epsilon scaling in here
+*           
 *   2020.11.13 ; C. Bronner
 *                Use subroutine to get BY parameters       
 ********************************************************************
@@ -83,10 +88,8 @@ C      SUBROUTINE GRV98PA (ISET, X, Q2, UV, DV, US, DS, SS, GL)
 C      COMMON / INTINIP / IINIP
       SAVE XUVF, XDVF, XDEF, XUDF, XSF, XGF, NA, ARRF
        DATA ZEROD/0.D0/
-       REAL DURATIO, K_val, K_sea, M, Mf
-       REAL K_val_u, K_val_d, K_sea_u, K_sea_d
-       REAL BY_A, BY_B, BY_C_val1_d, BY_C_val1_u, BY_C_val2_d
-       REAL BY_C_val2_u, BY_C_sea_d, BY_C_sea_u
+       REAL DURATIO, M, Mf    
+       REAL BY_A, BY_B
        PARAMETER (M=0.93827231) !(Mass of Proton(in GeV))
        PARAMETER (Mf=0.0) !(Quark mass in final state(in GeV))
 *
@@ -3998,59 +4001,31 @@ C
      +   .0000E+00,
      +   .9779E-05,  .3050E-06,  .0000E+00,  .0000E+00,  .0000E+00,
      +   .0000E+00 /
-C
-        if(NEBODEK.ge.1) then  ! -----> Bodek Correction
+C     
+        if(NEBODEK.ge.1) then   ! -----> Bodek Correction
            if(first) print *, '>>>> GRV98LO with Bodek corr.'
-    
-*       Set Bodek-Yang parameters
-*    Parameters from arXiv:hep-ex/0301036 (default for NEUT 5.3.4)
-C           BY_C_val1_d=0.544
-C           BY_C_val1_u=0.544
-C           BY_C_val2_d=0.431
-C           BY_C_val2_u=0.431
-C           BY_C_sea_d=0.380
-C           BY_C_sea_u=0.380
-
-*    Updated parameters from arXiv:hep-ex/0508007
-           BY_C_val1_d=0.202
-           BY_C_val1_u=0.291
-           BY_C_val2_d=0.255
-           BY_C_val2_u=0.189
-           BY_C_sea_d=0.621
-           BY_C_sea_u=0.363
-
-
-           CALL BYABPAR(BY_A,BY_B)
-           
-
-*       Compute scaling variable           
+          
+           CALL BYABPAR(BY_A,BY_B)         
+*     Compute scaling variable           
            X  = DX*(DQ**2 + BY_B + Mf**2)/(0.5*DQ**2*
      &          (1. + sqrt(1. + (2.*M*DX)**2/DQ**2)) + BY_A*DX)
 
            Q  = DQ
            Q2 = DQ*DQ
-
-*       Compute correction factors
-           K_val_u = (1. - 1./(1. + Q2/0.71)**4)*(Q2 +BY_C_val2_u )/
-     &          (Q2 + BY_C_val1_u)
-           K_val_d = (1. - 1./(1. + Q2/0.71)**4)*(Q2 +BY_C_val2_d )/
-     &          (Q2 + BY_C_val1_d)
-           K_sea_u = Q2/(Q2 + BY_C_sea_u)
-           K_sea_d = Q2/(Q2 + BY_C_sea_d)
            
-
-*       GRV98 PDF only valid for Q2>0.8
+           
+*     GRV98 PDF only valid for Q2>0.8
            IF(Q2.lt.0.8) then
               Q2=0.8
               Q=sqrt(Q2) 
            endif
 
-*       Correction factor for ratio of u and d quarks
+*     Correction factor for ratio of u and d quarks
            DURATIO = -0.00817 + 0.0506*DX + 0.0798*DX**2
-    
-        else if(NEBODEK.eq.0) then  ! ----> don't use Bodek-Yang corrections         
+           
+        else if(NEBODEK.eq.0) then ! ----> don't use Bodek-Yang corrections         
            if(first) print *, '>>>> GRV98LO original'
-*      Use Nachtmann variable in the non Bodek-Yang case
+*     Use Nachtmann variable in the non Bodek-Yang case
            X  = 2.*DX/(1. + sqrt(1. + (2.*M*DX)**2/DQ**2))
            Q  = DQ
            Q2 = DQ*DQ
@@ -4102,7 +4077,7 @@ C           BY_C_sea_u=0.380
       XS = X**(-0.2)
       UV = DBFINT(NARG,XT,NA,ARRF,XUVF) * X1**3 * XV
       DV = DBFINT(NARG,XT,NA,ARRF,XDVF) * X1**4 * XV
-      if(NEBODEK.eq.1) then     ! --> Corrected d/u ratio only for valence quarks
+      if(NEBODEK.ge.1) then     ! --> Corrected d/u ratio only for valence quarks
          DUV=UV/(1. + DURATIO*UV/(UV+DV))
          DDV=(DV + UV*DURATIO)/(1. + DURATIO*UV/(UV+DV))
       else
@@ -4123,15 +4098,6 @@ C           BY_C_sea_u=0.380
       DTOP = ZEROD
       GL = DBFINT(NARG,XT,NA,ARRF,XGF)  * X1**5 * XS 
       DGL = GL
-      if(NEBODEK.eq.1) then ! --> Apply the Bodek-Yang K factors
-*     Scaling factor for valence quarks
-         DUV = DUV*K_val_u
-         DDV = DDV*K_val_d
-*     Scaling factor for sea quarks
-         DUSEA = DUSEA*K_sea_u
-         DDSEA = DDSEA*K_sea_d
-         DSTR = DSTR*K_sea_d
-      endif
       
 *     
  60   RETURN

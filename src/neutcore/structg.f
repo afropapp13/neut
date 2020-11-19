@@ -22,18 +22,28 @@
 *       xF3    : structure function xf3
 *
 *     (Creation Date and Author)
-*       ????.??.?? ; ?? first version
-*       2016.07.21 ; C. Bronner
-*                    Separate CC and NC structure functions
-*                    Add CKM mixing for CC case, with check for charm quarks
-*      2017.05.15 ; C. Bronner
-*                   Put real expression of NC structure functions      
+*     ????.??.?? ; ?? first version
+*     2016.07.21 ; C. Bronner
+*                  Separate CC and NC structure functions
+*                  Add CKM mixing for CC case, with check for charm quarks
+*      
+*     2017.05.15 ; C. Bronner
+*                  Put real expression of NC structure functions
 *
+*     2019.10.11 ; J. Xia
+*                  Moved most of the Bodek-Yang correction to from grv98_lo.f
+*
+*     2020.11.19 ; C. Bronner
+*                  Rearrange and use subroutines
 ************************************************************************
 
 
 
       IMPLICIT REAL*8 (A-H,O-Z)
+
+C      REAL QS
+      REAL K_val_u,K_val_d,K_sea_u,K_sea_d
+      
 *     Nucleon masses
       PARAMETER (xmp    = 0.93827231D0)
       PARAMETER (xmn    = 0.93956563D0)
@@ -52,7 +62,9 @@
 C      PARAMETER (Vud    = 0.97377D0)
 C      PARAMETER (Vus    = 0.2257D0)
 C      PARAMETER (Vcd    = 0.230D0)
-C      PARAMETER (Vcs    = 0.957D0)
+C     PARAMETER (Vcs    = 0.957D0)
+
+      INCLUDE 'necard.h'   
 
 *     Electroweak couplings
       PARAMETER (sin2w  = 0.2223D0)   !--CODATA2014 value
@@ -105,11 +117,30 @@ C      PRINT *,' gvu, gau, gvd, gad',gvu,gau,gvd,gad
       Q2    = 2*AM*X*Y*EN
       CALL QGDISG(X,Q2,G,U,D,AU,AD,S,C,B,T)
 
+
+      
+      if(NEBODEK.ge.1) then
+         CALL BYKVEC(Q2,K_val_u,K_val_d,K_sea_u,K_sea_d)      
+*     Scaling factor for valence quarks
+         U = U*K_val_u
+         D = D*K_val_d
+*     Scaling factor for sea quarks
+         AU = AU*K_sea_u
+         AD = AD*K_sea_d
+         S = S*K_sea_d
+      endif
+
+*     Add valence and sea components for up and down 
+      U = U + AU
+      D = D + AD
+      
 *     For sea quarks, take anti-quark probabilities to be the same as quark one
       AS=S
       AC=C
       AB=B
       AT=T
+
+
 
 *     Compute the structure functions from PDF
 *     PDFs are for proton, so for neutron target exchange U<->D
