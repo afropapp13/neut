@@ -1,4 +1,3 @@
-
 #include "nefillverC.h"
 #include "necardC.h"
 #include "neutmodelC.h"
@@ -6,15 +5,18 @@
 #include "neworkC.h"
 #include "fsihistC.h"
 #include "nucleonfsihistC.h"
+#include "fsinucleonreweightC.h"
 #include "vcworkC.h"
 #include "posinnucC.h"
 #include "neutcrsC.h"
-
+#include "nrnuclparamC.h"
 #include "neutvect.h"
 #include "neutpart.h"
 #include "neutfsipart.h"
 #include "neutfsivert.h"
 #include "neutrootTreeSingleton.h"
+#include "nrintC.h"
+#include "nrcardC.h"
 
 #include "NModeDefn.h"
 
@@ -44,6 +46,8 @@ namespace rew   {
 
   static FUNCTION_RETURN evdifcrs();
   static FUNCTION_RETURN evpiprob();
+
+  static void  nrprton();
   static void  nesetfgparams();
   static void  nefillmodel();
   static void  zexpconfig();

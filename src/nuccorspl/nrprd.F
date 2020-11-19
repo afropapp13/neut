@@ -1,6 +1,8 @@
       subroutine nrprd(no,e,ka,piso,chiso)
       implicit none
       real*4 piso(4,4),chiso(4) !momentum and charge of products
+c     C     interaction type, total energy, charge, momentum, charge
+
 c     ka= 0   primary neutron
 c     1   primary proton
 c     no=     1       elastic
@@ -127,6 +129,8 @@ C     the data as in MECC7 and GCALOR  (BERTINI's)
             pdldec(i,3)=-pdldec(i,1)
          end do
          pdldec(4,1)=sqrt(pcmsm**2+amnucl**2)
+c     nrllor performs a lorentz shift from first argument is prime of third
+c     second argument is prime of fourth
          call nrllor(piso(1,1),piso(4,1),pdldec(1,1),pdldec(4,1),beta)
          call nrllor(piso(1,3),piso(4,3),pdldec(1,3),pdldec(4,1),beta)
          chiso(1)=ka
@@ -161,6 +165,7 @@ C     Phys Rev 105,1874(1957) taken with some fixup from MECC7
       else if(no.eq.3) then
          t=((w-upi)**2-am2n2)/2/amnucl
       end if
+C     call nrhis(t-300.,20.,161,ilo,ihi,erem)
  1    call nrhis(t-300.,20.,161,ilo,ihi,erem)
       rf1=(frinn(ihi)*erem+frinn(ilo)*(1-erem))*1e-4
       phsm=(fmxsm(ihi)*erem+fmxsm(ilo)*(1-erem))*100.

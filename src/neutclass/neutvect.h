@@ -112,6 +112,8 @@ class NeutVect : public TObject {
   Float_t        NuceffFactorPIQELKin;
   Float_t        NuceffFactorPICXKin;
 
+  Float_t        NrintNucleonCascadeProb;
+  
   /////////////////////////////////////////////////////////////////////////
   /* Nieves 1p1h model parameters */
 

@@ -1,0 +1,27 @@
+## Check default NEUT_ROOT directory
+ifndef NEUT_ROOT
+      NEUT_ROOT = ../../../
+endif
+
+include ${NEUT_ROOT}/src/neutsmpl/config_neut.gmk
+
+NEUTINCDIR+=-I../
+NEUTLIBS+=-L../ -lNReWeight
+
+COREDIR = ${NEUT_ROOT}/src/neutcore
+CLASSDIR= ${NEUT_ROOT}/src/neutclass
+
+OBJS+=tauvect_dummy.o
+
+SOBJS = ${CLASSDIR}/neutctrl.so ${CLASSDIR}/neutpart.so \
+		${CLASSDIR}/neutvect.so ${CLASSDIR}/neutvtx.so \
+		${CLASSDIR}/neutfsipart.so ${CLASSDIR}/neutfsivert.so \
+		${CLASSDIR}/neutnucfsistep.so ${CLASSDIR}/neutnucfsivert.so
+
+TARGETS = previoustester
+
+all: $(TARGETS)
+
+previoustester: previoustester.o $(OBJS)
+	$(FC) -o $@ $(FLAGS) previoustester.o -Xlinker -R../ $(OBJS) \
+				$(NEUTLIBS) $(ROOTLIBS) 

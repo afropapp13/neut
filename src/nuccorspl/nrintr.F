@@ -79,21 +79,26 @@ C
 C
 C     Check Free or not
 C
+
+
       IF  ((PVC(1,2)**2+PVC(2,2)**2+PVC(3,2)**2).lt.1.e-5) THEN
          return
       endif
+
+
 
 !
 !     reset nucleon fsi common block
 !
       NFnvert = 0
       NFnstep = 0
-
+      RW_step_i= 0
 
   100 CONTINUE
 
       NPARTL=0
       NVC2=NVC
+C     from 3rd particle to end of vect
       DO 1000 I=3,NVC
 
 

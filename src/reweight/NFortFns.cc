@@ -5,6 +5,9 @@
 extern "C" {
   FUNCTION_RETURN evdifcrs_();
   FUNCTION_RETURN evpiprob_();
+
+  void nrprton_(float*,float[3],float[4],int*,float[4],int*,float[3],int*,int*,int*);
+
   void  nesetfgparams_();
   void  nefillmodel_();
   void  zexpconfig_();
@@ -101,12 +104,31 @@ NFortFns * NFortFns::Instance()
 
 FUNCTION_RETURN NFortFns::evdifcrs()      {  return evdifcrs_(); }
 FUNCTION_RETURN NFortFns::evpiprob()      {  return evpiprob_(); }
+
+void  NFortFns::nrprton() {
+  float anuc = -999; float stpi[3] = {-999,-999,-999}; float pi[4] = {-999,-999,-999,-999}; int idmc =-999; float po[4][20]; int ido; int no; float stpo[3][20]; int imode; int icont;
+  //nrprton just needs some arguments, none of these numbers actually used in the reweight
+
+
+
+    nucleonfsihist_.nreweightflag = 1;
+    //tell the code it's reweight o'clock
+
+
+
+
+    nrprton_(&anuc, stpi, pi, &idmc, *po, &ido, *stpo, &no, &imode, &icont);
+    //run nrprton.F for reweighting
+
+}
+
+
 void  NFortFns::nesetfgparams() { nesetfgparams_(); }
 void  NFortFns::nefillmodel()   { nefillmodel_(); }
 void  NFortFns::zexpconfig() { zexpconfig(); }
 
 void NFortFns::Reconfigure() {
-  nefillmodel_();
+ nefillmodel_();
   nesetfgparams_();
   if (nemdls_.mdlqeaf == 5) zexpconfig_();
 }
@@ -181,7 +203,7 @@ void NFortFns::SetMCDefaultVal(NSyst_t syst, double val) {
     cout << RNECA5Idef;
     RNECA5Idef = val;
     break;
-
+ 
   case ( kXSecTwkDial_BgSclRES ) :
     cout << RNEBGSCLdef;
     RNEBGSCLdef = val;

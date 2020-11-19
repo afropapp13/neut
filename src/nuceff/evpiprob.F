@@ -63,7 +63,7 @@ C#define DEBUG
 
       EVPIPROB = 1
       FSIPROB  = 1
-
+      write(*,*) 'Came to the EvPiProbParty'
 C     No intermediate particle
       IF (NVERT.le.1 .or. NVCVERT.lt.1) return
 
@@ -72,7 +72,8 @@ C     Not bound target
 
 C     Not tuned FSI model
       IF (NENEFMODL.EQ.0 .or. NENEFMODH.EQ.0) THEN
-         write(*,*) "EVPIPROB Warning: Attemping to call with NENEFMODL!=0 and NENEFMODH!=0"
+         write(*,*) "EVPIPROB Warning: Attemping to call
+     &  with NENEFMODL!=0 and NENEFMODH!=0"
          return
       END IF
 
@@ -209,7 +210,7 @@ C           Intermediate step
                PESC = (1-MODFRAC)*PESCL + MODFRAC*PESCH
 
                EVPIPROB = EVPIPROB * PESC
-
+C               write(*,*) 'EvPiProb * PESC2'
 #ifdef DEBUG
                if (EVPIPROB.le.0) write(*,*) "EVPIPROB: 1. ", J, IP, ABSP
 #endif
@@ -245,6 +246,7 @@ C     $        (NENEFMODL.EQ.1 .and. ABSP.LE.450) ) then
 C           Intermediate step
             IF (POSDIFF .ge. (DXXY*DXXYFACTOR)**2) THEN
                EVPIPROB = EVPIPROB * PESC
+C                write(*,*) 'EvPiProb * PESC1'
 
 #ifdef DEBUG
                if (EVPIPROB.le.0) write(*,*) "EVPIPROB: 2. ", J, IP, ABSP
@@ -257,26 +259,28 @@ C           Vertex step
             else
                IF (IFLGVERT(IVERTF(J)).eq.-1) then
                   EVPIPROB = EVPIPROB * PESC
+c                  write(*,*) 'EvPiProb * PESC5'
                ELSE IF (IFLGVERT(IVERTF(J)).eq.3) then
                   EVPIPROB = EVPIPROB * PABS
+c                  write(*,*) 'EvPiProb * PABS'
                ELSE IF (IFLGVERT(IVERTF(J)).eq.4 .or.
      &                  IFLGVERT(IVERTF(J)).eq.8) then
 
                   EVPIPROB = EVPIPROB * PQE
-
+c                  write(*,*) 'EvPiProb * PQE'
 C           Charge exchange probability determined within QE channel
                   PPI(1) = ABSP
                   PPI(2) = 0
                   PPI(3) = 0
 
 #ifdef DEBUG
-                  write(*,*) "EVPIPROB: Before EVSETPF, EVPIPROB =  ",EVPIPROB
+c                  write(*,*) "EVPIPROB: Before EVSETPF, EVPIPROB =  ",EVPIPROB
 #endif
 
                   CALL EVSETPF(IP,PPI,DL,IFLGVERT(IVERTF(J)),PROB)
 
                   EVPIPROB = EVPIPROB * PROB
-
+c                  write(*,*) 'EvPiProb * PROB'
 #ifdef DEBUG
                   write(*,*) "EVPIPROB: After EVSETPF ", PROB, EVPIPROB
 #endif
@@ -361,7 +365,7 @@ C              non-CX interaction
 C           Intermediate step
  320        IF (POSDIFF .ge. (DXXY*DXXYFACTOR)**2) THEN
                EVPIPROB = EVPIPROB * PESC
-
+c               write(*,*) 'EvPiProb * PESC4'
 #ifdef DEBUG
                if (EVPIPROB.le.0) write(*,*) "EVPIPROB: 4. ", J, IP, ABSP
 #endif
@@ -372,16 +376,21 @@ C     Vertex step
             else
                IF (IFLGVERT(IVERTF(J)).eq.-1) then
                   EVPIPROB = EVPIPROB * PESC
+c                  write(*,*) 'EvPiProb * PESC3'
 C               ELSE IF (IFLGVERT(IVERTF(J)).eq.30) then
 C                  EVPIPROB = EVPIPROB * PABS
                ELSE IF (IFLGVERT(IVERTF(J)).eq.40) then
                   EVPIPROB = EVPIPROB * PCX
+c                  write(*,*) 'EvPiProb * PCX'
                ELSE IF (IFLGVERT(IVERTF(J)).eq.70) then
                   EVPIPROB = EVPIPROB * PINEL
+c                  write(*,*) 'EvPiProb * PINEL'
                ELSE IF (IFLGVERT(IVERTF(J)).eq.80) then
                   EVPIPROB = EVPIPROB * PQE
+c                  write(*,*) 'EvPiProb * PQE'
                ELSE IF (IFLGVERT(IVERTF(J)).eq.90) then
                   EVPIPROB = EVPIPROB * PCOH
+c                  write(*,*) 'EvPiProb * PCOH'
 
 C              Should be a low energy calculation
                ELSE IF (IFLGVERT(IVERTF(J)).lt.10) then

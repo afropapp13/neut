@@ -63,8 +63,8 @@ endif
 
 setenv PATH ${CERN}/${CERN_LEVEL}/bin:${ROOTSYS}/bin:$PATH
 echo $PATH
-setenv LD_LIBRARY_PATH ${ROOTSYS}/lib/root:${LD_LIBRARY_PATH}
-echo $LD_LIBRARY_PATH
+#setenv LD_LIBRARY_PATH ${ROOTSYS}/lib/root:${LD_LIBRARY_PATH}
+#echo $LD_LIBRARY_PATH
 
 
 setenv EXPERIMENT /

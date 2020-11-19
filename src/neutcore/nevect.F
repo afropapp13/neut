@@ -86,7 +86,7 @@ C
       CALL NEOMEGA
 C
 C --  nucleon rescattering
-C
+C     
       call nrintr
 C      
 C --  nucleon ejection following pion/delta absorption

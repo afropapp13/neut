@@ -14,14 +14,11 @@ ifndef CERN_LEVEL
 endif
 
 # Check that we can find cernlib in shell
-ifeq "$(shell cernlib)" ""
-  $(error Looks like you havent set up CERNLIB, please fix this)
-  $(error I rely on being able to do cernlib in shell)
-endif
 
-ifndef ROOTSYS
- $(error ROOTSYS is not set!)
-endif
+
+#ifndef ROOTSYS
+# $(error ROOTSYS is not set!)
+#endif
 
 NEUT_SRC =  $(NEUT_ROOT)/src
 
@@ -139,4 +136,4 @@ clean:
 lib: $(LIB_DEPEND)
 	@echo "[package: $(PACKAGE)] Generating shared library ..."
 	$(SOCMD) $(SOFLAGS) $(SOMINF) $(PACKAGE_ALL_OBJECTS) $(LIBS) $(EXTRA_EXT_LIBS) $(OutPutOpt) $(PACKAGE_LIB_WITH_PATH)
-
+	cp -v $(PACKAGE_LIB) ../../lib/$(PACKAGE_LIB)
