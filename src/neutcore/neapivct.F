@@ -205,8 +205,16 @@ C
   100 CONTINUE
 
 C -- CONSIDER FERMI MOTION OF NUCLEON T.KAJITA  18-NOV-88 ------------
+C    Avoid infinite loop, possible due to hardcoded ENSTOP limits
+      idummy=0
 
  96   PFABS=0.
+
+      IF (idummy .GT. 10000) THEN
+         GOTO 1000
+      ENDIF
+      idummy=idummy+1
+
 C    Generate Fermi momentum for target nucleon
       IF (IBOUND.EQ.1 .AND. ABS(IPAR).NE.16) THEN
          CALL nefrmmom(PFABS,IWAVE)
