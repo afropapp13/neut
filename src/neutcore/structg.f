@@ -1,6 +1,6 @@
 ************************************************************************
 *     --------------------------------------
-      SUBROUTINE structg(ipar,it,itype,en,X,Y,f2,xf3)
+      SUBROUTINE structg(ipar,it,itype,en,X,Y,f2v,f2a,xf3)
 *
 *     --------------------------------------
 *
@@ -31,7 +31,7 @@
 *                  Put real expression of NC structure functions
 *
 *     2019.10.11 ; J. Xia
-*                  Moved most of the Bodek-Yang correction to from grv98_lo.f
+*                  Moved most of the Bodek-Yang correction from grv98_lo.f
 *
 *     2020.11.19 ; C. Bronner
 *                  Rearrange and use subroutines
@@ -43,6 +43,7 @@
 
 C      REAL QS
       REAL K_val_u,K_val_d,K_sea_u,K_sea_d
+      REAL K_ax_val,K_ax_sea
       
 *     Nucleon masses
       PARAMETER (xmp    = 0.93827231D0)
@@ -117,28 +118,63 @@ C      PRINT *,' gvu, gau, gvd, gad',gvu,gau,gvd,gad
       Q2    = 2*AM*X*Y*EN
       CALL QGDISG(X,Q2,G,U,D,AU,AD,S,C,B,T)
 
+*     Vector variables to have the original PDFs still available for axial terms
+      Uvect=U
+      Dvect=D
+      AUvect=AU
+      ADvect=AD
+      Svect=S
+      Cvect=C
+      Bvect=B
+      Tvect=T
 
-      
+*     BY correction for vector terms
       if(NEBODEK.ge.1) then
          CALL BYKVEC(Q2,K_val_u,K_val_d,K_sea_u,K_sea_d)      
 *     Scaling factor for valence quarks
-         U = U*K_val_u
-         D = D*K_val_d
+         Uvect = Uvect*K_val_u
+         Dvect = Dvect*K_val_d
 *     Scaling factor for sea quarks
-         AU = AU*K_sea_u
-         AD = AD*K_sea_d
-         S = S*K_sea_d
+         AUvect = AUvect*K_sea_u
+         ADvect = ADvect*K_sea_d
+         Svect = Svect*K_sea_d
       endif
 
+*     PDFs for axial F2
+      if(NEBODEK.eq.2) then     !--- specific corrections in new BY
+         CALL BYKAX(Q2, K_ax_val,K_ax_sea)
+         Uax = U*K_ax_val
+         Dax = D*K_ax_val
+         Uax = AU*K_ax_sea
+         ADax = AD*K_ax_sea
+         Sax = S*K_ax_sea
+      else     !---- same PDFs for vector and axial
+         Uax = Uvect
+         Dax = Dvect
+         AUax = AUvect
+         ADax = ADvect
+         Sax = Svect        
+      endif
+      Cax=C
+      Bax=B
+      Tax=T
+      
+
 *     Add valence and sea components for up and down 
-      U = U + AU
-      D = D + AD
+      Uvect = Uvect + AUvect
+      Dvect = Dvect + ADvect
+      Uax = Uax + AUax
+      Dax = Dax + ADax
       
 *     For sea quarks, take anti-quark probabilities to be the same as quark one
-      AS=S
-      AC=C
-      AB=B
-      AT=T
+      ASvect=Svect
+      ACvect=Cvect
+      ABvect=Bvect
+      ATvect=Tvect
+      ASax=Sax
+      ACax=Cax
+      ABax=Bax
+      ATax=Tax
 
 
 
@@ -150,43 +186,61 @@ C      PRINT *,' gvu, gau, gvd, gad',gvu,gau,gvd,gad
          if(ipar.gt.0) then     ! neutrino
             if(it.eq.2212) then 
 C     nu-proton
-               F2 = 2.D0*(D*(Vud2+Vcd2)+S*(Vus2+Vcs2)+B+AU*(Vud2+Vus2)
-     &              +AC+AT)
-               xF3 = 2.D0*(D*(Vud2+Vcd2)+S*(Vus2+Vcs2)+B-AU*(Vud2+Vus2)
-     &              -AC-AT)
+               F2V = Dvect*(Vud2+Vcd2)+Svect*(Vus2+Vcs2)+Bvect
+     &              +AUvect*(Vud2+Vus2)+ACvect+ATvect
+               F2A = Dax*(Vud2+Vcd2)+Sax*(Vus2+Vcs2)+Bax
+     &              +AUax*(Vud2+Vus2)+ACax+ATax
+               xF3 = 2.D0*(Dvect*(Vud2+Vcd2)+Svect*(Vus2+Vcs2)+Bvect
+     &              -AUvect*(Vud2+Vus2)-ACvect-ATvect)
             else
 C     nu-neutron
-               F2 = 2.D0*(U*(Vud2+Vcd2)+S*(Vus2+Vcs2)+B+AD*(Vud2+Vus2)
-     &              +AC+AT)
-               xF3 = 2.D0*(U*Vud2+S*Vus2+B-AD*(Vud2+Vus2)-AC-AT)
+               F2V = Uvect*(Vud2+Vcd2)+Svect*(Vus2+Vcs2)+Bvect
+     &              +ADvect*(Vud2+Vus2)+ACvect+ATvect
+               F2A = Uax*(Vud2+Vcd2)+Sax*(Vus2+Vcs2)+Bax
+     &              +ADax*(Vud2+Vus2)+ACax+ATax
+               xF3 = 2.D0*(Uvect*Vud2+Svect*Vus2+Bvect
+     &              -ADvect*(Vud2+Vus2)-ACvect-ATvect)
             endif
          else                   ! anti-neutrino
             if(it.eq.2212) then
 C     nubar-proton
-               F2 = 2.D0*(U*(Vud2+Vus2)+C+T+AD*(Vud2+Vcd2)
-     &              +AS*(Vus2+Vcs2)+AB)
-               xF3 = 2.D0*(U*(Vud2+Vus2)+C+T-AD*Vud2-AS*Vus2-AB)
+               F2V = Uvect*(Vud2+Vus2)+Cvect+Tvect+ADvect*(Vud2+Vcd2)
+     &              +ASvect*(Vus2+Vcs2)+ABvect
+               F2A = Uax*(Vud2+Vus2)+Cax+Tax+ADax*(Vud2+Vcd2)
+     &              +ASax*(Vus2+Vcs2)+ABax
+               xF3 = 2.D0*(Uvect*(Vud2+Vus2)+Cvect+Tvect
+     &              -ADvect*Vud2-ASvect*Vus2-ABvect)
             else
 C     nubar-neutron
-               F2 = 2.D0*(D*(Vud2+Vus2)+C+T+AU*(Vud2+Vcd2)
-     &              +AS*(Vus2+Vcs2)+AB)
-               xF3 = 2.D0*(D*(Vud2+Vus2)+C+T-AU*(Vud2+Vcd2)
-     &               -AS*(Vus2+Vcs2)-AB)
+               F2V = Dvect*(Vud2+Vus2)+Cvect+Tvect+AUvect*(Vud2+Vcd2)
+     &              +ASvect*(Vus2+Vcs2)+ABvect
+               F2A = Dax*(Vud2+Vus2)+Cax+Tax+AUax*(Vud2+Vcd2)
+     &              +ASax*(Vus2+Vcs2)+ABax
+               xF3 = 2.D0*(Dvect*(Vud2+Vus2)+Cvect+Tvect
+     &               -AUvect*(Vud2+Vcd2)-ASvect*(Vus2+Vcs2)-ABvect)
             endif
          endif
-      else                      ! Neutral current case       
+      else                      ! Neutral current case
+C     Not clear if should also separate axial and vector for NC...
+C     Implement the separation for now, but should reconsider in the future    
          if(it.eq.2212) then 
 C     proton target
-            F2 = (gvu*gvu+gau*gau)*(U+C+T+AU+AC+AT)
-     &         + (gvd*gvd+gad*gad)*(D+S+B+AD+AS+AB)
-            xF3 = 2.D0*gvu*gau*(U+C+T-AU-AC-AT)
-     &          + 2.D0*gvd*gad*(D+S+B-AD-AS-AB)
+            F2V = 0.5D0*((gvu*gvu+gau*gau)*(Uvect+Cvect+Tvect+AUvect
+     &           +ACvect+ATvect)+ (gvd*gvd+gad*gad)*(Dvect+Svect+Bvect
+     &           +ADvect+ASvect+ABvect))
+            F2A = 0.5D0*((gvu*gvu+gau*gau)*(Uax+Cax+Tax+AUax+ACax+ATax)
+     &           + (gvd*gvd+gad*gad)*(Dax+Sax+Bax+ADax+ASax+ABax))
+            xF3 = 2.D0*gvu*gau*(Uvect+Cvect+Tvect-AUvect-ACvect-ATvect)
+     &          + 2.D0*gvd*gad*(Dvect+Svect+Bvect-ADvect-ASvect-ABvect)
          else
 C     neutron target
-            F2 = (gvu*gvu+gau*gau)*(D+C+T+AD+AC+AT)
-     &           + (gvd*gvd+gad*gad)*(U+S+B+AU+AS+AB)
-            xF3 = 2.D0*gvu*gau*(D+C+T-AD-AC-AT)
-     &           + 2.D0*gvd*gad*(U+S+B-AU-AS-AB)
+            F2V = 0.5D0*((gvu*gvu+gau*gau)*(Dvect+Cvect+Tvect+ADvect           
+     &           +ACvect+ATvect)+ (gvd*gvd+gad*gad)*(Uvect+Svect+Bvect
+     &           +AUvect+ASvect+ABvect))
+            F2A = 0.5D0*((gvu*gvu+gau*gau)*(Dax+Cax+Tax+ADax+ACax+ATax)
+     &           + (gvd*gvd+gad*gad)*(Uax+Sax+Bax+AUax+ASax+ABax))
+            xF3 = 2.D0*gvu*gau*(Dvect+Cvect+Tvect-ADvect-ACvect-ATvect)
+     &           + 2.D0*gvd*gad*(Uvect+Svect+Bvect-AUvect-ASvect-ABvect)
          endif      
       endif
 

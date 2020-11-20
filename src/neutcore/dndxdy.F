@@ -32,6 +32,10 @@
 *                  Target mass corrections moved to PDF calculation (grv98_lo.F)
 *     2017.05.15 ; C. Bronner
 *                  Change to Z propagator for NC events
+*     2019.10.12 ; J. Xia
+*                  New version of the BY corrections
+*     2020.11.19 ; C. Bronner
+*                  Reorganize to merge last 2 updates smoothly
 ************************************************************************
       implicit none
 #include "necard.h"
@@ -49,7 +53,7 @@
       parameter (consn =  1.D+38*GF*GF*xmn/PI)
 
       real*8 const
-      real*8 f2,xf3
+      real*8 f2v,f2a,xf3
       
       real*8 amw2
       parameter( amw2=80.2D0*80.2D0 )
@@ -181,11 +185,11 @@ C     Formula taken from C.H. Albright and C. Jarlskog, Nucl. Phys B84, 467 (197
          
          corw=(AMBOSON2/(AMBOSON2+Q2))**2
 *        Get structure functions
-         call structg(ip,it,itype,e,x,y,f2,xf3)
+         call structg(ip,it,itype,e,x,y,f2v,f2a,xf3)
 
-         A=(1.-Y+Y**2/2.+COR1)*f2
+         A=(1.-Y+Y**2/2.+COR1)*(f2v+f2a)
          B=Y*(1-Y/2.+COR2)*xf3
-      elseif(nebodek.eq.1) then
+      elseif(nebodek.ge.1) then
 !     --> Bodek correction(Aug'06 G.Mitsuka)
          if(Q2.ge.0.35) then
             R = fnrworld(x,Q2)
@@ -205,9 +209,9 @@ C     Formula taken from C.H. Albright and C. Jarlskog, Nucl. Phys B84, 467 (197
          
          corw=(AMBOSON2/(AMBOSON2+Q2))**2
 *        Get structure functions
-         call structg(ip,it,itype,e,x,y,f2,xf3)
+         call structg(ip,it,itype,e,x,y,f2v,f2a,xf3)
 
-         A=COEFF2*f2
+         A=COEFF2*(f2v+f2a)+COEFF2_2*(f2v-f2a)
          B=Y*(1-Y/2.+COR2)*xf3
       endif
 
