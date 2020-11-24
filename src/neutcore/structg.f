@@ -44,6 +44,8 @@
 C      REAL QS
       REAL K_val_u,K_val_d,K_sea_u,K_sea_d
       REAL K_ax_val,K_ax_sea
+      REAL X_H, H_Factor
+      REAL*8 K_LW
       
 *     Nucleon masses
       PARAMETER (xmp    = 0.93827231D0)
@@ -75,8 +77,8 @@ C     PARAMETER (Vcs    = 0.957D0)
       gad=-0.5D0
       gvu=0.5D0-4.D0/3.D0*sin2w
       gvd=-0.5D0+2.D0/3.D0*sin2w
+      
 
-C      PRINT *,' gvu, gau, gvd, gad',gvu,gau,gvd,gad
       
 *     Square of the CKM matrix elements used to compute CC structure functions    
       Vud2=Vud*Vud
@@ -88,6 +90,10 @@ C      PRINT *,' gvu, gau, gvd, gad',gvu,gau,gvd,gad
       Wref=xmp+xmd
       
       Q2=X*(2.*xmp*Y*en)
+
+C     Save the bjoken X for calculation of H factor
+      X_H   = X
+      
       W2=-Q2+xmp**2+2.*xmp*Y*en
       W=SQRT(W2)
      
@@ -130,7 +136,20 @@ C      PRINT *,' gvu, gau, gvd, gad',gvu,gau,gvd,gad
 
 *     BY correction for vector terms
       if(NEBODEK.ge.1) then
-         CALL BYKVEC(Q2,K_val_u,K_val_d,K_sea_u,K_sea_d)      
+         CALL BYKVEC(Q2,K_val_u,K_val_d,K_sea_u,K_sea_d)
+
+*     BY low W factor (for resonances) - not used by default
+         if(NEBODEK.eq.2.and.NEBYLW.eq.1) then
+            W_LW_MIN = 1.4D0
+            if(W.gt.W_LW_MIN) then
+               BJNU2 = DBLE(EN)**2*DBLE(Y)**2 !--- nu
+               C_LW = 0.218D0
+               K_LW = (BJNU2 + C_LW) / BJNU2
+               K_val_u = K_val_u*K_LW
+               K_val_d = K_val_d*K_LW
+            endif
+         endif
+         
 *     Scaling factor for valence quarks
          Uvect = Uvect*K_val_u
          Dvect = Dvect*K_val_d
@@ -141,7 +160,7 @@ C      PRINT *,' gvu, gau, gvd, gad',gvu,gau,gvd,gad
       endif
 
 *     PDFs for axial F2
-      if(NEBODEK.eq.2) then     !--- specific corrections in new BY
+      if(NEBODEK.eq.2.and.NEBYFORCET1.eq.0) then     !--- specific corrections in new BY
          CALL BYKAX(Q2, K_ax_val,K_ax_sea)
          Uax = U*K_ax_val
          Dax = D*K_ax_val
@@ -242,6 +261,12 @@ C     neutron target
             xF3 = 2.D0*gvu*gau*(Dvect+Cvect+Tvect-ADvect-ACvect-ATvect)
      &           + 2.D0*gvd*gad*(Uvect+Svect+Bvect-AUvect-ASvect-ABvect)
          endif      
+      endif
+
+      if(NEBODEK.eq.2) then
+         H_Factor = 0.914 + 0.296*X_H - 0.374*X_H*X_H
+     &        + 0.165*X_H*X_H*X_H
+         xF3 = H_Factor*xF3
       endif
 
       RETURN

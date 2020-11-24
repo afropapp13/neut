@@ -64,9 +64,9 @@
 
       real*8 am,amlep
       real*8 cor1,cor2,corw
-      real*8 COEFF2, COEFF2_1, COEFF2_2, R, fnrworld
+      real*8 COEFF2, COEFF2_1, COEFF2_2, R, fnrworld, fnr1998
 
-      real*8 q2, Qtmp
+      real*8 q2, Qtmp, Rtmp
       real*8 e,x,y
       real*8 a,b
       real*8 ymax,xmax
@@ -184,20 +184,32 @@ C     Formula taken from C.H. Albright and C. Jarlskog, Nucl. Phys B84, 467 (197
          COR2=-(AMLEP**2)/(4.*am*E*(X+1.E-30))
          
          corw=(AMBOSON2/(AMBOSON2+Q2))**2
-*        Get structure functions
+*     Get structure functions
          call structg(ip,it,itype,e,x,y,f2v,f2a,xf3)
 
          A=(1.-Y+Y**2/2.+COR1)*(f2v+f2a)
          B=Y*(1-Y/2.+COR2)*xf3
       elseif(nebodek.ge.1) then
+         if (nebodek.eq.1) then
 !     --> Bodek correction(Aug'06 G.Mitsuka)
-         if(Q2.ge.0.35) then
-            R = fnrworld(x,Q2)
-         else if(Q2.lt.0.35) then
-            Qtmp = 0.35
-            R = 3.207*Q2*fnrworld(x,Qtmp)/(Q2**2 + 1.)
+            if(Q2.ge.0.35) then
+               R = fnrworld(x,Q2)
+            else if(Q2.lt.0.35) then
+               Qtmp = 0.35
+               R = 3.207*Q2*fnrworld(x,Qtmp)/(Q2**2 + 1.)
+            endif
+         else if (nebodek.eq.2) then
+!     --> Bodek correction 2019(Jan'20 J.Xia)
+            if (Q2.ge.0.30) then
+               R = fnr1998(x,Q2)
+            else if(Q2.lt.0.30) then
+               Qtmp = 0.30
+               R = 3.633*Q2*fnr1998(x,Qtmp)/(Q2**2 + 1.)
+            endif
+         else
+            R=0
          endif
-
+         
          COEFF2_1 = 1. - Y - am*X*Y/(2.*E) - (AMLEP**2)/(4.*E**2)
      &        - (AMLEP**2)/(2.*am*E*(X+1.E-30))
          COEFF2_2 = ( Y**2/2. + (Y*AMLEP**2)/(4.*am*E*(X+1.E-30)) )*
