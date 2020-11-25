@@ -19,8 +19,14 @@ if NEUT_LIBCOMPAT
 
 install-exec-hook:
 	-(cd ${libdir}; $(LN_S) $(LIBNAME) $(shell echo $(LIBNAME) | cut -d . -f 1).a)
+	-(mkdir -p ${bindir}/../share/neut/crsdat/radcorr; cp -r $(top_srcdir)/radcorr/*.root ${bindir}/../share/neut/crsdat/radcorr )
 
 uninstall-hook:
 	-(cd ${libdir}; rm -f $(shell echo $(LIBNAME) | cut -d . -f 1).a)
+
+else
+
+install-exec-hook:
+	-(mkdir -p ${bindir}/../share/neut/crsdat/radcorr; cp -r $(top_srcdir)/radcorr/*.root ${bindir}/../share/neut/crsdat/radcorr )
 
 endif

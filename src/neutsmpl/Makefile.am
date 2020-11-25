@@ -17,7 +17,7 @@ libNEUTROOTIFace_a_SOURCES += gperfstart.cc
 endif
 
 neutroot_SOURCES = neutroot.F 
-neutroot_LDADD = $(NEUTSMPL_PROGLDADD) libNEUTROOTIFace.a
+neutroot_LDADD = libNEUTROOTIFace.a $(NEUTSMPL_PROGLDADD)
 neutroot_LDFLAGS = $(NEUTSMPL_PROGLDFLAGS)
 
 #This is stupid

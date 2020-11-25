@@ -58,7 +58,7 @@ $(LIBNAME): $(NEUT_STATIC_LIBS)
 install-exec-hook:
 	-(cd ${libdir}; $(LN_S) $(LIBNAME) $(shell echo $(LIBNAME) | cut -d . -f 1).a)
 	-(mkdir -p ${bindir}/../share/neut; cp -r $(top_srcdir)/neutsmpl/Cards ${bindir}/../share/neut/ )
-	-(mkdir -p ${bindir}/../share/neut; cp -r $(top_srcdir)/crsdat ${bindir}/../share/neut/ )
+	-(mkdir -p ${bindir}/../share/neut/crsdat; cp -r $(top_srcdir)/crsdat/* ${bindir}/../share/neut/crsdat/ )
 
 uninstall-hook:
 	-(cd ${libdir}; rm -f $(shell echo $(LIBNAME) | cut -d . -f 1).a)
