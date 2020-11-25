@@ -16,6 +16,9 @@
 *       NENEFO16 : ( NEUT-NEFF ) Flag on Nuclear effect in O16
 *                     0 : on ( default )
 *                     1 : off
+*       NUCDEXITE : (NEUT-NUCDEXITE) Flag to enable nuclear de-excitation in O16
+*                     0 : off
+*                     1 : on ( default )
 *       NENEFMODL: ( NEUT-MODL ) Select model for low energy pion
 *                     0 : default (Salcedo et. al)
 *                     1 : Tuned to pion scattering data
@@ -119,12 +122,12 @@ C
 *       2012.12    ; P.Rodrigues added form factors
 *
 ************************************************************************
-      INTEGER NEFRMFLG,NEPAUFLG,NENEFO16,NENEFMODL,NENEFMODH,
+      INTEGER NEFRMFLG,NEPAUFLG,NENEFO16,NUCDEXITE,NENEFMODL,NENEFMODH,
      &        NENEFKINH,NEMODFLG,NESELMOD,ITAUFLGCORE,NUSIM, QUIET
       REAL   CRSNEUT,CRSNEUTB
 
-      COMMON/NEUTCARD/NEFRMFLG,NEPAUFLG,NENEFO16,NENEFMODL,NENEFMODH,
-     &                NENEFKINH,NEMODFLG,NESELMOD,CRSNEUT(30),
+      COMMON/NEUTCARD/NEFRMFLG,NEPAUFLG,NENEFO16,NUCDEXITE,NENEFMODL,
+     &                NENEFMODH,NENEFKINH,NEMODFLG,NESELMOD,CRSNEUT(30),
      &                CRSNEUTB(30),ITAUFLGCORE,NUSIM,QUIET
 
       INTEGER NEFKINVER

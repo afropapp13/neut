@@ -91,7 +91,7 @@ C
 C
 C --  CONSIDER NULCEAR EXCITATION OF GAMMA
 C
-      if(NUMATOM.eq.16) CALL NEMKGAM ! only 16O
+      if ((NUMATOM.eq.16).and.(NUCDEXITE.EQ.1)) CALL NEMKGAM ! only 16O
 c      CALL NEMKGAM
 C
 C --  translate K0 -> K LONG or K SHORT
