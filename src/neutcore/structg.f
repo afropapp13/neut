@@ -164,7 +164,7 @@ C     Save the bjoken X for calculation of H factor
          CALL BYKAX(Q2, K_ax_val,K_ax_sea)
          Uax = U*K_ax_val
          Dax = D*K_ax_val
-         Uax = AU*K_ax_sea
+         AUax = AU*K_ax_sea
          ADax = AD*K_ax_sea
          Sax = S*K_ax_sea
       else     !---- same PDFs for vector and axial
