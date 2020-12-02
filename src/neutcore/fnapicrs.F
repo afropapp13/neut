@@ -61,7 +61,9 @@
 *                               even if not upmu mode
 *       2008.11.17 ; R.Tacik    calculate inump and inumpn for each event
 *       2016.03.08 ; C.Bronner  Put back the possibility to use a given input proton fraction
-*                               inump and inumpn are computed from number of nucleons only if the input fraction is <0 or >1
+*                               inump and inumpn are computed from number of nucleons only if
+*                               the input fraction is <0 or >1
+*       2020.12.02 ; C.Bronner  Cross-section for new BY model
 *
 ************************************************************************
 *
@@ -382,22 +384,68 @@ C #include "discrs.h"
             open(84,file=fname,form='formatted',status='old')
             lunpcrs = 83
             lunpncrs = 84
-         elseif(nepdf.eq.12.and.nebodek.eq.0) then ! GRV98 original
+         elseif(nepdf.eq.12) then ! GRV98
+            if (nebodek.eq.0) then ! No B-Y corrections
             print*, '---> Loading GRV98 original version'
-            fname = crstblpath(1:lenpath)//'98org_p.dat'
+            fname = crstblpath(1:lenpath)//'PDF12_BY0_LW0_FT0_M0_p.dat'
             open(85,file=fname,form='formatted',status='old')
-            fname = crstblpath(1:lenpath)//'98org_pn.dat'
+            fname = crstblpath(1:lenpath)//'PDF12_BY0_LW0_FT0_M0_pn.dat'
             open(86,file=fname,form='formatted',status='old')
             lunpcrs = 85
             lunpncrs = 86
-         elseif(nepdf.eq.12.and.nebodek.eq.1) then ! GRV98 Bodek corr.
-            print*, '---> Loading GRV98 modified version'
-            fname = crstblpath(1:lenpath)//'98mod_p.dat'
+            else if (nebodek.eq.1) then ! B-Y model from hep-ex/0508007
+            print*, '---> Loading GRV98 + BY model from hep-ex/0508007'
+            fname = crstblpath(1:lenpath)//'PDF12_BY1_LW0_FT0_M0_p.dat'
             open(87,file=fname,form='formatted',status='old')
-            fname = crstblpath(1:lenpath)//'98mod_pn.dat'
+            fname = crstblpath(1:lenpath)//'PDF12_BY1_LW0_FT0_M0_pn.dat'
             open(88,file=fname,form='formatted',status='old')
             lunpcrs = 87
             lunpncrs = 88
+         else if (nebodek.eq.2) then ! B-Y model from 2019 paper in prep.
+            print*, '---> Loading GRV98 + BY model from 2019'
+               if (nebylw.eq.0) then  ! don't use extra low W term
+                  if (nebyforcet1.eq.0) then ! type 2 model
+                     fname = crstblpath(1:lenpath)//
+     &               'PDF12_BY2_LW0_FT0_M0_p.dat'
+                     open(89,file=fname,form='formatted',status='old')
+                     fname = crstblpath(1:lenpath)//
+     &               'PDF12_BY2_LW0_FT0_M0_pn.dat'
+                     open(90,file=fname,form='formatted',status='old')
+                     lunpcrs = 89
+                     lunpncrs = 90
+                  else if (nebyforcet1.eq.1) then ! type 1 model, F2_axial=F2_vector
+                     fname = crstblpath(1:lenpath)//
+     &               'PDF12_BY2_LW0_FT1_M0_p.dat'
+                     open(91,file=fname,form='formatted',status='old')
+                     fname = crstblpath(1:lenpath)//
+     &               'PDF12_BY2_LW0_FT1_M0_pn.dat'
+                     open(92,file=fname,form='formatted',status='old')
+                     lunpcrs = 91
+                     lunpncrs = 92
+                  endif
+               else if (nebylw.eq.1) then
+                  if (nebyforcet1.eq.0) then ! type 2 model
+                     fname = crstblpath(1:lenpath)//
+     &               'PDF12_BY2_LW1_FT0_M0_p.dat'
+                     open(93,file=fname,form='formatted',status='old')
+                     fname = crstblpath(1:lenpath)//
+     &               'PDF12_BY2_LW1_FT0_M0_pn.dat'
+                     open(94,file=fname,form='formatted',status='old')
+                     lunpcrs = 93
+                     lunpncrs = 94
+                  else if (nebyforcet1.eq.1) then ! type 1 model, F2_axial=F2_vector
+                     fname = crstblpath(1:lenpath)//
+     &               'PDF12_BY2_LW1_FT1_M0_p.dat'
+                     open(95,file=fname,form='formatted',status='old')
+                     fname = crstblpath(1:lenpath)//
+     &               'PDF12_BY2_LW1_FT1_M0_pn.dat'
+                     open(96,file=fname,form='formatted',status='old')
+                     lunpcrs = 95
+                     lunpncrs = 96
+                  endif
+                  
+               endif
+            endif
          endif
 
          read(lunpcrs,'(A)') DUMSTR
