@@ -90,10 +90,11 @@ C -- extract NEUT card
       WRITE(6,*) 'NECARDEV : INPUTTED PARAMETER '
       WRITE(6,*) 'NECARDEV : NEV  = ',NEVTEVCT
 
-      IF (      (abs(IDPTEVCT).ne.12
-     $     .and.(abs(IDPTEVCT).ne.14))) THEN
+      IF (      (abs(IDPTEVCT).ne.12)
+     $     .and.(abs(IDPTEVCT).ne.14)
+     $     .and.(abs(IDPTEVCT).ne.16)) THEN
          WRITE(6,*) 'NECARDEV : IDPT in the card was set to ',
-     $              IDPTEVCT,' but this should be +-12, +-14.'
+     $              IDPTEVCT,' but this should be +-12, +-14, +-16.'
          stop
       else
          WRITE(6,*) 'NECARDEV : IDPT = ',IDPTEVCT

@@ -58,13 +58,10 @@ C
 C
 C --  MAKE VECTOR
 C
-
-#ifndef NEUT_USE_TAUOLA
-      IF ((abs(ip).ne.12).and.(abs(ip).ne.14)) then
-         write(*,*) 'IP should be 12 or 14.'
+      IF ((abs(ip).ne.12).and.(abs(ip).ne.14).and.(abs(ip).ne.16)) then
+         write(*,*) 'IP should be 12, 14, or 16.'
          stop
       endif
-#endif
 
       CALL NEVENT(IP,PMOM,IERR)
 
