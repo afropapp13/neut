@@ -123,7 +123,6 @@ C ----- set initial neutrino four-vector components
         do i = 2, 4
           k(i) = dble(E*DIRNEU(i-1))
         enddo
-
 C ----- set masses of particles
         if (nc .EQV. .FALSE.) then
           call MCMASS(abs(IPAR)-1, dummy)
@@ -283,6 +282,12 @@ C ----- select values from the spectral function array
           call selectSfValues(p)
         endif
 
+        if ((ETilde + SFEBSHIFT*1.E3).LT.0) then
+          WRITE(*,*) "For chosen SF EMiss", ETilde, " Eb shift is too negative", SFEBSHIFT*1E3
+          WRITE(*,*) "Draw from SF again..."
+          goto 2207
+        endif
+
 
         p(1) = sqrt(inNucleonMass**2 + modMomentum(p)**2)
 
@@ -299,6 +304,7 @@ c ----- not enough energy - skip straight to end of event
           crossSection = 0
           goto 20
         endif
+
 C ----- calculate outgoing momenta, and pick a direction
         kPrime(1) = (dotProduct(temp_vector, temp_vector)
      &  - outNucleonMass**2 + leptonMass**2)
@@ -397,14 +403,11 @@ c sent straight here if event is impossible
 c event complete - go back to start to generate more
           goto 10
 
-
-
 C ----- for event generation -  compare to value loaded from xsec table
 c ----- 5% factor reduces efficiency but avoids errors from interpolation
        else if (crossSection*1E38 .LT. RLU(dummy)*tableMax*1.05) then
          goto 10
        endif
-
 
 c ----- if event has got to here - event is saved
 c ----- need to change everything into GeV

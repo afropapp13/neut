@@ -80,7 +80,8 @@ c ----- open file
         fileName = CRSTBLPATH(1:lenpath)//fileName
 
         open(99, file=fileName, status='old')
-        write(*,*) "reading in sf xsec file ", fileName
+        write(*,*) "reading in sf xsec file ", 
+     &              fileName(1:LEN_TRIM(fileName))
 
 c ----- read file into arrays
 c        read(99,*) nBins
