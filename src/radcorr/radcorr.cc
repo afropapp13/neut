@@ -70,7 +70,7 @@ bool isclep(int pdg) {
 struct radcorr_inputs {
 
   TGraph2D *colinear_gamma_total_prob[2];
-  std::array<TGraph2D *, 24> colinear_Egamma_prob[2];
+  TGraph2D *colinear_Egamma_prob[24][2];
 
   double egamma_max;
   double egamma_min;
@@ -120,7 +120,8 @@ struct radcorr_inputs {
     }
     prob = FixedEnuSpline.Eval(cos(thetalep));
     // std::cout << "[INFO]: At costhetalep: " << cos(thetalep)
-    //           << " was outside bound, used 1D extrapolation to determine prob: "
+    //           << " was outside bound, used 1D extrapolation to determine
+    //           prob: "
     //           << prob << "(prob at boundary: "
     //           << colinear_gamma_total_prob[is_ele]->Interpolate(enu, max_ct)
     //           << ")" << std::endl;
