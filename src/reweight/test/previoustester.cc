@@ -230,15 +230,19 @@ void FillNeutCommons(NeutVect* nvect) {
 int main(int argc, char *argv[]) {
 
   TH1::SetDefaultSumw2(true);
-  if (argc != 2 && argc != 3) {
-    std::cerr << "Syntax is: ./tester OUTPUT_NEUT_ROOT_FILE.root (variation)" << std::endl;
+  if (argc != 2 && argc != 3 && argc != 4) {
+    std::cerr << "Syntax is: ./tester OUTPUT_NEUT_ROOT_FILE.root (variation) (nEvts)" << std::endl;
     std::cerr << "Variation 0, Variation 1, Variation 2, Variation 3" << std::endl;
     return 1;
   }
 
 
   int variation = -1;
-  if (argc == 3) variation = int(std::atoi(argv[2]));
+  variation = int(std::atoi(argv[2]));
+
+  int nEvtsToProcess = -1;
+  if(argc==4) nEvtsToProcess = int(std::atoi(argv[3]));
+
 
   std::string InputName = std::string(argv[1]);
 
@@ -581,6 +585,9 @@ int main(int argc, char *argv[]) {
   Infile->cd();
   Tree->SetBranchAddress("vectorbranch", &nvect);
   int nEvents = Tree->GetEntriesFast();
+
+  // custom number of events
+  if(nEvtsToProcess!=-1) nEvents=nEvtsToProcess;
 
   int PrintWidth = 1;
 

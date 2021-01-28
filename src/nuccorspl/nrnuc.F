@@ -478,7 +478,8 @@ c      print *,"iqq = ",iqq
       nel(iqq)=nel(iqq)+1
 c     idec only set to 1 if survival, I think
 
-
+   
+c200  write(*,*) 'END OF nrnuc.F. pcascprob = ',pcascprob
  200  return
 
        end

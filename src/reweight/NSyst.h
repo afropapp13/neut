@@ -384,6 +384,13 @@ public:
       //case ( kRDcyTwkDial_BR1eta           ) : return "RDecBR1eta";           break;
       //case ( kRDcyTwkDial_Theta_Delta2Npi  ) : return "Theta_Delta2Npi";      break;
 
+    // New nucleon FSI dials: 
+
+    case ( kCascTwkDial_TotalProb    ) : return "TotalProb"   ;  break;
+    case ( kCascTwkDial_ElasticProb  ) : return "ElasticProb" ;  break;
+    case ( kCascTwkDial_SinglePiProb ) : return "SinglePiProb";  break;
+    case ( kCascTwkDial_DoublePiProb ) : return "DoublePiProb";  break;
+
     default: 
       return "-";
     }
@@ -504,10 +511,10 @@ public:
        kCascTwkDial_FrCExHigh_pi,    
        kCascTwkDial_FrPiProd_pi,
 
-       //kCascTwkDial_TotalProb,
-       //kCascTwkDial_ElasticProb,
-       //kCascTwkDial_SinglePiProb,
-       //kCascTwkDial_DoublePiProb,
+       kCascTwkDial_TotalProb,
+       kCascTwkDial_ElasticProb,
+       kCascTwkDial_SinglePiProb,
+       kCascTwkDial_DoublePiProb,
        
        //kINukeTwkDial_MFP_N,       
        //kINukeTwkDial_FrCEx_N,    

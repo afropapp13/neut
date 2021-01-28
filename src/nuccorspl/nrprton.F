@@ -159,6 +159,9 @@ c     ptot - total probability, ABC seemingly unused
 
 C     REWEIGHTING: NReweightFlag is the only thing that differentiates reweighting and regenerating
 C     If it is equal to 1, we are reweighting, and perform only a small fraction of the cascade
+C      write(*,*) 'Starting nrprton.F, NReweightFlag = ',NReweightFlag
+
+
       if(NReweightFlag.eq.1) then
 
          RW_step_i =0 !RW_step_i is the counter for steps in reweighting
@@ -170,7 +173,7 @@ C     If it is equal to 1, we are reweighting, and perform only a small fraction
 
 
 
-         nucresflg=1;!nucresflg is always set to 1
+      nucresflg=1;!nucresflg is always set to 1
 
 
 
