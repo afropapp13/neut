@@ -1,0 +1,17 @@
+This folder contains cross-section integration routines for the single pion models in NEUT
+
+** FILES **
+crs_newff calculates the Rein-Sehgal single pion cross-section tables using simple trapezium integration
+
+crs_newff_adap calculates the Rein-Sehgal single pion cross-section tables using quadpack integration techniques
+
+crs_min_adap calculates Minoo Kabirnezhad single pion cross-section tables using quadpack integration techniques
+
+** USAGE **
+These cross-section tables
+
+** HOW TO MAKE **
+1) set CERN and CERN_LEVEL environment variables
+2) It will assume NEUT/src is located two levels up and requires NEUT to be built
+3) make clean && make
+4) Run executable of your choice and enjoy the physics!
