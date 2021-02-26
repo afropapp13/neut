@@ -60,6 +60,9 @@ C      REAL    PNE
       REAL*4  RSSPICRS
       EXTERNAL RSSPICRS
 
+      REAL*4 evdifcrs, check
+      external evdifcrs
+
 C      INTEGER IFREE,IPAR,JMOD,IERR,IEC,IDECAY,I,INO16,IWAVE
       INTEGER IPAR,JMOD,IERR,IEC,IDECAY,I,IWAVE
       INTEGER IFLAG
@@ -123,10 +126,10 @@ C      IF(IFREE.EQ.0) INO16=1
 
  1500 CONTINUE
 
-C      IF(INO16.EQ.1 .AND. ABS(IPAR).NE.16) 
-      IF(IBOUND.EQ.1 .AND. ABS(IPAR).NE.16) 
-     & CALL nefrmmom(PFABS,IWAVE)
-C     & CALL RNFERM(PFABS,IWAVE)
+C    If we have a bounded nucleon get the momentum of it
+      IF(IBOUND.EQ.1 .AND. ABS(IPAR).NE.16 .AND. PFMAX.NE.0) THEN
+        CALL nefrmmom(PFABS,IWAVE)
+      endif
       PFABS = PFABS/1000.
 
       CALL RNDIR(DIRN)
@@ -134,7 +137,9 @@ C     & CALL RNFERM(PFABS,IWAVE)
       PNE(2,2)=DIRN(2)*PFABS
       PNE(3,2)=DIRN(3)*PFABS
 
+C     The energy of the nucleon
       TMPEP=sqrt(XMN2+(PNE(1,2)**2+PNE(2,2)**2+PNE(3,2)**2))
+C     The energy of the neutrino
       TMPEL=E
 
       TMPEEE=( (TMPEP+TMPEL)**2
@@ -150,11 +155,9 @@ C     $          +(PNE(3,2)+PNEU(3))**2))
 C      write(*,*) "S=",(TMPEEE+XMN)**2-TMPEEE**2
 C----------------------------------------------------------------
 
-C-Check IF sigma < 1.e-43 then re-calculate fermi-momentum 
-C-- Change to 1.e-42 ( 2017/3/25 )
-C
+C-Check IF sigma < 1.e-42 then re-calculate fermi-momentum 
+C     Get's the x-sec from free-nucleon
       TMPSIG=RSSPICRS(TMPEEE,IPAR,IMOD)
-C-- Change from 1.e-5 to 1.e-4 ( 2017/3/25: Hayato )
       IF (TMPSIG.le.1.e-4) GO TO 1500
 
 C--- initialize/set some commons
@@ -162,11 +165,11 @@ C--- initialize/set some commons
       IORGNE(2)=0
 C    lepton :  from initial lepton
       IORGNE(3)=1
-C    pion and nucleon :from initialn nucleon
+C    pion and nucleon :from initial nucleon
       IORGNE(4)=2
       IORGNE(5)=2
 
-C
+C     Set flags of initial and final state particles
       IFLGNE(1)=-1
       IFLGNE(2)=-1
       IFLGNE(3)=0
@@ -198,24 +201,32 @@ C
 
       GO TO 999
 
+C --- SET THE PDG CODES FOR OUTGOING PARTICLES ---
+C====================
+C     NEUTRINO
+C====================
+C     CC1pi+ on proton
   201 IPNE(2)=2212
       IPNE(3)=IPAR-1
       IPNE(4)=2212
       IPNE(5)=211
       IFLAG=1
       GO TO 300
+C     CC1pi0 on neutron
   202 IPNE(2)=2112
       IPNE(3)=IPAR-1
       IPNE(4)=2212
       IPNE(5)=111
       IFLAG=2
       GO TO 300
+C     CC1pi+ on neutron
   203 IPNE(2)=2112
       IPNE(3)=IPAR-1
       IPNE(4)=2112
       IPNE(5)=211
       IFLAG=3
       GO TO 300
+C     NC1pi0 on neutron
   204 IPNE(2)=2112
       IPNE(3)=IPAR
       IPNE(4)=2112
@@ -223,6 +234,7 @@ C
       IFLAG=6
       IFLGNE(3)=2
       GO TO 300
+C     NC1pi0 on neutron
   205 IPNE(2)=2212
       IPNE(3)=IPAR
       IPNE(4)=2212
@@ -230,6 +242,7 @@ C
       IFLAG=4
       IFLGNE(3)=2
       GO TO 300
+C     NC1pi- on neutron
   206 IPNE(2)=2112
       IPNE(3)=IPAR
       IPNE(4)=2212
@@ -237,6 +250,7 @@ C
       IFLAG=7
       IFLGNE(3)=2
       GO TO 300
+C     NC1pi+ on proton
   207 IPNE(2)=2212
       IPNE(3)=IPAR
       IPNE(4)=2112
@@ -244,24 +258,32 @@ C
       IFLAG=5
       IFLGNE(3)=2
       GO TO 300
+
+C====================
+C     ANTINEUTRINO
+C====================
+C     CC1pi- on n
   208 IPNE(2)=2112
       IPNE(3)=IPAR+1
       IPNE(4)=2112
       IPNE(5)=-211
       IFLAG=11
       GO TO 300
+C     CC1pi0 on p
   209 IPNE(2)=2212
       IPNE(3)=IPAR+1
       IPNE(4)=2112
       IPNE(5)=111
       IFLAG=12
       GO TO 300
+C     CC1pi- on p
   210 IPNE(2)=2212
       IPNE(3)=IPAR+1
       IPNE(4)=2212
       IPNE(5)=-211
       IFLAG=13
       GO TO 300
+C     NC1pi0 on n
   211 IPNE(2)=2112
       IPNE(3)=IPAR
       IPNE(4)=2112
@@ -269,6 +291,7 @@ C
       IFLAG=16
       IFLGNE(3)=2
       GO TO 300
+C     NC1pi0 on p
   212 IPNE(2)=2212
       IPNE(3)=IPAR
       IPNE(4)=2212
@@ -276,6 +299,7 @@ C
       IFLAG=14
       IFLGNE(3)=2
       GO TO 300
+C     NC1pi- on n
   213 IPNE(2)=2112
       IPNE(3)=IPAR
       IPNE(4)=2212
@@ -283,16 +307,14 @@ C
       IFLAG=17
       IFLGNE(3)=2
       GO TO 300
+C     NC1pi+ on p
   214 IPNE(2)=2212
       IPNE(3)=IPAR
       IPNE(4)=2112
       IPNE(5)=211
       IFLAG=15
       IFLGNE(3)=2
-C
-C
-C
-C
+
  300  CONTINUE
 
       DO 310 I=1,3
@@ -303,14 +325,12 @@ C
       ICRNNE(4) = 1
       ICRNNE(5) = 1
 
-C-ORiG      CALL RSDIST(IFLAG,IPNE(1),E,PNCEPZ(1),RTPLEP,RTPPI,RTPNC)
-      
-      DZ=DNEUT(3)
       DX=DNEUT(1)
       DY=DNEUT(2)
+      DZ=DNEUT(3)
 
       COSTH=DZ
-      if (abs(dz).eq.1.) then
+      if (abs(dz).ge.1.) then
          sinth = 0.
       else
          SINTH=SQRT(1.-DZ**2)
@@ -327,27 +347,11 @@ C-ORiG      CALL RSDIST(IFLAG,IPNE(1),E,PNCEPZ(1),RTPLEP,RTPPI,RTPNC)
         ENDIF
       ENDIF 
  
-C-----------------------------------------------------------------
-C      write(*,*) "NEUTRINO=",PNE(1,1),",",PNE(2,1),",",PNE(3,1)
-C      CALL RSROTVEC(PNE(1,1),PNCEPZ(1),
-C     $     1.,0.,COSPH,-1.*SINPH)
-C      CALL RSROTVEC(PNCEPZ(1),PNCEPZ(1),
-C     $     COSTH,-1.*SINTH,1.,0.)
-C      write(*,*) "NEUTRINO=",PNCEPZ(1),",",PNCEPZ(2)
-C     $     ,",",PNCEPZ(3)
-C      write(*,*) "NUCLEON=",PNE(1,2),",",PNE(2,2),",",PNE(3,2)
-C-----------------------------------------------------------------
-
       CALL RSROTVEC(PNE(1,2),PNCEPZ(1),
      $     1.,0.,COSPH,-1.*SINPH)
       CALL RSROTVEC(PNCEPZ(1),PNCEPZ(1),
      $     COSTH,-1.*SINTH,1.,0.)
 
-C-----------------------------------------------------------------
-C      write(*,*) "NUCLEON=",PNCEPZ(1),",",PNCEPZ(2)
-C     $     ,",",PNCEPZ(3)
-C-----------------------------------------------------------------
-  
  1000 continue
 
       CALL RSDIST(IFLAG,IPNE(1),E,PNCEPZ(1),RTPLEP,RTPPI,RTPNC,IERR)
@@ -355,42 +359,9 @@ C-----------------------------------------------------------------
          return
       endif
 
-CCCC Comment out by Y.H. on Mar.17, 2003
-CCCC  --------- check pauli blocking ---------
-CCCC          P(Nucleon) > 0.216 GeV
-CCCC
-CC      IF (INO16.eq.1) THEN
-CC         
-CC         NTMP = 0
-CC         PTMP = sqrt(RTPNC(1)**2+RTPNC(2)**2+RTPNC(3)**2)
-CC         
-CC         IF (PTMP.lt.0.216) then
-CC            write(*,*) 'RSSPIVCT.F : PAULI BLOCKING OCCURS'
-CC 500        CONTINUE
-CC            
-CC            NTMP = NTMP + 1
-CC            IF (NTMP.GT.10000) GOTO 1500
-CC            CALL  RSPAULI(RTPNC,RTPPI,XMN,XMPI,PONUC,POMES) 
-CC            POUT = SQRT(PONUC(1)**2+PONUC(2)**2+PONUC(3)**2)
-CC            IF (POUT.le.216) GOTO 500
-CC
-CC            DO 600 i = 1,3
-CC               RTPNC(I) = PONUC(I)
-CC               RTPNC(I) = POMES(I)
-CC 600        CONTINUE
-CC            
-CC         ENDIF
-CC         
-CC      ENDIF
-CCCC Comment out by Y.H. on Mar.17, 2003
-
-C-- New pauli-blocking handling routine
-C--                   Y.H.(Mar.17, 2003)
-C     
-C      IF (INO16.eq.1) THEN
+C     Do Pauli blocking on the outgoing nucleon
       IF (IBOUND.eq.1) THEN
          PTMP = sqrt(RTPNC(1)**2+RTPNC(2)**2+RTPNC(3)**2)
-C         if (PTMP.LE.0.226) THEN
          if (PTMP.LE.PFSURF) THEN
             DO 800 I=3,5
                IFLGNE(I)=5
@@ -404,12 +375,8 @@ C         if (PTMP.LE.0.226) THEN
       CALL RSROTVEC(RTPPI ,PNE(1,5),COSTH,SINTH,COSPH,SINPH)
 
 CCC     Consider Non-pion Decay of Delta resonance
-CCC     
-C       IF (INO16.eq.1) THEN
-C       IF (IBOUND.eq.1) THEN
       IF ((IBOUND.eq.1).and.(IPILESSDCY.ne.0).and.ICRNNE(4).eq.1) THEN
          prob = RLU(dum)
-C          if (prob.le.0.2) then
          if (prob.le.RPILESSDCY) then
             if (QUIET.eq.0) then
                write(*,*) 'RSSPIVCT.F : DELTA NON-PI DECAY in nuclear'
@@ -443,29 +410,10 @@ C   Delta-
           endif          
        ENDIF
 
+C       DONE WITH THE PIONLESS DELTA DECAY
 
-
-C------------------------------------------------------------------
-C      write(*,*) "Conservation Laws"
-C      write(*,*) "INCOMING E=",
-C     $     (E+sqrt(PNE(1,2)**2+PNE(2,2)**2+PNE(3,2)**2+XMN2))
-C      write(*,*) "OUTGOING E=",
-C     $     ( sqrt(PNE(1,4)**2+PNE(2,4)**2+PNE(3,4)**2+XMN2)
-C     $      +sqrt(PNE(1,5)**2+PNE(2,5)**2+PNE(3,5)**2+XMPI2)
-C     $      +sqrt(PNE(1,3)**2+PNE(2,3)**2+PNE(3,3)**2+XMMU**2))
-C      write(*,*) "INCOMING s=",
-C     $     (E+sqrt(PNE(1,2)**2+PNE(2,2)**2+PNE(3,2)**2+XMN2))**2
-C     $    -( (PNE(1,1)+PNE(1,2))**2+(PNE(2,1)+PNE(2,2))**2
-C     $      +(PNE(3,1)+PNE(3,2))**2)
-C      write(*,*) "OUTGOING s=",
-C     $     ( sqrt(PNE(1,4)**2+PNE(2,4)**2+PNE(3,4)**2+XMN2)
-C     $      +sqrt(PNE(1,5)**2+PNE(2,5)**2+PNE(3,5)**2+XMPI2)
-C     $      +sqrt(PNE(1,3)**2+PNE(2,3)**2+PNE(3,3)**2+XMMU**2))**2
-C     $    -( (PNE(1,4)+PNE(1,5)+PNE(1,3))**2
-C     $      +(PNE(2,4)+PNE(2,5)+PNE(2,3))**2
-C     $      +(PNE(3,4)+PNE(3,5)+PNE(3,3))**2)
-C------------------------------------------------------------------
-
+C     check=evdifcrs()
+C     write(*,*) "evdifcrs after particles done:", check
       RETURN
 
  999  WRITE(*,*)

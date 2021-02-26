@@ -340,6 +340,7 @@ void NeutVect::Dump() {
 
   std::cout << "QE Model       :" << QEModel << "\n";
   std::cout << "SPI Model      :" << SPIModel << "\n";
+  std::cout << "RS 1pi ejection:" << SPIRSEj  << "\n";
   std::cout << "COH Model      :" << COHModel << "\n";
   std::cout << "DIS Model      :" << DISModel << "\n";
 

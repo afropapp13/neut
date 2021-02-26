@@ -81,12 +81,22 @@ C  MDL2P2H = 2 ; Nieves model with hadron tensor
 C
 C-- Model for Single pion production
 C  MDLSPI = 1 ; Rein Sehgal
+C  MDLSPI = 2 ; Rein Sehgal + Local Fermi gas ( yet to be implemented )
+C  MDLSPI = 3 ; Minoo's model
+C               Controlled by rca5ispi, xmaspi, xmvspi, xmabkgm
+C
+C-- Model for 1 pion ejection direction
+C  MDLRS1PIEJ = 0 ; Isotropic
+C  MDLRS1PIEJ = 1 ; Delta only
+C  MDLRS1PIEJ = 2 ; All resonances 
 C
 C-- MA (MV) for Rein-Sehgal Single meson production
 C  XMARSRES (XMVRSRES)
+C  Set in necard.h and copied over into xmaspi here
 C
 C-- MA for New Form factor Single meson production
 C  XMANFFRES (XMVNFFRES)
+C  Set in necard.h and copied over into xmaspi here
 C
 C-- Coherent pion
 C  MDLCOH = 0 ; Rein&Sehgal w/ lepton mass corr.
@@ -104,6 +114,10 @@ C             71 ; GRV94 Bodek
 C            120 ; GRV98 Original
 C            121 ; GRV98 Bodek
 C
+C-- 1pi only applies to Rein-Sehgal
+C  RS1PIEJ =  0 eject pion isotropically
+C             1 eject pion with Delta(1232)
+C             2 eject pion with interference and channel dependent
 C-- Diffractive pion
 C  MDLDIF = 0 ; Rein&Sehgal w/ lepton mass corr.
 C
@@ -112,8 +126,9 @@ C  NUCVOLDIF  (Default = 7 GeV^-2)
 
       INTEGER*4 MODELDIS,MODELCOH,MODELDIF
       INTEGER*4 MDLQE,MDL2P2H,MDLSPI,MDLDIS,MDLCOH,MDLDIF,MDLQEAF
+      INTEGER*4 MDLRS1PIEJ
       REAL*4    XMAQE,XMASPI,XMARES,XMVQE,XMVSPI,XMVRES,
-     $          KAPP,XMACOH,RAD0NU,fA1COH,fb1COH
+     $          KAPP,XMACOH,RAD0NU,fA1COH,fb1COH,XMABKGM
       INTEGER*4 IFFSPI,NRTYPESPI
       REAL*4    RCA5ISPI,RBGSCLSPI
       REAL*4    SCCFV, SCCFA, FPQE
@@ -130,12 +145,12 @@ C  NUCVOLDIF  (Default = 7 GeV^-2)
       REAL*4    XMANCEL
 
 
-          COMMON /NEUTMODEL/MODELDIS,MODELCOH,MODELDIF
-      COMMON /NEMDLS/MDLQE,MDLSPI,MDLDIS,MDLCOH,MDLDIF,
+      COMMON /NEUTMODEL/MODELDIS,MODELCOH,MODELDIF
+      COMMON /NEMDLS/MDLQE,MDLSPI,MDLDIS,MDLCOH,MDLDIF,MDLRS1PIEJ,
      $               MDLQEAF,XMAQE,XMASPI,XMVQE,XMVSPI,
      $               KAPP,XMACOH,RAD0NU,fA1COH,fb1COH,
      $               IFFSPI,NRTYPESPI,RCA5ISPI,RBGSCLSPI,
-     $               XMARES,XMVRES,
+     $               XMARES,XMVRES,XMABKGM
      $               SCCFV, SCCFA, FPQE,
      $               PFSF,XMADIF,NUCVOLDIF,
      $               AXFFALPHA, AXFFGAMMA,

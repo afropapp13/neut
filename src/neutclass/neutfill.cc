@@ -159,60 +159,101 @@ neutfillvect(char *filename, char *treename, char *branchname)
   nv->Ibound   = posinnuc_.ibound;
   
   nv->FluxID   = 0;
+
+
+  // Temp CWRET, try saving Q2, Enu, W, costh, phi adler
+  /*
+  nv->Q2 = neut1pi_.q2_com;
+  nv->W = neut1pi_.w_com;
+  nv->Enu = neut1pi_.enu_com;
+  nv->costhadler = neut1pi_.costh_com;
+  nv->phiadler = neut1pi_.phi_com;
+  nv->ppirs[0] = neut1pi_.ppirs[0];
+  nv->ppirs[1] = neut1pi_.ppirs[1];
+  nv->ppirs[2] = neut1pi_.ppirs[2];
+  nv->ppirs[3] = neut1pi_.ppirs[3];
+  */
   
   /****************************************************/
   // interaction model and some parameters
+  // CCQE model
   nv->QEModel  = nemdls_.mdlqe;
+  // Form factor CCQE model
+  nv->QEVForm  = nemdls_.mdlqeaf;
+  // Radiative correction
+  nv->RADcorr = neutradcorr_.iradcorr;
+  // Single pion model
   nv->SPIModel = nemdls_.mdlspi;
-
+  // Rein-Sehgal single-pion ejection method
+  nv->SPIRSEj  = nemdls_.mdlrs1piej;
+  // Coherent model
   nv->COHModel = nemdls_.mdlcoh;
+  // DIS model
   nv->DISModel = nemdls_.mdldis;
 
-  nv->QEVForm  = nemdls_.mdlqeaf;
-  nv->QEMA     = nemdls_.xmaqe;
-
-  nv->SPIForm  = neut1pi_.neiff;
+  // Single pion form factors (Rein-Sehgal original or Graczyk & Sobczyk)
+  // These are the parameters _actually_ used in Rein-Sehgal code, not the neut1pi common block
+  nv->SPIForm  = nemdls_.iffspi;
+  //nv->SPIForm  = neut1pi_.neiff;
   nv->RESForm  = 0;
-  
+
+  // Single pion harmonic oscillator scaling (electron-scattering like or neutrino-scattering like)
+  // These are the parameters _actually_ used in Rein-Sehgal code, not the neut1pi common block
   nv->SPINRType= neut1pi_.nenrtype;
+  //nv->SPINRType = neut1pi_.neiff;
   nv->RESNRType= 0;
 
-  nv->SPICA5I  = neut1pi_.rneca5i;
-  nv->SPIBGScale= neut1pi_.rnebgscl;
-
-  nv->SPIMA    = nemdls_.xmaspi;
-  nv->SPIMV    = nemdls_.xmvspi;
-
-  nv->RESMA   = nemdls_.xmares;
-  nv->RESMV   = nemdls_.xmvres;
-
+  // CCQE model parameters
+  nv->QEMA     = nemdls_.xmaqe;
   nv->QEMV     = nemdls_.xmvqe;
-
   nv->KAPPA    = nemdls_.kapp;
 
+  // Single pion model parameters
+  nv->SPIMA   = nemdls_.xmaspi;
+  nv->SPIMV   = nemdls_.xmvspi;
+  nv->RESMA   = nemdls_.xmares;
+  nv->RESMV   = nemdls_.xmvres;
+  // These are the parameters _actually_ used in Rein-Sehgal code, not the neut1pi common block
+  nv->SPICA5I = nemdls_.rca5ispi;
+  nv->SPIBGScale = nemdls_.rbgsclspi;
+  //nv->SPICA5I = neut1pi_.rneca5i;
+  //nv->SPIBGScale= neut1pi_.rnebgscl;
+  // Background resonant mass for Minoo model
+  nv->SPIMaBKGM = nemdls_.xmabkgm;
+
+  // Coherent model parameters
   nv->COHMA    = nemdls_.xmacoh;
   nv->COHR0    = nemdls_.rad0nu;
   nv->COHA1err = nemdls_.fa1coh;
   nv->COHb1err = nemdls_.fb1coh;
 
-  // neut verion
+  // NEUT versions
   nv->COREVer  = neutversion_.corev;
   nv->NUCEVer  = neutversion_.nucev;
   nv->NUCCVer  = neutversion_.nuccv;
-  // neut card
+
+  // NEUT card
   nv->FrmFlg  = neutcard_.nefrmflg;
   nv->PauFlg  = neutcard_.nepauflg;
   nv->NefO16  = neutcard_.nenefo16;
   nv->ModFlg  = neutcard_.nemodflg;
   nv->SelMod  = neutcard_.neselmod;
+
+  // Formation length
   nv->FormLen = nenupr_.iformlen;
+
+  // Pionless delta decay
   nv->IPilessDcy = neutpiless_.ipilessdcy;
   nv->RPilessDcy = neutpiless_.rpilessdcy;
+
+  // Rescattering
   nv->NucScat = nucres_.nucrescat;
+  // Neutrino generating mode
   nv->NucFac  = nucres_.xnucfact;
 
   nv->NuceffKinVersion = nuceffver_.nefkinver;
 
+  // FSI scattering probabilities
   nv->NuceffFactorPIQE = neffpr_.fefqe;	  
   nv->NuceffFactorPIInel = neffpr_.fefinel;  
   nv->NuceffFactorPIAbs = neffpr_.fefabs;  
@@ -226,10 +267,10 @@ neutfillvect(char *filename, char *treename, char *branchname)
   nv->NuceffFactorPIAll = neffpr_.fefall;
 
   /****************************************************/
-
+  // Nieves 2p2h model parameters
   nv->NVQERFG          = nievesqepar_.nvqerfg;
-  nv->NVQEBind     	   = nievesqepar_.nvqebind;
-  nv->NVQERPA		   = nievesqepar_.nvqerpa;
+  nv->NVQEBind         = nievesqepar_.nvqebind;
+  nv->NVQERPA	       = nievesqepar_.nvqerpa;
   nv->XNVRPAFP0in      = nievesqepar_.xnvrpafp0in;
   nv->XNVRPAPF0ex      = nievesqepar_.xnvrpapf0ex;
   nv->XNVRPAFstar      = nievesqepar_.xnvrpafstar;
@@ -245,7 +286,9 @@ neutfillvect(char *filename, char *treename, char *branchname)
   nv->NVBINDFermiCor   = nievesqepar_.nvbindfermicor;
 
   /****************************************************/
+  // Mode
   nv->Mode = nework_.modene;
+  // Total cross-section
   nv->Totcrs = neutcrscom_.totcrsne;
 
   nv->CrsEnergy = neutcrscom_.crsenergy;
@@ -266,56 +309,55 @@ neutfillvect(char *filename, char *treename, char *branchname)
   nv->SetNprimary(nework_.numne);
 
   for ( i = 0 ; i < np ; i++ ){
-	Double_t mass;
+    Double_t mass;
 
-	nv->SetVertexID(i, vcwork_.ivtivc[i]);
+    nv->SetVertexID(i, vcwork_.ivtivc[i]);
 
-	nv->SetParentIdx(i, vcwork_.iorgvc[i]);
-	  
-	pinfo.fPID = vcwork_.ipvc[i];
-	mass       = vcwork_.amasvc[i];
-	pinfo.fMass = mass;
-	pinfo.fIsAlive = vcwork_.icrnvc[i];
-	pinfo.fStatus  = vcwork_.iflgvc[i];
-	
-	pinfo.fP.SetXYZM(vcwork_.pvc[i][0],
-					 vcwork_.pvc[i][1],
-					 vcwork_.pvc[i][2],
-					 mass);
+    nv->SetParentIdx(i, vcwork_.iorgvc[i]);
 
-	pinfo.fPosIni.SetXYZT(posinnuc_.posnuc[i][0],
-						  posinnuc_.posnuc[i][1],
-						  posinnuc_.posnuc[i][2],
-						  0.);
-	
-	pinfo.fPosFin.SetXYZT(posinnuc_.posnuc[i][0],
-						  posinnuc_.posnuc[i][1],
-						  posinnuc_.posnuc[i][2],						  
-						  0.);
-	  
-	nv->SetPartInfo(i, pinfo);
-	  
+    pinfo.fPID = vcwork_.ipvc[i];
+    mass       = vcwork_.amasvc[i];
+    pinfo.fMass = mass;
+    pinfo.fIsAlive = vcwork_.icrnvc[i];
+    pinfo.fStatus  = vcwork_.iflgvc[i];
+
+    pinfo.fP.SetXYZM(vcwork_.pvc[i][0],
+        vcwork_.pvc[i][1],
+        vcwork_.pvc[i][2],
+        mass);
+
+    pinfo.fPosIni.SetXYZT(posinnuc_.posnuc[i][0],
+        posinnuc_.posnuc[i][1],
+        posinnuc_.posnuc[i][2],
+        0.);
+
+    pinfo.fPosFin.SetXYZT(posinnuc_.posnuc[i][0],
+        posinnuc_.posnuc[i][1],
+        posinnuc_.posnuc[i][2],						  
+        0.);
+
+    nv->SetPartInfo(i, pinfo);
   }
-  
+
 
   // FSI Particles
   Int_t nfsip = fsihist_.nvcvert;
-  
+
   if (nfsip) {
     nv->SetNfsiPart(nfsip);
 
-    for ( i = 0 ; i < nfsip ; i++ ){
-    
+    for (i = 0; i < nfsip; i++){
+
       fsipinfo.fPID = fsihist_.ipvert[i];
       fsipinfo.fDir.SetXYZT(fsihist_.dirvert[i][0],
-			    fsihist_.dirvert[i][1],
-			    fsihist_.dirvert[i][2],
-			    0.);
+          fsihist_.dirvert[i][1],
+          fsihist_.dirvert[i][2],
+          0.);
       fsipinfo.fMomLab = fsihist_.abspvert[i];
       fsipinfo.fMomNuc = fsihist_.abstpvert[i];
       fsipinfo.fVertStart = fsihist_.iverti[i];
       fsipinfo.fVertEnd = fsihist_.ivertf[i];
-  
+
       nv->SetFsiPartInfo(i, fsipinfo);
     }
   }
@@ -324,33 +366,33 @@ neutfillvect(char *filename, char *treename, char *branchname)
   // (You'll need to take care of this in downstream routines)
   else {
     nv->SetNfsiPart(1);
-    
+
     fsipinfo.fPID = -1;
     fsipinfo.fDir.SetXYZT(0, 0, 0, 0);
     fsipinfo.fMomLab = -1;
     fsipinfo.fMomNuc = -1;
     fsipinfo.fVertStart = -1;
     fsipinfo.fVertEnd = -1;
-    
+
     nv->SetFsiPartInfo(0, fsipinfo);
   }
 
 
   // FSI Vertices
   Int_t nfsiv = fsihist_.nvert;
-  
+
   if (nfsiv) {
     nv->SetNfsiVert(nfsiv);
 
     for ( i = 0 ; i < nfsiv ; i++ ){
-      
+
       fsivinfo.fPos.SetXYZT(fsihist_.posvert[i][0],
-			    fsihist_.posvert[i][1],
-			    fsihist_.posvert[i][2],
-			    0.);
+          fsihist_.posvert[i][1],
+          fsihist_.posvert[i][2],
+          0.);
 
       fsivinfo.fVertID = fsihist_.iflgvert[i];
-  
+
       nv->SetFsiVertInfo(i, fsivinfo);
 
     }
@@ -366,7 +408,7 @@ neutfillvect(char *filename, char *treename, char *branchname)
     fsivinfo.fPos.SetXYZT(0,0,0,0);
 
     fsivinfo.fVertID = -99999;
-  
+
     nv->SetFsiVertInfo(0, fsivinfo);
 
     nv->Fsiprob = -1;
@@ -374,23 +416,23 @@ neutfillvect(char *filename, char *treename, char *branchname)
 
   // Nucleon FSI Verticies
   Int_t nnucfsivert = nucleonfsihist_.nfnvert;
-  
+
   if (nnucfsivert) {
     nv->SetNnucFsiVert(nnucfsivert);
 
     for ( i = 0 ; i < nnucfsivert ; i++ ){
-    
+
       nucfsivinfo.fVertFlag      = nucleonfsihist_.nfiflag[i];
       nucfsivinfo.fVertFirstStep = nucleonfsihist_.nffirststep[i];
 
       nucfsivinfo.fPos.SetXYZT(nucleonfsihist_.nfx[i],
-							   nucleonfsihist_.nfy[i],
-							   nucleonfsihist_.nfz[i],
-							   0.);
+          nucleonfsihist_.nfy[i],
+          nucleonfsihist_.nfz[i],
+          0.);
       nucfsivinfo.fMom.SetPxPyPzE(nucleonfsihist_.nfpx[i],
-								  nucleonfsihist_.nfpy[i],
-								  nucleonfsihist_.nfpz[i],
-								  nucleonfsihist_.nfe[i]);
+          nucleonfsihist_.nfpy[i],
+          nucleonfsihist_.nfpz[i],
+          nucleonfsihist_.nfe[i]);
 
       nv->SetNucFsiVertInfo(i, nucfsivinfo);
     }
@@ -400,26 +442,26 @@ neutfillvect(char *filename, char *treename, char *branchname)
   // (You'll need to take care of this in downstream routines)
   else {
     nv->SetNnucFsiVert(1);
-	nucfsivinfo.fVertFlag      = -1;
-	nucfsivinfo.fVertFirstStep = -1;
-	
-	nucfsivinfo.fPos.SetXYZT(0.,0.,0.,0.);
-	nucfsivinfo.fMom.SetPxPyPzE(0.,0.,0.,0.);
-								
+    nucfsivinfo.fVertFlag      = -1;
+    nucfsivinfo.fVertFirstStep = -1;
+
+    nucfsivinfo.fPos.SetXYZT(0.,0.,0.,0.);
+    nucfsivinfo.fMom.SetPxPyPzE(0.,0.,0.,0.);
+
     nv->SetNucFsiVertInfo(0, nucfsivinfo);
   }
 
   // Nucleon FSI Step
   Int_t nnucfsis = nucleonfsihist_.nfnstep;
-  
+
   if ( nnucfsis ) {
     nv->SetNnucFsiStep(nnucfsis);
 
     for ( i = 0 ; i < nnucfsis ; i++ ){
-      
+
       nucfsisinfo.fECMS2 = nucleonfsihist_.nfecms2[i];
       nucfsisinfo.fProb  = nucleonfsihist_.nfptot[i];
-  
+
       nv->SetNucFsiStepInfo(i, nucfsisinfo);
 
     }
@@ -431,23 +473,23 @@ neutfillvect(char *filename, char *treename, char *branchname)
   else {
     nv->SetNnucFsiStep(1);
 
-	nucfsisinfo.fECMS2 =  0.;
-	nucfsisinfo.fProb  = -1.;
-  
+    nucfsisinfo.fECMS2 =  0.;
+    nucfsisinfo.fProb  = -1.;
+
     nv->SetNucFsiStepInfo(0, nucfsisinfo);
 
   }
 
   if (!(neutcard_.quiet)){
-	nv->Dump();
+    nv->Dump();
   }
 
   return 0;
 }
 
-int
+  int
 neutfillvtx_(char *filename, char *treename, char *branchname,
-			  int len_fname,int len_tname, int len_bname)
+    int len_fname,int len_tname, int len_bname)
 {
   NeutRootHandlers nrh;  
 
@@ -458,7 +500,7 @@ neutfillvtx_(char *filename, char *treename, char *branchname,
   return neutfillvtx(filename, treename, branchname);
 }
 
-int
+  int
 neutfillvtx(char *filename, char *treename, char *branchname)
 {
 
@@ -474,32 +516,32 @@ neutfillvtx(char *filename, char *treename, char *branchname)
   int i;
 
   if (t == NULL){
-	t = nrh.maketree(filename, treename, "Neut Tree");
-	if (t == NULL) return -1;
+    t = nrh.maketree(filename, treename, "Neut Tree");
+    if (t == NULL) return -1;
 
-	nv = new NeutVtx();
-	t->Branch(branchname,"NeutVtx",&nv,1024,99);
+    nv = new NeutVtx();
+    t->Branch(branchname,"NeutVtx",&nv,1024,99);
   }
 
   nv->SetNvtx(0);
-  
+
   /****************************************************/
   nv->EventNo = event_no++;
-  
+
   nvtx  = vcvrtx_.nvtxvc;
   nv->SetNvtx(nvtx);
 
   for ( i = 0 ; i < nvtx ; i++ ){
-	tlv.SetXYZT(vcvrtx_.pvtxvc[i][0],
-				vcvrtx_.pvtxvc[i][1],
-				vcvrtx_.pvtxvc[i][2],
-				vcvrtx_.timvvc[i]);
+    tlv.SetXYZT(vcvrtx_.pvtxvc[i][0],
+        vcvrtx_.pvtxvc[i][1],
+        vcvrtx_.pvtxvc[i][2],
+        vcvrtx_.timvvc[i]);
 
-	nv->SetPos(i, tlv);
-	  
+    nv->SetPos(i, tlv);
+
   }
   if (!(neutcard_.quiet)){
-	nv->Dump();
+    nv->Dump();
   }
 
   return 0;

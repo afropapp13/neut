@@ -33,7 +33,7 @@
 
 C     CONSTANTS
 
-#include<rscons.h>
+#include <rscons.h>
 
 C      COMMON /RSCONS/Z,PI,MN,MN2,MPI,MPI2,MV,MV2,MA,MA2,OMEG,XW,EPSI
 C      REAL  Z,PI,MN,MN2,MPI,MPI2,MV,MV2,MA,MA2,OMEG,XW,EPSI
@@ -419,6 +419,7 @@ C     **********************************
      $     *(XLAM*C-2.*B)
       GOTO 2000
  650  CONTINUE
+C     CWRET: This is the obsolete resonance!
 C     **********************************
 C     IBLOCK = 15     P33(1640)P,N
 C     **********************************
@@ -661,6 +662,7 @@ C     **********************************
       F(6) = F(5)
       GOTO 2000
  760  CONTINUE
+C     CWRET this is also obsolete
 C     **********************************
 C     IBLOCK = 26     F17(1970)P
 C     **********************************
@@ -681,6 +683,7 @@ C     **********************************
       F(6) = 0.
       GOTO 2000
  770  CONTINUE
+C     CWRET this is also obsolete
 C     **********************************
 C     IBLOCK = 27     F17(1970)N
 C     **********************************
@@ -706,6 +709,9 @@ C     IBLOCK = 28   BACKGROUND   PROTON
 C     **********************************
       IF(IFLAG.LE.3)  GOTO 781
       F(1) = 0.
+C     CWRET maybe should be /12, not /2?
+C     p103 in R&S
+C     B is also neglected
       F(2)= (5.*(RM+2.*XW*(6./5.)*R)/2.)
       F(4)= (5.*(RP+2.*XW*(6./5.)*R)/2.)
       F(3)= 0.
@@ -737,6 +743,7 @@ C     **********************************
       F(2) = 5.*RM
       F(4) = 5.*RP
       F(3) = 0.
+C     CWRET check this
       F(5) = (3.*S+5.*C)
       F(6) = (3.*S-5.*C)
       GOTO 2000
@@ -773,4 +780,3 @@ C     J = 3/2 BACKGROUND NOW INOPERATIVE
       
 
       END
-      

@@ -697,5 +697,3 @@ C      write(*,*) "Wrong arguments."
       DFCRS3 = DSI0
 
       END
-
-

@@ -49,9 +49,20 @@ class NeutVect : public TObject {
                             //  0: Randomly generated
 
   // Interaction model
+  // QE model
   Int_t          QEModel;
+  // Axialform factor choice CCQE
+  Int_t          QEAVForm;
+  Int_t          QEVForm;
+  // Radiative correction
+  Int_t          RADcorr;
+  // Single pion model
   Int_t          SPIModel;
+  // Rein-Sehgal 1pi ejection
+  Int_t          SPIRSEj;
+  // Coherent model
   Int_t          COHModel;
+  // DIS model
   Int_t          DISModel;
 
   // 1 pi & the other meson productions form factor type
@@ -62,39 +73,45 @@ class NeutVect : public TObject {
   Int_t          SPINRType;
   Int_t          RESNRType;
 
-  Int_t          QEVForm;
+  // CCQE model parameters
   Float_t        QEMA;
+  Float_t        QEMV;
+  Float_t        KAPPA;
+
+  // Single pion model parameters
   Float_t        SPIMA;
   Float_t        RESMA;
-  Float_t        QEMV;
   Float_t        SPIMV;
   Float_t        RESMV;
-  Float_t        KAPPA;
+  Float_t        SPICA5I;
+  Float_t        SPIBGScale;
+  Float_t        SPIMaBKGM;
+
+  // Coherent model parameters
   Float_t        COHMA;
   Float_t        COHR0;
   Float_t        COHA1err;
   Float_t        COHb1err;
-
-
-  // 1 pi CA5I and BG scale
-  Float_t        SPICA5I;
-  Float_t        SPIBGScale;
-
-
   // NEUT version
   Int_t          COREVer;
   Int_t          NUCEVer;
   Int_t          NUCCVer;
+
   // NEUT card configuration
   Int_t          FrmFlg;
   Int_t          PauFlg;
   Int_t          NefO16;
   Int_t          ModFlg;
   Int_t          SelMod;
+
+  // Formation length
   Int_t          FormLen;
+  // Pionless delta decay
   Int_t          IPilessDcy;
   Float_t        RPilessDcy;
+  // Rescattering
   Int_t          NucScat;
+  // Neutrino generating mode
   Float_t        NucFac;
 
   Float_t        NuceffKinVersion;

@@ -22,7 +22,11 @@ class NeutPart : public TObject {
                            //       ( in the detector simulator )
 
   Int_t          fStatus;  // Status flag of this particle
-						   /*   -2: Non existing particle
+  /*
+                                                    * C     -3    Erase nucleons ejected via pion intranuclear 
+                                                    * C           scattering since this is included in data used 
+                                                    * C           for the multiplicity calculations in abspi()
+						      -2: Non existing particle
 						        -1: Initial state particle
 								 0: Normal
 								 1: Decayed to the other particle

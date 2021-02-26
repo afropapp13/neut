@@ -71,15 +71,24 @@ C-------XEE & FBWNO0 is for SINGLE PION DECAY----------------------
       REAL XEEK(31),FBWNOOK(31)
       REAL XEEG(31),FBWNOOG(31)
 
+C     the numbering here is for resonances and might be different for neutron and proton for NC, which is why we have 31, not 18
+C     backgrounds are also included as resonances
       DATA XMRR/1.232,1.52,1.52,1.535,1.535,1.62,1.65,
      1     1.65,1.7,1.7,1.675,1.675,1.7,1.44,1.44,
      2     1.6,1.68,1.68,1.71,1.71,1.72,1.72,1.91,
      3     1.905,1.95,1.92,1.99,1.99,.94,.94,.94/
 
+C     Decay width Gamma_0 for resonances
       DATA BRR/.115,.125,.125,.15,.15,.14,.15,.15,.1,.1,
      1     .155,.155,.25,.2,.2,.37,.125,.125,.11,.11,
      2     .2,.2,.22,.3,.24,.25,.325,.325,3.,3.,3./
 cc
+
+C     CWRET + MINOO new ones that Minoo has
+C     Decay width Gamma_0 for resonances
+C     DATA BRR/.117,.115,.115,.15,.15,.14,.14,.14,.1,.1,
+C    1     .155,.155,.25,.2,.2,.37,.125,.125,.11,.11,
+C    2     .2,.2,.22,.3,.24,.25,.325,.325,3.,3.,3./
 
 ccc for gamma          05/04/30
       DATA XEEG   /0.006,0.005,0.005,0.001,0.001,0.000,0.000,0.000,
@@ -116,10 +125,18 @@ ccc  for eta        98/02/25 J.K.
 
 ccc for pion
 
+C     Branching ratios
+C     CWRET update
+
+C     These are what Minoo uses and extracted from latest PDG
+C     1., 0.60, 0.60, 0.45, 0.45, 0.25, 0.70, 0.70, 0.12, 0.12, 0.40, 0.40, 0.15, 0.65, 0.65
       DATA XEE/1.,.55,.55,.43,.43,.3,.6,.6,.1,.1,.35,.35,
      1     .15,.6,.6,.1,.6,.6,.15,.15,.15,.15,.22,.12,.4,
      2     .17,.01,.01,1.,1.,1./
 
+C     CWRET: Check in on this, Minoo thinks it might be weird
+C     Probably resonance norm. not sure, Minoo was right! (R&S original)
+C     Might be wrong numbers though! should be corrected
       DATA FBWNOO/.96,.98,.98,1.06,1.06,1.05,1.05,1.05,
      1     1.15,1.15,.99,.99,.81,1.04,1.04,.89,.91,.91,
      2     1.32,1.32,1.21,1.21,1.2,.65,.74,1.17,.63,.63,

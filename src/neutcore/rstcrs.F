@@ -64,6 +64,7 @@
       REAL ETBL(IEMAX),XNUCRS(17,2,IEMAX)
 
       character*15 fname_ref(3)
+      character*18 fname_mk_ref(3)
       character*1024 fname
       integer*4      LENSTR
       external       lenstr
@@ -73,6 +74,12 @@
      $     'spi_nue_xsec_ma',
      $     'spi_num_xsec_ma',
      $     'spi_nut_xsec_ma'/
+
+      data fname_mk_ref/
+     $     'spi_nue_xsec_mk_ma',
+     $     'spi_num_xsec_mk_ma',
+     $     'spi_nut_xsec_mk_ma'/
+
 
       DATA ETBL/0.37,0.4,0.5,0.625,0.75,0.875,1.00,1.125,1.25,
      $     1.375,1.50,2.00,2.50,3.00,3.50,4.75,6.00,10.0,50.0,
@@ -86,24 +93,34 @@
 
       IF (SFLAG.eq.0) then
 
-         if (IFFSPI.ne.0) then
+C   Minoo's model
+        if (MDLSPI .EQ. 3) then
 
-C- new form factor
+C   Has different format in the stored xsec table
+          write(fname,'(A,F4.2,A,F4.2,A,F4.2,A)') fname_mk_ref(1),
+     $          xmaspi,'_ca5',rca5ispi,'_mabkg',XMABKGM,'.dat'
+
+C   Rein-Sehgal model
+        else
+C- New form factor and Rein-Sehgal
+         if (IFFSPI.ne.0) then
             write(fname,'(A,F4.2,A,F4.2,A,F4.2,A)') fname_ref(1), 
      $           xmaspi, '_ca5I', RCA5ISPI, '_bgscl',
      $           RBGSCLSPI,'.dat'
 
-         else
-
 C- original form factor
+         else
             write(fname,'(A,F4.2,A)') fname_ref(1), xmaspi, '.dat'
+C       end if iffspi.ne.0
+          endif
+C end if mdl1pi .eq. 1
+        endif
 
-         endif
-         fname = crstblpath(1:lenpath)//fname
-         write(6,*) 'Opening file ', fname(1:lenstr(fname))
+        fname = crstblpath(1:lenpath)//fname
+        write(6,*) 'Opening file ', fname(1:lenstr(fname))
 
-         open(LUNI,file=fname,
-     $        form='formatted',status='OLD')
+        open(LUNI,file=fname,
+     $       form='formatted',status='OLD')
 
         read(LUNI,*) DUMSTR
 
