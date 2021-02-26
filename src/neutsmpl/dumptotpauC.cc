@@ -38,6 +38,8 @@ int main(int argc, char *argv[]){
     return 0;
   }
 
+  // Fill NEUT with the settings in the card file
+  // Either it is specified as the first argument or neut.card is used
   necard_();
 
   // Now make cross section histograms
@@ -56,10 +58,11 @@ int main(int argc, char *argv[]){
 
       h_xsec[inu][imode] = new TH1D(Form("neut_xsec_%s_%s",nuName[inu],neutModeName[imode]),Form("#sigma %s;True E_{%s} (GeV);#sigma (cm^{2}/nucleon)",neutModeTitle[imode],nuTitle[inu]),nBins,enuLow,enuHigh);
 
+      // Turn on the interaction mode (set the other CRSNEUT common blocks to zero)
       necrsmode_(&nuID[inu], &neutModeID[imode]);
       
+      // Loop through the Enu range and calculate the cross-section for this mode
       for (float enu=enuLow+binWidth/2; enu<enuHigh; enu+=binWidth) {
-	//h_xsec[inu][imode]->Fill(enu,(neuttarget_.numatom+neuttarget_.numfrep)*fntotpau_(&nuID[inu], &enu)*pow(10,-38));
 	h_xsec[inu][imode]->Fill(enu,fntotpau_(&nuID[inu], &enu)*pow(10,-38));  // Per nucleon
       } 
     }

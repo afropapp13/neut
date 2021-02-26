@@ -219,8 +219,10 @@ C
 #include "posinnuc.h"
 #include "neutcrs.h"
 
-      real*4   fnelscrs,fnelscrn,fnelspau_select,fnelspan,cohcrsne,fnapicrs,fnmec_select
-      external fnelscrs,fnelscrn,fnelspau_select,fnelspan,cohcrsne,fnapicrs,fnmec_select
+      real*4   fnelscrs,fnelscrn,fnelspau_select,fnelspan,cohcrsne,
+     $         fnapicrs,fnmec_select
+      external fnelscrs,fnelscrn,fnelspau_select,fnelspan,cohcrsne,
+     $         fnapicrs,fnmec_select
       real*4   rsspicrs,rssetcrs,rsskcrs,rssgcrs
       external rsspicrs,rssetcrs,rsskcrs,rssgcrs
 

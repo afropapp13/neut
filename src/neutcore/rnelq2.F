@@ -67,14 +67,14 @@ C
          DO 30 I=2,50
             DBQ2=EQ2MIN+FLOAT(ILAST)*DQ2+FLOAT(I)*DQ2*0.02
             SIGMA=DNELSQ2(DBE,IPAR,DBQ2)
-C           write(6,*) i,dbq2,sigma
+           write(6,*) i,dbq2,sigma
             IF(SIGMA.GT.BMAX) BMAX=SIGMA
             IF (SIGMA.LT.BLAST) GOTO 100
             BLAST=SIGMA
  30      CONTINUE
       ELSE IF (ILAST.NE.0) THEN
 C
-C --     BACKWORD
+C --     BACKWARD
 C         
          DO 40 I=1,50
             DBQ2=EQ2MIN+FLOAT(ILAST)*DQ2-FLOAT(I)*DQ2*0.02
