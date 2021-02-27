@@ -150,7 +150,7 @@ C  NUCVOLDIF  (Default = 7 GeV^-2)
      $               MDLQEAF,XMAQE,XMASPI,XMVQE,XMVSPI,
      $               KAPP,XMACOH,RAD0NU,fA1COH,fb1COH,
      $               IFFSPI,NRTYPESPI,RCA5ISPI,RBGSCLSPI,
-     $               XMARES,XMVRES,XMABKGM
+     $               XMARES,XMVRES,XMABKGM,
      $               SCCFV, SCCFA, FPQE,
      $               PFSF,XMADIF,NUCVOLDIF,
      $               AXFFALPHA, AXFFGAMMA,

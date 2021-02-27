@@ -37,6 +37,7 @@
       REAL*4    XINPPR(3),RETPMU(3),RETPPI(3),RETPPR(3)
       INTEGER*4 IERR
 
+#include "neutmodel.h"
 #include "rscons.h"
 
       REAL*4    XPNU

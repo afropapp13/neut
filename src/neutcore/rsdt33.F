@@ -624,7 +624,7 @@ c        C_L = -C_R
 c        C_R = -tempC_L
 ccc this was bug 98 MAR 11 by Y.Itow
 ccc         TWUV = -TWUV
-      END IF
+C     END IF
 
 C     Qs = 1.
 C     nus = 1.
