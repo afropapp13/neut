@@ -38,7 +38,7 @@
 *       2016.07    ; C. Bronner
 *
 *                    Hadron multiplicity model for multi-pi mode
-*       2016.10    ; C.Wret add Rein-Sehgal pion ejection methods (NE1PIEJ)
+*       2016.10    ; C.Wret add Rein-Sehgal pion ejection methods (MDLSPIEJ)
 *                    and Minoo's model. Added background MA for Minoo
 *
 *       2019.04    ; Y.Hayato add new variable for LFG parameters
@@ -130,11 +130,11 @@ C     If not G&S form factors, use R&S with quark oscillator level (=0)
       NENRTYPE  = 0
 C     Pion ejection in Rein-Sehgal model. 0 use no resonances, 1 use
 C     Delta, 2 use multiple resonances
-      MDLRS1PIEJ = 1
+      MDLSPIEJ = 1
 C     Default pion model is Rein-Sehgal + Global Fermi-gas = 1
 C     Default pion model is Rein-Sehgal + Local  Fermi-gas = 2 ( not yet )
 C     Minoo's model                                        = 3
-      MDLSPI   = 3
+      MDLSPI   = 1
       RNECA5I   = 1.01
       RNEBGSCL  = 1.30
       XMANFFRES = 0.95
@@ -310,7 +310,7 @@ C -- extract NEUT card
 
       CALL FFKEY('IFF',NEIFF, 1,'INTEGER')
       CALL FFKEY('NRTYPE',NENRTYPE, 1,'INTEGER')
-      CALL FFKEY('RSSPIEJ',MDLRS1PIEJ, 1,'INTEGER')
+      CALL FFKEY('MDLSPIEJ',MDLSPIEJ, 1,'INTEGER')
       CALL FFKEY('MDLSPI',MDLSPI, 1,'INTEGER')
 
       CALL FFKEY('MARSRES'  ,XMARSRES ,1,'REAL')
@@ -525,6 +525,7 @@ c         XMANFFRES = 0.62
       WRITE(6,*) '********* CCQE SETTINGS ***************'
       WRITE(6,*) 'NECARD : MDLQE   = ',MDLQE
       WRITE(6,*) 'NECARD : MDLQEAF = ',MDLQEAF
+      WRITE(6,*) 'NECARD : MDL2P2H = ',MDL2P2H
       WRITE(6,*) 'NECARD : MAQE    = ',XMAQE
       WRITE(6,*) 'NECARD : AXFFALPHA =',AXFFALPHA
       WRITE(6,*) 'NECARD : AXFFBETA=',AXFFBETA
@@ -561,7 +562,7 @@ C      WRITE(6,*) 'NECARD : MASPI  = ',XMASPI
       WRITE(6,*) '********** SINGLE PION ***************'
       WRITE(6,*) 'NECARD : IFF       = ',NEIFF
       WRITE(6,*) 'NECARD : NRTYPE    = ',NENRTYPE
-      WRITE(6,*) 'NECARD : NERSPIEJ  = ',MDLRS1PIEJ
+      WRITE(6,*) 'NECARD : MDLSPIEJ  = ',MDLSPIEJ
       WRITE(6,*) 'NECARD : MDLSPI    = ',MDLSPI
       WRITE(6,*) 'NECARD : MARSRES   = ',XMARSRES
       WRITE(6,*) 'NECARD : MANFFRES  = ',XMANFFRES
@@ -726,11 +727,11 @@ C     Check FSI rescattering probabilities
          STOP
       END IF
 
-      IF ((MDLSPI .EQ. 3) .AND. (MDLRS1PIEJ .NE. 1)) THEN
+      IF ((MDLSPI .EQ. 3) .AND. (MDLSPIEJ .NE. 1)) THEN
         WRITE(*,*) '******************************'
         WRITE(*,*) 'NECARD error: specified a Rein-Sehgal ejection'
         WRITE(*,*) 'method with a model that WAS NOT Rein-Sehgal!'
-        WRITE(*,*) 'Model: ', MDLSPI, 'Method: ', MDLRS1PIEJ
+        WRITE(*,*) 'Model: ', MDLSPI, 'Method: ', MDLSPIEJ
         STOP
       ENDIF
 

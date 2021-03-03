@@ -185,7 +185,7 @@ neutfillvect(char *filename, char *treename, char *branchname)
   // Single pion model
   nv->SPIModel = nemdls_.mdlspi;
   // Rein-Sehgal single-pion ejection method
-  nv->SPIRSEj  = nemdls_.mdlrs1piej;
+  nv->SPIRSEj  = nemdls_.mdlspiej;
   // Coherent model
   nv->COHModel = nemdls_.mdlcoh;
   // DIS model

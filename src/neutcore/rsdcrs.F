@@ -427,7 +427,7 @@ C    &  "Plep = ", Plep
       ELSE IF (THETA .LE. -0.999999) then
 C       write(*,*) "Had to modify theta = -1 from", theta
          theta =-0.999999
-         Original = 1
+         goto 999
       ENDIF
 
       nu_lab = E - El

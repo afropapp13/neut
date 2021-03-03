@@ -603,9 +603,9 @@ C     Q_lab = SQRT(nu_lab**2-Q2)
 C     Q2_lab = Q_lab**2
 
 C     Set up the case where we don't have a mass effect
-c     C_L = u
-c     C_R = v
-c     C_S = sqrt(2.*u*v)
+      C_L = u
+      C_R = v
+      C_S = sqrt(2.*u*v)
 
 C     Neutrino or anti neutrino: U->V and V->U
 
@@ -618,13 +618,13 @@ C     CWRET: reference eq 2.18 Rein-Sehgal.
 
 C     CWRET: replace U with C_L, V with C_R, UV with C_S
 C     If anti-neturino reverse C_L and - C_R
-c     IF (IMODE.GT.10) THEN
-c        tempC_L = C_L
-c        C_L = -C_R
-c        C_R = -tempC_L
+      IF (IMODE.GT.10) THEN
+         tempC_L = C_L
+         C_L = -C_R
+         C_R = -tempC_L
 ccc this was bug 98 MAR 11 by Y.Itow
-ccc         TWUV = -TWUV
-C     END IF
+         TWUV = -TWUV
+      END IF
 
 C     Qs = 1.
 C     nus = 1.
@@ -959,7 +959,7 @@ C     need to generate the outgoing pion
 
 
 C     Follow the convention of Rein-Sehgal for alpha, beta, gamma on
-C     last page of appendix
+C     last page of appendix, equation A.23
 C     ALPSH = Alpha
 C     BETSH = Beta
 C     DELSH = Delta (not Kronecker and not resonance symbol: refers to
@@ -988,23 +988,23 @@ C     since we only use these squared
          C_L = -C_R
          C_R = -tempC_L
 C this was bug/ fixed by Y.Itow 98 Mar 11
-C         TWUV = -TWUV
+         TWUV = -TWUV
       END IF
 
 C     Throw the pion according to user input
-C     MDLRS1PIEJ = 0 means isotropic
-C     MDLRS1PIEJ = 1 means Delta only
-C     MDLRS1PIEJ = 2 means full Rein-Sehgal (Appendix A)
+C     MDLSPIEJ = 0 means isotropic
+C     MDLSPIEJ = 1 means Delta only
+C     MDLSPIEJ = 2 means full Rein-Sehgal (Appendix A)
 
-      IF (MDLRS1PIEJ .EQ. 0) THEN
+      IF (MDLSPIEJ .EQ. 0) THEN
         GOTO 101
-      ELSE IF (MDLRS1PIEJ .EQ. 1) THEN
+      ELSE IF (MDLSPIEJ .EQ. 1) THEN
         GOTO 102
-      ELSE IF (MDLRS1PIEJ .EQ. 2) THEN
+      ELSE IF (MDLSPIEJ .EQ. 2) THEN
         GOTO 103
       ELSE
-        WRITE(*,*) "WRONG RS1PIEJ GIVEN"
-        WRITE(*,*) "YOU GAVE RS1PIEJ = ", MDLRS1PIEJ
+        WRITE(*,*) "WRONG MDLSPIEJ GIVEN"
+        WRITE(*,*) "YOU GAVE MDLSPIEJ = ", MDLSPIEJ
         WRITE(*,*) "I NEED 0 (ISOTROPIC)",
      &             "1 (DELTA ONLY)", 
      &             "2 FULL REIN-SEHGAL"
