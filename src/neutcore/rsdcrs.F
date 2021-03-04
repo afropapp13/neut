@@ -308,8 +308,10 @@ C      REAL FIM3,FI0M,FI0P,BR,FBW,FBWNO,ETA,XE,RV,FFV,R,TA,FFA,T
       REAL ASL(3),ASR(3),ASS(3)
 
 
+C     These are the 2l+1 constants (IPP stores which interaction mode the resonance is relevant to)
       DATA IPP/3,5,5,1,1,1,1,1,5,5,5,5,5,3,3,3,7,7,3,3,3,3,3,7,7,3,7,7,
      1     1,1,3/
+C     Harmonic oscillation of the resonance
       DATA NRR/0,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
      1     0,0,0/
 
@@ -349,7 +351,7 @@ C     indicates very bad news!
 
 C     CWRET: there is already a check for this in rsdt33.F
       IF ( ((2 * XMN * E) * (2 * XMN * E + XMN2 - W2) /
-     $     (2 * XMN * E + XMN2) + Q2) .LT. -1.0E-5 ) THEN
+     $     (2 * XMN * E + XMN2) + Q2) .LT. -1.*RS_SMNO ) THEN
 C       write(*,*) "Q2 range"
         GOTO 999
       ENDIF
@@ -398,11 +400,11 @@ C     This definitely should not be 0, but allow for some numerical
 C     inaccuracy
 C     Putting the accuracy at 1E-5: if between -1E-5 and +1E-5, set
 C     lepton momentum to zero
-      IF (El**2 - XMLEP2 .LT. -1E-5) THEN
+      IF (El**2 - XMLEP2 .LT. -1*RS_SMNO) THEN
 c        write(*,*) "Bad lepton momentum, invalid event"
 c        write(*,*) "plep2 = ", el**2 - xmlep2
          GOTO 999
-      ELSE IF (El**2 - XMLEP2 .LE. 1.E-5) THEN
+      ELSE IF (El**2 - XMLEP2 .LE. -1*RS_SMNO) THEN
 c        write(*,*) "Modified plep to 1E-5"
 c        write(*,*) el**2-xmlep2
          Plep = 1E-5
@@ -413,21 +415,13 @@ c        write(*,*) el**2-xmlep2
       theta = (Q2-XMLEP2+2*E*El)/(2*E*Plep)
 
 C     If theta is forward+numerical accuracy, set to forward
-C     if (theta .GT. 1.0 .AND. theta .LT. 1.0+1E-7) then
 C     CWRET changed here too
-      IF (ABS(THETA) .GT. 1.+1.E-5) THEN
-c       write(*,*) "Weird kinematics; theta = ", theta,
-c    &  "Plep = ", Plep
+      IF (ABS(THETA) .GT. 1.+RS_SMNO) THEN
         GOTO 999
-      ELSE IF (THETA .GE. 0.999999 ) then
-C       write(*,*) "Had to modify theta = 1 from", theta,
-C    &  "Plep = ", Plep
-         theta = 0.999999
-         goto 999
-      ELSE IF (THETA .LE. -0.999999) then
-C       write(*,*) "Had to modify theta = -1 from", theta
-         theta =-0.999999
-         goto 999
+      ELSE IF (THETA .GE. 1-RS_SMNO) then
+         theta = 1-RS_SMNO
+      ELSE IF (THETA .LE. -1+RS_SMNO) then
+         theta =-1+RS_SMNO
       ENDIF
 
       nu_lab = E - El
@@ -678,10 +672,10 @@ C        Changed from RAD and RADR = 0.0001 to 1E-7
 C        Need .LE. 0 because we divide by SQRT(RADR)
 C        CWRET changed here from .LE. 0, RAD = 1E-7, used to be IF(RAD
 C        .LT. 0) GOTO 999
-         IF(RAD .LE. 0.) RAD = 1E-7
+         IF(RAD .LE. 0.) RAD = RS_SMNO
          PQ = SQRT(RAD)
          RADR = ((XMR**2-XMN2-XMPI2)**2-4.*XMN2*XMPI2)/(4.*XMR**2)
-         IF(RADR .LE. 0) RADR = 1E-7
+         IF(RADR .LE. 0) RADR = RS_SMNO
          PQR = SQRT(RADR)
 C        Rein p48, eq 28, Gamma_R
          BRA = BR*(PQ/PQR)**IP

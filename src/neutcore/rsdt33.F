@@ -134,7 +134,7 @@ C     CWRET added these for checking Q2 is within limits
 
 #include <neutcrs.h>
 
-      REAL QV,QV2,QVS,QVS2,A,V,U,V2,U2,TWUV,AK,ALFA,ALFA2
+      REAL QV,QV2,QVS,QVS2,A,V,U,V2,U2,AK,ALFA,ALFA2
       REAL BETA,BETA2,GAMA,GAMA2,FAKT
       REAL BR,FBWNO,XE,FFV,FFA
       REAL R,RA,RV,RM,RP,T,TA,TV,TP,TM,S,B,C
@@ -153,18 +153,12 @@ C     Variables for dealing with ejecting the pion in the Npi frame
       COMPLEX ROP3P3,ROM3M3,ROP3P1,ROM1M3,ROP3M1,ROP1M3,ROP1P1,ROM1M1
       COMPLEX RHOTIL,ROTI33,ROTI31,ROT3M1
       REAL BETSH,ALPSH,DELSH
-C     testing
-      COMPLEX ROP3P3C
 C     The Axy for Rein-Sehgal
       COMPLEX A00,A10,A20,A30,A11,A21,A22,A31,A32,A33
       COMPLEX B11,B21,B22,B31,B32,B33
 C     The calculator function for rho, at the bottom of this
       COMPLEX RHOCALC
       EXTERNAL RHOCALC
-C     Save the old versions for comparison
-      COMPLEX ROP3P3o,ROM3M3o,ROP3P1o,ROM1M3o,ROP3M1o,ROP1M3o,ROP1P1o
-      COMPLEX ROM1M1o, RHOTILo,ROTI33o,ROTI31o,ROT3M1o
-C     REAL YFNOLD
 C     Helpers
 C     REAL rhop3p3r, rhop3p1r, rhop3m1r
 C     REAL rhop3p3i, rhop3p1i, rhop3m1i
@@ -184,10 +178,6 @@ C     Angles of pion in resonance rest frame
       REAL PHI,THETA,PHILEP
 C     The normalised rho tildes in Rein-Sehgal pion ejection
       COMPLEX RHOP3P3,RHOP3P1,RHOP3M1
-      REAL RHOP3P3o,RHOP3P1o,RHOP3M1o
-
-C     REAL ROP3P3,ROM3M3,ROP3P1,ROM1M3,ROP3M1,ROP1M3,ROP1P1,ROM1M1
-C     REAL RHOTIL,ROTI33,ROTI31,ROT3M1
 
 C     Store the signs of the resonances; here be dragons!
       REAL RESSGN(31)
@@ -229,7 +219,7 @@ C     Store the various constants for given Enu, W, Q2 combination for Rein-Sehg
 C     Store the returned amplitudes per resonance
       REAL RETF(6)
 
-      REAL RND,RNDSIG,DSIGMX,DSIGMXP,DSIGMXM,DSIG3,DSIG3P,DSIG3M
+      REAL RNDSIG,DSIGMX,DSIGMXP,DSIGMXM,DSIG3,DSIG3P,DSIG3M
 C     CWRET added these to agree with rsdcrs and have lepton mass-effect
 C     accounted for in vector generation
       Real El
@@ -241,7 +231,7 @@ C     accounted for in vector generation
       Integer LambdaIT
 
 C     Used for accept-reject
-      REAL TMPSIG,TMPSIGP,TMPSIGM,SIGMAX,JUNK,UU
+      REAL TMPSIG,SIGMAX
       INTEGER Lambda(2), iOrg
 
       REAL TMPPMU(3),TMPPPI(3),TMPPNU(3)
@@ -392,10 +382,6 @@ C     Save the kinematically allowed Q2 limits in QMINFOUND and QMAXFOUND
 C     This depends on Enu, W and the lepton mass. We'll reject Q2 if
 C     it's outside of these limits
       CALL RES_Q2_LIMITS(SMAX, W, XMLEP, QMINFOUND, QMAXFOUND)
-      IF (QMINFOUND .EQ. -9999 .OR. QMAXFOUND .EQ. 9999) THEN
-        GOTO 11
-      END IF
-
 
 C     Choose a random Q2 in the range determined by Enu,
 C     this is our "y-value" in the accept-reject method
@@ -559,7 +545,6 @@ C     IF(V.LT.0.) V = 0.
       IF(V.LT.0.) GOTO 11
       U2 = U**2
       V2 = V**2
-      TWUV = 2.*U*V
       AK = (W2-XMN2)/(2.*XMN)
       FAKT = W*PI/(W2-XMN2)
 
@@ -622,8 +607,6 @@ C     If anti-neturino reverse C_L and - C_R
          tempC_L = C_L
          C_L = -C_R
          C_R = -tempC_L
-ccc this was bug 98 MAR 11 by Y.Itow
-         TWUV = -TWUV
       END IF
 
 C     Qs = 1.
@@ -912,8 +895,8 @@ C     The q_pi (W) squared (p87 bottom)
 C     The q_pi (M_res) squared (p87 bottom)
       RADR = ((XMR**2-XMN2-XMPI2)**2-4.*XMN2*XMPI2)/(4.*XMR**2)
 C     CWRET: maybe rethrow here instead of approximating?
-      IF(RAD .LT. 0) RAD = 1E-7
-      IF(RADR .LE. 0) RADR = 1E-7
+      IF(RAD .LE. 0) RAD = RS_SMNO
+      IF(RADR .LE. 0) RADR = RS_SMNO
 C     Now square root them
       PQ = SQRT(RAD)
       PQR = SQRT(RADR)
@@ -987,8 +970,6 @@ C     since we only use these squared
          tempC_L = C_L
          C_L = -C_R
          C_R = -tempC_L
-C this was bug/ fixed by Y.Itow 98 Mar 11
-         TWUV = -TWUV
       END IF
 
 C     Throw the pion according to user input
@@ -998,7 +979,8 @@ C     MDLSPIEJ = 2 means full Rein-Sehgal (Appendix A)
 
       IF (MDLSPIEJ .EQ. 0) THEN
         GOTO 101
-      ELSE IF (MDLSPIEJ .EQ. 1) THEN
+C     The usual NEUT method is very similar to Delta only
+      ELSE IF (MDLSPIEJ .EQ. 1 .OR. MDLSPIEJ .EQ. 3) THEN
         GOTO 102
       ELSE IF (MDLSPIEJ .EQ. 2) THEN
         GOTO 103
@@ -1007,7 +989,8 @@ C     MDLSPIEJ = 2 means full Rein-Sehgal (Appendix A)
         WRITE(*,*) "YOU GAVE MDLSPIEJ = ", MDLSPIEJ
         WRITE(*,*) "I NEED 0 (ISOTROPIC)",
      &             "1 (DELTA ONLY)", 
-     &             "2 FULL REIN-SEHGAL"
+     &             "2 FULL REIN-SEHGAL",
+     &             "3 (DELTA+FLAT old NEUT)
         STOP
       END IF
 
@@ -1027,7 +1010,7 @@ C     Now get the momentum at GOTO 72
 
 C     ===========================================================
 C     ===========================================================
-C     PION EJECTION USING DELTA ONLY, like old NEUT
+C     PION EJECTION USING DELTA ONLY, similar to old NEUT
 C     ===========================================================
 C     Start the pion ejection calculation for P33(1232) ONLY
 C     See Rein-Sehgal 2.46; recommended only for CC1pi+1p channel
@@ -1066,24 +1049,30 @@ C     Normalise relative rho tilde, as Rein-Sehgal also do
       RHOP3P1 = ROTI31 / RHOTIL
       RHOP3M1 = ROT3M1 / RHOTIL
 
-C     The maximum for the accept-reject ceiling
+C     The maximum for the accept-reject ceiling, eq 2.46 maximised
+C     (spherical harmonics maximised)
       MAXDST = SQRT(1./(4.*PI))
-     &       + (2./SQRT(5.)) * (1./4.) * SQRT(5./PI) * (3.-1.) *
+     &       - (2./SQRT(5.)) * (1./4.) * SQRT(5./PI) * (-1.) *
      &         (RHOP3P3 - 0.5)
-     &       + (4./SQRT(10.)) * (1./2.) * SQRT(3./(2.*PI)) *
+     &       + (4./SQRT(10.)) * (-1./2.) * SQRT(15./(2.*PI)) *0.5 *
      &         RHOP3P1
-     &       + (4./SQRT(10.)) * (1./4.) * SQRT(15./(2.*PI)) *
+     &       - (4./SQRT(10.)) * (1./4.) * SQRT(15./(2.*PI)) * -1.*
      &         RHOP3M1
 
 C     If this theta, phi, yrand combination fails the accept-reject,
 C     rethrow them!
 C     Note: GOTO 5x will always rethrow; 50 for this simple Delta only model)
  50   CONTINUE
-C     WRITE(*,*) "Trying again del"
 C     Throw CosTheta between -1 and +1
       THETA = ACOS(1.-RLU(IRSISED)*2.)
       PHI   = RLU(IRSISED) * PI * 2.
 
+C     If we aren't dealing with a Delta resonance just make the
+C     distribution flat in costheta and phi if user has requested it
+      IF (MDLSPIEJ .EQ. 3 .AND. RES33 .EQ. 0) GOTO 72
+
+C     If not, calculate equation 2.46 (remember all rho have been
+C     normalised out by rho tilde)
       YFN = RSY00(THETA,PHI)
      $    - (2./ SQRT(5.)) * RSY20(THETA,PHI) *
      $      (RHOP3P3 - 0.5)
@@ -1092,9 +1081,6 @@ C     Throw CosTheta between -1 and +1
 
 C     Do the accept-reject on the YFN distribution
       YRAND = RLU(IRSISED) * MAXDST
-C     If we aren't dealing with a Delta resonance just make the
-C     distribution flat in costheta and phi
-      IF (RES33 .EQ. 0) GOTO 72
 C     Accept-reject on YFN, rethrow
       IF (YRAND .GT. YFN) THEN
         GOTO 50
@@ -1563,7 +1549,6 @@ C     B33 as defined in A.19p (superfluous?)
 
 C     This is where we goto if rethrow
  52   CONTINUE
-C     WRITE(*,*) "TRY AGAIN ADV NEUTRON"
 C     The theoretical description can be found in Rein-Sehgal, eq 2.46
 C     Rein-Sehgal also provide theory for calculating outgoing pion
 C     kinematics using more resonances, which is a future project!
@@ -1766,9 +1751,6 @@ C       We're only interested in the peak, so look in low Q2 region
 C       Get the physically allowed Q2 limits and check that the above
 C       hard-coded limits are allowed. If not, set QMIN and QMAX
         CALL RES_Q2_LIMITS(SMAX, W, XMLEP, Q2MINkin, Q2MAXkin)
-        IF (Q2MINkin .EQ. -9999 .AND. Q2MAXkin .EQ. 9999) THEN
-          GOTO 500
-        END IF
 
 C       q2min>q2minkin
         IF (q2minkin .ne. q2maxkin) then
@@ -1823,7 +1805,7 @@ C     Finally multiply found maximum by safety factor
 
 C     Unfortunately this hack is needed for the case when the Q2 limits
 C     are so close to each other that a cross-section isn't calculated
-      IF (SIGMAX .LT. 1E-7) SIGMAX = 1E-7
+      IF (SIGMAX .LT. RS_SMNO) SIGMAX = RS_SMNO
 
       END ! end of GETMAXCRS_RS subroutine
 
@@ -1868,14 +1850,18 @@ C                         resonances in ejecting the pion in the
 C                         resonance rest-frame
 C
 ************************************************************************
-
+      IMPLICIT NONE
 C     Resonance number (found in rsclfm.F)
-      INTEGER*4 RES1,RES2
+      INTEGER RES1,RES2
 C     Isospin (J = 3 means 3/2)
-      INTEGER*4 J1,J2
+      INTEGER J1,J2
+
+      INTEGER NCTR
 
 C     Array that holds the Breit-Wigner etas
       COMPLEX ETABW(31)
+
+      REAL ALPSH,BETSH, DELSH
 
 C     The alpha, beta and delta as defined in equation A.23 Rein-Sehgal
 

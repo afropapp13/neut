@@ -657,7 +657,7 @@ C      ISPIMA = INT(XMASPI*100+0.5)
          END IF
       endif
 
-      IF ( IRSRESMA.ne.95 .and. IRSRESMA.ne.101 .and. IRSRESMA.ne.103.
+      IF (IRSRESMA.ne.95 .and. IRSRESMA.ne.101 .and. IRSRESMA.ne.103.
      $     .and. IRSRESMA.ne.111 .and. IRSRESMA.ne.121 ) THEN
          WRITE(6,*)
      $     'NECARD error: MARS must be 0.95, 1.01, 1.03, 1.11 or 1.21'
@@ -732,6 +732,19 @@ C     Check FSI rescattering probabilities
         WRITE(*,*) 'NECARD error: specified a Rein-Sehgal ejection'
         WRITE(*,*) 'method with a model that WAS NOT Rein-Sehgal!'
         WRITE(*,*) 'Model: ', MDLSPI, 'Method: ', MDLSPIEJ
+        STOP
+      ENDIF
+
+C     Check pion ejection model
+      IF (MDLSPIEJ.LT.0 .OR. MDLSPIEJ.GT.3) then
+        WRITE(*,*) '******************************'
+        WRITE(*,*) 'NECARD error: specified a Rein-Sehgal ejection that
+     &              doesnt exist'
+        write(*,*) 'MDLSPIEJ: ', MDLSPIEJ, ' but should be'
+        write(*,*) 'MDLSPIEJ=0 Isotropic'
+        write(*,*) 'MDLSPIEJ=1 Delta'
+        write(*,*) 'MDLSPIEJ=2 Many'
+        write(*,*) 'MDLSPIEJ=3 Delta+Isotrop (old NEUT)'
         STOP
       ENDIF
 
