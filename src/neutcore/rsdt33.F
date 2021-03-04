@@ -990,7 +990,7 @@ C     The usual NEUT method is very similar to Delta only
         WRITE(*,*) "I NEED 0 (ISOTROPIC)",
      &             "1 (DELTA ONLY)", 
      &             "2 FULL REIN-SEHGAL",
-     &             "3 (DELTA+FLAT old NEUT)
+     &             "3 (DELTA+FLAT old NEUT)"
         STOP
       END IF
 
