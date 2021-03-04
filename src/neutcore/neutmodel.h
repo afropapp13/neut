@@ -89,6 +89,7 @@ C-- Model for 1 pion ejection direction
 C  MDLSPIEJ = 0 ; Isotropic
 C  MDLSPIEJ = 1 ; Delta only
 C  MDLSPIEJ = 2 ; All resonances 
+C  MDLSPIEJ = 3 ; Delta + Isotropic (same as old NEUT)
 C
 C-- MA (MV) for Rein-Sehgal Single meson production
 C  XMARSRES (XMVRSRES)
