@@ -404,10 +404,10 @@ C     lepton momentum to zero
 c        write(*,*) "Bad lepton momentum, invalid event"
 c        write(*,*) "plep2 = ", el**2 - xmlep2
          GOTO 999
-      ELSE IF (El**2 - XMLEP2 .LE. -1*RS_SMNO) THEN
+      ELSE IF (El**2 - XMLEP2 .LE. 1*RS_SMNO) THEN
 c        write(*,*) "Modified plep to 1E-5"
 c        write(*,*) el**2-xmlep2
-         Plep = 1E-5
+         Plep = RS_SMNO
       ELSE
          Plep = SQRT(El**2-XMLEP2)
       ENDIF
