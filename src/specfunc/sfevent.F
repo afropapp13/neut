@@ -42,7 +42,7 @@ c ----- temporary values to copy to output common block
 #include "../neutcore/neutmodel.h"
 
         real E, DIRNEU(3)
-        integer IPAR, IERR, mode
+        integer IPAR, IERR, mode, NAttempts
         logical single, nc, first
 
 c ----- pdg code of target
@@ -99,6 +99,7 @@ c        write (*,*) "MAKING CCQE EVENT"
 c        write (*,*) numbndp,numatom, mode, E
 c ----- E is in GeV here - change it to MeV for the calculation
 
+        IERR=0
         if ((NUMBNDP .ne. 6) .AND. (NUMBNDP .ne. 8) .AND. 
      &      (NUMBNDP .ne. 26)) then
          write (*,*) "using RFG for nucleus with atomic mass", NUMATOM
@@ -240,7 +241,9 @@ c ----- setup temp values for output common block
 
 C ******************************************************************** C
 C ----- Begin event generation -----
+        NAttempts = -1
 10      continue
+        NAttempts = NAttempts + 1
         if (tmp_IPNE(2) < 0) then
           write(*,*) "in nucleon pdg < 0!"
         endif
@@ -400,6 +403,12 @@ c event complete - go back to start to generate more
 C ----- for event generation -  compare to value loaded from xsec table
 c ----- 1% factor reduces efficiency but avoids errors from interpolation
        else if (crossSection*1E38 .LT. RLU(dummy)*tableMax*1.05) then
+         if(NAttempts.GT.100000) then
+            E = E / 1000.0 ! turn back into GeV for the rest of neut
+            print *, 'Giving up after ', NAttempts, ' attempts for E', E
+            IERR=1
+            return
+         endif
          goto 10
        endif
 
