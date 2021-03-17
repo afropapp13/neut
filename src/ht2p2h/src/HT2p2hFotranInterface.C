@@ -136,7 +136,7 @@ extern "C" {
       nework_.pne[i][0] = p[i][1];
       nework_.pne[i][1] = p[i][2];
       nework_.pne[i][2] = p[i][3];
-      nework_.iorgne[i] = parent[i]+1;
+      nework_.iorgne[i] = parent[i];
       if( i < 3 ) {
 	nework_.iflgne[i] = -1;
 	nework_.icrnne[i] = 0; 
