@@ -92,6 +92,8 @@ C --  Initialize
       NEDIFPI  = 0
       NEPDF    = 12
       NEBODEK  = 1
+      NEBYLW   = 0
+      NEBYFORCET1 = 0
       NEMULT   = 0
 
       XMAQE   = 1.21
@@ -240,6 +242,8 @@ C -- extract NEUT card
       CALL FFKEY('DIFPI',NEDIFPI, 1,'INTEGER')
       CALL FFKEY('PDF',NEPDF, 1,'INTEGER')
       CALL FFKEY('BODEK',NEBODEK, 1,'INTEGER')
+      CALL FFKEY('BYLW',NEBYLW, 1,'INTEGER')
+      CALL FFKEY('BYFORCET1',NEBYFORCET1, 1,'INTEGER')
       CALL FFKEY('MULT',NEMULT, 1,'INTEGER')
 
       CALL FFKEY('IFF',NEIFF, 1,'INTEGER')
@@ -404,6 +408,8 @@ C Set VNUINI here ( when PFSURF is fixed)
       WRITE(6,*) 'NECARD : DIFPI  = ',NEDIFPI
       WRITE(6,*) 'NECARD : PDF    = ',NEPDF
       WRITE(6,*) 'NECARD : BODEK  = ',NEBODEK
+      WRITE(6,*) 'NECARD : BYLW   = ',NEBYLW
+      WRITE(6,*) 'NECARD : BYFORCET1   = ',NEBYFORCET1
       WRITE(6,*) 'NECARD : MULT   = ',NEMULT
       WRITE(6,*) 'NECARD : MDLQE  = ',MDLQE
       WRITE(6,*) 'NECARD : MDLQEAF= ',MDLQEAF

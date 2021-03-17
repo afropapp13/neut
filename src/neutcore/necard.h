@@ -66,14 +66,23 @@
 *       NEDIFPI      : ( NEUT_DIFPI ) Select Diffractive pi model
 *                            0 : Rein
 *
-*       NEPDF         : ( NEUT-Select Parton distribution function
+*       NEPDF         : Select Parton distribution function
 *                           n = 7 : GRV94
 *                           n =12 : GRV98
 *
-*       NEBODEK       : ( NEUT- urn off/on Bodek-Yang correction
+*       NEBODEK       : Bodek-Yang correction
 *                       0 :   off
-*                       1 :   on
+*                       1 :   BY model from arXiv:hep-ex/0508007
+*			2 :   new BY model from 2019 paper in prep. (updated version of  arXiv:hep-ph/1011.6592
 *
+*	NEBYLW        :  Low W K factor of Bodek-Yang model (only works for NEBODEK=2)
+*                       0 : off (default)
+*                       1 : on
+*
+*	NEBYFORCET1   : use same BY coefficients for axial and vector part of F2  (only works for NEBODEK=2)
+*                       0 : off (default)
+*                       1 : on								     
+*								     
 *       NEMULT        : (Hadron multiplicity model for multi-pi mode)
 *                       0 :  old NEUT model
 *                       1 :  fit of deuterium bubble-chamber data (hep-ph:1607.06558)
@@ -130,8 +139,8 @@ C
       INTEGER NEFKINVER
       COMMON/NUCEFFVER/NEFKINVER
 
-      INTEGER NEPDF, NEBODEK, NEMULT
-      COMMON/NEUTDIS/NEPDF,NEBODEK,NEMULT
+      INTEGER NEPDF, NEBODEK, NEMULT, NEBYLW, NEBYFORCET1
+      COMMON/NEUTDIS/NEPDF,NEBODEK,NEMULT, NEBYLW, NEBYFORCET1
 
       INTEGER NEIFF,   NENRTYPE
       REAL    RNECA5I, RNEBGSCL

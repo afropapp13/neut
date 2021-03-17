@@ -21,13 +21,15 @@
 *                    Support for different PDFs and Bodek-Yang corrections
 *       2016.07.22 ; C. Bronner
 *                    Cleaning and commenting
+*       2019.10.12 ; J. Xia
+*                    Separating valence and sea u/d in the output 
 *
 ************************************************************************
 
       IMPLICIT REAL*8(A-H,O-Z)
       LOGICAL verbose/.false./
 #include "necard.h"
-
+      REAL K_val_u,K_val_d,K_sea_u,K_sea_d 
       COMMON /PARAM/EN,E0,IFQG,IFEL
 
 C     Allowed Q2 range for the different PDFs
@@ -42,7 +44,7 @@ C     Allowed Q2 range for the different PDFs
          endif
       ! ---> GRV98LO
       else if(NEPDF.eq.12) then
-         if(NEBODEK.eq.1) then ! use corrections by Bodek and Yang 
+         if(NEBODEK.ge.1) then ! use corrections by Bodek and Yang 
             QMIN2=0.0D0
             QMAX2=1.0D6
          else if(NEBODEK.eq.0) then ! original
@@ -56,10 +58,12 @@ C     Allowed Q2 range for the different PDFs
          QMAX2=1.0D6
       endif
 
+      
 C --- Force Q2 to be within allowed range for the PDF
       If(Q2.Gt.Qmax2) Q2=Qmax2
       If(Q2.Lt.Qmin2) Q2=Qmin2
       Q=Sqrt(Q2)
+
 
 C --- Call PDF calculation routine
 C --- GRV94 Leading Order
@@ -73,21 +77,21 @@ C --- GRV94 Next Leading Order (Deep Inelastic Scattering)
         CALL GRV94DI(X0,Q,UV,DV,AU,AD,AS,AC,AB,AT,G)
       Else If(NEPDF.Eq.12) Then
 C --- GRV98 Leading Order
-        CALL GRV98_LO(X0,Q,UV,DV,AU,AD,AS,AC,AB,AT,G)
+         CALL GRV98_LO(X0,Q,UV,DV,AU,AD,AS,AC,AB,AT,G)    
+         
+         
       Else
         Write(*,*) '%QGDISG-E: unknown PDF!',NEPDF
       End If
 
-*     Probabilities to return
-*     Return total probability (valence+sea) for up and down quarks
-      U = UV+AU
-      D = DV+AD
+*     Probabilities to return     
+      U = UV
+      D = DV
       S = AS
       C = AC
       B = AB
       T = AT
       
-
 
       Return
       End

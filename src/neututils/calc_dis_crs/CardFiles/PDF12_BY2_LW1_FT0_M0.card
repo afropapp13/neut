@@ -1,0 +1,187 @@
+C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C  DIS related parameters 
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C  PDF for DIS is set in this section
+C  (GRV94DI -> 7, GRV98_LO -> 12 (default))
+NEUT-PDF    12
+C
+C  Bodek-Yang correction
+C ( 0 = off, 1 = BY model from arXiv:hep-ex/0508007, 2 = new BY model from 2019 paper in prep. (updated version of  arXiv:hep-ph/1011.6592))
+NEUT-BODEK   2
+C
+C Low W K factor of Bodek-Yang model (only works for NEBODEK=2)
+C 0:off (default), 1:on
+NEUT-BYLW 1
+C
+C Use same BY coefficients for axial and vector part of F2  (only works for NEBODEK=2)
+C 0:off (default), 1:on
+NEUT-BYFORCET1 0
+C
+C  Hadron multiplicity model for multi-pion mode
+C ( original=0 (default), deuterium fit=1, AGKY model (hep-ph:0904.4043)=2)
+NEUT-MULT 0
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C
+C Number of events ; EVCT-NEVT
+C
+EVCT-NEVT  1000
+C
+C--------------------------------
+C
+C Particle Code ; EVCT-IDPT
+C
+EVCT-IDPT 14
+C
+C--------------------------------
+C
+C fixed  VERTEX ; EVCT-MPOS 1
+C random VERTEX ; EVCT-MPOS 2
+C
+C EVCT-MPOS 1
+C VECT-POS  100. 0. 0.
+C
+EVCT-MPOS 2
+EVCT-RAD  100.
+C
+C--------------------------------
+C
+C fixed  DIRECTION ; EVCT-MDIR 1
+C random DIRECTION ; EVCT-MDIR 2
+C
+EVCT-MDIR 1
+EVCT-DIR 0. 0. 1.
+C
+C
+C--------------------------------
+C
+C fixed  MOMENTUM ; EVCT-MPV 1
+C random MOMENTUM ; EVCT-MPV 2
+C
+C random MOMENTUM based on flux times cross section distribution
+C EVCT-MPV 3
+C EVCT-FILENM : name of ROOT file containing flux histogram
+C EVCT-HISTNM : flux histogram name
+C EVCT-INMEV  : flag for histograms in MeV
+C               (MeV => 1, GeV => 0)
+C
+EVCT-MPV 1
+EVCT-PV  2000.
+C
+C
+C **** TARGET INFORMATION ****
+C
+C NUMBNDN : total number of neutron (Default is H2O)
+C           (e.g. CH => 6, H2O => 8, Ar => 22, Fe => 30)
+C
+NEUT-NUMBNDN 8
+C
+C NUMBNDP : total number of bound proton (Default is H2O)
+C           (e.g. CH => 6, H2O => 8, Ar => 18, Fe => 26)
+C
+NEUT-NUMBNDP 8
+C
+C NUMFREP : total number of free proton (Default is H2O)
+C           (e.g. CH => 1, H2O => 2, Ar => 0, Fe => 0)
+C
+NEUT-NUMFREP 2
+C
+C NUMATOM : atomic number of atom heavier than hydrogen
+C           (e.g. CH => 12, H2O =>16, Ar => 40, Fe => 56)
+C
+NEUT-NUMATOM 16
+C
+C
+C Fermi-Gas perameters are target nucleus dependent
+C Set by default in neutcore/nesetfgparams.F
+C
+CNEUT-PFSURF 0.225
+CNEUT-PFMAX  0.225
+CNEUT-VNUINI -0.027
+CNEUT-VNUFIN 0.0
+C
+C **** NEUTRINO INTERACTION ****
+C
+C FERM : Fermi motion  0 : on ( default )  1 : off
+C
+CNEUT-FERM 0
+C
+C PAUL : Pauli blocking  0 : on ( default )  1 : off
+C
+CNEUT-PAUL 0
+C
+C NEFF : Nuclear effect in O16  0 : on ( default )  1 : off
+C
+CNEUT-NEFF 0
+C
+C   IFORMLEN: FORMATION zone effect ON/OFF
+C              IFORMLEN=   1  : ALL ON (default)
+C              IFORMLEN=   0  : ALL OFF
+C              IFORMLEN= 110  : OFF for QE/Elastic
+C              IFORMLEN= 100  : ON  for mPi/DIS only
+C
+CNEUT-IFORMLEN 1
+C
+C
+C
+C ABSPIEMIT : Nucleon emission after absorption of pi 1: on (default) 0: off
+C 
+CNEUT-ABSPIEMIT 1
+C
+C
+C NUSIM : Toggle neutrino simulation or not (piscat/gampi) 1: yes (default) 0: no
+C
+CNEUT-NUSIM 1
+C
+C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C Nucleon rescattering
+C 
+C NUCRES-RESCAT  1: on (default) 0: off
+C 
+CNUCRES-RESCAT 1
+C
+C NUCRES-XNUCFACT  cross-section factor to study uncertainty default = 1.
+C
+CNUCRES-FACT 1.
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C
+C
+C
+C MODE : Interaction mode
+C                     0 : normal ( default )
+C                    -1 : input cross section by CRSNEUT
+C                     n : sellect one mode ( n > 0 )   See nemodsel.F
+C                           n =  1 : charged current Q.E. 
+C			    n =  2 : charged current npnh (Nieves)	
+C                           n = 11,12,13
+C                                  : charged current Single pi production
+C                           n = 16 : coherent Single pi production
+C                           n = 21 : charged current Multi pi production
+C                           n = 31,32,33,34
+C                                  : neutral current Single pi production
+C                           n = 36 : coherent Single pi production
+C                           n = 41 : neutral current Multi pi production
+C                           n = 51,52 : neutral current elastic 
+C                           n = 22,42,43 : single eta production 
+C                           n = 23,44,45 : single  K  production 
+C			                    
+NEUT-MODE   0 
+
+
+
+C
+C
+C RAND : random seed
+C      0 : Read RANDOM number from FILE
+C      1 : Generating RANDOM SEED from the time
+C
+NEUT-RAND 1
+C
+C QUIET : Screen output verbosity
+C         0 : Default (prints all initial state info)
+C         1 : Print only interaction mode and neutrino energy
+C         2 : Prints almost nothing (except PYTHIA output)
+C
+NEUT-QUIET 2
+

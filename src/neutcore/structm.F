@@ -27,7 +27,7 @@
 * Version 7.01
 *
 *
-#include "pdf804/pilot.h"
+#include "pdf804/pilot.h"  
 C
 C-----------------------------------------------------------------------
 C
@@ -107,6 +107,10 @@ C  *                                                                   *
 C  *********************************************************************
 C
 C
+
+*     2020/11/19 ; C. Bronner
+*                  K factors for BY corrections
+      
 #include "pdf804/impdp.inc"
 C
 #include "pdf804/w5051p1.inc"
@@ -129,6 +133,10 @@ C
      +       VAL(NCHDIM)
       DATA ZEROD/0.D0/,ONED/1.D0/,TWOD/2.D0/
       SAVE /W50514/, /W50514W/, /W50516/
+
+#include "necard.h"          
+C     For Bodek-Yang corrections 
+      REAL K_val_u,K_val_d,K_sea_u,K_sea_d 
 C.
 #include "pdf804/w50511c.inc"
 C.
@@ -1942,6 +1950,16 @@ C         GOTO 100
      + '                 Ngroup = ',NGROUP,',   Nset = ',NSET
           CALL GRV98_lo
      +         (DX,DQ,DUPV,DDNV,DUSEA,DDSEA,DSTR,DCHM,DBOT,DTOP,DGL)
+          if(NEBODEK.ge.1) then
+             CALL BYKVEC(DQ2,K_val_u,K_val_d,K_sea_u,K_sea_d)
+*     Scaling factor for valence quarks
+             DUPV = DUPV*K_val_u
+             DDNV = DDNV*K_val_d
+*     Scaling factor for sea quarks
+             DUSEA = DUSEA*K_sea_u
+             DDSEA = DDSEA*K_sea_d
+             DSTR = DSTR*K_sea_d
+          endif
           GOTO 100
         ELSEIF(NSET.EQ.13) THEN
           IF (FIRST) WRITE(N6,*) 
