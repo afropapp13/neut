@@ -638,6 +638,8 @@ NEUT_USE_GPERF_FALSE
 NEUT_USE_GPERF_TRUE
 NEUT_DEBUG_FALSE
 NEUT_DEBUG_TRUE
+NEUT_USE_ZBS_FALSE
+NEUT_USE_ZBS_TRUE
 NEUT_USE_TAUOLA_FALSE
 NEUT_USE_TAUOLA_TRUE
 LIBPREFIX
@@ -800,6 +802,7 @@ with_sysroot
 enable_libtool_lock
 enable_compatnames
 enable_tauola
+enable_zebra
 enable_debug
 with_gperf
 '
@@ -1463,6 +1466,7 @@ Optional Features:
   --disable-libtool-lock  avoid locking (might break parallel builds)
   --enable-compatnames    Enable 5.4.0 and previous library naming scheme
   --enable-tauola         Enable tauola, requires ZEBRA!
+  --enable-zebra          Enable ZEBRA
   --enable-debug          Compile with debug symbols
 
 Optional Packages:
@@ -19431,6 +19435,22 @@ else
 fi
 
 
+######## Check use tauola
+# Check whether --enable-zebra was given.
+if test "${enable_zebra+set}" = set; then :
+  enableval=$enable_zebra;
+fi
+
+
+ if test "x$enable_zebra" = "xyes"; then
+  NEUT_USE_ZBS_TRUE=
+  NEUT_USE_ZBS_FALSE='#'
+else
+  NEUT_USE_ZBS_TRUE='#'
+  NEUT_USE_ZBS_FALSE=
+fi
+
+
 ######## Check debug
 # Check whether --enable-debug was given.
 if test "${enable_debug+set}" = set; then :
@@ -19681,6 +19701,10 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${NEUT_USE_TAUOLA_TRUE}" && test -z "${NEUT_USE_TAUOLA_FALSE}"; then
   as_fn_error $? "conditional \"NEUT_USE_TAUOLA\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${NEUT_USE_ZBS_TRUE}" && test -z "${NEUT_USE_ZBS_FALSE}"; then
+  as_fn_error $? "conditional \"NEUT_USE_ZBS\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${NEUT_DEBUG_TRUE}" && test -z "${NEUT_DEBUG_FALSE}"; then
@@ -21276,7 +21300,9 @@ $as_echo X/"$am_mf" |
     { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
 $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
 as_fn_error $? "Something went wrong bootstrapping makefile fragments
-    for automatic dependency tracking.  Try re-running configure with the
+    for automatic dependency tracking.  If GNU make was not used, consider
+    re-running the configure script with MAKE=\"gmake\" (or whatever is
+    necessary).  You can also try re-running configure with the
     '--disable-dependency-tracking' option to at least be able to build
     the package (albeit without support for automatic dependency tracking).
 See \`config.log' for more details" "$LINENO" 5; }

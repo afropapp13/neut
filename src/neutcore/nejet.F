@@ -210,7 +210,7 @@ C#endif
      &        (SQRT(P(1,4)**2-P(1,5)**2)*SQRT(P(FF,4)**2-P(FF,5)**2))
          IF(ntry.gt.1000) goto 300
          IF(COSTH.LT.-0.75) THEN
-            If (mod(ntry1,100).eq.0) then
+            If ((ntry1.gt.0).and.(mod(ntry1,100).eq.0)) then
                print *, 'nejet: retry ',ntry1,' times to get COSTH>-0.75 '
                print *, '     : E,mode=',ineu,mode
                print*,'Pnu=',pne(1,1),pne(2,1),pne(3,1)
@@ -310,7 +310,7 @@ C                  CALL RNFERM(PFABS,IWAVE)
       WPY = SQRT(TOTE**2-TOTP(1)**2-TOTP(2)**2-TOTP(3)**2)
       IF (WPY.LT.2.0) THEN
          ntry=ntry+1
-         If (mod(ntry,100).eq.0) then
+         If ((ntry.gt.0).and.(mod(ntry,100).eq.0)) then
             print *, 'nejet: retry ',ntry,' times to get W>2.0GeV.'
             print *, '     : E,mode=',ineu,mode
             print*,'Pnu=',pne(1,1),pne(2,1),pne(3,1)

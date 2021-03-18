@@ -122,6 +122,12 @@ AC_ARG_ENABLE([tauola],
 
 AM_CONDITIONAL([NEUT_USE_TAUOLA], [test "x$enable_tauola" = "xyes"])
 
+######## Check use tauola
+AC_ARG_ENABLE([zebra],
+    AS_HELP_STRING([--enable-zebra], [Enable ZEBRA]))
+
+AM_CONDITIONAL([NEUT_USE_ZBS], [test "x$enable_zebra" = "xyes"])
+
 ######## Check debug
 AC_ARG_ENABLE([debug],
     AS_HELP_STRING([--enable-debug], [Compile with debug symbols]))
