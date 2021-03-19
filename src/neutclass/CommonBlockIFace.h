@@ -15,12 +15,14 @@ void nefillmodel_();
 void zexpconfig_();
 double evdifcrs_();
 double evpiprob_();
+double evpiw_();
 }
 
 namespace neut {
 
 inline double NEUTGetXSec() { return evdifcrs_(); }
 inline double NEUTGetPiCascProb() { return evpiprob_(); }
+inline double NEUTGetPiEj() { return evpiw_(); }
 inline void NEUTSetParams() {
   nefillmodel_();
   nesetfgparams_();
@@ -65,6 +67,8 @@ public:
   static void ReadFSIHIST(NeutVect *);
   static void ReadNUCLEONFSIHIST(NeutVect *);
   static void ReadVect(NeutVect *);
+
+  //static void ReadOther(NeutVect *);
 
   static std::string ParamsToString(bool isinstance = false);
 };

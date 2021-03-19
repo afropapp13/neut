@@ -44,7 +44,7 @@
 namespace neut {
 namespace rew {
 
-NReWeightNuXSecRES::NReWeightNuXSecRES() { this->Init(); }
+NReWeightNuXSecRES::NReWeightNuXSecRES() : UseAngular(false) { this->Init(); }
 
 NReWeightNuXSecRES::~NReWeightNuXSecRES() {}
 
@@ -64,6 +64,8 @@ void NReWeightNuXSecRES::Init(void) {
   NSYST_SETDEF(kXSecTwkDial_BgSclRES, cbfa.fneut1pi_gen.rnebgscl);
   NSYST_SETDEF(kXSecTwkDial_UseSeparateBgSclLMCPiBar, 0);
   NSYST_SETDEF(kXSecTwkDial_BgSclLMCPiBarRES, cbfa.fneut1pi_gen.rnebgscl);
+
+  NSYST_SETDEF(kXSecTwkDial_MDLSPiEj, cbfa.fnemdls_gen.mdlspiej);
 }
 
 bool NReWeightNuXSecRES::IsHandled(NSyst_t syst) {
@@ -74,6 +76,8 @@ bool NReWeightNuXSecRES::IsHandled(NSyst_t syst) {
   NSYST_USESDIAL(syst, kXSecTwkDial_BgSclRES);
   NSYST_USESDIAL(syst, kXSecTwkDial_UseSeparateBgSclLMCPiBar);
   NSYST_USESDIAL(syst, kXSecTwkDial_BgSclLMCPiBarRES);
+
+  NSYST_USESDIAL(syst, kXSecTwkDial_MDLSPiEj);
 
   return false;
 }
@@ -86,6 +90,8 @@ void NReWeightNuXSecRES::SetSystematic(NSyst_t syst, double twk_dial) {
   NSYST_UPDATEVALUE(kXSecTwkDial_BgSclRES, syst, twk_dial);
   NSYST_UPDATEVALUE(kXSecTwkDial_UseSeparateBgSclLMCPiBar, syst, twk_dial);
   NSYST_UPDATEVALUE(kXSecTwkDial_BgSclLMCPiBarRES, syst, twk_dial);
+
+  NSYST_UPDATEVALUE(kXSecTwkDial_MDLSPiEj, syst, twk_dial);
 }
 
 void NReWeightNuXSecRES::Reset(void) {
@@ -95,6 +101,7 @@ void NReWeightNuXSecRES::Reset(void) {
   NSYST_SETTODEF(kXSecTwkDial_BgSclRES);
   NSYST_SETTODEF(kXSecTwkDial_UseSeparateBgSclLMCPiBar);
   NSYST_SETTODEF(kXSecTwkDial_BgSclLMCPiBarRES);
+  NSYST_SETTODEF(kXSecTwkDial_MDLSPiEj);
 }
 
 void NReWeightNuXSecRES::Reconfigure(void) {
@@ -106,6 +113,12 @@ void NReWeightNuXSecRES::Reconfigure(void) {
   NSYST_RECONFCURRVALUE(kXSecTwkDial_BgSclRES, fracerr);
   NSYST_RECONFCURRVALUE_NOUNCERT(kXSecTwkDial_UseSeparateBgSclLMCPiBar);
   NSYST_RECONFCURRVALUE(kXSecTwkDial_BgSclLMCPiBarRES, fracerr);
+
+  //NSYST_RECONFCURRVALUE(kXSecTwkDial_MDLSPiEj, fracerr);
+  if (NSYST_CURRVAR(kXSecTwkDial_MDLSPiEj) != NSYST_DEFVAR(kXSecTwkDial_MDLSPiEj)) {
+    NSYST_CURRVAR(kXSecTwkDial_MDLSPiEj) = NSYST_TWKVAR(kXSecTwkDial_MDLSPiEj);
+  }
+
 }
 
 double NReWeightNuXSecRES::CalcChisq() {
@@ -150,6 +163,7 @@ bool EventIsLMCPiBar() {
 } // namespace
 
 double NReWeightNuXSecRES::CalcWeight() {
+
   if (!NModeDefn::isRES(nework_.modene)) {
     return 1;
   }
@@ -158,6 +172,7 @@ double NReWeightNuXSecRES::CalcWeight() {
                  NSYST_ISTWKD(kXSecTwkDial_MvRES) ||
                  NSYST_ISTWKD(kXSecTwkDial_CA5RES) ||
                  NSYST_ISTWKD(kXSecTwkDial_BgSclRES) ||
+                 NSYST_ISTWKD_INT(kXSecTwkDial_MDLSPiEj) || // Is a discrete parameter, gets different treatment
                  (NSYST_ISTWKD(kXSecTwkDial_UseSeparateBgSclLMCPiBar) &&
                   NSYST_ISTWKD(kXSecTwkDial_BgSclLMCPiBarRES));
 
@@ -169,6 +184,12 @@ double NReWeightNuXSecRES::CalcWeight() {
   cbfa.ResetGenValues();
 
   double old_xsec = NEUTGetXSec();
+
+  // Add MDLSPiEj weight calculation here (won't have an effect on differential xsec so returns weights 1)
+  // But should really calculate this before tweaking dials
+  double piej_old = 1;
+  if (UseAngular) piej_old = NEUTGetPiEj();
+  //std::cout << "old piej: " << piej_old << std::endl;
 
   if (old_xsec == 0) {
     std::cout
@@ -185,8 +206,16 @@ double NReWeightNuXSecRES::CalcWeight() {
     NSYST_ASSIGNIFTWKD(neut1pi_.xmarsres, kXSecTwkDial_MaRES);
     NSYST_ASSIGNIFTWKD(neut1pi_.xmvrsres, kXSecTwkDial_MvRES);
   }
+  //std::cout << "nsyst currvar: " << NSYST_CURRVAR(kXSecTwkDial_MDLSPiEj) << std::endl;
+  //std::cout << "nsyst twkvar: " << NSYST_TWKVAR(kXSecTwkDial_MDLSPiEj) << std::endl;
+  //std::cout << "def var: " << NSYST_DEFVAR(kXSecTwkDial_MDLSPiEj) << std::endl;
+  //std::cout << "istwkd int: " << NSYST_ISTWKD_INT(kXSecTwkDial_MDLSPiEj) << std::endl;
 
   NSYST_ASSIGNIFTWKD(neut1pi_.rneca5i, kXSecTwkDial_CA5RES);
+
+  // Update pion ejection
+  NSYST_ASSIGNIFTWKD_INT(nemdls_.mdlspiej, kXSecTwkDial_MDLSPiEj);
+
   if (NSYST_CURRVAR(kXSecTwkDial_UseSeparateBgSclLMCPiBar) &&
       EventIsLMCPiBar()) {
     NSYST_ASSIGNIFTWKD(neut1pi_.rnebgscl, kXSecTwkDial_BgSclLMCPiBarRES);
@@ -197,13 +226,16 @@ double NReWeightNuXSecRES::CalcWeight() {
   NEUTSetParams();
 
   double new_xsec = NEUTGetXSec();
+  double piej_new = 1;
+  if (UseAngular) piej_new = NEUTGetPiEj();
 
 #ifdef _N_REWEIGHT_RES_DEBUG_
   cout << "differential cross section (old) = " << old_xsec << endl;
   cout << "differential cross section (new) = " << new_xsec << endl;
 #endif
 
-  NREWCHECKRETURN(new_xsec / old_xsec);
+  NREWCHECKRETURN((new_xsec / old_xsec)*(piej_new / piej_old));
+  //NREWCHECKRETURN((new_xsec / old_xsec));
 }
 
 } // namespace rew

@@ -28,3 +28,5 @@ Linux
 *.m4
 autom4te.cache
 *.libs
+*.in
+*.am

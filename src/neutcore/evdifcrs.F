@@ -446,7 +446,7 @@ C     differential xsec, the 33s are using only the Delta(1232)
         IF (MDLSPI .EQ. 1) THEN
           call rsdcrs(IMOD, IORIG, 1, xmlep,e,q2,w,dcp,dc33p)
           call rsdcrs(IMOD, IORIG, -1,xmlep,e,q2,w,dcm,dc33m)
-            evdifcrs = dcp + dcm
+          evdifcrs = dcp + dcm
 C       For Minoo's model choice call Minoo's code
         ELSE IF (MDLSPI .EQ. 3) THEN
 C     Need to calculate theta and phi

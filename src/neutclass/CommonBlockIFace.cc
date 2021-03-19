@@ -63,6 +63,7 @@ void CommonBlockIFace::SetGenCard(std::string const &GenCardLocation) {
   fneffpr_gen = neffpr_;
 }
 void CommonBlockIFace::Initialize(std::string const &GenCardLocation) {
+  std::cout << "Initializing with " << GenCardLocation << std::endl;
   if (!gCommonBlockIFace) {
     gCommonBlockIFace = new CommonBlockIFace();
     gCommonBlockIFace->SetGenCard(GenCardLocation);
@@ -419,7 +420,20 @@ void CommonBlockIFace::ReadVect(NeutVect *nvect) {
   ReadNEUTCRS(nvect);
   ReadFSIHIST(nvect);
   ReadNUCLEONFSIHIST(nvect);
+
+  // The leftovers cw found
+  //ReadOther(nvect);
 }
+
+/*
+void CommonBlockIFace::ReadOther(NeutVect *nvect) {
+  neut1pi_.q2_com = nvect->Q2;
+  neut1pi_.enu_com = nvect->Enu;
+  neut1pi_.w_com = nvect->W;
+  neut1pi_.phi_com = nvect->phiadler;
+  neut1pi_.th_com = nvect->thadler;
+}
+*/
 
 std::string CommonBlockIFace::ParamsToString(bool isinstance) {
   std::stringstream ss("");
@@ -523,6 +537,7 @@ std::string CommonBlockIFace::ParamsToString(bool isinstance) {
   ss << "nemdls:\n"
      << "\tmdlqe: " << nemdls.mdlqe << "\n"
      << "\tmdlspi: " << nemdls.mdlspi << "\n"
+     << "\tmdlspiej: " << nemdls.mdlspiej << "\n"
      << "\tmdldis: " << nemdls.mdldis << "\n"
      << "\tmdlcoh: " << nemdls.mdlcoh << "\n"
      << "\tmdldif: " << nemdls.mdldif << "\n"

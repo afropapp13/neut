@@ -5,7 +5,7 @@
 #error NSyst.h uses X macros and as such 'X' cannot be defined before preprocessing.
 #endif
 
-// #define NSYST_DEBUG
+//#define NSYST_DEBUG
 
 #include <cmath>
 #include <string>
@@ -85,6 +85,8 @@
   /* events from anti-neutrinos where the pion is below Cherenkov threshold.*/ \
   X(kXSecTwkDial_BgSclLMCPiBarRES, BgSclLMCPiBarRES, 0.153846154 * 3,          \
     0.153846154 * 3)                                                           \
+  /* Rein Sehgal ejection mechanism */                                         \
+  X(kXSecTwkDial_MDLSPiEj, MDLSPiEj, 1, 1)                                     \
   /*Tweak the model of coherent pion production*/                              \
   /* X(kXSecTwkDial_NECOHEPI, NECOHEPI, NOUNCERT, NOUNCERT)   */               \
   /*Tweak A1 coef for COH pion production (Berger&Sehgal)*/                    \
@@ -176,6 +178,7 @@ public:
 #define NSYST_DEFVAR(DN) NSYST_CATVARNAME(fDef, DN)
 #define NSYST_TWKVAR(DN) NSYST_CATVARNAME(fTwk, DN)
 #define NSYST_ISTWKD(DN) bool(std::abs(NSYST_TWKVAR(DN)) > 1E-8)
+#define NSYST_ISTWKD_INT(DN) bool(std::abs(NSYST_CURRVAR(DN)-NSYST_DEFVAR(DN)) > 1E-8)
 #define NSYST_DECLAREDIALVARIABLES(DN)                                         \
   double NSYST_CURRVAR(DN);                                                    \
   double NSYST_DEFVAR(DN);                                                     \
@@ -195,6 +198,11 @@ public:
 
 #define NSYST_ASSIGNIFTWKD(TGT, DN)                                            \
   if (NSYST_ISTWKD(DN)) {                                                      \
+    TGT = NSYST_CURRVAR(DN);                                                   \
+  }
+
+#define NSYST_ASSIGNIFTWKD_INT(TGT, DN)                                        \
+  if (NSYST_ISTWKD_INT(DN)) {                                                  \
     TGT = NSYST_CURRVAR(DN);                                                   \
   }
 

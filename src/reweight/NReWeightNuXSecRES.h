@@ -43,9 +43,14 @@ public:
   void Reconfigure(void);
   double CalcWeight();
   double CalcChisq(void);
+  void SetUseAngular(bool val) { 
+    std::cout << "Using angular information in reweight: " << val << std::endl;
+    UseAngular = val; 
+  };
 
 private:
   void Init(void);
+  bool UseAngular;
 
   NSYST_DECLAREDIALVARIABLES(kXSecTwkDial_MaRES);
   NSYST_DECLAREDIALVARIABLES(kXSecTwkDial_MvRES);
@@ -59,6 +64,7 @@ private:
   NSYST_DECLAREDIALVARIABLES(kXSecTwkDial_MvRSRES);
   NSYST_DECLAREDIALVARIABLES(kXSecTwkDial_UseSeparateBgSclLMCPiBar);
   NSYST_DECLAREDIALVARIABLES(kXSecTwkDial_BgSclLMCPiBarRES);
+  NSYST_DECLAREDIALVARIABLES(kXSecTwkDial_MDLSPiEj);
 };
 
 } // namespace rew

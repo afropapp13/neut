@@ -90,6 +90,7 @@ C     after the pion ejection is completed
 
 #include <rscons.h>
 #include <neutmodel.h>
+#include "necard.h"
 
       REAL*4 XMASPI2, XMVSPI2
 
@@ -496,6 +497,11 @@ C     i.e. change SIGMAX = SIGMAX * (bigger number than currently)
      &             "x-sec = ", DSIGMX, "SIGMAX = ", SIGMAX
         GOTO 111
       END IF
+
+      enu_com = e
+      q2_com = q2
+      w_com = w
+
 
 
 C     ===================================================================
@@ -1099,7 +1105,6 @@ C     The most complete case, throwing differently depending on
 C     interaction mode, taking P33(1232) + nearby resonances into
 C     account when generating the outgoing pion
  103  CONTINUE
-C     WRITE(*,*) "EJECTING PION IN COMPLEX WAY!"
       IF (IFLAG .EQ. 1) THEN
         GOTO 104 ! I=3/2 (CC1pi+1p) case, P33(1232) + P33(1640)
       ELSE
@@ -1113,8 +1118,8 @@ C     ===================================================
 C     Start the pion ejection calculation for P33(1232) and P33(1640) ONLY
 C     Should only be done with I=3/2 channel, i.e. IFLAG = 1
 C     Unforunately have to derive this by hand :( Contact Clarence if you need a hand!
+C     THE I=3/2 case is covered in Rein-Sehgal eq 2.48
  104  CONTINUE
-C     WRITE(*,*) "EJECTING PION USING P33(1232) + P33(1640)"
 
 C     rho 3 3 = delta delta + p delta + delta p + p p
       ROP3P3 = RHOCALC(1, 3, 1, 3, ALPSH, BETSH, DELSH, AM, ETABW)
@@ -1196,6 +1201,10 @@ C     Needed for the accept-reject ceiling
      &  + (4./SQRT(10.))*SQRT(15./(32.*PI))
      &    *IMAGPART(RHOP3M1)
 
+C     Even though both dists (maxdst and yfn) end up with this 
+C     prefactor, include for completeness
+      MAXDST = MAXDST/SQRT(PI)
+
 C     Now have the amplitudes: do the accept-reject on the pion
  51   CONTINUE
 C     WRITE(*,*) "Trying again adv"
@@ -1216,6 +1225,8 @@ C     Throw in costheta and phi
      &      *IMAGPART(RHOP3P1)
      &    + (4./SQRT(10.))*IMAGPART(RSY22(THETA,PHI))
      &      *IMAGPART(RHOP3M1)
+
+      YFN = YFN/SQRT(PI)
 
       IF (YRAND .GT. YFN) THEN
         GOTO 51
@@ -1621,6 +1632,9 @@ C     ======================================
 C     This is where we want to end up once 
 C     we've got a good theta and phi for any model
  72   CONTINUE
+
+      th_com = theta
+      phi_com = phi
 
 C     Boost to get the muon, pion and nucleon 3-momenta
       CALL RSLZBT(E,Q2,W,XMLEP,THETA,PHI,TMPPMU,TMPPPI,TMPPNU)

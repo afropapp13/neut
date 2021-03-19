@@ -92,7 +92,7 @@ C          32 : NEU,P --> NEU,P,PI0
 C          33 : NEU,N --> NEU,P,PI-
 C          34 : NEU,P --> NEU,N,PI+
 C
-C          15 : NEU,P --> LEPTON-,P,PI0 ( diffractive )
+C          35 : NEU,P --> NEU,P,PI0 ( diffractive )
 C
 C          36 : NEU,O(16) --> NEU,O(16),PI0
 C

@@ -360,7 +360,8 @@ C     NC1pi+ on p
       endif
 
 C     Do Pauli blocking on the outgoing nucleon
-      IF (IBOUND.eq.1) THEN
+C     CWRET add consistenly turn off pauli blocking for res
+      IF (IBOUND.eq.1 .and. nepauflg.eq.0) THEN
          PTMP = sqrt(RTPNC(1)**2+RTPNC(2)**2+RTPNC(3)**2)
          if (PTMP.LE.PFSURF) THEN
             DO 800 I=3,5
