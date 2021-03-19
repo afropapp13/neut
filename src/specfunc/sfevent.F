@@ -37,7 +37,6 @@ c ----- temporary values to copy to output common block
         integer tmp_IFLGNE(5)
         integer tmp_ICRNNE(5)
 
-
 #include "necard.h"
 #include "neutmodel.h"
 #include "neutparams.h"
@@ -101,6 +100,7 @@ C ******************************************************** C
 c        write (*,*) "MAKING CCQE EVENT"
 c        write (*,*) numbndp,numatom, mode, E
 c ----- E is in GeV here - change it to MeV for the calculation
+        IERR=0
 
         if ( .NOT.HaveSpecFuncForNuclei() ) then
          write (*,*) "using RFG for nucleus with atomic mass", NUMATOM
@@ -379,15 +379,6 @@ c sent straight here if event is impossible
 20      continue
         N_tries = N_tries + 1
 
-c We're having some trouble here
-        if (N_tries.GT.100000) then
-          IERR=1
-          WRITE(*,*) "Failed to generate SF Event for PDG: ", IPAR, 
-     &       " energy: ", E, "MeV"
-          E = E / 1000.0 ! turn back into GeV for the rest of neut so that the error message isn't too confusing
-          return
-        endif
-
 **********  For table generation only!
 **********  Once enough events generated, stop
 **********  This value can be changed to increase precision/speed
@@ -418,6 +409,12 @@ c event complete - go back to start to generate more
 C ----- for event generation -  compare to value loaded from xsec table
 c ----- 5% factor reduces efficiency but avoids errors from interpolation
        else if (crossSection*1E38 .LT. RLU(dummy)*tableMax*1.05) then
+         if(N_tries.GT.100000) then
+            E = E / 1000.0 ! turn back into GeV for the rest of neut
+            print *, 'Giving up after ', N_tries, ' attempts for E', E
+            IERR=1
+            return
+         endif
          goto 10
        endif
 

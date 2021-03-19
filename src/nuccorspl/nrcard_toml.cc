@@ -44,6 +44,7 @@ void nrcardtoml_() {
     auto const &hadron_rescattering_table =
         toml_h::find_rec(neut_table, {"target", "hadron_rescattering"});
 
+
     toml_h::set_option_if_present(nucres_.nucrescat, hadron_rescattering_table,
                                   "nucleon_rescattering",
                                   std::map<std::string, int>{
@@ -52,6 +53,15 @@ void nrcardtoml_() {
                                   });
     toml_h::set_if_present_rec(nucres_.xnucfact, hadron_rescattering_table,
                                {"nucleon_cross_sections", "mean_free_path"});
+
+    toml_h::set_if_present_rec(nucres_.xnucelafact, hadron_rescattering_table,
+                               {"nucleon_cross_sections", "elastic"});
+
+    toml_h::set_if_present_rec(nucres_.xnucspifact, hadron_rescattering_table,
+                               {"nucleon_cross_sections", "single_pi_prod"});
+
+    toml_h::set_if_present_rec(nucres_.xnucdpifact, hadron_rescattering_table,
+                               {"nucleon_cross_sections", "double_pi_prod"});
 
     toml_h::set_option_if_present(nucres_.nucresflg, hadron_rescattering_table,
                                   "nucleon_rescattering_nuclear_model",

@@ -483,6 +483,21 @@ void read_DIS_params(toml::value const &DIS_table) {
   toml_h::set_option_if_present(neutdis_.nebodek, DIS_table,
                                 "bodek_yang_correction",
                                 std::map<std::string, int>{
+                                    {"BY19", 2},
+                                    {"BY05", 1},
+                                    {"off", 0},
+                                });
+
+  toml_h::set_option_if_present(neutdis_.nebylw, DIS_table,
+                                "bodek_yang_low_W_K_factor",
+                                std::map<std::string, int>{
+                                    {"on", 1},
+                                    {"off", 0},
+                                });
+
+  toml_h::set_option_if_present(neutdis_.nebyforcet1, DIS_table,
+                                "bodek_yang_force_ax_vec_equal",
+                                std::map<std::string, int>{
                                     {"on", 1},
                                     {"off", 0},
                                 });

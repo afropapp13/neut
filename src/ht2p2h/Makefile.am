@@ -1,5 +1,13 @@
 include $(top_srcdir)/build.common
 
+nieves2p2hC.h: inc/nieves2p2h.h
+	$(top_srcdir)/tools/fh2h.pl $< > $@
+
+BUILT_SOURCES = nieves2p2hC.h
+CLEANFILES = $(BUILT_SOURCES)
+
+include_HEADERS = $(BUILT_SOURCES)
+
 LIBNAME = lib@LIBPREFIX@ht2p2h.@NEUT_VERSION_NUM@.a
 
 noinst_LIBRARIES = $(LIBNAME)

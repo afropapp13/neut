@@ -161,6 +161,8 @@ C  NUCVOLDIF  (Default = 7 GeV^-2)
      $               MDL2P2H,
      $               XMANCEL
 
-#include <nieves1p1h.h>
+
+#include "nieves1p1h.h"
+#include "nieves2p2h.h"
 
 

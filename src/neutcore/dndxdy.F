@@ -30,6 +30,12 @@
 *                  If Bodek-Yang is not used, keep the target mass corrections
 *     2016.07.20 ; C. Bronner
 *                  Target mass corrections moved to PDF calculation (grv98_lo.F)
+*     2017.05.15 ; C. Bronner
+*                  Change to Z propagator for NC events
+*     2019.10.12 ; J. Xia
+*                  New version of the BY corrections
+*     2020.11.19 ; C. Bronner
+*                  Reorganize to merge last 2 updates smoothly
 ************************************************************************
       implicit none
 #include "necard.h"
@@ -47,15 +53,20 @@
       parameter (consn =  1.D+38*GF*GF*xmn/PI)
 
       real*8 const
-      real*8 f2,xf3
+      real*8 f2v,f2a,xf3
+      
       real*8 amw2
       parameter( amw2=80.2D0*80.2D0 )
+      real*8 amz2
+      parameter( amz2=91.1876D0*91.1876D0 )
+      real *8 amboson2
+      
 
       real*8 am,amlep
       real*8 cor1,cor2,corw
-      real*8 COEFF2, COEFF2_1, COEFF2_2, R, fnrworld
+      real*8 COEFF2, COEFF2_1, COEFF2_2, R, fnrworld, fnr1998
 
-      real*8 q2, Qtmp
+      real*8 q2, Qtmp, Rtmp
       real*8 e,x,y
       real*8 a,b
       real*8 ymax,xmax
@@ -82,6 +93,15 @@ C     Assign lepton mass based on neutrino and interaction type
         return
       endif
 
+C     Assign exchanged boson mass based on interaction type
+       if(itype.eq.0) then
+          amboson2=amz2
+       elseif(itype.eq.1) then
+          amboson2=amw2
+       else
+          return
+       endif
+          
 C     Assign target nucleon mass
       if(it.eq.2212) then
         am = xmp
@@ -163,21 +183,33 @@ C     Formula taken from C.H. Albright and C. Jarlskog, Nucl. Phys B84, 467 (197
          COR1=COR1-(AMLEP**2)/(4.*E*E)-(AMLEP**2)/(2.*am*E*(X+1.E-30))
          COR2=-(AMLEP**2)/(4.*am*E*(X+1.E-30))
          
-         corw=(AMW2/(AMW2+Q2))**2
-*        Get structure functions
-         call structg(ip,it,itype,e,x,y,f2,xf3)
+         corw=(AMBOSON2/(AMBOSON2+Q2))**2
+*     Get structure functions
+         call structg(ip,it,itype,e,x,y,f2v,f2a,xf3)
 
-         A=(1.-Y+Y**2/2.+COR1)*f2
+         A=(1.-Y+Y**2/2.+COR1)*(f2v+f2a)
          B=Y*(1-Y/2.+COR2)*xf3
-      elseif(nebodek.eq.1) then
+      elseif(nebodek.ge.1) then
+         if (nebodek.eq.1) then
 !     --> Bodek correction(Aug'06 G.Mitsuka)
-         if(Q2.ge.0.35) then
-            R = fnrworld(x,Q2)
-         else if(Q2.lt.0.35) then
-            Qtmp = 0.35
-            R = 3.207*Q2*fnrworld(x,Qtmp)/(Q2**2 + 1.)
+            if(Q2.ge.0.35) then
+               R = fnrworld(x,Q2)
+            else if(Q2.lt.0.35) then
+               Qtmp = 0.35
+               R = 3.207*Q2*fnrworld(x,Qtmp)/(Q2**2 + 1.)
+            endif
+         else if (nebodek.eq.2) then
+!     --> Bodek correction 2019(Jan'20 J.Xia)
+            if (Q2.ge.0.30) then
+               R = fnr1998(x,Q2)
+            else if(Q2.lt.0.30) then
+               Qtmp = 0.30
+               R = 3.633*Q2*fnr1998(x,Qtmp)/(Q2**2 + 1.)
+            endif
+         else
+            R=0
          endif
-
+         
          COEFF2_1 = 1. - Y - am*X*Y/(2.*E) - (AMLEP**2)/(4.*E**2)
      &        - (AMLEP**2)/(2.*am*E*(X+1.E-30))
          COEFF2_2 = ( Y**2/2. + (Y*AMLEP**2)/(4.*am*E*(X+1.E-30)) )*
@@ -187,11 +219,11 @@ C     Formula taken from C.H. Albright and C. Jarlskog, Nucl. Phys B84, 467 (197
          
          COR2=-(AMLEP**2)/(4.*am*E*(X+1.E-30))
          
-         corw=(AMW2/(AMW2+Q2))**2
+         corw=(AMBOSON2/(AMBOSON2+Q2))**2
 *        Get structure functions
-         call structg(ip,it,itype,e,x,y,f2,xf3)
+         call structg(ip,it,itype,e,x,y,f2v,f2a,xf3)
 
-         A=COEFF2*f2
+         A=COEFF2*(f2v+f2a)+COEFF2_2*(f2v-f2a)
          B=Y*(1-Y/2.+COR2)*xf3
       endif
 

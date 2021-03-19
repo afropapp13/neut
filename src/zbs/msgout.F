@@ -1,0 +1,4 @@
+      subroutine msgout
+
+      return
+      end

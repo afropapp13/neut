@@ -33,6 +33,9 @@
 
 C --  Initialize
 
+C     Default to neutvect
+      OUTPUTFORMAT = 1
+
       NEVTEVCT   = 0
       IDPTEVCT   = 0
 

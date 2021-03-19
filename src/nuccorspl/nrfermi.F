@@ -9,7 +9,7 @@
       real*4 r
 
 #include "nrdis.h"
-c     ommon /nrdis/probmi(31),probdi(31),rhotab(30),pnorm
+C     common /nrdis/probmi(31),probdi(31),rhotab(30),pnorm
 #include "nrint.h"
 C      common /nrint/uin,chint,ein,pin(3),upin(3)
 #include "nrcms.h"
@@ -45,11 +45,14 @@ C      dimension rec(3),p4cms(3)
 
 
 C     SET PARAMETER FOR EACH TARGET NUCLEI
+c     not sure what prat is
       prat = AP/APN
+c if AP greater than APN
       if(prat.gt.1.) then
          print*, 'NUMBNDP is larger than NUMATOM, see necard.h'
          stop
       endif
+c set r and number of bins of r
       rbin = 0.2
       rmin = 0.
       rmax = 6.*(NRRMSRAD/RMSRADOXY)
@@ -59,6 +62,7 @@ C     Asmita R.:For MEC events fermi surface momentum is function of radial dist
 C     while for other modes its read from card
 C      pfermi=NRPFSURF*1000. ! NRPFSURF is GeV unit
 C Change to local Fermi Gas ( 2017/04/03 )
+c     for surface events, do exactly the same as in nrprton.F code
       if (nucresflg.eq.1) then
          if (abs(MODENE).EQ.2) then
             if (r.ge.rmax) then
@@ -79,6 +83,7 @@ C Change to local Fermi Gas ( 2017/04/03 )
          write(*,*) 'Unknown NUCRESFLG ( expected 1 or 2 )',NUCRESFLG
          STOP
       endif
+c     ^ all the same as in nrprton code
 
 c     decide if interaction is on proton (prot=.true.) or neutron (.false.)
       if(ranf().lt.prat)then
@@ -89,6 +94,7 @@ c     decide if interaction is on proton (prot=.true.) or neutron (.false.)
 C     NUCLEAR DENSITY AT THIS VALUE OF R
 C     INCLUDE 0.1   FACTOR is TO CHANGE FROM MB TO FMSQ (cms is in fm!)
       call nrhis(r-rmin,rbin,nbin,irlo,irhi,rrem)
+c     sets irlo, irhi, and rrem from r-rmin and rbin
       RHON=(RHOTAB(IRHI)*RREM+RHOTAB(IRLO)*(1.0-RREM))*0.1
       RHONF=RHON/PNORM
 
@@ -96,10 +102,14 @@ C     FERMI MOMENTUM AT THIS VALUE OF R
 C     PFERMI=250.0*((RHONF*10.)**0.3333)
 C     IF(PFERMI.LE.0.0) PFERMI=1.0
 
+c     not sure on third root here
       AREC=pfermi*RANF()**0.3333
       call nrranve(arec,rec,2.,-1.)
+c     assigns a random vector of length arec in direction rec
       unucl=sqrt(toten2-pfermi**2)
+c     toten2 is atomic mass unit squared
 
+c     cms energy based on that
 C     ENERGY AND 3 MOMENTUM PARTS   OF CMS 4 MOMENTUM
       E4CMS=EIN+sqrt(unucl**2+arec**2)
       DO J=1,3

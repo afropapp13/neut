@@ -31,6 +31,7 @@
 c ----- looping index, i, and selected bin
         integer i
         integer bin
+        integer maxbin
 
 c ----- common block for arrays - filled by readData subroutine
 c ----- 9 nuclei(C,O,Fe,-,-,-,-,-,-)
@@ -63,6 +64,8 @@ c ----- for nc, 2 nucleons (proton, neutron)
         endif
 
 
+        maxbin = 210
+
         if (ipar .EQ. 12) then
           neutrino = 1
         else if (ipar .EQ. -12) then
@@ -73,8 +76,10 @@ c ----- for nc, 2 nucleons (proton, neutron)
           neutrino = 4
         else if (ipar .EQ. 16) then
           neutrino = 5
+          maxbin = 125
         else if (ipar .EQ. -16) then
           neutrino = 6
+          maxbin = 125
         endif
 
         if (targ .EQ. 1000060120) then
@@ -95,7 +100,8 @@ c ----- check for under flow of calculated tables - return 0 as xsec is small an
         endif
 
 c ----- loop through energy array to find correct point
-        do i = 0, 209
+C        do i = 0, 209
+        do i = 0, maxbin - 1
           if (energiescc(neutrino, i+1) .GE. E) then
             bin = i
             goto 10
@@ -103,7 +109,8 @@ c ----- loop through energy array to find correct point
         enddo
 c ----- if sat here - E is bigger than the max allowed - extrapolate linearly
 c ----- extrapolation based on bins N and N-2
-        bin = 210
+C        bin = 210
+        bin = maxbin
 c       write (*,*) "Selected energy greater than maximum calculated"
         maxDiff = diffXsecscc(nuc, neutrino, bin-2)
      & + (diffXsecscc(nuc, neutrino, bin)-

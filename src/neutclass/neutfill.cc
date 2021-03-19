@@ -1,11 +1,11 @@
-#include <iostream>
-
 #include <NeutRootHandlers.h>
+#include <iostream>
 
 #include "neutvect.h"
 #include "neutvtx.h"
 
 #include "fsihistC.h"
+#include "fsinucleonreweightC.h"
 #include "necardC.h"
 #include "nefillverC.h"
 #include "neutcrsC.h"
@@ -14,11 +14,12 @@
 #include "neworkC.h"
 #include "nieves1p1hC.h"
 #include "nrcardC.h"
+#include "nrintC.h"
 #include "nucleonfsihistC.h"
 #include "vcvrtxC.h"
 #include "vcworkC.h"
 
-//This has to come after VCWork
+// This has to come after VCWork
 #include "posinnucC.h"
 
 extern "C" {
@@ -236,6 +237,8 @@ int neutfillvect(char *filename, char *treename, char *branchname) {
   nv->NuceffFactorPICXKin = neffpr_.fefcxhf;
   nv->NuceffFactorPIAll = neffpr_.fefall;
 
+  nv->NrintNucleonCascadeProb = nrint_.pcascprob;
+
   /****************************************************/
   // Nieves 2p2h model parameters
   nv->NVQERFG = nievesqepar_.nvqerfg;
@@ -395,6 +398,7 @@ int neutfillvect(char *filename, char *treename, char *branchname) {
   // (You'll need to take care of this in downstream routines)
   else {
     nv->SetNnucFsiVert(1);
+
     nucfsivinfo.fVertFlag = -1;
     nucfsivinfo.fVertFirstStep = -1;
 
@@ -412,8 +416,27 @@ int neutfillvect(char *filename, char *treename, char *branchname) {
 
     for (i = 0; i < nnucfsis; i++) {
 
-      nucfsisinfo.fECMS2 = nucleonfsihist_.nfecms2[i];
+      //          nucfsisinfo.fECMS2 = nucleonfsihist_.nfecms2[i];
       nucfsisinfo.fProb = nucleonfsihist_.nfptot[i];
+      nucfsisinfo.fVertFlagStep = nucleonfsihist_.nfiflagstep[i];
+      nucfsisinfo.fVertFsiRhon = nucleonfsihist_.nfirhon[i];
+      nucfsisinfo.fStepPel = nucleonfsihist_.nfipel[i];
+      nucfsisinfo.fStepPsp = nucleonfsihist_.nfipsp[i];
+      nucfsisinfo.fStepPdp = nucleonfsihist_.nfipdp[i];
+
+      // std::cout << "fvertflag step in neutfill.cc = " <<
+      // nucfsisinfo.fVertFlagStep << std::endl; std::cout << "Step number in
+      // neutfill.cc = " << i << std::endl;
+      /*      nucfsisinfo.fPosStep.SetXYZT(nucleonfsihist_.nfxstep[i],
+                               nucleonfsihist_.nfystep[i],
+                               nucleonfsihist_.nfzstep[i],
+                               0.);
+      std::cout << "fvert fposstep = " << nucfsisinfo.fPosStep.X() << std::endl;
+      nucfsisinfo.fMomStep.SetPxPyPzE(nucleonfsihist_.nfpxstep[i],
+                                  nucleonfsihist_.nfpystep[i],
+                                  nucleonfsihist_.nfpzstep[i],
+
+      */
 
       nv->SetNucFsiStepInfo(i, nucfsisinfo);
     }
@@ -425,6 +448,9 @@ int neutfillvect(char *filename, char *treename, char *branchname) {
   else {
     nv->SetNnucFsiStep(1);
     nucfsisinfo.fECMS2 = 0.;
+    nucfsisinfo.fProb = -1.;
+
+    //    	nucfsisinfo.fECMS2 =  0.;
     nucfsisinfo.fProb = -1.;
 
     nv->SetNucFsiStepInfo(0, nucfsisinfo);

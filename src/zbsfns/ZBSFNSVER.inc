@@ -1,3 +1,0 @@
-ZBSFNSVER   = 5.4.1
-IZBSFNSVER  = 541
-

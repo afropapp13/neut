@@ -4,7 +4,7 @@ C EVCT-NEVT
 C   Number of events to generate
 C
 
-EVCT-NEVT  1000000
+EVCT-NEVT  10000
 
 C--------------------------------------------------
 C
@@ -211,7 +211,7 @@ C             ( specfy file with the enviroment variable RANFILE )
 C      1 : Generating RANDOM SEED from the time
 C
 
-NEUT-RAND 0
+NEUT-RAND 1
 
 C
 C-----------------------------------------------------------------------

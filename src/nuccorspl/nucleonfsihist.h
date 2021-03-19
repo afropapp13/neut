@@ -9,8 +9,8 @@
         parameter(maxnucleonvert=200)
 
         integer maxnucleonstep           ! maximum number of steps
-        parameter(maxnucleonstep=2000)
-
+        parameter(maxnucleonstep=10000)
+  
 !
 !       NFnvert        : number of vertices
 !
@@ -48,7 +48,7 @@
 !
 !       Remarks:
 !        - a "vertex" is actually better described as a start, end or scattering point of a track
-!        - at each scattering point, the first nucleon will be followed in the same track, while the
+!        - at each scattering point, the first nucleon will be followed in the same track, whilst the
 !          second one will create a new track
 !        - each track consists of a series of consecutive vertices. The first vertex has P=0, the
 !          last P=4. In between may be any number (including 0) vertices where an actual scattering
@@ -58,12 +58,17 @@
 !          FSI uncertainties, only the probabilities of the scattering processes have to be
 !          calculated, so it is not important to know which tracks belong to each other.
 !
-!
+!       NFeStep is not currently used, but removing stops nfirhon from working; it is very unclear to me why this is the case
 
-        integer*4   NFnvert, NFiflag,NFnstep,NFfirststep
-        real*4      NFx,NFy,NFz,NFpx,NFpy,NFpz,NFe,NFecms2,NFptot
-        common /nucleonfsihist/ NFnvert, NFiflag(maxnucleonvert),
+        integer*4   NFnvert, NFiflag,NFnstep,NFfirststep,NReweightFlag,NFnucresflg,NFiflagStep,NFStepNumber,RW_step_i
+        real*4      NFx,NFy,NFz,NFpx,NFpy,NFpz,NFe,NFecms2,NFiPel,NFiPsp,NFiPdp,
+     &   NFptot,NFfirststepStep,NFeStep,NFiRhon
+	common /nucleonfsihist/ NFnvert, NFiflag(maxnucleonvert),NReweightFlag,
+     &   NFnucresflg,NFiflagStep(maxnucleonstep),NFStepNumber(maxnucleonstep),RW_step_i,
      &   NFx(maxnucleonvert),NFy(maxnucleonvert),NFz(maxnucleonvert),
      &   NFpx(maxnucleonvert),NFpy(maxnucleonvert),NFpz(maxnucleonvert),
      &   NFe(maxnucleonvert),NFfirststep(maxnucleonvert),
-     &   NFnstep, NFecms2(maxnucleonstep),NFptot(maxnucleonstep)
+     &   NFnstep, NFecms2(maxnucleonstep),NFiPel(maxnucleonstep),NFiPsp(maxnucleonstep),
+     &   NFiPdp(maxnucleonstep),NFptot(maxnucleonstep),
+     &   NFfirststepStep(maxnucleonstep),NFeStep(maxnucleonstep),NFiRhon(maxnucleonstep)
+

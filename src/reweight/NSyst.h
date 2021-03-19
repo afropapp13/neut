@@ -108,7 +108,15 @@
   /*Tweak inelastic (QE in NEUT) probability for high energy pions*/           \
   X(kCascTwkDial_FrCExHigh_pi, FrCExHigh_pi, 0.30, 0.30)                       \
   /*Tweak charge exchange probability for high energy pions*/                  \
-  X(kCascTwkDial_FrPiProd_pi, FrPiProd_pi, 0.50, 0.50)
+  X(kCascTwkDial_FrPiProd_pi, FrPiProd_pi, 0.50, 0.50)                         \
+  /**/                                                                         \
+  X(kCascTwkDial_TotalProb_N, TotalProb_N, 0.1, 0.1)                           \
+  /**/                                                                         \
+  X(kCascTwkDial_ElasticProb_N, ElasticProb_N, 0.1, 0.1)                       \
+  /**/                                                                         \
+  X(kCascTwkDial_SinglePiProb_N, SinglePiProb_N, 0.1, 0.1)                     \
+  /**/                                                                         \
+  X(kCascTwkDial_DoublePiProb_N, DoublePiProb_N, 0.1, 0.1)
 
 namespace neut {
 namespace rew {
@@ -135,7 +143,6 @@ public:
     switch (syst) {
 
       NEUTREWEIGHT_DIAL_LIST
-
     default:
       return "-";
     }

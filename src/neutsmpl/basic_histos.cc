@@ -398,6 +398,87 @@ fill_q2_hist(NeutVect *nvect, TH1D *h1, Double_t weight)
 }
 
 Int_t
+fill_ediff_hist(NeutVect *nvect, TH1D *h1, Double_t weight)
+{
+  Int_t    idx,ip,mode;
+  TLorentzVector q4;
+  Double_t ein, eout, ediff;
+
+  Int_t    i, ret;
+
+  idx = 2;
+
+  mode = abs(nvect->Mode);
+
+  if ( mode == 2 ){
+	idx = 3;
+  }
+
+  ein = 0;
+  for (i = 0 ; i < idx ; i++){
+	ein = ein + (nvect->PartInfo(i))->fP.E()/1000.;
+  }
+
+  eout = 0;
+  for (i = idx ; i < nvect->Nprimary() ; i++){
+	eout = eout + (nvect->PartInfo(i))->fP.E()/1000.;
+  }
+
+  ediff = ein - eout;
+
+  ret = h1->Fill(ediff,weight);
+
+  return 0;
+
+}
+
+Int_t
+fill_enurec_hist(NeutVect *nvect, TH1D *h1, Double_t weight)
+{
+  Int_t    idx,ip,mode;
+  TLorentzVector q4;
+  Double_t xmnuc1, xmnuc2;
+  Double_t xmlep;
+  Double_t coslep;
+
+  Double_t plep,elep;
+  Double_t enurec;
+
+  Int_t    i, ret;
+
+  idx = 2;
+
+  mode = abs(nvect->Mode);
+
+  if ( mode == 2 ){
+	idx = 3;
+  }
+
+  coslep = (nvect->PartInfo(0))->fP.Vect()*(nvect->PartInfo(idx))->fP.Vect();
+  coslep = coslep / 
+	((nvect->PartInfo(0))->fP.P()*(nvect->PartInfo(idx))->fP.P());
+
+  xmnuc1 = (nvect->PartInfo(1))->fMass;
+  xmnuc2 = (nvect->PartInfo(idx+1))->fMass;
+
+  elep = (nvect->PartInfo(idx))->fP.E();
+  plep = (nvect->PartInfo(idx))->fP.P();
+
+  enurec = 
+	+ (xmnuc2*xmnuc2)
+	- (xmnuc1 - 27)*(xmnuc1 - 27)
+	- (xmlep*xmlep)
+	+ 2*(xmnuc1-27)*elep;
+  enurec = enurec / (2*(xmnuc1 - 27 - elep + plep*coslep));
+  enurec = enurec - (nvect->PartInfo(0))->fP.E();
+  enurec = enurec/1000.;
+  ret = h1->Fill(enurec,weight);
+
+  return 0;
+
+}
+
+Int_t
 fill_intr_rad(NeutVect *nvect, TH1D *h1, Double_t weight)
 {
   int idx, mode, ret;
@@ -812,7 +893,7 @@ fill_rescat_pnuc1_hist(NeutVect *nvect, TH1D *h1, Double_t weight)
 
 
 Int_t
-fill_histograms(NeutVect *nvect, TH1D *h[][20][6], int idx, int ip_idx,
+fill_histograms(NeutVect *nvect, TH1D *h[][22][6], int idx, int ip_idx,
 				double xnorm)
 {
 
@@ -878,6 +959,10 @@ fill_histograms(NeutVect *nvect, TH1D *h[][20][6], int idx, int ip_idx,
   fill_out_nucs_opening_hist(nvect, h[idx][18][ip_idx], xnorm);
 
   fill_intr_rad(nvect, h[idx][19][ip_idx], xnorm);
+
+  fill_ediff_hist(nvect, h[idx][20][ip_idx], xnorm);
+
+  fill_enurec_hist(nvect, h[idx][21][ip_idx], xnorm);
 
   return 0;
 }
@@ -960,16 +1045,16 @@ basic_histos(char *fname,char *fname_out)
 
   cout << " rate_norm = " << rate_norm << endl;
 
-  TH1D *h_combined[8][20][6];
+  TH1D *h_combined[8][22][6];
   TH2D *h_2d_combined[8][2][6];
-  TH1D *h_indiv[60][20][6];
+  TH1D *h_indiv[60][22][6];
   TH1D *h_modes;
 
   char hist_kind[8][16]={"all\0"    ,"CCall\0"    ,"NCall\0",
 						 "CCQE\0"   ,"CCMEC\0"    ,"CC1pi\0",
 						 "CCDIS\0"};
 
-  char hist_type[20][16]={"enu\0"          ,"plep\0"       ,"in_nuc1_p\0",
+  char hist_type[22][16]={"enu\0"          ,"plep\0"       ,"in_nuc1_p\0",
 						  "in_nuc2_p\0"    ,"out_nuc1_p\0" ,"out_nuc2_p\0",
 						  "coslep\0"       ,"q2\0"         ,"in_nuc1_cosL\0",
 						  "in_nuc2_cosL\0","in_nuc1_phiL\0","in_nuc2_phiL\0",
@@ -977,7 +1062,8 @@ basic_histos(char *fname,char *fname_out)
 						  "out_nuc1_phiL\0","out_nuc2_phiL\0",
 						  "rescat_nuc1_p\0",
 						  "in_nucs_open\0", "out_nucs_open\0",
-						  "intr_pos\0",
+						  "intr_pos\0",     "ediff\0",
+						  "enurec\0"
   };
 
   char hist_type_2d[2][16]={"in_nuc1_p_rad\0","out_nuc1_p_rad\0"};
@@ -991,8 +1077,8 @@ basic_histos(char *fname,char *fname_out)
   Double_t h_max_2d_1[2] ={10.,10.};
   Double_t h_min_2d_2[2] ={ 0., 0.};
   Double_t h_max_2d_2[2] ={ 1., 5.};
-
-  int       h_bins[20]={
+  
+  int       h_bins[22]={
 	1200, 1200,  100,
 	 100,  500,  500,
 	50,   1200,	  50,
@@ -1000,9 +1086,10 @@ basic_histos(char *fname,char *fname_out)
 	50,     50  ,
 	50,     50  ,
 	500,
-    50,     50  ,100};
+    50,     50  ,100,
+    100,   200};
 
-  Double_t  h_min[20] ={
+  Double_t  h_min[22] ={
 	 0.  ,  0.  ,  0.,
 	 0.  ,  0.  ,  0.,
 	-1.  ,-30.  , -1.,
@@ -1010,9 +1097,9 @@ basic_histos(char *fname,char *fname_out)
 	-1.  , -1.  ,
 	-3.14, -3.14,
      0.  , -1.  , -1.,
-     0. };
+     0.  , -0.5 , -1.};
 
-  Double_t  h_max[20] ={
+  Double_t  h_max[22] ={
 	30. , 30.  ,    1.,
 	1.  ,  5.  ,    5.,
 	1.,    0.  ,    1.,
@@ -1020,7 +1107,7 @@ basic_histos(char *fname,char *fname_out)
 	1.,    1.  ,
 	3.14,  3.14,
     5.,    1.  ,    1.,
-   10.};
+	10.,   0.5,     1.};
 
   char hist_name[128],hist_title[128];
 
@@ -1032,7 +1119,7 @@ basic_histos(char *fname,char *fname_out)
 					 121,-60.5,60.5);
 
   for ( i = 0 ; i < 7 ; i++ ){
-	for ( j = 0 ; j < 20 ; j++ ){ /* histogram type */
+	for ( j = 0 ; j < 22 ; j++ ){ /* histogram type */
 	  for ( k = 0 ; k < 6 ; k++ ){ /* flavor */
 		snprintf(hist_name,sizeof(hist_name),
 				 "h_%s_%s_%s",hist_kind[i],hist_type[j],flavor_str[k]);
@@ -1127,7 +1214,7 @@ basic_histos(char *fname,char *fname_out)
   }
 
   for ( i = 0 ; i < 7 ; i++ ){
-	for ( j = 0 ; j < 20 ; j++ ){ /* histogram type */
+	for ( j = 0 ; j < 22 ; j++ ){ /* histogram type */
 	  for ( k = 0 ; k < 6 ; k++ ){ /* flavor */
 		if ( h_combined[i][j][k]->GetEntries() == 0 ){
 		  delete h_combined[i][j][k];

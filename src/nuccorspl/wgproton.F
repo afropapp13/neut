@@ -19,6 +19,7 @@ c     nvc2   - position of the last track in VCWORK stack
 #include "vcvrtx.h"
 #include "posinnuc.h"
 
+
       real*4 stpi(3),pi(4),anuc
 C      real*4 po(4,20),stpo(3,20)
 C      integer ido(20)
@@ -26,18 +27,37 @@ C      integer ido(20)
       integer ido(MAXVC)
       integer imode,icont,idmc,no,itpmax,itnmax
       real*4 amn,p4pmax,p4nmax,pcut
-      parameter (amn=939.,pcut=amn+8.)
+C      parameter (amn=939.,pcut=amn+8.)
+C      parameter (pcut=amn+8.)
       data imode/2/
 
       integer i
 
       icont=1
       idmc = ipvc(itrack)
+      if(idmc.eq.2212) then     !put the input track on stack                                                                                                             
+C        amn = 4000
+      amn = 938.28
+ 
+
+c     or if it's a neutron set charge 0                                                                                                                             
+      else if(idmc.eq.2112) then
+C        amn = 4000
+         amn = 939.57
+      else
+      print *,'*** NUCPRTON ERROR call for wrong track id=',idmc
+      return
+      end if
+      pcut = amn+8
       call ucopy(xpos,stpi,3)
       call ucopy(pvc(1,itrack),pi,3)
       pi(4)=sqrt(amn**2+pi(1)**2+pi(2)**2+pi(3)**2)
       no=0
-
+      
+      
+c        print *,'Calling nrprton.F'
+c     this call happens once for every particle in the nvect
+c     and then a complete cascade is performed within nrprton
       call nrprton ( anuc,     !A of the nucleus =16 for Oxygen
      $     stpi,                !current point inside nucleus
      $     pi,idmc,             !4momentum in GeV,id (should be p or n)

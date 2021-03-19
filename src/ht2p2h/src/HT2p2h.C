@@ -2,6 +2,8 @@
 #include <dirent.h>
 #include <stdlib.h>
 #include <math.h>
+#include <string.h>
+#include <fstream>
 
 #define PNOFFSET 10000
 
@@ -80,45 +82,47 @@ void HT2p2h::ReadTensors(std::string dirname ){
   if ( ( dir = opendir (dirname.c_str()) ) != 0 ) {
 
     std::cout << " HT2p2h reading directory " << dirname << std::endl; 
-    
+	
     while( ( ent = readdir(dir) ) != 0 ) {
-
+	  
       if( ent->d_name[0] == '.' ) continue; 
-           
+	  
       HadronTensor *ht = new HadronTensor();
 	  ht->Initialize(dirname+"/"+std::string(ent->d_name));
       int nuclei = ht->GetNuclei();
       if( nuclei == -1 ) continue;  // This is not a proper file. 
       if( ht->IsPN()  ){
-	Tensor[nuclei+PNOFFSET] = ht;
-	Tensor_init[nuclei+PNOFFSET] = false;
-
-	if( nuclei == 28 ) { // Create a copy for 27 (Al) 
-	  Tensor[27+PNOFFSET] = ht;
-	  Tensor_init[27+PNOFFSET] = false;
-	}
-	
+		Tensor[nuclei+PNOFFSET] = ht;
+		Tensor_fname[nuclei+PNOFFSET] = dirname+"/"+std::string(ent->d_name);
+		Tensor_init[nuclei+PNOFFSET] = false;
+		
+		if( nuclei == 28 ) { // Create a copy for 27 (Al) 
+		  Tensor[27+PNOFFSET] = ht;
+		  Tensor_fname[nuclei+PNOFFSET] = dirname+"/"+std::string(ent->d_name);
+		  Tensor_init[27+PNOFFSET] = false;
+		}
       }
       else{
-	Tensor[nuclei] = ht;
-	Tensor_init[nuclei] = false;
-	if( nuclei == 28 ) { // Create a copy for 27 (Al) 
-	  Tensor[27] = ht;
-	  Tensor_init[27] = false;
-	}
-      }
-      
-      std::cout << " Tensor for nuclei " << nuclei << " has been read " << std::endl; 
+		Tensor[nuclei] = ht;
+		Tensor_init[nuclei] = false;
+		if( nuclei == 28 ) { // Create a copy for 27 (Al) 
+		  Tensor[27] = ht;
+		  Tensor_init[27] = false;
+		}
 
+      }
+	  
+      std::cout << " Tensor for nuclei " << nuclei << " has been read " << std::endl; 
+	  
       /*
-	InitializeNucleus(nuclei); 
+		InitializeNucleus(nuclei); 
 	
-	Precompindx pindx1(1,nuclei);
-	
-	Precompindx pindx2(-1,nuclei);
-	
-	if( !ht->IsPN() )   // Only for the total. 
-	ComputeIntegrals(nuclei);
+		Precompindx pindx1(1,nuclei);
+		
+		Precompindx pindx2(-1,nuclei);
+		
+		if( !ht->IsPN() )   // Only for the total. 
+		ComputeIntegrals(nuclei);
       */
       
     }
@@ -130,13 +134,172 @@ void HT2p2h::ReadTensors(std::string dirname ){
 }
 
 
+int HT2p2h::ReadIntegrals(int nuclei){
+  
+  std::ifstream infile;
+
+  std::string fname;
+  fname = Tensor_fname[nuclei+PNOFFSET];
+
+#define LOCALBUFSIZ (1024*1024*10)
+  char *line = NULL;
+  char *item = NULL;
+  int  ipar, ret, i;
+
+  line = (char *)malloc(LOCALBUFSIZ);
+  item = (char *)malloc(LOCALBUFSIZ);
+  infile.open (fname.c_str());
+  if (infile.fail()){
+	std::cout << "Failed to open Tensor file" 
+			  << fname 
+			  << std::endl;
+	exit(1);
+  }
+
+  std::cout << " Reading Cross-section from the Tensor File " 
+			<< fname << std::endl; 
+
+  int crstbl_exists = 0;
+  int param_agreed = 0;
+
+  while (param_agreed==0){
+	/* search for the Cross-sections block  */
+	while(infile.getline(line,LOCALBUFSIZ)){
+	  if (strstr (line,"#Cross-section Table")){
+		crstbl_exists = 1;
+		break;
+	  }
+	}
+	if ((crstbl_exists == 0)||(infile.eof())){
+	  free(line);
+	  free(item);
+	  return -1;
+	}
+
+	/* search for the parameters block  */
+	while(infile.getline(line,LOCALBUFSIZ)){
+	  if ( strstr(line,"#PARAMSTART") ){
+		break;
+	  }
+	}
+	/* search for the table with same parameter value */
+	while(infile.getline(line,LOCALBUFSIZ)){  
+	  if (line[0] == 0) continue;
+	  if (line[0] != '#') break;
+	  if (strncmp (line,"#NV2P2HQVAL",11)==0){
+		sscanf(line,"%s %d",item, &ipar);
+		if (ipar == nieves2p2hpar_.nv2p2hqval){
+		  param_agreed = 1;
+		  break;
+		}
+	  }
+	}  
+  }
+  
+  if (param_agreed == 0){
+	free(line);
+	free(item);
+	return -1;
+  }
+
+
+  int    nuclei_file;
+  int    ebinmax;
+  double enubin;
+
+  /* read # of nuclei */
+  if (infile.getline(line,LOCALBUFSIZ)){
+	nuclei_file = atoi(line);
+  }else{
+	free(line);
+	free(item);
+	return -1;
+  }
+
+  if (nuclei_file != nuclei){
+	std::cout << "Inconsistent nuclei was stored" << std::endl;
+	free(line);
+	free(item);
+	return -2;
+  }
+
+  /* read # of energy bins */
+  if (infile.getline(line,LOCALBUFSIZ)){
+	ebinmax = atoi(line);
+  }else{
+	free(line);
+	free(item);
+	return -3;
+  }
+
+  /* read energy bin size */
+  if (infile.getline(line,LOCALBUFSIZ)){
+	enubin = atof(line);
+  }else{
+	free(line);
+	free(item);
+	return -4;
+  }
+
+  std::vector<double> integrals[neutrinoIdlist.size()];
+  std::vector<double> maximals[neutrinoIdlist.size()];
+  double crs[neutrinoIdlist.size()];
+  double max[neutrinoIdlist.size()];
+
+  double enu;
+
+  for (i = 0 ; i < ebinmax ; i++){
+	infile.getline(line,LOCALBUFSIZ);
+	ret = sscanf(line,"%d %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf",
+				 &ipar, &enu, 
+				 &crs[0], &max[0], &crs[1], &max[1], &crs[2], &max[2],
+				 &crs[3], &max[3], &crs[4], &max[4], &crs[5], &max[5]);
+	if (ret != 14){
+	  free(line);
+	  free(item);
+	  return -2;
+	}
+	if ( enu - ((double)i*enubin+enubin*0.5) > enubin/100. ){
+	  free(line);
+	  free(item);
+	  return -3;
+	}
+
+	for( unsigned int il = 0; il < 6;  il++ ) {	
+	  integrals[il].push_back(crs[il]);
+	  maximals[il].push_back(max[il]);
+	}
+  }
+
+  for( unsigned int il = 0; il < 6;  il++ ) {	
+	int id = neutrinoIdlist[il]; 
+	Precompindx pindx(id,nuclei);
+    IntCrossSection[pindx] = integrals[il];
+    MaxCrossSection[pindx] = maximals[il]; 
+  }
+
+  free(line);
+  free(item);
+
+  return 0;
+
+}
+
+
 void HT2p2h::ComputeIntegrals(int nuclei){
 
+  int ret;
   CheckNuclei_2(nuclei);  
- 
+  
   int binmax = Emax/Enubin;
   
   //  std::cout << " Looping for " << neutrinoIdlist.size() << " neutrinos with " << binmax << " bins " <<  std::endl; 
+
+  ret = ReadIntegrals(nuclei);
+  if (ret == 0){
+	/* cross-section was stored in the tensor file */
+	return;
+  }
 
 
   for( unsigned int il = 0; il < neutrinoIdlist.size(); il++ ) {
@@ -172,22 +335,49 @@ void HT2p2h::ComputeIntegrals(int nuclei){
 	double tl = El-ml;
 	double Enu2 = Enu*Enu;
 	double pl2 = pl*pl;
-	double plEnu = pl*Enu; 
+	double plEnu = pl*Enu;
 	
 	for( double q3 = q0; q3 < tlc->GetMaxQ3(); q3 += tlc->GetQ3Step()  ) {
 	  double Q3 = q3+tlc->GetQ3Step()/2.;
 	  double xcos = (Q3*Q3-Enu2-pl2)/(-2.*plEnu);
 	  if ( xcos > 1. || xcos < -1. ) continue; 
 	  
-	  double xs = DoubleDifferential(id,nuclei,Enu,tl,xcos);
+	  double xs = 0.;
+
+	  switch (nieves2p2hpar_.nv2p2hqval){
+	  case 1:
+		{
+		  double R = 0.01;
+		  xs = DoubleDifferential(id,nuclei,Enu,tl,xcos,R);
+		}
+		if (xs > MaxXsect ) MaxXsect = xs*1.05; 		
+		break;
+	  case 2:
+		if (nieves2p2hpar_.nv2p2hqval == 2){
+		  for(  int i = 0; i < 20; i++ ) {
+			double R = GenerateR(nuclei,-1);
+			double lxs = DoubleDifferential(id,nuclei,Enu,tl,xcos,R);
+			if( lxs > 0. ) 
+			  xs += lxs/20.;
+			if( lxs > MaxXsect ) MaxXsect = lxs*1.05; 
+		  }
+		}
+		break;
+	  default:
+		std::cout << "HT2p2h Error : " 
+				  << "Config param. nv2p2hqval is not properly set"
+				  << "nv2p2hqval is " << nieves2p2hpar_.nv2p2hqval
+				  << std::endl;
+		exit(1);
+	  }
+
 	  double Jacobian = Q3; 
 	  
-	  //	  if( std::isnan(xs) ) { std::cout << " xs isnan " << xs << "  " << El << "  " << xcos << "  " << Q0 << "  " << Q3 << std::endl; continue; }
 	  if( isnan(xs) ) { std::cout << " xs isnan " << xs << "  " << El << "  " << xcos << "  " << Q0 << "  " << Q3 << std::endl; continue; }
 
 	  if( xs < 0. ) break; // IF this condition is fulfilled, next q3 will also, so we break. 
 	  
-	  if( xs > MaxXsect ) MaxXsect = xs*1.05; 
+	  
 	  double alocal = xs*Jacobian/plEnu;
 	  Xsect += alocal;
 	}
@@ -203,7 +393,46 @@ void HT2p2h::ComputeIntegrals(int nuclei){
     MaxCrossSection[pindx] = maximal; 
     
   }
+  
+  std::vector<double> integral_dump[neutrinoIdlist.size()];
+  std::vector<double> maximal_dump[neutrinoIdlist.size()];
 
+  for( unsigned int il = 0; il < neutrinoIdlist.size(); il++ ) {
+    int id = neutrinoIdlist[il]; 
+    Precompindx pindx(id,nuclei);
+	
+    integral_dump[il] = IntCrossSection[pindx];
+    maximal_dump[il]  = MaxCrossSection[pindx];
+
+  }  
+
+  std::string fname;
+  fname = Tensor_fname[nuclei+PNOFFSET];
+
+  std::ofstream offile(fname.c_str(),std::ofstream::app);
+  if (offile.fail()){
+	return;
+  }
+
+  offile << "#Cross-section Table" << std::endl;
+  offile << "#PARAMSTART" << std::endl;
+  offile << "#NV2P2HQVAL   " << nieves2p2hpar_.nv2p2hqval << std::endl;
+  offile << nuclei << std::endl;
+  offile << binmax << std::endl;
+  offile << Enubin << std::endl;
+
+  for( int i = 0; i < binmax; i++ ) {
+	offile << i << " ";
+	offile << (double)i*Enubin+Enubin*0.5 << " ";
+	for( unsigned int il = 0; il < neutrinoIdlist.size(); il++ ) {
+	  offile << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+			 << integral_dump[il][i] << " "
+			 << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+			 << maximal_dump[il][i] << " ";
+	}
+	offile << std::endl;
+  }
+  
   return; 
 }
 
@@ -230,14 +459,17 @@ double HT2p2h::IntegralCrossSection(int id,int nuclei,double Enu){
 }
 
 
-int HT2p2h::GenerateLeptonKinematics(int id,int nuclei,double Enu,double &TLepton,double &xcos) {
+int HT2p2h::GenerateLeptonKinematics(int id,int nuclei,double Enu,double &TLepton,double &xcos, double &R ) {
  
   CheckNuclei(nuclei);  
 
   Precompindx pindx(id,nuclei);
   double Tlepmax = Enu;
+
+  double qval = GetQ0Fermivalue(nuclei,id,R); 
+
   if( ApplyBindEnergy )  
-    Tlepmax -= GetBind(nuclei,id);
+    Tlepmax -= (GetBind(nuclei,id)+qval);
   
   int ibin = (int) ((Enu+Enubin*0.001)/Enubin);
 
@@ -252,41 +484,28 @@ int HT2p2h::GenerateLeptonKinematics(int id,int nuclei,double Enu,double &TLepto
 
   double tl,cos,xs;
 
-  int tries = -1;
-
-  do {
-
-    tries++;
-
-    cos = 2.*Random()-1.;
-
-    tl = Random()*Tlepmax;
-
-    xs = DoubleDifferential(id,nuclei,Enu,tl,cos); 
-    
-    if( xs == 0 ) continue;
-    
-    double y = max * Random();
-    
-    if( debug ) 
-      std::cout <<  "  y =  " << y << " max =  "<< max << " xs  " << xs  <<  std::endl; 
-    
-    if( xs > max ) {std::cout << " Cross-Section " << xs << " larger than maximum " << max << " cos " << cos << std::endl; MaxCrossSection[pindx][ibin] = max*1.1; }
-
-    if( xs > y ) break;
-
-    
-  } while(1);
-
-
+  cos = 2.*Random()-1.;
   
+  tl = Random()*Tlepmax;
+  
+  xs = DoubleDifferential(id,nuclei,Enu,tl,cos, R ); 
+  
+  if( xs == 0 ) return -1;
+  
+  double y = max * Random();
+  
+  if( debug ) 
+    std::cout <<  "  y =  " << y << " max =  "<< max << " xs  " << xs  <<  std::endl; 
+  
+  if( xs > max ) {std::cout << " Cross-Section " << xs << " larger than maximum " << max << " cos " << cos << std::endl; MaxCrossSection[pindx][ibin] = max*1.1; }
+  
+  if( xs < y ) return -1;
+  
+
   TLepton = tl; 
   xcos = cos; 
 
-
-
-  return tries; 
-
+  return 1; 
 }
 
 
@@ -307,9 +526,7 @@ int HT2p2h::GenerateHadronKinematics( int id, int nuclei, double frac, double q[
     q0 = q[0] - GetBind(nuclei,id);       // Take the bind energy out of the equation.
   else
     q0 = q[0];
- 
-  R = GenerateR(nuclei,-1);
-  
+   
   if( id > 0 ) {   // Neutrinos n --> p 
     if ( Random() > frac ) {
       m1 = neutronmass;  // neutron 
@@ -441,8 +658,10 @@ int HT2p2h::GenerateHadronKinematics( int id, int nuclei, double frac, double q[
 
     for( int i = 0; i < 4 ; i++ ) qf[i] = q[i] + ni1[i] + ni2[i];
 
+    double qval = GetQ0Fermivalue(nuclei,id,R); 
 
-    if( ApplyBindEnergy ) qf[0] = qf[0]-GetBind(nuclei,id); 
+    if( ApplyBindEnergy ) 
+      qf[0] -= (GetBind(nuclei,id)+qval); 
 
     double qfm2 = qf[1]*qf[1] + qf[2]*qf[2] + qf[3]*qf[3];
     double qfm  = sqrt(qfm2);
@@ -502,10 +721,9 @@ int HT2p2h::GenerateHadronKinematics( int id, int nuclei, double frac, double q[
     double p1 = sqrt(p1L*p1L+pRF*sinangRF*pRF*sinangRF); 
     double p2 = sqrt(p2L*p2L+pRF*sinangRF*pRF*sinangRF);
     
-	//    if( std::isnan(p1) ) std::cout << " ERROR " << p1 << " " << gamma <<  "  " << pRF << "   " << beta << "   " << e1RF << std::endl;
-	if( isnan(p1) ) std::cout << " ERROR " << p1 << " " << gamma <<  "  " << pRF << "   " << beta << "   " << e1RF << std::endl;
-	//    if( std::isnan(p2) ) std::cout << " ERROR " << p2 << " " << gamma <<  "  " << pRF << "   " << beta << "   " << e1RF << std::endl; 
-    if( isnan(p2) ) std::cout << " ERROR " << p2 << " " << gamma <<  "  " << pRF << "   " << beta << "   " << e1RF << std::endl;     
+    if( isnan(p1) ) std::cout << " ERROR " << p1 << " " << gamma <<  "  " << pRF << "   " << beta << "   " << e1RF << std::endl;
+    if( isnan(p2) ) std::cout << " ERROR " << p2 << " " << gamma <<  "  " << pRF << "   " << beta << "   " << e1RF << std::endl; 
+    
     // Pauli blocking. Outgoing nucleons below fermi level. 
 
     if( p1 < FermiLevel || p2 < FermiLevel ) { code = -4;continue; }
@@ -557,7 +775,7 @@ int HT2p2h::GenerateHadronKinematics( int id, int nuclei, double frac, double q[
 
 
 
-double   HT2p2h::DoubleDifferential(int id,int nuclei,double Enu,double TLep,double xcos,bool pn ) {
+double   HT2p2h::DoubleDifferential(int id,int nuclei,double Enu,double TLep,double xcos, double R, bool pn ) {
  
   CheckNuclei_2(nuclei);  
   
@@ -591,8 +809,11 @@ double   HT2p2h::DoubleDifferential(int id,int nuclei,double Enu,double TLep,dou
 
   double q0=energyneutrino-energylepton;
   double q0nucleus=q0;
+
+  double qval = GetQ0Fermivalue(nuclei,id,R); 
+
   if( ApplyBindEnergy )
-    q0nucleus-= GetBind(nuclei,id);
+    q0nucleus-= (GetBind(nuclei,id)+qval);
   
   double q02 = q0*q0; 
 
@@ -740,8 +961,11 @@ int HT2p2h::GenerateVectors(int id, int nuclei, double pnu[4],  double p[6][4], 
   int hadrontries;
 
   while(1){
-    GenerateLeptonKinematics(id,nuclei,Enu,TLepton,coslepton);
-    
+
+    double R = GenerateR(nuclei,-1);
+
+    if( GenerateLeptonKinematics(id,nuclei,Enu,TLepton,coslepton,R) < 0 ) continue;
+   
     mass = leptonmass[abs(id)];
     
     elepton = TLepton+mass; 
@@ -765,7 +989,7 @@ int HT2p2h::GenerateVectors(int id, int nuclei, double pnu[4],  double p[6][4], 
     
     //  std::cout << " Generating the hadron kinematics " << std::endl; 
     
-    fractionpn = GetFraction(id,nuclei,Enu,TLepton,coslepton);
+    fractionpn = GetFraction(id,nuclei,Enu,TLepton,coslepton,R);
 
     while(1){
       hadrontries = GenerateHadronKinematics(id,nuclei,fractionpn,q,qi1,qi2,qf1,qf2,idNucleon,R);
@@ -784,7 +1008,7 @@ int HT2p2h::GenerateVectors(int id, int nuclei, double pnu[4],  double p[6][4], 
     if ( hadrontries >= 0 ){
       break;
     }
-    std::cout << "HT2p2h: Retry different lepton kinematics" << std::endl;
+    //    std::cout << "HT2p2h: Retry different lepton kinematics" << std::endl;
   }
 
   for(int i = 0; i < 4; i++ ){
@@ -819,15 +1043,15 @@ int HT2p2h::GenerateVectors(int id, int nuclei, double pnu[4],  double p[6][4], 
 }
 
 
-double HT2p2h::GetFraction(int id, int nuclei,double Enu,double TLepton,double coslepton){
+double HT2p2h::GetFraction(int id, int nuclei,double Enu,double TLepton,double coslepton, double R){
 
   CheckNuclei(nuclei);  
   
   double fraction = default_pn_nn_fraction;
   
-  double totalCrossSection = DoubleDifferential(id,nuclei,Enu,TLepton,coslepton);
+  double totalCrossSection = DoubleDifferential(id,nuclei,Enu,TLepton,coslepton,R);
   
-  double pnCrossSection = DoubleDifferential(id,nuclei,Enu,TLepton,coslepton,true);
+  double pnCrossSection = DoubleDifferential(id,nuclei,Enu,TLepton,coslepton,R,true);
   
   if( pnCrossSection >= 0. )     fraction =  pnCrossSection/totalCrossSection;
   
@@ -875,3 +1099,28 @@ void HT2p2h::CheckNuclei_2(int nuclei){
 	}
   }
 }
+
+
+double HT2p2h::GetQ0Fermivalue(int nuclei,int id,double R){
+  
+  double qval;
+  if (nieves2p2hpar_.nv2p2hqval == 1){
+	qval = 0.;
+	return qval; 
+  }
+  
+  double pfermi = GetFermiLFG(R,nuclei,-1);
+  
+  qval = pfermi*pfermi/2.*(1./protonmass+1./neutronmass);
+
+  if ((nieves2p2hpar_.nv2p2hqval != 1) &&
+	  (nieves2p2hpar_.nv2p2hqval != 2)){
+	std::cout << "HT2p2h Error : Config param. nv2p2hqval is not properly set"
+			  << "nv2p2hqval is " << nieves2p2hpar_.nv2p2hqval
+			  << std::endl;
+	exit(1);
+  }
+
+  return qval; 
+}
+

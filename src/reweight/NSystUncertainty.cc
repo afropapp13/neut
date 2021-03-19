@@ -84,7 +84,6 @@ void NSystUncertainty::SetUncertainty(NSyst_t s, double plus_err,
 
 void NSystUncertainty::GetUncertainty(NSyst_t s, double &plus_err,
                                       double &minus_err) {
-
   plus_err = fOneSigPlusErrMap[s];
   minus_err = fOneSigMnusErrMap[s];
 }

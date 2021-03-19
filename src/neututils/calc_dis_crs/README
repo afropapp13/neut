@@ -1,0 +1,12 @@
+Code to pre-compute the cross section for DIS related modes
+Updated Dec. 2020 (C. Bronner)
+
+* Start by building the code using 'make all'
+(for some reasons 'make' runs 'make clean', feel free to fix if you know how to)
+
+* Then needs to build for each card file considered the table of cross section for each target nucleon and neutrino target.
+Script "submit_sukap.sh" shows an example to do this for the card files in the folder CardFiles, submitting jobs to the Kamioka cluster
+
+* Finally need to merge the different tables for each card file into tables for proton target and proton+neutron. Script "Merge_all.sh" shows an example for all the card files in the folder CardFiles
+
+The folder CardFiles should have all the card files needed to compute the standard DIS cross sections used in NEUT.

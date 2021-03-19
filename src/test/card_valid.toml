@@ -98,6 +98,9 @@ nucleon_rescattering_nuclear_model = "lfg"
 [neut.target.hadron_rescattering.nucleon_cross_sections]
 
 # mean_free_path = 1
+# elastic
+# single_pi_prod
+# double_pi_prod
 
 [neut.target.nuclear_effects]
 
@@ -387,7 +390,12 @@ model = "rein_w_cut"
 # pdf_set = "grv94_di"
 pdf_set = "grv98_lo"
 
-bodek_yang_correction = "on"
+bodek_yang_correction = "BY19"
+# bodek_yang_correction = "BY05"
+# bodek_yang_correction = "off"
+
+bodek_yang_low_W_K_factor = "on"
+bodek_yang_force_ax_vec_equal = "on"
 
 multiplicity_model = "neut"
 # multiplicity_model = "fit_to_bc"
