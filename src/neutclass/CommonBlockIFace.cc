@@ -30,6 +30,21 @@ void necard_();
 void necardev_();
 }
 
+template <size_t N> std::string fstr_to_stdstring(char const (&fstr)[N]) {
+  if (N == 0) {
+    return "";
+  }
+  char cstr[N + 1];
+  for (int i = (N - 1); i >= 0; --i) {
+    if (fstr[i] != ' ') {
+      std::strncpy(cstr, fstr, i + 1);
+      cstr[i + 1] = '\0';
+      break;
+    }
+  }
+  return cstr;
+}
+
 namespace neut {
 
 static CommonBlockIFace *gCommonBlockIFace = NULL;
@@ -49,6 +64,7 @@ void CommonBlockIFace::SetGenCard(std::string const &GenCardLocation) {
   std::strncpy(necardname_.fcard, GenCardLocation.c_str(),
                std::min(size_t(1023), GenCardLocation.size()));
   necardname_.isset = true;
+
   // Read Card
   necard_();
   necardev_();
@@ -69,6 +85,14 @@ void CommonBlockIFace::SetGenCard(std::string const &GenCardLocation) {
   fnemdls_gen = nemdls_;
   fnenupr_gen = nenupr_;
   fneffpr_gen = neffpr_;
+
+  // Copy less important common blocks
+  fneutmodel_gen = neutmodel_;
+  fnecardname_gen = necardname_;
+  fnevccard_gen = nevccard_;
+  fnucres_gen = nucres_;
+  fneutfilepath_gen = neutfilepath_;
+  fnievesqepar_gen = nievesqepar_;
 }
 void CommonBlockIFace::Initialize(std::string const &GenCardLocation) {
   if (!gCommonBlockIFace) {
@@ -105,6 +129,14 @@ void CommonBlockIFace::ResetGenValues() const {
   nenupr_.sfebshift = fnenupr_gen.sfebshift;
 
   neffpr_ = fneffpr_gen;
+
+  // less important blocks
+  neutmodel_ = fneutmodel_gen;
+  necardname_ = fnecardname_gen;
+  nevccard_ = fnevccard_gen;
+  nucres_ = fnucres_gen;
+  neutfilepath_ = fneutfilepath_gen;
+  nievesqepar_ = fnievesqepar_gen;
 
   NEUTSetParams();
 }
@@ -613,8 +645,78 @@ std::string CommonBlockIFace::ParamsToString(bool isinstance) {
      << "\tfefcoul: " << neffpr.fefcoul << "\n"
      << "\tfefall: " << neffpr.fefall << "\n";
 
+  neutmodel_common const &neutmodel =
+      isinstance ? CommonBlockIFace::Get().fneutmodel_gen : neutmodel_;
+
+  ss << "neutmodel:\n"
+     << "\tmodeldis: " << neutmodel.modeldis << "\n"
+     << "\tmodelcoh: " << neutmodel.modelcoh << "\n"
+     << "\tmodeldif: " << neutmodel.modeldif << "\n";
+
+  necardname_common const &necardname =
+      isinstance ? CommonBlockIFace::Get().fnecardname_gen : necardname_;
+
+  ss << "necardname:\n"
+     << "\tfcard: " << fstr_to_stdstring(necardname.fcard) << "\n"
+     << "\tisset: " << necardname.isset << "\n";
+
+  nevccard_common const &nevccard =
+      isinstance ? CommonBlockIFace::Get().fnevccard_gen : nevccard_;
+
+  ss << "nevccard:\n"
+     << "\tnevtevct: " << nevccard.nevtevct << "\n"
+     << "\tidptevct: " << nevccard.idptevct << "\n"
+     << "\tmposevct: " << nevccard.mposevct << "\n"
+     << "\tposevct: [ " << nevccard.posevct[0] << ", " << nevccard.posevct[1]
+     << ", " << nevccard.posevct[2] << "]\n"
+     << "\tradevct: " << nevccard.radevct << "\n"
+     << "\tmdirevct: " << nevccard.mdirevct << "\n"
+     << "\tdirevct: [ " << nevccard.direvct[0] << ", " << nevccard.direvct[1]
+     << ", " << nevccard.direvct[2] << "]\n"
+     << "\tmpvevct: " << nevccard.mpvevct << "\n"
+     << "\tpvevct: [ " << nevccard.pvevct[0] << ", " << nevccard.pvevct[1]
+     << "]\n"
+     << "\tangdeg: " << nevccard.angdeg << "\n"
+     << "\tangwidth: " << nevccard.angwidth << "\n"
+     << "\tfilenmevct: " << fstr_to_stdstring(nevccard.filenmevct) << "\n"
+     << "\thistnmevct: " << fstr_to_stdstring(nevccard.histnmevct) << "\n"
+     << "\tinmevevct: " << nevccard.inmevevct << "\n";
+
+  nucres_common const &nucres =
+      isinstance ? CommonBlockIFace::Get().fnucres_gen : nucres_;
+  ss << "nucres:\n"
+     << "\tnucrescat: " << nucres.nucrescat << "\n"
+     << "\txnucfact: " << nucres.xnucfact << "\n"
+     << "\tnucresflg: " << nucres.nucresflg << "\n";
+
+  neutfilepath_common const &neutfilepath =
+      isinstance ? CommonBlockIFace::Get().fneutfilepath_gen : neutfilepath_;
+  ss << "neutfilepath:\n"
+     << "\tcrstblpath: " << fstr_to_stdstring(neutfilepath.crstblpath) << "\n";
+
+  nievesqepar_common const &nievesqepar =
+      isinstance ? CommonBlockIFace::Get().fnievesqepar_gen : nievesqepar_;
+  ss << "nievesqepar:\n"
+     << "\tnvqerfg: " << nievesqepar.nvqerfg << "\n"
+     << "\tnvqebind: " << nievesqepar.nvqebind << "\n"
+     << "\tnvqerpa: " << nievesqepar.nvqerpa << "\n"
+     << "\txnvrpafp0in: " << nievesqepar.xnvrpafp0in << "\n"
+     << "\txnvrpapf0ex: " << nievesqepar.xnvrpapf0ex << "\n"
+     << "\txnvrpafstar: " << nievesqepar.xnvrpafstar << "\n"
+     << "\txnvrpaf: " << nievesqepar.xnvrpaf << "\n"
+     << "\txnvrpapilambda: " << nievesqepar.xnvrpapilambda << "\n"
+     << "\txnvrpacr0: " << nievesqepar.xnvrpacr0 << "\n"
+     << "\txnvrparholambda: " << nievesqepar.xnvrparholambda << "\n"
+     << "\txnvrpagp: " << nievesqepar.xnvrpagp << "\n"
+     << "\txnvrpaxmpi: " << nievesqepar.xnvrpaxmpi << "\n"
+     << "\txnvrpaxmrho: " << nievesqepar.xnvrpaxmrho << "\n"
+     << "\txnvrpairel: " << nievesqepar.xnvrpairel << "\n"
+     << "\tfftype: " << nievesqepar.fftype << "\n"
+     << "\tnvbindfermicor: " << nievesqepar.nvbindfermicor << "\n";
   return ss.str();
 }
+
+#ifdef USE_HEPMC
 
 template <typename T> inline std::string sstostr(T const &t) {
   std::stringstream ss("");
@@ -849,8 +951,11 @@ void CommonBlockIFace::Initialize(
     gCommonBlockIFace->fneffpr_gen = neffpr_;
   }
 }
+
 void CommonBlockIFace::ReadEvent(std::shared_ptr<HepMC3::GenEvent> evt) {
   ReadNuHepMCEvent(evt);
 }
+
+#endif
 
 } // namespace neut

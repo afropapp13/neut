@@ -15,9 +15,11 @@
 #include "nieves1p1hC.h"
 #include "nrcardC.h"
 #include "nucleonfsihistC.h"
-#include "posinnucC.h"
 #include "vcvrtxC.h"
 #include "vcworkC.h"
+
+//This has to come after VCWork
+#include "posinnucC.h"
 
 extern "C" {
 int neutfillvect_(char * /* filename */, char * /* treename */,

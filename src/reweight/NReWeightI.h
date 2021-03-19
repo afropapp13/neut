@@ -47,6 +47,13 @@ public:
 
   /// calculate penalty factors
   virtual double CalcChisq(void) = 0;
+
+  // Get the variation in sigma units for a given absolute dial value
+  virtual double GetTwkForAbs(NSyst_t syst, double val) { return 0; }
+
+  virtual std::string ToString() {
+    return "No ToString implemented for this NReWeightI";
+  };
 };
 
 } // namespace rew

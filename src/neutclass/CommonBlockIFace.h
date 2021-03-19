@@ -5,6 +5,13 @@
 #include "neutmodelC.h"
 #include "neutparamsC.h"
 
+#include "cardnameC.h"
+#include "necardevC.h"
+#include "nrcardC.h"
+#include "neutfilepathC.h"
+#include "nieves1p1hC.h"
+
+
 #include "neutvect.h"
 
 #ifdef USE_HEPMC
@@ -52,9 +59,26 @@ public:
 
   // neutmodelC.h
   nemdls_common fnemdls_gen;
+  neutmodel_common fneutmodel_gen;
+
   // neutparamsC.h
   nenupr_common fnenupr_gen;
   neffpr_common fneffpr_gen;
+
+  // cardnameC.h
+  necardname_common fnecardname_gen;
+
+  // necardevC.h
+  nevccard_common fnevccard_gen;
+
+  // nrcardC.h
+  nucres_common fnucres_gen;
+
+  //neutfilepathC.h
+  neutfilepath_common fneutfilepath_gen;
+
+  // nieves1p1hC.h
+  nievesqepar_common fnievesqepar_gen;
 
 private:
   void SetGenCard(std::string const &GenCardLocation);

@@ -28,6 +28,9 @@
       EXTERNAL      IARGC
 #endif
 
+      LOGICAL  CARDISTOML
+      EXTERNAL CARDISTOML
+
 C --  Initialize
 
       NEVTEVCT   = 0
@@ -48,45 +51,54 @@ C --- get card file name (1st argument of the program)
 
       WRITE(6,*)
       CALL RESOLVECARDNAME
-      WRITE(6,*) 'NEUT(EVCT) card file you read is ', FCARD(1:LEN_TRIM(FCARD))
+      IF ( CARDISTOML() ) THEN
+         WRITE(6,*) 'Reading', FCARD(1:LEN_TRIM(FCARD)), ' as a toml file.'
+         CALL NECARDEVTOML
+      ELSE
+         WRITE(6,*) 'Reading', FCARD(1:LEN_TRIM(FCARD)), ' as a card file.'
 
 C -- extract NEUT card
 
-      CALL GETUNI(TMPFIL)
-      OPEN(UNIT=90, FILE=FCARD, STATUS='OLD')
-      OPEN(UNIT=91, FILE=TMPFIL,STATUS='UNKNOWN')
-      CALL EXCARD('EVCT', 90, 91, IRET)
-      CLOSE(UNIT=91)
-      CLOSE(UNIT=90)
+         CALL GETUNI(TMPFIL)
+         OPEN(UNIT=90, FILE=FCARD, STATUS='OLD')
+         OPEN(UNIT=91, FILE=TMPFIL,STATUS='UNKNOWN')
+         CALL EXCARD('EVCT', 90, 91, IRET)
+         CLOSE(UNIT=91)
+         CLOSE(UNIT=90)
 
-      OPEN(UNIT=91, FILE=TMPFIL,STATUS='OLD')
-      CALL FFINIT(0)
-      CALL FFSET('LINP', 91)
-      CALL FFSET('SIZE', 10)
+         OPEN(UNIT=91, FILE=TMPFIL,STATUS='OLD')
+         WRITE(6,*) 'TMPFILE: ', TMPFIL
+         CALL FFINIT(0)
+         CALL FFSET('LINP', 91)
+         CALL FFSET('SIZE', 10)
+         CALL FFSET('LENMAX', 1000)
 
-      CALL FFKEY('NEVT',NEVTEVCT,1,'INTEGER')
+         CALL FFKEY('NEVT',NEVTEVCT,1,'INTEGER')
 
-      CALL FFKEY('IDPT',IDPTEVCT,1,'INTEGER')
+         CALL FFKEY('IDPT',IDPTEVCT,1,'INTEGER')
 
-      CALL FFKEY('MPOS',MPOSEVCT,1,'INTEGER')
-      CALL FFKEY('POS' ,POSEVCT ,3,'REAL')
-      CALL FFKEY('RAD' ,RADEVCT ,1,'REAL')
+         CALL FFKEY('MPOS',MPOSEVCT,1,'INTEGER')
+         CALL FFKEY('POS' ,POSEVCT ,3,'REAL')
+         CALL FFKEY('RAD' ,RADEVCT ,1,'REAL')
 
-      CALL FFKEY('MDIR',MDIREVCT,1,'INTEGER')
-      CALL FFKEY('DIR' ,DIREVCT ,3,'REAL')
+         CALL FFKEY('MDIR',MDIREVCT,1,'INTEGER')
+         CALL FFKEY('DIR' ,DIREVCT ,3,'REAL')
 
-      CALL FFKEY('MPV' ,MPVEVCT ,1,'INTEGER')
-      CALL FFKEY('PV'  ,PVEVCT  ,2,'REAL')
+         CALL FFKEY('MPV' ,MPVEVCT ,1,'INTEGER')
+         CALL FFKEY('PV'  ,PVEVCT  ,2,'REAL')
 
-      CALL FFKEY('FILENM',FILENMEVCT,80,'MIXED')
-      CALL FFKEY('HISTNM',HISTNMEVCT,80,'MIXED')
-      CALL FFKEY('INMEV' ,INMEVEVCT ,1,'INTEGER')
-      CALL FFKEY('OUTPUTFORMAT' ,OUTPUTFORMAT ,1,'INTEGER')
+         CALL FFKEY('FILENM',FILENMEVCT,1000,'MIXED')
+         CALL FFKEY('HISTNM',HISTNMEVCT,1000,'MIXED')
+         CALL FFKEY('INMEV' ,INMEVEVCT ,1,'INTEGER')
 
-      CALL FFGO
-      CLOSE(UNIT=91)
-      COMMAND = '/bin/rm '//TMPFIL
-      CALL SYSTEM(COMMAND)
+         CALL FFKEY('OUTPUTFORMAT' ,OUTPUTFORMAT ,1,'INTEGER')
+
+         CALL FFGO
+         CLOSE(UNIT=91)
+         COMMAND = '/bin/rm '//TMPFIL
+         CALL SYSTEM(COMMAND)
+
+      ENDIF
 
       WRITE(6,*) 'NECARDEV : INPUTTED PARAMETER '
       WRITE(6,*) 'NECARDEV : NEV  = ',NEVTEVCT
@@ -130,6 +142,8 @@ C -- extract NEUT card
       else if (MPVEVCT.eq.3) then
          WRITE(6,*) 'NECARDEV : MPV  = ',MPVEVCT
          WRITE(6,*) 'Random ENEU generation using flux histogram'
+         WRITE(6,*) 'NECARDEV : FILENMEVCT = ',  FILENMEVCT(1:LEN_TRIM(FILENMEVCT))
+         WRITE(6,*) 'NECARDEV : HISTNMEVCT = ',  HISTNMEVCT(1:LEN_TRIM(HISTNMEVCT))
       else
          WRITE(6,*) 'NECARDEV : MPV in the card was set to ',
      $              MPVEVCT,' but this should be 1, 2 or 3.'

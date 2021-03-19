@@ -120,6 +120,28 @@ void NReWeightNuXSecCCQE::SetSystematic(NSyst_t syst, double twk_dial) {
   NSYST_UPDATEVALUE(kXSecTwkDial_FAZExp_A4, syst, twk_dial);
 }
 
+double NReWeightNuXSecCCQE::GetTwkForAbs(NSyst_t syst, double val) {
+  NSystUncertainty *fracerr = NSystUncertainty::Instance();
+  NSYST_GETTWKFORABS(kXSecTwkDial_MaCCQE, syst, val, fracerr);
+  NSYST_GETTWKFORABS(kXSecTwkDial_AxlFFCCQE, syst, val, fracerr);
+  NSYST_GETTWKFORABS(kXSecTwkDial_SCCVecQE, syst, val, fracerr);
+  NSYST_GETTWKFORABS(kXSecTwkDial_SCCAxlQE, syst, val, fracerr);
+  NSYST_GETTWKFORABS(kXSecTwkDial_PsFF, syst, val, fracerr);
+  NSYST_GETTWKFORABS(kXSecTwkDial_FAxlCCQEAlpha, syst, val, fracerr);
+  NSYST_GETTWKFORABS(kXSecTwkDial_FAxlCCQEGamma, syst, val, fracerr);
+  NSYST_GETTWKFORABS(kXSecTwkDial_FAxlCCQEBeta, syst, val, fracerr);
+  NSYST_GETTWKFORABS(kXSecTwkDial_FAxlCCQETheta, syst, val, fracerr);
+  // NSYST_GETTWKFORABS(kXSecTwkDial_FAZExp_NTerms, syst, val, fracerr);
+  // NSYST_GETTWKFORABS(kXSecTwkDial_FAZExp_TCut, syst, val, fracerr);
+  // NSYST_GETTWKFORABS(kXSecTwkDial_FAZExp_T0, syst, val, fracerr);
+  // NSYST_GETTWKFORABS(kXSecTwkDial_FAZExp_Q4Cut, syst, val, fracerr);
+  NSYST_GETTWKFORABS(kXSecTwkDial_FAZExp_A1, syst, val, fracerr);
+  NSYST_GETTWKFORABS(kXSecTwkDial_FAZExp_A2, syst, val, fracerr);
+  NSYST_GETTWKFORABS(kXSecTwkDial_FAZExp_A3, syst, val, fracerr);
+  NSYST_GETTWKFORABS(kXSecTwkDial_FAZExp_A4, syst, val, fracerr);
+  return 0;
+}
+
 void NReWeightNuXSecCCQE::Reset() {
   NSYST_SETTODEF(kXSecTwkDial_MaCCQE);
   NSYST_SETTODEF(kXSecTwkDial_AxlFFCCQE);
@@ -244,11 +266,15 @@ double NReWeightNuXSecCCQE::CalcWeight() {
   // << ", new: " << new_xsec << std::endl;
 
 #ifdef _N_REWEIGHT_CCQE_DEBUG_
-  cout << "differential cross section (old) = " << old_xsec << endl;
-  cout << "differential cross section (new) = " << new_xsec << endl;
+  std::cout << "differential cross section (old) = " << old_xsec << std::endl;
+  std::cout << "differential cross section (new) = " << new_xsec << std::endl;
 #endif
 
   NREWCHECKRETURN(new_xsec / old_xsec);
+}
+
+std::string NReWeightNuXSecCCQE::ToString(){
+  
 }
 
 } // namespace rew

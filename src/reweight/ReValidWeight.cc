@@ -1,6 +1,7 @@
 #include "CommonBlockIFace.h"
 #include "EventSummaryHelper.h"
 #include "NReWeightFactory.h"
+#include "NReWeightNuXSecCCQE.h"
 #include "neutrootTreeSingleton.h"
 
 #include "TFile.h"
@@ -25,6 +26,18 @@ int main(int argc, char const *argv[]) {
 
   NReWeight *NRW = DefaultConfiguredNReWeightFactory();
 
+  double MAQE103_twkval = NRW->WghtCalc("NReWeightNuXSecCCQE")
+                              ->GetTwkForAbs(kXSecTwkDial_MaCCQE, 1.03);
+  std::cout << "twkval for MAQE103 = " << MAQE103_twkval << std::endl;
+
+  // double alpha_nom = NRW->WghtCalc("NReWeightNuXSecCCQE")
+  //                        ->GetTwkForAbs(kXSecTwkDial_FAxlCCQEAlpha, 2.19);
+  // double gamma_nom = NRW->WghtCalc("NReWeightNuXSecCCQE")
+  //                        ->GetTwkForAbs(kXSecTwkDial_FAxlCCQEGamma, 0.93);
+  // double beta_nom = NRW->WghtCalc("NReWeightNuXSecCCQE")
+  //                       ->GetTwkForAbs(kXSecTwkDial_FAxlCCQEBeta, -7.67);
+  // double theta_nom = NRW->WghtCalc("NReWeightNuXSecCCQE")
+  //                        ->GetTwkForAbs(kXSecTwkDial_FAxlCCQETheta, -4.67);
   NeutrootTreeSingleton &neutRdr = NeutrootTreeSingleton::Initialize(argv[2]);
 
   Long64_t Nents = neutRdr.GetEntries();
@@ -38,6 +51,8 @@ int main(int argc, char const *argv[]) {
   std::vector<std::string> DialNames;
 
   Dials.push_back(kXSecTwkDial_MaCCQE);
+
+  // Dials.push_back(kXSecTwkDial_MaCCQE);
   // Dials.push_back(kXSecTwkDial_MaRES);
   // Dials.push_back(kXSecTwkDial_CA5RES);
   // Dials.push_back(kXSecTwkDial_BgSclRES);
@@ -58,7 +73,11 @@ int main(int argc, char const *argv[]) {
   for (size_t d_it = 0; d_it < NDials; ++d_it) {
     DialNames.push_back(NSyst::AsString(Dials[d_it]));
 
-    AllTheHists[d_it].resize(7);
+    if (Dials[d_it] == kXSecTwkDial_AxlFFCCQE) {
+      AllTheHists[d_it].resize(4);
+    } else {
+      AllTheHists[d_it].resize(7);
+    }
   }
 
   size_t shout_every = Nents / 100;
@@ -79,15 +98,44 @@ int main(int argc, char const *argv[]) {
     CommonBlockIFace::ReadVect(nvct);
 
     for (size_t d_it = 0; d_it < NDials; ++d_it) {
-      for (int dv = -3; dv < 4; ++dv) {
+      int numtweaks = AllTheHists[d_it].size();
+      for (int dv = -3; dv < (numtweaks - 3); ++dv) {
         NRW->Systematics().Clear();
-        NRW->Systematics().Init(Dials[d_it], dv);
+
         if (Dials[d_it] == kXSecTwkDial_BgSclLMCPiBarRES) {
           NRW->Systematics().Init(kXSecTwkDial_UseSeparateBgSclLMCPiBar, 1);
+          NRW->Systematics().Init(kXSecTwkDial_BgSclLMCPiBarRES, dv);
+
+        } else if (Dials[d_it] == kXSecTwkDial_AxlFFCCQE) {
+          if (dv == -3) {
+            // std::cout << "@@Dipole:" << std::endl;
+            NRW->Systematics().Init(kXSecTwkDial_AxlFFCCQE, 1);
+            NRW->Systematics().Init(kXSecTwkDial_MaCCQE, MAQE103_twkval);
+          } else if (dv == -2) {
+            // std::cout << "@@3comp:" << std::endl;
+            NRW->Systematics().Init(kXSecTwkDial_AxlFFCCQE, 4);
+          } else if (dv == -1) {
+            // NRW->Systematics().Init(kXSecTwkDial_AxlFFCCQE, 4);
+            // NRW->Systematics().Init(kXSecTwkDial_FAxlCCQEAlpha, alpha_nom);
+            // NRW->Systematics().Init(kXSecTwkDial_FAxlCCQEGamma, gamma_nom);
+            // NRW->Systematics().Init(kXSecTwkDial_FAxlCCQEBeta, beta_nom);
+            // NRW->Systematics().Init(kXSecTwkDial_FAxlCCQETheta, theta_nom);
+
+          } else if (dv == 0) {
+            // std::cout << "@@zexp:" << std::endl;
+            NRW->Systematics().Init(kXSecTwkDial_AxlFFCCQE, 5);
+          }
+
+        } else {
+          NRW->Systematics().Init(Dials[d_it], dv);
         }
+
         NRW->Reconfigure();
         // std::cout << "Enu: " << k.Enu << ", Q2: " << k.Q2 << std::endl;
         double w = std::min(NRW->CalcWeight(), 10.0);
+        if (!std::isnormal(w)) {
+          w = 0;
+        }
         AllTheHists[d_it][dv + 3][k.mode].Fill(k, fweight * w);
         AllTheHists[d_it][dv + 3][0].Fill(k, fweight * w);
       }
@@ -102,9 +150,23 @@ int main(int argc, char const *argv[]) {
       std::stringstream ss("");
       ss << "mode_" << it->first;
       TDirectory *mode_dir = dial_dir->mkdir(ss.str().c_str());
-      for (int dv = -3; dv < 4; ++dv) {
+      int numtweaks = AllTheHists[d_it].size();
+
+      for (int dv = -3; dv < (numtweaks - 3); ++dv) {
         ss.str("");
-        ss << "tweak_" << (dv < 0 ? "m" : "") << std::abs(dv);
+        if (Dials[d_it] == kXSecTwkDial_AxlFFCCQE) {
+          if (dv == -3) {
+            ss << "tweak_dipole";
+          } else if (dv == -2) {
+            ss << "tweak_3comp";
+          } else if (dv == -1) {
+            ss << "tweak_3comp_altfit";
+          } else if (dv == 0) {
+            ss << "tweak_zexp";
+          }
+        } else {
+          ss << "tweak_" << (dv < 0 ? "m" : "") << std::abs(dv);
+        }
         AllTheHists[d_it][dv + 3][it->first].Write(mode_dir, ss.str());
       }
     }

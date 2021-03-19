@@ -74,7 +74,7 @@ int loadflx_(int *IDPTEVCT, char *filename, char *histname, int *inMeV,
   float ebinctr;
   TH1D *hflxr, *hflx, *hrate;
   TH1D *h_flux, *h_rate;
-  char cPath[256];
+  char cPath[1000];
 
   for (i=0; i<4; i++) {
     if (*IDPTEVCT==pidtbl[i]) {

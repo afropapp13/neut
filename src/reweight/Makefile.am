@@ -20,21 +20,27 @@ else
 libNEUTReWeight_@NEUT_VERSION_NUM@_a_SOURCES = $(SRCLIST)
 endif
 
-include_HEADERS = NModeDefn.h NReWeightCasc.h  NReWeightNuXSecCCQE.h    NReWeightNuXSecRES.h NReWeightFactory.h NReWeight.h NReWeightI.h NSyst.h NSystSet.h NSystUncertainty.h PDGCodes.h EventSummaryHelper.h
+include_HEADERS = NModeDefn.h NReWeightCasc.h  NReWeightNuXSecCCQE.h NReWeightNuXSecRES.h NReWeightFactory.h NReWeight.h NReWeightI.h NSyst.h NSystSet.h NSystUncertainty.h PDGCodes.h EventSummaryHelper.h
 
 # Unused sources that live in the directory
 UNUSED_srcs = NReWeightNuclPiless.cc NReWeightNuXSecCOH.cc NReWeightNuXSecDIS.cc NReWeightNuXSecNCEL.cc
 UNUSED_headers = NReWeightNuclPiless.h NReWeightNuXSecCOH.h NReWeightNuXSecDIS.h NReWeightNuXSecNCEL.h
 
-bin_PROGRAMS = ReValidWeight ReValidWeight_HepMC SummaryPlots PlotReValidWeight
+bin_PROGRAMS = ReValidWeight SummaryPlots PlotReValidWeight
+
 ReValidWeight_SOURCES = ReValidWeight.cc
 ReValidWeight_LDADD = $(LIBNAME) $(NEUT_LIBS) $(CERN_LIBS) $(ROOT_LIBS) $(EXE_RTLIBS)
 ReValidWeight_LDFLAGS = $(EXE_LINKFLAGS) $(CERN_LINKFLAGS) $(ROOT_LINKFLAGS)
+
+if NEUT_HEPMC
+
+bin_PROGRAMS += ReValidWeight_HepMC
 
 ReValidWeight_HepMC_SOURCES = ReValidWeight_HepMC.cc
 ReValidWeight_HepMC_LDADD = $(LIBNAME) $(NEUT_LIBS) $(CERN_LIBS) $(ROOT_LIBS) $(EXE_RTLIBS)
 ReValidWeight_HepMC_LDFLAGS = $(EXE_LINKFLAGS) $(CERN_LINKFLAGS) $(ROOT_LINKFLAGS)
 
+endif
 
 PlotReValidWeight_SOURCES = PlotReValidWeight.cc
 PlotReValidWeight_LDADD = $(LIBNAME) $(NEUT_LIBS) $(CERN_LIBS) $(ROOT_LIBS) $(EXE_RTLIBS)

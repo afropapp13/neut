@@ -6,32 +6,34 @@
 // Author  P.Stowell (05/08/2016)
 //////////////////////////////////////////////////////////////
 
-# include <cstdlib>
-# include <iostream>
-# include <iomanip>
-# include <cmath>
-# include <ctime>
 #include "neutmodelC.h"
+#include <cmath>
+#include <cstdlib>
+#include <ctime>
+#include <iomanip>
+#include <iostream>
 
 using namespace std;
 
-extern "C"
-{
-  double fa2COMP(double x);
-  double fa2comp_(double *x);
-  double fa3COMP(double x);
-  double fa3comp_(double *x);
+extern "C" {
+double fa2COMP(double x);
+double fa2comp_(double *x);
+double fa3COMP(double x);
+double fa3comp_(double *x);
 }
 
 // Axial Coupling
 static const double GA = 1.267;
 
-double fa2COMP(double x){
+double fa2COMP(double x) {
 
   // Read Params
   double q2 = fabs(x);
   double axial_ff_gamma = nemdls_.axffgamma;
   double axial_ff_alpha = nemdls_.axffalpha;
+
+  // std::cout << "fa2COMP: q2: " << q2 << ", gm: " << nemdls_.axffgamma
+  //           << ", al: " << nemdls_.axffalpha << std::endl;
 
   // Set Ma_Axl as axial meson
   double ma_axl = 1.230;
@@ -40,42 +42,44 @@ double fa2COMP(double x){
   double gterm = 1.0 / pow(1.0 + axial_ff_gamma * q2, 2);
 
   // Alpha Term
-  double aterm = (1.0 - axial_ff_alpha + \
-		  (axial_ff_alpha * (ma_axl * ma_axl) / (ma_axl*ma_axl + q2)));
+  double aterm =
+      (1.0 - axial_ff_alpha +
+       (axial_ff_alpha * (ma_axl * ma_axl) / (ma_axl * ma_axl + q2)));
 
   //  cout << " Returning 2 Comp " << -1.0 * GA * gterm * aterm << endl;
   return -1.0 * GA * gterm * aterm;
 }
 
-double fa3COMP(double x){
+double fa3COMP(double x) {
 
   // Read Params
   double q2 = fabs(x);
   double axial_ff_theta = nemdls_.axfftheta;
-  double axial_ff_beta  = nemdls_.axffbeta;
+  double axial_ff_beta = nemdls_.axffbeta;
 
+  // std::cout << "fa3COMP: q2: " << q2 << ", th: " << nemdls_.axfftheta
+  //           << ", bt: " << nemdls_.axffbeta << std::endl;
   // Get First 2Comp Term
   double comp2_term = fa2COMP(q2);
+  // std::cout << "--" << std::endl;
 
   // Get Exponential
-  double thetaprime = sqrt( fabs(axial_ff_theta) * axial_ff_beta );
-  if (axial_ff_theta < 0.0) thetaprime *= -1.0;
+  double thetaprime = sqrt(fabs(axial_ff_theta) * axial_ff_beta);
+  if (axial_ff_theta < 0.0)
+    thetaprime *= -1.0;
 
-  double exp_term = -1.0 * GA * q2 * thetaprime * \
-    exp(thetaprime - 1.0 * axial_ff_beta * q2);
+  double exp_term =
+      -1.0 * GA * q2 * thetaprime * exp(thetaprime - 1.0 * axial_ff_beta * q2);
 
-  //  cout << " Returning 3 Comp " << q2 << " " << comp2_term + exp_term << endl;
+  //  cout << " Returning 3 Comp " << q2 << " " << comp2_term + exp_term <<
+  //  endl;
   return comp2_term + exp_term;
 }
 
 // Awful extra function that neut seems to need...
-double fa2comp_(double *x){
-  return fa2COMP(*x);
-}
+double fa2comp_(double *x) { return fa2COMP(*x); }
 
 // Awful extra function that neut seems to need...
-double fa3comp_(double *x){
-  return fa3COMP(*x);
-}
+double fa3comp_(double *x) { return fa3COMP(*x); }
 
 #endif

@@ -45,6 +45,11 @@ public:
   double CalcWeight();
   double CalcChisq();
 
+  //Get the variation in sigma units for a given absolute dial value
+  double GetTwkForAbs(NSyst_t syst, double val);
+
+  std::string ToString();
+
 private:
   void Init();
   double CalcWeightMa();

@@ -101,12 +101,13 @@ host_triplet = @host@
 @NEUT_DEBUG_FALSE@@NEUT_LIBCOMPAT_FALSE@am__append_10 = -O0
 @NEUT_DEBUG_FALSE@@NEUT_LIBCOMPAT_FALSE@am__append_11 = -O0
 @FC_ALLOW_ARG_MISMATCH_TRUE@@NEUT_LIBCOMPAT_FALSE@am__append_12 = -fallow-argument-mismatch
-@FC_COMMON_TRUE@@NEUT_LIBCOMPAT_FALSE@am__append_13 = -fcommon -Wl,--allow-multiple-definition
-@FC_COMMON_TRUE@@NEUT_LIBCOMPAT_FALSE@am__append_14 = -Wl,--allow-multiple-definition
-@NEUT_HEPMC_TRUE@@NEUT_LIBCOMPAT_FALSE@am__append_15 = -L$(HEPMC_LIBDIR) -L$(NUHEPMC_LIBDIR)
-@NEUT_HEPMC_TRUE@@NEUT_LIBCOMPAT_FALSE@am__append_16 = -lNuHepMC -lHepMC3 -lHepMC3rootIO
-@FC_HAS_PIE_TRUE@@NEUT_LIBCOMPAT_FALSE@am__append_17 = -no-pie
-@NEUT_LIBCOMPAT_FALSE@@NEUT_USE_GPERF_TRUE@am__append_18 = -L@NEUT_GPERF@ -lprofiler
+@FC_ALLOW_ARG_MISMATCH_TRUE@@NEUT_LIBCOMPAT_FALSE@am__append_13 = -Wl,--allow-multiple-definition
+@FC_COMMON_TRUE@@NEUT_LIBCOMPAT_FALSE@am__append_14 = -fcommon -Wl,--allow-multiple-definition
+@FC_COMMON_TRUE@@NEUT_LIBCOMPAT_FALSE@am__append_15 = -Wl,--allow-multiple-definition
+@NEUT_HEPMC_TRUE@@NEUT_LIBCOMPAT_FALSE@am__append_16 = -L$(HEPMC_LIBDIR) -L$(NUHEPMC_LIBDIR)
+@NEUT_HEPMC_TRUE@@NEUT_LIBCOMPAT_FALSE@am__append_17 = -lNuHepMC -lHepMC3 -lHepMC3rootIO
+@FC_HAS_PIE_TRUE@@NEUT_LIBCOMPAT_FALSE@am__append_18 = -no-pie
+@NEUT_LIBCOMPAT_FALSE@@NEUT_USE_GPERF_TRUE@am__append_19 = -L@NEUT_GPERF@ -lprofiler
 subdir = mec
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
@@ -372,7 +373,7 @@ top_srcdir = @top_srcdir@
 @NEUT_LIBCOMPAT_FALSE@ACLOCAL_AMFLAGS = -I m4
 
 # top_builddir dependencies are needed for fh2h.pl-generated headers
-@NEUT_LIBCOMPAT_FALSE@NEUT_INCLUDES = -I$(top_srcdir)/radcorr -I$(top_srcdir)/tauola -I$(top_srcdir)/mec -I$(top_srcdir)/ht2p2h/inc -I$(top_srcdir)/nuccorspl -I$(top_srcdir)/zbsfns -I$(top_srcdir)/n1p1h/inc -I$(top_srcdir)/nuceff -I$(top_srcdir)/kamflux -I$(top_srcdir)/nuclsmpl -I$(top_srcdir)/skmcsvc -I$(top_srcdir)/neutcore -I$(top_srcdir)/partnuck -I$(top_srcdir)/specfunc -I$(top_srcdir)/t2kflux_zbs -I$(top_builddir)/neutcore -I$(top_builddir)/skmcsvc -I$(top_builddir)/n1p1h -I$(top_builddir)/nuccorspl -I$(top_builddir)/nuceff
+@NEUT_LIBCOMPAT_FALSE@NEUT_INCLUDES = -I$(top_srcdir)/radcorr -I$(top_srcdir)/tauola -I$(top_srcdir)/mec -I$(top_srcdir)/ht2p2h/inc -I$(top_srcdir)/nuccorspl -I$(top_srcdir)/zbsfns -I$(top_srcdir)/n1p1h/inc -I$(top_srcdir)/nuceff -I$(top_srcdir)/kamflux -I$(top_srcdir)/nuclsmpl -I$(top_srcdir)/skmcsvc -I$(top_srcdir)/neutcore -I$(top_srcdir)/partnuck -I$(top_srcdir)/specfunc -I$(top_srcdir)/t2kflux_zbs -I$(top_srcdir)/tools -I$(top_builddir)/neutcore -I$(top_builddir)/skmcsvc -I$(top_builddir)/n1p1h -I$(top_builddir)/nuccorspl -I$(top_builddir)/nuceff
 @NEUT_LIBCOMPAT_FALSE@NEUT_CLASS_INCLUDES = -I$(top_srcdir)/neutclass
 @NEUT_LIBCOMPAT_FALSE@NEUT_STATIC_LIBS = $(top_builddir)/neutcore/lib@LIBPREFIX@neutcore.@NEUT_VERSION_NUM@.a \
 @NEUT_LIBCOMPAT_FALSE@	$(top_builddir)/neutcore/lib@LIBPREFIX@CERNOverride.a \
@@ -389,7 +390,7 @@ top_srcdir = @top_srcdir@
 @NEUT_LIBCOMPAT_FALSE@NEUT_LIBS = $(top_builddir)/neutclass/libNEUTClassUtils.@NEUT_VERSION_NUM@.a \
 @NEUT_LIBCOMPAT_FALSE@	$(top_builddir)/neutclass/libNEUTClass.la \
 @NEUT_LIBCOMPAT_FALSE@	$(top_builddir)/libNEUT.@NEUT_VERSION_NUM@.a \
-@NEUT_LIBCOMPAT_FALSE@	$(am__append_16)
+@NEUT_LIBCOMPAT_FALSE@	$(am__append_17)
 @NEUT_LIBCOMPAT_FALSE@CERN_ROOT = $(CERN)/$(CERN_LEVEL)
 @NEUT_LIBCOMPAT_FALSE@CERN_LINKFLAGS = -L$(CERN_ROOT)/lib
 @NEUT_LIBCOMPAT_FALSE@CERN_LIBS = -ljetset74 -lpdflib804 -lphotos202 -lmathlib -lpacklib -lkernlib
@@ -401,19 +402,20 @@ top_srcdir = @top_srcdir@
 @NEUT_LIBCOMPAT_FALSE@DEFAULT_FFLAGS = $(NEUT_FFLAGS) $(NEUT_INCLUDES) \
 @NEUT_LIBCOMPAT_FALSE@	-I$(CERN_ROOT)/include $(am__append_6) \
 @NEUT_LIBCOMPAT_FALSE@	$(am__append_9) $(am__append_12) \
-@NEUT_LIBCOMPAT_FALSE@	$(am__append_13)
+@NEUT_LIBCOMPAT_FALSE@	$(am__append_14)
 @NEUT_LIBCOMPAT_FALSE@DEFAULT_CXXFLAGS = -fPIC $(NEUT_DEFINES) \
 @NEUT_LIBCOMPAT_FALSE@	$(NEUT_INCLUDES) -I$(CERN_ROOT)/include \
 @NEUT_LIBCOMPAT_FALSE@	$(shell root-config --cflags) \
 @NEUT_LIBCOMPAT_FALSE@	$(am__append_5) $(am__append_7) \
-@NEUT_LIBCOMPAT_FALSE@	$(am__append_10) $(am__append_14)
+@NEUT_LIBCOMPAT_FALSE@	$(am__append_10) $(am__append_15)
 @NEUT_LIBCOMPAT_FALSE@DEFAULT_CFLAGS = -fPIC $(NEUT_DEFINES) \
 @NEUT_LIBCOMPAT_FALSE@	$(NEUT_INCLUDES) -I$(CERN_ROOT)/include \
 @NEUT_LIBCOMPAT_FALSE@	$(am__append_8) $(am__append_11)
-@NEUT_LIBCOMPAT_FALSE@DEFAULT_LINKFLAGS = -version-info @NEUT_VERSION_NUM@
+@NEUT_LIBCOMPAT_FALSE@DEFAULT_LINKFLAGS = -version-info \
+@NEUT_LIBCOMPAT_FALSE@	@NEUT_VERSION_NUM@ $(am__append_13)
 @NEUT_LIBCOMPAT_FALSE@ROOT_LINKFLAGS = $(shell root-config --ldflags) \
 @NEUT_LIBCOMPAT_FALSE@	-pthread -rdynamic -L$(shell root-config \
-@NEUT_LIBCOMPAT_FALSE@	--libdir) $(am__append_15)
+@NEUT_LIBCOMPAT_FALSE@	--libdir) $(am__append_16)
 @NEUT_LIBCOMPAT_FALSE@@ROOT_MAJOR_IS_SIX_FALSE@ROOT_LIBS = -lCore -lCint -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lm -ldl
 @NEUT_LIBCOMPAT_FALSE@@ROOT_MAJOR_IS_SIX_TRUE@ROOT_LIBS = -lCore -lImt -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lTreePlayer -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lMultiProc
 @NEUT_HEPMC_TRUE@@NEUT_LIBCOMPAT_FALSE@HEPMC_LIBDIR = $(shell HepMC3-config --libdir)
@@ -423,9 +425,9 @@ top_srcdir = @top_srcdir@
 
 # I know... but this seems to work
 @NEUT_LIBCOMPAT_FALSE@EXE_LINKFLAGS = -fno-PIE -fno-pie \
-@NEUT_LIBCOMPAT_FALSE@	$(am__append_17)
-@NEUT_LIBCOMPAT_FALSE@EXE_RTLIBS = -lstdc++ -lgfortran \
 @NEUT_LIBCOMPAT_FALSE@	$(am__append_18)
+@NEUT_LIBCOMPAT_FALSE@EXE_RTLIBS = -lstdc++ -lgfortran \
+@NEUT_LIBCOMPAT_FALSE@	$(am__append_19)
 @NEUT_LIBCOMPAT_FALSE@AM_FFLAGS = -DNEMEC_VERSION=@NEUT_VERSION_NUM@ $(DEFAULT_FFLAGS)
 @NEUT_LIBCOMPAT_FALSE@LIBNAME = lib@LIBPREFIX@neutmec.@NEUT_VERSION_NUM@.a
 @NEUT_LIBCOMPAT_FALSE@noinst_LIBRARIES = $(LIBNAME)
