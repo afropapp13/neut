@@ -7,6 +7,16 @@
 
 #include "neutvect.h"
 
+#ifdef USE_HEPMC
+namespace HepMC3 {
+class GenEvent;
+class GenRunInfo;
+class Attribute;
+} // namespace HepMC3
+#include <memory>
+#endif
+
+#include <map>
 #include <string>
 
 extern "C" {
@@ -23,7 +33,6 @@ inline double NEUTGetXSec() { return evdifcrs_(); }
 inline double NEUTGetPiCascProb() { return evpiprob_(); }
 inline void NEUTSetParams() {
   nefillmodel_();
-  nesetfgparams_();
   zexpconfig_();
 }
 
@@ -37,7 +46,6 @@ public:
   neut1pi_common fneut1pi_gen;
   neutdif_common fneutdif_gen;
   neutcoh_common fneutcoh_gen;
-  neuttarget_common fneuttarget_gen;
   neutpiabs_common fneutpiabs_gen;
   neutpiless_common fneutpiless_gen;
   neutradcorr_common fneutradcorr_gen;
@@ -55,6 +63,14 @@ public:
   static void Initialize(std::string const &GenCardLocation);
   static CommonBlockIFace const &Get();
 
+#ifdef USE_HEPMC
+  static void Initialize(std::shared_ptr<HepMC3::GenRunInfo const> gri);
+  static void ReadEvent(std::shared_ptr<HepMC3::GenEvent> evt);
+
+  static std::map<std::string, std::shared_ptr<HepMC3::Attribute> >
+  SerializeModelCommonBlocksToAttributeList();
+#endif
+
   void ResetGenValues() const;
 
   // Reads event properties straight into the common blocks
@@ -64,6 +80,9 @@ public:
   static void ReadNEUTCRS(NeutVect *);
   static void ReadFSIHIST(NeutVect *);
   static void ReadNUCLEONFSIHIST(NeutVect *);
+  static void ReadNEUTTARGET(NeutVect *);
+  static void ReadNENUPR(NeutVect *);
+
   static void ReadVect(NeutVect *);
 
   static std::string ParamsToString(bool isinstance = false);

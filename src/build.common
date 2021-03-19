@@ -36,11 +36,23 @@ if NEUT_USE_GPERF
 NEUT_DEFINES += -DNEUT_USE_GPERF
 endif
 
+if NEUT_HEPMC
+NEUT_DEFINES += -DUSE_HEPMC
+USE_HEPMC = yes
+else
+USE_HEPMC = no
+endif
+
+
 NEUT_FFLAGS = -fno-backslash -fno-automatic -fno-second-underscore -ffixed-line-length-132 -fdollar-ok -fPIC -fbounds-check -Wall -Wextra -ffpe-trap=invalid,zero,overflow -DstrictF77 -Df2cFortran $(NEUT_DEFINES)
 
 DEFAULT_FFLAGS = $(NEUT_FFLAGS) $(NEUT_INCLUDES) -I$(CERN_ROOT)/include
 
 DEFAULT_CXXFLAGS = -fPIC $(NEUT_DEFINES) $(NEUT_INCLUDES) -I$(CERN_ROOT)/include $(shell root-config --cflags)
+
+if NEUT_HEPMC
+DEFAULT_CXXFLAGS += $(shell HepMC3-config --cflags) -I$(shell NuHepMC-config --incdir)
+endif
 
 DEFAULT_CFLAGS = -fPIC $(NEUT_DEFINES) $(NEUT_INCLUDES) -I$(CERN_ROOT)/include
 
@@ -71,6 +83,16 @@ if ROOT_MAJOR_IS_SIX
 ROOT_LIBS = -lCore -lImt -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lTreePlayer -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lMultiProc
 else
 ROOT_LIBS = -lCore -lCint -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lm -ldl
+endif
+
+if NEUT_HEPMC
+HEPMC_LIBDIR = $(shell HepMC3-config --libdir)
+HEPMC_INCDIR = $(shell HepMC3-config --incdir)
+NUHEPMC_LIBDIR = $(shell NuHepMC-config --libdir)
+NUHEPMC_INCDIR = $(shell NuHepMC-config --incdir)
+ROOT_LINKFLAGS += -L$(HEPMC_LIBDIR) -L$(NUHEPMC_LIBDIR)
+NEUT_LIBS += -lNuHepMC -lHepMC3 -lHepMC3rootIO
+else
 endif
 
 # I know... but this seems to work

@@ -81,6 +81,7 @@ C -- extract NEUT card
       CALL FFKEY('FILENM',FILENMEVCT,80,'MIXED')
       CALL FFKEY('HISTNM',HISTNMEVCT,80,'MIXED')
       CALL FFKEY('INMEV' ,INMEVEVCT ,1,'INTEGER')
+      CALL FFKEY('OUTPUTFORMAT' ,OUTPUTFORMAT ,1,'INTEGER')
 
       CALL FFGO
       CLOSE(UNIT=91)
@@ -133,6 +134,17 @@ C -- extract NEUT card
          WRITE(6,*) 'NECARDEV : MPV in the card was set to ',
      $              MPVEVCT,' but this should be 1, 2 or 3.'
          stop
+      endif
+
+      if (OUTPUTFORMAT.eq.1) then
+        write (*,*) 'Writing output vector in neutvect format'
+#ifdef USE_HEPMC
+      else if (OUTPUTFORMAT.eq.2) then
+        write (*,*) 'Writing output vector in HepMC3 format'
+#endif
+      else
+        write(*,*) 'Unknown output format', OUTPUTFORMAT, ' specified.'
+        stop
       endif
 
       RETURN

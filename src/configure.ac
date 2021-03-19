@@ -116,6 +116,31 @@ AS_IF([test "x$enable_compatnames" = "xyes"], [
   AC_SUBST(LIBPREFIX, [NEUT])
 ])
 
+######## Check use HepMC
+AC_ARG_ENABLE([hepmc],
+    AS_HELP_STRING([--enable-hepmc], [Enable HepMC as an output format, expect to find HepMC-config in PATH.]))
+
+AS_IF([test "x$enable_hepmc" = "xyes"], [
+  AC_CHECK_PROG(FOUND_HEPMC3CONFIG,HepMC3-config,"FOUND","NOT-FOUND")
+
+  case "${FOUND_HEPMC3CONFIG}" in
+    "FOUND") AC_MSG_RESULT(Found HepMC3-config.);;
+    *) AC_MSG_ERROR(Failed to find HepMC3-config. Is HepMC3 set up?);
+  esac
+
+  AC_CHECK_PROG(FOUND_NuHepMCCONFIG,NuHepMC-config,"FOUND","NOT-FOUND")
+
+  case "${FOUND_NuHepMCCONFIG}" in
+    "FOUND") AC_MSG_RESULT(Found NuHepMC-config.);;
+    *) AC_MSG_ERROR(Failed to find NuHepMC-config. Is NuHepMC set up?);
+  esac
+
+], [
+  :
+])
+
+AM_CONDITIONAL([NEUT_HEPMC], [test "x$enable_hepmc" = "xyes"])
+
 ######## Check use tauola
 AC_ARG_ENABLE([tauola],
     AS_HELP_STRING([--enable-tauola], [Enable tauola, requires ZEBRA!]))
@@ -170,7 +195,6 @@ AC_CONFIG_FILES([
   nuclsmpl/Makefile
   pionsmpl/Makefile
   neutgeom/Makefile
-  escat/Makefile
   reweight/Makefile
   tools/Makefile
   neututils/Makefile

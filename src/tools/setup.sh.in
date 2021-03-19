@@ -56,4 +56,8 @@ export NEUT_CRSPATH=${SETUPDIR}/share/neut/crsdat
 add_to_PATH ${NEUT}/bin
 add_to_LD_LIBRARY_PATH ${NEUT}/lib
 
+if [ "__USE_HEPMC__" == "yes" ]; then
+  add_to_LD_LIBRARY_PATH __HEPMC_LIBDIR__
+fi
+
 unset SETUPDIR

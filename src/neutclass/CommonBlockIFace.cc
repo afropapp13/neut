@@ -12,6 +12,15 @@
 // Must come after vcworkC.h
 #include "posinnucC.h"
 
+#ifdef USE_HEPMC
+#include "HepMC3/GenEvent.h"
+#include "HepMC3/GenRunInfo.h"
+
+#include "NuHepMC/AttributeUtils.hxx"
+
+#include "HepMCReader.h"
+#endif
+
 #include <cstring>
 #include <iostream>
 #include <sstream>
@@ -33,10 +42,10 @@ void CommonBlockIFace::SetGenCard(std::string const &GenCardLocation) {
     throw;
   }
   // Set Card
-  //Set the whole array to spaces first
+  // Set the whole array to spaces first
   std::memset(necardname_.fcard, ' ', 1024);
-  //Copy just the string characters without null termination as FORTRAN doesn't
-  //do null termination...
+  // Copy just the string characters without null termination as FORTRAN doesn't
+  // do null termination...
   std::strncpy(necardname_.fcard, GenCardLocation.c_str(),
                std::min(size_t(1023), GenCardLocation.size()));
   necardname_.isset = true;
@@ -54,7 +63,6 @@ void CommonBlockIFace::SetGenCard(std::string const &GenCardLocation) {
   fneut1pi_gen = neut1pi_;
   fneutdif_gen = neutdif_;
   fneutcoh_gen = neutcoh_;
-  fneuttarget_gen = neuttarget_;
   fneutpiabs_gen = neutpiabs_;
   fneutpiless_gen = neutpiless_;
   fneutradcorr_gen = neutradcorr_;
@@ -86,12 +94,16 @@ void CommonBlockIFace::ResetGenValues() const {
   neut1pi_ = fneut1pi_gen;
   neutdif_ = fneutdif_gen;
   neutcoh_ = fneutcoh_gen;
-  neuttarget_ = fneuttarget_gen;
   neutpiabs_ = fneutpiabs_gen;
   neutpiless_ = fneutpiless_gen;
   neutradcorr_ = fneutradcorr_gen;
   nemdls_ = fnemdls_gen;
-  nenupr_ = fnenupr_gen;
+
+  // Only reset these as we want to take vnuini etc... from the event
+  nenupr_.iformlen = fnenupr_gen.iformlen;
+  nenupr_.fzmu2 = fnenupr_gen.fzmu2;
+  nenupr_.sfebshift = fnenupr_gen.sfebshift;
+
   neffpr_ = fneffpr_gen;
 
   NEUTSetParams();
@@ -412,6 +424,20 @@ void CommonBlockIFace::ReadPOSINNUC(NeutVect *nvect) {
   }
 }
 
+void CommonBlockIFace::ReadNEUTTARGET(NeutVect *nvect) {
+  neuttarget_.numbndn = nvect->TargetA - nvect->TargetZ;
+  neuttarget_.numbndp = nvect->TargetZ;
+  neuttarget_.numfrep = nvect->TargetH;
+  neuttarget_.numatom = nvect->TargetA;
+}
+
+void CommonBlockIFace::ReadNENUPR(NeutVect *nvect) {
+  nenupr_.pfsurf = nvect->PFSurf;
+  nenupr_.pfmax = nvect->PFMax;
+  nenupr_.vnuini = nvect->VNuclIni;
+  nenupr_.vnufin = nvect->VNuclFin;
+}
+
 void CommonBlockIFace::ReadVect(NeutVect *nvect) {
   ReadNEWORK(nvect);
   ReadVCWORK(nvect);
@@ -419,6 +445,8 @@ void CommonBlockIFace::ReadVect(NeutVect *nvect) {
   ReadNEUTCRS(nvect);
   ReadFSIHIST(nvect);
   ReadNUCLEONFSIHIST(nvect);
+  ReadNEUTTARGET(nvect);
+  ReadNENUPR(nvect);
 }
 
 std::string CommonBlockIFace::ParamsToString(bool isinstance) {
@@ -488,15 +516,6 @@ std::string CommonBlockIFace::ParamsToString(bool isinstance) {
 
   ss << "NEUTCOH:\n"
      << "\tnecohepi: " << neutcoh.necohepi << "\n";
-
-  neuttarget_common const &neuttarget =
-      isinstance ? CommonBlockIFace::Get().fneuttarget_gen : neuttarget_;
-
-  ss << "NEUTTARGET:\n"
-     << "\tnumbndn: " << neuttarget.numbndn << "\n"
-     << "\tnumbndp: " << neuttarget.numbndp << "\n"
-     << "\tnumfrep: " << neuttarget.numfrep << "\n"
-     << "\tnumatom: " << neuttarget.numatom << "\n";
 
   neutpiabs_common const &neutpiabs =
       isinstance ? CommonBlockIFace::Get().fneutpiabs_gen : neutpiabs_;
@@ -573,10 +592,6 @@ std::string CommonBlockIFace::ParamsToString(bool isinstance) {
       isinstance ? CommonBlockIFace::Get().fnenupr_gen : nenupr_;
 
   ss << "nenupr:\n"
-     << "\tpfsurf: " << nenupr.pfsurf << "\n"
-     << "\tpfmax: " << nenupr.pfmax << "\n"
-     << "\tvnuini: " << nenupr.vnuini << "\n"
-     << "\tvnufin: " << nenupr.vnufin << "\n"
      << "\tiformlen: " << nenupr.iformlen << "\n"
      << "\tfzmu2: " << nenupr.fzmu2 << "\n"
      << "\tsfebshift: " << nenupr.sfebshift << "\n";
@@ -599,6 +614,243 @@ std::string CommonBlockIFace::ParamsToString(bool isinstance) {
      << "\tfefall: " << neffpr.fefall << "\n";
 
   return ss.str();
+}
+
+template <typename T> inline std::string sstostr(T const &t) {
+  std::stringstream ss("");
+  ss << t;
+  return ss.str();
+}
+
+std::map<std::string, std::shared_ptr<HepMC3::Attribute> >
+CommonBlockIFace::SerializeModelCommonBlocksToAttributeList() {
+
+  neutcard_common const &neutcard = neutcard_;
+
+  std::map<std::string, std::shared_ptr<HepMC3::Attribute> >
+      CommonBlockAttributes;
+
+  CommonBlockAttributes["neutcard.nefrmflg"] =
+      NuHepMC::AsAttribute(neutcard.nefrmflg);
+  CommonBlockAttributes["neutcard.nepauflg"] =
+      NuHepMC::AsAttribute(neutcard.nepauflg);
+  CommonBlockAttributes["neutcard.nenefo16"] =
+      NuHepMC::AsAttribute(neutcard.nenefo16);
+  CommonBlockAttributes["neutcard.nenefmodl"] =
+      NuHepMC::AsAttribute(neutcard.nenefmodl);
+  CommonBlockAttributes["neutcard.nenefmodh"] =
+      NuHepMC::AsAttribute(neutcard.nenefmodh);
+  CommonBlockAttributes["neutcard.nenefkinh"] =
+      NuHepMC::AsAttribute(neutcard.nenefkinh);
+  CommonBlockAttributes["neutcard.nemodflg"] =
+      NuHepMC::AsAttribute(neutcard.nemodflg);
+  CommonBlockAttributes["neutcard.neselmod"] =
+      NuHepMC::AsAttribute(neutcard.neselmod);
+
+  std::vector<std::remove_reference<decltype(neutcard_.crsneut[0])>::type>
+      crsneut(30);
+  std::copy_n(neutcard.crsneut, 30, crsneut.begin());
+  CommonBlockAttributes["neutcard.crsneut"] = NuHepMC::AsAttribute(crsneut);
+
+  std::vector<std::remove_reference<decltype(neutcard_.crsneutb[0])>::type>
+      crsneutb(30);
+  std::copy_n(neutcard.crsneutb, 30, crsneutb.begin());
+  CommonBlockAttributes["neutcard.crsneutb"] = NuHepMC::AsAttribute(crsneutb);
+
+  CommonBlockAttributes["neutcard.itauflgcore"] =
+      NuHepMC::AsAttribute(neutcard.itauflgcore);
+  CommonBlockAttributes["neutcard.nusim"] =
+      NuHepMC::AsAttribute(neutcard.nusim);
+  CommonBlockAttributes["neutcard.quiet"] =
+      NuHepMC::AsAttribute(neutcard.quiet);
+
+  nuceffver_common const &nuceffver = nuceffver_;
+
+  CommonBlockAttributes["nuceffver.nefkinver"] =
+      NuHepMC::AsAttribute(nuceffver.nefkinver);
+
+  neutdis_common const &neutdis = neutdis_;
+
+  CommonBlockAttributes["neutdis.nepdf"] = NuHepMC::AsAttribute(neutdis.nepdf);
+  CommonBlockAttributes["neutdis.nebodek"] =
+      NuHepMC::AsAttribute(neutdis.nebodek);
+  CommonBlockAttributes["neutdis.nemult"] =
+      NuHepMC::AsAttribute(neutdis.nemult);
+
+  neut1pi_common const &neut1pi = neut1pi_;
+
+  CommonBlockAttributes["neut1pi.xmanffres"] =
+      NuHepMC::AsAttribute(neut1pi.xmanffres);
+  CommonBlockAttributes["neut1pi.xmvnffres"] =
+      NuHepMC::AsAttribute(neut1pi.xmvnffres);
+  CommonBlockAttributes["neut1pi.xmarsres"] =
+      NuHepMC::AsAttribute(neut1pi.xmarsres);
+  CommonBlockAttributes["neut1pi.xmvrsres"] =
+      NuHepMC::AsAttribute(neut1pi.xmvrsres);
+  CommonBlockAttributes["neut1pi.neiff"] = NuHepMC::AsAttribute(neut1pi.neiff);
+  CommonBlockAttributes["neut1pi.nenrtype"] =
+      NuHepMC::AsAttribute(neut1pi.nenrtype);
+  CommonBlockAttributes["neut1pi.rneca5i"] =
+      NuHepMC::AsAttribute(neut1pi.rneca5i);
+  CommonBlockAttributes["neut1pi.rnebgscl"] =
+      NuHepMC::AsAttribute(neut1pi.rnebgscl);
+
+  neutdif_common const &neutdif = neutdif_;
+
+  CommonBlockAttributes["neutdif.nedifpi"] =
+      NuHepMC::AsAttribute(neutdif.nedifpi);
+
+  neutcoh_common const &neutcoh = neutcoh_;
+
+  CommonBlockAttributes["neutcoh.necohepi"] =
+      NuHepMC::AsAttribute(neutcoh.necohepi);
+
+  neutpiabs_common const &neutpiabs = neutpiabs_;
+
+  CommonBlockAttributes["neutpiabs.neabspiemit"] =
+      NuHepMC::AsAttribute(neutpiabs.neabspiemit);
+
+  neutpiless_common const &neutpiless = neutpiless_;
+
+  CommonBlockAttributes["neutpiless.ipilessdcy"] =
+      NuHepMC::AsAttribute(neutpiless.ipilessdcy);
+  CommonBlockAttributes["neutpiless.rpilessdcy"] =
+      NuHepMC::AsAttribute(neutpiless.rpilessdcy);
+
+  neutradcorr_common const &neutradcorr = neutradcorr_;
+
+  CommonBlockAttributes["neutradcorr.iradcorr"] =
+      NuHepMC::AsAttribute(neutradcorr.iradcorr);
+
+  nemdls_common const &nemdls = nemdls_;
+
+  CommonBlockAttributes["nemdls.mdlqe"] = NuHepMC::AsAttribute(nemdls.mdlqe);
+  CommonBlockAttributes["nemdls.mdlspi"] = NuHepMC::AsAttribute(nemdls.mdlspi);
+  CommonBlockAttributes["nemdls.mdldis"] = NuHepMC::AsAttribute(nemdls.mdldis);
+  CommonBlockAttributes["nemdls.mdlcoh"] = NuHepMC::AsAttribute(nemdls.mdlcoh);
+  CommonBlockAttributes["nemdls.mdldif"] = NuHepMC::AsAttribute(nemdls.mdldif);
+  CommonBlockAttributes["nemdls.mdlqeaf"] =
+      NuHepMC::AsAttribute(nemdls.mdlqeaf);
+  CommonBlockAttributes["nemdls.xmaqe"] = NuHepMC::AsAttribute(nemdls.xmaqe);
+  CommonBlockAttributes["nemdls.xmaspi"] = NuHepMC::AsAttribute(nemdls.xmaspi);
+  CommonBlockAttributes["nemdls.xmvqe"] = NuHepMC::AsAttribute(nemdls.xmvqe);
+  CommonBlockAttributes["nemdls.xmvspi"] = NuHepMC::AsAttribute(nemdls.xmvspi);
+  CommonBlockAttributes["nemdls.kapp"] = NuHepMC::AsAttribute(nemdls.kapp);
+  CommonBlockAttributes["nemdls.xmacoh"] = NuHepMC::AsAttribute(nemdls.xmacoh);
+  CommonBlockAttributes["nemdls.rad0nu"] = NuHepMC::AsAttribute(nemdls.rad0nu);
+  CommonBlockAttributes["nemdls.fa1coh"] = NuHepMC::AsAttribute(nemdls.fa1coh);
+  CommonBlockAttributes["nemdls.fb1coh"] = NuHepMC::AsAttribute(nemdls.fb1coh);
+  CommonBlockAttributes["nemdls.iffspi"] = NuHepMC::AsAttribute(nemdls.iffspi);
+  CommonBlockAttributes["nemdls.nrtypespi"] =
+      NuHepMC::AsAttribute(nemdls.nrtypespi);
+  CommonBlockAttributes["nemdls.rca5ispi"] =
+      NuHepMC::AsAttribute(nemdls.rca5ispi);
+  CommonBlockAttributes["nemdls.rbgsclspi"] =
+      NuHepMC::AsAttribute(nemdls.rbgsclspi);
+  CommonBlockAttributes["nemdls.xmares"] = NuHepMC::AsAttribute(nemdls.xmares);
+  CommonBlockAttributes["nemdls.xmvres"] = NuHepMC::AsAttribute(nemdls.xmvres);
+  CommonBlockAttributes["nemdls.sccfv"] = NuHepMC::AsAttribute(nemdls.sccfv);
+  CommonBlockAttributes["nemdls.sccfa"] = NuHepMC::AsAttribute(nemdls.sccfa);
+  CommonBlockAttributes["nemdls.fpqe"] = NuHepMC::AsAttribute(nemdls.fpqe);
+  CommonBlockAttributes["nemdls.pfsf"] = NuHepMC::AsAttribute(nemdls.pfsf);
+  CommonBlockAttributes["nemdls.xmadif"] = NuHepMC::AsAttribute(nemdls.xmadif);
+  CommonBlockAttributes["nemdls.nucvoldif"] =
+      NuHepMC::AsAttribute(nemdls.nucvoldif);
+  CommonBlockAttributes["nemdls.axffalpha"] =
+      NuHepMC::AsAttribute(nemdls.axffalpha);
+  CommonBlockAttributes["nemdls.axffgamma"] =
+      NuHepMC::AsAttribute(nemdls.axffgamma);
+  CommonBlockAttributes["nemdls.axfftheta"] =
+      NuHepMC::AsAttribute(nemdls.axfftheta);
+  CommonBlockAttributes["nemdls.axffbeta"] =
+      NuHepMC::AsAttribute(nemdls.axffbeta);
+  CommonBlockAttributes["nemdls.axzexpq4"] =
+      NuHepMC::AsAttribute(nemdls.axzexpq4);
+  CommonBlockAttributes["nemdls.axzexpnt"] =
+      NuHepMC::AsAttribute(nemdls.axzexpnt);
+  CommonBlockAttributes["nemdls.axzexpt0"] =
+      NuHepMC::AsAttribute(nemdls.axzexpt0);
+  CommonBlockAttributes["nemdls.axzexptc"] =
+      NuHepMC::AsAttribute(nemdls.axzexptc);
+  CommonBlockAttributes["nemdls.axzexpa0"] =
+      NuHepMC::AsAttribute(nemdls.axzexpa0);
+  CommonBlockAttributes["nemdls.axzexpa1"] =
+      NuHepMC::AsAttribute(nemdls.axzexpa1);
+  CommonBlockAttributes["nemdls.axzexpa2"] =
+      NuHepMC::AsAttribute(nemdls.axzexpa2);
+  CommonBlockAttributes["nemdls.axzexpa3"] =
+      NuHepMC::AsAttribute(nemdls.axzexpa3);
+  CommonBlockAttributes["nemdls.axzexpa4"] =
+      NuHepMC::AsAttribute(nemdls.axzexpa4);
+  CommonBlockAttributes["nemdls.axzexpa5"] =
+      NuHepMC::AsAttribute(nemdls.axzexpa5);
+  CommonBlockAttributes["nemdls.axzexpa6"] =
+      NuHepMC::AsAttribute(nemdls.axzexpa6);
+  CommonBlockAttributes["nemdls.axzexpa7"] =
+      NuHepMC::AsAttribute(nemdls.axzexpa7);
+  CommonBlockAttributes["nemdls.axzexpa8"] =
+      NuHepMC::AsAttribute(nemdls.axzexpa8);
+  CommonBlockAttributes["nemdls.axzexpa9"] =
+      NuHepMC::AsAttribute(nemdls.axzexpa9);
+  CommonBlockAttributes["nemdls.mdl2p2h"] =
+      NuHepMC::AsAttribute(nemdls.mdl2p2h);
+  CommonBlockAttributes["nemdls.xmancel"] =
+      NuHepMC::AsAttribute(nemdls.xmancel);
+
+  nenupr_common const &nenupr = nenupr_;
+
+  CommonBlockAttributes["nenupr.iformlen"] =
+      NuHepMC::AsAttribute(nenupr.iformlen);
+  CommonBlockAttributes["nenupr.fzmu2"] = NuHepMC::AsAttribute(nenupr.fzmu2);
+  CommonBlockAttributes["nenupr.sfebshift"] =
+      NuHepMC::AsAttribute(nenupr.sfebshift);
+
+  neffpr_common const &neffpr = neffpr_;
+
+  CommonBlockAttributes["neffpr.fefqe"] = NuHepMC::AsAttribute(neffpr.fefqe);
+  CommonBlockAttributes["neffpr.fefqeh"] = NuHepMC::AsAttribute(neffpr.fefqeh);
+  CommonBlockAttributes["neffpr.fefinel"] =
+      NuHepMC::AsAttribute(neffpr.fefinel);
+  CommonBlockAttributes["neffpr.fefabs"] = NuHepMC::AsAttribute(neffpr.fefabs);
+  CommonBlockAttributes["neffpr.fefcoh"] = NuHepMC::AsAttribute(neffpr.fefcoh);
+  CommonBlockAttributes["neffpr.fefqehf"] =
+      NuHepMC::AsAttribute(neffpr.fefqehf);
+  CommonBlockAttributes["neffpr.fefcohf"] =
+      NuHepMC::AsAttribute(neffpr.fefcohf);
+  CommonBlockAttributes["neffpr.fefcx"] = NuHepMC::AsAttribute(neffpr.fefcx);
+  CommonBlockAttributes["neffpr.fefcxhf"] =
+      NuHepMC::AsAttribute(neffpr.fefcxhf);
+  CommonBlockAttributes["neffpr.fefcxh"] = NuHepMC::AsAttribute(neffpr.fefcxh);
+  CommonBlockAttributes["neffpr.fefcoul"] =
+      NuHepMC::AsAttribute(neffpr.fefcoul);
+  CommonBlockAttributes["neffpr.fefall"] = NuHepMC::AsAttribute(neffpr.fefall);
+
+  return CommonBlockAttributes;
+}
+
+void CommonBlockIFace::Initialize(
+    std::shared_ptr<HepMC3::GenRunInfo const> gri) {
+  if (!gCommonBlockIFace) {
+    gCommonBlockIFace = new CommonBlockIFace();
+    ReadGenRunInfo(gri);
+
+    // Copy common blocks
+    gCommonBlockIFace->fneutcard_gen = neutcard_;
+    gCommonBlockIFace->fnuceffver_gen = nuceffver_;
+    gCommonBlockIFace->fneutdis_gen = neutdis_;
+    gCommonBlockIFace->fneut1pi_gen = neut1pi_;
+    gCommonBlockIFace->fneutdif_gen = neutdif_;
+    gCommonBlockIFace->fneutcoh_gen = neutcoh_;
+    gCommonBlockIFace->fneutpiabs_gen = neutpiabs_;
+    gCommonBlockIFace->fneutpiless_gen = neutpiless_;
+    gCommonBlockIFace->fneutradcorr_gen = neutradcorr_;
+    gCommonBlockIFace->fnemdls_gen = nemdls_;
+    gCommonBlockIFace->fnenupr_gen = nenupr_;
+    gCommonBlockIFace->fneffpr_gen = neffpr_;
+  }
+}
+void CommonBlockIFace::ReadEvent(std::shared_ptr<HepMC3::GenEvent> evt) {
+  ReadNuHepMCEvent(evt);
 }
 
 } // namespace neut
