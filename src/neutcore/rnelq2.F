@@ -67,7 +67,7 @@ C
          DO 30 I=2,50
             DBQ2=EQ2MIN+FLOAT(ILAST)*DQ2+FLOAT(I)*DQ2*0.02
             SIGMA=DNELSQ2(DBE,IPAR,DBQ2)
-           write(6,*) i,dbq2,sigma
+C           write(6,*) i,dbq2,sigma
             IF(SIGMA.GT.BMAX) BMAX=SIGMA
             IF (SIGMA.LT.BLAST) GOTO 100
             BLAST=SIGMA

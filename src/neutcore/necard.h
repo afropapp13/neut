@@ -139,13 +139,9 @@ C
       INTEGER NEIFF,   NENRTYPE
       REAL    RNECA5I, RNEBGSCL
       REAL    XMANFFRES,XMVNFFRES,XMARSRES,XMVRSRES
-C     Temp CWRET
-C     REAL q2_com,w_com,enu_com,costh_com,phi_com
-C     real ppirs(4)
+
       COMMON/NEUT1PI/XMANFFRES,XMVNFFRES,XMARSRES,XMVRSRES,
      $               NEIFF,NENRTYPE,RNECA5I,RNEBGSCL
-C    $               q2_com,w_com,enu_com,costh_com,phi_com,
-C    $               ppirs
 
       INTEGER NEDIFPI
       COMMON/NEUTDIF/NEDIFPI
