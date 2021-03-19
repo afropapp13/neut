@@ -68,8 +68,10 @@ C
       REAL W2,X,QV,QV2,QVS,QVS2,A,ES
       REAL U,V,U2,V2,AK
       REAL FAKT,FRP1,FRP3,FRM1,FRM3,FR0P,FR0M,FIP1,FIP3,FIM1
-C      REAL FIM3,FI0M,FI0P,BR,FBW,FBWNO,ETA,XE,RV,FFV,R,TA,FFA,T
       REAL FIM3,FI0M,FI0P,BR,FBW,FBWNO,XE,RV,FFV,R,TA,FFA,T
+C     Aux variables to speed up calculation (don't need to recalculate
+C     for ever resonance)
+      REAL FFVaux, FFAaux
       REAL TV,RA,RP,RM,TP,TM,S,B,C,FM3C,FP3C,FM1C,FP1C,F0PC
       REAL F0MC,FM3,FP3,FM1,FP1,F0P,F0M,XXE,RAD,PQ,PQR,RADR,BRA
       REAL CO,SL,SR,SS,SL1,SR1,SS1,SL0,SR0,SS0,DSI,DSI1,DSI0
@@ -383,9 +385,9 @@ C     CWRET: there is already a check for this in rsdt33.F
       AK = (W2-XMN2)/(2.*XMN)
       FAKT = W*PI/(W2-XMN2)
 
+      XMLEP2 = XMLEP**2
 C     ---------------------------
 C     --- Lepton mass effects ---
-      XMLEP2 = XMLEP**2
 
 C     Lepton energy
       El = E+XMN-(XMN2+W**2-q2)/(2*XMN)
@@ -401,12 +403,8 @@ C     inaccuracy
 C     Putting the accuracy at 1E-5: if between -1E-5 and +1E-5, set
 C     lepton momentum to zero
       IF (El**2 - XMLEP2 .LT. -1*RS_SMNO) THEN
-c        write(*,*) "Bad lepton momentum, invalid event"
-c        write(*,*) "plep2 = ", el**2 - xmlep2
          GOTO 999
       ELSE IF (El**2 - XMLEP2 .LE. 1*RS_SMNO) THEN
-c        write(*,*) "Modified plep to 1E-5"
-c        write(*,*) el**2-xmlep2
          Plep = RS_SMNO
       ELSE
          Plep = SQRT(El**2-XMLEP2)
@@ -484,6 +482,60 @@ C     SUMMATION OVER RESONANCES
       FI0P = 0.
       FI0M = 0.
 
+C     Move some of the form factor calculations outside the IB block to
+C     avoid recalculating unnecessarily
+C     **********************************
+C     FORMFACTORS AND RELATED QUANTITIES
+C     If using Graczyk Sobczyk form factors
+      if (IFFSPI.ne.0) then
+
+C       K.M. Graczyk and J.T. Sobczyk, Phys.Rev.D 77,053001 (2008)
+C       Equations are correction in erratum
+C       CA5(0) and XMA are set by user
+
+         CA5=   RCA5ISPI/((1-Q2/XMASPI2)**2)
+
+C     J.A. Nowak, arXiv:0909.3659
+C     Vector Form Factors
+C     CV1, CV2 are for simplicity, not true form factors
+C     Added the proportional factors of the vector form factors GV
+C     to CV3,CV4,CV5
+
+C     (PAR) Yargh, the variable Q2 here has a minus sign relative to
+C     Q2 in the Nowak/Graczyk & Sobczyk papers
+
+C     CHANGE HERE FOR NEW FORM FACTORS?
+C     arxiv:1407.5445v1
+
+         CV1=  1./((1.-Q2/(4.*XMVSPI2))
+     $           * ((1.-Q2/XMVSPI2)**2))
+         CV2=  1./((1.-Q2/(4.*XMVSPI2))
+     $           * ((1.-Q2/(0.766*XMVSPI2))**2))
+         CV3A= 2.13*CV1*((W+XMN)/XMN)
+         CV3B= 2.13*CV1*((XMN2-Q2+XMN*W)/(XMN*W))
+         CV4= -1.51*CV1*((W2+Q2-XMN2)/(2.*XMN2))
+         CV5=  0.48*CV2*((W2-Q2-XMN2)/(2.*XMN2))
+
+         GV3=  (.5/SQRT(3.))*(CV4+CV5+CV3A)
+         GV1=  (-.5/SQRT(3.))*(CV4+CV5-CV3B)
+
+         NFF=  SQRT((3.*(GV3)**2)+GV1**2)
+
+         FFVaux = 0.5 * (1 - Q2/(XMN+W)**2)**0.5
+     &           * NFF
+
+         FFAaux = 0.5 * SQRT(3.0) * (1 - Q2/(XMN+W)**2)**0.5
+     &           * (1 - (W2 + Q2 - XMN2)/(8*XMN2))
+     &           * CA5 / Z
+      endif
+
+C     Can also precalculate these as they don't depend on resonance
+C     Changed from RAD and RADR = 0.0001 to 1E-7
+      RAD =((W2-XMN2-XMPI2)**2-4.*XMN2*XMPI2)/(4.*W2)
+C     Need .LE. 0 because we divide by SQRT(RADR)
+      IF(RAD .LE. 0.) RAD = RS_SMNO
+      PQ = SQRT(RAD)
+
 C     loop over all the isospin in resonances
       DO 60  IB = 1,31
 
@@ -507,59 +559,18 @@ C         ETA = ETAA(IB)
          XE = XEE(IB)
          IP = IPP(IB)
 
-C     **********************************
-
-C     FORMFACTORS AND RELATED QUANTITIES
-C        If using Graczyk Sobczyk form factors
          if (IFFSPI.ne.0) then
-
-C       K.M. Graczyk and J.T. Sobczyk, Phys.Rev.D 77,053001 (2008)
-C       Equations are correction in erratum
-C       CA5(0) and XMA are set by user
-
-            CA5=   RCA5ISPI/((1-Q2/XMASPI2)**2)
-
-C     J.A. Nowak, arXiv:0909.3659
-C     Vector Form Factors
-C     CV1, CV2 are for simplicity, not true form factors
-C     Added the proportional factors of the vector form factors GV
-C     to CV3,CV4,CV5
-
-C     (PAR) Yargh, the variable Q2 here has a minus sign relative to
-C     Q2 in the Nowak/Graczyk & Sobczyk papers
-
-C     CHANGE HERE FOR NEW FORM FACTORS?
-C     arxiv:1407.5445v1
-
-            CV1=  1./((1.-Q2/(4.*XMVSPI2))
-     $           * ((1.-Q2/XMVSPI2)**2))
-            CV2=  1./((1.-Q2/(4.*XMVSPI2))
-     $           * ((1.-Q2/(0.766*XMVSPI2))**2))
-            CV3A= 2.13*CV1*((W+XMN)/XMN)
-            CV3B= 2.13*CV1*((XMN2-Q2+XMN*W)/(XMN*W))
-            CV4= -1.51*CV1*((W2+Q2-XMN2)/(2.*XMN2))
-            CV5=  0.48*CV2*((W2-Q2-XMN2)/(2.*XMN2))
-
-            GV3=  (.5/SQRT(3.))*(CV4+CV5+CV3A)
-            GV1=  (-.5/SQRT(3.))*(CV4+CV5-CV3B)
-
-            NFF=  SQRT((3.*(GV3)**2)+GV1**2)
 
 C     Note, J.A. Nowak has different form factors that those quoted
 C     in G&S (eq. 58). G&S seems to match previous MC better
 
 C     Neutrino-production
-            FFV = 0.5 * (1 - Q2/(XMN+W)**2)**0.5
-     &           * (1 - Q2/(4*XMN2))**(-1*NR)
-     &           * NFF
+            FFV = FFVaux*(1 - Q2/(4*XMN2))**(-1*NR)
 
 C     Axial. Divide by Z, the arbitrary Rein-Sehgal factor, because
 C     we multiply by it later
 
-            FFA = 0.5 * SQRT(3.0) * (1 - Q2/(XMN+W)**2)**0.5
-     &           * (1 - Q2/(4*XMN2))**(-1*NR)
-     &           * (1 - (W2 + Q2 - XMN2)/(8*XMN2))
-     &           * CA5 / Z
+            FFA = FFAaux * (1 - Q2/(4*XMN2))**(-1*NR)
 
 C     Rein-Seghal form factors
 C     Difference between Rein-Seghal form factors are shown in
@@ -667,13 +678,6 @@ C     Now store the resonance ampltiudes
 
          XXE = SQRT(XE)
 
-C        Changed from RAD and RADR = 0.0001 to 1E-7
-         RAD =((W2-XMN2-XMPI2)**2-4.*XMN2*XMPI2)/(4.*W2)
-C        Need .LE. 0 because we divide by SQRT(RADR)
-C        CWRET changed here from .LE. 0, RAD = 1E-7, used to be IF(RAD
-C        .LT. 0) GOTO 999
-         IF(RAD .LE. 0.) RAD = RS_SMNO
-         PQ = SQRT(RAD)
          RADR = ((XMR**2-XMN2-XMPI2)**2-4.*XMN2*XMPI2)/(4.*XMR**2)
          IF(RADR .LE. 0) RADR = RS_SMNO
          PQR = SQRT(RADR)
@@ -865,7 +869,6 @@ C     1.321 is G_F/(4pi^2)*Cabbibo cos^2 and convert from GeV-1 to cm^1
 
  999  CONTINUE
 C     BAD EVENTS END HERE
-C     write(*,*) "Weird event, setting xsec = 0" 
       DSI = -0
       DSI0 = -0
       GOTO 100
