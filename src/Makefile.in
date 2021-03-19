@@ -89,7 +89,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-@NEUT_LIBCOMPAT_TRUE@@NEUT_USE_TAUOLA_TRUE@am__append_1 = $(top_builddir)/tauola/lib@LIBPREFIX@tauola.@NEUT_VERSION_NUM@.a
+@NEUT_USE_TAUOLA_TRUE@am__append_1 = $(top_builddir)/tauola/lib@LIBPREFIX@tauola.@NEUT_VERSION_NUM@.a
 @NEUT_USE_TAUOLA_TRUE@am__append_2 = -DNEUT_USE_TAUOLA
 @NEUT_USE_GPERF_TRUE@am__append_3 = -DNEUT_USE_GPERF
 @NEUT_DEBUG_TRUE@am__append_4 = -O0 -g
@@ -103,7 +103,6 @@ host_triplet = @host@
 @FC_COMMON_TRUE@am__append_12 = -Wl,--allow-multiple-definition
 @FC_HAS_PIE_TRUE@am__append_13 = -no-pie
 @NEUT_USE_GPERF_TRUE@am__append_14 = -L@NEUT_GPERF@ -lprofiler
-@NEUT_LIBCOMPAT_FALSE@@NEUT_USE_TAUOLA_TRUE@am__append_15 = $(top_builddir)/tauola/*.o
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
@@ -426,6 +425,8 @@ ACLOCAL_AMFLAGS = -I m4
 NEUT_INCLUDES = -I$(top_srcdir)/radcorr -I$(top_srcdir)/tauola -I$(top_srcdir)/mec -I$(top_srcdir)/ht2p2h/inc -I$(top_srcdir)/nuccorspl -I$(top_srcdir)/zbsfns -I$(top_srcdir)/n1p1h/inc -I$(top_srcdir)/nuceff -I$(top_srcdir)/kamflux -I$(top_srcdir)/nuclsmpl -I$(top_srcdir)/skmcsvc -I$(top_srcdir)/neutcore -I$(top_srcdir)/partnuck -I$(top_srcdir)/specfunc -I$(top_srcdir)/t2kflux_zbs -I$(top_builddir)/neutcore -I$(top_builddir)/skmcsvc -I$(top_builddir)/n1p1h -I$(top_builddir)/nuccorspl -I$(top_builddir)/nuceff
 NEUT_CLASS_INCLUDES = -I$(top_srcdir)/neutclass
 NEUT_STATIC_LIBS = $(top_builddir)/neutcore/lib@LIBPREFIX@neutcore.@NEUT_VERSION_NUM@.a \
+	$(top_builddir)/neutcore/lib@LIBPREFIX@CERNOverride.a \
+	$(top_builddir)/mec/lib@LIBPREFIX@neutmec.@NEUT_VERSION_NUM@.a \
 	$(top_builddir)/n1p1h/lib@LIBPREFIX@n1p1h.@NEUT_VERSION_NUM@.a \
 	$(top_builddir)/ht2p2h/lib@LIBPREFIX@ht2p2h.@NEUT_VERSION_NUM@.a \
 	$(top_builddir)/nuccorspl/lib@LIBPREFIX@nuccorspl.@NEUT_VERSION_NUM@.a \
@@ -436,7 +437,7 @@ NEUT_STATIC_LIBS = $(top_builddir)/neutcore/lib@LIBPREFIX@neutcore.@NEUT_VERSION
 	$(top_builddir)/partnuck/lib@LIBPREFIX@partnuck.@NEUT_VERSION_NUM@.a \
 	$(am__append_1)
 @NEUT_LIBCOMPAT_TRUE@NEUTCLASS_LIBS = $(top_builddir)/neutclass/libneutrootTreeSingleton.la $(top_builddir)/neutclass/libneutctrl.la $(top_builddir)/neutclass/libneutfsipart.la $(top_builddir)/neutclass/libneutfsivert.la $(top_builddir)/neutclass/libneutnucfsistep.la $(top_builddir)/neutclass/libneutnucfsivert.la $(top_builddir)/neutclass/libneutpart.la $(top_builddir)/neutclass/libneutvect.la $(top_builddir)/neutclass/libneutvtx.la
-@NEUT_LIBCOMPAT_FALSE@NEUT_LIBS = $(top_builddir)/neutclass/libNEUTClassUtils.@NEUT_VERSION_NUM@.a $(top_builddir)/neutclass/libNEUTClass.la $(top_builddir)/libNEUT.@NEUT_VERSION_NUM@.a
+@NEUT_LIBCOMPAT_FALSE@NEUT_LIBS = $(top_builddir)/neutclass/libNEUTClassUtils.@NEUT_VERSION_NUM@.a $(top_builddir)/neutclass/libNEUTClass.la $(top_builddir)/libNEUT.@NEUT_VERSION_NUM@.a 
 @NEUT_LIBCOMPAT_TRUE@NEUT_LIBS = $(NEUTCLASS_LIBS) $(NEUT_STATIC_LIBS)
 CERN_ROOT = $(CERN)/$(CERN_LEVEL)
 CERN_LINKFLAGS = -L$(CERN_ROOT)/lib
@@ -487,17 +488,6 @@ ZEBRA_SUBDIRS = zbsfns
 @NEUT_LIBCOMPAT_FALSE@LIBNAME = libNEUT.@NEUT_VERSION_NUM@.a
 @NEUT_LIBCOMPAT_FALSE@lib_LIBRARIES = $(LIBNAME)
 @NEUT_LIBCOMPAT_FALSE@libNEUT_@NEUT_VERSION_NUM@_a_SOURCES = 
-@NEUT_LIBCOMPAT_FALSE@ALLCOREOBJS = $(top_builddir)/nuccorspl/*.o \
-@NEUT_LIBCOMPAT_FALSE@	$(top_builddir)/nuceff/*.o \
-@NEUT_LIBCOMPAT_FALSE@	$(top_builddir)/radcorr/*.o $ \
-@NEUT_LIBCOMPAT_FALSE@	$(top_builddir)/specfunc/*.o \
-@NEUT_LIBCOMPAT_FALSE@	$(top_builddir)/skmcsvc/*.o \
-@NEUT_LIBCOMPAT_FALSE@	$(top_builddir)/partnuck/*.o \
-@NEUT_LIBCOMPAT_FALSE@	$(top_builddir)/neutcore/*.o \
-@NEUT_LIBCOMPAT_FALSE@	$(top_builddir)/mec/*.o \
-@NEUT_LIBCOMPAT_FALSE@	$(top_builddir)/n1p1h/src/*.o \
-@NEUT_LIBCOMPAT_FALSE@	$(top_builddir)/ht2p2h/src/*.o \
-@NEUT_LIBCOMPAT_FALSE@	$(am__append_15)
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 
@@ -1066,7 +1056,8 @@ neutcore/neutmodelC.h: neutcore/neutmodel.h n1p1h/nieves1p1hC.h
 	$(top_srcdir)/tools/fh2h.pl $< > $@
 
 @NEUT_LIBCOMPAT_FALSE@$(LIBNAME): $(NEUT_STATIC_LIBS)
-@NEUT_LIBCOMPAT_FALSE@	$(AR) -rs $@ $(ALLCOREOBJS)
+@NEUT_LIBCOMPAT_FALSE@	$(LD) -r -o neut.o --whole-archive --start-group $(NEUT_STATIC_LIBS) --end-group
+@NEUT_LIBCOMPAT_FALSE@	$(AR) -rs $@ neut.o
 
 @NEUT_LIBCOMPAT_FALSE@install-exec-hook:
 @NEUT_LIBCOMPAT_FALSE@	-(cd ${libdir}; $(LN_S) $(LIBNAME) $(shell echo $(LIBNAME) | cut -d . -f 1).a)

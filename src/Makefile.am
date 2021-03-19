@@ -46,14 +46,9 @@ lib_LIBRARIES = $(LIBNAME)
 
 libNEUT_@NEUT_VERSION_NUM@_a_SOURCES =
 
-ALLCOREOBJS = $(top_builddir)/nuccorspl/*.o $(top_builddir)/nuceff/*.o $(top_builddir)/radcorr/*.o $ $(top_builddir)/specfunc/*.o $(top_builddir)/skmcsvc/*.o $(top_builddir)/partnuck/*.o $(top_builddir)/neutcore/*.o $(top_builddir)/mec/*.o $(top_builddir)/n1p1h/src/*.o $(top_builddir)/ht2p2h/src/*.o
-
-if NEUT_USE_TAUOLA
-ALLCOREOBJS += $(top_builddir)/tauola/*.o
-endif
-
 $(LIBNAME): $(NEUT_STATIC_LIBS)
-	$(AR) -rs $@ $(ALLCOREOBJS)
+	$(LD) -r -o neut.o --whole-archive --start-group $(NEUT_STATIC_LIBS) --end-group
+	$(AR) -rs $@ neut.o
 
 install-exec-hook:
 	-(cd ${libdir}; $(LN_S) $(LIBNAME) $(shell echo $(LIBNAME) | cut -d . -f 1).a)

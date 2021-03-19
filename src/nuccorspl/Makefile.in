@@ -88,7 +88,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-@NEUT_LIBCOMPAT_TRUE@@NEUT_USE_TAUOLA_TRUE@am__append_1 = $(top_builddir)/tauola/lib@LIBPREFIX@tauola.@NEUT_VERSION_NUM@.a
+@NEUT_USE_TAUOLA_TRUE@am__append_1 = $(top_builddir)/tauola/lib@LIBPREFIX@tauola.@NEUT_VERSION_NUM@.a
 @NEUT_USE_TAUOLA_TRUE@am__append_2 = -DNEUT_USE_TAUOLA
 @NEUT_USE_GPERF_TRUE@am__append_3 = -DNEUT_USE_GPERF
 @NEUT_DEBUG_TRUE@am__append_4 = -O0 -g
@@ -102,6 +102,7 @@ host_triplet = @host@
 @FC_COMMON_TRUE@am__append_12 = -Wl,--allow-multiple-definition
 @FC_HAS_PIE_TRUE@am__append_13 = -no-pie
 @NEUT_USE_GPERF_TRUE@am__append_14 = -L@NEUT_GPERF@ -lprofiler
+@NEUT_USE_ZBS_TRUE@am__append_15 = vcmkvcbf.F nrsetxpos.F
 subdir = nuccorspl
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
@@ -150,17 +151,24 @@ am__v_AR_0 = @echo "  AR      " $@;
 am__v_AR_1 = 
 lib@LIBPREFIX@nuccorspl_@NEUT_VERSION_NUM@_a_AR = $(AR) $(ARFLAGS)
 lib@LIBPREFIX@nuccorspl_@NEUT_VERSION_NUM@_a_LIBADD =
+am__lib@LIBPREFIX@nuccorspl_@NEUT_VERSION_NUM@_a_SOURCES_DIST =  \
+	nr2iso.F nrcst.F nrhis.F nrllor.F nrprton.F nrstp.F nrazio.F \
+	nrctpnh.F nrinit.F nrloren.F nrranve.F nrcard.F nrctpnl.F \
+	nrintr.F nrnuc.F nrrodis.F nrcfd.F nrctpp.F nrkin.F nrprbin.F \
+	nrroxy.F wgproton.F nrcone.F nrfermi.F nrlibver.F nrprd.F \
+	vcmkvcbf.F nrsetxpos.F
+@NEUT_USE_ZBS_TRUE@am__objects_1 = vcmkvcbf.$(OBJEXT) \
+@NEUT_USE_ZBS_TRUE@	nrsetxpos.$(OBJEXT)
 am_lib@LIBPREFIX@nuccorspl_@NEUT_VERSION_NUM@_a_OBJECTS =  \
 	nr2iso.$(OBJEXT) nrcst.$(OBJEXT) nrhis.$(OBJEXT) \
 	nrllor.$(OBJEXT) nrprton.$(OBJEXT) nrstp.$(OBJEXT) \
 	nrazio.$(OBJEXT) nrctpnh.$(OBJEXT) nrinit.$(OBJEXT) \
 	nrloren.$(OBJEXT) nrranve.$(OBJEXT) nrcard.$(OBJEXT) \
 	nrctpnl.$(OBJEXT) nrintr.$(OBJEXT) nrnuc.$(OBJEXT) \
-	nrrodis.$(OBJEXT) vcmkvcbf.$(OBJEXT) nrcfd.$(OBJEXT) \
-	nrctpp.$(OBJEXT) nrkin.$(OBJEXT) nrprbin.$(OBJEXT) \
-	nrroxy.$(OBJEXT) wgproton.$(OBJEXT) nrcone.$(OBJEXT) \
-	nrfermi.$(OBJEXT) nrlibver.$(OBJEXT) nrprd.$(OBJEXT) \
-	nrsetxpos.$(OBJEXT)
+	nrrodis.$(OBJEXT) nrcfd.$(OBJEXT) nrctpp.$(OBJEXT) \
+	nrkin.$(OBJEXT) nrprbin.$(OBJEXT) nrroxy.$(OBJEXT) \
+	wgproton.$(OBJEXT) nrcone.$(OBJEXT) nrfermi.$(OBJEXT) \
+	nrlibver.$(OBJEXT) nrprd.$(OBJEXT) $(am__objects_1)
 lib@LIBPREFIX@nuccorspl_@NEUT_VERSION_NUM@_a_OBJECTS =  \
 	$(am_lib@LIBPREFIX@nuccorspl_@NEUT_VERSION_NUM@_a_OBJECTS)
 AM_V_P = $(am__v_P_@AM_V@)
@@ -199,8 +207,7 @@ am__v_F77LD_ = $(am__v_F77LD_@AM_DEFAULT_V@)
 am__v_F77LD_0 = @echo "  F77LD   " $@;
 am__v_F77LD_1 = 
 SOURCES = $(lib@LIBPREFIX@nuccorspl_@NEUT_VERSION_NUM@_a_SOURCES)
-DIST_SOURCES =  \
-	$(lib@LIBPREFIX@nuccorspl_@NEUT_VERSION_NUM@_a_SOURCES)
+DIST_SOURCES = $(am__lib@LIBPREFIX@nuccorspl_@NEUT_VERSION_NUM@_a_SOURCES_DIST)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -351,6 +358,8 @@ ACLOCAL_AMFLAGS = -I m4
 NEUT_INCLUDES = -I$(top_srcdir)/radcorr -I$(top_srcdir)/tauola -I$(top_srcdir)/mec -I$(top_srcdir)/ht2p2h/inc -I$(top_srcdir)/nuccorspl -I$(top_srcdir)/zbsfns -I$(top_srcdir)/n1p1h/inc -I$(top_srcdir)/nuceff -I$(top_srcdir)/kamflux -I$(top_srcdir)/nuclsmpl -I$(top_srcdir)/skmcsvc -I$(top_srcdir)/neutcore -I$(top_srcdir)/partnuck -I$(top_srcdir)/specfunc -I$(top_srcdir)/t2kflux_zbs -I$(top_builddir)/neutcore -I$(top_builddir)/skmcsvc -I$(top_builddir)/n1p1h -I$(top_builddir)/nuccorspl -I$(top_builddir)/nuceff
 NEUT_CLASS_INCLUDES = -I$(top_srcdir)/neutclass
 NEUT_STATIC_LIBS = $(top_builddir)/neutcore/lib@LIBPREFIX@neutcore.@NEUT_VERSION_NUM@.a \
+	$(top_builddir)/neutcore/lib@LIBPREFIX@CERNOverride.a \
+	$(top_builddir)/mec/lib@LIBPREFIX@neutmec.@NEUT_VERSION_NUM@.a \
 	$(top_builddir)/n1p1h/lib@LIBPREFIX@n1p1h.@NEUT_VERSION_NUM@.a \
 	$(top_builddir)/ht2p2h/lib@LIBPREFIX@ht2p2h.@NEUT_VERSION_NUM@.a \
 	$(top_builddir)/nuccorspl/lib@LIBPREFIX@nuccorspl.@NEUT_VERSION_NUM@.a \
@@ -361,7 +370,7 @@ NEUT_STATIC_LIBS = $(top_builddir)/neutcore/lib@LIBPREFIX@neutcore.@NEUT_VERSION
 	$(top_builddir)/partnuck/lib@LIBPREFIX@partnuck.@NEUT_VERSION_NUM@.a \
 	$(am__append_1)
 @NEUT_LIBCOMPAT_TRUE@NEUTCLASS_LIBS = $(top_builddir)/neutclass/libneutrootTreeSingleton.la $(top_builddir)/neutclass/libneutctrl.la $(top_builddir)/neutclass/libneutfsipart.la $(top_builddir)/neutclass/libneutfsivert.la $(top_builddir)/neutclass/libneutnucfsistep.la $(top_builddir)/neutclass/libneutnucfsivert.la $(top_builddir)/neutclass/libneutpart.la $(top_builddir)/neutclass/libneutvect.la $(top_builddir)/neutclass/libneutvtx.la
-@NEUT_LIBCOMPAT_FALSE@NEUT_LIBS = $(top_builddir)/neutclass/libNEUTClassUtils.@NEUT_VERSION_NUM@.a $(top_builddir)/neutclass/libNEUTClass.la $(top_builddir)/libNEUT.@NEUT_VERSION_NUM@.a
+@NEUT_LIBCOMPAT_FALSE@NEUT_LIBS = $(top_builddir)/neutclass/libNEUTClassUtils.@NEUT_VERSION_NUM@.a $(top_builddir)/neutclass/libNEUTClass.la $(top_builddir)/libNEUT.@NEUT_VERSION_NUM@.a 
 @NEUT_LIBCOMPAT_TRUE@NEUT_LIBS = $(NEUTCLASS_LIBS) $(NEUT_STATIC_LIBS)
 CERN_ROOT = $(CERN)/$(CERN_LEVEL)
 CERN_LINKFLAGS = -L$(CERN_ROOT)/lib
@@ -388,7 +397,12 @@ AM_FFLAGS = -DNENUCC_VERSION=@NEUT_VERSION_NUM@ $(DEFAULT_FFLAGS)
 LIBNAME = lib@LIBPREFIX@nuccorspl.@NEUT_VERSION_NUM@.a
 @NEUT_LIBCOMPAT_TRUE@lib_LIBRARIES = $(LIBNAME)
 @NEUT_LIBCOMPAT_FALSE@noinst_LIBRARIES = $(LIBNAME)
-lib@LIBPREFIX@nuccorspl_@NEUT_VERSION_NUM@_a_SOURCES = nr2iso.F nrcst.F nrhis.F nrllor.F nrprton.F nrstp.F nrazio.F nrctpnh.F nrinit.F nrloren.F nrranve.F nrcard.F nrctpnl.F nrintr.F nrnuc.F nrrodis.F vcmkvcbf.F nrcfd.F nrctpp.F nrkin.F nrprbin.F nrroxy.F wgproton.F nrcone.F nrfermi.F nrlibver.F nrprd.F nrsetxpos.F
+lib@LIBPREFIX@nuccorspl_@NEUT_VERSION_NUM@_a_SOURCES = nr2iso.F \
+	nrcst.F nrhis.F nrllor.F nrprton.F nrstp.F nrazio.F nrctpnh.F \
+	nrinit.F nrloren.F nrranve.F nrcard.F nrctpnl.F nrintr.F \
+	nrnuc.F nrrodis.F nrcfd.F nrctpp.F nrkin.F nrprbin.F nrroxy.F \
+	wgproton.F nrcone.F nrfermi.F nrlibver.F nrprd.F \
+	$(am__append_15)
 
 # Unused sources that live in the directory
 UNUSED_srcs = proton_nuceff.F

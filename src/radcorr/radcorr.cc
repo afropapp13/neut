@@ -91,7 +91,7 @@ struct radcorr_inputs {
   double GetProb(double enu, int pdglep, double thetalep) {
     int is_ele = (pdglep == 11);
 
-    if (enu < egamma_knots.front()) {
+    if (enu < egamma_knots[0]) {
       return 0;
     }
 
@@ -136,7 +136,7 @@ struct radcorr_inputs {
 
     int is_ele = (pdglep == 11);
 
-    if (enu < egamma_knots.front()) {
+    if (enu < egamma_knots[0]) {
       std::cout << "[ERROR]: Attempted to get radiative EGamma distribution "
                    "for neutrino of energy: "
                 << enu << " GeV." << std::endl;
@@ -145,7 +145,7 @@ struct radcorr_inputs {
 
     TGraph EGamma_dist;
     double acc_rej_ceiling = 0;
-    for (int i = 0; i < egamma_knots.size(); ++i) {
+    for (int i = 0; i < negamma_knots; ++i) {
       double prob =
           colinear_Egamma_prob[is_ele][i]->Interpolate(enu, cos(thetalep));
       if (prob < 0) { // Need to extrapolate out
@@ -222,7 +222,7 @@ struct radcorr_inputs {
         abort();
       }
 
-      for (int i = 0; i < egamma_knots.size(); ++i) {
+      for (int i = 0; i < negamma_knots; ++i) {
         ss.str("");
         ss << (is_ele ? "electron" : "muon") << "_colinear_gamma_prob_"
            << egamma_knots[i] << "_GeV";
