@@ -37,7 +37,8 @@
       REAL*4    XINPPR(3),RETPMU(3),RETPPI(3),RETPPR(3)
       INTEGER*4 IERR
 
-#include<rscons.h>
+#include "neutmodel.h"
+#include "rscons.h"
 
       REAL*4    XPNU
       REAL*4    DINPPR(3),XINPNU(3)
@@ -82,6 +83,7 @@ C---initialize valiables
       ENDIF
       GAMMA = 1./SQRT(1.- GAMMA)
 
+C     Boost to nucleon frame
       CALL MCVECBST(XINPNU,0.000,DINPPR,GAMMA)
       XPNU  = SQRT(XINPNU(1)**2 + XINPNU(2)**2 + XINPNU(3)**2)
 C
@@ -100,11 +102,25 @@ C
         SINPHI=0.00000
       ENDIF
 
-      CALL RSDT33(IMODE,INLEP,XPNU,TMPPMU,TMPPPI,TMPPPR,IERR)
-      if (ierr.ne.0) then
-         return
-      endif
+C     Get the outgoing kinematics from Rein-Sehgal implementation
+      IF (MDLSPI .EQ. 1) THEN
+        CALL RSDT33(IMODE,INLEP,XPNU,TMPPMU,TMPPPI,TMPPPR,IERR)
+        if (ierr.ne.0) then
+           return
+        endif
+C     Alternatively call Minoo's model (MDLSPI)
+      ELSE IF (MDLSPI .EQ. 3) THEN
+        CALL MKDT33(IMODE,INLEP,XPNU,TMPPMU,TMPPPI,TMPPPR)
+      ELSE
+        WRITE(*,*) 'WRONG MDLSPI GIVEN'
+        WRITE(*,*) 'YOU GAVE MDLSPI = ', MDLSPI
+        WRITE(*,*) '1=REIN-SEHGAL : Global Fermi Gas'
+        WRITE(*,*) '2=REIN-SEHGAL : Local Fermi Gas (not implemented)'
+        WRITE(*,*) '3=MINOO KABIRNEZHAD'
+        STOP
+      ENDIF
 
+C     Rotate around
       CALL RS3DRT(TMPPMU,SINTH,COSTH,SINPHI,COSPHI)
       CALL RS3DRT(TMPPPI,SINTH,COSTH,SINPHI,COSPHI)
       CALL RS3DRT(TMPPPR,SINTH,COSTH,SINPHI,COSPHI)
@@ -116,6 +132,7 @@ C
          RETPPR(I) = TMPPPR(I)
  20   CONTINUE
 
+C     Boost out of nucleon frame
       CALL MCVECBST(RETPMU,XMLEP,DINPPR,GAMMA)
       CALL MCVECBST(RETPPI,XMPI,DINPPR,GAMMA)
       CALL MCVECBST(RETPPR,XMN,DINPPR,GAMMA)

@@ -83,9 +83,16 @@ C
 C---------------------------------------------------------------------
 C-- Model for Single pion production
 C
-C-- MDLSPI = 1 ; Rein Sehgal
+C-- MDLSPI = 1 ; Rein Sehgal ( Global Fermi Gas )
+C-- MDLSPI = 2 ; Rein Sehgal ( Local Fermi Gas ) : To be implemented
+C-- MDLSPI = 3 ; Minoo's model
 C
-      MDLSPI = 1;
+C RS1PIEJ is the Rein-Sehgal Pion Ejection method (see Rein-Sehgal
+C appendix). This integer sets which resonances we account for when
+C ejecting pion (CWret)
+C RS1PIEJ = 0 flat
+C         = 1 Delta only
+C         = 2 four interfering resonances
 
 C-- MA for Single pion production
 C     XMASPI now filled in necard.F 
@@ -104,14 +111,21 @@ C- Copy to neutmodel.h
       RCA5ISPI  = RNECA5I
       RBGSCLSPI = RNEBGSCL
 
-      if (NEIFF.ne.0) then
-C-- new form factor
-         XMASPI  = XMANFFRES
-         XMVSPI  = XMVNFFRES
-      else
+C     Rein-Sehgal Single pion
+      if (MDLSPI .ne. 3) THEN
+C--   Graczyk & Sobczyk form factor
+        if (NEIFF .eq. 1) then
+           XMASPI  = XMANFFRES
+           XMVSPI  = XMVNFFRES
 C-- Rein-Sehgal
+      else
          XMASPI  = XMARSRES
          XMVSPI  = XMVRSRES
+        endif
+C--   Minoo's model
+      else if (MDLSPI .eq. 3) THEN
+        XMASPI = XMANFFRES
+        XMVSPI = XMVNFFRES
       endif
 
       return

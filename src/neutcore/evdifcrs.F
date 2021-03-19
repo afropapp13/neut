@@ -200,6 +200,10 @@ C
       real*4 w,      x,      xcoh,  y
       real*8 e8,     x8,     y8,    q28
 
+C     Adler angles needed for Minoo's model
+C     Also needed for reweighting Rein-Seghal ejection method
+      real*4 costhetaAd, phiAd
+
       real*4 dcp,    dc33p
       real*4 dcm,    dc33m
 
@@ -286,6 +290,7 @@ C -- for SF parameters
       IF (MODENE.eq.-38) IMOD=13
       IF (MODENE.eq.-39) IMOD=14
 
+C     Set lepton mass
       if (abs(ipne(3)).eq.11) then
          xmlep=XME
       else if (abs(ipne(3)).eq.13) then
@@ -296,6 +301,7 @@ C -- for SF parameters
          xmlep=0.
       endif
 
+C     Set nucleon mass
       if (ipne(2).eq.2112) then
          xmn01 = XMNE
       else
@@ -338,11 +344,13 @@ cRT: variables for SF
       nucPdg = ipne(2)
 cRT: end variables for SF
 
+C     Calculate Q2
       q2 =   (e - elep)**2
      $     - ( (pne(1,1)-pne(1,3))**2
      $        +(pne(2,1)-pne(2,3))**2
      $        +(pne(3,1)-pne(3,3))**2)
 
+C     Calculate W
       w = sqrt ( (e + enuc1 - elep)**2
      $          -( (pne(1,1)+pne(1,2)-pne(1,3))**2
      $            +(pne(2,1)+pne(2,2)-pne(2,3))**2
@@ -402,6 +410,7 @@ C
               write(*,*) "DO NOT IGNORE!!!! BAD EVDIFCRS, Free proton"
             endif
          endif
+C     Single pion calculation (11-13 is CC, 31-34 is NC)
       else if (    ((abs(modene).ge.11).and.(abs(modene).le.13))
      $         .or.((abs(modene).ge.31).and.(abs(modene).le.34)))
      $        then
@@ -409,46 +418,66 @@ C
             WRITE(*,*) "Resetting W: ", w, " -> ", XMN+XMPI
             w = XMN+XMPI
          endif
-C     Boost neutrino to nucleon rest frame
+C     Boost neutrino to nucleon rest frame since all the calculations in
+C     Rein-Sehgal and Minoo are done in nucleon rest frame
+C     Q2 and W neednt be calculated since invariant
         PFABS=SQRT(pne(1,2)**2+pne(2,2)**2+pne(3,2)**2)
         IF (PFABS.NE.0.) THEN
+C         Get relativistic beta (momentum/energy)
           BETA=PFABS/enuc1
+C         Get relativistic gamma factor
           GM=1./SQRT(1.-BETA**2)
           do i =1,3
-              PNEU(i) = pne(i,1)
-              EV(i)=-pne(i,2)/PFABS
+C           Copy the neutrino energy
+            PNEU(i) = pne(i,1)
+C           Get the unit vector of the initial state nucleon momentum
+            EV(i)=-pne(i,2)/PFABS
           enddo
+C         Boost neutrino to nucleon frame
           CALL MCVECBST(PNEU,0.,EV,GM)
           e = SQRT(PNEU(1)**2+PNEU(2)**2+PNEU(3)**2)
         ENDIF
+C     For Rein-Sehgal model choice call Rein-Sehgal code
+C     IMOD is the interaction mode (e.g. CC1pi+1p), IORIG refers to
+C     using lepton mass effect, xmlep is lepton mass, e = neutrino
+C     energy, q2 = -Q2, W = hadronic mass, dcp is returned positive
+C     helicity differential xsec, dcm is returned negative helicity
+C     differential xsec, the 33s are using only the Delta(1232) 
+        IF (MDLSPI .EQ. 1) THEN
+          call rsdcrs(IMOD, IORIG, 1, xmlep,e,q2,w,dcp,dc33p)
+          call rsdcrs(IMOD, IORIG, -1,xmlep,e,q2,w,dcm,dc33m)
+            evdifcrs = dcp + dcm
+C       For Minoo's model choice call Minoo's code
+        ELSE IF (MDLSPI .EQ. 3) THEN
+C     Need to calculate theta and phi
+C     Get the primary nucleon and pion so we can boost into the frame
+C         Get the Adler angles
+          costhetaAd = -999
+          phiAd = -999
+C         write(*,*) "******"
+          call mkAdler(costhetaAd, phiAd)
+C         write(*,*) "saved pion adler=",ppirs
 
-C     Check if just outside Q2 PS
-C     Should abstract this check as it is copied verbatim from rsdcrs
-         IF ( ((2 * XMN * E) * (2 * XMN * E + XMN2 - W**2) /
-     $        (2 * XMN * E + XMN2)).LT.(-Q2) ) THEN
-           WRITE(*,*) "RSDCRS: Q2 Kinematically disallowed: ", ((2 * XMN * E) *
-     $       (2 * XMN * E + XMN2 - W**2) / (2 * XMN * E + XMN2)), ".LT.", -Q2
-           IF (ABS(((2 * XMN * E) * (2 * XMN * E + XMN2 - W**2) /
-     $          (2 * XMN * E + XMN2)) - (-Q2)).LT.1E-3) THEN
-            Q2Nudge = ((2 * XMN * E) * (2 * XMN * E + XMN2 - W**2) /
-     $          (2 * XMN * E + XMN2)) + 1E-4
-            WRITE(*,*) "--But its close so we'll allow it."
-            call rsdcrs(IMOD,IORIG,1, xmlep,e,Q2Nudge,w,dcp,dc33p);
-            call rsdcrs(IMOD,IORIG,-1,xmlep,e,Q2Nudge,w,dcm,dc33m);
-          ELSE
-            dcp = 0
-            dcm = 0
-          ENDIF
-         ELSE
-          call rsdcrs(IMOD,IORIG,1, xmlep,e,q2,w,dcp,dc33p);
-          call rsdcrs(IMOD,IORIG,-1,xmlep,e,q2,w,dcm,dc33m);
-         ENDIF
-
-         evdifcrs = dcp + dcm
+C         write(*,*) "calc enu=",e
+C         write(*,*) "saved enu=",enu_com
+C         write(*,*) "calc q2=",q2
+C         write(*,*) "saved q2=",q2_com
+C         write(*,*) "calc w=",w
+C         write(*,*) "saved w=",w_com
+C         write(*,*) "calc costh=",costhetaAd
+C         write(*,*) "saved costh=",costh_com
+C         write(*,*) "calc phi=",phiAd
+C         write(*,*) "saved phi=",phi_com
+          call mkdcrs(IMOD, e, q2, w, costhetaAd, phiAd, xmlep, dcp)
+          evdifcrs = dcp
+        ENDIF
+C     Multi-pi or DIS CC
       else if ((abs(modene).eq.21).or.(abs(modene).eq.26)) then
          evdifcrs = dndxdy(IPAR,IPNE(2),1,E8,X8,Y8)
+C     Multi-pi or DIS NC
       else if ((abs(modene).eq.41).or.(abs(modene).eq.46)) then
          evdifcrs = dndxdy(IPAR,IPNE(2),0,E8,X8,Y8)
+C     NCQE
       else if ((abs(modene).eq.51).or.(abs(modene).eq.52)) then
          ccnc   = 0
          if (IBOUND .eq. 1) then
@@ -477,15 +506,12 @@ c         evdifcrs
 C     $        = qedifcrs(ipar, ccnc, e*1000., elep*1000., coslep)
 c     $        = qedifcrs(ipar, ccnc, e, elep, coslep)
       else if (abs(modene).eq.16.or.abs(modene).eq.36) then
-C        write(*,*) 'in evdifcrs, MDLCOH = ',MDLCOH
+C     Rein-Sehgal coherent model
         if (MDLCOH.eq.0) then
           evdifcrs = dcohnerein(e,ipar,modene,CRSX,CRSY,CRSZ,CRSPHI)
-C          write(*,*) 'in RS if statement, e=',e,
-C     $ ' ipar=',ipar,' x=',CRSX,' y=',CRSY,' z=',CRSZ,' phi=',CRSPHI
        else if (MDLCOH.eq.2) then
+C     Berger-Sehgal coherent model
           evdifcrs = dcohneberger(e,ipar,modene,CRSX,CRSY,CRSZ,CRSPHI)
-C          write(*,*) 'in BS if statement, evdifcrs = ',evdifcrs,' e=',e,
-C     $ ' ipar=',ipar,' x=',CRSX,' y=',CRSX,' z=',CRSX,' phi=',CRSPHI
        endif
       else if (   (abs(modene).eq.22)
      $        .or.(abs(modene).eq.42).or.(abs(modene).eq.43))
@@ -513,10 +539,8 @@ C     $ ' ipar=',ipar,' x=',CRSX,' y=',CRSX,' z=',CRSX,' phi=',CRSPHI
          evdifcrs = dcp + dcm
       else
          write(*,*) 'Unknown interaction mode',modene
-C         stop
+         stop
       endif
-
-c      write(*,*) "evdifcrs: ", evdifcrs
 
       RETURN
       END

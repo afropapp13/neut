@@ -38,6 +38,8 @@
 *       2016.07    ; C. Bronner
 *
 *                    Hadron multiplicity model for multi-pi mode
+*       2016.10    ; C.Wret add Rein-Sehgal pion ejection methods (MDLSPIEJ)
+*                    and Minoo's model. Added background MA for Minoo
 *
 *       2019.04    ; Y.Hayato add new variable for LFG parameters
 *
@@ -67,12 +69,17 @@
 
       REAL*4        XMN
 
+      REAL*4        TEMP_MARES, TEMP_CA5RES
+
       INTEGER IRSRESMA, INFFRESMA, IQEMA
 
       integer*4     LENCRSPATH
 
       integer*4     LENSTR
       external      LENSTR
+
+C     Opening file error
+      INTEGER       OPENERR
 
       logical HaveSpecFuncForNuclei
       external HaveSpecFuncForNuclei
@@ -89,8 +96,8 @@ C --  Initialize
       NENEFMODL = 1
       NENEFKINH = 1
       NEMODFLG = 0
-      CALL VZERO(30,CRSNEUT)
-      CALL VZERO(30,CRSNEUTB)
+      CALL VZERO(CRSNEUT,30)
+      CALL VZERO(CRSNEUTB,30)
       IRANDFLG = 0
       NECOHEPI = 2
       NEDIFPI  = 0
@@ -99,7 +106,6 @@ C --  Initialize
       NEMULT   = 0
 
       XMAQE   = 1.21
-C      XMAQE   = 1.03
       XMVQE   = 0.84
 
 C-NCEL
@@ -112,13 +118,34 @@ C      XMASPI  = 1.21
       XMARSRES = 1.21
       XMVRSRES = 0.84
 
+      TEMP_MARES = -999
+      TEMP_CA5RES = -999
+
 C     For form factors for Rein-Seighal update
       XMANFFRES = 0.95
       XMVNFFRES = 0.84
+C     Use G&S form factors ( 0: Rein-Sehgal, 1 : G&S )
       NEIFF     = 1
+C     If not G&S form factors, use R&S with quark oscillator level (=0)
       NENRTYPE  = 0
+C     Pion ejection in Rein-Sehgal model. 
+C     0 use no resonances (isotropic)
+C     1 use Delta only
+C     2 use multiple resonances
+C     3 use Delta+isotropic (old NEUT default)
+      MDLSPIEJ = 3
+
+C     Default pion model is Rein-Sehgal + Global Fermi-gas = 1
+C     Default pion model is Rein-Sehgal + Local  Fermi-gas = 2 ( not yet )
+C     Minoo's model                                        = 3
+      MDLSPI   = 1
       RNECA5I   = 1.01
       RNEBGSCL  = 1.30
+      XMANFFRES = 0.95
+C     For Minoo's model we also tune the MA of the background. Here use
+C     the parameters saved in neutmodel.h directly
+C     XMABKGM = 1.05
+      XMABKGM = 1.03
 
       KAPP    = 1.0
       XMACOH  = 1.0
@@ -287,17 +314,19 @@ C -- extract NEUT card
 
       CALL FFKEY('IFF',NEIFF, 1,'INTEGER')
       CALL FFKEY('NRTYPE',NENRTYPE, 1,'INTEGER')
-      CALL FFKEY('CA5',RNECA5I, 1,'REAL')
+      CALL FFKEY('MDLSPIEJ',MDLSPIEJ, 1,'INTEGER')
+      CALL FFKEY('MDLSPI',MDLSPI, 1,'INTEGER')
+
+      CALL FFKEY('MARSRES'  ,XMARSRES ,1,'REAL')
+      CALL FFKEY('MARNFFRES',TEMP_MARES ,1,'REAL')
+      CALL FFKEY('MVRSRES' ,XMVRSRES ,1,'REAL')
+      CALL FFKEY('MVNFFRES' ,XMVNFFRES ,1,'REAL')
+      CALL FFKEY('MABKGM',XMABKGM ,1,'REAL')
+      CALL FFKEY('CA5', TEMP_CA5RES, 1,'REAL')
       CALL FFKEY('BGSCL',RNEBGSCL, 1,'REAL')
 
       CALL FFKEY('MAQE' ,XMAQE ,1,'REAL')
-C      CALL FFKEY('MASPI' ,XMASPI ,1,'REAL')
-      CALL FFKEY('MARSRES'  ,XMARSRES ,1,'REAL')
-      CALL FFKEY('MARNFFRES',XMANFFRES ,1,'REAL')
       CALL FFKEY('MVQE' ,XMVQE ,1,'REAL')
-C      CALL FFKEY('MVSPI' ,XMVSPI ,1,'REAL')
-      CALL FFKEY('MVRSRES' ,XMVRSRES ,1,'REAL')
-      CALL FFKEY('MVNFFRES' ,XMVNFFRES ,1,'REAL')
       CALL FFKEY('KAPP' ,KAPP ,1,'REAL')
 
       CALL FFKEY('MANCEL' ,XMANCEL ,1,'REAL')
@@ -414,6 +443,7 @@ C Clarence hack, z exp
 
 C Set VNUINI here ( when PFSURF is fixed)
       VNUINI = -1. * (sqrt(XMN * XMN + PFSURF * PFSURF) - XMN)
+
       CALL FFKEY('VNUINI',VNUINI,1,'REAL')
       CALL FFKEY('VNUFIN',VNUFIN,1,'REAL')
       CALL FFKEY('IFORMLEN',IFORMLEN,1,'INTEGER')
@@ -431,6 +461,33 @@ C Set VNUINI here ( when PFSURF is fixed)
       COMMAND = '/bin/rm '//TMPFIL
       CALL SYSTEM(COMMAND)
 
+C     If user has specified CA5
+      IF (TEMP_CA5RES .GT. 0) THEN
+        RNECA5I = TEMP_CA5RES
+C     Else set CA5 to default
+      ELSE
+C       For Rein-Sehgal
+        IF (mdlspi .EQ. 1) THEN
+          RNECA5I = 1.01
+C       For Minoo
+        ELSE IF (mdlspi .EQ. 3) THEN
+          RNECA5I = 1.02
+        ENDIF
+      ENDIF
+
+C     If user has specified MARES
+      IF (TEMP_MARES .GT. 0) THEN
+        XMANFFRES = TEMP_MARES
+      ELSE
+C       For Rein-Sehgal
+        IF (MDLSPI .EQ. 1) THEN
+          XMANFFRES = 0.95
+C       For Minoo
+        ELSE IF (MDLSPI .EQ. 3) THEN
+c         XMANFFRES = 0.62
+          XMANFFRES = 1.06
+        ENDIF
+      ENDIF
       IF (mod(MDLQE, 1000)/100 .EQ. 4) THEN
         IF (HaveSpecFuncForNuclei()) THEN
           write (6,*) "Using Spectral Function for elastic events"
@@ -467,35 +524,13 @@ C Set VNUINI here ( when PFSURF is fixed)
       WRITE(6,*) 'NECARD : MODE   = ',NEMODFLG
       WRITE(6,*) 'NECARD : COHEPI = ',NECOHEPI
       WRITE(6,*) 'NECARD : DIFPI  = ',NEDIFPI
-      WRITE(6,*) 'NECARD : PDF    = ',NEPDF
-      WRITE(6,*) 'NECARD : BODEK  = ',NEBODEK
-      WRITE(6,*) 'NECARD : MULT   = ',NEMULT
-      WRITE(6,*) 'NECARD : MDLQE  = ',MDLQE
-      WRITE(6,*) 'NECARD : MDLQEAF= ',MDLQEAF
-      WRITE(6,*) 'NECARD : MAQE   = ',XMAQE
-      WRITE(6,*) 'NECARD : MANCEL = ',XMANCEL
-C      WRITE(6,*) 'NECARD : MASPI  = ',XMASPI
-      WRITE(6,*) 'NECARD : MARSRES = ',XMARSRES
-      WRITE(6,*) 'NECARD : MANFFRES= ',XMANFFRES
 
-      WRITE(6,*) 'NECARD : MVQE   = ',XMVQE
-C      WRITE(6,*) 'NECARD : MVSPI  = ',XMVSPI
-      WRITE(6,*) 'NECARD : MVRSRES = ',XMVRSRES
-      WRITE(6,*) 'NECARD : MVNFFRES= ',XMVNFFRES
-      WRITE(6,*) 'NECARD : KAPP   = ',KAPP
-      WRITE(6,*) 'NECARD : XMACOH   = ',XMACOH
-      WRITE(6,*) 'NECARD : R0COH   = ',RAD0NU
-      WRITE(6,*) 'NECARD : A1COHerr   = ',fA1COH
-      WRITE(6,*) 'NECARD : b1COHerr   = ',fb1COH
-      WRITE(6,*) 'NECARD : XMADIF   = ',XMADIF
-      WRITE(6,*) 'NECARD : NUCVOLDIF   = ',NUCVOLDIF
 
-      WRITE(6,*) 'NECARD : SCCFV     = ',SCCFV
-      WRITE(6,*) 'NECARD : SCCFA     = ',SCCFA
-      WRITE(6,*) 'NECARD : FPQE      = ',FPQE
-      WRITE(6,*) 'NECARD : PFSF      = ',PFSF
-
-      WRITE(6,*) '*** axial form factor alterations ***'
+      WRITE(6,*) '********* CCQE SETTINGS ***************'
+      WRITE(6,*) 'NECARD : MDLQE   = ',MDLQE
+      WRITE(6,*) 'NECARD : MDLQEAF = ',MDLQEAF
+      WRITE(6,*) 'NECARD : MDL2P2H = ',MDL2P2H
+      WRITE(6,*) 'NECARD : MAQE    = ',XMAQE
       WRITE(6,*) 'NECARD : AXFFALPHA =',AXFFALPHA
       WRITE(6,*) 'NECARD : AXFFBETA=',AXFFBETA
       WRITE(6,*) 'NECARD : AXFFGAMMA=',AXFFGAMMA
@@ -515,6 +550,59 @@ C Clarence hack, z exp
       WRITE(6,*) 'NECARD : AXZEXPA7=',AXZEXPA7
       WRITE(6,*) 'NECARD : AXZEXPA8=',AXZEXPA8
       WRITE(6,*) 'NECARD : AXZEXPA9=',AXZEXPA9
+      WRITE(6,*) 'NECARD : MVQE   = ',XMVQE
+      WRITE(6,*) 'NECARD : KAPP   = ',KAPP
+      WRITE(6,*) 'NECARD : SCCFV     = ',SCCFV
+      WRITE(6,*) 'NECARD : SCCFA     = ',SCCFA
+      WRITE(6,*) 'NECARD : FPQE      = ',FPQE
+      WRITE(6,*) 'NECARD : PFSF      = ',PFSF
+      WRITE(6,*) 'NECARD : IRADCORR  = ',IRADCORR
+      WRITE(6,*) 'NECARD : IPILESSDCY= ',IPILESSDCY
+      WRITE(6,*) 'NECARD : RPILESSDCY= ',RPILESSDCY
+
+      WRITE(6,*) 'NECARD : MANCEL = ',XMANCEL
+C      WRITE(6,*) 'NECARD : MASPI  = ',XMASPI
+
+      WRITE(6,*) '********** SINGLE PION ***************'
+      WRITE(6,*) 'NECARD : IFF       = ',NEIFF
+      WRITE(6,*) 'NECARD : NRTYPE    = ',NENRTYPE
+      WRITE(6,*) 'NECARD : MDLSPIEJ  = ',MDLSPIEJ
+      WRITE(6,*) 'NECARD : MDLSPI    = ',MDLSPI
+      WRITE(6,*) 'NECARD : MARSRES   = ',XMARSRES
+      WRITE(6,*) 'NECARD : MANFFRES  = ',XMANFFRES
+      WRITE(6,*) 'NECARD : MABKGM    = ',XMABKGM
+      WRITE(6,*) 'NECARD : CA5       = ',RNECA5I
+      WRITE(6,*) 'NECARD : BGSCL     = ',RNEBGSCL
+      WRITE(6,*) 'NECARD : MVRSRES   = ',XMVRSRES
+      WRITE(6,*) 'NECARD : MVNFFRES  = ',XMVNFFRES
+
+      WRITE(6,*) '********* MULTIPI SETTINGS ***************'
+      WRITE(6,*) 'NECARD : PDF    = ',NEPDF
+      WRITE(6,*) 'NECARD : BODEK  = ',NEBODEK
+      WRITE(6,*) 'NECARD : MULT   = ',NEMULT
+
+      WRITE(6,*) '********** COHERENT *************'
+      WRITE(6,*) 'NECARD : COHEPI   = ',NECOHEPI
+      WRITE(6,*) 'NECARD : MACOH    = ',XMACOH
+      WRITE(6,*) 'NECARD : R0COH    = ',RAD0NU
+      WRITE(6,*) 'NECARD : A1COHerr = ',fA1COH
+      WRITE(6,*) 'NECARD : b1COHerr = ',fb1COH
+      WRITE(6,*) 'NECARD : XMADIF   = ',XMADIF
+      WRITE(6,*) 'NECARD : NUCVOLDIF= ',NUCVOLDIF
+
+      WRITE(6,*) '======= PION FSI ======='
+      WRITE(6,*) 'NECARD : FEFQE     = ',FEFQE
+      WRITE(6,*) 'NECARD : FEFQEH    = ',FEFQEH
+      WRITE(6,*) 'NECARD : FEFINEL   = ',FEFINEL
+      WRITE(6,*) 'NECARD : FEFABS    = ',FEFABS
+      WRITE(6,*) 'NECARD : FEFCOH    = ',FEFCOH
+      WRITE(6,*) 'NECARD : FEFCX     = ',FEFCX
+      WRITE(6,*) 'NECARD : FEFCXH    = ',FEFCXH
+      WRITE(6,*) 'NECARD : FEFCXHF   = ',FEFCXHF
+      WRITE(6,*) 'NECARD : FEFQEHF   = ',FEFQEHF
+      WRITE(6,*) 'NECARD : FEFCOHF   = ',FEFCOHF
+      WRITE(6,*) 'NECARD : FEFCOUL   = ',FEFCOUL
+      WRITE(6,*) 'NECARD : FEFALL    = ',FEFALL
 
       IF (NEMODFLG.EQ.-1) THEN
          WRITE(6,*) 'NECARD : CRS  = ',CRSNEUT
@@ -553,30 +641,6 @@ C Clarence hack, z exp
       WRITE(6,*) 'NECARD : NUSIM = ',NUSIM
       WRITE(6,*) 'NECARD : QUIET = ',QUIET
 
-      WRITE(6,*) 'NECARD : FEFQE   = ',FEFQE
-      WRITE(6,*) 'NECARD : FEFQEH  = ',FEFQEH
-      WRITE(6,*) 'NECARD : FEFINEL = ',FEFINEL
-      WRITE(6,*) 'NECARD : FEFABS  = ',FEFABS
-      WRITE(6,*) 'NECARD : FEFCOH  = ',FEFCOH
-      WRITE(6,*) 'NECARD : FEFCX   = ',FEFCX
-      WRITE(6,*) 'NECARD : FEFCXH  = ',FEFCXH
-      WRITE(6,*) 'NECARD : FEFCXHF = ',FEFCXHF
-      WRITE(6,*) 'NECARD : FEFQEHF = ',FEFQEHF
-      WRITE(6,*) 'NECARD : FEFCOHF = ',FEFCOHF
-      WRITE(6,*) 'NECARD : FEFCOUL = ',FEFCOUL
-      WRITE(6,*) 'NECARD : FEFALL = ',FEFALL
-
-      WRITE(6,*) 'NECARD : IPILESSDCY = ',IPILESSDCY
-      WRITE(6,*) 'NECARD : RPILESSDCY = ',RPILESSDCY
-
-      WRITE(6,*) 'NECARD : IFF =',NEIFF
-      WRITE(6,*) 'NECARD : NRTYPE =',NENRTYPE
-      WRITE(6,*) 'NECARD : CA5 =',RNECA5I
-      WRITE(6,*) 'NECARD : BGSCL =',RNEBGSCL
-
-      WRITE(6,*) 'NECARD : IRADCORR =',IRADCORR
-
-
 C     Parameter checks
 
       IQEMA = INT(XMAQE*100+0.5)
@@ -597,21 +661,18 @@ C      ISPIMA = INT(XMASPI*100+0.5)
          END IF
       endif
 
-C      IF ( ISPIMA.ne.95 .and. ISPIMA.ne.101 .and. ISPIMA.ne.103.
-C     $     .and. ISPIMA.ne.111 .and. ISPIMA.ne.121 ) THEN
-C         WRITE(6,*)
-C     $        'NECARD error: MASPI must be 0.95, 1.01, 1.03, 1.11 or 1.21'
-C         STOP
-C      END IF
-
-
-      IF ( IRSRESMA.ne.95 .and. IRSRESMA.ne.101 .and. IRSRESMA.ne.103.
+      IF (IRSRESMA.ne.95 .and. IRSRESMA.ne.101 .and. IRSRESMA.ne.103.
      $     .and. IRSRESMA.ne.111 .and. IRSRESMA.ne.121 ) THEN
          WRITE(6,*)
      $     'NECARD error: MARS must be 0.95, 1.01, 1.03, 1.11 or 1.21'
          STOP
       END IF
 
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C     Check 1 pi model: can only generate with certain parameters
+C     because we read a pre-generated cross-section table
+C     For Rein-Sehgal original form factors
+      if (MDLSPI .EQ. 1 .AND. NEIFF .EQ. 0) THEN
       IF ( INFFRESMA.ne.95 .and. INFFRESMA.ne.101 .and.
      $     INFFRESMA.ne.103. .and. INFFRESMA.ne.111 .and.
      $     INFFRESMA.ne.121 ) THEN
@@ -619,6 +680,46 @@ C      END IF
      $    'NECARD error: MARNFF must be 0.95, 1.01, 1.03, 1.11 or 1.21'
          STOP
       END IF
+      ENDIF
+
+C     Check Rein-Sehgal model with Graczyk Sobczyk form factors
+C     Can only generate with certain parameters
+C     because we read a pre-generated cross-section table
+      IF (MDLSPI .EQ. 1 .AND. NEIFF .EQ. 1) THEN
+        IF ( XMANFFRES .ne. 0.95 ) then
+          WRITE(6,*) 
+     $    'NECARD: MARNFFRES must be 0.95 for generating Rein-Sehgal'
+          STOP
+        ELSE IF (RNECA5I .ne. 1.01) then
+          WRITE(6,*) 
+     $    'NECARD: CA5 must be 1.01 for generating Rein-Sehgal'
+          STOP
+        ELSE IF (RNEBGSCL .ne. 1.30) then
+          WRITE(6,*) 
+     $    'NECARD: BGSCL must be 1.30 for generating Rein-Sehgal'
+          STOP
+        ENDIF
+      ENDIF
+
+C     For Minoo model do the checks
+      IF (MDLSPI .EQ. 3) THEN
+        IF (XMABKGM .ne. 1.03 ) then
+          WRITE(6,*) 
+     $    'NECARD: MABKGM must be 1.03 for generating Minoo model'
+          STOP
+        ELSE IF (RNECA5I .ne. 1.02) then
+          WRITE(6,*) 
+     $    'NECARD: CA5 must be 1.02 for generating Minoo model'
+          STOP
+        ELSE IF (XMANFFRES .ne. 1.06) then
+          WRITE(6,*)
+     $    'NECARD: XMANFFRES must be 1.06 for generating Minoo mode'
+          STOP
+        ENDIF
+      ENDIF
+
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C     Check FSI rescattering probabilities
 
       IF (FEFQEHF.lt.0 .or. FEFQEHF.gt.1) THEN
          WRITE(6,*) 'NECARD error: FEFQEHF must be between 0 and 1!'
@@ -630,6 +731,27 @@ C      END IF
          STOP
       END IF
 
+      IF ((MDLSPI .EQ. 3) .AND. (MDLSPIEJ .NE. 1)) THEN
+        WRITE(*,*) '******************************'
+        WRITE(*,*) 'NECARD error: specified a Rein-Sehgal ejection'
+        WRITE(*,*) 'method with a model that WAS NOT Rein-Sehgal!'
+        WRITE(*,*) 'Model: ', MDLSPI, 'Method: ', MDLSPIEJ
+        STOP
+      ENDIF
+
+C     Check pion ejection model
+      IF (MDLSPIEJ.LT.0 .OR. MDLSPIEJ.GT.3) then
+        WRITE(*,*) '******************************'
+        WRITE(*,*) 'NECARD error: specified a Rein-Sehgal ejection that
+     &              doesnt exist'
+        write(*,*) 'MDLSPIEJ: ', MDLSPIEJ, ' but should be'
+        write(*,*) 'MDLSPIEJ=0 Isotropic'
+        write(*,*) 'MDLSPIEJ=1 Delta'
+        write(*,*) 'MDLSPIEJ=2 Many'
+        write(*,*) 'MDLSPIEJ=3 Delta+Isotrop (old NEUT)'
+        STOP
+      ENDIF
+
 C-- Add nuceff/nuccorspl related card
 C--      call nesettarg
 C--      call nrsettarg
@@ -639,4 +761,8 @@ C-- ADD proton nuceff related card
       call nefillmodel
 
       RETURN
+
+ 123  write(*,*) 'Card file was not found: ', fcard
+      stop
+
       END

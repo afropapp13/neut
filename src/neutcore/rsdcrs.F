@@ -49,10 +49,10 @@ C
       INTEGER IMODE
       REAL E,Q2,W,DIFCRS,DFCRS3
 
-#include"rscons.h"
-#include <neutmodel.h>
+#include "rscons.h"
+#include "neutmodel.h"
 
-      REAL*4 XMASPI2, XMVSPI2
+      REAL XMASPI2, XMVSPI2
 
       INTEGER IFLAG
       REAL  XNU,XNU2,XNUS,XLAM,XLAM2,XMR
@@ -64,12 +64,14 @@ C
       INTEGER IPP(31),NRR(31)
 
       INTEGER IB,NR,IP,IBLOCK,NCTR
-      REAL WMIN,QMAX,SMAX
+      REAL WMIN,QMAX
       REAL W2,X,QV,QV2,QVS,QVS2,A,ES
       REAL U,V,U2,V2,AK
       REAL FAKT,FRP1,FRP3,FRM1,FRM3,FR0P,FR0M,FIP1,FIP3,FIM1
-C      REAL FIM3,FI0M,FI0P,BR,FBW,FBWNO,ETA,XE,RV,FFV,R,TA,FFA,T
       REAL FIM3,FI0M,FI0P,BR,FBW,FBWNO,XE,RV,FFV,R,TA,FFA,T
+C     Aux variables to speed up calculation (don't need to recalculate
+C     for ever resonance)
+      REAL FFVaux, FFAaux
       REAL TV,RA,RP,RM,TP,TM,S,B,C,FM3C,FP3C,FM1C,FP1C,F0PC
       REAL F0MC,FM3,FP3,FM1,FP1,F0P,F0M,XXE,RAD,PQ,PQR,RADR,BRA
       REAL CO,SL,SR,SS,SL1,SR1,SS1,SL0,SR0,SS0,DSI,DSI1,DSI0
@@ -99,8 +101,6 @@ C      REAL FIM3,FI0M,FI0P,BR,FBW,FBWNO,ETA,XE,RV,FFV,R,TA,FFA,T
 
       COMPLEX S310PN,S110PN,P310PN,P110PN,P330PN,P130PN,D330PN,D130PN
       COMPLEX D350PN,D150PN,F350PN,F150PN,F370PN,F170PN
-
-
 
       COMPLEX S31M3P,S11M3P,P31M3P,P11M3P,P33M3P,P13M3P,D33M3P,D13M3P
       COMPLEX D35M3P,D15M3P,F35M3P,F15M3P,F37M3P,F17M3P
@@ -310,8 +310,10 @@ C      REAL FIM3,FI0M,FI0P,BR,FBW,FBWNO,ETA,XE,RV,FFV,R,TA,FFA,T
       REAL ASL(3),ASR(3),ASS(3)
 
 
+C     These are the 2l+1 constants (IPP stores which interaction mode the resonance is relevant to)
       DATA IPP/3,5,5,1,1,1,1,1,5,5,5,5,5,3,3,3,7,7,3,3,3,3,3,7,7,3,7,7,
      1     1,1,3/
+C     Harmonic oscillation of the resonance
       DATA NRR/0,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
      1     0,0,0/
 
@@ -319,12 +321,12 @@ C      REAL FIM3,FI0M,FI0P,BR,FBW,FBWNO,ETA,XE,RV,FFV,R,TA,FFA,T
       Integer OriginalF          ! 0:Lepton mass effects, 1:Original R-S model
       Integer Original
       Integer Lambda
-      Real*4 XMLEP, XMLEP2
-      Real*4 El, Plep, theta
-      Real*4 Q_lab, Q2_lab, Q, nu_lab
-      Real*4 jl(4), jl_n1, jl_n2, Norm, C_L, C_R, C_S, Qs, nus, ng
-      Real*4 Ei, Ef, nu
-      Real*4 B_BRS,C_BRS,Ctmp
+      Real XMLEP, XMLEP2
+      Real El, Plep, theta
+      Real Q_lab, Q2_lab, Q, nu_lab
+      Real jl(4), jl_n1, jl_n2, Norm, C_L, C_R, C_S, Qs, nus, ng
+      Real Ei, Ef, nu
+      Real B_BRS,C_BRS,Ctmp
 
 C-------------------------------------------------------------------------
 
@@ -333,41 +335,36 @@ C-------------------------------------------------------------------------
 
       Original = OriginalF
 
+C     anti-neutrino mode
       IF (IMODE.GT.10) THEN
          IFLAG = IMODE - 10
+C     neutrino mode
       ELSE
          IFLAG = IMODE
       ENDIF
 
+C     There are only 7 single pion production modes, having this fire 
+C     indicates very bad news!
       IF (IFLAG.GT.7) GOTO 9999
 
       WMIN = XMN+XMPI
-      SMAX = (2 * XMN * E) + XMN2
-      QMAX = (SMAX - XMN2)
 
       W2 = W**2
 
+C     CWRET: there is already a check for this in rsdt33.F
       IF ( ((2 * XMN * E) * (2 * XMN * E + XMN2 - W2) /
-     $     (2 * XMN * E + XMN2)).LT.(-Q2) ) THEN
-C        WRITE(*,*) "RSDCRS: Q2 Kinematically disallowed: ", ((2 * XMN * E) *
-C     $  (2 * XMN * E + XMN2 - W2) / (2 * XMN * E + XMN2)), ".LT.", -Q2
+     $     (2 * XMN * E + XMN2) + Q2) .LT. -1.*RS_SMNO ) THEN
+C       write(*,*) "Q2 range"
         GOTO 999
       ENDIF
-
-C     -------------------------------------------------------
-C     NOW  W  AND  E  ARE FIXED
-C     Q2MAX = 2.*XMN*E*(2.*XMN*E+XMN2-W2)/(2.*XMN*E+XMN2)
-C     -------------------------------------------------------
 
 C     KINEMATICAL QUANTITIES
 
       XNU = (W2 - XMN2 - Q2) / (2 * XMN)
       X = -Q2 / (2 * XMN * XNU)
 
-      IF(XNU.GE.E) THEN
-C        WRITE(*,*) "RSDCRS: Energy Kinematically disallowed: ", XNU, ".GE.", E
-        GOTO 999
-      ENDIF
+C     CWRET: there is already a check for this in rsdt33.F
+      IF(XNU.GT.E) GOTO 999
 
       XNU2 = XNU**2
       ES = E-XNU
@@ -388,9 +385,9 @@ C        WRITE(*,*) "RSDCRS: Energy Kinematically disallowed: ", XNU, ".GE.", E
       AK = (W2-XMN2)/(2.*XMN)
       FAKT = W*PI/(W2-XMN2)
 
+      XMLEP2 = XMLEP**2
 C     ---------------------------
 C     --- Lepton mass effects ---
-      XMLEP2 = XMLEP**2
 
 C     Lepton energy
       El = E+XMN-(XMN2+W**2-q2)/(2*XMN)
@@ -400,23 +397,30 @@ C
       nu = Ei - Ef
       Q = QVS
 
-C     Lab frame
-      if (El**2-XMLEP2.le.0.) then
-C         Plep = 0.000001
-         Plep = 1e-7
-      else
+C     Lab frame lepton energy
+C     This definitely should not be 0, but allow for some numerical
+C     inaccuracy
+C     Putting the accuracy at 1E-5: if between -1E-5 and +1E-5, set
+C     lepton momentum to zero
+      IF (El**2 - XMLEP2 .LT. -1*RS_SMNO) THEN
+         GOTO 999
+      ELSE IF (El**2 - XMLEP2 .LE. 1*RS_SMNO) THEN
+         Plep = RS_SMNO
+      ELSE
          Plep = SQRT(El**2-XMLEP2)
-      endif
+      ENDIF
 
       theta = (Q2-XMLEP2+2*E*El)/(2*E*Plep)
-      if (theta.ge.0.999999 ) then
-         theta = 0.999999
-         goto 999
-      endif
-      if (theta.le.-0.999999) then
-         theta =-0.999999
-         Original = 1
-      endif
+
+C     If theta is forward+numerical accuracy, set to forward
+C     CWRET changed here too
+      IF (ABS(THETA) .GT. 1.+RS_SMNO) THEN
+        GOTO 999
+      ELSE IF (THETA .GE. 1-RS_SMNO) then
+         theta = 1-RS_SMNO
+      ELSE IF (THETA .LE. -1+RS_SMNO) then
+         theta =-1+RS_SMNO
+      ENDIF
 
       nu_lab = E - El
       Q_lab = SQRT(nu_lab**2-Q2)
@@ -429,6 +433,7 @@ C         Plep = 0.000001
       Qs = 1.
       nus = 1.
 
+C     Berger-Sehgal mass-effect
       if (Original.ne.1) then
 C     Leptonic current in RRF
 C     jl_0, jl_x, i*jl_y, jl_z
@@ -477,6 +482,58 @@ C     SUMMATION OVER RESONANCES
       FI0P = 0.
       FI0M = 0.
 
+C     Move some of the form factor calculations outside the IB block to
+C     avoid recalculating unnecessarily
+C     **********************************
+C     FORMFACTORS AND RELATED QUANTITIES
+C     If using Graczyk Sobczyk form factors
+      if (IFFSPI.ne.0) then
+
+C       K.M. Graczyk and J.T. Sobczyk, Phys.Rev.D 77,053001 (2008)
+C       Equations are correction in erratum
+C       CA5(0) and XMA are set by user
+
+         CA5=   RCA5ISPI/((1-Q2/XMASPI2)**2)
+
+C     J.A. Nowak, arXiv:0909.3659
+C     Vector Form Factors
+C     CV1, CV2 are for simplicity, not true form factors
+C     Added the proportional factors of the vector form factors GV
+C     to CV3,CV4,CV5
+
+C     CW: New form factors should be put here
+C     arxiv:1407.5445v1
+
+         CV1=  1./((1.-Q2/(4.*XMVSPI2))
+     $           * ((1.-Q2/XMVSPI2)**2))
+         CV2=  1./((1.-Q2/(4.*XMVSPI2))
+     $           * ((1.-Q2/(0.766*XMVSPI2))**2))
+         CV3A= 2.13*CV1*((W+XMN)/XMN)
+         CV3B= 2.13*CV1*((XMN2-Q2+XMN*W)/(XMN*W))
+         CV4= -1.51*CV1*((W2+Q2-XMN2)/(2.*XMN2))
+         CV5=  0.48*CV2*((W2-Q2-XMN2)/(2.*XMN2))
+
+         GV3=  (.5/SQRT(3.))*(CV4+CV5+CV3A)
+         GV1=  (-.5/SQRT(3.))*(CV4+CV5-CV3B)
+
+         NFF=  SQRT((3.*(GV3)**2)+GV1**2)
+
+         FFVaux = 0.5 * (1 - Q2/(XMN+W)**2)**0.5
+     &           * NFF
+
+         FFAaux = 0.5 * SQRT(3.0) * (1 - Q2/(XMN+W)**2)**0.5
+     &           * (1 - (W2 + Q2 - XMN2)/(8*XMN2))
+     &           * CA5 / Z
+      endif
+
+C     Can also precalculate these as they don't depend on resonance
+C     Changed from RAD and RADR = 0.0001 to 1E-7
+      RAD =((W2-XMN2-XMPI2)**2-4.*XMN2*XMPI2)/(4.*W2)
+C     Need .LE. 0 because we divide by SQRT(RADR)
+      IF(RAD .LE. 0.) RAD = RS_SMNO
+      PQ = SQRT(RAD)
+
+C     loop over all the isospin in resonances
       DO 60  IB = 1,31
 
          IBLOCK = IB-1
@@ -499,61 +556,30 @@ C         ETA = ETAA(IB)
          XE = XEE(IB)
          IP = IPP(IB)
 
-C     **********************************
-
-C     FORMFACTORS AND RELATED QUANTITIES
-
          if (IFFSPI.ne.0) then
-
-C       K.M. Graczyk and J.T. Sobczyk, Phys.Rev.D 77,053001 (2008)
-C       Equations are correction in erratum
-C       CA5(0) and XMA are set by user
-
-            CA5=   RCA5ISPI/((1-Q2/XMASPI2)**2)
-
-C     J.A. Nowak, arXiv:0909.3659
-C     Vector Form Factors
-C     CV1, CV2 are for simplicity, not true form factors
-C     Added the proportional factors of the vector form factors GV
-C     to CV3,CV4,CV5
-
-C     (PAR) Yargh, the variable Q2 here has a minus sign relative to
-C     Q2 in the Nowak/Graczyk & Sobczyk papers
-
-            CV1=  1./((1.-Q2/(4.*XMVSPI2))
-     $           * ((1.-Q2/XMVSPI2)**2))
-            CV2=  1./((1.-Q2/(4.*XMVSPI2))
-     $           * ((1.-Q2/(0.766*XMVSPI2))**2))
-            CV3A= 2.13*CV1*((W+XMN)/XMN)
-            CV3B= 2.13*CV1*((XMN2-Q2+XMN*W)/(XMN*W))
-            CV4= -1.51*CV1*((W2+Q2-XMN2)/(2.*XMN2))
-            CV5=  0.48*CV2*((W2-Q2-XMN2)/(2.*XMN2))
-
-            GV3=  (.5/SQRT(3.))*(CV4+CV5+CV3A)
-            GV1=  (-.5/SQRT(3.))*(CV4+CV5-CV3B)
-
-            NFF=  SQRT((3.*(GV3)**2)+GV1**2)
 
 C     Note, J.A. Nowak has different form factors that those quoted
 C     in G&S (eq. 58). G&S seems to match previous MC better
 
-            FFV = 0.5 * (1 - Q2/(XMN+W)**2)**0.5
-     &           * (1 - Q2/(4*XMN2))**(-1*NR)
-     &           * NFF
+C     Neutrino-production
+            FFV = FFVaux*(1 - Q2/(4*XMN2))**(-1*NR)
 
 C     Axial. Divide by Z, the arbitrary Rein-Sehgal factor, because
 C     we multiply by it later
 
-            FFA = 0.5 * SQRT(3.0) * (1 - Q2/(XMN+W)**2)**0.5
-     &           * (1 - Q2/(4*XMN2))**(-1*NR)
-     &           * (1 - (W2 + Q2 - XMN2)/(8*XMN2))
-     &           * CA5 / Z
+            FFA = FFAaux * (1 - Q2/(4*XMN2))**(-1*NR)
 
 C     Rein-Seghal form factors
 C     Difference between Rein-Seghal form factors are shown in
 C     Phys Rev D 77 (053001), equation 12, 13
+C     NRTYPESPI seems to be if electroproduction (Ravndal)
          else
             if(NRTYPESPI.eq.0) then
+
+C     CWRET: MAYBE WRONG HERE, SEE EQ 12; instead of XMN2 in FFV should
+C     be W2? 
+C     data or neutrino (Rein-Sehgal)
+C     This also exists for G&S form factors!
                FFV = ((1.-Q2/(4.*XMN2))**(.5-NR/2.))
      $              /(1.-Q2/XMVSPI2)**2
                FFA = ((1.-Q2/(4.*XMN2))**(.5-NR/2.))
@@ -579,11 +605,10 @@ C     ATTENTION: NR CHANGED INTO NR/2.
          TP = -(TV+TA)
          TM = -(TV-TA)
 
-C     ---------------------------
-C     --- Lepton mass effects ---
+C     Start lepton mass corrections
          ng = (W+XMN)**2-Q2
 
-C     New definitions of S, B, C
+C     New definitions of S, B, C for KLN, equation 16 of Berger-Sehgal
          S = (Qs*Q-nus*nu)*(3.*W*XMN+Q2-XMN2)/(6.*Q2_lab*XMN2)*FFV
          B = 2.*SQRT(OMEG/2.)*(Qs+2.*W*nus*Q/ng)/(6.*W*Q)*Z*FFA
          C = ((Qs*Q-nus*nu)*(1./3.+2.*W*nu/ng)
@@ -598,16 +623,18 @@ C     Correction is added to B_BRS(2M_Na should be M_Na in the reference)
 
          B = B + B_BRS
          C = C + C_BRS
-C     ---------------------------
-C     ---------------------------
 
-*     Original dynamical form factors
+C     Original dynamical form factors (no mass effect), overwrite the above
          if (Original.eq.1) then
+C       Maybe this should be XMN2, not W2, in denominator, RS 3.11
             S = (FFV*(3.*W*XMN-XMN2+Q2)/(6.*W2))*(-Q2/QVS2)
             B = FFA*Z*SQRT(OMEG/2.)*(1.+XNUS/A)/(3.*W)
+C       Same thing here in denominator
             C = FFA*Z*(W2-XMN2+NR*OMEG*XNUS/A)/(6.*W*QVS)
          endif
 
+C       Make an array for all the constants we've now managed to make
+C       for calculating the great Rein-Sehgal cross-section!
          PAR( 1) = RV
          PAR( 2) = RA
          PAR( 3) = R
@@ -623,6 +650,7 @@ C     ---------------------------
          PAR(13) = C
          PAR(14) = XLAM
 
+C        Calculate the helicity amplitudes
          CALL RSCLFM(IFLAG,IBLOCK,PAR,RETF)
 
          IF (IFLAG.LE.3) THEN
@@ -643,18 +671,16 @@ C     ---------------------------
 
 
 C     **********************************
-
-C     STORE RESONANCE AMPLITUDES
+C     Now store the resonance ampltiudes
 
          XXE = SQRT(XE)
 
-         RAD =((W2-XMN2-XMPI2)**2-4.*XMN2*XMPI2)/(4.*W2)
-         IF(RAD.LE.0.) RAD = 0.0001
-         PQ = SQRT(RAD)
          RADR = ((XMR**2-XMN2-XMPI2)**2-4.*XMN2*XMPI2)/(4.*XMR**2)
-         IF(RADR.LE.0.) RADR = 0.0001
+         IF(RADR .LE. 0) RADR = RS_SMNO
          PQR = SQRT(RADR)
+C        Rein p48, eq 28, Gamma_R
          BRA = BR*(PQ/PQR)**IP
+C        Rein p48 eq 27
          FBW = (BRA/(2.*PI))/((W-XMR)**2+BRA**2/4.)
 
          ETABW(IB) = CMPLX(W-XMR,-1.*BRA/2.)
@@ -663,10 +689,12 @@ C     STORE RESONANCE AMPLITUDES
 
          FFBW(IB) = FBW/FBWNO
 
+C       CWRET don't think these are used...
          ABWR(IB) = FFBW(IB)*(W-XMR)/SQRT(BRA/(2.*PI))
          ABWR(IB) = ABWR(IB)*SQRT(FBWNO)
          ABWI(IB) = FFBW(IB)*SQRT(BRA*PI/2.)
          ABWI(IB) = ABWI(IB)*SQRT(FBWNO)
+
          IF(IFLAG.LE.3)  GOTO 991
          AM3(IB) = FM3*XXE
          AM1(IB) = FM1*XXE
@@ -690,16 +718,23 @@ C     STORE RESONANCE AMPLITUDES
          A0MC(IB) = F0MC*XXE
  992     CONTINUE
 
-C     WE CHOOSE I=1/2, J=1/2 NONRES. INCOHERENT BACKGROUND
+C     For the background we choose an I12 nonres background, as
+C     originally prescribed by Rein & Sehgal
+C     We also replace the Breit-Wigner to emulate effect of a
+C     phase-space distribution
 
-         CO = ((W2-WMIN**2)/(4.*W2))**.25
-         IF(IB.GE.29)  FFBW(IB) = 1.*(CO**2)
-         IF(IB.eq.29)  ETABW(IB) = RBGSCLSPI*CMPLX(SQRT(FFBW(IB)))
-         IF(IB.eq.30)  ETABW(IB) = RBGSCLSPI*CMPLX(SQRT(FFBW(IB)))
-
-C     **********                 ****CHANGE WITH COH/INCOH BACKGROUND
+C     29 is I12 background
+C     30 is I32 background (not implemented; is always 0)
+C     Both backgrounds are non-interfering
+C        CO = ((W2-WMIN**2)/(4.*W2))**.25
+C        IF(IB.GE.29)  FFBW(IB) = 1.*(CO**2)
+C        IF(IB.eq.29)  ETABW(IB) = RBGSCLSPI*CMPLX(SQRT(FFBW(IB)))
+C        IF(IB.eq.30)  ETABW(IB) = RBGSCLSPI*CMPLX(SQRT(FFBW(IB)))
+         IF(IB.GE.29)  FFBW(IB) = SQRT((W2-WMIN**2)/(4.*W2))
+         IF(IB.GE.29)  ETABW(IB) = RBGSCLSPI*CMPLX(SQRT(FFBW(IB)))
 
  60   CONTINUE
+C     END OF IB LOOP
 
       DO 61 NCTR=1,31
          AM(1,NCTR) = AM3C(NCTR)
@@ -710,14 +745,12 @@ C     **********                 ****CHANGE WITH COH/INCOH BACKGROUND
          AM(6,NCTR) = A0MC(NCTR)
  61   CONTINUE
 
-
+C     Sum the resonance amplitude coherently!
       CALL RSASUM(AM,ETABW,RESSGN,ASUM)
 
 
-      CO = ((W2-(XMN+XMPI)**2)/(4.*W2))**.25
-
-C     **********                 ****CHANGE WITH COH/INCOH BACKGROUND
-
+C     Choose GOTO based on interaction mode: getting close to the
+C     cross-section now!
 C     SELECT APPROPRIATE NUCLEON - PION CHANNEL
 
       IF(IFLAG.EQ.1)  GOTO 2010
@@ -729,72 +762,87 @@ C     SELECT APPROPRIATE NUCLEON - PION CHANNEL
       IF(IFLAG.EQ.7)  GOTO 2070
 
 
-C     START SELECTIVE SUMMATION IN FIRST CHANNEL
+C     Do the selective summations of the amplitudes
 
  2010 CONTINUE
 
+C     CC1pi+ 1p
       CALL RSIFL1(ASUM,ETABW,RESSGN,AM,ASL,ASR,ASS)
 
       GOTO 69
 
  2020 CONTINUE
 
+C     CC1pi0 1p
       CALL RSIFL2(ASUM,ETABW,RESSGN,AM,ASL,ASR,ASS)
 
       GOTO 69
 
  2030 CONTINUE
 
+C     CC1pi+ 1n
       CALL RSIFL3(ASUM,ETABW,RESSGN,AM,ASL,ASR,ASS)
 
       GOTO 69
 
  2040 CONTINUE
 
+C     NC 1p 1pi0
       CALL RSIFL4(ASUM,ETABW,RESSGN,AM,ASL,ASR,ASS)
 
       GOTO 69
 
  2050 CONTINUE
 
+C     NC 1n 1pi+
       CALL RSIFL5(ASUM,ETABW,RESSGN,AM,ASL,ASR,ASS)
 
       GOTO 69
 
  2060 CONTINUE
 
+C     NC 1n 1pi0
       CALL RSIFL6(ASUM,ETABW,RESSGN,AM,ASL,ASR,ASS)
 
       GOTO 69
 
  2070 CONTINUE
 
+C     NC 1p 1pi-
       CALL RSIFL7(ASUM,ETABW,RESSGN,AM,ASL,ASR,ASS)
 
       GOTO 69
 
  69   CONTINUE
 
+C     SL, SR, SS, is the left, right and longditudinal polarisations
+C     For total cross-section
       SL = ASL(1)
       SR = ASR(1)
       SS = ASS(1) * (-QVS2 / Q2)
 
+C     SL, SR, SS, is the left, right and longditudinal polarisations,
+C     Only from terms without background!
       SL1 = ASL(2)
       SR1 = ASR(2)
       SS1 = ASS(2) * (-QVS2 / Q2)
 
+C     SL, SR, SS, is the left, right and longditudinal polarisations,
+C     Only from Delta(1232)
       SL0 = ASL(3)
       SR0 = ASR(3)
       SS0 = ASS(3) * (-QVS2/ Q2)
 
-
-
-      IF (IMODE.GT.10) THEN     ! for anti-neutrino
+C     For anti-neutrino
+      IF (IMODE.GT.10) THEN
          Ctmp = C_L
          C_L = -C_R
          C_R = -Ctmp
       ENDIF
 
+C     DSI is the total cross-section
+C     DSI1 is the cross-section without resonance
+C     DSI2 is the cross-section from the Delta
       DSI  = AK*(W/XMN)*(-Q2/QV2)*FAKT*((C_L**2)*SL  + (C_R**2)*SR
      $       + (C_S**2)*SS)
       DSI1 = AK*(W/XMN)*(-Q2/QV2)*FAKT*((C_L**2)*SL1 + (C_R**2)*SR1
@@ -803,6 +851,7 @@ C     START SELECTIVE SUMMATION IN FIRST CHANNEL
      $       + (C_S**2)*SS0)
 
 C     dsigma/(dQ2*dW)
+C     1.321 is G_F/(4pi^2)*Cabbibo cos^2 and convert from GeV-1 to cm^1
       DSI  = DSI * 1.321
       DSI1 = DSI1 * 1.321
       DSI0 = DSI0 * 1.321
@@ -816,13 +865,16 @@ C     dsigma/(dQ2*dW)
       GOTO 100
 
  999  CONTINUE
-c      write(*,*) "Wrong arguments."
-      DSI = -0.0000000E1
-      DSI0 = -0.0000000E1
+C     BAD EVENTS END HERE
+      DSI = -0
+      DSI0 = -0
       GOTO 100
 
  9999 DSI = -9999.999
       DSI0 = -9999.999
+      write(*,*) "GOT A WRONG MODE IN NEUTCORE/RSDCRS.F!"
+      write(*,*) "IFLAG = ", IFLAG
+      stop
 
  100  DIFCRS = DSI
       DFCRS3 = DSI0

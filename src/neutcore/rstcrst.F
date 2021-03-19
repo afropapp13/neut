@@ -63,12 +63,18 @@
       REAL ETBL(IEMAX),XNUCRS(17,2,IEMAX)
 
       character*15 fname_ref(3)
+      character*18 fname_mk_ref(3)
       character*1024 fname
 
       data fname_ref/
      $     'spi_nue_xsec_ma',
      $     'spi_num_xsec_ma',
      $     'spi_nut_xsec_ma'/
+
+      data fname_mk_ref/
+     $     'spi_nue_xsec_mk_ma',
+     $     'spi_num_xsec_mk_ma',
+     $     'spi_nut_xsec_mk_ma'/
 
       DATA ETBL/0.37,0.4,0.5,0.625,0.75,0.875,1.00,1.125,1.25,
      $     1.375,1.50,2.00,2.50,3.00,3.50,4.75,6.00,10.0,50.0,
@@ -84,19 +90,28 @@
 
       IF (SFLAG.eq.0) then
 
-         if (IFFSPI.ne.0) then
+C   Minoo's model
+        if (MDLSPI .EQ. 3) then
 
-C- new form factor
+C   Has different format in the stored xsec table
+          write(fname,'(A,F4.2,A,F4.2,A,F4.2,A)') fname_mk_ref(3),
+     $          xmaspi,'_ca5',rca5ispi,'_mabkg',XMABKGM,'.dat'
+
+C   Rein-Sehgal model
+        else
+C- New form factor and Rein-Sehgal
+         if (IFFSPI.ne.0) then
             write(fname,'(A,F4.2,A,F4.2,A,F4.2,A)') fname_ref(3), 
      $           xmaspi, '_ca5I', RCA5ISPI,
      $           '_bgscl', RBGSCLSPI,'.dat'
 
-         else
-
 C- original form factor
+         else
             write(fname,'(A,F4.2,A)') fname_ref(3), xmaspi, '.dat'
-
-         endif
+C       end if iffspi.ne.0
+          endif
+C end if mdl1pi .eq. 1
+        endif
 
          fname = crstblpath(1:lenpath)//fname         
          write(6,*) 'Opening file ', fname(1:lenstr(fname))
@@ -143,10 +158,8 @@ C- original form factor
       SIGMA = SIGMA / 10.
       SIGMA3= SIGMA3/ 10.
 
-C      IF((E.LT.3.92).and.((IMODE.lt.4).or.((IMODE.gt.10).and.(IMODE.
       IF((E.LT.4.05).and.((IMODE.lt.4).or.((IMODE.gt.10).and.(IMODE.
      $     lt.14)))) THEN
-*        write(*,*) "RSTCTST: E<3.92GeV",E,SIGMA,SIGMA3
          SIGMA=0.
          SIGMA3=0.
       ENDIF

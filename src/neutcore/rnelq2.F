@@ -74,7 +74,7 @@ C           write(6,*) i,dbq2,sigma
  30      CONTINUE
       ELSE IF (ILAST.NE.0) THEN
 C
-C --     BACKWORD
+C --     BACKWARD
 C         
          DO 40 I=1,50
             DBQ2=EQ2MIN+FLOAT(ILAST)*DQ2-FLOAT(I)*DQ2*0.02

@@ -234,11 +234,7 @@ C-
 
       RNDSIG = RLU(IRSISED)*SIGMAX
       W = RLU(IRSISED)*(WMAX - WMIN)+WMIN
-C      if (e.le.1.) then
-C         Q2 = -1.*RLU(IRSISED)*8
-C      else
-         Q2 = -1.*RLU(IRSISED)*e*e*8
-C      endif
+      Q2 = -1.*RLU(IRSISED)*E*E*4
 
  12   CONTINUE
       XCONS=SMAX-XMLEP**2-W**2
@@ -255,6 +251,7 @@ C     $      - 2*PNEUCM*sqrt(PTAUA**2+XMLEP**2)
 C     $      - 2*PTAUA*PNEUCM
 
 C      Q2 = QMIN + RLU(IRSISED)*(QMAX-QMIN)
+      IF (Q2 .GT. QMIN .OR. Q2 .LT. QMAX) GOTO 11
 
       W2 = W*W
       IF ( ((2 * XMN * E) * (2 * XMN * E + XMN2 - W2) /
@@ -327,6 +324,6 @@ C- Add 98/03/01
          RETPLMD(I) = TMPPNU(I)
  80   CONTINUE
  1000 continue
-       return
+      return
 
       END

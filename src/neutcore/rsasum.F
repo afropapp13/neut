@@ -42,6 +42,9 @@
           A0MC(NCTR) = AM(6,NCTR)
  61   CONTINUE
 
+C     Here we're summing up the amplitudes of each state
+C     e.g. P33 amplitude = P33(1234) + P33(1640) + other P33 states
+C     Hence only 14, and not 18
 
       ASUM( 1 , 1 , 1 ) = AM3C( 6)*ETABW( 6)*RESSGN( 6)
       ASUM( 1 , 1 , 2 ) = AM3C( 4)*ETABW( 4)*RESSGN( 4)

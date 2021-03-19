@@ -23,6 +23,7 @@
 *       2007.Dec. ; add lepton mass effects by G.Mitsuka
 *       2009.Feb. ; change Z=0.74 -> Z=0.76 by Y.Nakajima
 *       2010.Oct. ; use file for the cross-section table by Y.Hayato
+*       2016.Oct : C. Wret add in Kabirnezhad model
 *
 *     ( comment )
 *       Reference:Rein and Sehgal,Ann. of Phys. 133(1981),79-153
@@ -48,6 +49,8 @@
       INTEGER IEMAX
       PARAMETER (IEMAX=24)
 
+      LOGICAL EXISTS
+
       INTEGER LUNI
       PARAMETER (LUNI=88)
 
@@ -63,6 +66,7 @@
       REAL ETBL(IEMAX),XNUCRS(17,2,IEMAX)
 
       character*15 fname_ref(3)
+      character*18 fname_mk_ref(3)
       character*1024 fname
 
       data fname_ref/
@@ -70,6 +74,12 @@
      $     'spi_num_xsec_ma',
      $     'spi_nut_xsec_ma'/
 
+      data fname_mk_ref/
+     $     'spi_nue_xsec_mk_ma',
+     $     'spi_num_xsec_mk_ma',
+     $     'spi_nut_xsec_mk_ma'/
+
+C     Needs to match this table
       DATA ETBL/0.37,0.4,0.5,0.625,0.75,0.875,1.00,1.125,1.25,
      $     1.375,1.50,2.00,2.50,3.00,3.50,4.75,6.00,10.0,50.0,
      $     100.0,200.0,400.0,650.0,1000.0/
@@ -84,18 +94,30 @@
 
       IF (SFLAG.eq.0) then
 
+C   Minoo's model
+        if (MDLSPI .EQ. 3) then
+
+C   Has different format in the stored xsec table
+          write(fname,'(A,F4.2,A,F4.2,A,F4.2,A)') fname_mk_ref(2),
+     $          xmaspi,'_ca5',rca5ispi,'_mabkg',XMABKGM,'.dat'
+
+        else
+C       If we are using Graczyk Sobczyk form factors
+C       IFFSPI = NEUT-IFF (IFF) in card file (common/neut1pi/neiff)
          if (IFFSPI.ne.0) then
 
-C- new form factor
+C- New form factor and Rein-Sehgal
             write(fname,'(A,F4.2,A,F4.2,A,F4.2,A)') fname_ref(2),
      $           xmaspi, '_ca5I', RCA5ISPI,
      $           '_bgscl', RBGSCLSPI,'.dat'
 
-         else
-
 C- original form factor
+         else
             write(fname,'(A,F4.2,A)') fname_ref(2), xmaspi, '.dat'
+C       end if iffspi.ne.0
+          endif
 
+C end if mdl1pi .eq. 1
          endif
 
          fname = crstblpath(1:lenpath)//fname         
@@ -103,8 +125,16 @@ C- original form factor
          open(LUNI,file=fname,
      $        form='formatted',status='OLD')
 
-        read(LUNI,*) DUMSTR
+        READ(LUNI,*) DUMSTR
 
+        INQUIRE(LUNI, EXIST=EXISTS)
+        if (.NOT. EXISTS) then
+          write(*,*) "Could not find file ", fname
+          stop
+        endif
+
+C       Minoo and Rein-Sehgal implementation has same cross-section
+C       tables
         call rstcrsrd(LUNI,IP,IEMAX,ETBL,XNUCRS)
 
         close(LUNI)
