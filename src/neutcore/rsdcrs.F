@@ -501,10 +501,7 @@ C     CV1, CV2 are for simplicity, not true form factors
 C     Added the proportional factors of the vector form factors GV
 C     to CV3,CV4,CV5
 
-C     (PAR) Yargh, the variable Q2 here has a minus sign relative to
-C     Q2 in the Nowak/Graczyk & Sobczyk papers
-
-C     CHANGE HERE FOR NEW FORM FACTORS?
+C     CW: New form factors should be put here
 C     arxiv:1407.5445v1
 
          CV1=  1./((1.-Q2/(4.*XMVSPI2))
