@@ -498,9 +498,9 @@ C     i.e. change SIGMAX = SIGMAX * (bigger number than currently)
         GOTO 111
       END IF
 
-      enu_com = e
-      q2_com = q2
-      w_com = w
+c     enu_com = e
+c     q2_com = q2
+c     w_com = w
 
 
 
@@ -1633,8 +1633,8 @@ C     This is where we want to end up once
 C     we've got a good theta and phi for any model
  72   CONTINUE
 
-      th_com = theta
-      phi_com = phi
+c     th_com = theta
+c     phi_com = phi
 
 C     Boost to get the muon, pion and nucleon 3-momenta
       CALL RSLZBT(E,Q2,W,XMLEP,THETA,PHI,TMPPMU,TMPPPI,TMPPNU)

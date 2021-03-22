@@ -183,10 +183,10 @@ C     Z component
 C     Make the nucleon in the negative direction of pion
       DO 50 I=1,3
 C     CWRET save the pion
-         ppirs(I)=ppiar(I)
+c        ppirs(I)=ppiar(I)
          PPRAR(I)=-1.*PPIAR(I)
  50   CONTINUE
-      ppirs(4) = sqrt(XMPI**2+ppirs(1)**2+ppirs(2)**2+ppirs(3)**2)
+c     ppirs(4) = sqrt(XMPI**2+ppirs(1)**2+ppirs(2)**2+ppirs(3)**2)
 
       COSZQA=ZAXIS(3)
       SINZQA=ZAXIS(1)

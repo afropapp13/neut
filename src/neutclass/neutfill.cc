@@ -162,6 +162,7 @@ neutfillvect(char *filename, char *treename, char *branchname)
 
 
   // Temp CWRET, try saving Q2, Enu, W, costh, phi adler
+  /*
   nv->Q2 = neut1pi_.q2_com;
   nv->W = neut1pi_.w_com;
   nv->Enu = neut1pi_.enu_com;
@@ -171,6 +172,7 @@ neutfillvect(char *filename, char *treename, char *branchname)
   nv->ppirs[1] = neut1pi_.ppirs[1];
   nv->ppirs[2] = neut1pi_.ppirs[2];
   nv->ppirs[3] = neut1pi_.ppirs[3];
+  */
   
   /****************************************************/
   // interaction model and some parameters
