@@ -196,12 +196,11 @@ C
       real*4 q2
       real*4 w
 
+      real yfn
+
 C     Adler angles needed for Minoo's model
 C     Also needed for reweighting Rein-Seghal ejection method
       real*4 costhetaAd, phiAd
-
-      real*4 dcp,    dc33p
-      real*4 dcm,    dc33m
 
 C -- For boosting
       real*4 PNEU(3),PFABS,AMIN,BETA,EV(3),GM
@@ -211,9 +210,23 @@ C -- Parameters
 
       integer*4 IMOD
 
-      evdifcrs = -1
+      evpiw = 1
+
+C     Only works for Rein-Sehgal model
+      IF (MDLSPI .NE. 1) THEN
+        GOTO 999
+      endif
+
 
       ipar = ipne(1)
+
+C     Only applies to resonant interaction
+      if (abs(modene) .lt. 11 .or. ! CC1pi+1p starts at 11
+     &    (abs(modene) .gt. 14 .and. ! CC1pi+1n ends at 14
+     &     abs(modene) .lt. 31) .or. ! NCpi starts at 31
+     &    (abs(modene) .gt. 34)) then
+        goto 999
+      endif
 
       IF (MODENE.eq.11)  IMOD=1
       IF (MODENE.eq.12)  IMOD=2
@@ -293,40 +306,39 @@ C     Calculate W
      $            +(pne(2,1)+pne(2,2)-pne(2,3))**2
      $            +(pne(3,1)+pne(3,2)-pne(3,3))**2))
 
-C     Lepton mass effect
+C     Lepton mass effect; don't need to apply if NC because no mass
+C     of outgoing lepton
       if (abs(modene).gt.30) then
          IORIG = 1
       else
          IORIG = 0
       endif
 
-C     Single pion calculation (11-13 is CC, 31-34 is NC)
-      else if (    ((abs(modene).ge.11).and.(abs(modene).le.13))
-     $         .or.((abs(modene).ge.31).and.(abs(modene).le.34)))
-     $        then
-         if ( w.le.XMN+XMPI ) then
-            WRITE(*,*) "Resetting W: ", w, " -> ", XMN+XMPI
-            w = XMN+XMPI
-         endif
+C     Check the W
+      if ( w.le.XMN+XMPI ) then
+        WRITE(*,*) "Resetting W: ", w, " -> ", XMN+XMPI
+        w = XMN+XMPI
+      endif
+
 C     Boost neutrino to nucleon rest frame since all the calculations in
 C     Rein-Sehgal and Minoo are done in nucleon rest frame
 C     Q2 and W neednt be calculated since invariant
-        PFABS=SQRT(pne(1,2)**2+pne(2,2)**2+pne(3,2)**2)
-        IF (PFABS.NE.0.) THEN
-C         Get relativistic beta (momentum/energy)
-          BETA=PFABS/enuc1
-C         Get relativistic gamma factor
-          GM=1./SQRT(1.-BETA**2)
-          do i =1,3
-C           Copy the neutrino energy
-            PNEU(i) = pne(i,1)
-C           Get the unit vector of the initial state nucleon momentum
-            EV(i)=-pne(i,2)/PFABS
-          enddo
-C         Boost neutrino to nucleon frame
-          CALL MCVECBST(PNEU,0.,EV,GM)
-          e = SQRT(PNEU(1)**2+PNEU(2)**2+PNEU(3)**2)
-        ENDIF
+      PFABS=SQRT(pne(1,2)**2+pne(2,2)**2+pne(3,2)**2)
+      IF (abs(PFABS).gt.1E-5) THEN
+C       Get relativistic beta (momentum/energy)
+        BETA=PFABS/enuc1
+C       Get relativistic gamma factor
+        GM=1./SQRT(1.-BETA**2)
+        do i =1,3
+C         Copy the neutrino energy
+          PNEU(i) = pne(i,1)
+C         Get the unit vector of the initial state nucleon momentum
+          EV(i)=-pne(i,2)/PFABS
+        enddo
+C       Boost neutrino to nucleon frame
+        CALL MCVECBST(PNEU,0.,EV,GM)
+        e = SQRT(PNEU(1)**2+PNEU(2)**2+PNEU(3)**2)
+      ENDIF
 
 C     For Rein-Sehgal model choice call Rein-Sehgal code
 C     IMOD is the interaction mode (e.g. CC1pi+1p), IORIG refers to
@@ -334,33 +346,19 @@ C     using lepton mass effect, xmlep is lepton mass, e = neutrino
 C     energy, q2 = -Q2, W = hadronic mass, dcp is returned positive
 C     helicity differential xsec, dcm is returned negative helicity
 C     differential xsec, the 33s are using only the Delta(1232) 
-        IF (MDLSPI .EQ. 1) THEN
-          call rsdcrs(IMOD, IORIG, 1, xmlep,e,q2,w,dcp,dc33p)
-          call rsdcrs(IMOD, IORIG, -1,xmlep,e,q2,w,dcm,dc33m)
-          evdifcrs = dcp + dcm
+      IF (MDLSPI .EQ. 1) THEN
 C     Need to calculate theta and phi
 C     Get the primary nucleon and pion so we can boost into the frame
-C         Get the Adler angles
+C     Get the Adler angles
           costhetaAd = -999
           phiAd = -999
-C         write(*,*) "******"
           call mkAdler(costhetaAd, phiAd)
-C         write(*,*) "saved pion adler=",ppirs
+          call rscalcy(IMOD, ipne(3), e, q2, w, acos(costhetaAd), phiAd,
+     &                0, yfn)
 
-C         write(*,*) "calc enu=",e
-C         write(*,*) "saved enu=",enu_com
-C         write(*,*) "calc q2=",q2
-C         write(*,*) "saved q2=",q2_com
-C         write(*,*) "calc w=",w
-C         write(*,*) "saved w=",w_com
-C         write(*,*) "calc costh=",costhetaAd
-C         write(*,*) "saved costh=",costh_com
-C         write(*,*) "calc phi=",phiAd
-C         write(*,*) "saved phi=",phi_com
-
-          call mkdcrs(IMOD, e, q2, w, costhetaAd, phiAd, xmlep, dcp)
-          evdifcrs = dcp
+          evpiw = yfn
         ENDIF
 
+ 999  continue
       RETURN
       END
