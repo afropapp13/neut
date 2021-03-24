@@ -1,69 +1,44 @@
-//____________________________________________________________________________
-/*!
+#pragma once
 
-\class    neut::rew::NReWeight
-
-\brief    Interface to the NEUT event reweighting engines
-
-\author   Jim Dobson <J.Dobson07 \at imperial.ac.uk>
-          Imperial College London
-
-          Costas Andreopoulos <costas.andreopoulos \at stfc.ac.uk>
-          STFC, Rutherford Appleton Laboratory
-
-          Patrick de Perio <pdeperio \at physics.utoronto.ca>
-          University of Toronto
-
-\created  Apr 5, 2011
-
-\cpright  Copyright (c) 2003-2011, GENIE Neutrino MC Generator Collaboration
-          For the full text of the license visit http://copyright.genie-mc.org
-          or see $GENIE/LICENSE
-*/
-//____________________________________________________________________________
-
-#ifndef _N_REWEIGHT_H_
-#define _N_REWEIGHT_H_
+#include "NSyst.h"
 
 #include <map>
+#include <memory>
 #include <string>
-
-#include "NReWeightI.h"
-#include "NSystSet.h"
 
 namespace neut {
 namespace rew {
 
+class NReWeightEngineI;
+
 class NReWeight {
 public:
-  NReWeight();
-  ~NReWeight();
+  NReWeight() {}
+  ~NReWeight() {}
 
-  /// Add concrete weight calculator, transfers ownership
-  void AdoptWghtCalc(std::string name, NReWeightI *wcalc);
+  void AdoptWeightEngine(std::string const &name,
+                         std::unique_ptr<NReWeightEngineI> &&engine);
 
-  /// access a weight calculator by name
-  NReWeightI *WghtCalc(std::string name);
-  /// set of enabled systematic params & values
-  NSystSet &Systematics(void);
-  /// reconfigure weight calculators with new params
-  void Reconfigure(void);
-  /// calculate weight for input event
+  NReWeightEngineI &WeightEngine(std::string const &name);
+
+  void Reconfigure();
+
   double CalcWeight();
-  /// calculate penalty chisq for current values of tweaking dials
-  double CalcChisq(void);
-  void Print(void);
+
+  bool DialIsHandled(NSyst_t) const;
+  NSyst_t DialFromString(std::string const &) const;
+  std::string DialAsString(NSyst_t) const;
+  double GetDial_From_Value(NSyst_t) const;
+  double GetDial_To_Value(NSyst_t) const;
+  double GetDial_OneSigma(NSyst_t, double) const;
+  void SetDial_NumberOfSigmas(NSyst_t, double);
+  void SetDial_To_Value(NSyst_t, double);
+
+  void Reset();
 
 private:
-  void CleanUp(void);
-
-  /// set of enabled nuisance parameters
-  NSystSet fSystSet;
-  /// concrete weight calculators
-  std::map<std::string, NReWeightI *> fWghtCalc;
+  std::map<std::string, std::unique_ptr<NReWeightEngineI>> WeightEngines;
 };
 
 } // namespace rew
 } // namespace neut
-
-#endif

@@ -15,7 +15,6 @@
 @SET_MAKE@
 
 
-
 VPATH = @srcdir@
 am__is_gnu_make = test -n '$(MAKEFILE_LIST)' && test -n '$(MAKELEVEL)'
 am__make_running_with_option = \
@@ -101,9 +100,6 @@ DIST_COMMON = $(top_srcdir)/build.common $(srcdir)/Makefile.in \
 @NEUT_HEPMC_TRUE@am__append_17 = -lNuHepMC -lHepMC3 -lHepMC3rootIO
 @FC_HAS_PIE_TRUE@am__append_18 = -no-pie
 @NEUT_USE_GPERF_TRUE@am__append_19 = -L@NEUT_GPERF@ -lprofiler
-bin_PROGRAMS = ReValidWeight$(EXEEXT) SummaryPlots$(EXEEXT) \
-	PlotReValidWeight$(EXEEXT) $(am__EXEEXT_1)
-@NEUT_HEPMC_TRUE@am__append_20 = ReValidWeight_HepMC
 subdir = reweight
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
@@ -142,8 +138,7 @@ am__uninstall_files_from_dir = { \
     || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
-am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" \
-	"$(DESTDIR)$(includedir)"
+am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(includedir)"
 LIBRARIES = $(lib_LIBRARIES)
 ARFLAGS = cru
 AM_V_AR = $(am__v_AR_@AM_V@)
@@ -152,79 +147,10 @@ am__v_AR_0 = @echo "  AR      " $@;
 am__v_AR_1 = 
 libNEUTReWeight_@NEUT_VERSION_NUM@_a_AR = $(AR) $(ARFLAGS)
 libNEUTReWeight_@NEUT_VERSION_NUM@_a_LIBADD =
-am__libNEUTReWeight_@NEUT_VERSION_NUM@_a_SOURCES_DIST =  \
-	NReWeightCasc.cc NReWeightNuXSecCCQE.cc NReWeightNuXSecRES.cc \
-	NReWeightFactory.cc NReWeight.cc NSystSet.cc \
-	NSystUncertainty.cc
-am__objects_1 = NReWeightCasc.$(OBJEXT) NReWeightNuXSecCCQE.$(OBJEXT) \
-	NReWeightNuXSecRES.$(OBJEXT) NReWeightFactory.$(OBJEXT) \
-	NReWeight.$(OBJEXT) NSystSet.$(OBJEXT) \
-	NSystUncertainty.$(OBJEXT)
-@NEUT_LIBCOMPAT_FALSE@am_libNEUTReWeight_@NEUT_VERSION_NUM@_a_OBJECTS =  \
-@NEUT_LIBCOMPAT_FALSE@	$(am__objects_1)
+am__objects_1 = NReWeight.$(OBJEXT) NSyst.$(OBJEXT)
+am_libNEUTReWeight_@NEUT_VERSION_NUM@_a_OBJECTS = $(am__objects_1)
 libNEUTReWeight_@NEUT_VERSION_NUM@_a_OBJECTS =  \
 	$(am_libNEUTReWeight_@NEUT_VERSION_NUM@_a_OBJECTS)
-libNReWeight_@NEUT_VERSION_NUM@_a_AR = $(AR) $(ARFLAGS)
-libNReWeight_@NEUT_VERSION_NUM@_a_LIBADD =
-am__libNReWeight_@NEUT_VERSION_NUM@_a_SOURCES_DIST = NReWeightCasc.cc \
-	NReWeightNuXSecCCQE.cc NReWeightNuXSecRES.cc \
-	NReWeightFactory.cc NReWeight.cc NSystSet.cc \
-	NSystUncertainty.cc
-@NEUT_LIBCOMPAT_TRUE@am_libNReWeight_@NEUT_VERSION_NUM@_a_OBJECTS =  \
-@NEUT_LIBCOMPAT_TRUE@	$(am__objects_1)
-libNReWeight_@NEUT_VERSION_NUM@_a_OBJECTS =  \
-	$(am_libNReWeight_@NEUT_VERSION_NUM@_a_OBJECTS)
-@NEUT_HEPMC_TRUE@am__EXEEXT_1 = ReValidWeight_HepMC$(EXEEXT)
-PROGRAMS = $(bin_PROGRAMS)
-am_PlotReValidWeight_OBJECTS = PlotReValidWeight.$(OBJEXT)
-PlotReValidWeight_OBJECTS = $(am_PlotReValidWeight_OBJECTS)
-am__DEPENDENCIES_1 =
-@NEUT_LIBCOMPAT_FALSE@am__DEPENDENCIES_2 = $(top_builddir)/neutclass/libNEUTClassUtils.@NEUT_VERSION_NUM@.a \
-@NEUT_LIBCOMPAT_FALSE@	$(top_builddir)/neutclass/libNEUTClass.la \
-@NEUT_LIBCOMPAT_FALSE@	$(top_builddir)/libNEUT.@NEUT_VERSION_NUM@.a \
-@NEUT_LIBCOMPAT_FALSE@	$(am__DEPENDENCIES_1)
-@NEUT_LIBCOMPAT_TRUE@am__DEPENDENCIES_2 = $(NEUTCLASS_LIBS) \
-@NEUT_LIBCOMPAT_TRUE@	$(NEUT_STATIC_LIBS) $(am__DEPENDENCIES_1)
-am__DEPENDENCIES_3 = $(am__DEPENDENCIES_1)
-PlotReValidWeight_DEPENDENCIES = $(LIBNAME) $(am__DEPENDENCIES_2) \
-	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_3)
-AM_V_lt = $(am__v_lt_@AM_V@)
-am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
-am__v_lt_0 = --silent
-am__v_lt_1 = 
-PlotReValidWeight_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
-	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CXXLD) \
-	$(AM_CXXFLAGS) $(CXXFLAGS) $(PlotReValidWeight_LDFLAGS) \
-	$(LDFLAGS) -o $@
-am_ReValidWeight_OBJECTS = ReValidWeight.$(OBJEXT)
-ReValidWeight_OBJECTS = $(am_ReValidWeight_OBJECTS)
-ReValidWeight_DEPENDENCIES = $(LIBNAME) $(am__DEPENDENCIES_2) \
-	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_3)
-ReValidWeight_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
-	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CXXLD) \
-	$(AM_CXXFLAGS) $(CXXFLAGS) $(ReValidWeight_LDFLAGS) $(LDFLAGS) \
-	-o $@
-am__ReValidWeight_HepMC_SOURCES_DIST = ReValidWeight_HepMC.cc
-@NEUT_HEPMC_TRUE@am_ReValidWeight_HepMC_OBJECTS =  \
-@NEUT_HEPMC_TRUE@	ReValidWeight_HepMC.$(OBJEXT)
-ReValidWeight_HepMC_OBJECTS = $(am_ReValidWeight_HepMC_OBJECTS)
-@NEUT_HEPMC_TRUE@ReValidWeight_HepMC_DEPENDENCIES = $(LIBNAME) \
-@NEUT_HEPMC_TRUE@	$(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1) \
-@NEUT_HEPMC_TRUE@	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_3)
-ReValidWeight_HepMC_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
-	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CXXLD) \
-	$(AM_CXXFLAGS) $(CXXFLAGS) $(ReValidWeight_HepMC_LDFLAGS) \
-	$(LDFLAGS) -o $@
-am_SummaryPlots_OBJECTS = SummaryPlots.$(OBJEXT)
-SummaryPlots_OBJECTS = $(am_SummaryPlots_OBJECTS)
-SummaryPlots_DEPENDENCIES = $(LIBNAME) $(am__DEPENDENCIES_2) \
-	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_3)
-SummaryPlots_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
-	$(CXXFLAGS) $(SummaryPlots_LDFLAGS) $(LDFLAGS) -o $@
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -243,6 +169,10 @@ am__depfiles_maybe = depfiles
 am__mv = mv -f
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
+AM_V_lt = $(am__v_lt_@AM_V@)
+am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
+am__v_lt_0 = --silent
+am__v_lt_1 = 
 LTCXXCOMPILE = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) \
 	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
@@ -259,16 +189,8 @@ AM_V_CXXLD = $(am__v_CXXLD_@AM_V@)
 am__v_CXXLD_ = $(am__v_CXXLD_@AM_DEFAULT_V@)
 am__v_CXXLD_0 = @echo "  CXXLD   " $@;
 am__v_CXXLD_1 = 
-SOURCES = $(libNEUTReWeight_@NEUT_VERSION_NUM@_a_SOURCES) \
-	$(libNReWeight_@NEUT_VERSION_NUM@_a_SOURCES) \
-	$(PlotReValidWeight_SOURCES) $(ReValidWeight_SOURCES) \
-	$(ReValidWeight_HepMC_SOURCES) $(SummaryPlots_SOURCES)
-DIST_SOURCES =  \
-	$(am__libNEUTReWeight_@NEUT_VERSION_NUM@_a_SOURCES_DIST) \
-	$(am__libNReWeight_@NEUT_VERSION_NUM@_a_SOURCES_DIST) \
-	$(PlotReValidWeight_SOURCES) $(ReValidWeight_SOURCES) \
-	$(am__ReValidWeight_HepMC_SOURCES_DIST) \
-	$(SummaryPlots_SOURCES)
+SOURCES = $(libNEUTReWeight_@NEUT_VERSION_NUM@_a_SOURCES)
+DIST_SOURCES = $(libNEUTReWeight_@NEUT_VERSION_NUM@_a_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -342,7 +264,6 @@ INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
 LD = @LD@
 LDFLAGS = @LDFLAGS@
 LIBOBJS = @LIBOBJS@
-LIBPREFIX = @LIBPREFIX@
 LIBS = @LIBS@
 LIBTOOL = @LIBTOOL@
 LIPO = @LIPO@
@@ -437,7 +358,7 @@ ACLOCAL_AMFLAGS = -I m4
 NEUT_INCLUDES = -I$(top_srcdir)/radcorr -I$(top_srcdir)/mec -I$(top_srcdir)/ht2p2h/inc -I$(top_srcdir)/nuccorspl -I$(top_srcdir)/n1p1h/inc -I$(top_srcdir)/nuceff -I$(top_srcdir)/nuclsmpl -I$(top_srcdir)/skmcsvc -I$(top_srcdir)/neutcore -I$(top_srcdir)/partnuck -I$(top_srcdir)/specfunc  -I$(top_srcdir)/tools -I$(top_builddir)/neutcore -I$(top_builddir)/skmcsvc -I$(top_builddir)/n1p1h -I$(top_builddir)/nuccorspl -I$(top_builddir)/nuceff
 NEUT_CLASS_INCLUDES = -I$(top_srcdir)/neutclass
 NEUT_STATIC_LIBS = $(top_builddir)/neutcore/lib@LIBPREFIX@neutcore.@NEUT_VERSION_NUM@.a \
-	$(top_builddir)/neutcore/lib@LIBPREFIX@CERNOverride.a \
+	$(top_builddir)/neutcore/lib@LIBPREFIX@CERNOverride.@NEUT_VERSION_NUM@.a \
 	$(top_builddir)/mec/lib@LIBPREFIX@neutmec.@NEUT_VERSION_NUM@.a \
 	$(top_builddir)/n1p1h/lib@LIBPREFIX@n1p1h.@NEUT_VERSION_NUM@.a \
 	$(top_builddir)/ht2p2h/lib@LIBPREFIX@ht2p2h.@NEUT_VERSION_NUM@.a \
@@ -448,13 +369,9 @@ NEUT_STATIC_LIBS = $(top_builddir)/neutcore/lib@LIBPREFIX@neutcore.@NEUT_VERSION
 	$(top_builddir)/skmcsvc/lib@LIBPREFIX@skmcsvc.@NEUT_VERSION_NUM@.a \
 	$(top_builddir)/partnuck/lib@LIBPREFIX@partnuck.@NEUT_VERSION_NUM@.a \
 	$(am__append_1)
-@NEUT_LIBCOMPAT_TRUE@NEUTCLASS_LIBS = $(top_builddir)/neutclass/libneutrootTreeSingleton.la $(top_builddir)/neutclass/libneutctrl.la $(top_builddir)/neutclass/libneutfsipart.la $(top_builddir)/neutclass/libneutfsivert.la $(top_builddir)/neutclass/libneutnucfsistep.la $(top_builddir)/neutclass/libneutnucfsivert.la $(top_builddir)/neutclass/libneutpart.la $(top_builddir)/neutclass/libneutvect.la $(top_builddir)/neutclass/libneutvtx.la
-@NEUT_LIBCOMPAT_FALSE@NEUT_LIBS = $(top_builddir)/neutclass/libNEUTClassUtils.@NEUT_VERSION_NUM@.a \
-@NEUT_LIBCOMPAT_FALSE@	$(top_builddir)/neutclass/libNEUTClass.la \
-@NEUT_LIBCOMPAT_FALSE@	$(top_builddir)/libNEUT.@NEUT_VERSION_NUM@.a \
-@NEUT_LIBCOMPAT_FALSE@	$(am__append_17)
-@NEUT_LIBCOMPAT_TRUE@NEUT_LIBS = $(NEUTCLASS_LIBS) $(NEUT_STATIC_LIBS) \
-@NEUT_LIBCOMPAT_TRUE@	$(am__append_17)
+NEUT_LIBS = $(top_builddir)/neutclass/libNEUTClassUtils.@NEUT_VERSION_NUM@.a \
+	$(top_builddir)/neutclass/libNEUTClass.la \
+	$(top_builddir)/libNEUT.@NEUT_VERSION_NUM@.a $(am__append_17)
 CERN_ROOT = $(CERN)/$(CERN_LEVEL)
 CERN_LINKFLAGS = -L$(CERN_ROOT)/lib
 CERN_LIBS = -ljetset74 -lpdflib804 -lphotos202 -lmathlib -lpacklib -lkernlib
@@ -486,31 +403,17 @@ ROOT_LINKFLAGS = $(shell root-config --ldflags) -pthread -rdynamic \
 EXE_LINKFLAGS = -fno-PIE -fno-pie $(am__append_18)
 EXE_RTLIBS = -lstdc++ -lgfortran $(am__append_19)
 AM_CXXFLAGS = -DNREWEIGHT_VERSION=@NEUT_VERSION_NUM@ $(DEFAULT_CXXFLAGS) $(NEUT_CLASS_INCLUDES)
-@NEUT_LIBCOMPAT_FALSE@LIBNAME = libNEUTReWeight.@NEUT_VERSION_NUM@.a
-@NEUT_LIBCOMPAT_TRUE@LIBNAME = libNReWeight.@NEUT_VERSION_NUM@.a
+LIBNAME = libNEUTReWeight.@NEUT_VERSION_NUM@.a
 lib_LIBRARIES = $(LIBNAME)
 
 # Don't seem to be able to have canonical names easily build from makefile variables, this is ugly, but works
-SRCLIST = NReWeightCasc.cc NReWeightNuXSecCCQE.cc NReWeightNuXSecRES.cc NReWeightFactory.cc NReWeight.cc NSystSet.cc NSystUncertainty.cc
-@NEUT_LIBCOMPAT_TRUE@libNReWeight_@NEUT_VERSION_NUM@_a_SOURCES = $(SRCLIST)
-@NEUT_LIBCOMPAT_FALSE@libNEUTReWeight_@NEUT_VERSION_NUM@_a_SOURCES = $(SRCLIST)
-include_HEADERS = NModeDefn.h NReWeightCasc.h  NReWeightNuXSecCCQE.h NReWeightNuXSecRES.h NReWeightFactory.h NReWeight.h NReWeightI.h NSyst.h NSystSet.h NSystUncertainty.h PDGCodes.h EventSummaryHelper.h
+SRCLIST = NReWeight.cc NSyst.cc
+libNEUTReWeight_@NEUT_VERSION_NUM@_a_SOURCES = $(SRCLIST)
+include_HEADERS = NReWeight.h NSyst.h NReWeightEngineI.h
 
 # Unused sources that live in the directory
-UNUSED_srcs = NReWeightNuclPiless.cc NReWeightNuXSecCOH.cc NReWeightNuXSecDIS.cc NReWeightNuXSecNCEL.cc
-UNUSED_headers = NReWeightNuclPiless.h NReWeightNuXSecCOH.h NReWeightNuXSecDIS.h NReWeightNuXSecNCEL.h
-ReValidWeight_SOURCES = ReValidWeight.cc
-ReValidWeight_LDADD = $(LIBNAME) $(NEUT_LIBS) $(CERN_LIBS) $(ROOT_LIBS) $(EXE_RTLIBS)
-ReValidWeight_LDFLAGS = $(EXE_LINKFLAGS) $(CERN_LINKFLAGS) $(ROOT_LINKFLAGS)
-@NEUT_HEPMC_TRUE@ReValidWeight_HepMC_SOURCES = ReValidWeight_HepMC.cc
-@NEUT_HEPMC_TRUE@ReValidWeight_HepMC_LDADD = $(LIBNAME) $(NEUT_LIBS) $(CERN_LIBS) $(ROOT_LIBS) $(EXE_RTLIBS)
-@NEUT_HEPMC_TRUE@ReValidWeight_HepMC_LDFLAGS = $(EXE_LINKFLAGS) $(CERN_LINKFLAGS) $(ROOT_LINKFLAGS)
-PlotReValidWeight_SOURCES = PlotReValidWeight.cc
-PlotReValidWeight_LDADD = $(LIBNAME) $(NEUT_LIBS) $(CERN_LIBS) $(ROOT_LIBS) $(EXE_RTLIBS)
-PlotReValidWeight_LDFLAGS = $(EXE_LINKFLAGS) $(CERN_LINKFLAGS) $(ROOT_LINKFLAGS)
-SummaryPlots_SOURCES = SummaryPlots.cc
-SummaryPlots_LDADD = $(LIBNAME) $(NEUT_LIBS) $(CERN_LIBS) $(ROOT_LIBS) $(EXE_RTLIBS)
-SummaryPlots_LDFLAGS = $(EXE_LINKFLAGS) $(CERN_LINKFLAGS) $(ROOT_LINKFLAGS)
+UNUSED_srcs = 
+UNUSED_headers = 
 all: all-am
 
 .SUFFIXES:
@@ -583,76 +486,6 @@ libNEUTReWeight.@NEUT_VERSION_NUM@.a: $(libNEUTReWeight_@NEUT_VERSION_NUM@_a_OBJ
 	$(AM_V_AR)$(libNEUTReWeight_@NEUT_VERSION_NUM@_a_AR) libNEUTReWeight.@NEUT_VERSION_NUM@.a $(libNEUTReWeight_@NEUT_VERSION_NUM@_a_OBJECTS) $(libNEUTReWeight_@NEUT_VERSION_NUM@_a_LIBADD)
 	$(AM_V_at)$(RANLIB) libNEUTReWeight.@NEUT_VERSION_NUM@.a
 
-libNReWeight.@NEUT_VERSION_NUM@.a: $(libNReWeight_@NEUT_VERSION_NUM@_a_OBJECTS) $(libNReWeight_@NEUT_VERSION_NUM@_a_DEPENDENCIES) $(EXTRA_libNReWeight_@NEUT_VERSION_NUM@_a_DEPENDENCIES) 
-	$(AM_V_at)-rm -f libNReWeight.@NEUT_VERSION_NUM@.a
-	$(AM_V_AR)$(libNReWeight_@NEUT_VERSION_NUM@_a_AR) libNReWeight.@NEUT_VERSION_NUM@.a $(libNReWeight_@NEUT_VERSION_NUM@_a_OBJECTS) $(libNReWeight_@NEUT_VERSION_NUM@_a_LIBADD)
-	$(AM_V_at)$(RANLIB) libNReWeight.@NEUT_VERSION_NUM@.a
-install-binPROGRAMS: $(bin_PROGRAMS)
-	@$(NORMAL_INSTALL)
-	@list='$(bin_PROGRAMS)'; test -n "$(bindir)" || list=; \
-	if test -n "$$list"; then \
-	  echo " $(MKDIR_P) '$(DESTDIR)$(bindir)'"; \
-	  $(MKDIR_P) "$(DESTDIR)$(bindir)" || exit 1; \
-	fi; \
-	for p in $$list; do echo "$$p $$p"; done | \
-	sed 's/$(EXEEXT)$$//' | \
-	while read p p1; do if test -f $$p \
-	 || test -f $$p1 \
-	  ; then echo "$$p"; echo "$$p"; else :; fi; \
-	done | \
-	sed -e 'p;s,.*/,,;n;h' \
-	    -e 's|.*|.|' \
-	    -e 'p;x;s,.*/,,;s/$(EXEEXT)$$//;$(transform);s/$$/$(EXEEXT)/' | \
-	sed 'N;N;N;s,\n, ,g' | \
-	$(AWK) 'BEGIN { files["."] = ""; dirs["."] = 1 } \
-	  { d=$$3; if (dirs[d] != 1) { print "d", d; dirs[d] = 1 } \
-	    if ($$2 == $$4) files[d] = files[d] " " $$1; \
-	    else { print "f", $$3 "/" $$4, $$1; } } \
-	  END { for (d in files) print "f", d, files[d] }' | \
-	while read type dir files; do \
-	    if test "$$dir" = .; then dir=; else dir=/$$dir; fi; \
-	    test -z "$$files" || { \
-	    echo " $(INSTALL_PROGRAM_ENV) $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(INSTALL_PROGRAM) $$files '$(DESTDIR)$(bindir)$$dir'"; \
-	    $(INSTALL_PROGRAM_ENV) $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(INSTALL_PROGRAM) $$files "$(DESTDIR)$(bindir)$$dir" || exit $$?; \
-	    } \
-	; done
-
-uninstall-binPROGRAMS:
-	@$(NORMAL_UNINSTALL)
-	@list='$(bin_PROGRAMS)'; test -n "$(bindir)" || list=; \
-	files=`for p in $$list; do echo "$$p"; done | \
-	  sed -e 'h;s,^.*/,,;s/$(EXEEXT)$$//;$(transform)' \
-	      -e 's/$$/$(EXEEXT)/' \
-	`; \
-	test -n "$$list" || exit 0; \
-	echo " ( cd '$(DESTDIR)$(bindir)' && rm -f" $$files ")"; \
-	cd "$(DESTDIR)$(bindir)" && rm -f $$files
-
-clean-binPROGRAMS:
-	@list='$(bin_PROGRAMS)'; test -n "$$list" || exit 0; \
-	echo " rm -f" $$list; \
-	rm -f $$list || exit $$?; \
-	test -n "$(EXEEXT)" || exit 0; \
-	list=`for p in $$list; do echo "$$p"; done | sed 's/$(EXEEXT)$$//'`; \
-	echo " rm -f" $$list; \
-	rm -f $$list
-
-PlotReValidWeight$(EXEEXT): $(PlotReValidWeight_OBJECTS) $(PlotReValidWeight_DEPENDENCIES) $(EXTRA_PlotReValidWeight_DEPENDENCIES) 
-	@rm -f PlotReValidWeight$(EXEEXT)
-	$(AM_V_CXXLD)$(PlotReValidWeight_LINK) $(PlotReValidWeight_OBJECTS) $(PlotReValidWeight_LDADD) $(LIBS)
-
-ReValidWeight$(EXEEXT): $(ReValidWeight_OBJECTS) $(ReValidWeight_DEPENDENCIES) $(EXTRA_ReValidWeight_DEPENDENCIES) 
-	@rm -f ReValidWeight$(EXEEXT)
-	$(AM_V_CXXLD)$(ReValidWeight_LINK) $(ReValidWeight_OBJECTS) $(ReValidWeight_LDADD) $(LIBS)
-
-ReValidWeight_HepMC$(EXEEXT): $(ReValidWeight_HepMC_OBJECTS) $(ReValidWeight_HepMC_DEPENDENCIES) $(EXTRA_ReValidWeight_HepMC_DEPENDENCIES) 
-	@rm -f ReValidWeight_HepMC$(EXEEXT)
-	$(AM_V_CXXLD)$(ReValidWeight_HepMC_LINK) $(ReValidWeight_HepMC_OBJECTS) $(ReValidWeight_HepMC_LDADD) $(LIBS)
-
-SummaryPlots$(EXEEXT): $(SummaryPlots_OBJECTS) $(SummaryPlots_DEPENDENCIES) $(EXTRA_SummaryPlots_DEPENDENCIES) 
-	@rm -f SummaryPlots$(EXEEXT)
-	$(AM_V_CXXLD)$(SummaryPlots_LINK) $(SummaryPlots_OBJECTS) $(SummaryPlots_LDADD) $(LIBS)
-
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
 
@@ -660,16 +493,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NReWeight.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NReWeightCasc.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NReWeightFactory.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NReWeightNuXSecCCQE.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NReWeightNuXSecRES.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NSystSet.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NSystUncertainty.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/PlotReValidWeight.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ReValidWeight.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ReValidWeight_HepMC.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/SummaryPlots.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NSyst.Po@am__quote@
 
 .cc.o:
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -806,9 +630,9 @@ distdir: $(DISTFILES)
 	done
 check-am: all-am
 check: check-am
-all-am: Makefile $(LIBRARIES) $(PROGRAMS) $(HEADERS)
+all-am: Makefile $(LIBRARIES) $(HEADERS)
 installdirs:
-	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(includedir)"; do \
+	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(includedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -843,8 +667,8 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-am
 
-clean-am: clean-binPROGRAMS clean-generic clean-libLIBRARIES \
-	clean-libtool mostlyclean-am
+clean-am: clean-generic clean-libLIBRARIES clean-libtool \
+	mostlyclean-am
 
 distclean: distclean-am
 	-rm -rf ./$(DEPDIR)
@@ -870,9 +694,8 @@ install-dvi: install-dvi-am
 
 install-dvi-am:
 
-install-exec-am: install-binPROGRAMS install-libLIBRARIES
-	@$(NORMAL_INSTALL)
-	$(MAKE) $(AM_MAKEFLAGS) install-exec-hook
+install-exec-am: install-libLIBRARIES
+
 install-html: install-html-am
 
 install-html-am:
@@ -911,35 +734,56 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-binPROGRAMS uninstall-includeHEADERS \
-	uninstall-libLIBRARIES
-	@$(NORMAL_INSTALL)
-	$(MAKE) $(AM_MAKEFLAGS) uninstall-hook
-.MAKE: install-am install-exec-am install-strip uninstall-am
+uninstall-am: uninstall-includeHEADERS uninstall-libLIBRARIES
 
-.PHONY: CTAGS GTAGS TAGS all all-am check check-am clean \
-	clean-binPROGRAMS clean-generic clean-libLIBRARIES \
-	clean-libtool cscopelist-am ctags ctags-am distclean \
-	distclean-compile distclean-generic distclean-libtool \
-	distclean-tags distdir dvi dvi-am html html-am info info-am \
-	install install-am install-binPROGRAMS install-data \
+.MAKE: install-am install-strip
+
+.PHONY: CTAGS GTAGS TAGS all all-am check check-am clean clean-generic \
+	clean-libLIBRARIES clean-libtool cscopelist-am ctags ctags-am \
+	distclean distclean-compile distclean-generic \
+	distclean-libtool distclean-tags distdir dvi dvi-am html \
+	html-am info info-am install install-am install-data \
 	install-data-am install-dvi install-dvi-am install-exec \
-	install-exec-am install-exec-hook install-html install-html-am \
+	install-exec-am install-html install-html-am \
 	install-includeHEADERS install-info install-info-am \
 	install-libLIBRARIES install-man install-pdf install-pdf-am \
 	install-ps install-ps-am install-strip installcheck \
 	installcheck-am installdirs maintainer-clean \
 	maintainer-clean-generic mostlyclean mostlyclean-compile \
 	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags tags-am uninstall uninstall-am uninstall-binPROGRAMS \
-	uninstall-hook uninstall-includeHEADERS uninstall-libLIBRARIES
+	tags tags-am uninstall uninstall-am uninstall-includeHEADERS \
+	uninstall-libLIBRARIES
 
 
-install-exec-hook:
-	-(cd ${libdir}; $(LN_S) $(LIBNAME) $(shell echo $(LIBNAME) | cut -d . -f 1).a)
+# bin_PROGRAMS =
 
-uninstall-hook:
-	-(cd ${libdir}; rm -f $(shell echo $(LIBNAME) | cut -d . -f 1).a)
+# ReValidWeight_SOURCES = ReValidWeight.cc
+# ReValidWeight_LDADD = $(LIBNAME) $(NEUT_LIBS) $(CERN_LIBS) $(ROOT_LIBS) $(EXE_RTLIBS)
+# ReValidWeight_LDFLAGS = $(EXE_LINKFLAGS) $(CERN_LINKFLAGS) $(ROOT_LINKFLAGS)
+
+# if NEUT_HEPMC
+
+# bin_PROGRAMS += ReValidWeight_HepMC
+
+# ReValidWeight_HepMC_SOURCES = ReValidWeight_HepMC.cc
+# ReValidWeight_HepMC_LDADD = $(LIBNAME) $(NEUT_LIBS) $(CERN_LIBS) $(ROOT_LIBS) $(EXE_RTLIBS)
+# ReValidWeight_HepMC_LDFLAGS = $(EXE_LINKFLAGS) $(CERN_LINKFLAGS) $(ROOT_LINKFLAGS)
+
+# endif
+
+# PlotReValidWeight_SOURCES = PlotReValidWeight.cc
+# PlotReValidWeight_LDADD = $(LIBNAME) $(NEUT_LIBS) $(CERN_LIBS) $(ROOT_LIBS) $(EXE_RTLIBS)
+# PlotReValidWeight_LDFLAGS = $(EXE_LINKFLAGS) $(CERN_LINKFLAGS) $(ROOT_LINKFLAGS)
+
+# SummaryPlots_SOURCES = SummaryPlots.cc
+# SummaryPlots_LDADD = $(LIBNAME) $(NEUT_LIBS) $(CERN_LIBS) $(ROOT_LIBS) $(EXE_RTLIBS)
+# SummaryPlots_LDFLAGS = $(EXE_LINKFLAGS) $(CERN_LINKFLAGS) $(ROOT_LINKFLAGS)
+
+# install-exec-hook:
+# 	-(cd ${libdir}; $(LN_S) $(LIBNAME) $(shell echo $(LIBNAME) | cut -d . -f 1).a)
+
+# uninstall-hook:
+# 	-(cd ${libdir}; rm -f $(shell echo $(LIBNAME) | cut -d . -f 1).a)
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

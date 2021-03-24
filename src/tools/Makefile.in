@@ -181,7 +181,6 @@ INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
 LD = @LD@
 LDFLAGS = @LDFLAGS@
 LIBOBJS = @LIBOBJS@
-LIBPREFIX = @LIBPREFIX@
 LIBS = @LIBS@
 LIBTOOL = @LIBTOOL@
 LIPO = @LIPO@
@@ -276,7 +275,7 @@ ACLOCAL_AMFLAGS = -I m4
 NEUT_INCLUDES = -I$(top_srcdir)/radcorr -I$(top_srcdir)/mec -I$(top_srcdir)/ht2p2h/inc -I$(top_srcdir)/nuccorspl -I$(top_srcdir)/n1p1h/inc -I$(top_srcdir)/nuceff -I$(top_srcdir)/nuclsmpl -I$(top_srcdir)/skmcsvc -I$(top_srcdir)/neutcore -I$(top_srcdir)/partnuck -I$(top_srcdir)/specfunc  -I$(top_srcdir)/tools -I$(top_builddir)/neutcore -I$(top_builddir)/skmcsvc -I$(top_builddir)/n1p1h -I$(top_builddir)/nuccorspl -I$(top_builddir)/nuceff
 NEUT_CLASS_INCLUDES = -I$(top_srcdir)/neutclass
 NEUT_STATIC_LIBS = $(top_builddir)/neutcore/lib@LIBPREFIX@neutcore.@NEUT_VERSION_NUM@.a \
-	$(top_builddir)/neutcore/lib@LIBPREFIX@CERNOverride.a \
+	$(top_builddir)/neutcore/lib@LIBPREFIX@CERNOverride.@NEUT_VERSION_NUM@.a \
 	$(top_builddir)/mec/lib@LIBPREFIX@neutmec.@NEUT_VERSION_NUM@.a \
 	$(top_builddir)/n1p1h/lib@LIBPREFIX@n1p1h.@NEUT_VERSION_NUM@.a \
 	$(top_builddir)/ht2p2h/lib@LIBPREFIX@ht2p2h.@NEUT_VERSION_NUM@.a \
@@ -287,13 +286,9 @@ NEUT_STATIC_LIBS = $(top_builddir)/neutcore/lib@LIBPREFIX@neutcore.@NEUT_VERSION
 	$(top_builddir)/skmcsvc/lib@LIBPREFIX@skmcsvc.@NEUT_VERSION_NUM@.a \
 	$(top_builddir)/partnuck/lib@LIBPREFIX@partnuck.@NEUT_VERSION_NUM@.a \
 	$(am__append_1)
-@NEUT_LIBCOMPAT_TRUE@NEUTCLASS_LIBS = $(top_builddir)/neutclass/libneutrootTreeSingleton.la $(top_builddir)/neutclass/libneutctrl.la $(top_builddir)/neutclass/libneutfsipart.la $(top_builddir)/neutclass/libneutfsivert.la $(top_builddir)/neutclass/libneutnucfsistep.la $(top_builddir)/neutclass/libneutnucfsivert.la $(top_builddir)/neutclass/libneutpart.la $(top_builddir)/neutclass/libneutvect.la $(top_builddir)/neutclass/libneutvtx.la
-@NEUT_LIBCOMPAT_FALSE@NEUT_LIBS = $(top_builddir)/neutclass/libNEUTClassUtils.@NEUT_VERSION_NUM@.a \
-@NEUT_LIBCOMPAT_FALSE@	$(top_builddir)/neutclass/libNEUTClass.la \
-@NEUT_LIBCOMPAT_FALSE@	$(top_builddir)/libNEUT.@NEUT_VERSION_NUM@.a \
-@NEUT_LIBCOMPAT_FALSE@	$(am__append_17)
-@NEUT_LIBCOMPAT_TRUE@NEUT_LIBS = $(NEUTCLASS_LIBS) $(NEUT_STATIC_LIBS) \
-@NEUT_LIBCOMPAT_TRUE@	$(am__append_17)
+NEUT_LIBS = $(top_builddir)/neutclass/libNEUTClassUtils.@NEUT_VERSION_NUM@.a \
+	$(top_builddir)/neutclass/libNEUTClass.la \
+	$(top_builddir)/libNEUT.@NEUT_VERSION_NUM@.a $(am__append_17)
 CERN_ROOT = $(CERN)/$(CERN_LEVEL)
 CERN_LINKFLAGS = -L$(CERN_ROOT)/lib
 CERN_LIBS = -ljetset74 -lpdflib804 -lphotos202 -lmathlib -lpacklib -lkernlib
@@ -329,19 +324,13 @@ HEPMC_FLAGS = $(am__append_20)
 FEATURES = reweight common-iface $(am__append_21)
 ROOT_FLAGS = $(HEPMC_FLAGS) $(ROOT_LINKFLAGS) $(ROOT_LIBS)
 CERN_FLAGS = $(CERN_LINKFLAGS) $(CERN_LIBS)
-@NEUT_LIBCOMPAT_FALSE@IO_LIB_LIST = libNEUTClassUtils.a libNEUTClass.so
-@NEUT_LIBCOMPAT_TRUE@IO_LIB_LIST = neutrootTreeSingleton.so neutctrl.so neutfsipart.so neutfsivert.so neutnucfsistep.so neutnucfsivert.so neutpart.so neutvect.so neutvtx.so
-@NEUT_LIBCOMPAT_FALSE@IO_LIB_FLAGS = $(JUST_IO_LIB_FLAGS) $(ROOT_FLAGS)
-@NEUT_LIBCOMPAT_TRUE@IO_LIB_FLAGS = $(INST_ROOT)/lib/neutrootTreeSingleton.so $(INST_ROOT)/lib/neutctrl.so $(INST_ROOT)/lib/neutfsipart.so $(INST_ROOT)/lib/neutfsivert.so $(INST_ROOT)/lib/neutnucfsistep.so $(INST_ROOT)/lib/neutnucfsivert.so $(INST_ROOT)/lib/neutpart.so $(INST_ROOT)/lib/neutvect.so $(INST_ROOT)/lib/neutvtx.so
-@NEUT_LIBCOMPAT_FALSE@RW_LIB = libNEUTReWeight.so
-@NEUT_LIBCOMPAT_TRUE@RW_LIB = libNReWeight.so
-@NEUT_LIBCOMPAT_FALSE@RW_FLAGS = -lNEUTReWeight
-@NEUT_LIBCOMPAT_TRUE@RW_FLAGS = -lNReWeight
-@NEUT_LIBCOMPAT_FALSE@LIB_LIST = $(RW_LIB) $(IO_LIB_LIST) libNEUT.a
-@NEUT_LIBCOMPAT_TRUE@LIB_LIST = $(RW_LIB) $(IO_LIB_LIST) libneutcore.a libnuccorspl.a libnuceff.a libn1p1h.a libht2p2h.a libradcorr.a libtauola.a libspecfunc.a libskmcsvc.a libzbsfns.a libpartnuck.a
-@NEUT_LIBCOMPAT_FALSE@LIB_FLAGS = $(RW_FLAGS) $(JUST_IO_LIB_FLAGS) -lNEUT $(ROOT_FLAGS) $(CERN_FLAGS)
-@NEUT_LIBCOMPAT_TRUE@LIB_FLAGS = $(RW_FLAGS) $(IO_LIB_FLAGS) -lneutcore -lnuccorspl -lnuceff -ln1p1h -lht2p2h -lradcorr -ltauola -lspecfunc -lskmcsvc -lzbsfns -lpartnuck $(ROOT_FLAGS) $(CERN_FLAGS)
-@NEUT_LIBCOMPAT_FALSE@JUST_IO_LIB_FLAGS = -lNEUTClassUtils -lNEUTClass
+IO_LIB_LIST = libNEUTClassUtils.a libNEUTClass.so
+JUST_IO_LIB_FLAGS = -lNEUTClassUtils -lNEUTClass
+IO_LIB_FLAGS = $(JUST_IO_LIB_FLAGS) $(ROOT_FLAGS)
+RW_LIB = libNEUTReWeight.so
+RW_FLAGS = -lNEUTReWeight
+LIB_LIST = $(RW_LIB) $(IO_LIB_LIST) libNEUT.a
+LIB_FLAGS = $(RW_FLAGS) $(JUST_IO_LIB_FLAGS) -lNEUT $(ROOT_FLAGS) $(CERN_FLAGS)
 all: all-am
 
 .SUFFIXES:

@@ -646,9 +646,6 @@ NEUT_HEPMC_FALSE
 NEUT_HEPMC_TRUE
 FOUND_NuHepMCCONFIG
 FOUND_HEPMC3CONFIG
-LIBPREFIX
-NEUT_LIBCOMPAT_FALSE
-NEUT_LIBCOMPAT_TRUE
 ROOT_MAJOR_IS_SIX_FALSE
 ROOT_MAJOR_IS_SIX_TRUE
 FOUND_ROOTCONFIG
@@ -801,7 +798,6 @@ enable_fast_install
 with_gnu_ld
 with_sysroot
 enable_libtool_lock
-enable_compatnames
 enable_hepmc
 enable_tauola
 enable_zebra
@@ -1454,7 +1450,6 @@ Optional Features:
   --enable-fast-install[=PKGS]
                           optimize for fast installation [default=yes]
   --disable-libtool-lock  avoid locking (might break parallel builds)
-  --enable-compatnames    Enable 5.4.0 and previous library naming scheme
   --enable-hepmc          Enable HepMC as an output format, expect to find
                           HepMC-config in PATH.
   --enable-tauola         Enable tauola, requires ZEBRA!
@@ -18407,33 +18402,6 @@ else
 fi
 
 
-######## Check compat mode
-# Check whether --enable-compatnames was given.
-if test "${enable_compatnames+set}" = set; then :
-  enableval=$enable_compatnames;
-fi
-
-
- if test "x$enable_compatnames" = "xyes"; then
-  NEUT_LIBCOMPAT_TRUE=
-  NEUT_LIBCOMPAT_FALSE='#'
-else
-  NEUT_LIBCOMPAT_TRUE='#'
-  NEUT_LIBCOMPAT_FALSE=
-fi
-
-
-if test "x$enable_compatnames" = "xyes"; then :
-
-  :
-
-else
-
-  LIBPREFIX=NEUT
-
-
-fi
-
 ######## Check use HepMC
 # Check whether --enable-hepmc was given.
 if test "${enable_hepmc+set}" = set; then :
@@ -18823,10 +18791,6 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${ROOT_MAJOR_IS_SIX_TRUE}" && test -z "${ROOT_MAJOR_IS_SIX_FALSE}"; then
   as_fn_error $? "conditional \"ROOT_MAJOR_IS_SIX\" was never defined.
-Usually this means the macro was only invoked conditionally." "$LINENO" 5
-fi
-if test -z "${NEUT_LIBCOMPAT_TRUE}" && test -z "${NEUT_LIBCOMPAT_FALSE}"; then
-  as_fn_error $? "conditional \"NEUT_LIBCOMPAT\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${NEUT_HEPMC_TRUE}" && test -z "${NEUT_HEPMC_FALSE}"; then

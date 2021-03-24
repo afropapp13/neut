@@ -5,23 +5,13 @@ NEUT_INCLUDES = -I$(top_srcdir)/radcorr -I$(top_srcdir)/mec -I$(top_srcdir)/ht2p
 
 NEUT_CLASS_INCLUDES = -I$(top_srcdir)/neutclass
 
-NEUT_STATIC_LIBS =  $(top_builddir)/neutcore/lib@LIBPREFIX@neutcore.@NEUT_VERSION_NUM@.a  $(top_builddir)/neutcore/lib@LIBPREFIX@CERNOverride.a $(top_builddir)/mec/lib@LIBPREFIX@neutmec.@NEUT_VERSION_NUM@.a $(top_builddir)/n1p1h/lib@LIBPREFIX@n1p1h.@NEUT_VERSION_NUM@.a $(top_builddir)/ht2p2h/lib@LIBPREFIX@ht2p2h.@NEUT_VERSION_NUM@.a $(top_builddir)/nuccorspl/lib@LIBPREFIX@nuccorspl.@NEUT_VERSION_NUM@.a $(top_builddir)/nuceff/lib@LIBPREFIX@nuceff.@NEUT_VERSION_NUM@.a $(top_builddir)/radcorr/lib@LIBPREFIX@radcorr.@NEUT_VERSION_NUM@.a $(top_builddir)/specfunc/lib@LIBPREFIX@specfunc.@NEUT_VERSION_NUM@.a $(top_builddir)/skmcsvc/lib@LIBPREFIX@skmcsvc.@NEUT_VERSION_NUM@.a  $(top_builddir)/partnuck/lib@LIBPREFIX@partnuck.@NEUT_VERSION_NUM@.a
+NEUT_STATIC_LIBS =  $(top_builddir)/neutcore/lib@LIBPREFIX@neutcore.@NEUT_VERSION_NUM@.a  $(top_builddir)/neutcore/lib@LIBPREFIX@CERNOverride.@NEUT_VERSION_NUM@.a $(top_builddir)/mec/lib@LIBPREFIX@neutmec.@NEUT_VERSION_NUM@.a $(top_builddir)/n1p1h/lib@LIBPREFIX@n1p1h.@NEUT_VERSION_NUM@.a $(top_builddir)/ht2p2h/lib@LIBPREFIX@ht2p2h.@NEUT_VERSION_NUM@.a $(top_builddir)/nuccorspl/lib@LIBPREFIX@nuccorspl.@NEUT_VERSION_NUM@.a $(top_builddir)/nuceff/lib@LIBPREFIX@nuceff.@NEUT_VERSION_NUM@.a $(top_builddir)/radcorr/lib@LIBPREFIX@radcorr.@NEUT_VERSION_NUM@.a $(top_builddir)/specfunc/lib@LIBPREFIX@specfunc.@NEUT_VERSION_NUM@.a $(top_builddir)/skmcsvc/lib@LIBPREFIX@skmcsvc.@NEUT_VERSION_NUM@.a  $(top_builddir)/partnuck/lib@LIBPREFIX@partnuck.@NEUT_VERSION_NUM@.a
 
 if NEUT_USE_TAUOLA
 NEUT_STATIC_LIBS += $(top_builddir)/tauola/lib@LIBPREFIX@tauola.@NEUT_VERSION_NUM@.a
 endif
 
-if NEUT_LIBCOMPAT
-
-NEUTCLASS_LIBS = $(top_builddir)/neutclass/libneutrootTreeSingleton.la $(top_builddir)/neutclass/libneutctrl.la $(top_builddir)/neutclass/libneutfsipart.la $(top_builddir)/neutclass/libneutfsivert.la $(top_builddir)/neutclass/libneutnucfsistep.la $(top_builddir)/neutclass/libneutnucfsivert.la $(top_builddir)/neutclass/libneutpart.la $(top_builddir)/neutclass/libneutvect.la $(top_builddir)/neutclass/libneutvtx.la
-
-NEUT_LIBS = $(NEUTCLASS_LIBS) $(NEUT_STATIC_LIBS)
-
-else
-
 NEUT_LIBS = $(top_builddir)/neutclass/libNEUTClassUtils.@NEUT_VERSION_NUM@.a $(top_builddir)/neutclass/libNEUTClass.la $(top_builddir)/libNEUT.@NEUT_VERSION_NUM@.a 
-
-endif
 
 CERN_ROOT = $(CERN)/$(CERN_LEVEL)
 

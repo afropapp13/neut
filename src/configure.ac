@@ -104,18 +104,6 @@ else
 fi
 AM_CONDITIONAL([ROOT_MAJOR_IS_SIX], [test ${ROOT_MAJOR_VERSION} = 6])
 
-######## Check compat mode
-AC_ARG_ENABLE([compatnames],
-    AS_HELP_STRING([--enable-compatnames], [Enable 5.4.0 and previous library naming scheme]))
-
-AM_CONDITIONAL([NEUT_LIBCOMPAT], [test "x$enable_compatnames" = "xyes"])
-
-AS_IF([test "x$enable_compatnames" = "xyes"], [
-  :
-], [
-  AC_SUBST(LIBPREFIX, [NEUT])
-])
-
 ######## Check use HepMC
 AC_ARG_ENABLE([hepmc],
     AS_HELP_STRING([--enable-hepmc], [Enable HepMC as an output format, expect to find HepMC-config in PATH.]))

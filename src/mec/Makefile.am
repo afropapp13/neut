@@ -1,5 +1,3 @@
-if !NEUT_LIBCOMPAT
-
 include $(top_srcdir)/build.common
 
 AM_FFLAGS = -DNEMEC_VERSION=@NEUT_VERSION_NUM@ $(DEFAULT_FFLAGS)
@@ -14,5 +12,3 @@ include_HEADERS = meccrs.h
 
 # Unused sources that live in the directory
 UNUSED_srcs =
-
-endif

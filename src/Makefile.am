@@ -16,27 +16,14 @@ BUILT_SOURCES = neutcore/cardnameC.h neutcore/necardC.h neutcore/neworkC.h neutc
 CLEANFILES = $(BUILT_SOURCES)
 
 include_HEADERS = $(BUILT_SOURCES)
-
-if NEUT_LIBCOMPAT
 # Order here matters, should build core libraries, combine them in this dir (.), then build reweight, programs, and tools.
-# Cannot currently build neututils dirs in compat mode.
-SUBDIRS = neutcore nuccorspl nuceff n1p1h ht2p2h radcorr skmcsvc partnuck neutclass specfunc . neutsmpl tools
-else
-# Order here matters, should build core libraries, combine them in this dir (.), then build reweight, programs, and tools.
-SUBDIRS = neutcore nuccorspl nuceff n1p1h mec ht2p2h radcorr skmcsvc partnuck neutclass specfunc . neutsmpl tools neututils nuclsmpl pionsmpl neutgeom
-endif
-
-SUBDIRS += reweight
-
-SUBDIRS += test
+SUBDIRS = neutcore nuccorspl nuceff n1p1h mec ht2p2h radcorr skmcsvc partnuck neutclass specfunc . neutsmpl tools neututils nuclsmpl pionsmpl neutgeom reweight test
 
 if NEUT_USE_ZBS
 
 SUBDIRS += zbs zbsfns t2kflux_zbs
 
 endif
-
-if !NEUT_LIBCOMPAT
 
 # Combine all of the core static libraries into one!
 # The lines below trick/override automake into building this library out of all
@@ -60,5 +47,3 @@ install-exec-hook:
 
 uninstall-hook:
 	-(cd ${libdir}; rm -f $(shell echo $(LIBNAME) | cut -d . -f 1).a)
-
-endif

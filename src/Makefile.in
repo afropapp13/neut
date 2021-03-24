@@ -327,7 +327,6 @@ INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
 LD = @LD@
 LDFLAGS = @LDFLAGS@
 LIBOBJS = @LIBOBJS@
-LIBPREFIX = @LIBPREFIX@
 LIBS = @LIBS@
 LIBTOOL = @LIBTOOL@
 LIPO = @LIPO@
@@ -422,7 +421,7 @@ ACLOCAL_AMFLAGS = -I m4
 NEUT_INCLUDES = -I$(top_srcdir)/radcorr -I$(top_srcdir)/mec -I$(top_srcdir)/ht2p2h/inc -I$(top_srcdir)/nuccorspl -I$(top_srcdir)/n1p1h/inc -I$(top_srcdir)/nuceff -I$(top_srcdir)/nuclsmpl -I$(top_srcdir)/skmcsvc -I$(top_srcdir)/neutcore -I$(top_srcdir)/partnuck -I$(top_srcdir)/specfunc  -I$(top_srcdir)/tools -I$(top_builddir)/neutcore -I$(top_builddir)/skmcsvc -I$(top_builddir)/n1p1h -I$(top_builddir)/nuccorspl -I$(top_builddir)/nuceff
 NEUT_CLASS_INCLUDES = -I$(top_srcdir)/neutclass
 NEUT_STATIC_LIBS = $(top_builddir)/neutcore/lib@LIBPREFIX@neutcore.@NEUT_VERSION_NUM@.a \
-	$(top_builddir)/neutcore/lib@LIBPREFIX@CERNOverride.a \
+	$(top_builddir)/neutcore/lib@LIBPREFIX@CERNOverride.@NEUT_VERSION_NUM@.a \
 	$(top_builddir)/mec/lib@LIBPREFIX@neutmec.@NEUT_VERSION_NUM@.a \
 	$(top_builddir)/n1p1h/lib@LIBPREFIX@n1p1h.@NEUT_VERSION_NUM@.a \
 	$(top_builddir)/ht2p2h/lib@LIBPREFIX@ht2p2h.@NEUT_VERSION_NUM@.a \
@@ -433,13 +432,9 @@ NEUT_STATIC_LIBS = $(top_builddir)/neutcore/lib@LIBPREFIX@neutcore.@NEUT_VERSION
 	$(top_builddir)/skmcsvc/lib@LIBPREFIX@skmcsvc.@NEUT_VERSION_NUM@.a \
 	$(top_builddir)/partnuck/lib@LIBPREFIX@partnuck.@NEUT_VERSION_NUM@.a \
 	$(am__append_1)
-@NEUT_LIBCOMPAT_TRUE@NEUTCLASS_LIBS = $(top_builddir)/neutclass/libneutrootTreeSingleton.la $(top_builddir)/neutclass/libneutctrl.la $(top_builddir)/neutclass/libneutfsipart.la $(top_builddir)/neutclass/libneutfsivert.la $(top_builddir)/neutclass/libneutnucfsistep.la $(top_builddir)/neutclass/libneutnucfsivert.la $(top_builddir)/neutclass/libneutpart.la $(top_builddir)/neutclass/libneutvect.la $(top_builddir)/neutclass/libneutvtx.la
-@NEUT_LIBCOMPAT_FALSE@NEUT_LIBS = $(top_builddir)/neutclass/libNEUTClassUtils.@NEUT_VERSION_NUM@.a \
-@NEUT_LIBCOMPAT_FALSE@	$(top_builddir)/neutclass/libNEUTClass.la \
-@NEUT_LIBCOMPAT_FALSE@	$(top_builddir)/libNEUT.@NEUT_VERSION_NUM@.a \
-@NEUT_LIBCOMPAT_FALSE@	$(am__append_17)
-@NEUT_LIBCOMPAT_TRUE@NEUT_LIBS = $(NEUTCLASS_LIBS) $(NEUT_STATIC_LIBS) \
-@NEUT_LIBCOMPAT_TRUE@	$(am__append_17)
+NEUT_LIBS = $(top_builddir)/neutclass/libNEUTClassUtils.@NEUT_VERSION_NUM@.a \
+	$(top_builddir)/neutclass/libNEUTClass.la \
+	$(top_builddir)/libNEUT.@NEUT_VERSION_NUM@.a $(am__append_17)
 CERN_ROOT = $(CERN)/$(CERN_LEVEL)
 CERN_LINKFLAGS = -L$(CERN_ROOT)/lib
 CERN_LIBS = -ljetset74 -lpdflib804 -lphotos202 -lmathlib -lpacklib -lkernlib
@@ -474,27 +469,18 @@ BUILT_SOURCES = neutcore/cardnameC.h neutcore/necardC.h neutcore/neworkC.h neutc
 CLEANFILES = $(BUILT_SOURCES)
 include_HEADERS = $(BUILT_SOURCES)
 # Order here matters, should build core libraries, combine them in this dir (.), then build reweight, programs, and tools.
-@NEUT_LIBCOMPAT_FALSE@SUBDIRS = neutcore nuccorspl nuceff n1p1h mec \
-@NEUT_LIBCOMPAT_FALSE@	ht2p2h radcorr skmcsvc partnuck \
-@NEUT_LIBCOMPAT_FALSE@	neutclass specfunc . neutsmpl tools \
-@NEUT_LIBCOMPAT_FALSE@	neututils nuclsmpl pionsmpl neutgeom \
-@NEUT_LIBCOMPAT_FALSE@	reweight test $(am__append_20)
-
-# Order here matters, should build core libraries, combine them in this dir (.), then build reweight, programs, and tools.
-# Cannot currently build neututils dirs in compat mode.
-@NEUT_LIBCOMPAT_TRUE@SUBDIRS = neutcore nuccorspl nuceff n1p1h ht2p2h \
-@NEUT_LIBCOMPAT_TRUE@	radcorr skmcsvc partnuck neutclass \
-@NEUT_LIBCOMPAT_TRUE@	specfunc . neutsmpl tools reweight test \
-@NEUT_LIBCOMPAT_TRUE@	$(am__append_20)
+SUBDIRS = neutcore nuccorspl nuceff n1p1h mec ht2p2h radcorr skmcsvc \
+	partnuck neutclass specfunc . neutsmpl tools neututils \
+	nuclsmpl pionsmpl neutgeom reweight test $(am__append_20)
 
 # Combine all of the core static libraries into one!
 # The lines below trick/override automake into building this library out of all
 # of the object files it used to build the other libraries.
 # This will cause a make warning about overriding a target, but you can safetly
 # ignore the warning.
-@NEUT_LIBCOMPAT_FALSE@LIBNAME = libNEUT.@NEUT_VERSION_NUM@.a
-@NEUT_LIBCOMPAT_FALSE@lib_LIBRARIES = $(LIBNAME)
-@NEUT_LIBCOMPAT_FALSE@libNEUT_@NEUT_VERSION_NUM@_a_SOURCES = 
+LIBNAME = libNEUT.@NEUT_VERSION_NUM@.a
+lib_LIBRARIES = $(LIBNAME)
+libNEUT_@NEUT_VERSION_NUM@_a_SOURCES = 
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 
@@ -936,8 +922,6 @@ maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
 	-test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
-@NEUT_LIBCOMPAT_TRUE@install-exec-hook:
-@NEUT_LIBCOMPAT_TRUE@uninstall-hook:
 clean: clean-recursive
 
 clean-am: clean-generic clean-libLIBRARIES clean-libtool \
@@ -1044,17 +1028,17 @@ n1p1h/nieves1p1hC.h: n1p1h/inc/nieves1p1h.h
 neutcore/neutmodelC.h: neutcore/neutmodel.h n1p1h/nieves1p1hC.h
 	$(top_srcdir)/tools/fh2h.pl $< > $@
 
-@NEUT_LIBCOMPAT_FALSE@$(LIBNAME): $(NEUT_STATIC_LIBS)
-@NEUT_LIBCOMPAT_FALSE@	$(LD) -r -o neut.o --whole-archive --start-group $(NEUT_STATIC_LIBS) --end-group
-@NEUT_LIBCOMPAT_FALSE@	$(AR) -rs $@ neut.o
+$(LIBNAME): $(NEUT_STATIC_LIBS)
+	$(LD) -r -o neut.o --whole-archive --start-group $(NEUT_STATIC_LIBS) --end-group
+	$(AR) -rs $@ neut.o
 
-@NEUT_LIBCOMPAT_FALSE@install-exec-hook:
-@NEUT_LIBCOMPAT_FALSE@	-(cd ${libdir}; $(LN_S) $(LIBNAME) $(shell echo $(LIBNAME) | cut -d . -f 1).a)
-@NEUT_LIBCOMPAT_FALSE@	-(mkdir -p ${bindir}/../share/neut; cp -r $(top_srcdir)/neutsmpl/Cards ${bindir}/../share/neut/ )
-@NEUT_LIBCOMPAT_FALSE@	-(mkdir -p ${bindir}/../share/neut/crsdat; cp -r $(top_srcdir)/crsdat/* ${bindir}/../share/neut/crsdat/ )
+install-exec-hook:
+	-(cd ${libdir}; $(LN_S) $(LIBNAME) $(shell echo $(LIBNAME) | cut -d . -f 1).a)
+	-(mkdir -p ${bindir}/../share/neut; cp -r $(top_srcdir)/neutsmpl/Cards ${bindir}/../share/neut/ )
+	-(mkdir -p ${bindir}/../share/neut/crsdat; cp -r $(top_srcdir)/crsdat/* ${bindir}/../share/neut/crsdat/ )
 
-@NEUT_LIBCOMPAT_FALSE@uninstall-hook:
-@NEUT_LIBCOMPAT_FALSE@	-(cd ${libdir}; rm -f $(shell echo $(LIBNAME) | cut -d . -f 1).a)
+uninstall-hook:
+	-(cd ${libdir}; rm -f $(shell echo $(LIBNAME) | cut -d . -f 1).a)
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

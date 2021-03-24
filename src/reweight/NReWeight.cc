@@ -1,153 +1,152 @@
-//____________________________________________________________________________
-/*
- Copyright (c) 2003-2010, GENIE Neutrino MC Generator Collaboration
- For the full text of the license visit http://copyright.genie-mc.org
- or see $GENIE/LICENSE
-
- Authors: Jim Dobson <J.Dobson07 \at imperial.ac.uk>
-          Imperial College London
-
-          Costas Andreopoulos <costas.andreopoulos \at stfc.ac.uk>
-          STFC, Rutherford Appleton Laboratory
-
-          Patrick de Perio <pdeperio \at physics.utoronto.ca>
-          University of Toronto
-
- For the class documentation see the corresponding header file.
-
- Important revisions after version 2.0.0 :
- @ Aug 01, 2009 - CA
-   Was adapted from Jim's and Costas' T2K-specific GENIE reweighting code.
-   First included in v2.5.1.
- @ May 18, 2010 - CA
-   AdoptWghtCalc(std::string,NReWeightI*) allows user to decide which weight
-   calculator to include. Weight calculators are owned by NReWeight and are
-   identified by a name. Weight calculators can be retrieved via the
-   WghtCalc(string) method and their reweighting options can be fine-tuned.
- @ Apr 6, 2011 - PD
-   Implemented in NEUT
-*/
-//____________________________________________________________________________
-
 #include "NReWeight.h"
-
-//#define _NEUT_REWEIGHT_DEBUG_
+#include "NSyst.h"
+#include "NReWeightEngineI.h"
 
 #include <iostream>
 #include <vector>
 
 namespace neut {
 namespace rew {
-NReWeight::NReWeight() {}
-NReWeight::~NReWeight() { this->CleanUp(); }
-void NReWeight::AdoptWghtCalc(std::string name, NReWeightI *wcalc) {
-  if (!wcalc)
-    return;
 
-  fWghtCalc.insert(
-      std::map<std::string, NReWeightI *>::value_type(name, wcalc));
+void NReWeight::AdoptWeightEngine(std::string const &name,
+                                  std::unique_ptr<NReWeightEngineI> &&wengine) {
+  if (!wengine) {
+    std::cout << "[ERROR]: nullptr passed as weightengine named: " << name
+              << std::endl;
+    abort();
+  }
+  WeightEngines[name] = std::move(wengine);
 }
-NReWeightI *NReWeight::WghtCalc(std::string name) {
-  std::map<std::string, NReWeightI *>::iterator iter = fWghtCalc.find(name);
-  if (iter != fWghtCalc.end())
-    return iter->second;
 
-  return 0;
+NReWeightEngineI &NReWeight::WeightEngine(std::string const &name) {
+  if (WeightEngines.count(name)) {
+    return *WeightEngines[name];
+  }
+  std::cout << "[ERROR]: Unknown weight engine requested: " << name
+            << std::endl;
+  abort();
 }
-NSystSet &NReWeight::Systematics(void) { return fSystSet; }
-void NReWeight::Reconfigure(void) {
-#ifdef _NEUT_REWEIGHT_DEBUG_
-  std::cout << "NReWeight: Reconfiguring ...";
-#endif
 
-  std::vector<neut::rew::NSyst_t> svec = fSystSet.AllIncluded();
+void NReWeight::Reconfigure() {
 
-  std::map<std::string, NReWeightI *>::iterator it = fWghtCalc.begin();
-  for (; it != fWghtCalc.end(); ++it) {
-
-    NReWeightI *wcalc = it->second;
-
-    std::vector<neut::rew::NSyst_t>::const_iterator parm_iter = svec.begin();
-    for (; parm_iter != svec.end(); ++parm_iter) {
-      NSyst_t syst = *parm_iter;
-      double val = fSystSet.Info(syst)->CurValue;
-      wcalc->SetSystematic(syst, val);
-    } // params
-
-    wcalc->Reconfigure();
-
-  } // weight calculators
-
-#ifdef _NEUT_REWEIGHT_DEBUG_
-  std::cout << "Done reconfiguring" << std::endl;
-  ;
-#endif
+  for (auto &wght_engine : WeightEngines) {
+    wght_engine.second->Reconfigure();
+  }
 }
 
 double NReWeight::CalcWeight() {
-  // calculate weight for all tweaked physics parameters
-  //
-  double weight = 1.0;
-
-  std::map<std::string, NReWeightI *>::iterator it = fWghtCalc.begin();
-  for (; it != fWghtCalc.end(); ++it) {
-
-    NReWeightI *wcalc = it->second;
-    double w = wcalc->CalcWeight();
-
-#ifdef _NEUT_REWEIGHT_DEBUG_
-    std::cout << "Calculator: " << it->first << " => wght = " << w << std::endl;
-#endif
-
-    weight *= w;
+  double weight = 1;
+  for (auto &wght_engine : WeightEngines) {
+    weight *= wght_engine.second->CalcWeight();
   }
   return weight;
 }
 
-double NReWeight::CalcChisq(void) {
-  // calculate the sum of penalty terms for all tweaked physics parameters
-  //
-  double tot_chisq = 0.0;
-
-  std::map<std::string, NReWeightI *>::iterator it = fWghtCalc.begin();
-  for (; it != fWghtCalc.end(); ++it) {
-    NReWeightI *wcalc = it->second;
-    double chisq = wcalc->CalcChisq();
-#ifdef _NEUT_REWEIGHT_DEBUG_
-    std::cout << "Calculator: " << it->first << " => chisq = " << chisq;
-#endif
-    tot_chisq *= chisq;
-  }
-  return tot_chisq;
-}
-
-void NReWeight::CleanUp(void) {
-  std::map<std::string, NReWeightI *>::iterator it = fWghtCalc.begin();
-  for (; it != fWghtCalc.end(); ++it) {
-    NReWeightI *rw = it->second;
-    if (rw) {
-      delete rw;
-      rw = 0;
+bool NReWeight::DialIsHandled(NSyst_t syst) const {
+  for (auto &wght_engine : WeightEngines) {
+    if (wght_engine.second->DialIsHandled(syst)) {
+      return true;
     }
   }
-  fWghtCalc.clear();
+  return false;
 }
 
-void NReWeight::Print() {
-  std::vector<neut::rew::NSyst_t> syst_vec = this->Systematics().AllIncluded();
-  int vec_size = syst_vec.size();
+NSyst_t NReWeight::DialFromString(std::string const &name) const {
+  return NSyst::DialFromString(name);
+}
 
-  std::cout << "NReWeight: Current set of systematic params:" << std::endl;
-  ;
-  for (int i = 0; i < vec_size; i++) {
-    std::cout << " --o " << NSyst::AsString(syst_vec[i]) << " is set at "
-              << this->Systematics().Info(syst_vec[i])->CurValue << std::endl;
-    ;
+std::string NReWeight::DialAsString(NSyst_t syst) const {
+  return NSyst::DialAsString(syst);
+}
+
+void CheckEngineUnique(
+    std::map<std::string, std::unique_ptr<NReWeightEngineI> > const
+        &WeightEngines,
+    NSyst_t syst) {
+  int nweightengines = 0;
+  for (auto &wght_engine : WeightEngines) {
+    if (wght_engine.second->DialIsHandled(syst)) {
+      nweightengines++;
+    }
   }
 
-  double chi2val = this->CalcChisq();
+  if (nweightengines > 1) {
+    std::cout << "[ERROR]: Multiple weight engines handle dial "
+              << NSyst::DialAsString(syst) << "\n";
+    for (auto &wght_engine : WeightEngines) {
+      if (wght_engine.second->DialIsHandled(syst)) {
+        std::cout << "\t" << wght_engine.second->EngineName() << "\n";
+      }
+    }
+    std::cout << "Please Use NReWeight::WeightEngine to interact "
+                 "directly with the weight engine.\n"
+              << std::endl;
+    abort();
+  }
+}
 
-  std::cout << "Chisq_{penalty} = " << chi2val << std::endl;
+double NReWeight::GetDial_From_Value(NSyst_t syst) const {
+  CheckEngineUnique(WeightEngines, syst);
+
+  for (auto &wght_engine : WeightEngines) {
+    if (wght_engine.second->DialIsHandled(syst)) {
+      return wght_engine.second->GetDial_From_Value(syst);
+    }
+  }
+  std::cout << "[ERROR]: Dial: " << syst
+            << " is unhandled by any known weight engine." << std::endl;
+  std::cout << syst << " = " << NSyst::DialAsString(syst) << std::endl;
+  abort();
+}
+
+double NReWeight::GetDial_To_Value(NSyst_t syst) const {
+  CheckEngineUnique(WeightEngines, syst);
+
+  for (auto &wght_engine : WeightEngines) {
+    if (wght_engine.second->DialIsHandled(syst)) {
+      return wght_engine.second->GetDial_To_Value(syst);
+    }
+  }
+  std::cout << "[ERROR]: Dial: " << syst
+            << " is unhandled by any known weight engine." << std::endl;
+  std::cout << syst << " = " << NSyst::DialAsString(syst) << std::endl;
+  abort();
+}
+
+double NReWeight::GetDial_OneSigma(NSyst_t syst, double tweak) const {
+  CheckEngineUnique(WeightEngines, syst);
+
+  for (auto &wght_engine : WeightEngines) {
+    if (wght_engine.second->DialIsHandled(syst)) {
+      return wght_engine.second->GetDial_OneSigma(syst, tweak);
+    }
+  }
+  std::cout << "[ERROR]: Dial: " << syst
+            << " is unhandled by any known weight engine." << std::endl;
+  std::cout << syst << " = " << NSyst::DialAsString(syst) << std::endl;
+  abort();
+}
+
+void NReWeight::SetDial_NumberOfSigmas(NSyst_t syst, double nsigmas) {
+  for (auto &wght_engine : WeightEngines) {
+    if (wght_engine.second->DialIsHandled(syst)) {
+      return wght_engine.second->SetDial_NumberOfSigmas(syst, nsigmas);
+    }
+  }
+}
+
+void NReWeight::SetDial_To_Value(NSyst_t syst, double value) {
+  for (auto &wght_engine : WeightEngines) {
+    if (wght_engine.second->DialIsHandled(syst)) {
+      return wght_engine.second->SetDial_To_Value(syst, value);
+    }
+  }
+}
+
+void NReWeight::Reset() {
+  for (auto &wght_engine : WeightEngines) {
+    wght_engine.second->Reset();
+  }
 }
 
 } // namespace rew
