@@ -18,19 +18,19 @@ NuXSecRESEngine::NuXSecRESEngine() {
 
   // From nefillmodel.F
   if (cbfa.fneut1pi_gen.neiff != 0) {
-    MaRES = RegisterDial("MaRES", cbfa.fneut1pi_gen.xmanffres);
+    MaRES = RegisterDial("MaRES", cbfa.fneut1pi_gen.xmanffres, 0.15, 0.15);
     MvRES = RegisterDial("MvRES", cbfa.fneut1pi_gen.xmvnffres);
   } else {
     MaRES = RegisterDial("MaRES", cbfa.fneut1pi_gen.xmarsres);
     MvRES = RegisterDial("MvRES", cbfa.fneut1pi_gen.xmvrsres);
   }
 
-  CA5RES = RegisterDial("CA5RES", cbfa.fneut1pi_gen.rneca5i);
-  BgSclRES = RegisterDial("BgSclRES", cbfa.fneut1pi_gen.rnebgscl);
+  CA5RES = RegisterDial("CA5RES", cbfa.fneut1pi_gen.rneca5i, 0.15, 0.15);
+  BgSclRES = RegisterDial("BgSclRES", cbfa.fneut1pi_gen.rnebgscl, , 0.15, 0.15);
 
   UseSeparateBgSclLMCPiBar = RegisterDial("UseSeparateBgSclLMCPiBar", 0);
   BgSclLMCPiBarRES =
-      RegisterDial("BgSclLMCPiBarRES", cbfa.fneut1pi_gen.rnebgscl);
+      RegisterDial("BgSclLMCPiBarRES", cbfa.fneut1pi_gen.rnebgscl, 1.3, 1.3);
 }
 
 void NuXSecRESEngine::Reconfigure(void) { ApplyTweaks(); }

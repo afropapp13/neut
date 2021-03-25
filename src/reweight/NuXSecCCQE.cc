@@ -16,16 +16,16 @@ NuXSecCCQEEngine::NuXSecCCQEEngine() { // Get the parameter values at generation
                                        // time and store them as the 'default'
   CommonBlockIFace const &cbfa = CommonBlockIFace::Get();
 
-  MaCCQE = RegisterDial("MaCCQE", cbfa.fnemdls_gen.xmaqe);
+  MaCCQE = RegisterDial("MaCCQE", cbfa.fnemdls_gen.xmaqe, 0.196,0.196);
   AxlFFCCQE = RegisterDial("AxlFFCCQE", cbfa.fnemdls_gen.mdlqeaf);
   SCCVecQE = RegisterDial("SCCVecQE", cbfa.fnemdls_gen.sccfv);
   SCCAxlQE = RegisterDial("SCCAxlQE", cbfa.fnemdls_gen.sccfa);
   PsFF = RegisterDial("PsFF", cbfa.fnemdls_gen.fpqe);
 
-  FAxlCCQEAlpha = RegisterDial("FAxlCCQEAlpha", cbfa.fnemdls_gen.axffalpha);
-  FAxlCCQEGamma = RegisterDial("FAxlCCQEGamma", cbfa.fnemdls_gen.axffgamma);
-  FAxlCCQEBeta = RegisterDial("FAxlCCQEBeta", cbfa.fnemdls_gen.axffbeta);
-  FAxlCCQETheta = RegisterDial("FAxlCCQETheta", cbfa.fnemdls_gen.axfftheta);
+  FAxlCCQEAlpha = RegisterDial("FAxlCCQEAlpha", cbfa.fnemdls_gen.axffalpha,0.123,0.123);
+  FAxlCCQEGamma = RegisterDial("FAxlCCQEGamma", cbfa.fnemdls_gen.axffgamma,0.121,0.121);
+  FAxlCCQEBeta = RegisterDial("FAxlCCQEBeta", cbfa.fnemdls_gen.axffbeta),0.178,0.178;
+  FAxlCCQETheta = RegisterDial("FAxlCCQETheta", cbfa.fnemdls_gen.axfftheta,0.031,0.031);
 
   // Not current used for reweighting, but could be
   // FAZExp_NTerms = RegisterDial("FAZExp_NTerms", cbfa.fnemdls_gen.axzexpnt);
@@ -33,10 +33,10 @@ NuXSecCCQEEngine::NuXSecCCQEEngine() { // Get the parameter values at generation
   // FAZExp_T0 = RegisterDial("FAZExp_T0", cbfa.fnemdls_gen.axzexpt0);
   // FAZExp_Q4Cut = RegisterDial("FAZExp_Q4Cut", cbfa.fnemdls_gen.axzexpq4);
 
-  FAZExp_A1 = RegisterDial("FAZExp_A1", cbfa.fnemdls_gen.axzexpa1);
-  FAZExp_A2 = RegisterDial("FAZExp_A2", cbfa.fnemdls_gen.axzexpa2);
-  FAZExp_A3 = RegisterDial("FAZExp_A3", cbfa.fnemdls_gen.axzexpa3);
-  FAZExp_A4 = RegisterDial("FAZExp_A4", cbfa.fnemdls_gen.axzexpa4);
+  FAZExp_A1 = RegisterDial("FAZExp_A1", cbfa.fnemdls_gen.axzexpa1,0.186,0.186);
+  FAZExp_A2 = RegisterDial("FAZExp_A2", cbfa.fnemdls_gen.axzexpa2,1.559,1.559);
+  FAZExp_A3 = RegisterDial("FAZExp_A3", cbfa.fnemdls_gen.axzexpa3,3.836,3.836);
+  FAZExp_A4 = RegisterDial("FAZExp_A4", cbfa.fnemdls_gen.axzexpa4,4.08,4.08);
 }
 
 void NuXSecCCQEEngine::Reconfigure() {
