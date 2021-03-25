@@ -44,10 +44,6 @@ which might produce compiler/linker flags like:
 -I/path/to/neut/build/Linux/include -L/path/to/neut/build/Linux/lib -lneutclassUtils -lneutclass
 ```
 
-### If you need to link against the old style NEUT libraries
-You can configure with the `--enable-compatnames` argument which will build the NEUT libraries in the old format. i.e. each ROOT I/O class gets its own library, the main NEUT static libraries are built per subdirectory, and the reweight library is called `libNReWeight.so`.<br>
-N.B. in this mode, highly parallel builds are not supported, if you build errors related to `XXXDict.cc` while building with `make -j X`, try running `make` with no `-j` argument and see if they are resolved.<br>
-
 ## When you found issues or bugs in the existing code
 Please do not commit to the master.<br>
 There is a branch for the next version and bug fix release.<br>

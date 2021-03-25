@@ -15,7 +15,7 @@ public:
 #define ABORT_IF_UNHANDLED(syst)                                               \
   if (!DialIsHandled(syst)) {                                                  \
     std::cout << syst << " in engine: " << EngineName() << std::endl;          \
-    abort;                                                                     \
+    abort();                                                                     \
   }
 
   virtual ~NReWeightEngineI(){};
