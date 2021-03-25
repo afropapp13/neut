@@ -638,6 +638,8 @@ NEUT_USE_GPERF_FALSE
 NEUT_USE_GPERF_TRUE
 NEUT_DEBUG_FALSE
 NEUT_DEBUG_TRUE
+NEUT_WRITE_NUCFSI_FALSE
+NEUT_WRITE_NUCFSI_TRUE
 NEUT_USE_ZBS_FALSE
 NEUT_USE_ZBS_TRUE
 NEUT_USE_TAUOLA_FALSE
@@ -801,6 +803,7 @@ enable_libtool_lock
 enable_hepmc
 enable_tauola
 enable_zebra
+enable_nucfsi
 enable_debug
 with_gperf
 '
@@ -1454,6 +1457,9 @@ Optional Features:
                           HepMC-config in PATH.
   --enable-tauola         Enable tauola, requires ZEBRA!
   --enable-zebra          Enable ZEBRA
+  --disable-nucleon-fsi-info
+                          Remove nucleon fsi step information in vector
+                          output. Included for backward compatibility
   --enable-debug          Compile with debug symbols
 
 Optional Packages:
@@ -18533,7 +18539,7 @@ else
 fi
 
 
-######## Check use tauola
+######## Check use ZEBRA
 # Check whether --enable-zebra was given.
 if test "${enable_zebra+set}" = set; then :
   enableval=$enable_zebra;
@@ -18546,6 +18552,22 @@ fi
 else
   NEUT_USE_ZBS_TRUE='#'
   NEUT_USE_ZBS_FALSE=
+fi
+
+
+######## Check use nucfsi
+# Check whether --enable-nucfsi was given.
+if test "${enable_nucfsi+set}" = set; then :
+  enableval=$enable_nucfsi;
+fi
+
+
+ if test "x$enable_nucfsi" = "xyes"; then
+  NEUT_WRITE_NUCFSI_TRUE=
+  NEUT_WRITE_NUCFSI_FALSE='#'
+else
+  NEUT_WRITE_NUCFSI_TRUE='#'
+  NEUT_WRITE_NUCFSI_FALSE=
 fi
 
 
@@ -18803,6 +18825,10 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${NEUT_USE_ZBS_TRUE}" && test -z "${NEUT_USE_ZBS_FALSE}"; then
   as_fn_error $? "conditional \"NEUT_USE_ZBS\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${NEUT_WRITE_NUCFSI_TRUE}" && test -z "${NEUT_WRITE_NUCFSI_FALSE}"; then
+  as_fn_error $? "conditional \"NEUT_WRITE_NUCFSI\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${NEUT_DEBUG_TRUE}" && test -z "${NEUT_DEBUG_FALSE}"; then

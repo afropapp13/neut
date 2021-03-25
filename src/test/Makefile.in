@@ -91,16 +91,19 @@ DIST_COMMON = $(top_srcdir)/build.common $(srcdir)/Makefile.in \
 @NEUT_DEBUG_FALSE@am__append_9 = -O0
 @NEUT_DEBUG_FALSE@am__append_10 = -O0
 @NEUT_DEBUG_FALSE@am__append_11 = -O0
-@FC_ALLOW_ARG_MISMATCH_TRUE@am__append_12 = -fallow-argument-mismatch
-@FC_ALLOW_ARG_MISMATCH_TRUE@am__append_13 = -Wl,--allow-multiple-definition
-@FC_COMMON_TRUE@am__append_14 = -fcommon -Wl,--allow-multiple-definition
-@FC_COMMON_TRUE@am__append_15 = -Wl,--allow-multiple-definition
-@NEUT_HEPMC_TRUE@am__append_16 = -L$(HEPMC_LIBDIR) -L$(NUHEPMC_LIBDIR)
-@NEUT_HEPMC_TRUE@am__append_17 = -lNuHepMC -lHepMC3 -lHepMC3rootIO
-@FC_HAS_PIE_TRUE@am__append_18 = -no-pie
-@NEUT_USE_GPERF_TRUE@am__append_19 = -L@NEUT_GPERF@ -lprofiler
+@NEUT_WRITE_NUCFSI_TRUE@am__append_12 = -DNEUT_WRITE_NUCFSI
+@NEUT_WRITE_NUCFSI_TRUE@am__append_13 = -DNEUT_WRITE_NUCFSI
+@NEUT_WRITE_NUCFSI_TRUE@am__append_14 = -DNEUT_WRITE_NUCFSI
+@FC_ALLOW_ARG_MISMATCH_TRUE@am__append_15 = -fallow-argument-mismatch
+@FC_ALLOW_ARG_MISMATCH_TRUE@am__append_16 = -Wl,--allow-multiple-definition
+@FC_COMMON_TRUE@am__append_17 = -fcommon -Wl,--allow-multiple-definition
+@FC_COMMON_TRUE@am__append_18 = -Wl,--allow-multiple-definition
+@NEUT_HEPMC_TRUE@am__append_19 = -L$(HEPMC_LIBDIR) -L$(NUHEPMC_LIBDIR)
+@NEUT_HEPMC_TRUE@am__append_20 = -lNuHepMC -lHepMC3 -lHepMC3rootIO
+@FC_HAS_PIE_TRUE@am__append_21 = -no-pie
+@NEUT_USE_GPERF_TRUE@am__append_22 = -L@NEUT_GPERF@ -lprofiler
 bin_PROGRAMS = cFORTRAN_boundary$(EXEEXT) \
-	neut_test_card_reader$(EXEEXT)
+	neut_test_card_reader$(EXEEXT) NReWeightDeclaredDials$(EXEEXT)
 subdir = test
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
@@ -114,22 +117,31 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_cFORTRAN_boundary_OBJECTS = cFORTRAN_boundary.$(OBJEXT) \
-	double_me.$(OBJEXT)
-cFORTRAN_boundary_OBJECTS = $(am_cFORTRAN_boundary_OBJECTS)
+am_NReWeightDeclaredDials_OBJECTS = NReWeightDeclaredDials.$(OBJEXT)
+NReWeightDeclaredDials_OBJECTS = $(am_NReWeightDeclaredDials_OBJECTS)
 am__DEPENDENCIES_1 =
 am__DEPENDENCIES_2 = $(top_builddir)/neutclass/libNEUTClassUtils.@NEUT_VERSION_NUM@.a \
 	$(top_builddir)/neutclass/libNEUTClass.la \
 	$(top_builddir)/libNEUT.@NEUT_VERSION_NUM@.a \
 	$(am__DEPENDENCIES_1)
 am__DEPENDENCIES_3 = $(am__DEPENDENCIES_1)
-cFORTRAN_boundary_DEPENDENCIES = $(am__DEPENDENCIES_2) \
-	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_3)
+NReWeightDeclaredDials_DEPENDENCIES = $(NEUT_REWEIGHT_LIBS) \
+	$(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_3)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
 am__v_lt_1 = 
+NReWeightDeclaredDials_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
+	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CXXLD) \
+	$(AM_CXXFLAGS) $(CXXFLAGS) $(NReWeightDeclaredDials_LDFLAGS) \
+	$(LDFLAGS) -o $@
+am_cFORTRAN_boundary_OBJECTS = cFORTRAN_boundary.$(OBJEXT) \
+	double_me.$(OBJEXT)
+cFORTRAN_boundary_OBJECTS = $(am_cFORTRAN_boundary_OBJECTS)
+cFORTRAN_boundary_DEPENDENCIES = $(am__DEPENDENCIES_2) \
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_3)
 cFORTRAN_boundary_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CXXLD) \
 	$(AM_CXXFLAGS) $(CXXFLAGS) $(cFORTRAN_boundary_LDFLAGS) \
@@ -213,10 +225,10 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(cFORTRAN_boundary_SOURCES) \
-	$(neut_test_card_reader_SOURCES)
-DIST_SOURCES = $(cFORTRAN_boundary_SOURCES) \
-	$(neut_test_card_reader_SOURCES)
+SOURCES = $(NReWeightDeclaredDials_SOURCES) \
+	$(cFORTRAN_boundary_SOURCES) $(neut_test_card_reader_SOURCES)
+DIST_SOURCES = $(NReWeightDeclaredDials_SOURCES) \
+	$(cFORTRAN_boundary_SOURCES) $(neut_test_card_reader_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -382,6 +394,8 @@ ACLOCAL_AMFLAGS = -I m4
 # top_builddir dependencies are needed for fh2h.pl-generated headers
 NEUT_INCLUDES = -I$(top_srcdir)/radcorr -I$(top_srcdir)/mec -I$(top_srcdir)/ht2p2h/inc -I$(top_srcdir)/nuccorspl -I$(top_srcdir)/n1p1h/inc -I$(top_srcdir)/nuceff -I$(top_srcdir)/nuclsmpl -I$(top_srcdir)/skmcsvc -I$(top_srcdir)/neutcore -I$(top_srcdir)/partnuck -I$(top_srcdir)/specfunc  -I$(top_srcdir)/tools -I$(top_builddir)/neutcore -I$(top_builddir)/skmcsvc -I$(top_builddir)/n1p1h -I$(top_builddir)/nuccorspl -I$(top_builddir)/nuceff
 NEUT_CLASS_INCLUDES = -I$(top_srcdir)/neutclass
+NEUT_REWEIGHT_INCLUDES = -I$(top_srcdir)/reweight
+NEUT_REWEIGHT_LIBS = $(top_builddir)/reweight/libNEUTReWeight.@NEUT_VERSION_NUM@.a
 NEUT_STATIC_LIBS = $(top_builddir)/neutcore/lib@LIBPREFIX@neutcore.@NEUT_VERSION_NUM@.a \
 	$(top_builddir)/neutcore/lib@LIBPREFIX@CERNOverride.@NEUT_VERSION_NUM@.a \
 	$(top_builddir)/mec/lib@LIBPREFIX@neutmec.@NEUT_VERSION_NUM@.a \
@@ -396,7 +410,7 @@ NEUT_STATIC_LIBS = $(top_builddir)/neutcore/lib@LIBPREFIX@neutcore.@NEUT_VERSION
 	$(am__append_1)
 NEUT_LIBS = $(top_builddir)/neutclass/libNEUTClassUtils.@NEUT_VERSION_NUM@.a \
 	$(top_builddir)/neutclass/libNEUTClass.la \
-	$(top_builddir)/libNEUT.@NEUT_VERSION_NUM@.a $(am__append_17)
+	$(top_builddir)/libNEUT.@NEUT_VERSION_NUM@.a $(am__append_20)
 CERN_ROOT = $(CERN)/$(CERN_LEVEL)
 CERN_LINKFLAGS = -L$(CERN_ROOT)/lib
 CERN_LIBS = -ljetset74 -lpdflib804 -lphotos202 -lmathlib -lpacklib -lkernlib
@@ -407,16 +421,17 @@ NEUT_DEFINES = -DgFortran $(am__append_2) $(am__append_3) \
 NEUT_FFLAGS = -fno-backslash -fno-automatic -fno-second-underscore -ffixed-line-length-132 -fdollar-ok -fPIC -fbounds-check -Wall -Wextra -ffpe-trap=invalid,zero,overflow -DstrictF77 -Df2cFortran $(NEUT_DEFINES)
 DEFAULT_FFLAGS = $(NEUT_FFLAGS) $(NEUT_INCLUDES) \
 	-I$(CERN_ROOT)/include $(am__append_6) $(am__append_9) \
-	$(am__append_12) $(am__append_14)
+	$(am__append_12) $(am__append_15) $(am__append_17)
 DEFAULT_CXXFLAGS = -fPIC $(NEUT_DEFINES) $(NEUT_INCLUDES) \
 	-I$(CERN_ROOT)/include -std=c++11 $(shell root-config \
 	--cflags) $(am__append_5) $(am__append_7) $(am__append_10) \
-	$(am__append_15)
+	$(am__append_13) $(am__append_18)
 DEFAULT_CFLAGS = -fPIC $(NEUT_DEFINES) $(NEUT_INCLUDES) \
-	-I$(CERN_ROOT)/include $(am__append_8) $(am__append_11)
-DEFAULT_LINKFLAGS = -version-info @NEUT_VERSION_NUM@ $(am__append_13)
+	-I$(CERN_ROOT)/include $(am__append_8) $(am__append_11) \
+	$(am__append_14)
+DEFAULT_LINKFLAGS = -version-info @NEUT_VERSION_NUM@ $(am__append_16)
 ROOT_LINKFLAGS = $(shell root-config --ldflags) -pthread -rdynamic \
-	-L$(shell root-config --libdir) $(am__append_16)
+	-L$(shell root-config --libdir) $(am__append_19)
 @ROOT_MAJOR_IS_SIX_FALSE@ROOT_LIBS = -lCore -lCint -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lm -ldl
 @ROOT_MAJOR_IS_SIX_TRUE@ROOT_LIBS = -lCore -lImt -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lTreePlayer -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lMultiProc
 @NEUT_HEPMC_TRUE@HEPMC_LIBDIR = $(shell HepMC3-config --libdir)
@@ -425,16 +440,19 @@ ROOT_LINKFLAGS = $(shell root-config --ldflags) -pthread -rdynamic \
 @NEUT_HEPMC_TRUE@NUHEPMC_INCDIR = $(shell NuHepMC-config --incdir)
 
 # I know... but this seems to work
-EXE_LINKFLAGS = -fno-PIE -fno-pie $(am__append_18)
-EXE_RTLIBS = -lstdc++ -lgfortran $(am__append_19)
+EXE_LINKFLAGS = -fno-PIE -fno-pie $(am__append_21)
+EXE_RTLIBS = -lstdc++ -lgfortran $(am__append_22)
 AM_FFLAGS = $(DEFAULT_FFLAGS)
-AM_CXXFLAGS = $(DEFAULT_CXXFLAGS) $(NEUT_CLASS_INCLUDES)
+AM_CXXFLAGS = $(DEFAULT_CXXFLAGS) $(NEUT_CLASS_INCLUDES) $(NEUT_REWEIGHT_INCLUDES)
 cFORTRAN_boundary_LDADD = $(NEUT_LIBS) $(CERN_LIBS) $(ROOT_LIBS) $(EXE_RTLIBS) -lgfortran
 cFORTRAN_boundary_LDFLAGS = $(EXE_LINKFLAGS) $(CERN_LINKFLAGS) $(ROOT_LINKFLAGS)
 cFORTRAN_boundary_SOURCES = cFORTRAN_boundary.cc double_me.F
 neut_test_card_reader_SOURCES = neut_test_card_reader.cc
 neut_test_card_reader_LDADD = $(NEUT_LIBS) $(CERN_LIBS) $(ROOT_LIBS) $(EXE_RTLIBS)
 neut_test_card_reader_LDFLAGS = $(EXE_LINKFLAGS) $(CERN_LINKFLAGS) $(ROOT_LINKFLAGS)
+NReWeightDeclaredDials_SOURCES = NReWeightDeclaredDials.cc
+NReWeightDeclaredDials_LDADD = $(NEUT_REWEIGHT_LIBS) $(NEUT_LIBS) $(CERN_LIBS) $(ROOT_LIBS) $(EXE_RTLIBS)
+NReWeightDeclaredDials_LDFLAGS = $(EXE_LINKFLAGS) $(CERN_LINKFLAGS) $(ROOT_LINKFLAGS)
 all: all-am
 
 .SUFFIXES:
@@ -520,6 +538,10 @@ clean-binPROGRAMS:
 	echo " rm -f" $$list; \
 	rm -f $$list
 
+NReWeightDeclaredDials$(EXEEXT): $(NReWeightDeclaredDials_OBJECTS) $(NReWeightDeclaredDials_DEPENDENCIES) $(EXTRA_NReWeightDeclaredDials_DEPENDENCIES) 
+	@rm -f NReWeightDeclaredDials$(EXEEXT)
+	$(AM_V_CXXLD)$(NReWeightDeclaredDials_LINK) $(NReWeightDeclaredDials_OBJECTS) $(NReWeightDeclaredDials_LDADD) $(LIBS)
+
 cFORTRAN_boundary$(EXEEXT): $(cFORTRAN_boundary_OBJECTS) $(cFORTRAN_boundary_DEPENDENCIES) $(EXTRA_cFORTRAN_boundary_DEPENDENCIES) 
 	@rm -f cFORTRAN_boundary$(EXEEXT)
 	$(AM_V_CXXLD)$(cFORTRAN_boundary_LINK) $(cFORTRAN_boundary_OBJECTS) $(cFORTRAN_boundary_LDADD) $(LIBS)
@@ -534,6 +556,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NReWeightDeclaredDials.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cFORTRAN_boundary.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/neut_test_card_reader.Po@am__quote@
 

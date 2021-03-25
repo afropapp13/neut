@@ -135,11 +135,17 @@ AC_ARG_ENABLE([tauola],
 
 AM_CONDITIONAL([NEUT_USE_TAUOLA], [test "x$enable_tauola" = "xyes"])
 
-######## Check use tauola
+######## Check use ZEBRA
 AC_ARG_ENABLE([zebra],
     AS_HELP_STRING([--enable-zebra], [Enable ZEBRA]))
 
 AM_CONDITIONAL([NEUT_USE_ZBS], [test "x$enable_zebra" = "xyes"])
+
+######## Check use nucfsi
+AC_ARG_ENABLE([nucfsi],
+    AS_HELP_STRING([--disable-nucleon-fsi-info], [Remove nucleon fsi step information in vector output. Included for backward compatibility]))
+
+AM_CONDITIONAL([NEUT_WRITE_NUCFSI], [test "x$enable_nucfsi" = "xyes"])
 
 ######## Check debug
 AC_ARG_ENABLE([debug],

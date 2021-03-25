@@ -8,17 +8,14 @@ namespace rew {
 class NuXSecCCQEEngine : public NReWeightEngineI {
 public:
   NuXSecCCQEEngine();
-  ~NuXSecCCQEEngine();
+  ~NuXSecCCQEEngine() {}
 
   void Reconfigure();
   double CalcWeight();
 
-  std::string EngineName() { return "NuXSecCCQEEngine"; }
+  std::string EngineName() const { return "NuXSecCCQEEngine"; }
 
 private:
-  void Init();
-  double CalcWeightMa();
-
   NSyst_t MaCCQE;
   NSyst_t AxlFFCCQE;
   NSyst_t SCCVecQE;

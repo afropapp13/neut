@@ -1,7 +1,8 @@
 #include "NuXSecCCQE.h"
 
-#include "CommonBlockIFace.h"
 #include "NModeDefn.h"
+
+#include "CommonBlockIFace.h"
 
 #include "neutcrsC.h"
 #include "neworkC.h"
@@ -11,13 +12,8 @@
 namespace neut {
 namespace rew {
 
-NuXSecCCQEEngine::NuXSecCCQEEngine() { this->Init(); }
-
-NuXSecCCQEEngine::~NuXSecCCQEEngine() {}
-
-void NuXSecCCQEEngine::Init() {
-
-  // Get the parameter values at generation time and store them as the 'default'
+NuXSecCCQEEngine::NuXSecCCQEEngine() { // Get the parameter values at generation
+                                       // time and store them as the 'default'
   CommonBlockIFace const &cbfa = CommonBlockIFace::Get();
 
   MaCCQE = RegisterDial("MaCCQE", cbfa.fnemdls_gen.xmaqe);
@@ -55,12 +51,11 @@ void NuXSecCCQEEngine::Reconfigure() {
   }
 }
 
-
 double NuXSecCCQEEngine::CalcWeight() {
   if (!NModeDefn::isCCQE(nework_.modene)) {
     return 1;
   }
-  if(!AnyTweaked()){
+  if (!AnyTweaked()) {
     return 1;
   }
 

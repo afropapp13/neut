@@ -89,6 +89,14 @@ protected:
     return index;
   }
 
+  double CheckReturnWeight(double weight) {
+    if (weight && !std::isnormal(weight)) {
+      std::cout << "[WARN]: Abnormal weight being returned by " << EngineName()
+                << std::endl;
+    }
+    return weight;
+  }
+
   std::map<NSyst_t, NSyst::Info> fDials;
 
   NReWeightEngineI(){};

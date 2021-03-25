@@ -17,7 +17,7 @@ CLEANFILES = $(BUILT_SOURCES)
 
 include_HEADERS = $(BUILT_SOURCES)
 # Order here matters, should build core libraries, combine them in this dir (.), then build reweight, programs, and tools.
-SUBDIRS = neutcore nuccorspl nuceff n1p1h mec ht2p2h radcorr skmcsvc partnuck neutclass specfunc . neutsmpl tools neututils nuclsmpl pionsmpl neutgeom reweight test
+SUBDIRS = neutcore nuccorspl nuceff n1p1h mec ht2p2h radcorr skmcsvc partnuck neutclass specfunc . reweight neutsmpl tools neututils nuclsmpl pionsmpl neutgeom test
 
 if NEUT_USE_ZBS
 

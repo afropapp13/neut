@@ -4,6 +4,8 @@ ACLOCAL_AMFLAGS = -I m4
 NEUT_INCLUDES = -I$(top_srcdir)/radcorr -I$(top_srcdir)/mec -I$(top_srcdir)/ht2p2h/inc -I$(top_srcdir)/nuccorspl -I$(top_srcdir)/n1p1h/inc -I$(top_srcdir)/nuceff -I$(top_srcdir)/nuclsmpl -I$(top_srcdir)/skmcsvc -I$(top_srcdir)/neutcore -I$(top_srcdir)/partnuck -I$(top_srcdir)/specfunc  -I$(top_srcdir)/tools -I$(top_builddir)/neutcore -I$(top_builddir)/skmcsvc -I$(top_builddir)/n1p1h -I$(top_builddir)/nuccorspl -I$(top_builddir)/nuceff
 
 NEUT_CLASS_INCLUDES = -I$(top_srcdir)/neutclass
+NEUT_REWEIGHT_INCLUDES = -I$(top_srcdir)/reweight
+NEUT_REWEIGHT_LIBS = $(top_builddir)/reweight/libNEUTReWeight.@NEUT_VERSION_NUM@.a
 
 NEUT_STATIC_LIBS =  $(top_builddir)/neutcore/lib@LIBPREFIX@neutcore.@NEUT_VERSION_NUM@.a  $(top_builddir)/neutcore/lib@LIBPREFIX@CERNOverride.@NEUT_VERSION_NUM@.a $(top_builddir)/mec/lib@LIBPREFIX@neutmec.@NEUT_VERSION_NUM@.a $(top_builddir)/n1p1h/lib@LIBPREFIX@n1p1h.@NEUT_VERSION_NUM@.a $(top_builddir)/ht2p2h/lib@LIBPREFIX@ht2p2h.@NEUT_VERSION_NUM@.a $(top_builddir)/nuccorspl/lib@LIBPREFIX@nuccorspl.@NEUT_VERSION_NUM@.a $(top_builddir)/nuceff/lib@LIBPREFIX@nuceff.@NEUT_VERSION_NUM@.a $(top_builddir)/radcorr/lib@LIBPREFIX@radcorr.@NEUT_VERSION_NUM@.a $(top_builddir)/specfunc/lib@LIBPREFIX@specfunc.@NEUT_VERSION_NUM@.a $(top_builddir)/skmcsvc/lib@LIBPREFIX@skmcsvc.@NEUT_VERSION_NUM@.a  $(top_builddir)/partnuck/lib@LIBPREFIX@partnuck.@NEUT_VERSION_NUM@.a
 
@@ -54,6 +56,12 @@ else
 DEFAULT_FFLAGS += -O0
 DEFAULT_CXXFLAGS += -O0
 DEFAULT_CFLAGS += -O0
+endif
+
+if NEUT_WRITE_NUCFSI
+DEFAULT_FFLAGS += -DNEUT_WRITE_NUCFSI
+DEFAULT_CXXFLAGS += -DNEUT_WRITE_NUCFSI
+DEFAULT_CFLAGS += -DNEUT_WRITE_NUCFSI
 endif
 
 DEFAULT_LINKFLAGS = -version-info @NEUT_VERSION_NUM@
