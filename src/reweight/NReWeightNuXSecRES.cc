@@ -115,7 +115,7 @@ void NReWeightNuXSecRES::Reconfigure(void) {
   NSYST_RECONFCURRVALUE(kXSecTwkDial_BgSclLMCPiBarRES, fracerr);
 
   //NSYST_RECONFCURRVALUE(kXSecTwkDial_MDLSPiEj, fracerr);
-  if (NSYST_CURRVAR(kXSecTwkDial_MDLSPiEj) != NSYST_DEFVAR(kXSecTwkDial_MDLSPiEj)) {
+  if (NSYST_TWKVAR(kXSecTwkDial_MDLSPiEj) != NSYST_DEFVAR(kXSecTwkDial_MDLSPiEj)) {
     NSYST_CURRVAR(kXSecTwkDial_MDLSPiEj) = NSYST_TWKVAR(kXSecTwkDial_MDLSPiEj);
   }
 
@@ -196,7 +196,7 @@ double NReWeightNuXSecRES::CalcWeight() {
         << "NReWeightNuXSecRes::CalcWeight() Warning: old_xsec==0, setting "
            "weight to 1"
         << std::endl;
-    return 1;
+    old_xsec = 1;
   }
 
   if (cbfa.fneut1pi_gen.neiff != 0) {
@@ -226,6 +226,13 @@ double NReWeightNuXSecRES::CalcWeight() {
   NEUTSetParams();
 
   double new_xsec = NEUTGetXSec();
+  if (new_xsec == 0) {
+    std::cout
+        << "NReWeightNuXSecRes::CalcWeight() Warning: new_xsec==0, setting "
+           "weight to 1"
+        << std::endl;
+    new_xsec = 1;
+  }
   double piej_new = 1;
   if (UseAngular) piej_new = NEUTGetPiEj();
 

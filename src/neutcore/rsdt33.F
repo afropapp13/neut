@@ -982,6 +982,7 @@ C     Throw the pion according to user input
 C     MDLSPIEJ = 0 means isotropic
 C     MDLSPIEJ = 1 means Delta only
 C     MDLSPIEJ = 2 means full Rein-Sehgal (Appendix A)
+C     MDLSPIEJ = 3 means Delta + isotropic, as in old NEUT
 
       IF (MDLSPIEJ .EQ. 0) THEN
         GOTO 101
@@ -1021,7 +1022,6 @@ C     ===========================================================
 C     Start the pion ejection calculation for P33(1232) ONLY
 C     See Rein-Sehgal 2.46; recommended only for CC1pi+1p channel
  102  CONTINUE
-C     WRITE(*,*) "EJECTING PION USING P33(1232) ONLY"
 
 C     rho 3/2 3/2 = delta delta + p delta + delta p + p p
       ROP3P3 = RHOCALC(1, 3, 1, 3, ALPSH, BETSH, DELSH, AM, ETABW)
@@ -1081,9 +1081,11 @@ C     If not, calculate equation 2.46 (remember all rho have been
 C     normalised out by rho tilde)
       YFN = RSY00(THETA,PHI)
      $    - (2./ SQRT(5.)) * RSY20(THETA,PHI) *
-     $      (RHOP3P3 - 0.5)
-     $    + (4./ SQRT(10.)) * RSY21(THETA,PHI) * RHOP3P1
-     $    - (4./ SQRT(10.)) * RSY22(THETA,PHI) * RHOP3M1
+     $      (REALPART(RHOP3P3) - 0.5)
+     $    + (4./ SQRT(10.)) * REALPART(RSY21(THETA,PHI))
+     $    * REALPART(RHOP3P1)
+     $    - (4./ SQRT(10.)) * REALPART(RSY22(THETA,PHI))
+     $    * REALPART(RHOP3M1)
 
 C     Do the accept-reject on the YFN distribution
       YRAND = RLU(IRSISED) * MAXDST
@@ -1172,7 +1174,7 @@ C     rho +1 -3
 C     Now we construct the same variables as used in the P33(1232) case
 C     Except now they have the additional P33(1640) resonance built-in
 
-C     RHOTIL is rho tilde, or the total equal isospin sum
+C     RHOTIL is rho tilde, or the total equal isospin sum (A.17)
       RHOTIL = ROP3P3 + ROP1P1 + ROM1M1 + ROM3M3
 C     Rho tilde 3/2, 3/2
       ROTI33 = ROP3P3 + ROM3M3
@@ -1207,7 +1209,6 @@ C     prefactor, include for completeness
 
 C     Now have the amplitudes: do the accept-reject on the pion
  51   CONTINUE
-C     WRITE(*,*) "Trying again adv"
 
 C     Throw in costheta and phi
       YRAND = RLU(IRSISED) * MAXDST
@@ -1216,15 +1217,15 @@ C     Throw in costheta and phi
 
       YFN = RSY00(THETA,PHI)
      &    - (2./SQRT(5.))*RSY20(THETA,PHI)
-     &      *(REALPART(RHOP3P3)-0.5)
+     &      * (REALPART(RHOP3P3)-0.5)
      &    + (4./SQRT(10.))*REALPART(RSY21(THETA,PHI))
-     &      *REALPART(RHOP3P1)
+     &      * REALPART(RHOP3P1)
      &    - (4./SQRT(10.))*REALPART(RSY22(THETA,PHI))
-     &      *REALPART(RHOP3M1)
+     &      * REALPART(RHOP3M1)
      &    - (4./SQRT(10.))*IMAGPART(RSY21(THETA,PHI))
-     &      *IMAGPART(RHOP3P1)
+     &      * IMAGPART(RHOP3P1)
      &    + (4./SQRT(10.))*IMAGPART(RSY22(THETA,PHI))
-     &      *IMAGPART(RHOP3M1)
+     &      * IMAGPART(RHOP3M1)
 
       YFN = YFN/SQRT(PI)
 
@@ -1569,7 +1570,7 @@ C     Throw costheta between -1 and +1
       PHI   = RLU(IRSISED) * PI * 2.
 
 C     W(THETA,PHI) as defined in A.18 Rein-Sehgal
-      YFN = (1./3.) * (1./SQRT(PI)) * (
+      YFN = 1./(3*SQRT(PI)) * (
      &      A00*RSY00(THETA,PHI) + A10*RSY10(THETA,PHI)
      &    + A20*RSY20(THETA,PHI) + A30*RSY30(THETA,PHI)
 
@@ -1862,6 +1863,8 @@ C     (Creation Date and Author)
 C       2016.Oct C. Wret: Add in to allow using multiple interfering 
 C                         resonances in ejecting the pion in the
 C                         resonance rest-frame
+C                         See Rein-Sehgal 1981 Eq A20 and onwards
+C                         Here we are calculating the "rho" above Eq A20
 C
 ************************************************************************
       IMPLICIT NONE
@@ -1933,11 +1936,8 @@ C     So pass all of the resonance amplitudes
       A0MC(NCTR) = AM(6, NCTR)
  99   CONTINUE     
 
-C     Set to zero just to be sure!
-      RHOCALC = 0.
-
 C     Will always have the Breit-Wigner factor
-      RHOCALC = 0.5*CONJG(ETABW(RES1))*ETABW(RES2)
+      RHOCALC = 0.5*CONJG(ETABW(RES1))
 
 
 C     3/2 xx
@@ -1946,15 +1946,12 @@ C     3/2 xx
 C     3/2 3/2 
         IF (J2 .EQ. 3) THEN
           RHOCALC = RHOCALC*BETSH*BETSH*AM3C(RES1)*AM3C(RES2)
-          RETURN
 C     3/2 1/2
         ELSE IF (J2 .EQ. 1) THEN
           RHOCALC = RHOCALC*BETSH*DELSH*AM3C(RES1)*A0PC(RES2)
-          RETURN
 C     3/2 -1/2
         ELSE IF (J2 .EQ. -1) THEN
           RHOCALC = RHOCALC*(-1.)*BETSH*ALPSH*AM3C(RES1)*AP1C(RES2)
-          RETURN
 C     3/2 -3/2 -- THIS DOESN'T SEEM TO HAPPEN?
 C       ELSE IF (J2 .EQ. -3) THEN
 
@@ -1966,21 +1963,17 @@ C     1/2 xx
 C     1/2 3/2
         IF (J2 .EQ. 3) THEN
           RHOCALC = RHOCALC*BETSH*DELSH*A0PC(RES1)*AM3C(RES2)
-          RETURN
 C     1/2 1/2
         ELSE IF (J2 .EQ. 1) THEN
           RHOCALC = RHOCALC*(BETSH*BETSH*AM1C(RES1)*AM1C(RES2)
      &            + DELSH*DELSH*A0PC(RES1)*A0PC(RES2))
-          RETURN
 C     1/2 -1/2
         ELSE IF (J2 .EQ. -1) THEN
           RHOCALC = RHOCALC*(BETSH*DELSH*AM1C(RES1)*A0MC(RES2)
      &            - DELSH*ALPSH*A0PC(RES1)*AP1C(RES2))
-          RETURN
 C     1/2 -3/2
         ELSE IF (J2 .EQ. -3) THEN
           RHOCALC = RHOCALC*(-1.)*BETSH*ALPSH*AM1C(RES1)*AP3C(RES2)
-          RETURN
 
         END IF ! end the if on J2
 
@@ -1991,21 +1984,17 @@ C     -1/2 xx
 C     -1/2 3/2
         IF (J2 .EQ. 3) THEN
           RHOCALC = RHOCALC*BETSH*BETSH*AM1C(RES1)*AM3C(RES2)
-          RETURN
 C     -1/2 1/2
         ELSE IF (J2 .EQ. 1) THEN
           RHOCALC = RHOCALC*(DELSH*BETSH*A0MC(RES1)*AM1C(RES2)
      &            - ALPSH*DELSH*AP1C(RES1)*A0PC(RES2))
-          RETURN
 C     -1/2 -1/2
         ELSE IF (J2 .EQ. -1) THEN
           RHOCALC = RHOCALC*(ALPSH*ALPSH*AP1C(RES1)*AP1C(RES2)
      &            + DELSH*DELSH*A0MC(RES1)*A0MC(RES2))
-          RETURN
 C     -1/2 -3/2
         ELSE IF (J2 .EQ. -3) THEN
           RHOCALC = RHOCALC*(-1.)*ALPSH*DELSH*A0MC(RES1)*AP3C(RES2)
-          RETURN
 
         END IF ! end the if on J2
 
@@ -2018,19 +2007,18 @@ C       IF (J2 .EQ. 3) THEN
 C     -3/2 1/2
         IF (J2 .EQ. 1) THEN
           RHOCALC = RHOCALC*(-1.)*ALPSH*BETSH*AP3C(RES1)*AM1C(RES2)
-          RETURN
 C     -3/2 -1/2
         ELSE IF (J2 .EQ. -1) THEN
           RHOCALC = RHOCALC*(-1.)*ALPSH*DELSH*AP3C(RES1)*A0MC(RES2)
-          RETURN
 C     -3/2 -3/2
         ELSE IF (J2 .EQ. -3) THEN
           RHOCALC = RHOCALC*ALPSH*ALPSH*AP3C(RES1)*AP3C(RES2)
-          RETURN
 
         END IF ! end the if on J2
 
       END IF ! end the if on J1
+
+      RHOCALC = RHOCALC*ETABW(RES2)
 
       RETURN
 

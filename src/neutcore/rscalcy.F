@@ -650,10 +650,8 @@ C     Start the pion ejection calculation for ISOTROPIC distribution
 
 C     Not sure how to do this for a flat distribution
 C     Probably need to normalise somehow?
-      YFN = 1
+      YFN = 1/(4*PI)
 
-c     write(*,*) "rsy00=",rsy00(theta,phi)
-c     write(*,*) "other=",(2./SQRT(5.))*RSY20(THETA,PHI)*(-0.5)
       GOTO 72
 C     Now done with this method; have valid Enu, Q2, W, theta, phi
 C     Now get the momentum at GOTO 72
@@ -695,13 +693,13 @@ C     rho tilde 3/2, -1/2
       ROT3M1 = ROP3M1 + ROP1M3
 C     This is eq 2.46 of Rein-Sehgal, RSY are the spherical harmonics
 C     Normalise relative rho tilde, as Rein-Sehgal also do
-      RHOP3P3 = ROTI33 / RHOTIL
-      RHOP3P1 = ROTI31 / RHOTIL
-      RHOP3M1 = ROT3M1 / RHOTIL
+c     RHOP3P3 = ROTI33 / RHOTIL
+c     RHOP3P1 = ROTI31 / RHOTIL
+c     RHOP3M1 = ROT3M1 / RHOTIL
 
 C     Don't quite know how to calculate this for a flat dist?
 C     For now just try setting the resonances to zero?
-      YFN = 1
+      YFN = 1/(4*PI)
 
 C     If we aren't dealing with a Delta resonance just make the
 C     distribution flat in costheta and phi if user has requested it
@@ -709,11 +707,20 @@ C     distribution flat in costheta and phi if user has requested it
 
 C     If not, calculate equation 2.46 (remember all rho have been
 C     normalised out by rho tilde)
-      YFN = RSY00(THETA,PHI)
+c     YFN = RSY00(THETA,PHI)
+c    $    - (2./ SQRT(5.)) * RSY20(THETA,PHI) *
+c    $      (RHOP3P3 - 0.5)
+c    $    + (4./ SQRT(10.)) * RSY21(THETA,PHI) * RHOP3P1
+c    $    - (4./ SQRT(10.)) * RSY22(THETA,PHI) * RHOP3M1
+
+C     Don't use the rescaled amplitudes
+      YFN = RSY00(THETA,PHI)*REALPART(RHOTIL)
      $    - (2./ SQRT(5.)) * RSY20(THETA,PHI) *
-     $      (RHOP3P3 - 0.5)
-     $    + (4./ SQRT(10.)) * RSY21(THETA,PHI) * RHOP3P1
-     $    - (4./ SQRT(10.)) * RSY22(THETA,PHI) * RHOP3M1
+     $      (REALPART(ROTI33) - 0.5*REALPART(RHOTIL))
+     $    + (4./ SQRT(10.)) * REALPART(RSY21(THETA,PHI)) 
+     $      * REALPART(ROTI31)
+     $    - (4./ SQRT(10.)) * REALPART(RSY22(THETA,PHI)) 
+     $      * REALPART(ROT3M1)
 
       YFN = YFN/(3*SQRT(PI))
 
@@ -809,21 +816,22 @@ C     rho tilde 3/2, -1/2
 
 C     This is eq 2.46 of Rein-Sehgal, RSY are the spherical harmonics
 C     Normalise relative rho tilde, as Rein-Sehgal also do
-      RHOP3P3 = ROTI33 / RHOTIL
-      RHOP3P1 = ROTI31 / RHOTIL
-      RHOP3M1 = ROT3M1 / RHOTIL
+C     Try without normalisation
+c     RHOP3P3 = ROTI33 / RHOTIL
+c     RHOP3P1 = ROTI31 / RHOTIL
+c     RHOP3M1 = ROT3M1 / RHOTIL
 
-      YFN = RSY00(THETA,PHI)
+      YFN = RSY00(THETA,PHI)*REALPART(RHOTIL)
      &    - (2./SQRT(5.))*RSY20(THETA,PHI)
-     &      *(REALPART(RHOP3P3)-0.5)
+     &      * (REALPART(ROTI33)-0.5*REALPART(RHOTIL))
      &    + (4./SQRT(10.))*REALPART(RSY21(THETA,PHI))
-     &      *REALPART(RHOP3P1)
+     &      * REALPART(ROTI31)
      &    - (4./SQRT(10.))*REALPART(RSY22(THETA,PHI))
-     &      *REALPART(RHOP3M1)
+     &      * REALPART(ROT3M1)
      &    - (4./SQRT(10.))*IMAGPART(RSY21(THETA,PHI))
-     &      *IMAGPART(RHOP3P1)
+     &      * IMAGPART(ROTI31)
      &    + (4./SQRT(10.))*IMAGPART(RSY22(THETA,PHI))
-     &      *IMAGPART(RHOP3M1)
+     &      * IMAGPART(ROT3M1)
 
 C     Don't forget about the pre-factor
       YFN = YFN/(3*SQRT(PI))
@@ -1238,6 +1246,8 @@ C     (Creation Date and Author)
 C       2016.Oct C. Wret: Add in to allow using multiple interfering 
 C                         resonances in ejecting the pion in the
 C                         resonance rest-frame
+C                         See Rein-Sehgal 1981 Eq A20 and onwards
+C                         Here we are calculating the "rho" above Eq A20
 C
 ************************************************************************
       IMPLICIT NONE
@@ -1309,11 +1319,8 @@ C     So pass all of the resonance amplitudes
       A0MC(NCTR) = AM(6, NCTR)
  99   CONTINUE     
 
-C     Set to zero just to be sure!
-      RHOCALC = 0.
-
 C     Will always have the Breit-Wigner factor
-      RHOCALC = 0.5*CONJG(ETABW(RES1))*ETABW(RES2)
+      RHOCALC = 0.5*CONJG(ETABW(RES1))
 
 
 C     3/2 xx
@@ -1322,15 +1329,12 @@ C     3/2 xx
 C     3/2 3/2 
         IF (J2 .EQ. 3) THEN
           RHOCALC = RHOCALC*BETSH*BETSH*AM3C(RES1)*AM3C(RES2)
-          RETURN
 C     3/2 1/2
         ELSE IF (J2 .EQ. 1) THEN
           RHOCALC = RHOCALC*BETSH*DELSH*AM3C(RES1)*A0PC(RES2)
-          RETURN
 C     3/2 -1/2
         ELSE IF (J2 .EQ. -1) THEN
           RHOCALC = RHOCALC*(-1.)*BETSH*ALPSH*AM3C(RES1)*AP1C(RES2)
-          RETURN
 C     3/2 -3/2 -- THIS DOESN'T SEEM TO HAPPEN?
 C       ELSE IF (J2 .EQ. -3) THEN
 
@@ -1342,21 +1346,17 @@ C     1/2 xx
 C     1/2 3/2
         IF (J2 .EQ. 3) THEN
           RHOCALC = RHOCALC*BETSH*DELSH*A0PC(RES1)*AM3C(RES2)
-          RETURN
 C     1/2 1/2
         ELSE IF (J2 .EQ. 1) THEN
           RHOCALC = RHOCALC*(BETSH*BETSH*AM1C(RES1)*AM1C(RES2)
      &            + DELSH*DELSH*A0PC(RES1)*A0PC(RES2))
-          RETURN
 C     1/2 -1/2
         ELSE IF (J2 .EQ. -1) THEN
           RHOCALC = RHOCALC*(BETSH*DELSH*AM1C(RES1)*A0MC(RES2)
      &            - DELSH*ALPSH*A0PC(RES1)*AP1C(RES2))
-          RETURN
 C     1/2 -3/2
         ELSE IF (J2 .EQ. -3) THEN
           RHOCALC = RHOCALC*(-1.)*BETSH*ALPSH*AM1C(RES1)*AP3C(RES2)
-          RETURN
 
         END IF ! end the if on J2
 
@@ -1367,21 +1367,17 @@ C     -1/2 xx
 C     -1/2 3/2
         IF (J2 .EQ. 3) THEN
           RHOCALC = RHOCALC*BETSH*BETSH*AM1C(RES1)*AM3C(RES2)
-          RETURN
 C     -1/2 1/2
         ELSE IF (J2 .EQ. 1) THEN
           RHOCALC = RHOCALC*(DELSH*BETSH*A0MC(RES1)*AM1C(RES2)
      &            - ALPSH*DELSH*AP1C(RES1)*A0PC(RES2))
-          RETURN
 C     -1/2 -1/2
         ELSE IF (J2 .EQ. -1) THEN
           RHOCALC = RHOCALC*(ALPSH*ALPSH*AP1C(RES1)*AP1C(RES2)
      &            + DELSH*DELSH*A0MC(RES1)*A0MC(RES2))
-          RETURN
 C     -1/2 -3/2
         ELSE IF (J2 .EQ. -3) THEN
           RHOCALC = RHOCALC*(-1.)*ALPSH*DELSH*A0MC(RES1)*AP3C(RES2)
-          RETURN
 
         END IF ! end the if on J2
 
@@ -1394,19 +1390,18 @@ C       IF (J2 .EQ. 3) THEN
 C     -3/2 1/2
         IF (J2 .EQ. 1) THEN
           RHOCALC = RHOCALC*(-1.)*ALPSH*BETSH*AP3C(RES1)*AM1C(RES2)
-          RETURN
 C     -3/2 -1/2
         ELSE IF (J2 .EQ. -1) THEN
           RHOCALC = RHOCALC*(-1.)*ALPSH*DELSH*AP3C(RES1)*A0MC(RES2)
-          RETURN
 C     -3/2 -3/2
         ELSE IF (J2 .EQ. -3) THEN
           RHOCALC = RHOCALC*ALPSH*ALPSH*AP3C(RES1)*AP3C(RES2)
-          RETURN
 
         END IF ! end the if on J2
 
       END IF ! end the if on J1
+
+      RHOCALC = RHOCALC*ETABW(RES2)
 
       RETURN
 

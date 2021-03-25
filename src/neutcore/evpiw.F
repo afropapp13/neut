@@ -275,17 +275,8 @@ C     Set lepton mass
          xmlep=0.
       endif
 
-C     Set nucleon mass
-      if (ipne(2).eq.2112) then
-         xmn01 = XMNE
-      else
-         xmn01 = XMP
-      endif
-      if (ipne(4).eq.2112) then
-         xmn02 = XMNE
-      else
-         xmn02 = XMP
-      endif
+      xmn01 = XMN
+      xmn02 = XMN
 
       e = sqrt(pne(1,1)**2+pne(2,1)**2+pne(3,1)**2)
 
@@ -346,19 +337,18 @@ C     using lepton mass effect, xmlep is lepton mass, e = neutrino
 C     energy, q2 = -Q2, W = hadronic mass, dcp is returned positive
 C     helicity differential xsec, dcm is returned negative helicity
 C     differential xsec, the 33s are using only the Delta(1232) 
-      IF (MDLSPI .EQ. 1) THEN
 C     Need to calculate theta and phi
 C     Get the primary nucleon and pion so we can boost into the frame
 C     Get the Adler angles
-          costhetaAd = -999
-          phiAd = -999
-          call mkAdler(costhetaAd, phiAd)
-          call rscalcy(IMOD, ipne(3), e, q2, w, acos(costhetaAd), phiAd,
-     &                0, yfn)
+      costhetaAd = -999
+      phiAd = -999
+      call mkAdler(costhetaAd, phiAd)
+      call rscalcy(IMOD, ipne(3), e, q2, w, acos(costhetaAd), phiAd,
+     &                1, yfn)
 
-          evpiw = yfn
-        ENDIF
+      evpiw = yfn
 
  999  continue
       RETURN
       END
+

@@ -178,7 +178,7 @@ public:
 #define NSYST_DEFVAR(DN) NSYST_CATVARNAME(fDef, DN)
 #define NSYST_TWKVAR(DN) NSYST_CATVARNAME(fTwk, DN)
 #define NSYST_ISTWKD(DN) bool(std::abs(NSYST_TWKVAR(DN)) > 1E-8)
-#define NSYST_ISTWKD_INT(DN) bool(std::abs(NSYST_CURRVAR(DN)-NSYST_DEFVAR(DN)) > 1E-8)
+#define NSYST_ISTWKD_INT(DN) bool(std::abs(NSYST_TWKVAR(DN)-NSYST_DEFVAR(DN)) > 1E-8)
 #define NSYST_DECLAREDIALVARIABLES(DN)                                         \
   double NSYST_CURRVAR(DN);                                                    \
   double NSYST_DEFVAR(DN);                                                     \
