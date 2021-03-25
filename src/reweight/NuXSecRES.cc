@@ -26,7 +26,7 @@ NuXSecRESEngine::NuXSecRESEngine() {
   }
 
   CA5RES = RegisterDial("CA5RES", cbfa.fneut1pi_gen.rneca5i, 0.15, 0.15);
-  BgSclRES = RegisterDial("BgSclRES", cbfa.fneut1pi_gen.rnebgscl, , 0.15, 0.15);
+  BgSclRES = RegisterDial("BgSclRES", cbfa.fneut1pi_gen.rnebgscl, 0.15, 0.15);
 
   UseSeparateBgSclLMCPiBar = RegisterDial("UseSeparateBgSclLMCPiBar", 0);
   BgSclLMCPiBarRES =
