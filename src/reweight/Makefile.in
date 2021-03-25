@@ -705,7 +705,8 @@ install-dvi: install-dvi-am
 install-dvi-am:
 
 install-exec-am: install-libLIBRARIES
-
+	@$(NORMAL_INSTALL)
+	$(MAKE) $(AM_MAKEFLAGS) install-exec-hook
 install-html: install-html-am
 
 install-html-am:
@@ -745,8 +746,9 @@ ps: ps-am
 ps-am:
 
 uninstall-am: uninstall-includeHEADERS uninstall-libLIBRARIES
-
-.MAKE: install-am install-strip
+	@$(NORMAL_INSTALL)
+	$(MAKE) $(AM_MAKEFLAGS) uninstall-hook
+.MAKE: install-am install-exec-am install-strip uninstall-am
 
 .PHONY: CTAGS GTAGS TAGS all all-am check check-am clean clean-generic \
 	clean-libLIBRARIES clean-libtool cscopelist-am ctags ctags-am \
@@ -754,15 +756,15 @@ uninstall-am: uninstall-includeHEADERS uninstall-libLIBRARIES
 	distclean-libtool distclean-tags distdir dvi dvi-am html \
 	html-am info info-am install install-am install-data \
 	install-data-am install-dvi install-dvi-am install-exec \
-	install-exec-am install-html install-html-am \
+	install-exec-am install-exec-hook install-html install-html-am \
 	install-includeHEADERS install-info install-info-am \
 	install-libLIBRARIES install-man install-pdf install-pdf-am \
 	install-ps install-ps-am install-strip installcheck \
 	installcheck-am installdirs maintainer-clean \
 	maintainer-clean-generic mostlyclean mostlyclean-compile \
 	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags tags-am uninstall uninstall-am uninstall-includeHEADERS \
-	uninstall-libLIBRARIES
+	tags tags-am uninstall uninstall-am uninstall-hook \
+	uninstall-includeHEADERS uninstall-libLIBRARIES
 
 
 # bin_PROGRAMS =
@@ -789,11 +791,11 @@ uninstall-am: uninstall-includeHEADERS uninstall-libLIBRARIES
 # SummaryPlots_LDADD = $(LIBNAME) $(NEUT_LIBS) $(CERN_LIBS) $(ROOT_LIBS) $(EXE_RTLIBS)
 # SummaryPlots_LDFLAGS = $(EXE_LINKFLAGS) $(CERN_LINKFLAGS) $(ROOT_LINKFLAGS)
 
-# install-exec-hook:
-# 	-(cd ${libdir}; $(LN_S) $(LIBNAME) $(shell echo $(LIBNAME) | cut -d . -f 1).a)
+install-exec-hook:
+	-(cd ${libdir}; $(LN_S) $(LIBNAME) $(shell echo $(LIBNAME) | cut -d . -f 1).a)
 
-# uninstall-hook:
-# 	-(cd ${libdir}; rm -f $(shell echo $(LIBNAME) | cut -d . -f 1).a)
+uninstall-hook:
+	-(cd ${libdir}; rm -f $(shell echo $(LIBNAME) | cut -d . -f 1).a)
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
