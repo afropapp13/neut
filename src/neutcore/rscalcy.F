@@ -54,6 +54,7 @@ C     Lives so we can avoid infinite loops (set to something like 10k)
 
 #include <rscons.h>
 #include <neutmodel.h>
+#include "necard.h"
 
       REAL*4 XMASPI2, XMVSPI2
 
@@ -273,14 +274,6 @@ C     KINEMATICAL QUANTITIES
       XNU2 = XNU**2
       ES = E-XNU
 
-C     Rethrow if something weird has happened to the neutrino energy
-C     IF (XNU.GE.E) GOTO 11
-
-C     This would be a disaster, stop the routine!
-      IF (XNU2.LE.Q2) THEN
-         IERR=1
-         RETURN
-      ENDIF
 
 C     Some Rein-Sehgal fundamental constants for a given W, Enu, Q2
 C     combination
@@ -295,7 +288,6 @@ C     combination
 
       U = (E+ES+QV)/(2.*E)
       V = (E+ES-QV)/(2.*E)
-C     IF(V.LT.0.) GOTO 11
       U2 = U**2
       V2 = V**2
       AK = (W2-XMN2)/(2.*XMN)
@@ -362,16 +354,14 @@ C       Pure I3/2
         if (IFLAG .EQ. 1) then
 C         Only P33(1232) P33(1640)
           if (IB.NE.1 .and. IB.NE.16) then
-            CONTINUE
+            CYCLE
           endif
 C       Mixed isospin
         else
           if (IB.NE.1 .and. IB.NE.3 .and. IB.NE.5 .AND. IB.NE.15)
-     &      CONTINUE
+     &      CYCLE
         endif
       endif
-
-
 
 C     IBLOCK is just IB-1; has to do with how we've save NRR(IB) and
 C     rsclfm.F. Could be fixed if you want :)
@@ -572,7 +562,8 @@ C     The Breit-Wigner terms should be complex
       A0PC(IB) = A0P(IB)
       A0MC(IB) = A0M(IB)
       GOTO 992
-C     If we're doing a NC mode
+
+C     If we're doing a CC mode
  991  CONTINUE
       AM3C(IB) = FM3C*XXE
       AM1C(IB) = FM1C*XXE
@@ -650,7 +641,9 @@ C     Start the pion ejection calculation for ISOTROPIC distribution
 
 C     Not sure how to do this for a flat distribution
 C     Probably need to normalise somehow?
+c     YFN = 1/(2*SQRT(PI))
       YFN = 1/(4*PI)
+c     YFN = 1
 
       GOTO 72
 C     Now done with this method; have valid Enu, Q2, W, theta, phi
@@ -699,7 +692,9 @@ c     RHOP3M1 = ROT3M1 / RHOTIL
 
 C     Don't quite know how to calculate this for a flat dist?
 C     For now just try setting the resonances to zero?
+c     YFN = 1/(2*SQRT(PI))
       YFN = 1/(4*PI)
+c     YFN = 1
 
 C     If we aren't dealing with a Delta resonance just make the
 C     distribution flat in costheta and phi if user has requested it
@@ -722,7 +717,11 @@ C     Don't use the rescaled amplitudes
      $    - (4./ SQRT(10.)) * REALPART(RSY22(THETA,PHI)) 
      $      * REALPART(ROT3M1)
 
-      YFN = YFN/(3*SQRT(PI))
+C     Make sure the YFN integral over costheta and phi is 1
+C     Include the geometric factor
+      YFN = YFN/(2*SQRT(PI))
+C     Then also the term multiplying RSY00
+      YFN = YFN/REALPART(RHOTIL)
 
 
       GOTO 72
@@ -752,6 +751,11 @@ C     ===================================================
 C     Start the pion ejection calculation for P33(1232) and P33(1640) ONLY
 C     Should only be done with I=3/2 channel, i.e. IFLAG = 1
 C     Unforunately have to derive this by hand :( Contact Clarence if you need a hand!
+C     THE I=3/2 case is covered in Rein-Sehgal eq 2.48
+C
+C     Resonance 1 is Delta(1232), resonance 16 is P33(1640)
+C     You can find this in rsclfm or looking at the masses of resonances
+C     is rscons.h
  104  CONTINUE
 
 C     rho 3 3 = delta delta + p delta + delta p + p p
@@ -833,8 +837,11 @@ c     RHOP3M1 = ROT3M1 / RHOTIL
      &    + (4./SQRT(10.))*IMAGPART(RSY22(THETA,PHI))
      &      * IMAGPART(ROT3M1)
 
-C     Don't forget about the pre-factor
-      YFN = YFN/(3*SQRT(PI))
+C     Make sure the YFN integral over costheta and phi is 1
+C     Include the geometric factor
+      YFN = YFN/(2*SQRT(PI))
+C     Then also the term multiplying RSY00
+      YFN = YFN/REALPART(RHOTIL)
 
       GOTO 72
 C     Now done with this method; have valid Enu, Q2, W, theta, phi
@@ -847,6 +854,12 @@ C     ===================================================
 C     Start the pion ejection calculation for P33(1232) and others ONLY
 C     Should only be done with I=1/2 channel, i.e. IFLAG != 1
 C     See Appendix A Rein-Sehgal, last part
+C
+C     Resonance 1 is Delta(1232), resonance 3 is D13(1525)
+C     Resonance 5 is S11(1540), resonance 15 is P11(1450)
+C     All on neutron!!
+C     You can find this in rsclfm or looking at the masses of resonances
+C     is rscons.h
  105  CONTINUE
 C     A00 as defined in A.19a in Rein-Sehgal
 C     Here's the delta part
@@ -874,149 +887,150 @@ C     Here's the P11(1450)
 
 C     A10 as defined in A.19b in Rein-Sehgal
       A10 = REALPART((2./5.) * SQRT(6.) * (
-     &      RHOCALC(1, 3, 1, 3, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    - RHOCALC(1,-3, 1,-3, ALPSH, BETSH, DELSH, AM, ETABW)
+     &      RHOCALC(1, 3, 3, 3, ALPSH, BETSH, DELSH, AM, ETABW) !DelD
+     &    - RHOCALC(1,-3, 3,-3, ALPSH, BETSH, DELSH, AM, ETABW) !DelD
      &    ) ! Close the second bracket
      &    + (2./15.) * SQRT(6.) * (
-     &      RHOCALC(1, 1, 3, 1, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    - RHOCALC(1,-1, 3,-1, ALPSH, BETSH, DELSH, AM, ETABW)
+     &      RHOCALC(1, 1, 3, 1, ALPSH, BETSH, DELSH, AM, ETABW) ! DelD
+     &    - RHOCALC(1,-1, 3,-1, ALPSH, BETSH, DELSH, AM, ETABW) ! DelD
      &    ) ! Close the second bracket
      &    + (4./3.) * SQRT(3.) * (
-     &      RHOCALC(15, 1, 5, 1, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    - RHOCALC(15,-1, 5,-1, ALPSH, BETSH, DELSH, AM, ETABW)
+     &      RHOCALC(15, 1, 5, 1, ALPSH, BETSH, DELSH, AM, ETABW) ! PS
+     &    - RHOCALC(15,-1, 5,-1, ALPSH, BETSH, DELSH, AM, ETABW) ! PS
      &    ) ! Close the second bracket
      &    + (4./3.) * SQRT(3.) * (
-     &      RHOCALC(1, 1, 5, 1, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    + RHOCALC(1,-1, 5,-1, ALPSH, BETSH, DELSH, AM, ETABW)
+     &      RHOCALC(1, 1, 5, 1, ALPSH, BETSH, DELSH, AM, ETABW) ! DelS
+     &    + RHOCALC(1,-1, 5,-1, ALPSH, BETSH, DELSH, AM, ETABW) ! DelS
      &    ) ! Close the second bracket
      &    + (4./3.) * SQRT(6.) * (
-     &      RHOCALC(3, 1, 15, 1, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    + RHOCALC(3,-1, 15,-1, ALPSH, BETSH, DELSH, AM, ETABW)
+     &      RHOCALC(3, 1, 15, 1, ALPSH, BETSH, DELSH, AM, ETABW) ! DP
+     &    + RHOCALC(3,-1, 15,-1, ALPSH, BETSH, DELSH, AM, ETABW) ! DP
      &    ) ! Close second bracket
      &    ) ! Close first bracket
 
 C     A20 as defined in A.19c in Rein-Sehgal
+C     Note difficult to tell sign on real part in paper!
       A20 = (-2./5.) * SQRT(5.) * (
-     &      RHOCALC(1, 3, 1, 3, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    + RHOCALC(1,-3, 1,-3, ALPSH, BETSH, DELSH, AM, ETABW)
+     &      RHOCALC(1, 3, 1, 3, ALPSH, BETSH, DELSH, AM, ETABW) !DelDel
+     &    + RHOCALC(1,-3, 1,-3, ALPSH, BETSH, DELSH, AM, ETABW) !DelDel
      &    - 0.5 * (
-     &      RHOCALC(1, 3, 1, 3, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    + RHOCALC(1, 1, 1, 1, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    + RHOCALC(1,-1, 1,-1, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    + RHOCALC(1,-3, 1,-3, ALPSH, BETSH, DELSH, AM, ETABW)
+     &      RHOCALC(1, 3, 1, 3, ALPSH, BETSH, DELSH, AM, ETABW) !DelDel
+     &    + RHOCALC(1, 1, 1, 1, ALPSH, BETSH, DELSH, AM, ETABW) !DelDel
+     &    + RHOCALC(1,-1, 1,-1, ALPSH, BETSH, DELSH, AM, ETABW) !DelDel
+     &    + RHOCALC(1,-3, 1,-3, ALPSH, BETSH, DELSH, AM, ETABW) !DelDel
      &    ) ! Close the bracket
      &    ) ! Close the bracket
      &    - (4./5.)*SQRT(5.) * (
-     &      RHOCALC(3, 3, 3, 3, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    + RHOCALC(3,-3, 3,-3, ALPSH, BETSH, DELSH, AM, ETABW)
+     &      RHOCALC(3, 3, 3, 3, ALPSH, BETSH, DELSH, AM, ETABW) !DD
+     &    + RHOCALC(3,-3, 3,-3, ALPSH, BETSH, DELSH, AM, ETABW) !DD
      &    - 0.5 * (
-     &      RHOCALC(3, 3, 3, 3, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    + RHOCALC(3, 1, 3, 1, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    + RHOCALC(3,-1, 3,-1, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    + RHOCALC(3,-3, 3,-3, ALPSH, BETSH, DELSH, AM, ETABW)
+     &      RHOCALC(3, 3, 3, 3, ALPSH, BETSH, DELSH, AM, ETABW) !DD
+     &    + RHOCALC(3, 1, 3, 1, ALPSH, BETSH, DELSH, AM, ETABW) !DD
+     &    + RHOCALC(3,-1, 3,-1, ALPSH, BETSH, DELSH, AM, ETABW) !DD
+     &    + RHOCALC(3,-3, 3,-3, ALPSH, BETSH, DELSH, AM, ETABW) !DD
      &    ) ! Close the bracket
      &    ) ! Close the bracket
      &    - REALPART(
      &      (4./5.)*SQRT(5.) * (
-     &      RHOCALC(1, 1, 15, 1, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    - RHOCALC(1,-1, 15,-1, ALPSH, BETSH, DELSH, AM, ETABW)
+     &      RHOCALC(1, 1, 15, 1, ALPSH, BETSH, DELSH, AM, ETABW) !DelP
+     &    - RHOCALC(1,-1, 15,-1, ALPSH, BETSH, DELSH, AM, ETABW) !DelP
      &    ) ! Close first bracket
      &    + (4./5.)*SQRT(10.) * (
-     &      RHOCALC(3, 1, 5, 1, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    - RHOCALC(3,-1, 5,-1, ALPSH, BETSH, DELSH, AM, ETABW)
+     &      RHOCALC(3, 1, 5, 1, ALPSH, BETSH, DELSH, AM, ETABW) !DS
+     &    - RHOCALC(3,-1, 5,-1, ALPSH, BETSH, DELSH, AM, ETABW) !DS
      &    ) ! Close the first bracket
      &    ) ! Close the real part bracket
 
 C     A30 as defined in Rein-Sehgal A.19d
       A30 = REALPART(
      &      (-6./35.) * SQRT(14.) * (
-     &      RHOCALC(1, 3, 3, 3, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    - RHOCALC(1,-3, 3,-3, ALPSH, BETSH, DELSH, AM, ETABW)
+     &      RHOCALC(1, 3, 3, 3, ALPSH, BETSH, DELSH, AM, ETABW) !DelD
+     &    - RHOCALC(1,-3, 3,-3, ALPSH, BETSH, DELSH, AM, ETABW) !DelD
      &    ) ! Close second bracket
      &    - (18./35.) * SQRT(14.) * (
-     &      RHOCALC(1, 1, 3, 1, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    - RHOCALC(1,-1, 3,-1, ALPSH, BETSH, DELSH, AM, ETABW)
+     &      RHOCALC(1, 1, 3, 1, ALPSH, BETSH, DELSH, AM, ETABW) !DelD
+     &    - RHOCALC(1,-1, 3,-1, ALPSH, BETSH, DELSH, AM, ETABW) !DelD
      &    ) ! Close second bracket
      &    ) ! Close first bracket
 
 C     A11 as defined in Rein-Sehgal A.19e
       A11 = REALPART(
      &      (-4./5.) * (
-     &      RHOCALC(1, 3, 3, 1, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    + RHOCALC(1,-1, 3,-3, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    + RHOCALC(1, 1, 3, 3, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    + RHOCALC(1,-3, 3,-1, ALPSH, BETSH, DELSH, AM, ETABW)
+     &      RHOCALC(1, 3, 3, 1, ALPSH, BETSH, DELSH, AM, ETABW) !DelD
+     &    + RHOCALC(1,-1, 3,-3, ALPSH, BETSH, DELSH, AM, ETABW) !DelD
+     &    + RHOCALC(1, 1, 3, 3, ALPSH, BETSH, DELSH, AM, ETABW) !DelD
+     &    + RHOCALC(1,-3, 3,-1, ALPSH, BETSH, DELSH, AM, ETABW) !DelD
      &    ) ! Close the second bracket
      &    - (4./3.) * SQRT(6.) * (
-     &      RHOCALC(15, 1, 5,-1, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    + RHOCALC(15,-1, 5, 1, ALPSH, BETSH, DELSH, AM, ETABW)
+     &      RHOCALC(15, 1, 5,-1, ALPSH, BETSH, DELSH, AM, ETABW) !PS
+     &    + RHOCALC(15,-1, 5, 1, ALPSH, BETSH, DELSH, AM, ETABW) !PS
      &    ) ! Close the second bracket 
      &    - (4./15.) * SQRT(3.) * (
-     &      RHOCALC(1, 1, 3,-1, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    + RHOCALC(1,-1, 3, 1, ALPSH, BETSH, DELSH, AM, ETABW)
+     &      RHOCALC(1, 1, 3,-1, ALPSH, BETSH, DELSH, AM, ETABW) !DelD
+     &    + RHOCALC(1,-1, 3, 1, ALPSH, BETSH, DELSH, AM, ETABW) !DelD
      &    ) ! Close the second bracket 
      &    + (2.) * SQRT(3.) * (
-     &      RHOCALC(1, 3, 5, 1, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    - RHOCALC(1,-3, 5,-1, ALPSH, BETSH, DELSH, AM, ETABW)
+     &      RHOCALC(1, 3, 5, 1, ALPSH, BETSH, DELSH, AM, ETABW) !DelS
+     &    - RHOCALC(1,-3, 5,-1, ALPSH, BETSH, DELSH, AM, ETABW) !DelS
      &    ) ! Close the second bracket 
      &    + (4.) * (
-     &      RHOCALC(3, 3, 15, 1, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    - RHOCALC(3,-3, 15,-1, ALPSH, BETSH, DELSH, AM, ETABW)
+     &      RHOCALC(3, 3, 15, 1, ALPSH, BETSH, DELSH, AM, ETABW) !DP
+     &    - RHOCALC(3,-3, 15,-1, ALPSH, BETSH, DELSH, AM, ETABW) !DP
      &    ) ! Close the second bracket 
-     &    + (2.) * SQRT(6.) * (
-     &      RHOCALC(1, 1, 5,-1, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    - RHOCALC(1,-1, 5, 1, ALPSH, BETSH, DELSH, AM, ETABW)
+     &    - (2.) * SQRT(6.) * ( ! Negative sign? (last line of A.19e?)
+     &      RHOCALC(1, 1, 5,-1, ALPSH, BETSH, DELSH, AM, ETABW) !DelS
+     &    - RHOCALC(1,-1, 5, 1, ALPSH, BETSH, DELSH, AM, ETABW) !DelS
      &    ) ! Close the second bracket 
      &    + (4.) * SQRT(3.) * (
-     &      RHOCALC(3, 1, 15,-1, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    - RHOCALC(3,-1, 15, 1, ALPSH, BETSH, DELSH, AM, ETABW)
+     &      RHOCALC(3, 1, 15,-1, ALPSH, BETSH, DELSH, AM, ETABW) !DP
+     &    - RHOCALC(3,-1, 15, 1, ALPSH, BETSH, DELSH, AM, ETABW) !DP
      &    ) ! Close the second bracket 
      &    ) ! Close the first bracket
 
 C     A21 as defined in A.19f Rein-Sehgal
       A21 = (2./5.) * SQRT(10.) * (
-     &      RHOCALC(1, 3, 1, 1, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    - RHOCALC(1,-1, 1,-3, ALPSH, BETSH, DELSH, AM, ETABW)
+     &      RHOCALC(1, 3, 1, 1, ALPSH, BETSH, DELSH, AM, ETABW) !DelDel
+     &    - RHOCALC(1,-1, 1,-3, ALPSH, BETSH, DELSH, AM, ETABW) !DelDel
      &    + 2. * (
-     &      RHOCALC(3, 3, 3, 1, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    - RHOCALC(3,-1, 3,-3, ALPSH, BETSH, DELSH, AM, ETABW)
+     &      RHOCALC(3, 3, 3, 1, ALPSH, BETSH, DELSH, AM, ETABW) !DD
+     &    - RHOCALC(3,-1, 3,-3, ALPSH, BETSH, DELSH, AM, ETABW) !DD
      &    ) ! Close the second bracket
      &    ) ! Close the first bracket
      &    + REALPART(
-     &      (2./5.) * SQRT(10.) * (
-     &      RHOCALC(1, 3, 15, 1, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    + RHOCALC(1,-3, 15,-1, ALPSH, BETSH, DELSH, AM, ETABW)
+     &      (2./5.) * SQRT(10.) * ( ! Hard to tell if this is positive
+     &      RHOCALC(1, 3, 15, 1, ALPSH, BETSH, DELSH, AM, ETABW) !DelP
+     &    + RHOCALC(1,-3, 15,-1, ALPSH, BETSH, DELSH, AM, ETABW) !DelP
      &    ) ! Close the second bracket
      &    + (4./5.) * SQRT(5.) * (
-     &      RHOCALC(3, 3, 5, 1, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    + RHOCALC(3,-3, 5,-1, ALPSH, BETSH, DELSH, AM, ETABW)
+     &      RHOCALC(3, 3, 5, 1, ALPSH, BETSH, DELSH, AM, ETABW) !DS
+     &    + RHOCALC(3,-3, 5,-1, ALPSH, BETSH, DELSH, AM, ETABW) !DS
      &    ) ! Close the second bracket
      &    - (2./5.) * SQRT(30.) * (
-     &      RHOCALC(1, 1, 15,-1, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    + RHOCALC(1,-1, 15, 1, ALPSH, BETSH, DELSH, AM, ETABW)
+     &      RHOCALC(1, 1, 15,-1, ALPSH, BETSH, DELSH, AM, ETABW) !DelP
+     &    + RHOCALC(1,-1, 15, 1, ALPSH, BETSH, DELSH, AM, ETABW) !DelP
      &    ) ! Close the second bracket
      &    - (4./5.) * SQRT(15.) * (
-     &      RHOCALC(3, 1, 5,-1, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    + RHOCALC(3,-1, 5, 1, ALPSH, BETSH, DELSH, AM, ETABW)
+     &      RHOCALC(3, 1, 5,-1, ALPSH, BETSH, DELSH, AM, ETABW) !DS
+     &    + RHOCALC(3,-1, 5, 1, ALPSH, BETSH, DELSH, AM, ETABW) !DS
      &    ) ! Close the second bracket
      &    ) ! Close the first bracket
 
 C     A22 as defined in A19g Rein-Sehgal
       A22 = (-2./5.) * SQRT(10.) * (
-     &      RHOCALC(1, 3, 1, -1, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    + RHOCALC(1, 1, 1, -3, ALPSH, BETSH, DELSH, AM, ETABW)
+     &      RHOCALC(1, 3, 1, -1, ALPSH, BETSH, DELSH, AM, ETABW) !DelDel
+     &    + RHOCALC(1, 1, 1, -3, ALPSH, BETSH, DELSH, AM, ETABW) !DelDel
      &    + (2.) * (
-     &      RHOCALC(3, 3, 3, -1, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    + RHOCALC(3, 1, 3, -3, ALPSH, BETSH, DELSH, AM, ETABW)
+     &      RHOCALC(3, 3, 3, -1, ALPSH, BETSH, DELSH, AM, ETABW) !DD
+     &    + RHOCALC(3, 1, 3, -3, ALPSH, BETSH, DELSH, AM, ETABW) !DD
      &    ) ! Close second bracket 
      &    ) ! Close first bracket
-     &    + REALPART( (-4./5.) * SQRT(10.) * (
-     &      RHOCALC(1, 3, 15, -1, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    + RHOCALC(1, -3, 15, 1, ALPSH, BETSH, DELSH, AM, ETABW)
+     &    + REALPART( (-4./5.) * SQRT(10.) * ( ! Hard to see sign
+     &      RHOCALC(1, 3, 15, -1, ALPSH, BETSH, DELSH, AM, ETABW) !DelP
+     &    + RHOCALC(1, -3, 15, 1, ALPSH, BETSH, DELSH, AM, ETABW) !DelP
      &    ) ! Close second bracket
      &    - (8./5.) * SQRT(5.) * (
-     &      RHOCALC(3, 3, 5, -1, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    - RHOCALC(3, -3, 5, 1, ALPSH, BETSH, DELSH, AM, ETABW)
+     &      RHOCALC(3, 3, 5, -1, ALPSH, BETSH, DELSH, AM, ETABW) !DS
+     &    - RHOCALC(3, -3, 5, 1, ALPSH, BETSH, DELSH, AM, ETABW) !DS
      &    ) ! Close second bracket
      &    ) ! Close first bracket (REALPART)
 
@@ -1027,24 +1041,24 @@ C     D = 3
 C     S = 5
       A31 = REALPART(
      &      (12./35.) * SQRT(14.) * (
-     &      RHOCALC(1, 3, 3, 1, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    + RHOCALC(1,-1, 3,-3, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    + RHOCALC(1, 1, 3, 3, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    + RHOCALC(1,-3, 3,-1, ALPSH, BETSH, DELSH, AM, ETABW)
+     &      RHOCALC(1, 3, 3, 1, ALPSH, BETSH, DELSH, AM, ETABW) !DelD
+     &    + RHOCALC(1,-1, 3,-3, ALPSH, BETSH, DELSH, AM, ETABW) !DelD
+     &    + RHOCALC(1, 1, 3, 3, ALPSH, BETSH, DELSH, AM, ETABW) !DelD
+     &    + RHOCALC(1,-3, 3,-1, ALPSH, BETSH, DELSH, AM, ETABW) !DelD
      &    ) ! Close second bracket
      &    - (6./35.) * SQRT(42.) * (
-     &      RHOCALC(1, 3, 1,-1, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    + RHOCALC(1,-1, 3, 1, ALPSH, BETSH, DELSH, AM, ETABW)
+     &      RHOCALC(1, 1, 3,-1, ALPSH, BETSH, DELSH, AM, ETABW) !DelD
+     &    + RHOCALC(1,-1, 3, 1, ALPSH, BETSH, DELSH, AM, ETABW) !DelD
      &    ) ! Close second bracket
      &    ) ! Close first bracket
 
 C     A32 as defined in A.19i
       A32 = REALPART(
      &      (-12./35.) * SQRT(35.) * (
-     &      RHOCALC(1, 3, 3,-1, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    - RHOCALC(1, 1, 3,-3, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    + RHOCALC(1,-1, 3, 3, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    - RHOCALC(1,-3, 3, 1, ALPSH, BETSH, DELSH, AM, ETABW)
+     &      RHOCALC(1, 3, 3,-1, ALPSH, BETSH, DELSH, AM, ETABW) !DelD
+     &    - RHOCALC(1, 1, 3,-3, ALPSH, BETSH, DELSH, AM, ETABW) !DelD
+     &    + RHOCALC(1,-1, 3, 3, ALPSH, BETSH, DELSH, AM, ETABW) !DelD
+     &    - RHOCALC(1,-3, 3, 1, ALPSH, BETSH, DELSH, AM, ETABW) !DelD
      &    ) ! Close second bracket
      &    ) ! Close first bracket
 
@@ -1058,34 +1072,34 @@ C     D = 3
 C     S = 5
       B11 = IMAGPART(
      &      (4./5.) * (
-     &      RHOCALC(1, 3, 3, 1, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    + RHOCALC(1,-1, 3,-3, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    - RHOCALC(1, 1, 3, 3, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    - RHOCALC(1,-3, 3,-1, ALPSH, BETSH, DELSH, AM, ETABW)
+     &      RHOCALC(1, 3, 3, 1, ALPSH, BETSH, DELSH, AM, ETABW) !DelD
+     &    + RHOCALC(1,-1, 3,-3, ALPSH, BETSH, DELSH, AM, ETABW) !DelD
+     &    - RHOCALC(1, 1, 3, 3, ALPSH, BETSH, DELSH, AM, ETABW) !DelD
+     &    - RHOCALC(1,-3, 3,-1, ALPSH, BETSH, DELSH, AM, ETABW) !DelD
      &    ) ! Close the second bracket
      &    + (4./3.) * SQRT(6.) * (
-     &      RHOCALC(15, 1, 3,-1, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    - RHOCALC(15,-1, 3, 1, ALPSH, BETSH, DELSH, AM, ETABW)
+     &      RHOCALC(15, 1, 5,-1, ALPSH, BETSH, DELSH, AM, ETABW) !PS
+     &    - RHOCALC(15,-1, 5, 1, ALPSH, BETSH, DELSH, AM, ETABW) !PS
      &    ) ! Close the second bracket
      &    + (4./15.) * SQRT(3.) * (
-     &      RHOCALC(1, 1, 3,-1, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    - RHOCALC(1,-1, 3, 1, ALPSH, BETSH, DELSH, AM, ETABW)
+     &      RHOCALC(1, 1, 3,-1, ALPSH, BETSH, DELSH, AM, ETABW) !DelD
+     &    - RHOCALC(1,-1, 3, 1, ALPSH, BETSH, DELSH, AM, ETABW) !DelD
      &    ) ! Close the second bracket
      &    - 2. * SQRT(2.) * (
-     &      RHOCALC(1, 3, 5, 1, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    + RHOCALC(1,-3, 5,-1, ALPSH, BETSH, DELSH, AM, ETABW)
+     &      RHOCALC(1, 3, 5, 1, ALPSH, BETSH, DELSH, AM, ETABW) !DelS
+     &    + RHOCALC(1,-3, 5,-1, ALPSH, BETSH, DELSH, AM, ETABW) !DelS
      &    ) ! Close the second bracket
      &    - 4. * (
-     &      RHOCALC(3, 3, 15, 1, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    + RHOCALC(3,-3, 15,-1, ALPSH, BETSH, DELSH, AM, ETABW)
+     &      RHOCALC(3, 3, 15, 1, ALPSH, BETSH, DELSH, AM, ETABW) !DP
+     &    + RHOCALC(3,-3, 15,-1, ALPSH, BETSH, DELSH, AM, ETABW) !DP
      &    ) ! Close the second bracket
      &    - 2. * SQRT(6.) * (
-     &      RHOCALC(1, 1, 5,-1, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    + RHOCALC(1,-1, 5, 1, ALPSH, BETSH, DELSH, AM, ETABW)
+     &      RHOCALC(1, 1, 5,-1, ALPSH, BETSH, DELSH, AM, ETABW) !DelS
+     &    + RHOCALC(1,-1, 5, 1, ALPSH, BETSH, DELSH, AM, ETABW) !DelS
      &    ) ! Close the second bracket
      &    - 4. * SQRT(3.) * (
-     &      RHOCALC(3, 1, 15,-1, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    + RHOCALC(3,-1, 15, 1, ALPSH, BETSH, DELSH, AM, ETABW)
+     &      RHOCALC(3, 1, 15,-1, ALPSH, BETSH, DELSH, AM, ETABW) !DP
+     &    + RHOCALC(3,-1, 15, 1, ALPSH, BETSH, DELSH, AM, ETABW) !DP
      &    ) ! Close the second bracket
      &    ) ! Close the first bracket
 
@@ -1096,20 +1110,20 @@ C     D = 3
 C     S = 5
       B21 = IMAGPART(
      &    - (2./5.) * SQRT(10.) * (
-     &      RHOCALC(1, 3, 15, 1, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    - RHOCALC(1,-3, 15,-1, ALPSH, BETSH, DELSH, AM, ETABW)
+     &      RHOCALC(1, 3, 15, 1, ALPSH, BETSH, DELSH, AM, ETABW) !DelP
+     &    - RHOCALC(1,-3, 15,-1, ALPSH, BETSH, DELSH, AM, ETABW) !DelP
      &    ) ! Close the second bracket
      &    - (4./5.) * SQRT(5.) * (
-     &      RHOCALC(3, 3, 5, 1, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    - RHOCALC(3,-3, 5,-1, ALPSH, BETSH, DELSH, AM, ETABW)
+     &      RHOCALC(3, 3, 5, 1, ALPSH, BETSH, DELSH, AM, ETABW) !DS
+     &    - RHOCALC(3,-3, 5,-1, ALPSH, BETSH, DELSH, AM, ETABW) !DS
      &    ) ! Close the second bracket
      &    + (2./5.) * SQRT(30.) * (
-     &      RHOCALC(1, 1, 15,-1, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    - RHOCALC(1,-1, 15, 1, ALPSH, BETSH, DELSH, AM, ETABW)
+     &      RHOCALC(1, 1, 15,-1, ALPSH, BETSH, DELSH, AM, ETABW) !DelP
+     &    - RHOCALC(1,-1, 15, 1, ALPSH, BETSH, DELSH, AM, ETABW) !DelP
      &    ) ! Close the second bracket
      &    + (4./5.) * SQRT(15.) * (
-     &      RHOCALC(3, 1, 5,-1, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    - RHOCALC(3,-1, 5, 1, ALPSH, BETSH, DELSH, AM, ETABW)
+     &      RHOCALC(3, 1, 5,-1, ALPSH, BETSH, DELSH, AM, ETABW) !DS
+     &    - RHOCALC(3,-1, 5, 1, ALPSH, BETSH, DELSH, AM, ETABW) !DS
      &    ) ! Close the second bracket
      &    ) ! Close the first bracket
 
@@ -1120,12 +1134,12 @@ C     D = 3
 C     S = 5
       B22 = IMAGPART(
      &      (4./5.) * SQRT(10.) * (
-     &      RHOCALC(1, 3, 15,-1, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    + RHOCALC(1,-3, 15, 1, ALPSH, BETSH, DELSH, AM, ETABW)
+     &      RHOCALC(1, 3, 15,-1, ALPSH, BETSH, DELSH, AM, ETABW) !DelP
+     &    + RHOCALC(1,-3, 15, 1, ALPSH, BETSH, DELSH, AM, ETABW) !DelP
      &    ) ! Close second bracket
      &    + (8./5.) * SQRT(5.) * (
-     &      RHOCALC(3, 3, 5,-1, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    + RHOCALC(5,-3, 5, 1, ALPSH, BETSH, DELSH, AM, ETABW)
+     &      RHOCALC(3, 3, 5,-1, ALPSH, BETSH, DELSH, AM, ETABW) !DS
+     &    + RHOCALC(5,-3, 5, 1, ALPSH, BETSH, DELSH, AM, ETABW) !DS
      &    ) ! Close second bracket
      &    ) ! Close first bracket
 
@@ -1136,24 +1150,24 @@ C     D = 3
 C     S = 5
       B31 = IMAGPART(
      &      (-12./35.) * SQRT(14.) * (
-     &      RHOCALC(1, 3, 3, 1, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    + RHOCALC(1,-1, 3,-3, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    - RHOCALC(1, 1, 3, 3, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    - RHOCALC(1,-3, 3,-1, ALPSH, BETSH, DELSH, AM, ETABW)
+     &      RHOCALC(1, 3, 3, 1, ALPSH, BETSH, DELSH, AM, ETABW) !DelD
+     &    + RHOCALC(1,-1, 3,-3, ALPSH, BETSH, DELSH, AM, ETABW) !DelD
+     &    - RHOCALC(1, 1, 3, 3, ALPSH, BETSH, DELSH, AM, ETABW) !DelD
+     &    - RHOCALC(1,-3, 3,-1, ALPSH, BETSH, DELSH, AM, ETABW) !DelD
      &    ) ! Close second bracket
      &    + (6./35.) * SQRT(42.) * (
-     &      RHOCALC(1, 1, 3,-1, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    - RHOCALC(1,-1, 3, 1, ALPSH, BETSH, DELSH, AM, ETABW)
+     &      RHOCALC(1, 1, 3,-1, ALPSH, BETSH, DELSH, AM, ETABW) !DelD
+     &    - RHOCALC(1,-1, 3, 1, ALPSH, BETSH, DELSH, AM, ETABW) !DelD
      &    ) ! Close second bracket
      &    ) ! Close first bracket
 
 C     B32 as defined in A.19o
       B32 = IMAGPART(
      &      (12./35.) * SQRT(35.) * (
-     &      RHOCALC(1, 3, 3,-1, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    - RHOCALC(1, 1, 3,-3, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    - RHOCALC(1,-1, 3, 3, ALPSH, BETSH, DELSH, AM, ETABW)
-     &    + RHOCALC(1,-3, 3, 1, ALPSH, BETSH, DELSH, AM, ETABW)
+     &      RHOCALC(1, 3, 3,-1, ALPSH, BETSH, DELSH, AM, ETABW) !DelD
+     &    - RHOCALC(1, 1, 3,-3, ALPSH, BETSH, DELSH, AM, ETABW) !DelD
+     &    - RHOCALC(1,-1, 3, 3, ALPSH, BETSH, DELSH, AM, ETABW) !DelD
+     &    + RHOCALC(1,-3, 3, 1, ALPSH, BETSH, DELSH, AM, ETABW) !DelD
      &    ) ! Close second bracket
      &    ) ! Close first bracket
       
@@ -1166,7 +1180,7 @@ C     Rein-Sehgal also provide theory for calculating outgoing pion
 C     kinematics using more resonances, which is a future project!
 
 C     W(THETA,PHI) as defined in A.18 Rein-Sehgal
-      YFN = 1./(3*SQRT(PI)) * (
+      YFN = (
      &      A00*RSY00(THETA,PHI) + A10*RSY10(THETA,PHI)
      &    + A20*RSY20(THETA,PHI) + A30*RSY30(THETA,PHI)
 
@@ -1184,23 +1198,17 @@ C     W(THETA,PHI) as defined in A.18 Rein-Sehgal
      &    + B32*IMAGPART(RSY32(THETA,PHI))
      &    + B33*IMAGPART(RSY33(THETA,PHI))
      &    )
+
+C     Make sure the YFN integral over costheta and phi is 1
+C     Include the geometric factor
+      YFN = YFN/(2*SQRT(PI))
+C     Then also the term multiplying RSY00
+      YFN = YFN/A00
+
       GOTO 72
 
-C     Now done with this method; have valid Enu, Q2, W, theta, phi
-C     Now get the momentum at GOTO 72
-
-
-C     ======================================
-C     END DIFFERENT THROWS FOR THETA AND PHI
-C     NOW BOOST TO LAB FRAME AND GET MOMENTA
-C     ======================================
-
-C     This is where we want to end up once 
-C     we've got a good theta and phi for any model
  72   CONTINUE
       if (YFN.lt.0) THEN
-c       write(*,*) "YFN < 0"
-c       write(*,*) "mdlspiej",mdlspiej
         YFN=abs(YFN)
       endif
 
