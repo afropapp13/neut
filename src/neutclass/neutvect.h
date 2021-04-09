@@ -38,14 +38,6 @@ class NeutVect : public TObject {
                             //
   Double_t       VNuclFin;  // Nuclear potential for the final state (MeV)
 
-  // CWRET TESTING
-  //Double_t Q2;
-  //Double_t Enu;
-  //Double_t W;
-  //Double_t thadler;
-  //Double_t phiadler;
-  //float ppirs[4];
-
 
   /* Fermi momentum related */
   Double_t       PFSurf;    // Fermi surface momentum (MeV/c)

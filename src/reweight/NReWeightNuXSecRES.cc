@@ -189,14 +189,20 @@ double NReWeightNuXSecRES::CalcWeight() {
   // But should really calculate this before tweaking dials
   double piej_old = 1;
   if (UseAngular) piej_old = NEUTGetPiEj();
-  //std::cout << "old piej: " << piej_old << std::endl;
 
   if (old_xsec == 0) {
+    /*
     std::cout
         << "NReWeightNuXSecRes::CalcWeight() Warning: old_xsec==0, setting "
            "weight to 1"
         << std::endl;
+        */
     old_xsec = 1;
+  }
+
+  if (piej_old == 0) { 
+    std::cout << "piej_old zero" << std::endl;
+    piej_old = 1;
   }
 
   if (cbfa.fneut1pi_gen.neiff != 0) {
@@ -206,10 +212,6 @@ double NReWeightNuXSecRES::CalcWeight() {
     NSYST_ASSIGNIFTWKD(neut1pi_.xmarsres, kXSecTwkDial_MaRES);
     NSYST_ASSIGNIFTWKD(neut1pi_.xmvrsres, kXSecTwkDial_MvRES);
   }
-  //std::cout << "nsyst currvar: " << NSYST_CURRVAR(kXSecTwkDial_MDLSPiEj) << std::endl;
-  //std::cout << "nsyst twkvar: " << NSYST_TWKVAR(kXSecTwkDial_MDLSPiEj) << std::endl;
-  //std::cout << "def var: " << NSYST_DEFVAR(kXSecTwkDial_MDLSPiEj) << std::endl;
-  //std::cout << "istwkd int: " << NSYST_ISTWKD_INT(kXSecTwkDial_MDLSPiEj) << std::endl;
 
   NSYST_ASSIGNIFTWKD(neut1pi_.rneca5i, kXSecTwkDial_CA5RES);
 
@@ -227,14 +229,20 @@ double NReWeightNuXSecRES::CalcWeight() {
 
   double new_xsec = NEUTGetXSec();
   if (new_xsec == 0) {
+    /*
     std::cout
         << "NReWeightNuXSecRes::CalcWeight() Warning: new_xsec==0, setting "
            "weight to 1"
         << std::endl;
+        */
     new_xsec = 1;
   }
   double piej_new = 1;
   if (UseAngular) piej_new = NEUTGetPiEj();
+  if (piej_new == 0) { 
+    std::cout << "piej_new zero" << std::endl;
+    piej_new = 1;
+  }
 
 #ifdef _N_REWEIGHT_RES_DEBUG_
   cout << "differential cross section (old) = " << old_xsec << endl;
