@@ -251,6 +251,8 @@ C     Harmonic oscillation of the resonance
 
       IERR = 0
 
+      SPIDELTA = -1
+
 C     Set the constants
       XMASPI2= XMASPI * XMASPI
       XMVSPI2= XMVSPI * XMVSPI
@@ -495,11 +497,10 @@ C     i.e. change SIGMAX = SIGMAX * (bigger number than currently)
         GOTO 111
       END IF
 
-c     enu_com = e
-c     q2_com = q2
-c     w_com = w
-
-
+C     Save the RES33 since that determines if we throw costh/phi
+C     isotropically or with Delta amplitude accounted for
+C     Saving this means we can run reweights
+      SPIDELTA = RES33
 
 C     ===================================================================
 C     ===================================================================

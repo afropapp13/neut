@@ -420,20 +420,13 @@ void CommonBlockIFace::ReadVect(NeutVect *nvect) {
   ReadNEUTCRS(nvect);
   ReadFSIHIST(nvect);
   ReadNUCLEONFSIHIST(nvect);
-
-  // The leftovers cw found
-  //ReadOther(nvect);
+  ReadPARS(nvect);
 }
 
-/*
-void CommonBlockIFace::ReadOther(NeutVect *nvect) {
-  neut1pi_.q2_com = nvect->Q2;
-  neut1pi_.enu_com = nvect->Enu;
-  neut1pi_.w_com = nvect->W;
-  neut1pi_.phi_com = nvect->phiadler;
-  neut1pi_.th_com = nvect->thadler;
+  // Read parameters that may be important for reweight work and aren't filled in necard
+void CommonBlockIFace::ReadPARS(NeutVect *nvect) {
+  nemdls_.spidelta = nvect->SPIDelta;
 }
-*/
 
 std::string CommonBlockIFace::ParamsToString(bool isinstance) {
   std::stringstream ss("");

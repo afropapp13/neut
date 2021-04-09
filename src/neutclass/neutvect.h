@@ -60,6 +60,8 @@ class NeutVect : public TObject {
   Int_t          SPIModel;
   // Rein-Sehgal 1pi ejection
   Int_t          SPIRSEj;
+  // Did SPIDelta happen 
+  Int_t          SPIDelta;
   // Coherent model
   Int_t          COHModel;
   // DIS model

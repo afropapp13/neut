@@ -161,7 +161,7 @@ neutfillvect(char *filename, char *treename, char *branchname)
   nv->FluxID   = 0;
 
 
-  
+
   /****************************************************/
   // interaction model and some parameters
   // CCQE model
@@ -174,6 +174,8 @@ neutfillvect(char *filename, char *treename, char *branchname)
   nv->SPIModel = nemdls_.mdlspi;
   // Rein-Sehgal single-pion ejection method
   nv->SPIRSEj  = nemdls_.mdlspiej;
+  // Rein-Sehgal delta vs flat
+  nv->SPIDelta = nemdls_.spidelta;
   // Coherent model
   nv->COHModel = nemdls_.mdlcoh;
   // DIS model

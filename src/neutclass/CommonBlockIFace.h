@@ -67,8 +67,7 @@ public:
   static void ReadFSIHIST(NeutVect *);
   static void ReadNUCLEONFSIHIST(NeutVect *);
   static void ReadVect(NeutVect *);
-
-  //static void ReadOther(NeutVect *);
+  static void ReadPARS(NeutVect *);
 
   static std::string ParamsToString(bool isinstance = false);
 };

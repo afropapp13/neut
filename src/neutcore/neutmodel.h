@@ -90,6 +90,10 @@ C  MDLSPIEJ = 0 ; Isotropic
 C  MDLSPIEJ = 1 ; Delta only
 C  MDLSPIEJ = 2 ; All resonances 
 C  MDLSPIEJ = 3 ; Delta + Isotropic (same as old NEUT)
+
+C  SPIDELTA = 0 ; The event was generated with isotropic
+C           = 1 ; The event was generated with Delta res
+C           = -1; variable was not set (not applicable to event)
 C
 C-- MA (MV) for Rein-Sehgal Single meson production
 C  XMARSRES (XMVRSRES)
@@ -120,6 +124,7 @@ C  MDLDIF = 0 ; Rein&Sehgal w/ lepton mass corr.
 C
 C  XMADIF  (Default = 1.1)
 C  NUCVOLDIF  (Default = 7 GeV^-2)
+C
 
       INTEGER*4 MODELDIS,MODELCOH,MODELDIF
       INTEGER*4 MDLQE,MDL2P2H,MDLSPI,MDLDIS,MDLCOH,MDLDIF,MDLQEAF
@@ -140,6 +145,7 @@ C  NUCVOLDIF  (Default = 7 GeV^-2)
      $          AXZEXPA9
 
       REAL*4    XMANCEL
+      INTEGER*4 SPIDELTA
 
 
       COMMON /NEUTMODEL/MODELDIS,MODELCOH,MODELDIF
@@ -159,7 +165,8 @@ C  NUCVOLDIF  (Default = 7 GeV^-2)
      $               AXZEXPA6,AXZEXPA7,AXZEXPA8,
      $               AXZEXPA9,
      $               MDL2P2H,
-     $               XMANCEL
+     $               XMANCEL,
+     $               SPIDELTA
 
 #include <nieves1p1h.h>
 
