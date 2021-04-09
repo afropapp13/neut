@@ -697,6 +697,32 @@ C     slowest part by far
 C     IBLOCK is just IB-1; has to do with how we've save NRR(IB) and
 C     rsclfm.F. Could be fixed if you want :)
 
+C     If we're doing isotropic can skip all calculations as we won't use
+C     them
+      if (MDLSPIEJ .EQ. 0) then
+        GOTO 300
+
+C     If we're only using the Delta, only need its amplitude
+      else if (MDLSPIEJ .EQ. 1 .OR. MDLSPIEJ .EQ. 3) then
+        if (IB.NE.1) then
+          GOTO 300
+        endif
+
+C     If we're using multiple resonances, calculate them
+      else if (MDLSPIEJ .EQ. 2) then ! 
+C       Pure I3/2
+        if (IFLAG .EQ. 1) then
+C         Only P33(1232) P33(1640)
+          if (IB.NE.1 .and. IB.NE.16) then
+            CYCLE
+          endif
+C       Mixed isospin
+        else
+          if (IB.NE.1 .and. IB.NE.3 .and. IB.NE.5 .AND. IB.NE.15)
+     &      CYCLE
+        endif
+      endif
+
       IBLOCK = IB-1
       NR = NRR(IB)
       XMR = XMRR(IB)
@@ -992,10 +1018,11 @@ C     The usual NEUT method is very similar to Delta only
       ELSE
         WRITE(*,*) "WRONG MDLSPIEJ GIVEN"
         WRITE(*,*) "YOU GAVE MDLSPIEJ = ", MDLSPIEJ
-        WRITE(*,*) "I NEED 0 (ISOTROPIC)",
-     &             "1 (DELTA ONLY)", 
-     &             "2 FULL REIN-SEHGAL",
-     &             "3 (DELTA+FLAT old NEUT)"
+        WRITE(*,*) "I NEED:" 
+        WRITE(*,*) "0: ISOTROPIC"
+        WRITE(*,*) "1: DELTA ONLY"
+        WRITE(*,*) "2: FULL REIN-SEHGAL"
+        WRITE(*,*) "3: DELTA+FLAT (old NEUT)"
         STOP
       END IF
 
@@ -1047,26 +1074,29 @@ C     rho tilde 3/2, 1/2
 C     rho tilde 3/2, -1/2
       ROT3M1 = ROP3M1 + ROP1M3
 C     This is eq 2.46 of Rein-Sehgal, RSY are the spherical harmonics
-C     Normalise relative rho tilde, as Rein-Sehgal also do
-      RHOP3P3 = ROTI33 / RHOTIL
-      RHOP3P1 = ROTI31 / RHOTIL
-      RHOP3M1 = ROT3M1 / RHOTIL
 
 C     The maximum for the accept-reject ceiling, eq 2.46 maximised
 C     (spherical harmonics maximised)
-      MAXDST = SQRT(1./(4.*PI))
+      MAXDST = SQRT(1./(4.*PI))*REALPART(RHOTIL)
      &       - (2./SQRT(5.)) * (1./4.) * SQRT(5./PI) * (-1.) *
-     &         (RHOP3P3 - 0.5)
-     &       + (4./SQRT(10.)) * (-1./2.) * SQRT(15./(2.*PI)) *0.5 *
-     &         RHOP3P1
-     &       - (4./SQRT(10.)) * (1./4.) * SQRT(15./(2.*PI)) * -1.*
-     &         RHOP3M1
+     &         (REALPART(ROTI33) - 0.5*REALPART(RHOTIL))
+     &       + (4./SQRT(10.)) * (-1./2.) * SQRT(15./(2.*PI)) *0.5
+     &         * REALPART(ROTI31)
+     &       - (4./SQRT(10.)) * (1./4.) * SQRT(15./(2.*PI)) * -1.
+     &         * REALPART(ROT3M1)
+C     Technically these normalising factors aren't needed, but makes it
+C     easier to follow
+C     These are normalising factors that means the integral over
+C     d(costh)dphi is 1
+      MAXDST = MAXDST/(2*SQRT(PI))
+      MAXDST = MAXDST/REALPART(RHOTIL)
 
 C     If this theta, phi, yrand combination fails the accept-reject,
 C     rethrow them!
 C     Note: GOTO 5x will always rethrow; 50 for this simple Delta only model)
  50   CONTINUE
 C     Throw CosTheta between -1 and +1
+      YRAND = RLU(IRSISED) * MAXDST
       THETA = ACOS(1.-RLU(IRSISED)*2.)
       PHI   = RLU(IRSISED) * PI * 2.
 
@@ -1076,18 +1106,18 @@ C     distribution flat in costheta and phi if user has requested it
 
 C     If not, calculate equation 2.46 (remember all rho have been
 C     normalised out by rho tilde)
-      YFN = RSY00(THETA,PHI)
+C     Don't use the rescaled amplitudes
+      YFN = RSY00(THETA,PHI)*REALPART(RHOTIL)
      $    - (2./ SQRT(5.)) * RSY20(THETA,PHI) *
-     $      (REALPART(RHOP3P3) - 0.5)
-     $    + (4./ SQRT(10.)) * REALPART(RSY21(THETA,PHI))
-     $    * REALPART(RHOP3P1)
-     $    - (4./ SQRT(10.)) * REALPART(RSY22(THETA,PHI))
-     $    * REALPART(RHOP3M1)
+     $      (REALPART(ROTI33) - 0.5*REALPART(RHOTIL))
+     $    + (4./ SQRT(10.)) * REALPART(RSY21(THETA,PHI)) 
+     $      * REALPART(ROTI31)
+     $    - (4./ SQRT(10.)) * REALPART(RSY22(THETA,PHI)) 
+     $      * REALPART(ROT3M1)
+      YFN = YFN/(2*SQRT(PI))
+      YFN = YFN/REALPART(RHOTIL)
 
 C     Do the accept-reject on the YFN distribution
-      YRAND = RLU(IRSISED) * MAXDST
-
-C     Accept-reject on YFN, rethrow
       IF (YRAND .GT. YFN) THEN
         GOTO 50
       ELSE 
@@ -1183,28 +1213,25 @@ C     rho tilde 3/2, -1/2
       ROT3M1 = ROP3M1 + ROP1M3
 
 C     This is eq 2.46 of Rein-Sehgal, RSY are the spherical harmonics
-C     Normalise relative rho tilde, as Rein-Sehgal also do
-      RHOP3P3 = ROTI33 / RHOTIL
-      RHOP3P1 = ROTI31 / RHOTIL
-      RHOP3M1 = ROT3M1 / RHOTIL
 
 C     Get the maximum distribution for any theta and phi
 C     Needed for the accept-reject ceiling
-      MAXDST = SQRT(1./(4.*PI))
+      MAXDST = SQRT(1./(4.*PI))*REALPART(RHOTIL)
      &  + (2./SQRT(5.))*SQRT(5./(16.*PI))*(3.-1.)
-     &    *(REALPART(RHOP3P3) - 0.5)
+     &    *(REALPART(ROTI33) - 0.5*REALPART(RHOTIL))
      &  + (4./SQRT(10.))*SQRT(15./(8.*PI))
-     &    *REALPART(RHOP3P1)
+     &    *REALPART(ROTI31)
      &  + (4./SQRT(10.))*SQRT(15./(32.*PI))
-     &    *REALPART(RHOP3M1)
+     &    *REALPART(ROT3M1)
      &  + (4./SQRT(10.))*SQRT(15./(8.*PI))
-     &    *IMAGPART(RHOP3P1)
+     &    *IMAGPART(ROTI31)
      &  + (4./SQRT(10.))*SQRT(15./(32.*PI))
-     &    *IMAGPART(RHOP3M1)
+     &    *IMAGPART(ROT3M1)
 
 C     Even though both dists (maxdst and yfn) end up with this 
 C     prefactor, include for completeness
-      MAXDST = MAXDST/SQRT(PI)
+      MAXDST = MAXDST/(2*SQRT(PI))
+      MAXDST = MAXDST/REALPART(RHOTIL)
 
 C     Now have the amplitudes: do the accept-reject on the pion
  51   CONTINUE
@@ -1214,19 +1241,22 @@ C     Throw in costheta and phi
       THETA = ACOS(1.-RLU(IRSISED)*2.)
       PHI   = RLU(IRSISED) * PI * 2.
 
-      YFN = RSY00(THETA,PHI)
+      YFN = RSY00(THETA,PHI)*REALPART(RHOTIL)
      &    - (2./SQRT(5.))*RSY20(THETA,PHI)
-     &      * (REALPART(RHOP3P3)-0.5)
+     &      * (REALPART(ROTI33)-0.5*REALPART(RHOTIL))
      &    + (4./SQRT(10.))*REALPART(RSY21(THETA,PHI))
-     &      * REALPART(RHOP3P1)
+     &      * REALPART(ROTI31)
      &    - (4./SQRT(10.))*REALPART(RSY22(THETA,PHI))
-     &      * REALPART(RHOP3M1)
+     &      * REALPART(ROT3M1)
      &    - (4./SQRT(10.))*IMAGPART(RSY21(THETA,PHI))
-     &      * IMAGPART(RHOP3P1)
+     &      * IMAGPART(ROTI31)
      &    + (4./SQRT(10.))*IMAGPART(RSY22(THETA,PHI))
-     &      * IMAGPART(RHOP3M1)
+     &      * IMAGPART(ROT3M1)
 
-      YFN = YFN/SQRT(PI)
+C     Include the geometric factor
+      YFN = YFN/(2*SQRT(PI))
+C     Then also the term multiplying RSY00
+      YFN = YFN/REALPART(RHOTIL)
 
       IF (YRAND .GT. YFN) THEN
         GOTO 51
@@ -1563,39 +1593,8 @@ C     B32 as defined in A.19o
 C     B33 as defined in A.19p (superfluous?)
       B33 = 0.
 
-
-C     This is where we goto if rethrow
- 52   CONTINUE
-C     The theoretical description can be found in Rein-Sehgal, eq 2.46
-C     Rein-Sehgal also provide theory for calculating outgoing pion
-C     kinematics using more resonances, which is a future project!
-
-C     Throw costheta between -1 and +1
-      THETA = ACOS(1.-RLU(IRSISED)*2.)
-      PHI   = RLU(IRSISED) * PI * 2.
-
-C     W(THETA,PHI) as defined in A.18 Rein-Sehgal
-      YFN = 1./(3*SQRT(PI)) * (
-     &      A00*RSY00(THETA,PHI) + A10*RSY10(THETA,PHI)
-     &    + A20*RSY20(THETA,PHI) + A30*RSY30(THETA,PHI)
-
-     &    + A11*REALPART(RSY11(THETA,PHI)) 
-     &    + A21*REALPART(RSY21(THETA,PHI))
-     &    + A22*REALPART(RSY22(THETA,PHI)) 
-     &    + A31*REALPART(RSY31(THETA,PHI))
-     &    + A32*REALPART(RSY32(THETA,PHI)) 
-     &    + A33*REALPART(RSY33(THETA,PHI))
-
-     &    + B11*IMAGPART(RSY11(THETA,PHI))
-     &    + B21*IMAGPART(RSY21(THETA,PHI))
-     &    + B22*IMAGPART(RSY22(THETA,PHI))
-     &    + B31*IMAGPART(RSY31(THETA,PHI))
-     &    + B32*IMAGPART(RSY32(THETA,PHI))
-     &    + B33*IMAGPART(RSY33(THETA,PHI))
-     &    )
-
 C     W(THETA,PHI) as defined in A.18 Rein-Sehgal, maximum
-      MAXDST = (1./3.) * (1./SQRT(PI)) * (
+      MAXDST = (
      &      A00*SQRT(1./(4.*PI)) 
      &    + A10*(1./2.)*SQRT(3./PI)
      &    + A20*(1./4.)*SQRT(5./PI)*(3.-1.)
@@ -1615,9 +1614,45 @@ C     W(THETA,PHI) as defined in A.18 Rein-Sehgal, maximum
      &    + B32*(1./4.)*SQRT(105./(2.*PI))
      &    + B33*(1./8.)*SQRT(35./PI)
      &    )
+C     Include the geometric factor
+      MAXDST = MAXDST/(2*SQRT(PI))
+C     Then also the term multiplying RSY00
+      MAXDST = YFN/A00
 
+C     This is where we goto if rethrow
+ 52   CONTINUE
+C     The theoretical description can be found in Rein-Sehgal, eq 2.46
+C     Rein-Sehgal also provide theory for calculating outgoing pion
+C     kinematics using more resonances, which is a future project!
+
+C     Throw costheta between -1 and +1
 C     Throw a random number up to MAXDST for the accept-reject
       YRAND = RLU(IRSISED) * MAXDST
+      THETA = ACOS(1.-RLU(IRSISED)*2.)
+      PHI   = RLU(IRSISED) * PI * 2.
+
+C     W(THETA,PHI) as defined in A.18 Rein-Sehgal
+C     Recalculate for each theta phi throw
+      YFN = (
+     &      A00*RSY00(THETA,PHI) + A10*RSY10(THETA,PHI)
+     &    + A20*RSY20(THETA,PHI) + A30*RSY30(THETA,PHI)
+
+     &    + A11*REALPART(RSY11(THETA,PHI)) 
+     &    + A21*REALPART(RSY21(THETA,PHI))
+     &    + A22*REALPART(RSY22(THETA,PHI)) 
+     &    + A31*REALPART(RSY31(THETA,PHI))
+     &    + A32*REALPART(RSY32(THETA,PHI)) 
+     &    + A33*REALPART(RSY33(THETA,PHI))
+
+     &    + B11*IMAGPART(RSY11(THETA,PHI))
+     &    + B21*IMAGPART(RSY21(THETA,PHI))
+     &    + B22*IMAGPART(RSY22(THETA,PHI))
+     &    + B31*IMAGPART(RSY31(THETA,PHI))
+     &    + B32*IMAGPART(RSY32(THETA,PHI))
+     &    + B33*IMAGPART(RSY33(THETA,PHI))
+     &    )
+      YFN = YFN/(2*SQRT(PI))
+      YFN = YFN/A00
 
 C     Accept-reject on YFN, rethrow
       IF (YRAND.GT.YFN) THEN
@@ -1638,10 +1673,6 @@ C     ======================================
 C     This is where we want to end up once 
 C     we've got a good theta and phi for any model
  72   CONTINUE
-
-c     th_com = theta
-c     phi_com = phi
-c     yfn_com = yfn
 
 C     Boost to get the muon, pion and nucleon 3-momenta
       CALL RSLZBT(E,Q2,W,XMLEP,THETA,PHI,TMPPMU,TMPPPI,TMPPNU)
