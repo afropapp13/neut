@@ -625,10 +625,11 @@ C     The usual NEUT method is very similar to Delta only
       ELSE
         WRITE(*,*) "WRONG MDLSPIEJ GIVEN"
         WRITE(*,*) "YOU GAVE MDLSPIEJ = ", MDLSPIEJ
-        WRITE(*,*) "I NEED 0 (ISOTROPIC)",
-     &             "1 (DELTA ONLY)", 
-     &             "2 FULL REIN-SEHGAL",
-     &             "3 (DELTA+FLAT old NEUT)"
+        WRITE(*,*) "I NEED:" 
+        WRITE(*,*) "0: ISOTROPIC"
+        WRITE(*,*) "1: DELTA ONLY"
+        WRITE(*,*) "2: FULL REIN-SEHGAL"
+        WRITE(*,*) "3: DELTA+FLAT (old NEUT)"
         STOP
       END IF
 
@@ -643,7 +644,6 @@ C     Not sure how to do this for a flat distribution
 C     Probably need to normalise somehow?
 c     YFN = 1/(2*SQRT(PI))
       YFN = 1/(4*PI)
-c     YFN = 1
 
       GOTO 72
 C     Now done with this method; have valid Enu, Q2, W, theta, phi
@@ -657,6 +657,14 @@ C     ===========================================================
 C     Start the pion ejection calculation for P33(1232) ONLY
 C     See Rein-Sehgal 2.46; recommended only for CC1pi+1p channel
  102  CONTINUE
+
+C     For a flat distribution, just make sure integral over
+C     of #int(YFN d(costh)dphi)=1
+      YFN = 1/(4*PI)
+
+C     If we aren't dealing with a Delta resonance just make the
+C     distribution flat in costheta and phi if user has requested it
+      IF (MDLSPIEJ .EQ. 3 .AND. RES33 .EQ. 0) GOTO 72
 
 C     rho 3/2 3/2 = delta delta + p delta + delta p + p p
       ROP3P3 = RHOCALC(1, 3, 1, 3, ALPSH, BETSH, DELSH, AM, ETABW)
@@ -684,29 +692,10 @@ C     rho tilde 3/2, 1/2
       ROTI31 = ROP3P1 - ROM1M3
 C     rho tilde 3/2, -1/2
       ROT3M1 = ROP3M1 + ROP1M3
-C     This is eq 2.46 of Rein-Sehgal, RSY are the spherical harmonics
-C     Normalise relative rho tilde, as Rein-Sehgal also do
-c     RHOP3P3 = ROTI33 / RHOTIL
-c     RHOP3P1 = ROTI31 / RHOTIL
-c     RHOP3M1 = ROT3M1 / RHOTIL
 
-C     Don't quite know how to calculate this for a flat dist?
-C     For now just try setting the resonances to zero?
-c     YFN = 1/(2*SQRT(PI))
-      YFN = 1/(4*PI)
-c     YFN = 1
-
-C     If we aren't dealing with a Delta resonance just make the
-C     distribution flat in costheta and phi if user has requested it
-      IF (MDLSPIEJ .EQ. 3 .AND. RES33 .EQ. 0) GOTO 72
 
 C     If not, calculate equation 2.46 (remember all rho have been
 C     normalised out by rho tilde)
-c     YFN = RSY00(THETA,PHI)
-c    $    - (2./ SQRT(5.)) * RSY20(THETA,PHI) *
-c    $      (RHOP3P3 - 0.5)
-c    $    + (4./ SQRT(10.)) * RSY21(THETA,PHI) * RHOP3P1
-c    $    - (4./ SQRT(10.)) * RSY22(THETA,PHI) * RHOP3M1
 
 C     Don't use the rescaled amplitudes
       YFN = RSY00(THETA,PHI)*REALPART(RHOTIL)
@@ -723,11 +712,7 @@ C     Include the geometric factor
 C     Then also the term multiplying RSY00
       YFN = YFN/REALPART(RHOTIL)
 
-
       GOTO 72
-C     Now done with this method; have valid Enu, Q2, W, theta, phi
-C     Now get the momentum at GOTO 72
-
 
 C     ===========================================================
 C     =======================================================
@@ -819,11 +804,6 @@ C     rho tilde 3/2, -1/2
       ROT3M1 = ROP3M1 + ROP1M3
 
 C     This is eq 2.46 of Rein-Sehgal, RSY are the spherical harmonics
-C     Normalise relative rho tilde, as Rein-Sehgal also do
-C     Try without normalisation
-c     RHOP3P3 = ROTI33 / RHOTIL
-c     RHOP3P1 = ROTI31 / RHOTIL
-c     RHOP3M1 = ROT3M1 / RHOTIL
 
       YFN = RSY00(THETA,PHI)*REALPART(RHOTIL)
      &    - (2./SQRT(5.))*RSY20(THETA,PHI)
@@ -844,9 +824,6 @@ C     Then also the term multiplying RSY00
       YFN = YFN/REALPART(RHOTIL)
 
       GOTO 72
-C     Now done with this method; have valid Enu, Q2, W, theta, phi
-C     Now get the momentum at GOTO 72
-
 
 C     ===================================================
 C     PION EJECTION USING P33(1232) + others FOR I=1/2
