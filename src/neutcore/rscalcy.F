@@ -1,6 +1,6 @@
 ***********************************************************************
 *     ---------------------------------------------------
-      SUBROUTINE RSCALCY(IMODE, INLEP, E, Q2, W, theta, phi, RES33, yfn)
+      SUBROUTINE RSCALCY(IMODE, INLEP, E, Q2, W, theta, phi, yfn)
 *     ---------------------------------------------------
 *
 *     ( purpose )
@@ -79,7 +79,7 @@ C     DRES is just to skip certain resonances we don't need to calculate
 C     These are the 2l+1 and number of resonances
       INTEGER IPP(31),NRR(31)
 
-      INTEGER IFLAG,IB,NR,IP,IBLOCK,IQ2,RES33
+      INTEGER IFLAG,IB,NR,IP,IBLOCK,IQ2
 
       REAL WMIN,E,QMAX,SMAX,W2,W,X,Q2,ES,DQ2
       INTEGER NQ
@@ -664,7 +664,7 @@ C     of #int(YFN d(costh)dphi)=1
 
 C     If we aren't dealing with a Delta resonance just make the
 C     distribution flat in costheta and phi if user has requested it
-      IF (MDLSPIEJ .EQ. 3 .AND. RES33 .EQ. 0) GOTO 72
+      IF (MDLSPIEJ .EQ. 3 .AND. SPIDELTA .EQ. 0) GOTO 72
 
 C     rho 3/2 3/2 = delta delta + p delta + delta p + p p
       ROP3P3 = RHOCALC(1, 3, 1, 3, ALPSH, BETSH, DELSH, AM, ETABW)

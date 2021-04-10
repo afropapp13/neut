@@ -91,7 +91,10 @@ void CommonBlockIFace::ResetGenValues() const {
   neutpiabs_ = fneutpiabs_gen;
   neutpiless_ = fneutpiless_gen;
   neutradcorr_ = fneutradcorr_gen;
+  // Don't reset the delta
+  int tempdelta = nemdls_.spidelta;
   nemdls_ = fnemdls_gen;
+  nemdls_.spidelta = tempdelta;
   nenupr_ = fnenupr_gen;
   neffpr_ = fneffpr_gen;
 

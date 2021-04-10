@@ -358,7 +358,7 @@ C     Get the Adler angles
       phiAd = -999
       call mkAdler(costhetaAd, phiAd)
       call rscalcy(IMOD, ipne(3), e, q2, w, acos(costhetaAd), phiAd,
-     &                1, yfn)
+     &             yfn)
 
       evpiw = yfn
 
