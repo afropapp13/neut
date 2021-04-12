@@ -67,7 +67,7 @@ C---initialize valiables
 
       EPR = SQRT(XINPPR(1)**2 + XINPPR(2)**2 + XINPPR(3)**2 + XMN2)
       PPR = SQRT(XINPPR(1)**2 + XINPPR(2)**2 + XINPPR(3)**2)
-      IF ((PPR.lt.0.00001)) THEN
+      IF ((PPR.lt.RS_SMNO)) THEN
         DINPPR(1)=1.0
         DINPPR(2)=0.0
         DINPPR(3)=0.0
@@ -94,7 +94,8 @@ C
       else
          SINTH= SQRT(1.-COSTH**2)
       endif
-      IF (SINTH.gt.0.00001) THEN
+
+      IF (SINTH.gt.RS_SMNO) THEN
         COSPHI= XINPNU(1)/XPNU/SINTH
         SINPHI= XINPNU(2)/XPNU/SINTH
       ELSE

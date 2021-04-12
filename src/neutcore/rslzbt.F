@@ -47,12 +47,13 @@
       REAL GAMMA,PA
       REAL ZAXIS(3)
       REAL RTPNUL(3) ,PNCL(3) , PRESL(3) , QA(3)
-      REAL PNUA(3)   ,PNCA(3) , PRESA(3) , PLEPA(3)      , PPIA(3)       
+      REAL PNUA(3)   ,PNCA(3) , PRESA(3) , PLEPA(3)      , PPIA(3) 
       REAL PPRA(3) , PPRAR(3),PPIAR(3)
       REAL DPRESL(3)                
       REAL AQA
       REAL AQA2
 
+#include "necard.h"
 
       W2=W*W
 
@@ -182,10 +183,10 @@ C     Z component
 C     Make the nucleon in the negative direction of pion
       DO 50 I=1,3
 C     CWRET save the pion
-C       ppirs(I)=ppiar(I)
+c        ppirs(I)=ppiar(I)
          PPRAR(I)=-1.*PPIAR(I)
  50   CONTINUE
-C     ppirs(4) = sqrt(XMPI**2+ppirs(1)**2+ppirs(2)**2+ppirs(3)**2)
+c     ppirs(4) = sqrt(XMPI**2+ppirs(1)**2+ppirs(2)**2+ppirs(3)**2)
 
       COSZQA=ZAXIS(3)
       SINZQA=ZAXIS(1)

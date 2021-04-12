@@ -37,16 +37,16 @@ class NeutVect : public TObject {
   Double_t       VNuclIni;  // Nuclear potential for the initial state (MeV)
                             //
   Double_t       VNuclFin;  // Nuclear potential for the final state (MeV)
-                            //
+
 
   /* Fermi momentum related */
   Double_t       PFSurf;    // Fermi surface momentum (MeV/c)
   Double_t       PFMax;     // Maximum value of the Fermi momentum (MeV/c)
-                            //
+  //
 
   /* Flux ID including detector code?*/
   Int_t          FluxID;    // Flux ID code
-                            //  0: Randomly generated
+  //  0: Randomly generated
 
   // Interaction model
   // QE model
@@ -60,6 +60,8 @@ class NeutVect : public TObject {
   Int_t          SPIModel;
   // Rein-Sehgal 1pi ejection
   Int_t          SPIRSEj;
+  // Did SPIDelta happen 
+  Int_t          SPIDelta;
   // Coherent model
   Int_t          COHModel;
   // DIS model
@@ -181,7 +183,7 @@ class NeutVect : public TObject {
 
   /* Particle information (PID, 4 momentum etc.) */
   NeutPart       *PartInfo(Int_t idx)
-	{ return (NeutPart *)((fNpart>idx) ? (fPartInfo->At(idx)) : NULL );};
+  { return (NeutPart *)((fNpart>idx) ? (fPartInfo->At(idx)) : NULL );};
   void SetPartInfo(Int_t idx      , NeutPart PInfo);
   void SetPartInfo(Int_t npart   , NeutPart *PInfo_array);
 
@@ -197,7 +199,7 @@ class NeutVect : public TObject {
 
   /* FSI Particle Information */
   NeutFsiPart       *FsiPartInfo(Int_t idx)
-	{ return (NeutFsiPart *)((fNfsiPart>idx) ? (fFsiPartInfo->At(idx)) : NULL );};
+  { return (NeutFsiPart *)((fNfsiPart>idx) ? (fFsiPartInfo->At(idx)) : NULL );};
   void SetFsiPartInfo(Int_t idx      , NeutFsiPart PInfo);
   void SetFsiPartInfo(Int_t npart   , NeutFsiPart *PInfo_array);
 
@@ -208,7 +210,7 @@ class NeutVect : public TObject {
 
   /* FSI Vertex Information */
   NeutFsiVert       *FsiVertInfo(Int_t idx)
-	{ return (NeutFsiVert *)((fNfsiVert>idx) ? (fFsiVertInfo->At(idx)) : NULL );};
+  { return (NeutFsiVert *)((fNfsiVert>idx) ? (fFsiVertInfo->At(idx)) : NULL );};
   void SetFsiVertInfo(Int_t idx     , NeutFsiVert VInfo);
   void SetFsiVertInfo(Int_t nvert   , NeutFsiVert *VInfo_array);
 
@@ -243,7 +245,7 @@ class NeutVect : public TObject {
   TObjArray      *fPartInfo; // ->
 
   TArrayI        fVertexID;  //         Vertex Index ID
-                             //         ( To refer NeutVertex )
+  //         ( To refer NeutVertex )
 
   TArrayI        fParentIdx;  //        Idx of parent particle
 
@@ -263,7 +265,7 @@ class NeutVect : public TObject {
 
   TLorentzVector fZeroVect;  // !
 
-  ClassDef(NeutVect, 6)
+  ClassDef(NeutVect, 7)
 };
 
 #endif

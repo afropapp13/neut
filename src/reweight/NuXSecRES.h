@@ -21,6 +21,7 @@ private:
   NSyst_t MvRES;
   NSyst_t CA5RES;
   NSyst_t BgSclRES;
+  NSyst_t MDLSPiEj;
 
   NSyst_t UseSeparateBgSclLMCPiBar;
   NSyst_t BgSclLMCPiBarRES;

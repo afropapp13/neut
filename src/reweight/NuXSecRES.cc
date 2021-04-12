@@ -27,6 +27,7 @@ NuXSecRESEngine::NuXSecRESEngine() {
 
   CA5RES = RegisterDial("CA5RES", cbfa.fneut1pi_gen.rneca5i, 0.15, 0.15);
   BgSclRES = RegisterDial("BgSclRES", cbfa.fneut1pi_gen.rnebgscl, 0.15, 0.15);
+  MDLSPiEj = RegisterDial("MDLSPiEj", cbfa.fnemdls_gen.mdlspiej);
 
   UseSeparateBgSclLMCPiBar = RegisterDial("UseSeparateBgSclLMCPiBar", 0);
   BgSclLMCPiBarRES =
@@ -82,6 +83,7 @@ double NuXSecRESEngine::CalcWeight() {
   cbfa.ResetGenValues();
 
   double old_xsec = NEUTGetXSec();
+  double piej_old = NEUTGetPiEj();
 
   if (old_xsec == 0) {
     std::cout << "NuXSecRESEngine::CalcWeight() Warning: old_xsec==0, setting "
@@ -99,6 +101,7 @@ double NuXSecRESEngine::CalcWeight() {
   }
 
   neut1pi_.rneca5i = fDials[CA5RES].ToValue;
+  nemdls_.mdlspiej = fDials[MDLSPiEj].ToValue;
 
   if (fDials[UseSeparateBgSclLMCPiBar].ToValue && EventIsLMCPiBar()) {
     neut1pi_.rnebgscl = fDials[BgSclLMCPiBarRES].ToValue;
@@ -109,13 +112,15 @@ double NuXSecRESEngine::CalcWeight() {
   NEUTSetParams();
 
   double new_xsec = NEUTGetXSec();
+  double piej_new = NEUTGetPiEj();
 
 #ifdef _N_REWEIGHT_RES_DEBUG_
   cout << "differential cross section (old) = " << old_xsec << endl;
   cout << "differential cross section (new) = " << new_xsec << endl;
 #endif
 
-  return CheckReturnWeight(new_xsec / old_xsec);
+  return CheckReturnWeight(new_xsec / old_xsec) *
+         CheckReturnWeight(piej_new / piej_old);
 }
 
 } // namespace rew

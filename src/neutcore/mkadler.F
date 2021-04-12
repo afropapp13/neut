@@ -53,6 +53,8 @@ C     Set mass of nucleon depending on PDG
         Nucl(4) = dble(XMP)
       ENDIF
 
+      Nucl(4)=XMN
+
 C     Set fourth component to be energy
       Nucl(4) = sqrt(Nucl(1)**2+Nucl(2)**2+
      &               Nucl(3)**2+Nucl(4)**2)

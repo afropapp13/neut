@@ -45,6 +45,9 @@ void NeutVect::ClearVars() {
   ////////////////////////////////////////////
   Mode = 0;
 
+  SPIDelta = -1;
+  SPIRSEj = 3;
+
   Totcrs = 0;
 
   Fsiprob = 1;

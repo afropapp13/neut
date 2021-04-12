@@ -94,12 +94,15 @@ void CommonBlockIFace::SetGenCard(std::string const &GenCardLocation) {
   fneutfilepath_gen = neutfilepath_;
   fnievesqepar_gen = nievesqepar_;
 }
+
 void CommonBlockIFace::Initialize(std::string const &GenCardLocation) {
+  std::cout << "Initializing with " << GenCardLocation << std::endl;
   if (!gCommonBlockIFace) {
     gCommonBlockIFace = new CommonBlockIFace();
     gCommonBlockIFace->SetGenCard(GenCardLocation);
   }
 }
+
 CommonBlockIFace const &CommonBlockIFace::Get() {
   if (!gCommonBlockIFace) {
     std::cerr << "[ERROR]: Must manually call CommonBlockIFace::Initialize  "
@@ -121,7 +124,10 @@ void CommonBlockIFace::ResetGenValues() const {
   neutpiabs_ = fneutpiabs_gen;
   neutpiless_ = fneutpiless_gen;
   neutradcorr_ = fneutradcorr_gen;
+  // Don't reset the delta
+  int tempdelta = nemdls_.spidelta;
   nemdls_ = fnemdls_gen;
+  nemdls_.spidelta = tempdelta;
 
   // Only reset these as we want to take vnuini etc... from the event
   nenupr_.iformlen = fnenupr_gen.iformlen;
@@ -479,6 +485,13 @@ void CommonBlockIFace::ReadVect(NeutVect *nvect) {
   ReadNUCLEONFSIHIST(nvect);
   ReadNEUTTARGET(nvect);
   ReadNENUPR(nvect);
+  ReadEVENTPARS(nvect);
+}
+
+// Read model parameters that may be important for event reweighting work and
+// aren't filled in necard
+void CommonBlockIFace::ReadEVENTPARS(NeutVect *nvect) {
+  nemdls_.spidelta = nvect->SPIDelta;
 }
 
 std::string CommonBlockIFace::ParamsToString(bool isinstance) {
@@ -574,6 +587,7 @@ std::string CommonBlockIFace::ParamsToString(bool isinstance) {
   ss << "nemdls:\n"
      << "\tmdlqe: " << nemdls.mdlqe << "\n"
      << "\tmdlspi: " << nemdls.mdlspi << "\n"
+     << "\tmdlspiej: " << nemdls.mdlspiej << "\n"
      << "\tmdldis: " << nemdls.mdldis << "\n"
      << "\tmdlcoh: " << nemdls.mdlcoh << "\n"
      << "\tmdldif: " << nemdls.mdldif << "\n"

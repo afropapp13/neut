@@ -400,8 +400,8 @@ C
 C     Lab frame lepton energy
 C     This definitely should not be 0, but allow for some numerical
 C     inaccuracy
-C     Putting the accuracy at 1E-5: if between -1E-5 and +1E-5, set
-C     lepton momentum to zero
+C     Putting the accuracy at 1E-7: if between -1E-7 and +1E-7, set
+C     lepton momentum to 1E-7
       IF (El**2 - XMLEP2 .LT. -1*RS_SMNO) THEN
          GOTO 999
       ELSE IF (El**2 - XMLEP2 .LE. 1*RS_SMNO) THEN

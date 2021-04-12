@@ -172,7 +172,8 @@ am__lib@LIBPREFIX@neutcore_@NEUT_VERSION_NUM@_a_SOURCES_DIST =  \
 	mk_imode4.cc mk_imode5.cc mk_imode6.cc mk_imode7.cc \
 	mk_imode11.cc mk_imode12.cc mk_imode13.cc mk_imode14.cc \
 	mk_imode15.cc mk_imode16.cc mk_imode17.cc necard_toml.cc \
-	cardistoml.cc bykvec.F fnr1998.F byabpar.F bykax.F nemknpos.F
+	cardistoml.cc bykvec.F fnr1998.F byabpar.F bykax.F evpiw.F \
+	rscalcy.F rhocalc.F nemknpos.F
 @NEUT_USE_ZBS_TRUE@am__objects_1 = nemknpos.$(OBJEXT)
 am_lib@LIBPREFIX@neutcore_@NEUT_VERSION_NUM@_a_OBJECTS =  \
 	bbba05.$(OBJEXT) fnelspau_sf.$(OBJEXT) rsifl6g.$(OBJEXT) \
@@ -251,6 +252,7 @@ am_lib@LIBPREFIX@neutcore_@NEUT_VERSION_NUM@_a_OBJECTS =  \
 	mk_imode16.$(OBJEXT) mk_imode17.$(OBJEXT) \
 	necard_toml.$(OBJEXT) cardistoml.$(OBJEXT) bykvec.$(OBJEXT) \
 	fnr1998.$(OBJEXT) byabpar.$(OBJEXT) bykax.$(OBJEXT) \
+	evpiw.$(OBJEXT) rscalcy.$(OBJEXT) rhocalc.$(OBJEXT) \
 	$(am__objects_1)
 lib@LIBPREFIX@neutcore_@NEUT_VERSION_NUM@_a_OBJECTS =  \
 	$(am_lib@LIBPREFIX@neutcore_@NEUT_VERSION_NUM@_a_OBJECTS)
@@ -584,7 +586,8 @@ lib@LIBPREFIX@neutcore_@NEUT_VERSION_NUM@_a_SOURCES = bbba05.F \
 	mk_imode5.cc mk_imode6.cc mk_imode7.cc mk_imode11.cc \
 	mk_imode12.cc mk_imode13.cc mk_imode14.cc mk_imode15.cc \
 	mk_imode16.cc mk_imode17.cc necard_toml.cc cardistoml.cc \
-	bykvec.F fnr1998.F byabpar.F bykax.F $(am__append_23)
+	bykvec.F fnr1998.F byabpar.F bykax.F evpiw.F rscalcy.F \
+	rhocalc.F $(am__append_23)
 
 #CERN Override
 lib@LIBPREFIX@CERNOverride_@NEUT_VERSION_NUM@_a_SOURCES = pdfset.F structm.F grv94di.F grv98_lo.F

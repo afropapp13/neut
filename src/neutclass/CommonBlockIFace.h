@@ -32,12 +32,14 @@ void nefillmodel_();
 void zexpconfig_();
 double evdifcrs_();
 double evpiprob_();
+double evpiw_();
 }
 
 namespace neut {
 
 inline double NEUTGetXSec() { return evdifcrs_(); }
 inline double NEUTGetPiCascProb() { return evpiprob_(); }
+inline double NEUTGetPiEj() { return evpiw_(); }
 inline void NEUTSetParams() {
   nefillmodel_();
   zexpconfig_();
@@ -108,6 +110,7 @@ public:
   static void ReadNENUPR(NeutVect *);
 
   static void ReadVect(NeutVect *);
+  static void ReadEVENTPARS(NeutVect *);
 
   static std::string ParamsToString(bool isinstance = false);
 };
