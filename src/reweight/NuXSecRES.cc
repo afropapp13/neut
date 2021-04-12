@@ -83,7 +83,7 @@ double NuXSecRESEngine::CalcWeight() {
   cbfa.ResetGenValues();
 
   double old_xsec = NEUTGetXSec();
-  double piej_old = NEUTGetPiEj();
+  double piej_old = NModeDefn::is1PI(nework_.modene) ? NEUTGetPiEj() : 1;
 
   if (old_xsec == 0) {
     std::cout << "NuXSecRESEngine::CalcWeight() Warning: old_xsec==0, setting "
@@ -112,7 +112,7 @@ double NuXSecRESEngine::CalcWeight() {
   NEUTSetParams();
 
   double new_xsec = NEUTGetXSec();
-  double piej_new = NEUTGetPiEj();
+  double piej_new = NModeDefn::is1PI(nework_.modene) ? NEUTGetPiEj() : 1;
 
 #ifdef _N_REWEIGHT_RES_DEBUG_
   cout << "differential cross section (old) = " << old_xsec << endl;

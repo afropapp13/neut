@@ -223,7 +223,7 @@ C     Only works for Rein-Sehgal model
 C     Santiy check the input
       IF (MDLSPIEJ .LT. 0 .OR. MDLSPIEJ .GT. 3) THEN
         write(*,*) "ERROR***"
-        write(*,*) "Pion/nucleon ejection dial MDLSPIEJ reweight"
+        write(*,*) "Pion/nucleon ejection dial MDLSPIEJ reweight:", MDLSPIEJ
         write(*,*) "only works for value 0,1,2,3"
         GOTO 999
       endif
@@ -238,7 +238,7 @@ C     Only applies to resonant interaction
      &    (abs(modene) .gt. 34)) then
         write(*,*) "ERROR***"
         write(*,*) "Pion/nucleon ejection dial MDLSPIEJ reweight"
-        write(*,*) "only works for mode 11,12,13,31,32,33,34"
+        write(*,*) "only works for mode 11,12,13,31,32,33,34, not: ", modene
         goto 999
       endif
 
