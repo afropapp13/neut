@@ -440,6 +440,8 @@ C Set VNUINI here ( when PFSURF is fixed)
         CALL FFKEY('VNUINI',VNUINI,1,'REAL')
         CALL FFKEY('VNUFIN',VNUFIN,1,'REAL')
 
+C       These could be above, but FFKEY complains about running out of
+C       space, so read these on the second pass.
 C       Alt AXFF params
         CALL FFKEY('AXFFALPHA',AXFFALPHA, 1, 'REAL')
         CALL FFKEY('AXFFBETA',AXFFBETA, 1, 'REAL')
