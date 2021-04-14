@@ -74,7 +74,7 @@ C -- extract NEUT card
          CALL FFINIT(0)
          CALL FFSET('LINP', 91)
          CALL FFSET('SIZE', 10)
-         CALL FFSET('LENMAX', 1000)
+         CALL FFSET('LENG', 100)
 
          CALL FFKEY('NEVT',NEVTEVCT,1,'INTEGER')
 
