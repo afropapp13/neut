@@ -15,12 +15,12 @@ namespace neut {
 namespace rew {
 
 CascadePionEngine::CascadePionEngine() {
-  FrAbs_pi = RegisterDial("FrAbs_pi", neffpr_.fefabs, 0.432, 0.432);
-  FrInelLow_pi = RegisterDial("FrInelLow_pi", neffpr_.fefqe, 0.313, 0.313);
-  FrCExLow_pi = RegisterDial("FrCExLow_pi", neffpr_.fefcx, 0.305, 0.305);
-  FrInelHigh_pi = RegisterDial("FrInelHigh_pi", neffpr_.fefqeh, 0.859, 0.859);
-  FrCExHigh_pi = RegisterDial("FrCExHigh_pi", neffpr_.fefcxh);
-  FrPiProd_pi = RegisterDial("FrPiProd_pi", neffpr_.fefinel, 1.101, 1.101);
+  PionFSI_AbsProb = RegisterDial("PionFSI_AbsProb", neffpr_.fefabs, 0.432, 0.432);
+  PionFSI_QELowMomProb = RegisterDial("PionFSI_QELowMomProb", neffpr_.fefqe, 0.313, 0.313);
+  PionFSI_CExLowMomProb = RegisterDial("PionFSI_CExLowMomProb", neffpr_.fefcx, 0.305, 0.305);
+  PionFSI_QEHighMomProb = RegisterDial("PionFSI_QEHighMomProb", neffpr_.fefqeh, 0.859, 0.859);
+  PionFSI_CExHighMomProb = RegisterDial("PionFSI_CExHighMomProb", neffpr_.fefcxh);
+  PionFSI_InelProb = RegisterDial("PionFSI_InelProb", neffpr_.fefinel, 1.101, 1.101);
 }
 
 void CascadePionEngine::Reconfigure(void) { ApplyTweaks(); }
@@ -49,15 +49,15 @@ double CascadePionEngine::CalcWeight() {
     return 1;
   }
 
-  neffpr_.fefabs = fDials[FrAbs_pi].ToValue;
+  neffpr_.fefabs = fDials[PionFSI_AbsProb].ToValue;
 
-  neffpr_.fefqe = fDials[FrInelLow_pi].ToValue;
-  neffpr_.fefqeh = fDials[FrInelHigh_pi].ToValue;
+  neffpr_.fefqe = fDials[PionFSI_QELowMomProb].ToValue;
+  neffpr_.fefqeh = fDials[PionFSI_QEHighMomProb].ToValue;
 
-  neffpr_.fefcx = fDials[FrCExLow_pi].ToValue;
-  neffpr_.fefcxh = fDials[FrCExHigh_pi].ToValue;
+  neffpr_.fefcx = fDials[PionFSI_CExLowMomProb].ToValue;
+  neffpr_.fefcxh = fDials[PionFSI_CExHighMomProb].ToValue;
 
-  neffpr_.fefinel = fDials[FrPiProd_pi].ToValue;
+  neffpr_.fefinel = fDials[PionFSI_InelProb].ToValue;
 
   NEUTSetParams();
 

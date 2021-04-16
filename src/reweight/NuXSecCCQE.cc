@@ -18,6 +18,7 @@ NuXSecCCQEEngine::NuXSecCCQEEngine() { // Get the parameter values at generation
 
   MaCCQE = RegisterDial("MaCCQE", cbfa.fnemdls_gen.xmaqe, 0.196,0.196);
   AxlFFCCQE = RegisterDial("AxlFFCCQE", cbfa.fnemdls_gen.mdlqeaf);
+  DocumentDial(AxlFFCCQE, "Acceptable values: 1. Dipole, 2. BBBA07, 3. 2 Comp, 4. 3 Comp., 5. Z Exp.");
   SCCVecQE = RegisterDial("SCCVecQE", cbfa.fnemdls_gen.sccfv);
   SCCAxlQE = RegisterDial("SCCAxlQE", cbfa.fnemdls_gen.sccfa);
   PsFF = RegisterDial("PsFF", cbfa.fnemdls_gen.fpqe);

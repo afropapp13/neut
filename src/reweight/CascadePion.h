@@ -19,12 +19,13 @@ public:
   std::string EngineName() const { return "CascadePionEngine"; }
 
 private:
-  NSyst_t FrAbs_pi;
-  NSyst_t FrInelLow_pi;
-  NSyst_t FrCExLow_pi;
-  NSyst_t FrInelHigh_pi;
-  NSyst_t FrCExHigh_pi;
-  NSyst_t FrPiProd_pi;
+  NSyst_t PionFSI_AbsProb;
+  NSyst_t PionFSI_QELowMomProb;
+  NSyst_t PionFSI_QEHighMomProb;
+  NSyst_t PionFSI_CExLowMomProb;
+  NSyst_t PionFSI_CExHighMomProb;
+  NSyst_t PionFSI_InelProb;
+
 };
 
 } // namespace rew

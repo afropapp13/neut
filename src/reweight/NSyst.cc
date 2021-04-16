@@ -6,6 +6,7 @@ namespace neut {
 namespace NSyst {
 
 std::map<std::string, NSyst_t> Dials = {{"NullSystematic", kNullSystematic}};
+std::map<NSyst_t, std::string> Dial_Documentation;
 
 NSyst_t EnsureDialNameRegistered(std::string const &name) {
   if (Dials.count(name)) {
@@ -14,6 +15,14 @@ NSyst_t EnsureDialNameRegistered(std::string const &name) {
   NSyst_t index = Dials.size();
   Dials[name] = index;
   return index;
+}
+
+void DocumentDial(NSyst_t syst, std::string docstring){
+  Dial_Documentation[syst] = std::move(docstring);
+}
+
+std::string GetDialDocumentation(NSyst_t syst){
+  return Dial_Documentation[syst];
 }
 
 std::string DialAsString(NSyst_t syst) {

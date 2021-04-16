@@ -13,8 +13,11 @@ namespace NSyst {
 const NSyst_t kNullSystematic = 0;
 
 extern std::map<std::string, NSyst_t> Dials;
+extern std::map<NSyst_t, std::string> Dial_Documentation;
 
 NSyst_t EnsureDialNameRegistered(std::string const &name);
+void DocumentDial(NSyst_t, std::string);
+std::string GetDialDocumentation(NSyst_t);
 
 std::string DialAsString(NSyst_t);
 NSyst_t DialFromString(std::string const &);

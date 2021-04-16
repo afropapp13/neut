@@ -89,6 +89,10 @@ protected:
     return index;
   }
 
+  void DocumentDial(NSyst_t syst, std::string docstring){
+    NSyst::DocumentDial(syst,docstring);
+  }
+
   double CheckReturnWeight(double weight) {
     if (weight && !std::isnormal(weight)) {
       std::cout << "[WARN]: Abnormal weight being returned by " << EngineName()

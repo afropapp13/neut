@@ -28,6 +28,10 @@ int main(int argc, char const *argv[]) {
                   << ", SigmaDown: " << OneSigmaDown
                   << ", SigmaUp: " << OneSigmaUp << " }" << std::endl;
       }
+      std::string const &doc = neut::NSyst::GetDialDocumentation(d.second);
+      if(doc.size()){
+        std::cout << "\t\t" << doc << std::endl;
+      }
     }
   }
 }
