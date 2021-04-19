@@ -49,12 +49,19 @@ else
   SETUPDIR=$(readlink -f ${BASH_SOURCE%/*})
 fi
 
+
+if [ "__ROOT_VERSION_COMPILE__" != $(root-config --version) ]; then
+  echo "[ERROR]: Incompatible ROOT versions: Built with __ROOT_VERSION_COMPILE__ from __ROOT_ROOT_COMPILE__ but now have $(root-config --version) from ${ROOTSYS} set up."
+  return 1
+fi
+
 export NEUT=${SETUPDIR}
 export NEUT_CARDS=${SETUPDIR}/share/neut/Cards
 export NEUT_CRSPATH=${SETUPDIR}/share/neut/crsdat
 
 add_to_PATH ${NEUT}/bin
 add_to_LD_LIBRARY_PATH ${NEUT}/lib
+
 
 if [ "__USE_HEPMC__" == "yes" ]; then
   add_to_LD_LIBRARY_PATH __HEPMC_LIBDIR__

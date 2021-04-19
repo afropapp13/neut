@@ -315,6 +315,8 @@ DEFAULT_CFLAGS = -fPIC $(NEUT_DEFINES) $(NEUT_INCLUDES) \
 DEFAULT_LINKFLAGS = -version-info @NEUT_VERSION_NUM@ $(am__append_16)
 ROOT_LINKFLAGS = $(shell root-config --ldflags) -pthread -rdynamic \
 	-L$(shell root-config --libdir) $(am__append_19)
+ROOT_VERSION_COMPILE = $(shell root-config --version)
+ROOT_ROOT_COMPILE = $(ROOTSYS)
 @ROOT_MAJOR_IS_SIX_FALSE@ROOT_LIBS = -lCore -lCint -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lm -ldl
 @ROOT_MAJOR_IS_SIX_TRUE@ROOT_LIBS = -lCore -lImt -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lTreePlayer -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lMultiProc
 @NEUT_HEPMC_TRUE@HEPMC_LIBDIR = $(shell HepMC3-config --libdir)
@@ -536,7 +538,7 @@ neut-config: neut-config.in
 	chmod +x neut-config
 
 setup.sh: setup.sh.in
-	cat ${top_srcdir}/tools/setup.sh.in | sed "s|__USE_HEPMC__|$(USE_HEPMC)|g" | sed "s|__HEPMC_LIBDIR__|$(HEPMC_LIBDIR)|g" > setup.sh
+	cat ${top_srcdir}/tools/setup.sh.in | sed "s|__ROOT_VERSION_COMPILE__|$(ROOT_VERSION_COMPILE)|g" | sed "s|__ROOT_ROOT_COMPILE__|$(ROOT_ROOT_COMPILE)|g" | sed "s|__USE_HEPMC__|$(USE_HEPMC)|g" | sed "s|__HEPMC_LIBDIR__|$(HEPMC_LIBDIR)|g" > setup.sh
 
 install-exec-hook: neut-config setup.sh
 	-cp neut-config ${bindir}/

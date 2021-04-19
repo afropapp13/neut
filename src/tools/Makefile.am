@@ -31,7 +31,7 @@ neut-config: neut-config.in
 	chmod +x neut-config
 
 setup.sh: setup.sh.in
-	cat ${top_srcdir}/tools/setup.sh.in | sed "s|__USE_HEPMC__|$(USE_HEPMC)|g" | sed "s|__HEPMC_LIBDIR__|$(HEPMC_LIBDIR)|g" > setup.sh
+	cat ${top_srcdir}/tools/setup.sh.in | sed "s|__ROOT_VERSION_COMPILE__|$(ROOT_VERSION_COMPILE)|g" | sed "s|__ROOT_ROOT_COMPILE__|$(ROOT_ROOT_COMPILE)|g" | sed "s|__USE_HEPMC__|$(USE_HEPMC)|g" | sed "s|__HEPMC_LIBDIR__|$(HEPMC_LIBDIR)|g" > setup.sh
 
 install-exec-hook: neut-config setup.sh
 	-cp neut-config ${bindir}/

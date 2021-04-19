@@ -78,6 +78,9 @@ endif
 
 ROOT_LINKFLAGS = $(shell root-config --ldflags) -pthread -rdynamic -L$(shell root-config --libdir)
 
+ROOT_VERSION_COMPILE = $(shell root-config --version)
+ROOT_ROOT_COMPILE = $(ROOTSYS)
+
 if ROOT_MAJOR_IS_SIX
 ROOT_LIBS = -lCore -lImt -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lTreePlayer -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lMultiProc
 else
