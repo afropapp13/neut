@@ -81,7 +81,7 @@ build_triplet = @build@
 host_triplet = @host@
 DIST_COMMON = $(top_srcdir)/build.common $(srcdir)/Makefile.in \
 	$(srcdir)/Makefile.am $(top_srcdir)/depcomp
-@NEUT_USE_TAUOLA_TRUE@am__append_1 = $(top_builddir)/tauola/lib@LIBPREFIX@tauola.@NEUT_VERSION_NUM@.a
+@NEUT_USE_TAUOLA_TRUE@am__append_1 = $(top_builddir)/tauola/libtauola.@NEUT_VERSION_NUM@.a
 @NEUT_USE_TAUOLA_TRUE@am__append_2 = -DNEUT_USE_TAUOLA
 @NEUT_USE_GPERF_TRUE@am__append_3 = -DNEUT_USE_GPERF
 @NEUT_HEPMC_TRUE@am__append_4 = -DUSE_HEPMC
@@ -464,17 +464,18 @@ NEUT_INCLUDES = -I$(top_srcdir)/radcorr -I$(top_srcdir)/mec -I$(top_srcdir)/ht2p
 NEUT_CLASS_INCLUDES = -I$(top_srcdir)/neutclass
 NEUT_REWEIGHT_INCLUDES = -I$(top_srcdir)/reweight
 NEUT_REWEIGHT_LIBS = $(top_builddir)/reweight/libNEUTReWeight.@NEUT_VERSION_NUM@.a
-NEUT_STATIC_LIBS = $(top_builddir)/neutcore/lib@LIBPREFIX@neutcore.@NEUT_VERSION_NUM@.a \
-	$(top_builddir)/neutcore/lib@LIBPREFIX@CERNOverride.@NEUT_VERSION_NUM@.a \
-	$(top_builddir)/mec/lib@LIBPREFIX@neutmec.@NEUT_VERSION_NUM@.a \
-	$(top_builddir)/n1p1h/lib@LIBPREFIX@n1p1h.@NEUT_VERSION_NUM@.a \
-	$(top_builddir)/ht2p2h/lib@LIBPREFIX@ht2p2h.@NEUT_VERSION_NUM@.a \
-	$(top_builddir)/nuccorspl/lib@LIBPREFIX@nuccorspl.@NEUT_VERSION_NUM@.a \
-	$(top_builddir)/nuceff/lib@LIBPREFIX@nuceff.@NEUT_VERSION_NUM@.a \
-	$(top_builddir)/radcorr/lib@LIBPREFIX@radcorr.@NEUT_VERSION_NUM@.a \
-	$(top_builddir)/specfunc/lib@LIBPREFIX@specfunc.@NEUT_VERSION_NUM@.a \
-	$(top_builddir)/skmcsvc/lib@LIBPREFIX@skmcsvc.@NEUT_VERSION_NUM@.a \
-	$(top_builddir)/partnuck/lib@LIBPREFIX@partnuck.@NEUT_VERSION_NUM@.a \
+NEUT_STATIC_LIBS =  \
+	$(top_builddir)/neutcore/libneutcore.@NEUT_VERSION_NUM@.a \
+	$(top_builddir)/neutcore/libCERNOverride.@NEUT_VERSION_NUM@.a \
+	$(top_builddir)/mec/libneutmec.@NEUT_VERSION_NUM@.a \
+	$(top_builddir)/n1p1h/libn1p1h.@NEUT_VERSION_NUM@.a \
+	$(top_builddir)/ht2p2h/libht2p2h.@NEUT_VERSION_NUM@.a \
+	$(top_builddir)/nuccorspl/libnuccorspl.@NEUT_VERSION_NUM@.a \
+	$(top_builddir)/nuceff/libnuceff.@NEUT_VERSION_NUM@.a \
+	$(top_builddir)/radcorr/libradcorr.@NEUT_VERSION_NUM@.a \
+	$(top_builddir)/specfunc/libspecfunc.@NEUT_VERSION_NUM@.a \
+	$(top_builddir)/skmcsvc/libskmcsvc.@NEUT_VERSION_NUM@.a \
+	$(top_builddir)/partnuck/libpartnuck.@NEUT_VERSION_NUM@.a \
 	$(am__append_1)
 NEUT_LIBS = $(top_builddir)/neutclass/libNEUTClassUtils.@NEUT_VERSION_NUM@.a \
 	$(top_builddir)/neutclass/libNEUTClass.la \

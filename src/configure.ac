@@ -147,6 +147,12 @@ AC_ARG_ENABLE([nucfsi],
 
 AM_CONDITIONAL([NEUT_WRITE_NUCFSI], [test "x$enable_nucfsi" = "xyes"])
 
+######## Check use neutgeom
+AC_ARG_ENABLE([neutgeom],
+    AS_HELP_STRING([--enable-neutgeom], [Build neutgeom components, requires X11 support from root]))
+
+AM_CONDITIONAL([NEUT_USE_NEUTGEOM], [test "x$enable_neutgeom" = "xyes"])
+
 ######## Check debug
 AC_ARG_ENABLE([debug],
     AS_HELP_STRING([--enable-debug], [Compile with debug symbols]))

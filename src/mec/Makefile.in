@@ -81,7 +81,7 @@ build_triplet = @build@
 host_triplet = @host@
 DIST_COMMON = $(top_srcdir)/build.common $(srcdir)/Makefile.in \
 	$(srcdir)/Makefile.am $(include_HEADERS)
-@NEUT_USE_TAUOLA_TRUE@am__append_1 = $(top_builddir)/tauola/lib@LIBPREFIX@tauola.@NEUT_VERSION_NUM@.a
+@NEUT_USE_TAUOLA_TRUE@am__append_1 = $(top_builddir)/tauola/libtauola.@NEUT_VERSION_NUM@.a
 @NEUT_USE_TAUOLA_TRUE@am__append_2 = -DNEUT_USE_TAUOLA
 @NEUT_USE_GPERF_TRUE@am__append_3 = -DNEUT_USE_GPERF
 @NEUT_HEPMC_TRUE@am__append_4 = -DUSE_HEPMC
@@ -120,14 +120,13 @@ AM_V_AR = $(am__v_AR_@AM_V@)
 am__v_AR_ = $(am__v_AR_@AM_DEFAULT_V@)
 am__v_AR_0 = @echo "  AR      " $@;
 am__v_AR_1 = 
-lib@LIBPREFIX@neutmec_@NEUT_VERSION_NUM@_a_AR = $(AR) $(ARFLAGS)
-lib@LIBPREFIX@neutmec_@NEUT_VERSION_NUM@_a_LIBADD =
-am_lib@LIBPREFIX@neutmec_@NEUT_VERSION_NUM@_a_OBJECTS =  \
-	nemechad.$(OBJEXT) nemeclpv.$(OBJEXT) nemecvcp.$(OBJEXT) \
-	neranbll2.$(OBJEXT) fnmec_nieves.$(OBJEXT) \
-	fnmec_select.$(OBJEXT)
-lib@LIBPREFIX@neutmec_@NEUT_VERSION_NUM@_a_OBJECTS =  \
-	$(am_lib@LIBPREFIX@neutmec_@NEUT_VERSION_NUM@_a_OBJECTS)
+libneutmec_@NEUT_VERSION_NUM@_a_AR = $(AR) $(ARFLAGS)
+libneutmec_@NEUT_VERSION_NUM@_a_LIBADD =
+am_libneutmec_@NEUT_VERSION_NUM@_a_OBJECTS = nemechad.$(OBJEXT) \
+	nemeclpv.$(OBJEXT) nemecvcp.$(OBJEXT) neranbll2.$(OBJEXT) \
+	fnmec_nieves.$(OBJEXT) fnmec_select.$(OBJEXT)
+libneutmec_@NEUT_VERSION_NUM@_a_OBJECTS =  \
+	$(am_libneutmec_@NEUT_VERSION_NUM@_a_OBJECTS)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -163,8 +162,8 @@ AM_V_F77LD = $(am__v_F77LD_@AM_V@)
 am__v_F77LD_ = $(am__v_F77LD_@AM_DEFAULT_V@)
 am__v_F77LD_0 = @echo "  F77LD   " $@;
 am__v_F77LD_1 = 
-SOURCES = $(lib@LIBPREFIX@neutmec_@NEUT_VERSION_NUM@_a_SOURCES)
-DIST_SOURCES = $(lib@LIBPREFIX@neutmec_@NEUT_VERSION_NUM@_a_SOURCES)
+SOURCES = $(libneutmec_@NEUT_VERSION_NUM@_a_SOURCES)
+DIST_SOURCES = $(libneutmec_@NEUT_VERSION_NUM@_a_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -361,17 +360,18 @@ NEUT_INCLUDES = -I$(top_srcdir)/radcorr -I$(top_srcdir)/mec -I$(top_srcdir)/ht2p
 NEUT_CLASS_INCLUDES = -I$(top_srcdir)/neutclass
 NEUT_REWEIGHT_INCLUDES = -I$(top_srcdir)/reweight
 NEUT_REWEIGHT_LIBS = $(top_builddir)/reweight/libNEUTReWeight.@NEUT_VERSION_NUM@.a
-NEUT_STATIC_LIBS = $(top_builddir)/neutcore/lib@LIBPREFIX@neutcore.@NEUT_VERSION_NUM@.a \
-	$(top_builddir)/neutcore/lib@LIBPREFIX@CERNOverride.@NEUT_VERSION_NUM@.a \
-	$(top_builddir)/mec/lib@LIBPREFIX@neutmec.@NEUT_VERSION_NUM@.a \
-	$(top_builddir)/n1p1h/lib@LIBPREFIX@n1p1h.@NEUT_VERSION_NUM@.a \
-	$(top_builddir)/ht2p2h/lib@LIBPREFIX@ht2p2h.@NEUT_VERSION_NUM@.a \
-	$(top_builddir)/nuccorspl/lib@LIBPREFIX@nuccorspl.@NEUT_VERSION_NUM@.a \
-	$(top_builddir)/nuceff/lib@LIBPREFIX@nuceff.@NEUT_VERSION_NUM@.a \
-	$(top_builddir)/radcorr/lib@LIBPREFIX@radcorr.@NEUT_VERSION_NUM@.a \
-	$(top_builddir)/specfunc/lib@LIBPREFIX@specfunc.@NEUT_VERSION_NUM@.a \
-	$(top_builddir)/skmcsvc/lib@LIBPREFIX@skmcsvc.@NEUT_VERSION_NUM@.a \
-	$(top_builddir)/partnuck/lib@LIBPREFIX@partnuck.@NEUT_VERSION_NUM@.a \
+NEUT_STATIC_LIBS =  \
+	$(top_builddir)/neutcore/libneutcore.@NEUT_VERSION_NUM@.a \
+	$(top_builddir)/neutcore/libCERNOverride.@NEUT_VERSION_NUM@.a \
+	$(top_builddir)/mec/libneutmec.@NEUT_VERSION_NUM@.a \
+	$(top_builddir)/n1p1h/libn1p1h.@NEUT_VERSION_NUM@.a \
+	$(top_builddir)/ht2p2h/libht2p2h.@NEUT_VERSION_NUM@.a \
+	$(top_builddir)/nuccorspl/libnuccorspl.@NEUT_VERSION_NUM@.a \
+	$(top_builddir)/nuceff/libnuceff.@NEUT_VERSION_NUM@.a \
+	$(top_builddir)/radcorr/libradcorr.@NEUT_VERSION_NUM@.a \
+	$(top_builddir)/specfunc/libspecfunc.@NEUT_VERSION_NUM@.a \
+	$(top_builddir)/skmcsvc/libskmcsvc.@NEUT_VERSION_NUM@.a \
+	$(top_builddir)/partnuck/libpartnuck.@NEUT_VERSION_NUM@.a \
 	$(am__append_1)
 NEUT_LIBS = $(top_builddir)/neutclass/libNEUTClassUtils.@NEUT_VERSION_NUM@.a \
 	$(top_builddir)/neutclass/libNEUTClass.la \
@@ -410,9 +410,9 @@ ROOT_ROOT_COMPILE = $(ROOTSYS)
 EXE_LINKFLAGS = -fno-PIE -fno-pie $(am__append_21)
 EXE_RTLIBS = -lstdc++ -lgfortran $(am__append_22)
 AM_FFLAGS = -DNEMEC_VERSION=@NEUT_VERSION_NUM@ $(DEFAULT_FFLAGS)
-LIBNAME = lib@LIBPREFIX@neutmec.@NEUT_VERSION_NUM@.a
+LIBNAME = libneutmec.@NEUT_VERSION_NUM@.a
 noinst_LIBRARIES = $(LIBNAME)
-lib@LIBPREFIX@neutmec_@NEUT_VERSION_NUM@_a_SOURCES = nemechad.F nemeclpv.F nemecvcp.F neranbll2.F fnmec_nieves.F fnmec_select.F
+libneutmec_@NEUT_VERSION_NUM@_a_SOURCES = nemechad.F nemeclpv.F nemecvcp.F neranbll2.F fnmec_nieves.F fnmec_select.F
 include_HEADERS = meccrs.h
 
 # Unused sources that live in the directory
@@ -456,10 +456,10 @@ $(am__aclocal_m4_deps):
 clean-noinstLIBRARIES:
 	-test -z "$(noinst_LIBRARIES)" || rm -f $(noinst_LIBRARIES)
 
-lib@LIBPREFIX@neutmec.@NEUT_VERSION_NUM@.a: $(lib@LIBPREFIX@neutmec_@NEUT_VERSION_NUM@_a_OBJECTS) $(lib@LIBPREFIX@neutmec_@NEUT_VERSION_NUM@_a_DEPENDENCIES) $(EXTRA_lib@LIBPREFIX@neutmec_@NEUT_VERSION_NUM@_a_DEPENDENCIES) 
-	$(AM_V_at)-rm -f lib@LIBPREFIX@neutmec.@NEUT_VERSION_NUM@.a
-	$(AM_V_AR)$(lib@LIBPREFIX@neutmec_@NEUT_VERSION_NUM@_a_AR) lib@LIBPREFIX@neutmec.@NEUT_VERSION_NUM@.a $(lib@LIBPREFIX@neutmec_@NEUT_VERSION_NUM@_a_OBJECTS) $(lib@LIBPREFIX@neutmec_@NEUT_VERSION_NUM@_a_LIBADD)
-	$(AM_V_at)$(RANLIB) lib@LIBPREFIX@neutmec.@NEUT_VERSION_NUM@.a
+libneutmec.@NEUT_VERSION_NUM@.a: $(libneutmec_@NEUT_VERSION_NUM@_a_OBJECTS) $(libneutmec_@NEUT_VERSION_NUM@_a_DEPENDENCIES) $(EXTRA_libneutmec_@NEUT_VERSION_NUM@_a_DEPENDENCIES) 
+	$(AM_V_at)-rm -f libneutmec.@NEUT_VERSION_NUM@.a
+	$(AM_V_AR)$(libneutmec_@NEUT_VERSION_NUM@_a_AR) libneutmec.@NEUT_VERSION_NUM@.a $(libneutmec_@NEUT_VERSION_NUM@_a_OBJECTS) $(libneutmec_@NEUT_VERSION_NUM@_a_LIBADD)
+	$(AM_V_at)$(RANLIB) libneutmec.@NEUT_VERSION_NUM@.a
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)

@@ -80,7 +80,7 @@ build_triplet = @build@
 host_triplet = @host@
 DIST_COMMON = $(top_srcdir)/build.common $(srcdir)/Makefile.in \
 	$(srcdir)/Makefile.am $(top_srcdir)/depcomp
-@NEUT_USE_TAUOLA_TRUE@am__append_1 = $(top_builddir)/tauola/lib@LIBPREFIX@tauola.@NEUT_VERSION_NUM@.a
+@NEUT_USE_TAUOLA_TRUE@am__append_1 = $(top_builddir)/tauola/libtauola.@NEUT_VERSION_NUM@.a
 @NEUT_USE_TAUOLA_TRUE@am__append_2 = -DNEUT_USE_TAUOLA
 @NEUT_USE_GPERF_TRUE@am__append_3 = -DNEUT_USE_GPERF
 @NEUT_HEPMC_TRUE@am__append_4 = -DUSE_HEPMC
@@ -119,15 +119,14 @@ AM_V_AR = $(am__v_AR_@AM_V@)
 am__v_AR_ = $(am__v_AR_@AM_DEFAULT_V@)
 am__v_AR_0 = @echo "  AR      " $@;
 am__v_AR_1 = 
-lib@LIBPREFIX@n1p1h_@NEUT_VERSION_NUM@_a_AR = $(AR) $(ARFLAGS)
-lib@LIBPREFIX@n1p1h_@NEUT_VERSION_NUM@_a_LIBADD =
+libn1p1h_@NEUT_VERSION_NUM@_a_AR = $(AR) $(ARFLAGS)
+libn1p1h_@NEUT_VERSION_NUM@_a_LIBADD =
 am__dirstamp = $(am__leading_dot)dirstamp
-am_lib@LIBPREFIX@n1p1h_@NEUT_VERSION_NUM@_a_OBJECTS =  \
-	src/N1p1h2d.$(OBJEXT) src/N1p1h.$(OBJEXT) \
-	src/N1p1hFortranInterface.$(OBJEXT) src/Nucleus.$(OBJEXT) \
-	src/qe.$(OBJEXT)
-lib@LIBPREFIX@n1p1h_@NEUT_VERSION_NUM@_a_OBJECTS =  \
-	$(am_lib@LIBPREFIX@n1p1h_@NEUT_VERSION_NUM@_a_OBJECTS)
+am_libn1p1h_@NEUT_VERSION_NUM@_a_OBJECTS = src/N1p1h2d.$(OBJEXT) \
+	src/N1p1h.$(OBJEXT) src/N1p1hFortranInterface.$(OBJEXT) \
+	src/Nucleus.$(OBJEXT) src/qe.$(OBJEXT)
+libn1p1h_@NEUT_VERSION_NUM@_a_OBJECTS =  \
+	$(am_libn1p1h_@NEUT_VERSION_NUM@_a_OBJECTS)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -202,8 +201,8 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(lib@LIBPREFIX@n1p1h_@NEUT_VERSION_NUM@_a_SOURCES)
-DIST_SOURCES = $(lib@LIBPREFIX@n1p1h_@NEUT_VERSION_NUM@_a_SOURCES)
+SOURCES = $(libn1p1h_@NEUT_VERSION_NUM@_a_SOURCES)
+DIST_SOURCES = $(libn1p1h_@NEUT_VERSION_NUM@_a_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -353,17 +352,18 @@ NEUT_INCLUDES = -I$(top_srcdir)/radcorr -I$(top_srcdir)/mec -I$(top_srcdir)/ht2p
 NEUT_CLASS_INCLUDES = -I$(top_srcdir)/neutclass
 NEUT_REWEIGHT_INCLUDES = -I$(top_srcdir)/reweight
 NEUT_REWEIGHT_LIBS = $(top_builddir)/reweight/libNEUTReWeight.@NEUT_VERSION_NUM@.a
-NEUT_STATIC_LIBS = $(top_builddir)/neutcore/lib@LIBPREFIX@neutcore.@NEUT_VERSION_NUM@.a \
-	$(top_builddir)/neutcore/lib@LIBPREFIX@CERNOverride.@NEUT_VERSION_NUM@.a \
-	$(top_builddir)/mec/lib@LIBPREFIX@neutmec.@NEUT_VERSION_NUM@.a \
-	$(top_builddir)/n1p1h/lib@LIBPREFIX@n1p1h.@NEUT_VERSION_NUM@.a \
-	$(top_builddir)/ht2p2h/lib@LIBPREFIX@ht2p2h.@NEUT_VERSION_NUM@.a \
-	$(top_builddir)/nuccorspl/lib@LIBPREFIX@nuccorspl.@NEUT_VERSION_NUM@.a \
-	$(top_builddir)/nuceff/lib@LIBPREFIX@nuceff.@NEUT_VERSION_NUM@.a \
-	$(top_builddir)/radcorr/lib@LIBPREFIX@radcorr.@NEUT_VERSION_NUM@.a \
-	$(top_builddir)/specfunc/lib@LIBPREFIX@specfunc.@NEUT_VERSION_NUM@.a \
-	$(top_builddir)/skmcsvc/lib@LIBPREFIX@skmcsvc.@NEUT_VERSION_NUM@.a \
-	$(top_builddir)/partnuck/lib@LIBPREFIX@partnuck.@NEUT_VERSION_NUM@.a \
+NEUT_STATIC_LIBS =  \
+	$(top_builddir)/neutcore/libneutcore.@NEUT_VERSION_NUM@.a \
+	$(top_builddir)/neutcore/libCERNOverride.@NEUT_VERSION_NUM@.a \
+	$(top_builddir)/mec/libneutmec.@NEUT_VERSION_NUM@.a \
+	$(top_builddir)/n1p1h/libn1p1h.@NEUT_VERSION_NUM@.a \
+	$(top_builddir)/ht2p2h/libht2p2h.@NEUT_VERSION_NUM@.a \
+	$(top_builddir)/nuccorspl/libnuccorspl.@NEUT_VERSION_NUM@.a \
+	$(top_builddir)/nuceff/libnuceff.@NEUT_VERSION_NUM@.a \
+	$(top_builddir)/radcorr/libradcorr.@NEUT_VERSION_NUM@.a \
+	$(top_builddir)/specfunc/libspecfunc.@NEUT_VERSION_NUM@.a \
+	$(top_builddir)/skmcsvc/libskmcsvc.@NEUT_VERSION_NUM@.a \
+	$(top_builddir)/partnuck/libpartnuck.@NEUT_VERSION_NUM@.a \
 	$(am__append_1)
 NEUT_LIBS = $(top_builddir)/neutclass/libNEUTClassUtils.@NEUT_VERSION_NUM@.a \
 	$(top_builddir)/neutclass/libNEUTClass.la \
@@ -401,14 +401,14 @@ ROOT_ROOT_COMPILE = $(ROOTSYS)
 # I know... but this seems to work
 EXE_LINKFLAGS = -fno-PIE -fno-pie $(am__append_21)
 EXE_RTLIBS = -lstdc++ -lgfortran $(am__append_22)
-LIBNAME = lib@LIBPREFIX@n1p1h.@NEUT_VERSION_NUM@.a
+LIBNAME = libn1p1h.@NEUT_VERSION_NUM@.a
 noinst_LIBRARIES = $(LIBNAME)
 N1p1hDEFINES = -DWITH_NEUT
 AM_CXXFLAGS = -DN1P1HVER=@NEUT_VERSION_NUM@ $(DEFAULT_CXXFLAGS) $(N1p1hDEFINES)
 
 # src/qe.F will fail to build with the standard NEUT suite of flags so they are purposefully not used here.
 AM_FFLAGS = -DN1P1HVER=@NEUT_VERSION_NUM@ $(N1p1hDEFINES)
-lib@LIBPREFIX@n1p1h_@NEUT_VERSION_NUM@_a_SOURCES = src/N1p1h2d.C src/N1p1h.C src/N1p1hFortranInterface.C src/Nucleus.C src/qe.F
+libn1p1h_@NEUT_VERSION_NUM@_a_SOURCES = src/N1p1h2d.C src/N1p1h.C src/N1p1hFortranInterface.C src/Nucleus.C src/qe.F
 
 # Unused sources that live in the directory
 UNUSED_srcs = src/Simplex.C
@@ -465,10 +465,10 @@ src/Nucleus.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/qe.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
 
-lib@LIBPREFIX@n1p1h.@NEUT_VERSION_NUM@.a: $(lib@LIBPREFIX@n1p1h_@NEUT_VERSION_NUM@_a_OBJECTS) $(lib@LIBPREFIX@n1p1h_@NEUT_VERSION_NUM@_a_DEPENDENCIES) $(EXTRA_lib@LIBPREFIX@n1p1h_@NEUT_VERSION_NUM@_a_DEPENDENCIES) 
-	$(AM_V_at)-rm -f lib@LIBPREFIX@n1p1h.@NEUT_VERSION_NUM@.a
-	$(AM_V_AR)$(lib@LIBPREFIX@n1p1h_@NEUT_VERSION_NUM@_a_AR) lib@LIBPREFIX@n1p1h.@NEUT_VERSION_NUM@.a $(lib@LIBPREFIX@n1p1h_@NEUT_VERSION_NUM@_a_OBJECTS) $(lib@LIBPREFIX@n1p1h_@NEUT_VERSION_NUM@_a_LIBADD)
-	$(AM_V_at)$(RANLIB) lib@LIBPREFIX@n1p1h.@NEUT_VERSION_NUM@.a
+libn1p1h.@NEUT_VERSION_NUM@.a: $(libn1p1h_@NEUT_VERSION_NUM@_a_OBJECTS) $(libn1p1h_@NEUT_VERSION_NUM@_a_DEPENDENCIES) $(EXTRA_libn1p1h_@NEUT_VERSION_NUM@_a_DEPENDENCIES) 
+	$(AM_V_at)-rm -f libn1p1h.@NEUT_VERSION_NUM@.a
+	$(AM_V_AR)$(libn1p1h_@NEUT_VERSION_NUM@_a_AR) libn1p1h.@NEUT_VERSION_NUM@.a $(libn1p1h_@NEUT_VERSION_NUM@_a_OBJECTS) $(libn1p1h_@NEUT_VERSION_NUM@_a_LIBADD)
+	$(AM_V_at)$(RANLIB) libn1p1h.@NEUT_VERSION_NUM@.a
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)

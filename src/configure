@@ -638,6 +638,8 @@ NEUT_USE_GPERF_FALSE
 NEUT_USE_GPERF_TRUE
 NEUT_DEBUG_FALSE
 NEUT_DEBUG_TRUE
+NEUT_USE_NEUTGEOM_FALSE
+NEUT_USE_NEUTGEOM_TRUE
 NEUT_WRITE_NUCFSI_FALSE
 NEUT_WRITE_NUCFSI_TRUE
 NEUT_USE_ZBS_FALSE
@@ -804,6 +806,7 @@ enable_hepmc
 enable_tauola
 enable_zebra
 enable_nucfsi
+enable_neutgeom
 enable_debug
 with_gperf
 '
@@ -1460,6 +1463,8 @@ Optional Features:
   --disable-nucleon-fsi-info
                           Remove nucleon fsi step information in vector
                           output. Included for backward compatibility
+  --enable-neutgeom       Build neutgeom components, requires X11 support from
+                          root
   --enable-debug          Compile with debug symbols
 
 Optional Packages:
@@ -18571,6 +18576,22 @@ else
 fi
 
 
+######## Check use neutgeom
+# Check whether --enable-neutgeom was given.
+if test "${enable_neutgeom+set}" = set; then :
+  enableval=$enable_neutgeom;
+fi
+
+
+ if test "x$enable_neutgeom" = "xyes"; then
+  NEUT_USE_NEUTGEOM_TRUE=
+  NEUT_USE_NEUTGEOM_FALSE='#'
+else
+  NEUT_USE_NEUTGEOM_TRUE='#'
+  NEUT_USE_NEUTGEOM_FALSE=
+fi
+
+
 ######## Check debug
 # Check whether --enable-debug was given.
 if test "${enable_debug+set}" = set; then :
@@ -18829,6 +18850,10 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${NEUT_WRITE_NUCFSI_TRUE}" && test -z "${NEUT_WRITE_NUCFSI_FALSE}"; then
   as_fn_error $? "conditional \"NEUT_WRITE_NUCFSI\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${NEUT_USE_NEUTGEOM_TRUE}" && test -z "${NEUT_USE_NEUTGEOM_FALSE}"; then
+  as_fn_error $? "conditional \"NEUT_USE_NEUTGEOM\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${NEUT_DEBUG_TRUE}" && test -z "${NEUT_DEBUG_FALSE}"; then
