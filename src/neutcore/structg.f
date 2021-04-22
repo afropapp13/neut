@@ -88,13 +88,23 @@ C     PARAMETER (Vcs    = 0.957D0)
 *     If not, set the CKM elements corresponding to charm production to 0
 *     Criteria: W large enough to produce a proton and a D0
       Wref=xmp+xmd
+
+*     Set target mass 
+      if(it.eq.2212) then
+        AM    = xmp
+      elseif(it.eq.2112) then
+        AM    = xmn
+      else
+        return
+      endif
       
-      Q2=X*(2.*xmp*Y*en)
+      
+      Q2=X*(2.*AM*Y*en)
 
 C     Save the bjoken X for calculation of H factor
       X_H   = X
       
-      W2=-Q2+xmp**2+2.*xmp*Y*en
+      W2=-Q2+AM**2+2.*AM*Y*en
       W=SQRT(W2)
      
       if (W.gt.Wref) then
@@ -109,14 +119,7 @@ C     Save the bjoken X for calculation of H factor
       f2 = 0.D0
       xf3 = 0.D0
 
-*     Set target mass 
-      if(it.eq.2212) then
-        AM    = xmp
-      elseif(it.eq.2112) then
-        AM    = xmn
-      else
-        return
-      endif
+
 
    
 *     Get PDF, a priori from GRV98 LO + B-Y corrections, except if specified

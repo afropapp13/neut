@@ -102,7 +102,8 @@ DIST_COMMON = $(top_srcdir)/build.common $(srcdir)/Makefile.in \
 @NEUT_HEPMC_TRUE@am__append_20 = -lNuHepMC -lHepMC3 -lHepMC3rootIO
 @FC_HAS_PIE_TRUE@am__append_21 = -no-pie
 @NEUT_USE_GPERF_TRUE@am__append_22 = -L@NEUT_GPERF@ -lprofiler
-bin_PROGRAMS = calc_dis_crs$(EXEEXT)
+bin_PROGRAMS = calc_dis_crs$(EXEEXT) CalcQ2dXsec2$(EXEEXT) \
+	CalcQ2Xsec2$(EXEEXT)
 subdir = neututils/calc_dis_crs
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
@@ -116,21 +117,36 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_calc_dis_crs_OBJECTS = calcapicrs.$(OBJEXT) tpispir.$(OBJEXT)
-calc_dis_crs_OBJECTS = $(am_calc_dis_crs_OBJECTS)
+am_CalcQ2Xsec2_OBJECTS = CalcQ2Xsec2.$(OBJEXT) tpispir.$(OBJEXT)
+CalcQ2Xsec2_OBJECTS = $(am_CalcQ2Xsec2_OBJECTS)
 am__DEPENDENCIES_1 =
 am__DEPENDENCIES_2 = $(top_builddir)/neutclass/libNEUTClassUtils.@NEUT_VERSION_NUM@.a \
 	$(top_builddir)/neutclass/libNEUTClass.la \
 	$(top_builddir)/libNEUT.@NEUT_VERSION_NUM@.a \
 	$(am__DEPENDENCIES_1)
 am__DEPENDENCIES_3 = $(am__DEPENDENCIES_1)
-calc_dis_crs_DEPENDENCIES = $(am__DEPENDENCIES_2) \
-	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_3)
+CalcQ2Xsec2_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_3)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
 am__v_lt_1 = 
+CalcQ2Xsec2_LINK = $(LIBTOOL) $(AM_V_lt) $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(F77LD) $(AM_FFLAGS) $(FFLAGS) \
+	$(CalcQ2Xsec2_LDFLAGS) $(LDFLAGS) -o $@
+am_CalcQ2dXsec2_OBJECTS = CalcQ2dXsec2.$(OBJEXT) tpispir.$(OBJEXT)
+CalcQ2dXsec2_OBJECTS = $(am_CalcQ2dXsec2_OBJECTS)
+CalcQ2dXsec2_DEPENDENCIES = $(am__DEPENDENCIES_2) \
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_3)
+CalcQ2dXsec2_LINK = $(LIBTOOL) $(AM_V_lt) $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(F77LD) $(AM_FFLAGS) $(FFLAGS) \
+	$(CalcQ2dXsec2_LDFLAGS) $(LDFLAGS) -o $@
+am_calc_dis_crs_OBJECTS = calcapicrs.$(OBJEXT) tpispir.$(OBJEXT)
+calc_dis_crs_OBJECTS = $(am_calc_dis_crs_OBJECTS)
+calc_dis_crs_DEPENDENCIES = $(am__DEPENDENCIES_2) \
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_3)
 calc_dis_crs_LINK = $(LIBTOOL) $(AM_V_lt) $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(F77LD) $(AM_FFLAGS) $(FFLAGS) \
 	$(calc_dis_crs_LDFLAGS) $(LDFLAGS) -o $@
@@ -165,8 +181,10 @@ AM_V_F77LD = $(am__v_F77LD_@AM_V@)
 am__v_F77LD_ = $(am__v_F77LD_@AM_DEFAULT_V@)
 am__v_F77LD_0 = @echo "  F77LD   " $@;
 am__v_F77LD_1 = 
-SOURCES = $(calc_dis_crs_SOURCES)
-DIST_SOURCES = $(calc_dis_crs_SOURCES)
+SOURCES = $(CalcQ2Xsec2_SOURCES) $(CalcQ2dXsec2_SOURCES) \
+	$(calc_dis_crs_SOURCES)
+DIST_SOURCES = $(CalcQ2Xsec2_SOURCES) $(CalcQ2dXsec2_SOURCES) \
+	$(calc_dis_crs_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -387,6 +405,12 @@ AM_FFLAGS = $(DEFAULT_FFLAGS)
 calc_dis_crs_SOURCES = calcapicrs.F tpispir.F
 calc_dis_crs_LDADD = $(NEUT_LIBS) $(CERN_LIBS) $(ROOT_LIBS) $(EXE_RTLIBS)
 calc_dis_crs_LDFLAGS = $(EXE_LINKFLAGS) $(CERN_LINKFLAGS) $(ROOT_LINKFLAGS)
+CalcQ2dXsec2_SOURCES = CalcQ2dXsec2.F tpispir.F
+CalcQ2dXsec2_LDADD = $(NEUT_LIBS) $(CERN_LIBS) $(ROOT_LIBS) $(EXE_RTLIBS)
+CalcQ2dXsec2_LDFLAGS = $(EXE_LINKFLAGS) $(CERN_LINKFLAGS) $(ROOT_LINKFLAGS)
+CalcQ2Xsec2_SOURCES = CalcQ2Xsec2.F tpispir.F
+CalcQ2Xsec2_LDADD = $(NEUT_LIBS) $(CERN_LIBS) $(ROOT_LIBS) $(EXE_RTLIBS)
+CalcQ2Xsec2_LDFLAGS = $(EXE_LINKFLAGS) $(CERN_LINKFLAGS) $(ROOT_LINKFLAGS)
 all: all-am
 
 .SUFFIXES:
@@ -471,6 +495,14 @@ clean-binPROGRAMS:
 	list=`for p in $$list; do echo "$$p"; done | sed 's/$(EXEEXT)$$//'`; \
 	echo " rm -f" $$list; \
 	rm -f $$list
+
+CalcQ2Xsec2$(EXEEXT): $(CalcQ2Xsec2_OBJECTS) $(CalcQ2Xsec2_DEPENDENCIES) $(EXTRA_CalcQ2Xsec2_DEPENDENCIES) 
+	@rm -f CalcQ2Xsec2$(EXEEXT)
+	$(AM_V_F77LD)$(CalcQ2Xsec2_LINK) $(CalcQ2Xsec2_OBJECTS) $(CalcQ2Xsec2_LDADD) $(LIBS)
+
+CalcQ2dXsec2$(EXEEXT): $(CalcQ2dXsec2_OBJECTS) $(CalcQ2dXsec2_DEPENDENCIES) $(EXTRA_CalcQ2dXsec2_DEPENDENCIES) 
+	@rm -f CalcQ2dXsec2$(EXEEXT)
+	$(AM_V_F77LD)$(CalcQ2dXsec2_LINK) $(CalcQ2dXsec2_OBJECTS) $(CalcQ2dXsec2_LDADD) $(LIBS)
 
 calc_dis_crs$(EXEEXT): $(calc_dis_crs_OBJECTS) $(calc_dis_crs_DEPENDENCIES) $(EXTRA_calc_dis_crs_DEPENDENCIES) 
 	@rm -f calc_dis_crs$(EXEEXT)
