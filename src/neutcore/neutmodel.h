@@ -147,7 +147,6 @@ C
       REAL*4    XMANCEL
       INTEGER*4 SPIDELTA
 
-
       COMMON /NEUTMODEL/MODELDIS,MODELCOH,MODELDIF
       COMMON /NEMDLS/MDLQE,MDLSPI,MDLDIS,MDLCOH,MDLDIF,MDLSPIEJ,
      $               MDLQEAF,XMAQE,XMASPI,XMVQE,XMVSPI,
@@ -167,7 +166,6 @@ C
      $               MDL2P2H,
      $               XMANCEL,
      $               SPIDELTA
-
 
 #include "nieves1p1h.h"
 #include "nieves2p2h.h"

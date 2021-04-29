@@ -137,6 +137,7 @@ C     CWRET added these for checking Q2 is within limits
 #include <neutcrs.h>
 
       REAL QV,QV2,QVS,QVS2,A,V,U,V2,U2,AK,ALFA,ALFA2
+      REAL tempU
       REAL BETA,BETA2,GAMA,GAMA2,FAKT
       REAL BR,FBWNO,XE,FFV,FFA
       REAL R,RA,RV,RM,RP,T,TA,TV,TP,TM,S,B,C
@@ -218,15 +219,6 @@ C     Store the returned amplitudes per resonance
       REAL RETF(6)
 
       REAL RNDSIG,DSIGMX,DSIGMXP,DSIGMXM,DSIG3,DSIG3P,DSIG3M
-C     CWRET added these to agree with rsdcrs and have lepton mass-effect
-C     accounted for in vector generation
-      Real El
-      Real Q_lab, Q2_lab, Q, nu_lab
-      Real jl(4), jl_n1, jl_n2, Norm, C_L, C_R, C_S, Qs, nus, ng
-      Real tempC_L
-      Real Ei, Ef, nu
-      Real B_BRS,C_BRS,Ctmp
-      Integer LambdaIT
 
 C     Used for accept-reject
       REAL TMPSIG,SIGMAX
@@ -552,70 +544,6 @@ C     IF(V.LT.0.) V = 0.
       AK = (W2-XMN2)/(2.*XMN)
       FAKT = W*PI/(W2-XMN2)
 
-C     CWRET: Added to include lepton mass effects in getting the Delta
-C     amplitude
-
-C     Need to have both lambda contributions (lambda=+1,-1)
-C     ---------------------------
-C     --- Lepton mass effects ---
-
-C     Lepton energy
-C     El = E+XMN-(XMN2+W**2-q2)/(2*XMN)
-C     Ei = (2.*XMN*E+Q2-XMLEP2)/(2.*W)
-C     Ef = (2.*XMN*El-Q2-XMLEP2)/(2.*W)
-C     nu = Ei - Ef
-C     Q = QVS
-
-C     Lab frame
-C     If we somehow have generated a strange lepton mass, rethrow!
-C     IF (El**2-XMLEP2 .LT. 0) THEN
-C        GOTO 11
-C     ELSE IF (El**2 - XMLEP2 .LT. 0) THEN
-C        GOTO 11
-C     ELSE
-C        Plep = SQRT(El**2-XMLEP2)
-C     ENDIF
-
-C     Theta between incoming neutrino and outgoing lepton
-C     theta = (Q2-XMLEP2+2*E*El)/(2*E*Plep)
-
-C     If theta is forward+numerical accuracy, set to forward
-C     if (theta .GT. 1.0 .AND. theta .LT. 1.0+1E-7) then
-C     CWRET changed here too
-C     IF (ABS(THETA) .GT. 1) THEN
-C       GOTO 11
-C     ENDIF
-
-C     Some fundamental variables for the lepton mass correction
-C     nu_lab = E - El
-C     Q_lab = SQRT(nu_lab**2-Q2)
-C     Q2_lab = Q_lab**2
-
-C     Set up the case where we don't have a mass effect
-      C_L = u
-      C_R = v
-      C_S = sqrt(2.*u*v)
-
-C     Neutrino or anti neutrino: U->V and V->U
-
-C     CWRET: this could be an error; I don't think there should be a
-C     negative sign in front. Doesn't matter for calculation though,
-C     since we only use these squqared
-C     Upd: sign shouldn't matter since U->-V and V->-U and we only do
-C     UV, UU or VV multiplications
-C     CWRET: reference eq 2.18 Rein-Sehgal.
-
-C     CWRET: replace U with C_L, V with C_R, UV with C_S
-C     If anti-neturino reverse C_L and - C_R
-      IF (IMODE.GT.10) THEN
-         tempC_L = C_L
-         C_L = -C_R
-         C_R = -tempC_L
-      END IF
-
-C     Qs = 1.
-C     nus = 1.
-
 C     Set the resonance rhos to zero (initialise them)
 C     For explanation on what rho is, see Rein-Sehgal appendix
       ROP3P3 = 0.
@@ -627,65 +555,6 @@ C     For explanation on what rho is, see Rein-Sehgal appendix
       ROP1P1 = 0.
       ROM1M1 = 0.
       A00 = 0. ! Keep it coming!
-
-C     CWRET: Should start Lambda loop here for mass effect in pion accept-reject
-C     Need to use both -1 and +1 Lambda
-C     Only true for mass-effect case; for no mass-effect we simply get
-C     same amplitude twice, so divide the amplitude by two at end of
-C     loop
-C     
-C     This loop includes lepton mass-effects for the outgoing pion
-C     direction, which was previously not done
-C     It was only done for the calculation of the cross-section
-
-C     DO 90 LambdaIT=1,2
-
-C     Berger-Sehgal mass-effect
-C     if (iOrg.ne.1) then
-C     Leptonic current in RRF
-C     jl_0, jl_x, i*jl_y, jl_z
-C        jl(1) = (XMN-El-Lambda(LambdaIT)*Plep)/W
-C        jl(2) = (Plep-Lambda(LambdaIT)*E)/Q_lab
-C        jl(3) = -Lambda(LambdaIT)
-C        jl(4) = ((E+Lambda(LambdaIT)*Plep)*(XMN-El)+Plep
-C    $          *(Lambda(LambdaIT)*E+2.*E*theta-Plep))/(W*Q_lab)
-
-C        jl_n1 = SQRT(1.-Lambda(LambdaIT)*theta)*
-C    &          SQRT(E*(El-Lambda(LambdaIT)*Plep))
-C        jl_n2 = SQRT(1.+Lambda(LambdaIT)*theta)*
-C    &          SQRT(E*(El-Lambda(LambdaIT)*Plep))
-
-C        jl(1) = jl_n1*jl(1)
-C        jl(2) = jl_n2*jl(2)
-C        jl(3) = jl_n2*jl(3)
-C        jl(4) = jl_n1*jl(4)
-
-C     Coefficients C_L, C_R, C_S and Qs, nus
-C        Norm = SQRT(2.)*E/Q_lab*SQRT(-Q2)
-C        C_L = (jl(2)+jl(3))/(SQRT(2.)*Norm)
-C        C_R = (jl(3)-jl(2))/(SQRT(2.)*Norm)
-C        C_S = SQRT(ABS(jl(1)**2-jl(4)**2))/Norm
-
-C       Check that this makes sense
-C        if (C_S.eq.0) then
-C           iOrg = 1
-C           goto 200
-C        endif
-
-C        Qs  = jl(1)/(Norm)*SQRT(-Q2)/C_S
-C        nus = jl(4)/(Norm)*SQRT(-Q2)/C_S
-C     endif
-
-
-C     Previous code forgot lepton mass-effects here. Lepton mass-effects
-C     dampen the resonance amplitude, and should be applied accordingly
-C     to rsdcrs.F, otherwise we make an inconsistent calculation
-C     (cross-section made with mass-effect, outgoing without
-C     mass-effect!)
-
-C     Consider only Delta resonance, so set IB = 1 (see e.g. rsclfm.F for
-C     explanation of IBLOCK and IB numbering convention)
-C     Adding more resonances? Need to loop IB moar!
 
 C     Although computationally unnecessary doing the larger loop adds
 C     virtually no time to generation because the W Q2 accept-reject is the
@@ -836,42 +705,6 @@ C     ATTENTION: NR CHANGED INTO NR/2.
       B  = FFA*Z*SQRT(OMEG/2.)*(1.+XNUS/A)/(3.*W)
       C  = FFA*Z*(W2-XMN2+NR*OMEG*XNUS/A)/(6.*W*QVS)
 
-C     CWRET: lepton mass effects weren't taken into account in 
-C     generating the outgoing pion. Now uses modified U, V, UV, S, B
-C     and C accordingly (C_L, C_R, C_S, S, B, C)
-
-C     ---------------------------
-C     --- Lepton mass effects ---
-C     ng = (W+XMN)**2-Q2
-
-C     New definitions of S, B, C for mass-effect
-C     S = (Qs*Q-nus*nu)*(3.*W*XMN+Q2-XMN2)/(6.*Q2_lab*XMN2)*FFV
-C     B = 2.*SQRT(OMEG/2.)*(Qs+2.*W*nus*Q/ng)/(6.*W*Q)*Z*FFA
-C     C = ((Qs*Q-nus*nu)*(1./3.+2.*W*nu/ng)
-C    &    +nus*(2.*W/3.+(NR*OMEG/3.+Q2)*2.*W/ng))/(2.*W*Q)*Z*FFA
-
-C     Pion-pole contribution (according Berger and Sehgal ArXiV:0709.4387)
-C     Correction is added to B_BRS(2M_Na should be M_Na in the reference)
-C     when using mass-effect
-C     B_BRS = (Qs*nu-nus*Q)/(3.*W*Q*(XMPI**2-Q2))
-C    &        *sqrt(OMEG/2.)*(nu+2.*Q**2*W/ng)*Z*FFA
-C     C_BRS = (Qs*nu-nus*Q)/(XMPI**2-Q2)
-C    &        *(1./3.+Q2/ng+NR*OMEG/(3.*ng))*Z*FFA
-
-C     B = B + B_BRS
-C     C = C + C_BRS
-C     ---------------------------
-C     ---------------------------
-
-C     Original dynamical form factors without mass-effect
-C     if (iOrg .EQ. 1) then
-C     CWRET: should probably be XMN2, not W2, in denominator, RS 3.11
-C       S = (FFV*(3.*W*XMN-XMN2+Q2)/(6.*W2))*(-Q2/QVS2)
-C       B = FFA*Z*SQRT(OMEG/2.)*(1.+XNUS/A)/(3.*W)
-C     CWRET same here in denominator
-C       C = FFA*Z*(W2-XMN2+NR*OMEG*XNUS/A)/(6.*W*QVS)
-C     endif
-
 C     Write all the fun Rein-Sehgal parameters
       PAR( 1) = RV
       PAR( 2) = RA
@@ -978,9 +811,17 @@ C     ALPSH = Alpha
 C     BETSH = Beta
 C     DELSH = Delta (not Kronecker and not resonance symbol: refers to
 C     what follows alpha and beta in the paper)
-      ALPSH = W*E*SQRT(-Q2 / QVS) * C_L
-      BETSH = W*E*SQRT(-Q2 / QVS) * C_R
-      DELSH = W*E*(XMN / W) * C_S
+      ALPSH = W*E*SQRT(-Q2 / QVS) * U
+      BETSH = W*E*SQRT(-Q2 / QVS) * V
+      DELSH = W*E*(XMN / W) * SQRT(2.*U*V)
+      IF (IMODE.GT.10) THEN
+        tempU = ALPSH
+        ALPSH = -1*BETSH
+        BETSH = -1*tempU
+C       Ravndal says this last sign flip should happen, but doesn't
+C       agree with what NEUT had before. Needs checking
+c       DELSH = -1*delsh
+      endif
 
 C     Write all the ampltiudes from all the resonances to a 2D array
 C     which will be passed to the summation code
@@ -992,16 +833,6 @@ C     which will be passed to the summation code
          AM(5,NCTR) = A0PC(NCTR)
          AM(6,NCTR) = A0MC(NCTR)
  61   CONTINUE
-
-C     restore C_L, C_R
-C     CWRET: this could be an error; I don't think there should be a
-C     negative sign in front. Doesn't matter for calculation though,
-C     since we only use these squared
-      IF (IMODE.GT.10) THEN
-         tempC_L = C_L
-         C_L = -C_R
-         C_R = -tempC_L
-      END IF
 
 C     Throw the pion according to user input
 C     MDLSPIEJ = 0 means isotropic
@@ -1078,18 +909,18 @@ C     This is eq 2.46 of Rein-Sehgal, RSY are the spherical harmonics
 
 C     The maximum for the accept-reject ceiling, eq 2.46 maximised
 C     (spherical harmonics maximised)
-      MAXDST = SQRT(1./(4.*PI))*REALPART(RHOTIL)
-     &       - (2./SQRT(5.)) * (1./4.) * SQRT(5./PI) * (-1.) *
-     &         (REALPART(ROTI33) - 0.5*REALPART(RHOTIL))
-     &       + (4./SQRT(10.)) * (-1./2.) * SQRT(15./(2.*PI)) *0.5
-     &         * REALPART(ROTI31)
-     &       - (4./SQRT(10.)) * (1./4.) * SQRT(15./(2.*PI)) * -1.
-     &         * REALPART(ROT3M1)
+      MAXDST = 1./(2.*SQRT(PI))*ABS(REALPART(RHOTIL))
+     &       + (2./SQRT(5.)) * (1./4.) * SQRT(5./PI) * (2.) *
+     &         ABS(REALPART(ROTI33) - 0.5*REALPART(RHOTIL))
+     &       + (4./SQRT(10.)) * (-1./2.) * SQRT(15./(2.*PI)) * (-0.5)
+     &         * ABS(REALPART(ROTI31))
+     &       + (4./SQRT(10.)) * (1./4.) * SQRT(15./(2.*PI)) * 1.
+     &         * ABS(REALPART(ROT3M1))
 C     Technically these normalising factors aren't needed, but makes it
 C     easier to follow
 C     These are normalising factors that means the integral over
 C     d(costh)dphi is 1
-      MAXDST = MAXDST/(2*SQRT(PI))
+      MAXDST = MAXDST/(2.*SQRT(PI))
       MAXDST = MAXDST/REALPART(RHOTIL)
 
 C     If this theta, phi, yrand combination fails the accept-reject,
@@ -1111,12 +942,20 @@ C     Don't use the rescaled amplitudes
       YFN = RSY00(THETA,PHI)*REALPART(RHOTIL)
      $    - (2./ SQRT(5.)) * RSY20(THETA,PHI) *
      $      (REALPART(ROTI33) - 0.5*REALPART(RHOTIL))
-     $    + (4./ SQRT(10.)) * REALPART(RSY21(THETA,PHI)) 
+     $    + (4./ SQRT(10.)) * REALPART(RSY21(THETA,PHI))
      $      * REALPART(ROTI31)
-     $    - (4./ SQRT(10.)) * REALPART(RSY22(THETA,PHI)) 
+     $    - (4./ SQRT(10.)) * REALPART(RSY22(THETA,PHI))
      $      * REALPART(ROT3M1)
-      YFN = YFN/(2*SQRT(PI))
+      YFN = YFN/(2.*SQRT(PI))
       YFN = YFN/REALPART(RHOTIL)
+
+C     Sanity check the generation!
+      IF (YFN .GT. MAXDST) then
+        write(*,*) "YFN > MAXDST:"
+        write(*,*) YFN, ">", MAXDST
+        write(*,*) "theta=",theta, "phi=",phi
+        write(*,*) "If this happens often you have BIG PROBLEMS"
+      endif
 
 C     Do the accept-reject on the YFN distribution
       IF (YRAND .GT. YFN) THEN
@@ -1217,21 +1056,21 @@ C     This is eq 2.46 of Rein-Sehgal, RSY are the spherical harmonics
 
 C     Get the maximum distribution for any theta and phi
 C     Needed for the accept-reject ceiling
-      MAXDST = SQRT(1./(4.*PI))*REALPART(RHOTIL)
-     &  + (2./SQRT(5.))*SQRT(5./(16.*PI))*(3.-1.)
-     &    *(REALPART(ROTI33) - 0.5*REALPART(RHOTIL))
-     &  + (4./SQRT(10.))*SQRT(15./(8.*PI))
-     &    *REALPART(ROTI31)
-     &  + (4./SQRT(10.))*SQRT(15./(32.*PI))
-     &    *REALPART(ROT3M1)
-     &  + (4./SQRT(10.))*SQRT(15./(8.*PI))
-     &    *IMAGPART(ROTI31)
-     &  + (4./SQRT(10.))*SQRT(15./(32.*PI))
-     &    *IMAGPART(ROT3M1)
+      MAXDST = SQRT(1./(4.*PI))*ABS(REALPART(RHOTIL))
+     &  + (2./SQRT(5.))*(1./4.)*SQRT(5./PI)*2
+     &    *ABS(REALPART(ROTI33) - 0.5*REALPART(RHOTIL))
+     &  + (4./SQRT(10.))*(1./2.)*SQRT(15./(2.*PI))*0.5
+     &    *ABS(REALPART(ROTI31))
+     &  + (4./SQRT(10.))*(1./4.)*SQRT(15./(2.*PI))*1
+     &    *ABS(REALPART(ROT3M1))
+     &  + (4./SQRT(10.))*(1./2.)*SQRT(15./(2.*PI))*0.5
+     &    *ABS(IMAGPART(ROTI31))
+     &  + (4./SQRT(10.))*(1./4.)*SQRT(15./(2.*PI))*1
+     &    *ABS(IMAGPART(ROT3M1))
 
 C     Even though both dists (maxdst and yfn) end up with this 
 C     prefactor, include for completeness
-      MAXDST = MAXDST/(2*SQRT(PI))
+      MAXDST = MAXDST/(2.*SQRT(PI))
       MAXDST = MAXDST/REALPART(RHOTIL)
 
 C     Now have the amplitudes: do the accept-reject on the pion
@@ -1255,10 +1094,18 @@ C     Throw in costheta and phi
      &      * IMAGPART(ROT3M1)
 
 C     Include the geometric factor
-      YFN = YFN/(2*SQRT(PI))
+      YFN = YFN/(2.*SQRT(PI))
 C     Then also the term multiplying RSY00
       YFN = YFN/REALPART(RHOTIL)
 
+      IF (YFN .GT. MAXDST) then
+        write(*,*) "YFN > MAXDST:"
+        write(*,*) YFN, ">", MAXDST
+        write(*,*) "theta=",theta, "phi=",phi
+        write(*,*) "If this happens often you have BIG PROBLEMS"
+      endif
+
+C     Also captures if YFN is negative for numerical accuracy reasons
       IF (YRAND .GT. YFN) THEN
         GOTO 51
       ELSE 
@@ -1277,7 +1124,7 @@ C     See Appendix A Rein-Sehgal, last part
 C
 C     Resonance 1 is Delta(1232), resonance 3 is D13(1525)
 C     Resonance 5 is S11(1540), resonance 15 is P11(1450)
-C     All on neutron!!
+C     All on neutron
 C     You can find this in rsclfm or looking at the masses of resonances
 C     is rscons.h
  105  CONTINUE
@@ -1596,29 +1443,29 @@ C     B33 as defined in A.19p (superfluous?)
 
 C     W(THETA,PHI) as defined in A.18 Rein-Sehgal, maximum
       MAXDST = (
-     &      A00*SQRT(1./(4.*PI)) 
-     &    + A10*(1./2.)*SQRT(3./PI)
-     &    + A20*(1./4.)*SQRT(5./PI)*(3.-1.)
-     &    + A30*(1./4.)*SQRT(7./PI)*(5.-3.)
+     &      ABS(A00)*(1./(2.*SQRT(PI)))
+     &    + ABS(A10)*(1./2.)*SQRT(3./PI)
+     &    + ABS(A20)*(1./4.)*SQRT(5./PI)*(3.-1.)
+     &    + ABS(A30)*(1./4.)*SQRT(7./PI)*(5.-3.)
 
-     &    + A11*(1./2.)*SQRT(3./(2.*PI))
-     &    + A21*(1./2.)*SQRT(15./(2.*PI))
-     &    + A22*(1./4.)*SQRT(15./(2.*PI))
-     &    + A31*(1./8.)*SQRT(21./PI)*(5.-1.)
-     &    + A32*(1./4.)*SQRT(105./(2.*PI))
-     &    + A33*(1./8.)*SQRT(35./PI)
+     &    + ABS(A11)*(1./2.)*SQRT(3./(2.*PI))
+     &    + ABS(A21)*(1./2.)*SQRT(15./(2.*PI))
+     &    + ABS(A22)*(1./4.)*SQRT(15./(2.*PI))
+     &    + ABS(A31)*(1./8.)*SQRT(21./PI)*(5.-1.)
+     &    + ABS(A32)*(1./4.)*SQRT(105./(2.*PI))
+     &    + ABS(A33)*(1./8.)*SQRT(35./PI)
 
-     &    + B11*(1./2.)*SQRT(3./(2.*PI))
-     &    + B21*(1./2.)*SQRT(15./(2.*PI))
-     &    + B22*(1./4.)*SQRT(15./(2.*PI))
-     &    + B31*(1./8.)*SQRT(21./PI)*(5.-1.)
-     &    + B32*(1./4.)*SQRT(105./(2.*PI))
-     &    + B33*(1./8.)*SQRT(35./PI)
+     &    + ABS(B11)*(1./2.)*SQRT(3./(2.*PI))
+     &    + ABS(B21)*(1./2.)*SQRT(15./(2.*PI))
+     &    + ABS(B22)*(1./4.)*SQRT(15./(2.*PI))
+     &    + ABS(B31)*(1./8.)*SQRT(21./PI)*(5.-1.)
+     &    + ABS(B32)*(1./4.)*SQRT(105./(2.*PI))
+     &    + ABS(B33)*(1./8.)*SQRT(35./PI)
      &    )
 C     Include the geometric factor
-      MAXDST = MAXDST/(2*SQRT(PI))
+      MAXDST = MAXDST/(2.*SQRT(PI))
 C     Then also the term multiplying RSY00
-      MAXDST = YFN/A00
+      MAXDST = MAXDST/A00
 
 C     This is where we goto if rethrow
  52   CONTINUE
@@ -1652,8 +1499,15 @@ C     Recalculate for each theta phi throw
      &    + B32*IMAGPART(RSY32(THETA,PHI))
      &    + B33*IMAGPART(RSY33(THETA,PHI))
      &    )
-      YFN = YFN/(2*SQRT(PI))
+      YFN = YFN/(2.*SQRT(PI))
       YFN = YFN/A00
+
+      IF (YFN .GT. MAXDST) then
+        write(*,*) "YFN > MAXDST:"
+        write(*,*) YFN, ">", MAXDST
+        write(*,*) "theta=",theta, "phi=",phi
+        write(*,*) "If this happens often you have BIG PROBLEMS"
+      endif
 
 C     Accept-reject on YFN, rethrow
       IF (YRAND.GT.YFN) THEN

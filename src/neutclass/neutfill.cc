@@ -268,7 +268,6 @@ int neutfillvect(char *filename, char *treename, char *branchname) {
   nv->Totcrs = neutcrscom_.totcrsne;
 
   nv->CrsEnergy = neutcrscom_.crsenergy;
-
   for (i = 0; i < 8; i++) {
     nv->DifCrsNE[i] = neutcrscom_.difcrsne[i];
   }
@@ -297,8 +296,10 @@ int neutfillvect(char *filename, char *treename, char *branchname) {
     pinfo.fIsAlive = vcwork_.icrnvc[i];
     pinfo.fStatus = vcwork_.iflgvc[i];
 
-    pinfo.fP.SetXYZM(vcwork_.pvc[i][0], vcwork_.pvc[i][1], vcwork_.pvc[i][2],
-                     mass);
+    pinfo.fP.SetXYZM(vcwork_.pvc[i][0], 
+        vcwork_.pvc[i][1], 
+        vcwork_.pvc[i][2],
+        mass);
 
     pinfo.fPosIni.SetXYZT(posinnuc_.posnuc[i][0], posinnuc_.posnuc[i][1],
                           posinnuc_.posnuc[i][2], 0.);
@@ -351,8 +352,10 @@ int neutfillvect(char *filename, char *treename, char *branchname) {
 
     for (i = 0; i < nfsiv; i++) {
 
-      fsivinfo.fPos.SetXYZT(fsihist_.posvert[i][0], fsihist_.posvert[i][1],
-                            fsihist_.posvert[i][2], 0.);
+      fsivinfo.fPos.SetXYZT(fsihist_.posvert[i][0], 
+              fsihist_.posvert[i][1],
+              fsihist_.posvert[i][2],
+              0.);
 
       fsivinfo.fVertID = fsihist_.iflgvert[i];
 
@@ -424,7 +427,6 @@ int neutfillvect(char *filename, char *treename, char *branchname) {
 
       //          nucfsisinfo.fECMS2 = nucleonfsihist_.nfecms2[i];
       nucfsisinfo.fProb = nucleonfsihist_.nfptot[i];
-      nucfsisinfo.fECMS2 = nucleonfsihist_.nfecms2[i];
 #ifdef NEUT_READ_NUCFSI
       nucfsisinfo.fVertFlagStep = nucleonfsihist_.nfiflagstep[i];
       nucfsisinfo.fVertFsiRhon = nucleonfsihist_.nfirhon[i];
@@ -446,6 +448,7 @@ int neutfillvect(char *filename, char *treename, char *branchname) {
 
       */
 
+
       nv->SetNucFsiStepInfo(i, nucfsisinfo);
     }
 
@@ -458,7 +461,6 @@ int neutfillvect(char *filename, char *treename, char *branchname) {
     nucfsisinfo.fECMS2 = 0.;
     nucfsisinfo.fProb = -1.;
 
-    //    	nucfsisinfo.fECMS2 =  0.;
     nucfsisinfo.fProb = -1.;
 
     nv->SetNucFsiStepInfo(0, nucfsisinfo);
@@ -497,8 +499,7 @@ int neutfillvtx(char *filename, char *treename, char *branchname) {
 
   if (t == NULL) {
     t = nrh.maketree(filename, treename, "Neut Tree");
-    if (t == NULL)
-      return -1;
+    if (t == NULL) return -1;
 
     nv = new NeutVtx();
     t->Branch(branchname, "NeutVtx", &nv, 1024, 99);

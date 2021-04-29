@@ -102,7 +102,8 @@ DIST_COMMON = $(top_srcdir)/build.common $(srcdir)/Makefile.in \
 @NEUT_HEPMC_TRUE@am__append_20 = -lNuHepMC -lHepMC3 -lHepMC3rootIO
 @FC_HAS_PIE_TRUE@am__append_21 = -no-pie
 @NEUT_USE_GPERF_TRUE@am__append_22 = -L@NEUT_GPERF@ -lprofiler
-bin_PROGRAMS = EventSplines$(EXEEXT)
+bin_PROGRAMS = EventSplines$(EXEEXT) FlatTree$(EXEEXT) \
+	Reweight_test$(EXEEXT)
 subdir = neututils/reweight_utils
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
@@ -134,6 +135,17 @@ am__v_lt_1 =
 EventSplines_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
 	$(CXXFLAGS) $(EventSplines_LDFLAGS) $(LDFLAGS) -o $@
+am_FlatTree_OBJECTS = FlatTree.$(OBJEXT)
+FlatTree_OBJECTS = $(am_FlatTree_OBJECTS)
+FlatTree_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
+	$(CXXFLAGS) $(FlatTree_LDFLAGS) $(LDFLAGS) -o $@
+am_Reweight_test_OBJECTS = Reweight_test.$(OBJEXT)
+Reweight_test_OBJECTS = $(am_Reweight_test_OBJECTS)
+Reweight_test_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
+	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CXXLD) \
+	$(AM_CXXFLAGS) $(CXXFLAGS) $(Reweight_test_LDFLAGS) $(LDFLAGS) \
+	-o $@
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -168,8 +180,10 @@ AM_V_CXXLD = $(am__v_CXXLD_@AM_V@)
 am__v_CXXLD_ = $(am__v_CXXLD_@AM_DEFAULT_V@)
 am__v_CXXLD_0 = @echo "  CXXLD   " $@;
 am__v_CXXLD_1 = 
-SOURCES = $(EventSplines_SOURCES)
-DIST_SOURCES = $(EventSplines_SOURCES)
+SOURCES = $(EventSplines_SOURCES) $(FlatTree_SOURCES) \
+	$(Reweight_test_SOURCES)
+DIST_SOURCES = $(EventSplines_SOURCES) $(FlatTree_SOURCES) \
+	$(Reweight_test_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -387,12 +401,20 @@ ROOT_ROOT_COMPILE = $(ROOTSYS)
 EXE_LINKFLAGS = -fno-PIE -fno-pie $(am__append_21)
 EXE_RTLIBS = -lstdc++ -lgfortran $(am__append_22)
 AM_CXXFLAGS = $(DEFAULT_CXXFLAGS) $(NEUT_CLASS_INCLUDES) $(NEUT_REWEIGHT_INCLUDES)
-SPECFUNC_PROGLDADD = $(NEUT_REWEIGHT_LIBS) $(NEUT_LIBS) $(CERN_LIBS) $(ROOT_LIBS) $(EXE_RTLIBS)
-SPECFUNC_PROGLDFLAGS = $(EXE_LINKFLAGS) $(CERN_LINKFLAGS) $(ROOT_LINKFLAGS)
+NEUTRWUTILS_PROGLDADD = $(NEUT_REWEIGHT_LIBS) $(NEUT_LIBS) $(CERN_LIBS) $(ROOT_LIBS) $(EXE_RTLIBS)
+NEUTRWUTILS_PROGLDFLAGS = $(EXE_LINKFLAGS) $(CERN_LINKFLAGS) $(ROOT_LINKFLAGS)
 EventSplines_SOURCES = EventSplines.cc
-EventSplines_LDADD = $(SPECFUNC_PROGLDADD)
-EventSplines_LDFLAGS = $(SPECFUNC_PROGLDFLAGS)
+EventSplines_LDADD = $(NEUTRWUTILS_PROGLDADD)
+EventSplines_LDFLAGS = $(NEUTRWUTILS_PROGLDFLAGS)
 EventSplines_DEPENDENCIES = $(NEUT_LIBS)
+FlatTree_SOURCES = FlatTree.cc
+FlatTree_LDADD = $(NEUTRWUTILS_PROGLDADD)
+FlatTree_LDFLAGS = $(NEUTRWUTILS_PROGLDFLAGS)
+FlatTree_DEPENDENCIES = $(NEUT_LIBS)
+Reweight_test_SOURCES = Reweight_test.cc
+Reweight_test_LDADD = $(NEUTRWUTILS_PROGLDADD)
+Reweight_test_LDFLAGS = $(NEUTRWUTILS_PROGLDFLAGS)
+Reweight_test_DEPENDENCIES = $(NEUT_LIBS)
 all: all-am
 
 .SUFFIXES:
@@ -482,6 +504,14 @@ EventSplines$(EXEEXT): $(EventSplines_OBJECTS) $(EventSplines_DEPENDENCIES) $(EX
 	@rm -f EventSplines$(EXEEXT)
 	$(AM_V_CXXLD)$(EventSplines_LINK) $(EventSplines_OBJECTS) $(EventSplines_LDADD) $(LIBS)
 
+FlatTree$(EXEEXT): $(FlatTree_OBJECTS) $(FlatTree_DEPENDENCIES) $(EXTRA_FlatTree_DEPENDENCIES) 
+	@rm -f FlatTree$(EXEEXT)
+	$(AM_V_CXXLD)$(FlatTree_LINK) $(FlatTree_OBJECTS) $(FlatTree_LDADD) $(LIBS)
+
+Reweight_test$(EXEEXT): $(Reweight_test_OBJECTS) $(Reweight_test_DEPENDENCIES) $(EXTRA_Reweight_test_DEPENDENCIES) 
+	@rm -f Reweight_test$(EXEEXT)
+	$(AM_V_CXXLD)$(Reweight_test_LINK) $(Reweight_test_OBJECTS) $(Reweight_test_LDADD) $(LIBS)
+
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
 
@@ -489,6 +519,8 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/EventSplines.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/FlatTree.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Reweight_test.Po@am__quote@
 
 .cc.o:
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\

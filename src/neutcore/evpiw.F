@@ -205,9 +205,6 @@ C     Also needed for reweighting Rein-Seghal ejection method
 C -- For boosting
       real*4 PNEU(3),PFABS,AMIN,BETA,EV(3),GM
 
-C -- Parameters
-      integer*4 iorig
-
       integer*4 IMOD
 
       evpiw = 1
@@ -228,7 +225,6 @@ C     Santiy check the input
         GOTO 999
       endif
 
-
       ipar = ipne(1)
 
 C     Only applies to resonant interaction
@@ -239,6 +235,7 @@ C     Only applies to resonant interaction
         write(*,*) "ERROR***"
         write(*,*) "Pion/nucleon ejection dial MDLSPIEJ reweight"
         write(*,*) "only works for mode 11,12,13,31,32,33,34, not: ", modene
+
         goto 999
       endif
 
@@ -256,27 +253,6 @@ C     Only applies to resonant interaction
       IF (MODENE.eq.-32) IMOD=14
       IF (MODENE.eq.-33) IMOD=17
       IF (MODENE.eq.-34) IMOD=15
-
-      IF (MODENE.eq.22)  IMOD=1
-      IF (MODENE.eq.42)  IMOD=11
-      IF (MODENE.eq.43)  IMOD=12
-      IF (MODENE.eq.-22) IMOD=2
-      IF (MODENE.eq.-42) IMOD=13
-      IF (MODENE.eq.-43) IMOD=14
-
-      IF (MODENE.eq.23)  IMOD=1
-      IF (MODENE.eq.44)  IMOD=11
-      IF (MODENE.eq.45)  IMOD=12
-      IF (MODENE.eq.-23) IMOD=2
-      IF (MODENE.eq.-44) IMOD=13
-      IF (MODENE.eq.-45) IMOD=14
-
-      IF (MODENE.eq.17)  IMOD=1
-      IF (MODENE.eq.38)  IMOD=11
-      IF (MODENE.eq.39)  IMOD=12
-      IF (MODENE.eq.-17) IMOD=2
-      IF (MODENE.eq.-38) IMOD=13
-      IF (MODENE.eq.-39) IMOD=14
 
 C     Set lepton mass
       if (abs(ipne(3)).eq.11) then
@@ -311,18 +287,13 @@ C     Calculate W
      $            +(pne(2,1)+pne(2,2)-pne(2,3))**2
      $            +(pne(3,1)+pne(3,2)-pne(3,3))**2))
 
-C     Lepton mass effect; don't need to apply if NC because no mass
-C     of outgoing lepton
-      if (abs(modene).gt.30) then
-         IORIG = 1
-      else
-         IORIG = 0
-      endif
-
 C     Check the W
       if ( w.le.XMN+XMPI ) then
         WRITE(*,*) "Resetting W: ", w, " -> ", XMN+XMPI
         w = XMN+XMPI
+      else if (w.ge.2) then
+        write(*,*) "Resetting W: ", w, " -> ", 2.0
+        w = 2.0
       endif
 
 C     Boost neutrino to nucleon rest frame since all the calculations in

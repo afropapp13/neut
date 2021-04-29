@@ -92,6 +92,12 @@ double NuXSecRESEngine::CalcWeight() {
     return 1;
   }
 
+  if (piej_old == 0) { 
+    std::cout << "NuXSecRESEngine::CalcWeight() Warning: piej_old==0, setting "
+                 "piej_old to 1" << std::endl;
+    piej_old = 1;
+  }
+
   if (cbfa.fneut1pi_gen.neiff != 0) {
     neut1pi_.xmanffres = fDials[MaRES].ToValue;
     neut1pi_.xmvnffres = fDials[MvRES].ToValue;
@@ -113,6 +119,10 @@ double NuXSecRESEngine::CalcWeight() {
 
   double new_xsec = NEUTGetXSec();
   double piej_new = NModeDefn::is1PI(nework_.modene) ? NEUTGetPiEj() : 1;
+
+  if (piej_new == 0) { 
+    std::cout << "NuXSecRESEngine::CalcWeight() Warning: piej_new==0" << std::endl;
+  }
 
 #ifdef _N_REWEIGHT_RES_DEBUG_
   cout << "differential cross section (old) = " << old_xsec << endl;
