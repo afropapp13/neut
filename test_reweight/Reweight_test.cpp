@@ -4,9 +4,9 @@
 #include <iomanip>
 
 #include "NReWeight.h"
-#include "NReWeightNuXSecRES.h"
+#include "NuXSecRES.h"
+#include "NReWeightEngineI.h"
 #include "NSyst.h"
-#include "NSystUncertainty.h"
 
 // Common block variables for NEUT
 #include "nefillverC.h"
@@ -98,24 +98,19 @@ int main(int argc, char *argv[]) {
 
   std::cout << std::setprecision(9);
 
-  //std::vector<neut::rew::NSyst_t> DialVector;
-  //std::vector<std::vector<double> > ReWeightVals;
-  if (argc != 3) {
-    std::cerr << "Syntax is: " << argv[0] << " OUTPUT_NEUT_ROOT_FILE.root bool (useangular)" << std::endl;
+  if (argc != 2) {
+    std::cerr << "Syntax is: " << argv[0] << " OUTPUT_NEUT_ROOT_FILE.root" << std::endl;
     return 1;
   }
-
-  bool UseAngular = int(std::atoi(argv[2]));
-  std::cout << "Using angular: " << UseAngular << std::endl;
 
   std::string InputName = std::string(argv[1]);
 
   // Get the common block interface
   std::string cardfile = "";
-  if (InputName.find("_deltaflat") != std::string::npos) cardfile = "/vols/t2k/users/cvw09/software/NEUT/neut_2020_dev/submit/t2k_rspiej_nuc_nubar_deltaflat.card";
-  else if (InputName.find("_all") != std::string::npos) cardfile = "/vols/t2k/users/cvw09/software/NEUT/neut_2020_dev/submit/t2k_rspiej_nuc_nubar_all.card";
-  else if (InputName.find("_delta") != std::string::npos) cardfile = "/vols/t2k/users/cvw09/software/NEUT/neut_2020_dev/submit/t2k_rspiej_nuc_nubar_delta.card";
-  else if (InputName.find("_iso") != std::string::npos) cardfile = "/vols/t2k/users/cvw09/software/NEUT/neut_2020_dev/submit/t2k_rspiej_nuc_nubar_iso.card";
+  if (InputName.find("_deltaflat") != std::string::npos) cardfile = "/vols/t2k/users/cvw09/software/NEUT/submit_neut_2020_dev/t2k_rspiej_nuc_nubar_deltaflat.card";
+  else if (InputName.find("_all") != std::string::npos) cardfile = "/vols/t2k/users/cvw09/software/NEUT/submit_neut_2020_dev/t2k_rspiej_nuc_nubar_all.card";
+  else if (InputName.find("_delta") != std::string::npos) cardfile = "/vols/t2k/users/cvw09/software/NEUT/submit_neut_2020_dev/t2k_rspiej_nuc_nubar_delta.card";
+  else if (InputName.find("_iso") != std::string::npos) cardfile = "/vols/t2k/users/cvw09/software/NEUT/submit_neut_2020_dev/t2k_rspiej_nuc_nubar_iso.card";
   //else if (InputName.find("_delta") != std::string::npos) cardfile = "/vols/t2k/users/cvw09/software/NEUT/neut_2020_dev/submit/t2k_rspiej_nuc_nubar_delta.card";
   //else if (InputName.find("_iso") != std::string::npos) cardfile = "/vols/t2k/users/cvw09/software/NEUT/neut_2020_dev/submit/t2k_rspiej_nuc_nubar_iso.card";
   //else if (InputName.find("_all") != std::string::npos) cardfile = "/vols/t2k/users/cvw09/software/NEUT/neut_2020_dev/submit/t2k_rspiej_nuc_nubar_all.card";
@@ -128,31 +123,14 @@ int main(int argc, char *argv[]) {
   neut::CommonBlockIFace::Initialize(cardfile);
   neut::CommonBlockIFace const &cbfa = neut::CommonBlockIFace::Get();
 
-
   neut::rew::NReWeight rw;
-  rw.AdoptWghtCalc("res", new neut::rew::NReWeightNuXSecRES);
-  dynamic_cast<neut::rew::NReWeightNuXSecRES*>(rw.WghtCalc("res"))->SetUseAngular(UseAngular);
+  rw.AdoptWeightEngine("NuXSecRES", std::unique_ptr<neut::rew::NReWeightEngineI>(new neut::rew::NuXSecRESEngine));
 
-  std::vector<neut::rew::NSyst_t> SystematicVector;
-  //SystematicVector.push_back(neut::rew::kXSecTwkDial_MDLSPiEj);
-  SystematicVector.push_back(neut::rew::kXSecTwkDial_MaRES);
-  //SystematicVector.push_back(neut::rew::kXSecTwkDial_CA5RES);
-
-  // Initialise the systematic
-  for (std::vector<neut::rew::NSyst_t>::iterator it = SystematicVector.begin(); it != SystematicVector.end(); ++it) {
-    rw.Systematics().Init(*it);
-  }
-
-  const int nvars = 5;
+  const int nvars = 4;
   double vals[nvars];
-  vals[0] = -3;
-  vals[1] = -1;
-  vals[2] = 0;
-  vals[3] = 1;
-  vals[4] = 3;
-  //for (int i = 0; i < nvars; ++i) {
-    //vals[i] = i;
-  //}
+  for (int i = 0; i < nvars; ++i) {
+    vals[i] = i;
+  }
 
   // The weights for each variation
   double weights[nvars];
@@ -165,7 +143,7 @@ int main(int argc, char *argv[]) {
   bool pblocked = false;
 
   std::stringstream ss;
-  ss << "var_rew" << UseAngular;
+  ss << "var_rew";
   TFile *OutputFile = new TFile((InputName+"_to_MARES_"+ss.str()+".root").c_str(), "RECREATE");
   OutputFile->cd();
   TTree *OutputTree = new TTree("VARS", "VARS");
@@ -287,8 +265,8 @@ int main(int argc, char *argv[]) {
       //std::cout << "*" << std::endl;
       //std::cout << "Variation " << j << std::endl;
       //std::cout << "Setting to " << vals[j] << std::endl;
-      //rw.Systematics().Set(neut::rew::kXSecTwkDial_MDLSPiEj, vals[j]);
-      rw.Systematics().Set(neut::rew::kXSecTwkDial_MaRES, vals[j]);
+      rw.SetDial_To_Value(rw.DialFromString("MDLSPiEj"),vals[j]);
+      //rw.Systematics().Set(neut::rew::kXSecTwkDial_MaRES, vals[j]);
       //rw.Systematics().Set(neut::rew::kXSecTwkDial_CA5RES, vals[j]);
       // Reconfigure the reweight engine
       rw.Reconfigure(); 
