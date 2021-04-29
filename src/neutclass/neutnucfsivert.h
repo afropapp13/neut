@@ -19,7 +19,7 @@ class NeutNucFsiVert : public TObject {
   TLorentzVector fPos;            // Vertex position 
   TLorentzVector fMom;            // 4 momentum
   
-  ClassDef(NeutNucFsiVert, 1)
+  ClassDef(NeutNucFsiVert, 2)
 };
 
 #endif // _NEUTNUCFSIVERT_H_

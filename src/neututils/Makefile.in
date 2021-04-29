@@ -305,7 +305,7 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-SUBDIRS = calc_ccqe_crs calc_coh_crs.rs calc_dis_crs calc_nuc_dens make_SF_tables
+SUBDIRS = calc_ccqe_crs calc_coh_crs.rs calc_dis_crs calc_nuc_dens make_SF_tables reweight_utils
 UNUSED_SUBDIRS = calc_res_crs
 all: all-recursive
 

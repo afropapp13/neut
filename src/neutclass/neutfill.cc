@@ -419,14 +419,19 @@ int neutfillvect(char *filename, char *treename, char *branchname) {
 
     for (i = 0; i < nnucfsis; i++) {
 
+      //Really not sure this is right, nucleonfsihist suggest that nfptot and NFecms2 should
+      //be indexed differently to the rest...
+
       //          nucfsisinfo.fECMS2 = nucleonfsihist_.nfecms2[i];
       nucfsisinfo.fProb = nucleonfsihist_.nfptot[i];
+      nucfsisinfo.fECMS2 = nucleonfsihist_.nfecms2[i];
+#ifdef NEUT_READ_NUCFSI
       nucfsisinfo.fVertFlagStep = nucleonfsihist_.nfiflagstep[i];
       nucfsisinfo.fVertFsiRhon = nucleonfsihist_.nfirhon[i];
       nucfsisinfo.fStepPel = nucleonfsihist_.nfipel[i];
       nucfsisinfo.fStepPsp = nucleonfsihist_.nfipsp[i];
       nucfsisinfo.fStepPdp = nucleonfsihist_.nfipdp[i];
-
+#endif
       // std::cout << "fvertflag step in neutfill.cc = " <<
       // nucfsisinfo.fVertFlagStep << std::endl; std::cout << "Step number in
       // neutfill.cc = " << i << std::endl;

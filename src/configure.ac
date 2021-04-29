@@ -204,6 +204,7 @@ AC_CONFIG_FILES([
   neututils/calc_nuc_dens/Makefile
   neututils/calc_res_crs/Makefile
   neututils/make_SF_tables/Makefile
+  neututils/reweight_utils/Makefile
   test/Makefile
 ])
 

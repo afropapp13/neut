@@ -46,7 +46,7 @@ class NeutCtrl : public TObject {
                       //          True  : Use
                       //          False : Not use
 
-  ClassDef(NeutCtrl, 1)
+  ClassDef(NeutCtrl, 2)
 
 };
 #endif

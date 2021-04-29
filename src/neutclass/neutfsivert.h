@@ -32,7 +32,7 @@ class NeutFsiVert : public TObject {
   
   
   
-  ClassDef(NeutFsiVert, 1)
+  ClassDef(NeutFsiVert, 2)
 };
 
 #endif // _NEUTFSIVERT_H_

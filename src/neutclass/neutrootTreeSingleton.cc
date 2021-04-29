@@ -64,9 +64,6 @@ void NeutrootTreeSingleton::LoadTree(std::string const &filename) {
   std::cout << "[INFO]: Files added: " << f_nFiles
             << ", with number of events: " << f_nEvents << std::endl;
 
-  tree_neutroot->SetBranchStatus("*", false);
-  tree_neutroot->SetBranchStatus("vectorbranch", true);
-
   br_neutvect = tree_neutroot->GetBranch("vectorbranch");
   nvect = new NeutVect();
 

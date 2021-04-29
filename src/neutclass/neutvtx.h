@@ -29,7 +29,7 @@ class NeutVtx : public TObject {
 
   TObjArray *fPos;     // ->       To store vertexes
 
-  ClassDef(NeutVtx, 1)
+  ClassDef(NeutVtx, 2)
 };
 
 #endif

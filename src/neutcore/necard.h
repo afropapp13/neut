@@ -91,6 +91,10 @@
 *                       1 :  fit of deuterium bubble-chamber data (hep-ph:1607.06558)
 *                       2 :  AGKY model (hep-ph:0904.4043 and Yang, T. et al. AIP Conf.Proc. 967 (2007) 269-275)
 *
+*       NEBYRLONGMOD  : Vary longitudinal R factor to assess systematic uncertainties from arXiv:1011.6592v2
+*
+*       NEBYSEAQFAC   : Scale sea quark contribution to PDF to assess systematic uncertainties from arXiv:1011.6592v2
+*
 *       ITAUFLGCORE  : control Tau run mode(this is not set here)
 *
 *       NUMBNDN  : total number of neutron      (e.g. H2O => 8 , Fe => 30)
@@ -143,7 +147,9 @@ C
       COMMON/NUCEFFVER/NEFKINVER
 
       INTEGER NEPDF, NEBODEK, NEMULT, NEBYLW, NEBYFORCET1
-      COMMON/NEUTDIS/NEPDF,NEBODEK,NEMULT, NEBYLW, NEBYFORCET1
+      REAL NEBYSEAQFAC, NEBYRLONGMOD
+      COMMON/NEUTDIS/NEPDF,NEBODEK,NEMULT, NEBYLW, NEBYFORCET1,
+     $ NEBYSEAQFAC, NEBYRLONGMOD
 
       INTEGER NEIFF,   NENRTYPE
       REAL    RNECA5I, RNEBGSCL

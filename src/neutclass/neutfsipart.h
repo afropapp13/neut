@@ -23,7 +23,7 @@ class NeutFsiPart : public TObject {
   
   
   
-  ClassDef(NeutFsiPart, 1)
+  ClassDef(NeutFsiPart, 2)
 };
 
 #endif // _NEUTFSIPART_H_

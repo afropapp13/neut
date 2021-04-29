@@ -42,7 +42,7 @@ class NeutPart : public TObject {
   TLorentzVector fPosIni;  // Initilal position in the nucleus
   TLorentzVector fPosFin;  // Final(current) position in the nucleus
 
-  ClassDef(NeutPart, 1)
+  ClassDef(NeutPart, 2)
 };
 
 #endif // _NEUTPART_H_

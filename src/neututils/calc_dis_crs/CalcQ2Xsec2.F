@@ -53,7 +53,8 @@ Cx      scale = 1
       XXMAX=1000.
       
       IF(IARGC().NE.5) THEN
-         WRITE(*,*) 'ARGUMENT FAILED!!'
+         WRITE(*,*) 'ARGUMENT FAILED!! Expected 5 arguments but found',
+     $    IARGC()
          STOP
       ENDIF
       CALL GETARG(2,argc) ! target

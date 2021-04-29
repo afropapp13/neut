@@ -4088,11 +4088,11 @@ C
       UD = DBFINT(NARG,XT,NA,ARRF,XUDF) * X1**7 * XS
       IF (DE. GT. UD) DE = ZEROD
       US = 0.5 * (UD - DE)
-      DUSEA = US
+      DUSEA = US * NEBYSEAQFAC
       DS = 0.5 * (UD + DE)
-      DDSEA = DS
+      DDSEA = DS * NEBYSEAQFAC
       SS = DBFINT(NARG,XT,NA,ARRF,XSF)  * X1**7 * XS
-      DSTR = SS
+      DSTR = SS * NEBYSEAQFAC
       DCHM = ZEROD
       DBOT = ZEROD
       DTOP = ZEROD

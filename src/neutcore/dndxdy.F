@@ -209,6 +209,10 @@ C     Formula taken from C.H. Albright and C. Jarlskog, Nucl. Phys B84, 467 (197
          else
             R=0
          endif
+
+C        Set NEBYRLONGMOD in input card to study uncertainties from
+C        arXiv:1011.6592v2
+         R = R + NEBYRLONGMOD
          
          COEFF2_1 = 1. - Y - am*X*Y/(2.*E) - (AMLEP**2)/(4.*E**2)
      &        - (AMLEP**2)/(2.*am*E*(X+1.E-30))
