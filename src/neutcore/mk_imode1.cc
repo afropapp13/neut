@@ -43,14 +43,6 @@ void xsec_im1_(float *diff_Xsec, float *Wf, float *Qf, float *Ef, float *tf, flo
   M_V = nemdls_.xmvspi;
   C50[0] = nemdls_.rca5ispi;
 
-  /*
-  std::cout << "Using " << std::endl;
-  std::cout << " MAR=" << MAR << std::endl;
-  std::cout << " M_A=" << M_A << std::endl;
-  std::cout << " M_V=" << M_V << std::endl;
-  std::cout << " C50[0]=" << C50[0] << std::endl;
-  */
-
   //kinematic
   double q_0 =(W*W - M*M + m_pi* m_pi)/(2.*W);
   double k_0 = (W*W - M*M - Q)/(2.*W) ;

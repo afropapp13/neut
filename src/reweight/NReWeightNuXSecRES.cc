@@ -177,6 +177,8 @@ double NReWeightNuXSecRES::CalcWeight() {
                   NSYST_ISTWKD(kXSecTwkDial_BgSclLMCPiBarRES));
 
   if (!tweaked) {
+    piej_old=-999;
+    piej_new=-999;
     return 1.0;
   }
 
@@ -187,7 +189,7 @@ double NReWeightNuXSecRES::CalcWeight() {
 
   // Add MDLSPiEj weight calculation here (won't have an effect on differential xsec so returns weights 1)
   // But should really calculate this before tweaking dials
-  double piej_old = 1;
+  piej_old = 1;
   if (UseAngular) piej_old = NEUTGetPiEj();
 
   if (old_xsec == 0) {
@@ -201,7 +203,7 @@ double NReWeightNuXSecRES::CalcWeight() {
   }
 
   if (piej_old == 0) { 
-    std::cout << "piej_old zero" << std::endl;
+    //std::cout << "piej_old zero" << std::endl;
     piej_old = 1;
   }
 
@@ -237,11 +239,12 @@ double NReWeightNuXSecRES::CalcWeight() {
         */
     new_xsec = 1;
   }
-  double piej_new = 1;
+  piej_new = 1;
   if (UseAngular) piej_new = NEUTGetPiEj();
   if (piej_new == 0) { 
-    std::cout << "piej_new zero" << std::endl;
-    piej_new = 1;
+    //std::cout << "piej_new zero" << std::endl;
+    return 0;
+    //piej_new = 1;
   }
 
 #ifdef _N_REWEIGHT_RES_DEBUG_

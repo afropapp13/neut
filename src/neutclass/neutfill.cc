@@ -166,6 +166,19 @@ int neutfillvect(char *filename, char *treename, char *branchname) {
   // DIS model
   nv->DISModel = nemdls_.mdldis;
 
+  nv->rop3p3 = nemdls_.rop3p3_com;
+  nv->rom3m3 = nemdls_.rom3m3_com;
+  nv->rop1p1 = nemdls_.rop1p1_com;
+  nv->rom1m1 = nemdls_.rom1m1_com;
+  nv->rop3p1 = nemdls_.rop3p1_com;
+  nv->rom1m3 = nemdls_.rom1m3_com;
+  nv->rop3m1 = nemdls_.rop3m1_com;
+  nv->rop1m3 = nemdls_.rop1m3_com;
+
+  nv->thad = nemdls_.thad_com;
+  nv->phiad = nemdls_.phiad_com;
+  nv->yfn = nemdls_.yfn_com;
+
   // Single pion form factors (Rein-Sehgal original or Graczyk & Sobczyk)
   // These are the parameters _actually_ used in Rein-Sehgal code, not the
   // neut1pi common block
@@ -268,7 +281,6 @@ int neutfillvect(char *filename, char *treename, char *branchname) {
   nv->Totcrs = neutcrscom_.totcrsne;
 
   nv->CrsEnergy = neutcrscom_.crsenergy;
-
   for (i = 0; i < 8; i++) {
     nv->DifCrsNE[i] = neutcrscom_.difcrsne[i];
   }
@@ -297,8 +309,10 @@ int neutfillvect(char *filename, char *treename, char *branchname) {
     pinfo.fIsAlive = vcwork_.icrnvc[i];
     pinfo.fStatus = vcwork_.iflgvc[i];
 
-    pinfo.fP.SetXYZM(vcwork_.pvc[i][0], vcwork_.pvc[i][1], vcwork_.pvc[i][2],
-                     mass);
+    pinfo.fP.SetXYZM(vcwork_.pvc[i][0], 
+        vcwork_.pvc[i][1], 
+        vcwork_.pvc[i][2],
+        mass);
 
     pinfo.fPosIni.SetXYZT(posinnuc_.posnuc[i][0], posinnuc_.posnuc[i][1],
                           posinnuc_.posnuc[i][2], 0.);
@@ -351,8 +365,10 @@ int neutfillvect(char *filename, char *treename, char *branchname) {
 
     for (i = 0; i < nfsiv; i++) {
 
-      fsivinfo.fPos.SetXYZT(fsihist_.posvert[i][0], fsihist_.posvert[i][1],
-                            fsihist_.posvert[i][2], 0.);
+      fsivinfo.fPos.SetXYZT(fsihist_.posvert[i][0], 
+              fsihist_.posvert[i][1],
+              fsihist_.posvert[i][2],
+              0.);
 
       fsivinfo.fVertID = fsihist_.iflgvert[i];
 
@@ -419,7 +435,7 @@ int neutfillvect(char *filename, char *treename, char *branchname) {
 
     for (i = 0; i < nnucfsis; i++) {
 
-      //          nucfsisinfo.fECMS2 = nucleonfsihist_.nfecms2[i];
+      nucfsisinfo.fECMS2 = nucleonfsihist_.nfecms2[i];
       nucfsisinfo.fProb = nucleonfsihist_.nfptot[i];
       nucfsisinfo.fVertFlagStep = nucleonfsihist_.nfiflagstep[i];
       nucfsisinfo.fVertFsiRhon = nucleonfsihist_.nfirhon[i];
@@ -427,19 +443,6 @@ int neutfillvect(char *filename, char *treename, char *branchname) {
       nucfsisinfo.fStepPsp = nucleonfsihist_.nfipsp[i];
       nucfsisinfo.fStepPdp = nucleonfsihist_.nfipdp[i];
 
-      // std::cout << "fvertflag step in neutfill.cc = " <<
-      // nucfsisinfo.fVertFlagStep << std::endl; std::cout << "Step number in
-      // neutfill.cc = " << i << std::endl;
-      /*      nucfsisinfo.fPosStep.SetXYZT(nucleonfsihist_.nfxstep[i],
-                               nucleonfsihist_.nfystep[i],
-                               nucleonfsihist_.nfzstep[i],
-                               0.);
-      std::cout << "fvert fposstep = " << nucfsisinfo.fPosStep.X() << std::endl;
-      nucfsisinfo.fMomStep.SetPxPyPzE(nucleonfsihist_.nfpxstep[i],
-                                  nucleonfsihist_.nfpystep[i],
-                                  nucleonfsihist_.nfpzstep[i],
-
-      */
 
       nv->SetNucFsiStepInfo(i, nucfsisinfo);
     }
@@ -453,7 +456,6 @@ int neutfillvect(char *filename, char *treename, char *branchname) {
     nucfsisinfo.fECMS2 = 0.;
     nucfsisinfo.fProb = -1.;
 
-    //    	nucfsisinfo.fECMS2 =  0.;
     nucfsisinfo.fProb = -1.;
 
     nv->SetNucFsiStepInfo(0, nucfsisinfo);
@@ -492,8 +494,7 @@ int neutfillvtx(char *filename, char *treename, char *branchname) {
 
   if (t == NULL) {
     t = nrh.maketree(filename, treename, "Neut Tree");
-    if (t == NULL)
-      return -1;
+    if (t == NULL) return -1;
 
     nv = new NeutVtx();
     t->Branch(branchname, "NeutVtx", &nv, 1024, 99);

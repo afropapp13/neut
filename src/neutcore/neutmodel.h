@@ -147,6 +147,10 @@ C
       REAL*4    XMANCEL
       INTEGER*4 SPIDELTA
 
+      REAL*4 rop3p3_com, rom3m3_com, rop1p1_com,
+     $ rom1m1_com, rop3p1_com, rom1m3_com,
+     $ rop3m1_com, rop1m3_com
+      REAL*4 thad_com, phiad_com, yfn_com
 
       COMMON /NEUTMODEL/MODELDIS,MODELCOH,MODELDIF
       COMMON /NEMDLS/MDLQE,MDLSPI,MDLDIS,MDLCOH,MDLDIF,MDLSPIEJ,
@@ -166,7 +170,11 @@ C
      $               AXZEXPA9,
      $               MDL2P2H,
      $               XMANCEL,
-     $               SPIDELTA
+     $               SPIDELTA,
+     $ rop3p3_com, rom3m3_com, rop1p1_com,
+     $ rom1m1_com, rop3p1_com, rom1m3_com,
+     $ rop3m1_com, rop1m3_com,
+     $ thad_com, phiad_com, yfn_com
 
 
 #include "nieves1p1h.h"
