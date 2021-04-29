@@ -67,20 +67,6 @@ class NeutVect : public TObject {
   // DIS model
   Int_t          DISModel;
 
-  // CWRET RUBBISH
-  Double_t rop3p3;
-  Double_t rom3m3;
-  Double_t rop1p1;
-  Double_t rom1m1;
-  Double_t rop3p1;
-  Double_t rom1m3;
-  Double_t rop3m1;
-  Double_t rop1m3;
-
-  Double_t thad;
-  Double_t phiad;
-  Double_t yfn;
-
   // 1 pi & the other meson productions form factor type
   Int_t          SPIForm;
   Int_t          RESForm;

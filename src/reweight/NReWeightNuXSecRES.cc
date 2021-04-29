@@ -241,10 +241,10 @@ double NReWeightNuXSecRES::CalcWeight() {
   }
   piej_new = 1;
   if (UseAngular) piej_new = NEUTGetPiEj();
+  // If something has failed, this event should not be physical with this variation
   if (piej_new == 0) { 
     //std::cout << "piej_new zero" << std::endl;
     return 0;
-    //piej_new = 1;
   }
 
 #ifdef _N_REWEIGHT_RES_DEBUG_

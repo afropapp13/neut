@@ -137,6 +137,7 @@ C     CWRET added these for checking Q2 is within limits
 #include <neutcrs.h>
 
       REAL QV,QV2,QVS,QVS2,A,V,U,V2,U2,AK,ALFA,ALFA2
+      REAL tempU
       REAL BETA,BETA2,GAMA,GAMA2,FAKT
       REAL BR,FBWNO,XE,FFV,FFA
       REAL R,RA,RV,RM,RP,T,TA,TV,TP,TM,S,B,C
@@ -218,15 +219,6 @@ C     Store the returned amplitudes per resonance
       REAL RETF(6)
 
       REAL RNDSIG,DSIGMX,DSIGMXP,DSIGMXM,DSIG3,DSIG3P,DSIG3M
-C     CWRET added these to agree with rsdcrs and have lepton mass-effect
-C     accounted for in vector generation
-      Real El
-      Real Q_lab, Q2_lab, Q, nu_lab
-      Real jl(4), jl_n1, jl_n2, Norm, C_L, C_R, C_S, Qs, nus, ng
-      Real tempC_L
-      Real Ei, Ef, nu
-      Real B_BRS,C_BRS,Ctmp
-      Integer LambdaIT
 
 C     Used for accept-reject
       REAL TMPSIG,SIGMAX
@@ -552,23 +544,6 @@ C     IF(V.LT.0.) V = 0.
       AK = (W2-XMN2)/(2.*XMN)
       FAKT = W*PI/(W2-XMN2)
 
-C     Set up the case where we don't have a mass effect
-      C_L = u
-      C_R = v
-      C_S = sqrt(2.*u*v)
-
-C     Neutrino or anti neutrino: U->V and V->U
-
-C     CWRET: reference eq 2.18 Rein-Sehgal.
-
-C     CWRET: replace U with C_L, V with C_R, UV with C_S
-C     If anti-neturino reverse C_L and - C_R
-c     IF (IMODE.GT.10) THEN
-c        tempC_L = C_L
-c        C_L = -C_R
-c        C_R = -tempC_L
-c     END IF
-
 C     Set the resonance rhos to zero (initialise them)
 C     For explanation on what rho is, see Rein-Sehgal appendix
       ROP3P3 = 0.
@@ -836,13 +811,15 @@ C     ALPSH = Alpha
 C     BETSH = Beta
 C     DELSH = Delta (not Kronecker and not resonance symbol: refers to
 C     what follows alpha and beta in the paper)
-      ALPSH = W*E*SQRT(-Q2 / QVS) * C_L
-      BETSH = W*E*SQRT(-Q2 / QVS) * C_R
-      DELSH = W*E*(XMN / W) * C_S
+      ALPSH = W*E*SQRT(-Q2 / QVS) * U
+      BETSH = W*E*SQRT(-Q2 / QVS) * V
+      DELSH = W*E*(XMN / W) * SQRT(2.*U*V)
       IF (IMODE.GT.10) THEN
-        tempc_l = ALPSH
+        tempU = ALPSH
         ALPSH = -1*BETSH
-        BETSH = -1*tempc_l
+        BETSH = -1*tempU
+C       Ravndal says this last sign flip should happen, but doesn't
+C       agree with what NEUT had before. Needs checking
 c       DELSH = -1*delsh
       endif
 
@@ -856,16 +833,6 @@ C     which will be passed to the summation code
          AM(5,NCTR) = A0PC(NCTR)
          AM(6,NCTR) = A0MC(NCTR)
  61   CONTINUE
-
-C     restore C_L, C_R
-C     CWRET: this could be an error; I don't think there should be a
-C     negative sign in front. Doesn't matter for calculation though,
-C     since we only use these squared
-      IF (IMODE.GT.10) THEN
-         tempC_L = C_L
-         C_L = -C_R
-         C_R = -tempC_L
-      END IF
 
 C     Throw the pion according to user input
 C     MDLSPIEJ = 0 means isotropic
@@ -929,16 +896,6 @@ C     rho +3/2 -1/2
 C     rho +1/2 -3/2
       ROP1M3 = RHOCALC(1, 1, 1,-3, ALPSH, BETSH, DELSH, AM, ETABW)
 
-C // CWRET RUBBISH
-      rop3p3_com = rop3p3
-      rom3m3_com = rom3m3
-      rop1p1_com = rop1p1
-      rom1m1_com = rom1m1
-      rop3p1_com = rop3p1
-      rom1m3_com = rom1m3
-      rop3m1_com = rop3m1
-      rop1m3_com = rop1m3
-
 C     These are the 33 resonances that will contribute to pion direction (eq 2.47 R-S)
 C     RHOTIL is rho tilde, or the total equal isospin sum
       RHOTIL = ROP3P3 + ROP1P1 + ROM1M1 + ROM3M3
@@ -992,10 +949,12 @@ C     Don't use the rescaled amplitudes
       YFN = YFN/(2.*SQRT(PI))
       YFN = YFN/REALPART(RHOTIL)
 
+C     Sanity check the generation!
       IF (YFN .GT. MAXDST) then
         write(*,*) "YFN > MAXDST:"
         write(*,*) YFN, ">", MAXDST
         write(*,*) "theta=",theta, "phi=",phi
+        write(*,*) "If this happens often you have BIG PROBLEMS"
       endif
 
 C     Do the accept-reject on the YFN distribution
@@ -1097,18 +1056,6 @@ C     This is eq 2.46 of Rein-Sehgal, RSY are the spherical harmonics
 
 C     Get the maximum distribution for any theta and phi
 C     Needed for the accept-reject ceiling
-c     MAXDST = SQRT(1./(4.*PI))*ABS(REALPART(RHOTIL))
-c    &  + (2./SQRT(5.))*(1./4.)*SQRT(5./PI)*2.*
-c    &  ABS(REALPART(ROTI33) - 0.5*REALPART(RHOTIL))
-c    &  + (4./SQRT(10.))*(-1./2.)*SQRT(15./(2.*PI))*(-0.5)*
-c    &    ABS(REALPART(ROTI31))
-c    &  + (4./SQRT(10.))*(1./4.)*SQRT(15./(2.*PI)) * 1. *
-c    &    ABS(REALPART(ROT3M1))
-c    &  + (4./SQRT(10.))*(-1./2.)SQRT(15./(2.*PI))*(-0.5)*
-c    &    ABS(IMAGPART(ROTI31))
-c    &  + (4./SQRT(10.))*(1./4.)*SQRT(15./(2.*PI)) * 1.*
-c    &    ABS(IMAGPART(ROT3M1))
-
       MAXDST = SQRT(1./(4.*PI))*ABS(REALPART(RHOTIL))
      &  + (2./SQRT(5.))*(1./4.)*SQRT(5./PI)*2
      &    *ABS(REALPART(ROTI33) - 0.5*REALPART(RHOTIL))
@@ -1155,6 +1102,7 @@ C     Then also the term multiplying RSY00
         write(*,*) "YFN > MAXDST:"
         write(*,*) YFN, ">", MAXDST
         write(*,*) "theta=",theta, "phi=",phi
+        write(*,*) "If this happens often you have BIG PROBLEMS"
       endif
 
 C     Also captures if YFN is negative for numerical accuracy reasons
@@ -1176,7 +1124,7 @@ C     See Appendix A Rein-Sehgal, last part
 C
 C     Resonance 1 is Delta(1232), resonance 3 is D13(1525)
 C     Resonance 5 is S11(1540), resonance 15 is P11(1450)
-C     All on neutron!!
+C     All on neutron
 C     You can find this in rsclfm or looking at the masses of resonances
 C     is rscons.h
  105  CONTINUE
@@ -1558,6 +1506,7 @@ C     Recalculate for each theta phi throw
         write(*,*) "YFN > MAXDST:"
         write(*,*) YFN, ">", MAXDST
         write(*,*) "theta=",theta, "phi=",phi
+        write(*,*) "If this happens often you have BIG PROBLEMS"
       endif
 
 C     Accept-reject on YFN, rethrow
@@ -1579,11 +1528,6 @@ C     ======================================
 C     This is where we want to end up once 
 C     we've got a good theta and phi for any model
  72   CONTINUE
-
-      thad_com = theta
-      phiad_com = phi
-      yfn_com = yfn
-c     write (*,*) "mdlspiej=",mdlspiej, "yfn=", yfn
 
 C     Boost to get the muon, pion and nucleon 3-momenta
       CALL RSLZBT(E,Q2,W,XMLEP,THETA,PHI,TMPPMU,TMPPPI,TMPPNU)

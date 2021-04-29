@@ -183,15 +183,6 @@ C     Harmonic oscillation of the resonance
 
       YFN = 0
 
-      rop3p3_com = -999
-      rom3m3_com = -999
-      rop1p1_com = -999
-      rom1m1_com = -999
-      rop3p1_com = -999
-      rom1m3_com = -999
-      rop3m1_com = -999
-      rop1m3_com = -999
-
 C     Set the constants
       XMASPI2= XMASPI * XMASPI
       XMVSPI2= XMVSPI * XMVSPI
@@ -251,27 +242,8 @@ C     EQ 3.11 roughly
       U2 = U**2
       V2 = V**2
 
-C     Set up the case where we don't have a mass effect
-C     C_L = u
-C     C_R = v
-C     C_S = sqrt(2.*u*v)
-
-C     Neutrino or anti neutrino: U->V and V->U
-
-C     CWRET: this could be an error; I don't think there should be a
-C     negative sign in front. Doesn't matter for calculation though,
-C     since we only use these squqared
-C     Upd: sign shouldn't matter since U->-V and V->-U and we only do
-C     UV, UU or VV multiplications
-C     CWRET: reference eq 2.18 Rein-Sehgal.
-
-C     CWRET: replace U with C_L, V with C_R, UV with C_S
-C     If anti-neturino reverse C_L and - C_R
-c     IF (IMODE.GT.10) THEN
-c        tempU = U
-c        U = -V
-c        V = -tempU
-c     END IF
+C     Moved the U and V replacement to ALPSH, BETSH and DELSH, since
+C     this is more clear and what Rein-Sehgal/Ravndal actually do
 
 C     Set the resonance rhos to zero (initialise them)
 C     For explanation on what rho is, see Rein-Sehgal appendix
@@ -489,15 +461,25 @@ C     The q_pi (W) squared (p87 bottom)
 C     The q_pi (M_res) squared (p87 bottom)
       RADR = ((XMR**2-XMN2-XMPI2)**2-4.*XMN2*XMPI2)/(4.*XMR**2)
 C     CWRET: maybe rethrow here instead of approximating?
-c     IF(RAD .LE. 0) RAD = RS_SMNO
-c     IF(RADR .LE. 0) RADR = RS_SMNO
-      if (rad .lt. 0 .or. radr .lt. 0) then
+
+      IF (RAD .LT. 0-RS_SMNO) then
         YFN = -1
         GOTO 72
+      else if (RAD .GT. 0-RS_SMNO .AND. RAD .LT. 0) then
+        RAD = 0
       endif
+
+      IF (RADR .LT. 0-RS_SMNO) then
+        YFN = -1
+        GOTO 72
+      else if (RADR .GT. 0-RS_SMNO .AND. RADR .LT. 0) then
+        RADR = 0
+      endif
+
 C     Now square root them
       PQ = SQRT(RAD)
       PQR = SQRT(RADR)
+
 C     BR is the branching ratio for the resonance, IP is the 2l+1
 C     So BRA is Rein-Sehgal 2.32
       BRA = BR*(PQ/PQR)**IP
@@ -550,11 +532,14 @@ C     Also found in Ravndal (1973, equation A18)
       ALPSH = W*E*SQRT(-Q2 / QVS) * U
       BETSH = W*E*SQRT(-Q2 / QVS) * V
       DELSH = W*E*(XMN / W) * SQRT(2.*U*V)
-C     RAVNDAL says this...?
+C     For anti-neutrino the only difference is swapping and sign
+C     flipping the alpha and beta terms
       IF (IMODE.GT.10) THEN
         tempu = ALPSH
         ALPSH = -1*BETSH
         BETSH = -1*tempu
+C       Ravndal says this last sign flip should happen, but doesn't
+C       agree with what NEUT had before. Needs checking
 C       DELSH = -1*delsh
       endif
 
