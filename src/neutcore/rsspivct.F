@@ -118,10 +118,6 @@ C
   100 CONTINUE
       IPNE(1)=IPAR
 
-C---
-
-C      INO16=0
-C      IF(IFREE.EQ.0) INO16=1
       PFABS=0.
 
  1500 CONTINUE
@@ -146,21 +142,13 @@ C     The energy of the neutrino
      $        -( (PNE(1,2)+PNEU(1))**2+(PNE(2,2)+PNEU(2))**2
      $          +(PNE(3,2)+PNEU(3))**2)-XMN2)/2./XMN
 
-C----------------------------------------------------------------
-C      write(*,*) "E=",E,"/P(Nucl)=",PFABS
-C      write(*,*) "ENEU(REST)=",TMPEEE
-C      write(*,*) "S=",( (TMPEP+TMPEL)**2
-C     $        -( (PNE(1,2)+PNEU(1))**2+(PNE(2,2)+PNEU(2))**2
-C     $          +(PNE(3,2)+PNEU(3))**2))
-C      write(*,*) "S=",(TMPEEE+XMN)**2-TMPEEE**2
-C----------------------------------------------------------------
-
 C-Check IF sigma < 1.e-42 then re-calculate fermi-momentum 
 C     Get's the x-sec from free-nucleon
       TMPSIG=RSSPICRS(TMPEEE,IPAR,IMOD)
       IF (TMPSIG.le.1.e-4) GO TO 1500
 
 C--- initialize/set some commons
+C     Here set the parents
       IORGNE(1)=0
       IORGNE(2)=0
 C    lepton :  from initial lepton
@@ -177,10 +165,7 @@ C     Set flags of initial and final state particles
       IFLGNE(5)=0
 
       MODENE = JMOD
-C ---------------------------------------------------------------
-C
-C
-C
+
 C -- SET KIND OF PARTICLE
 C
       IF(IPAR.LT.0)GO TO 220

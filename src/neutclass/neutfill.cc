@@ -181,6 +181,19 @@ neutfillvect(char *filename, char *treename, char *branchname)
   // DIS model
   nv->DISModel = nemdls_.mdldis;
 
+  nv->rop3p3 = nemdls_.rop3p3_com;
+  nv->rom3m3 = nemdls_.rom3m3_com;
+  nv->rop1p1 = nemdls_.rop1p1_com;
+  nv->rom1m1 = nemdls_.rom1m1_com;
+  nv->rop3p1 = nemdls_.rop3p1_com;
+  nv->rom1m3 = nemdls_.rom1m3_com;
+  nv->rop3m1 = nemdls_.rop3m1_com;
+  nv->rop1m3 = nemdls_.rop1m3_com;
+
+  nv->thad = nemdls_.thad_com;
+  nv->phiad = nemdls_.phiad_com;
+  nv->yfn = nemdls_.yfn_com;
+
   // Single pion form factors (Rein-Sehgal original or Graczyk & Sobczyk)
   // These are the parameters _actually_ used in Rein-Sehgal code, not the neut1pi common block
   nv->SPIForm  = nemdls_.iffspi;
@@ -282,9 +295,9 @@ neutfillvect(char *filename, char *treename, char *branchname)
   nv->Totcrs = neutcrscom_.totcrsne;
 
   nv->CrsEnergy = neutcrscom_.crsenergy;
-  
+
   for ( i = 0 ; i < 8 ; i++ ){
-	nv->DifCrsNE[i] = neutcrscom_.difcrsne[i];
+    nv->DifCrsNE[i] = neutcrscom_.difcrsne[i];
   }
   nv->Crsx   = neutcrscom_.crsx;
   nv->Crsy   = neutcrscom_.crsy;

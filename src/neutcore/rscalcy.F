@@ -49,7 +49,6 @@ C     Lives so we can avoid infinite loops (set to something like 10k)
 
       INTEGER IMODE,INLEP
 
-      INTEGER*4 IDUMMY
       INTEGER*4 IERR
 
 #include <rscons.h>
@@ -57,8 +56,6 @@ C     Lives so we can avoid infinite loops (set to something like 10k)
 #include "necard.h"
 
       REAL*4 XMASPI2, XMVSPI2
-
-      INTEGER IRSISED
 
 C     Store the computed resonance amplitudes from Rein-Sehgal and FKR
 C     Do not need to be 50; should be 31?
@@ -81,26 +78,16 @@ C     These are the 2l+1 and number of resonances
 
       INTEGER IFLAG,IB,NR,IP,IBLOCK,IQ2
 
-      REAL WMIN,E,QMAX,SMAX,W2,W,X,Q2,ES,DQ2
-      INTEGER NQ
+C     Angles of pion in resonance rest frame
+      REAL E,W,Q2
+      REAL PHI, THETA
 
-      INTEGER NTRIES
-
-C     CWRET Multiplicative safety factor for accept-reject ceiling
-      REAL SAFETY
-C     CWRET added this for a W_max which is smax-xmlep or WMAX
-C     WMAX parameter is set in rscons.h and is 2.0 GeV (Rein-Sehgal default)
-      REAL W_max
-C     CWRET added these as alternative to calculated Q2 limits
-      REAL ERES,ELEP,PRES,PLEP,COS1,COS2,COSLEP
-
-C     CWRET added these for checking Q2 is within limits
-      REAL QMAXFOUND,QMINFOUND
+C     Setting up auxilliary kinematic variables
+      real W2, ES, tempU
 
 #include <neutcrs.h>
 
-      REAL QV,QV2,QVS,QVS2,A,V,U,V2,U2,AK,ALFA,ALFA2
-      REAL BETA,BETA2,GAMA,GAMA2,FAKT
+      REAL QV,QV2,QVS,QVS2,A,V,U,V2,U2
       REAL BR,FBWNO,XE,FFV,FFA
       REAL R,RA,RV,RM,RP,T,TA,TV,TP,TM,S,B,C
       REAL FM3C,FM1C,FP3C,FP1C,F0PC,F0MC
@@ -135,8 +122,6 @@ C     Some are real, others complex!
       EXTERNAL  RSY00,RSY10,RSY20,RSY30
       COMPLEX   RSY11,RSY21,RSY22,RSY31,RSY32,RSY33
       EXTERNAL  RSY11,RSY21,RSY22,RSY31,RSY32,RSY33
-C     Angles of pion in resonance rest frame
-      REAL PHI, THETA
 C     The normalised rho tildes in Rein-Sehgal pion ejection
       COMPLEX RHOP3P3,RHOP3P1,RHOP3M1
 
@@ -180,29 +165,11 @@ C     Store the various constants for given Enu, W, Q2 combination for Rein-Sehg
 C     Store the returned amplitudes per resonance
       REAL RETF(6)
 
-      REAL RNDSIG,DSIGMX,DSIGMXP,DSIGMXM,DSIG3,DSIG3P,DSIG3M
-C     CWRET added these to agree with rsdcrs and have lepton mass-effect
-C     accounted for in vector generation
-      Real El
-      Real Q_lab, Q2_lab, Q, nu_lab
-      Real jl(4), jl_n1, jl_n2, Norm, C_L, C_R, C_S, Qs, nus, ng
-      Real tempC_L
-      Real Ei, Ef, nu
-      Real B_BRS,C_BRS,Ctmp
-      Integer LambdaIT
-
-C     Used for accept-reject
-      REAL TMPSIG,SIGMAX
-      INTEGER Lambda(2), iOrg
-
-      REAL TMPPMU(3),TMPPPI(3),TMPPNU(3)
-
       INTEGER I
 
 C     Random numbers
       REAL RLU
       EXTERNAL RLU
-
 
 C     These are the 2l+1 constants (IPP stores which interaction mode the resonance is relevant to)
       DATA IPP/3,5,5,1,1,1,1,1,5,5,5,5,5,3,3,3,7,7,3,3,3,3,3,7,7,3,7,7,
@@ -215,6 +182,15 @@ C     Harmonic oscillation of the resonance
       IERR = 0
 
       YFN = 0
+
+      rop3p3_com = -999
+      rom3m3_com = -999
+      rop1p1_com = -999
+      rom1m1_com = -999
+      rop3p1_com = -999
+      rom1m3_com = -999
+      rop3m1_com = -999
+      rop1m3_com = -999
 
 C     Set the constants
       XMASPI2= XMASPI * XMASPI
@@ -234,25 +210,6 @@ C     Set iflag
       IFLAG = IMODE
       IF (IMODE.GT.10) IFLAG = IFLAG -10
 
-C     Lepton mass effects are considered
-C
-C     iOrg = 0 considers lepton mass effects
-C     iOrg = 1 considers original R-S model without mass effects (eg. NC, HighEnu)
-C     Hardcode this to have lepton mass effects on for now
-      iOrg = 0                  ! CC does need mass correction
-      if (ABS(inlep).eq.12.and.E.gt.1.5 ) iOrg = 1 ! High E
-      if (ABS(inlep).eq.14.and.E.gt.100.) iOrg = 1 ! High E
-      if (ABS(inlep).eq.16.and.E.gt.200.) iOrg = 1 ! High E
-      if (IFLAG.GE.4) iOrg = 1  ! NC
-
-      if (IMODE.LT.10) then     ! neutrino
-         Lambda(1) =  1
-         Lambda(2) = -1
-      else                      ! anti-neutrino
-         Lambda(1) = -1
-         Lambda(2) =  1
-      endif
-
       W2=W*W
 
 C     ===================================================================
@@ -270,13 +227,12 @@ C     CWRET: there's a copy of this in rsdcrs too
 C     KINEMATICAL QUANTITIES
 
       XNU = (W2 - XMN2 - Q2) / (2 * XMN)
-      X = -Q2 / (2 * XMN * XNU)
       XNU2 = XNU**2
       ES = E-XNU
 
-
 C     Some Rein-Sehgal fundamental constants for a given W, Enu, Q2
 C     combination
+C     EQ 3.11 roughly
       QV = SQRT(XNU2-Q2)
       QV2 = QV**2
       QVS = QV*XMN/W
@@ -288,15 +244,17 @@ C     combination
 
       U = (E+ES+QV)/(2.*E)
       V = (E+ES-QV)/(2.*E)
+      if (V .LT. 0) then
+        YFN = -1
+        GOTO 72
+      endif
       U2 = U**2
       V2 = V**2
-      AK = (W2-XMN2)/(2.*XMN)
-      FAKT = W*PI/(W2-XMN2)
 
 C     Set up the case where we don't have a mass effect
-      C_L = u
-      C_R = v
-      C_S = sqrt(2.*u*v)
+C     C_L = u
+C     C_R = v
+C     C_S = sqrt(2.*u*v)
 
 C     Neutrino or anti neutrino: U->V and V->U
 
@@ -309,11 +267,11 @@ C     CWRET: reference eq 2.18 Rein-Sehgal.
 
 C     CWRET: replace U with C_L, V with C_R, UV with C_S
 C     If anti-neturino reverse C_L and - C_R
-      IF (IMODE.GT.10) THEN
-         tempC_L = C_L
-         C_L = -C_R
-         C_R = -tempC_L
-      END IF
+c     IF (IMODE.GT.10) THEN
+c        tempU = U
+c        U = -V
+c        V = -tempU
+c     END IF
 
 C     Set the resonance rhos to zero (initialise them)
 C     For explanation on what rho is, see Rein-Sehgal appendix
@@ -464,6 +422,7 @@ C     Phys Rev D 77 (053001), equation 12, 13
       endif
 
 C     ATTENTION: NR CHANGED INTO NR/2.
+C     EQ 3.11 of Rein-Sehgal
       RV = SQRT(2.)*FFV*QVS*(W+XMN)/(2.*W*A)
       RA = SQRT(2.)*FFA*Z*(W+XMN+NR*OMEG/A)/(6.*W)
       R  = RV
@@ -515,7 +474,6 @@ C     FM3C = helicity amplitude, -3 isospin
          F0M = RETF(6)
       ENDIF
 
-
 C     **********************************
 
 C     STORE RESONANCE AMPLITUDES
@@ -531,8 +489,12 @@ C     The q_pi (W) squared (p87 bottom)
 C     The q_pi (M_res) squared (p87 bottom)
       RADR = ((XMR**2-XMN2-XMPI2)**2-4.*XMN2*XMPI2)/(4.*XMR**2)
 C     CWRET: maybe rethrow here instead of approximating?
-      IF(RAD .LE. 0) RAD = RS_SMNO
-      IF(RADR .LE. 0) RADR = RS_SMNO
+c     IF(RAD .LE. 0) RAD = RS_SMNO
+c     IF(RADR .LE. 0) RADR = RS_SMNO
+      if (rad .lt. 0 .or. radr .lt. 0) then
+        YFN = -1
+        GOTO 72
+      endif
 C     Now square root them
       PQ = SQRT(RAD)
       PQR = SQRT(RADR)
@@ -584,9 +546,17 @@ C     ALPSH = Alpha
 C     BETSH = Beta
 C     DELSH = Delta (not Kronecker and not resonance symbol: refers to
 C     what follows alpha and beta in the paper)
-      ALPSH = W*E*SQRT(-Q2 / QVS) * C_L
-      BETSH = W*E*SQRT(-Q2 / QVS) * C_R
-      DELSH = W*E*(XMN / W) * C_S
+C     Also found in Ravndal (1973, equation A18)
+      ALPSH = W*E*SQRT(-Q2 / QVS) * U
+      BETSH = W*E*SQRT(-Q2 / QVS) * V
+      DELSH = W*E*(XMN / W) * SQRT(2.*U*V)
+C     RAVNDAL says this...?
+      IF (IMODE.GT.10) THEN
+        tempu = ALPSH
+        ALPSH = -1*BETSH
+        BETSH = -1*tempu
+C       DELSH = -1*delsh
+      endif
 
 C     Write all the ampltiudes from all the resonances to a 2D array
 C     which will be passed to the summation code
@@ -598,16 +568,6 @@ C     which will be passed to the summation code
          AM(5,NCTR) = A0PC(NCTR)
          AM(6,NCTR) = A0MC(NCTR)
  61   CONTINUE
-
-C     restore C_L, C_R
-C     CWRET: this could be an error; I don't think there should be a
-C     negative sign in front. Doesn't matter for calculation though,
-C     since we only use these squared
-      IF (IMODE.GT.10) THEN
-         tempC_L = C_L
-         C_L = -C_R
-         C_R = -tempC_L
-      END IF
 
 C     Throw the pion according to user input
 C     MDLSPIEJ = 0 means isotropic
@@ -642,7 +602,6 @@ C     Start the pion ejection calculation for ISOTROPIC distribution
 
 C     Not sure how to do this for a flat distribution
 C     Probably need to normalise somehow?
-c     YFN = 1/(2*SQRT(PI))
       YFN = 1/(4*PI)
 
       GOTO 72
@@ -696,7 +655,6 @@ C     rho tilde 3/2, -1/2
 
 C     If not, calculate equation 2.46 (remember all rho have been
 C     normalised out by rho tilde)
-
 C     Don't use the rescaled amplitudes
       YFN = RSY00(THETA,PHI)*REALPART(RHOTIL)
      $    - (2./ SQRT(5.)) * RSY20(THETA,PHI) *
@@ -1185,8 +1143,9 @@ C     Then also the term multiplying RSY00
       GOTO 72
 
  72   CONTINUE
+
       if (YFN.lt.0) THEN
-        YFN=abs(YFN)
+        YFN=0
       endif
 
       END

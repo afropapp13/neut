@@ -43,6 +43,8 @@ public:
   void Reconfigure(void);
   double CalcWeight();
   double CalcChisq(void);
+  double GetNew() {return piej_new;};
+  double GetOld() {return piej_old;};
   void SetUseAngular(bool val) { 
     std::cout << "Using angular information in reweight: " << val << std::endl;
     UseAngular = val; 
@@ -51,6 +53,9 @@ public:
 private:
   void Init(void);
   bool UseAngular;
+
+  double piej_old;
+  double piej_new;
 
   NSYST_DECLAREDIALVARIABLES(kXSecTwkDial_MaRES);
   NSYST_DECLAREDIALVARIABLES(kXSecTwkDial_MvRES);
