@@ -15,7 +15,7 @@ public:
 #define ABORT_IF_UNHANDLED(syst)                                               \
   if (!DialIsHandled(syst)) {                                                  \
     std::cout << syst << " in engine: " << EngineName() << std::endl;          \
-    abort();                                                                     \
+    abort();                                                                   \
   }
 
   virtual ~NReWeightEngineI(){};
@@ -89,14 +89,15 @@ protected:
     return index;
   }
 
-  void DocumentDial(NSyst_t syst, std::string docstring){
-    NSyst::DocumentDial(syst,docstring);
+  void DocumentDial(NSyst_t syst, std::string docstring) {
+    NSyst::DocumentDial(syst, docstring);
   }
 
   double CheckReturnWeight(double weight) {
     if (weight && !std::isnormal(weight)) {
       std::cout << "[WARN]: Abnormal weight being returned by " << EngineName()
-                << std::endl;
+                << ". Forcing weight to unity." << std::endl;
+      weight = 1;
     }
     return weight;
   }
