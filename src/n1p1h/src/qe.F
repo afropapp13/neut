@@ -925,7 +925,7 @@ C
       vPn(1)  = En
       vPp(1)  = Ep
 
-      print*," 3 !!!!!!!!!! ",Eq*hbarc
+C       print*," 3 !!!!!!!!!! ",Eq*hbarc
 
 
 c
