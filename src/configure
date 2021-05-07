@@ -1460,8 +1460,7 @@ Optional Features:
                           HepMC-config in PATH.
   --enable-tauola         Enable tauola, requires ZEBRA!
   --enable-zebra          Enable ZEBRA
-  --disable-nucleon-fsi-info
-                          Remove nucleon fsi step information in vector
+  --enable-nucfsi         Remove nucleon fsi step information in vector
                           output. Included for backward compatibility
   --enable-neutgeom       Build neutgeom components, requires X11 support from
                           root
