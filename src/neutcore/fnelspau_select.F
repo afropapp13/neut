@@ -88,7 +88,7 @@ C     Nuclear Calculations
       if (MDLQEAF.gt.2) then
          write(*,*) "ERROR: Axial FF other than Dipole and BBBA07"
          write(*,*) "Cannot generate on Nuclear Target"
-         write(*,*) "Generte on dipole and use RW tools instead"
+         write(*,*) "Generate on dipole and use RW tools instead"
          stop 9
       endif
 

@@ -19,6 +19,14 @@ if NEUT_USE_NEUTGEOM
 FEATURES += neutgeom
 endif
 
+if NEUT_WRITE_NUCFSI
+FEATURES += neutvect-nucfsistep
+endif
+
+if NEUT_DEBUG
+FEATURES += debug
+endif
+
 ROOT_FLAGS = $(HEPMC_FLAGS) $(ROOT_LINKFLAGS) $(ROOT_LIBS)
 CERN_FLAGS = $(CERN_LINKFLAGS) $(CERN_LIBS)
 
