@@ -52,7 +52,7 @@ C      endif
       endif
       IZ = NUMBNDP
 
-      write(*,*) "NESETFGPARAMS: ", NUMBNDP, NUMBNDN, IZ, IA
+C       write(*,*) "NESETFGPARAMS: ", NUMBNDP, NUMBNDN, IZ, IA
 
       if (NUMBNDP.eq.1 .and. NUMBNDN.eq.0) then !1p
          PFSURF = 0.001
