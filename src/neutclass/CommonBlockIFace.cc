@@ -486,6 +486,8 @@ void CommonBlockIFace::ReadVect(NeutVect *nvect) {
   ReadNEUTTARGET(nvect);
   ReadNENUPR(nvect);
   ReadEVENTPARS(nvect);
+
+  NEUTSetParams();
 }
 
 // Read model parameters that may be important for event reweighting work and
@@ -561,6 +563,14 @@ std::string CommonBlockIFace::ParamsToString(bool isinstance) {
 
   ss << "NEUTCOH:\n"
      << "\tnecohepi: " << neutcoh.necohepi << "\n";
+
+  neuttarget_common const &neuttarget = neuttarget_;
+
+  ss << "NEUTTARGET:\n"
+     << "\tnumbndn: " << neuttarget.numbndn << "\n"
+     << "\tnumbndp: " << neuttarget.numbndp << "\n"
+     << "\tnumfrep: " << neuttarget.numfrep << "\n"
+     << "\tnumatom: " << neuttarget.numatom << "\n";
 
   neutpiabs_common const &neutpiabs =
       isinstance ? CommonBlockIFace::Get().fneutpiabs_gen : neutpiabs_;
@@ -638,6 +648,10 @@ std::string CommonBlockIFace::ParamsToString(bool isinstance) {
       isinstance ? CommonBlockIFace::Get().fnenupr_gen : nenupr_;
 
   ss << "nenupr:\n"
+     << "\tpfsurf: " << nenupr.pfsurf << "\n"
+     << "\tpfmax: " << nenupr.pfmax << "\n"
+     << "\tvnuini: " << nenupr.vnuini << "\n"
+     << "\tvnufin: " << nenupr.vnufin << "\n"
      << "\tiformlen: " << nenupr.iformlen << "\n"
      << "\tfzmu2: " << nenupr.fzmu2 << "\n"
      << "\tsfebshift: " << nenupr.sfebshift << "\n";
