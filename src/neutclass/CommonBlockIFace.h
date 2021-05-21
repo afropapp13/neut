@@ -7,10 +7,9 @@
 
 #include "cardnameC.h"
 #include "necardevC.h"
-#include "nrcardC.h"
 #include "neutfilepathC.h"
 #include "nieves1p1hC.h"
-
+#include "nrcardC.h"
 
 #include "neutvect.h"
 
@@ -42,6 +41,7 @@ inline double NEUTGetPiCascProb() { return evpiprob_(); }
 inline double NEUTGetPiEj() { return evpiw_(); }
 inline void NEUTSetParams() {
   nefillmodel_();
+  nesetfgparams_();
   zexpconfig_();
 }
 
@@ -76,7 +76,7 @@ public:
   // nrcardC.h
   nucres_common fnucres_gen;
 
-  //neutfilepathC.h
+  // neutfilepathC.h
   neutfilepath_common fneutfilepath_gen;
 
   // nieves1p1hC.h
