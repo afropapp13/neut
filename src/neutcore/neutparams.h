@@ -21,6 +21,9 @@ C               Negative VALUE (GeV)
 C
 C    SFEBSHIFT: Extra missing energy shift for SF events (GeV)
 C                 Positive means more missing energy.
+C    SFEBNEGBEH: Behavior if SFEb is below 0 (i.e. chosen nucleon is unbound)
+C               0: Pin to EB = 0 and continue event generation
+C               1: Redraw from SF (for large negative SFEBShift, will get stuck in infinite loops)
 C
 C    IFORMLEN: FORMATION LENGTH effect ON/OFF
 C              IFORMLEN=   1  : ALL ON (default)
@@ -64,9 +67,10 @@ C
 C---------------------------------------------------------
 C
       REAL*4 PFSURF,PFMAX,VNUINI,VNUFIN,FZMU2,SFEBSHIFT
-      INTEGER*4 IFORMLEN
+      INTEGER*4 IFORMLEN, SFEBNEGBEH
 
-      COMMON/NENUPR/PFSURF,PFMAX,VNUINI,VNUFIN,IFORMLEN,FZMU2,SFEBSHIFT
+      COMMON/NENUPR/PFSURF,PFMAX,VNUINI,VNUFIN,IFORMLEN,FZMU2,
+     $ SFEBSHIFT, SFEBNEGBEH
 C
 C---------------------------------------------------------
 C

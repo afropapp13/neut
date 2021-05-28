@@ -147,6 +147,7 @@ void ReadGenRunInfo(std::shared_ptr<HepMC3::GenRunInfo const> gri) {
   NuHepMC::FromAttribute(gri, "nenupr.iformlen", nenupr.iformlen);
   NuHepMC::FromAttribute(gri, "nenupr.fzmu2", nenupr.fzmu2);
   NuHepMC::FromAttribute(gri, "nenupr.sfebshift", nenupr.sfebshift);
+  NuHepMC::FromAttribute(gri, "nenupr.sfebnegbeh", nenupr.sfebnegbeh);
 
   neffpr_common &neffpr = neffpr_;
 

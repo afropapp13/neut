@@ -228,6 +228,8 @@ C      VNUINI = -0.027 ! defined below
       FZMU2 = 0.08
 
       SFEBSHIFT = 0
+      SFEBNEGBEH = 0 ! by default set Eb to physical limit and continue
+C       SFEBNEGBEH = 1 ! Draw from SF again if Eb unphysical
 
       NUSIM   = 1
       NEFKINVER= 0
@@ -476,6 +478,7 @@ C       Alt AXFF params
         CALL FFKEY('QUIET',QUIET,1,'INTEGER')
 
         CALL FFKEY('SFEBSHIFT',SFEBSHIFT,1,'REAL')
+        CALL FFKEY('SFEBNEGBEH',SFEBNEGBEH,1,'INTEGER')
 
         CALL FFGO
         CLOSE(UNIT=91)

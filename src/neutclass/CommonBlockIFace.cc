@@ -133,6 +133,7 @@ void CommonBlockIFace::ResetGenValues() const {
   nenupr_.iformlen = fnenupr_gen.iformlen;
   nenupr_.fzmu2 = fnenupr_gen.fzmu2;
   nenupr_.sfebshift = fnenupr_gen.sfebshift;
+  nenupr_.sfebnegbeh = fnenupr_gen.sfebnegbeh;
 
   neffpr_ = fneffpr_gen;
 
@@ -654,7 +655,8 @@ std::string CommonBlockIFace::ParamsToString(bool isinstance) {
      << "\tvnufin: " << nenupr.vnufin << "\n"
      << "\tiformlen: " << nenupr.iformlen << "\n"
      << "\tfzmu2: " << nenupr.fzmu2 << "\n"
-     << "\tsfebshift: " << nenupr.sfebshift << "\n";
+     << "\tsfebshift: " << nenupr.sfebshift << "\n"
+     << "\tsfebnegbeh: " << nenupr.sfebnegbeh << "\n";
 
   neffpr_common const &neffpr =
       isinstance ? CommonBlockIFace::Get().fneffpr_gen : neffpr_;
@@ -934,6 +936,8 @@ CommonBlockIFace::SerializeModelCommonBlocksToAttributeList() {
   CommonBlockAttributes["nenupr.fzmu2"] = NuHepMC::AsAttribute(nenupr.fzmu2);
   CommonBlockAttributes["nenupr.sfebshift"] =
       NuHepMC::AsAttribute(nenupr.sfebshift);
+  CommonBlockAttributes["nenupr.sfebnegbeh"] =
+      NuHepMC::AsAttribute(nenupr.sfebnegbeh);
 
   neffpr_common const &neffpr = neffpr_;
 

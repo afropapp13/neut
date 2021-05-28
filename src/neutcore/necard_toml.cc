@@ -219,6 +219,13 @@ void read_QE_params(toml::value const &QE_table) {
                              {"behnar", "fermi_surface_for_pauli_mev"});
   toml_h::set_if_present_rec(nenupr_.sfebshift, QE_table,
                              {"behnar", "separation_energy_shift_gev"});
+  toml_h::set_option_if_present_rec(
+      nenupr_.sfebnegbeh, QE_table,
+      {"behnar", "separation_energy_negative_behavior"},
+      std::map<std::string, int>{
+          {"pin_to_0", 0},
+          {"redraw_from_sf", 1},
+      });
 
   toml_h::set_if_present(nemdls_.kapp, QE_table, "kappa");
 
@@ -452,8 +459,7 @@ void read_RES_params(toml::value const &RES_table) {
     if (toml_h::contains(RES_table, "kabirnezhad")) {
       RES_MK_table = toml_h::find(RES_table, "kabirnezhad");
     }
-    toml_h::set_if_present(nemdls_.xmabkgm, RES_MK_table,
-                               "bkg_axial_mass");
+    toml_h::set_if_present(nemdls_.xmabkgm, RES_MK_table, "bkg_axial_mass");
     toml_h::set_if_present(neut1pi_.xmanffres, RES_MK_table, "axial_mass");
     toml_h::set_if_present(neut1pi_.xmvnffres, RES_MK_table, "vector_mass");
     toml_h::set_if_present(neut1pi_.rneca5i, RES_MK_table, "ca5");

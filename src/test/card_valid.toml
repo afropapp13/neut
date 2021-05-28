@@ -269,6 +269,10 @@ model = "nieves"
 # Shift SF inputs along the separation energy axis
 # benhar.separation_energy_shift_gev =
 
+# Behavior if chosen separation energy for event is unphysical
+# benhar.separation_energy_negative_behavior = "pin_to_0"
+# benhar.separation_energy_negative_behavior = "redraw_from_sf"
+
 # erpa = "off" # incompatible with model = "nieves", use nieves.rpa = "on" instead
 
 # kappa = 1.0 # c.f. Miniboone QE result
