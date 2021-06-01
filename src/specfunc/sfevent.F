@@ -285,12 +285,12 @@ C ----- select values from the spectral function array
         endif
 
         if ((ETilde + SFEBSHIFT*1.E3).LT.0) then
-            WRITE(*,*) "For chosen SF EMiss", ETilde, " Eb shift is too negative", SFEBSHIFT*1E3
+C           WRITE(*,*) "For chosen SF EMiss", ETilde, " Eb shift is too negative", SFEBSHIFT*1E3
           if (SFEBNEGBEH.EQ.0) then
-            WRITE(*,*) "Truncating EMiss to 0 to keep nucleons bound ..."      
-            ETilde = 0 
+C             WRITE(*,*) "Truncating EMiss to 0 to keep nucleons bound ..."      
+            ETilde = -(SFEBSHIFT*1.E3)
           else
-            WRITE(*,*) "Draw from SF again..."
+C             WRITE(*,*) "Draw from SF again..."
             goto 2207
           endif
         endif
