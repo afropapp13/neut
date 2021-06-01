@@ -706,8 +706,6 @@ std::string CommonBlockIFace::ParamsToString(bool isinstance) {
      << "\tmpvevct: " << nevccard.mpvevct << "\n"
      << "\tpvevct: [ " << nevccard.pvevct[0] << ", " << nevccard.pvevct[1]
      << "]\n"
-     << "\tangdeg: " << nevccard.angdeg << "\n"
-     << "\tangwidth: " << nevccard.angwidth << "\n"
      << "\tfilenmevct: " << fstr_to_stdstring(nevccard.filenmevct) << "\n"
      << "\thistnmevct: " << fstr_to_stdstring(nevccard.histnmevct) << "\n"
      << "\tinmevevct: " << nevccard.inmevevct << "\n";

@@ -35,11 +35,12 @@
 ************************************************************************
       INTEGER         NEVTEVCT,IDPTEVCT,MPOSEVCT,MDIREVCT,MPVEVCT,
      $                INMEVEVCT, OUTPUTFORMAT
-      REAL            POSEVCT(3),RADEVCT,DIREVCT(3),PVEVCT(2), ANGDEG,ANGWIDTH
+      REAL            POSEVCT(3),RADEVCT,DIREVCT(3),PVEVCT(2),
       character*1000    FILENMEVCT,HISTNMEVCT
 
       COMMON/NEVCCARD/NEVTEVCT, IDPTEVCT,
      $                MPOSEVCT, POSEVCT, RADEVCT,
      $                MDIREVCT, DIREVCT,
-     $                MPVEVCT,  PVEVCT, ANGDEG,ANGWIDTH,
-     $                FILENMEVCT, HISTNMEVCT, INMEVEVCT, OUTPUTFORMAT
+     $                MPVEVCT,  PVEVCT,
+     $                FILENMEVCT, HISTNMEVCT, INMEVEVCT, 
+     $                OUTPUTFORMAT

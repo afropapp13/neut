@@ -549,9 +549,6 @@ EVCT-INMEV
         0 : GeV
         1 : MeV
 
-EVCT-FIXANGDEG
-        Run in fixed angle mode, events must be weighted by cross-section,
-        only currently applicable for full SF mode.
 ///////////////////////////////////////////////////////////////////////////
 
 
