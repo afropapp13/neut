@@ -14,7 +14,7 @@ void NReWeight::AdoptWeightEngine(std::string const &name,
   if (!wengine) {
     std::cout << "[ERROR]: nullptr passed as weightengine named: " << name
               << std::endl;
-    throw std::invalid_argument();
+    throw std::invalid_argument(name);
   }
   WeightEngines[name] = std::move(wengine);
 }
@@ -25,7 +25,7 @@ NReWeightEngineI &NReWeight::WeightEngine(std::string const &name) {
   }
   std::cout << "[ERROR]: Unknown weight engine requested: " << name
             << std::endl;
-  throw std::invalid_argument();
+  throw std::invalid_argument(name);
 }
 
 void NReWeight::Reconfigure() {
@@ -82,7 +82,7 @@ void CheckEngineUnique(
     std::cout << "Please Use NReWeight::WeightEngine to interact "
                  "directly with the weight engine.\n"
               << std::endl;
-    throw std::invalid_argument();
+    throw std::invalid_argument(NSyst::DialAsString(syst));
   }
 }
 
@@ -97,7 +97,7 @@ double NReWeight::GetDial_From_Value(NSyst_t syst) const {
   std::cout << "[ERROR]: Dial: " << syst
             << " is unhandled by any known weight engine." << std::endl;
   std::cout << syst << " = " << NSyst::DialAsString(syst) << std::endl;
-  throw std::invalid_argument();
+  throw std::invalid_argument(NSyst::DialAsString(syst));
 }
 
 double NReWeight::GetDial_To_Value(NSyst_t syst) const {
@@ -111,7 +111,7 @@ double NReWeight::GetDial_To_Value(NSyst_t syst) const {
   std::cout << "[ERROR]: Dial: " << syst
             << " is unhandled by any known weight engine." << std::endl;
   std::cout << syst << " = " << NSyst::DialAsString(syst) << std::endl;
-  throw std::invalid_argument();
+  throw std::invalid_argument(NSyst::DialAsString(syst));
 }
 
 double NReWeight::GetDial_OneSigma(NSyst_t syst, double tweak) const {
@@ -125,7 +125,7 @@ double NReWeight::GetDial_OneSigma(NSyst_t syst, double tweak) const {
   std::cout << "[ERROR]: Dial: " << syst
             << " is unhandled by any known weight engine." << std::endl;
   std::cout << syst << " = " << NSyst::DialAsString(syst) << std::endl;
-  throw std::invalid_argument();
+  throw std::invalid_argument(NSyst::DialAsString(syst));
 }
 
 void NReWeight::SetDial_NumberOfSigmas(NSyst_t syst, double nsigmas) {

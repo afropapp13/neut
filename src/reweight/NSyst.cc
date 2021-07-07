@@ -1,6 +1,7 @@
 #include "NSyst.h"
 
 #include <iostream>
+#include <stdexcept>
 
 namespace neut {
 namespace NSyst {
@@ -17,11 +18,11 @@ NSyst_t EnsureDialNameRegistered(std::string const &name) {
   return index;
 }
 
-void DocumentDial(NSyst_t syst, std::string docstring){
+void DocumentDial(NSyst_t syst, std::string docstring) {
   Dial_Documentation[syst] = std::move(docstring);
 }
 
-std::string GetDialDocumentation(NSyst_t syst){
+std::string GetDialDocumentation(NSyst_t syst) {
   return Dial_Documentation[syst];
 }
 
@@ -41,7 +42,7 @@ std::string DialAsString(NSyst_t syst) {
   std::cout << "!Did you instantiate an NReWeight instance before trying to "
                "access the global dial list?\n"
             << std::endl;
-  abort();
+  throw std::invalid_argument(std::to_string(syst));
 }
 
 NSyst_t DialFromString(std::string const &name) {
@@ -58,7 +59,7 @@ NSyst_t DialFromString(std::string const &name) {
   std::cout << "!Did you instantiate an NReWeight instance before trying to "
                "access the global dial list?\n"
             << std::endl;
-  abort();
+  throw std::invalid_argument(name);
 }
 
 std::pair<NSyst_t, Info> DeclareNewDialInstance(std::string const &name,
