@@ -137,6 +137,15 @@ C     2 use multiple resonances
 C     3 use Delta+isotropic (old NEUT default)
       MDLSPIEJ = 3
 
+      ROP3P3_MULT = 1
+      ROM3M3_MULT = 1
+      ROP1P1_MULT = 1
+      ROM1M1_MULT = 1
+      ROP3P1_MULT = 1
+      ROM1M3_MULT = 1
+      ROP3M1_MULT = 1
+      ROP1M3_MULT = 1
+
 C     Default pion model is Rein-Sehgal + Global Fermi-gas = 1
 C     Default pion model is Rein-Sehgal + Local  Fermi-gas = 2 ( not yet )
 C     Minoo's model                                        = 3

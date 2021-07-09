@@ -627,6 +627,16 @@ C     rho +3/2 -1/2
 C     rho +1/2 -3/2
       ROP1M3 = RHOCALC(1, 1, 1,-3, ALPSH, BETSH, DELSH, AM, ETABW)
 
+C     Include the multiplicative factors
+      ROP3P3 = ROP3P3*ROP3P3_MULT
+      ROM3M3 = ROM3M3*ROM3M3_MULT
+      ROP1P1 = ROP1P1*ROP1P1_MULT
+      ROM1M1 = ROM1M1*ROM1M1_MULT
+      ROP3P1 = ROP3P1*ROP3P1_MULT
+      ROM1M3 = ROM1M3*ROM1M3_MULT
+      ROP3M1 = ROP3M1*ROP3M1_MULT
+      ROP1M3 = ROP1M3*ROP1M3_MULT
+
 C     These are the 33 resonances that will contribute to pion direction (eq 2.47 R-S)
 C     RHOTIL is rho tilde, or the total equal isospin sum
       RHOTIL = ROP3P3 + ROP1P1 + ROM1M1 + ROM3M3

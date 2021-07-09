@@ -146,6 +146,8 @@ C
 
       REAL*4    XMANCEL
       INTEGER*4 SPIDELTA
+      REAL*4 ROP3P3_MULT, ROM3M3_MULT, ROP1P1_MULT, ROM1M1_MULT
+      REAL*4 ROP3P1_MULT, ROM1M3_MULT, ROP3M1_MULT, ROP1M3_MULT
 
       COMMON /NEUTMODEL/MODELDIS,MODELCOH,MODELDIF
       COMMON /NEMDLS/MDLQE,MDLSPI,MDLDIS,MDLCOH,MDLDIF,MDLSPIEJ,
@@ -165,7 +167,15 @@ C
      $               AXZEXPA9,
      $               MDL2P2H,
      $               XMANCEL,
-     $               SPIDELTA
+     $               SPIDELTA,
+     $               ROP3P3_MULT,
+     $               ROM3M3_MULT,
+     $               ROP1P1_MULT,
+     $               ROM1M1_MULT,
+     $               ROP3P1_MULT,
+     $               ROM1M3_MULT,
+     $               ROP3M1_MULT,
+     $               ROP1M3_MULT
 
 #include "nieves1p1h.h"
 #include "nieves2p2h.h"
