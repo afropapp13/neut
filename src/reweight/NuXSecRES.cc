@@ -29,6 +29,15 @@ NuXSecRESEngine::NuXSecRESEngine() {
   BgSclRES = RegisterDial("BgSclRES", cbfa.fneut1pi_gen.rnebgscl, 0.15, 0.15);
   MDLSPiEj = RegisterDial("MDLSPiEj", cbfa.fnemdls_gen.mdlspiej);
 
+  ROP3P3 = RegisterDial("ROP3P3", cbfa.fnemdls_gen.rop3p3_mult, 0.3, 0.3);
+  ROP1P1 = RegisterDial("ROP1P1", cbfa.fnemdls_gen.rop1p1_mult, 0.3, 0.3);
+  ROM3M3 = RegisterDial("ROM3M3", cbfa.fnemdls_gen.rom3m3_mult, 0.3, 0.3);
+  ROM1M1 = RegisterDial("ROM1M1", cbfa.fnemdls_gen.rom1m1_mult, 0.3, 0.3);
+  ROP3P1 = RegisterDial("ROP3P1", cbfa.fnemdls_gen.rop3p1_mult, 0.3, 0.3);
+  ROM1M3 = RegisterDial("ROM1M3", cbfa.fnemdls_gen.rom1m3_mult, 0.3, 0.3);
+  ROP3M1 = RegisterDial("ROP3M1", cbfa.fnemdls_gen.rop3m1_mult, 0.3, 0.3);
+  ROP1M3 = RegisterDial("ROP1M3", cbfa.fnemdls_gen.rop1m3_mult, 0.3, 0.3);
+
   UseSeparateBgSclLMCPiBar = RegisterDial("UseSeparateBgSclLMCPiBar", 0);
   BgSclLMCPiBarRES =
       RegisterDial("BgSclLMCPiBarRES", cbfa.fneut1pi_gen.rnebgscl, 1.3, 1.3);
@@ -108,6 +117,15 @@ double NuXSecRESEngine::CalcWeight() {
 
   neut1pi_.rneca5i = fDials[CA5RES].ToValue;
   nemdls_.mdlspiej = fDials[MDLSPiEj].ToValue;
+
+  nemdls_.rop3p3_mult = fDials[ROP3P3].ToValue;
+  nemdls_.rop1p1_mult = fDials[ROP1P1].ToValue;
+  nemdls_.rom3m3_mult = fDials[ROM3M3].ToValue;
+  nemdls_.rom1m1_mult = fDials[ROM1M1].ToValue;
+  nemdls_.rop3p1_mult = fDials[ROP3P1].ToValue;
+  nemdls_.rom1m3_mult = fDials[ROM1M3].ToValue;
+  nemdls_.rop3m1_mult = fDials[ROP3M1].ToValue;
+  nemdls_.rop1m3_mult = fDials[ROP1M3].ToValue;
 
   if (fDials[UseSeparateBgSclLMCPiBar].ToValue && EventIsLMCPiBar()) {
     neut1pi_.rnebgscl = fDials[BgSclLMCPiBarRES].ToValue;

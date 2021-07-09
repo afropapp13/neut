@@ -25,6 +25,16 @@ private:
 
   NSyst_t UseSeparateBgSclLMCPiBar;
   NSyst_t BgSclLMCPiBarRES;
+
+  NSyst_t ROP3P3;
+  NSyst_t ROP1P1;
+  NSyst_t ROM3M3;
+  NSyst_t ROM1M1;
+  NSyst_t ROP3P1;
+  NSyst_t ROM1M3;
+  NSyst_t ROP3M1;
+  NSyst_t ROP1M3;
+
 };
 
 } // namespace rew
