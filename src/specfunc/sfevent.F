@@ -307,11 +307,11 @@ c ----- energy conservation from spectral function definition
         if (dotProduct(temp_vector, temp_vector) .LT.
      +  (leptonMass + outNucleonMass)**2 ) then
 c ----- not enough energy - skip straight to end of event
-          WRITE(*,*) "Not Enough Energy: ", temp_vector
-          WRITE(*,*) "-- ", E
-          WRITE(*,*) "-- ", SFEBSHIFT*1E3, ETilde
-          WRITE(*,*) "-- ", dotProduct(temp_vector, temp_vector)
-          WRITE(*,*) "-- ", (leptonMass + outNucleonMass)**2 
+C           WRITE(*,*) "Not Enough Energy: ", temp_vector
+C           WRITE(*,*) "-- ", E
+C           WRITE(*,*) "-- ", SFEBSHIFT*1E3, ETilde
+C           WRITE(*,*) "-- ", dotProduct(temp_vector, temp_vector)
+C           WRITE(*,*) "-- ", (leptonMass + outNucleonMass)**2 
           crossSection = 0
           goto 20
         endif
