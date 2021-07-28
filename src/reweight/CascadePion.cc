@@ -15,18 +15,18 @@ namespace neut {
 namespace rew {
 
 CascadePionEngine::CascadePionEngine() {
-    CommonBlockIFace const &cbfa = CommonBlockIFace::Get();
+  CommonBlockIFace const &cbfa = CommonBlockIFace::Get();
 
   PionFSI_AbsProb =
       RegisterDial("PionFSI_AbsProb", cbfa.fneffpr_gen.fefabs, 0.432, 0.432);
-  PionFSI_QELowMomProb =
-      RegisterDial("PionFSI_QELowMomProb", cbfa.fneffpr_gen.fefqe, 0.313, 0.313);
-  PionFSI_CExLowMomProb =
-      RegisterDial("PionFSI_CExLowMomProb", cbfa.fneffpr_gen.fefcx, 0.305, 0.305);
-  PionFSI_QEHighMomProb =
-      RegisterDial("PionFSI_QEHighMomProb", cbfa.fneffpr_gen.fefqeh, 0.859, 0.859);
-  PionFSI_CExHighMomProb =
-      RegisterDial("PionFSI_CExHighMomProb", cbfa.fneffpr_gen.fefcxh);
+  PionFSI_QELowMomProb = RegisterDial("PionFSI_QELowMomProb",
+                                      cbfa.fneffpr_gen.fefqe, 0.313, 0.313);
+  PionFSI_CExLowMomProb = RegisterDial("PionFSI_CExLowMomProb",
+                                       cbfa.fneffpr_gen.fefcx, 0.305, 0.305);
+  PionFSI_QEHighMomProb = RegisterDial("PionFSI_QEHighMomProb",
+                                       cbfa.fneffpr_gen.fefqeh, 0.859, 0.859);
+  PionFSI_CExHighMomProb = RegisterDial("PionFSI_CExHighMomProb",
+                                        cbfa.fneffpr_gen.fefcxh, 0.288, 0.288);
   PionFSI_InelProb =
       RegisterDial("PionFSI_InelProb", cbfa.fneffpr_gen.fefinel, 1.101, 1.101);
 }
