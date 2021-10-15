@@ -95,8 +95,11 @@ void CommonBlockIFace::SetGenCard(std::string const &GenCardLocation) {
   fnievesqepar_gen = nievesqepar_;
 }
 
-void CommonBlockIFace::Initialize(std::string const &GenCardLocation) {
-  std::cout << "Initializing with " << GenCardLocation << std::endl;
+void CommonBlockIFace::Initialize(std::string const &GenCardLocation,
+                                  bool quiet) {
+  if (!quiet) {
+    std::cout << "Initializing with " << GenCardLocation << std::endl;
+  }
   if (!gCommonBlockIFace) {
     gCommonBlockIFace = new CommonBlockIFace();
     gCommonBlockIFace->SetGenCard(GenCardLocation);

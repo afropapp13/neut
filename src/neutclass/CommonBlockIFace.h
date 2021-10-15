@@ -32,6 +32,8 @@ void zexpconfig_();
 double evdifcrs_();
 double evpiprob_();
 double evpiw_();
+void silencelibgfortran_();
+void unsilencelibgfortran_();
 }
 
 namespace neut {
@@ -86,7 +88,8 @@ private:
   void SetGenCard(std::string const &GenCardLocation);
 
 public:
-  static void Initialize(std::string const &GenCardLocation);
+  static void Initialize(std::string const &GenCardLocation,
+                         bool quiet = false);
   static CommonBlockIFace const &Get();
 
 #ifdef USE_HEPMC

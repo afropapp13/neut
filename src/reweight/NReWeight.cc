@@ -114,6 +114,20 @@ double NReWeight::GetDial_To_Value(NSyst_t syst) const {
   throw std::invalid_argument(NSyst::DialAsString(syst));
 }
 
+double NReWeight::GetDial_Tweak(NSyst_t syst) const {
+  CheckEngineUnique(WeightEngines, syst);
+
+  for (auto &wght_engine : WeightEngines) {
+    if (wght_engine.second->DialIsHandled(syst)) {
+      return wght_engine.second->GetDial_Tweak(syst);
+    }
+  }
+  std::cout << "[ERROR]: Dial: " << syst
+            << " is unhandled by any known weight engine." << std::endl;
+  std::cout << syst << " = " << NSyst::DialAsString(syst) << std::endl;
+  throw std::invalid_argument(NSyst::DialAsString(syst));
+}
+
 double NReWeight::GetDial_OneSigma(NSyst_t syst, double tweak) const {
   CheckEngineUnique(WeightEngines, syst);
 

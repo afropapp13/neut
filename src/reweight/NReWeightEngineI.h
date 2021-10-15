@@ -34,6 +34,13 @@ public:
     return fDials.at(syst).ToValue;
   }
 
+  // Note that this is instantly updated when calling SetDial_To_Value or
+  // SetDial_NumberOfSigmas
+  double GetDial_Tweak(NSyst_t syst) const {
+    ABORT_IF_UNHANDLED(syst);
+    return fDials.at(syst).Tweak;
+  }
+
   double GetDial_OneSigma(NSyst_t syst, double tweak) const {
     ABORT_IF_UNHANDLED(syst);
     return fDials.at(syst).GetOneSigma(tweak);

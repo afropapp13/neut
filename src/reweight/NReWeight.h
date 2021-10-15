@@ -30,6 +30,7 @@ public:
   std::string DialAsString(NSyst_t) const;
   double GetDial_From_Value(NSyst_t) const;
   double GetDial_To_Value(NSyst_t) const;
+  double GetDial_Tweak(NSyst_t syst) const;
   double GetDial_OneSigma(NSyst_t, double) const;
   void SetDial_NumberOfSigmas(NSyst_t, double);
   void SetDial_To_Value(NSyst_t, double);
