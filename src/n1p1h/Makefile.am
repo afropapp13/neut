@@ -15,3 +15,6 @@ libn1p1h_@NEUT_VERSION_NUM@_a_SOURCES = src/N1p1h2d.C src/N1p1h.C src/N1p1hFortr
 
 # Unused sources that live in the directory
 UNUSED_srcs = src/Simplex.C
+
+install-exec-hook:
+	-(mkdir -p ${bindir}/../share/neut/crsdat/N1p1h; cp -r $(top_srcdir)/n1p1h/Tables_std ${bindir}/../share/neut/crsdat/N1p1h )
