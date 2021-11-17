@@ -453,9 +453,10 @@ NEUT_FFLAGS = -fno-backslash -fno-automatic -fno-second-underscore -ffixed-line-
 DEFAULT_FFLAGS = $(NEUT_FFLAGS) $(NEUT_INCLUDES) \
 	-I$(CERN_ROOT)/include $(am__append_6) $(am__append_9) \
 	$(am__append_12) $(am__append_15) $(am__append_17)
+ROOT_CFLAGS = $(shell root-config --cflags)
 DEFAULT_CXXFLAGS = -fPIC $(NEUT_DEFINES) $(NEUT_INCLUDES) \
-	-I$(CERN_ROOT)/include -std=c++11 $(shell root-config \
-	--cflags) $(am__append_5) $(am__append_7) $(am__append_10) \
+	-I$(CERN_ROOT)/include -std=c++11 $(ROOT_CFLAGS) \
+	$(am__append_5) $(am__append_7) $(am__append_10) \
 	$(am__append_13) $(am__append_18)
 DEFAULT_CFLAGS = -fPIC $(NEUT_DEFINES) $(NEUT_INCLUDES) \
 	-I$(CERN_ROOT)/include $(am__append_8) $(am__append_11) \

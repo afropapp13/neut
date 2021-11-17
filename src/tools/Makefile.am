@@ -28,28 +28,35 @@ FEATURES += debug
 endif
 
 ROOT_FLAGS = $(HEPMC_FLAGS) $(ROOT_LINKFLAGS) $(ROOT_LIBS)
+NEUT_CFLAGS = -fPIC $(ROOT_CFLAGS)
 CERN_FLAGS = $(CERN_LINKFLAGS) $(CERN_LIBS)
 
-IO_LIB_LIST = libNEUTClassUtils.a libNEUTClass.so
-JUST_IO_LIB_FLAGS = -lNEUTClassUtils -lNEUTClass
-IO_LIB_FLAGS = $(JUST_IO_LIB_FLAGS) $(ROOT_FLAGS)
-RW_LIB = libNEUTReWeight.so
-RW_FLAGS = -lNEUTReWeight
-LIB_LIST = $(RW_LIB) $(IO_LIB_LIST) libNEUT.a
-LIB_FLAGS = $(RW_FLAGS) $(JUST_IO_LIB_FLAGS) -lNEUT $(ROOT_FLAGS) $(CERN_FLAGS)
+IO_LIB_FLAGS = -lNEUTClassUtils -lNEUTClass $(HEPMC_FLAGS) $(ROOT_FLAGS)
+LIB_FLAGS = -lNEUTReWeight -lNEUT $(IO_LIB_FLAGS) $(CERN_FLAGS)
 
-neut-config: neut-config.in
-	cat ${top_srcdir}/tools/neut-config.in | sed "s|__FEATURES__|$(FEATURES)|g" | sed "s|__INST_ROOT__|$(INST_ROOT)|g" | sed "s|__LIB_LIST__|$(LIB_LIST)|g" | sed "s|__IO_LIB_LIST__|$(IO_LIB_LIST)|g" | sed "s|__RW_LIB__|$(RW_LIB)|g" | sed "s|__LIB_FLAGS__|$(LIB_FLAGS)|g" | sed "s|__IO_LIB_FLAGS__|$(IO_LIB_FLAGS)|g" | sed "s|__RW_FLAGS__|$(RW_FLAGS)|g" | sed "s|__NEUT_VERSION__|$(NEUT_VERSION)|g" | sed "s|__ROOT_FLAGS__|$(ROOT_FLAGS)|g" | sed "s|__CERN_FLAGS__|$(CERN_FLAGS)|g" > neut-config
-	chmod +x neut-config
+neut.pc: neut.pc.in
+	cat ${top_srcdir}/tools/neut.pc.in \
+	| sed "s|__INST_ROOT__|$(INST_ROOT)|g" \
+	| sed "s|__FEATURES__|$(FEATURES)|g" \
+	| sed "s|__ROOT_FLAGS__|$(ROOT_FLAGS)|g" \
+	| sed "s|__NEUT_CFLAGS__|$(NEUT_CFLAGS)|g" \
+	| sed "s|__CERN_FLAGS__|$(CERN_FLAGS)|g" \
+	| sed "s|__IO_LIB_FLAGS__|$(IO_LIB_FLAGS)|g" \
+	| sed "s|__NEUT_VERSION__|$(NEUT_VERSION)|g" \
+	| sed "s|__LIB_FLAGS__|$(LIB_FLAGS)|g"   > neut.pc
 
 setup.sh: setup.sh.in
-	cat ${top_srcdir}/tools/setup.sh.in | sed "s|__ROOT_VERSION_COMPILE__|$(ROOT_VERSION_COMPILE)|g" | sed "s|__ROOT_ROOT_COMPILE__|$(ROOT_ROOT_COMPILE)|g" | sed "s|__USE_HEPMC__|$(USE_HEPMC)|g" | sed "s|__HEPMC_LIBDIR__|$(HEPMC_LIBDIR)|g" > setup.sh
+	cat ${top_srcdir}/tools/setup.sh.in \
+	| sed "s|__ROOT_VERSION_COMPILE__|$(ROOT_VERSION_COMPILE)|g" \
+	| sed "s|__ROOT_ROOT_COMPILE__|$(ROOT_ROOT_COMPILE)|g" \
+	| sed "s|__USE_HEPMC__|$(USE_HEPMC)|g" \
+	| sed "s|__HEPMC_LIBDIR__|$(HEPMC_LIBDIR)|g" > setup.sh
 
-install-exec-hook: neut-config setup.sh
-	-cp neut-config ${bindir}/
-	-cp setup.sh ${prefix}/
-	chmod +x ${prefix}/setup.sh
+install-exec-hook: neut-config setup.sh neut.pc
+	-cp ${top_srcdir}/tools/neut-config ${bindir}/
+	chmod +x ${bindir}/neut-config
+	-cp setup.sh neut.pc ${prefix}/
 
 uninstall-hook:
 	-(cd ${bindir}; rm -f neut-config)
-	-(cd ${prefix}; rm -f setup.sh)
+	-(cd ${prefix}; rm -f setup.sh neut.pc)

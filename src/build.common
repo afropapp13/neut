@@ -35,12 +35,12 @@ else
 USE_HEPMC = no
 endif
 
-
 NEUT_FFLAGS = -fno-backslash -fno-automatic -fno-second-underscore -ffixed-line-length-132 -fdollar-ok -fPIC -fbounds-check -Wall -Wextra -ffpe-trap=invalid,zero,overflow -DstrictF77 -Df2cFortran $(NEUT_DEFINES)
 
 DEFAULT_FFLAGS = $(NEUT_FFLAGS) $(NEUT_INCLUDES) -I$(CERN_ROOT)/include
 
-DEFAULT_CXXFLAGS = -fPIC $(NEUT_DEFINES) $(NEUT_INCLUDES) -I$(CERN_ROOT)/include -std=c++11 $(shell root-config --cflags)
+ROOT_CFLAGS=$(shell root-config --cflags)
+DEFAULT_CXXFLAGS = -fPIC $(NEUT_DEFINES) $(NEUT_INCLUDES) -I$(CERN_ROOT)/include -std=c++11 $(ROOT_CFLAGS)
 
 if NEUT_HEPMC
 DEFAULT_CXXFLAGS += $(shell HepMC3-config --cflags) -I$(shell NuHepMC-config --incdir)
