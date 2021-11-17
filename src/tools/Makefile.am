@@ -31,8 +31,11 @@ ROOT_FLAGS = $(HEPMC_FLAGS) $(ROOT_LINKFLAGS) $(ROOT_LIBS)
 NEUT_CFLAGS = -fPIC $(ROOT_CFLAGS)
 CERN_FLAGS = $(CERN_LINKFLAGS) $(CERN_LIBS)
 
-IO_LIB_FLAGS = -lNEUTClassUtils -lNEUTClass $(HEPMC_FLAGS) $(ROOT_FLAGS)
-LIB_FLAGS = -lNEUTReWeight -lNEUT $(IO_LIB_FLAGS) $(CERN_FLAGS)
+IO_LIB_FLAGS = -lNEUTClassUtils -lNEUTClass
+IO_LIB_FLAGS_PRIVATE = $(HEPMC_FLAGS) $(ROOT_FLAGS)
+
+LIB_FLAGS = -lNEUTReWeight -lNEUT $(IO_LIB_FLAGS)
+LIB_FLAGS_PRIVATE = $(IO_LIB_FLAGS_PRIVATE) $(CERN_FLAGS)
 
 neut.pc: neut.pc.in
 	cat ${top_srcdir}/tools/neut.pc.in \
@@ -43,7 +46,9 @@ neut.pc: neut.pc.in
 	| sed "s|__CERN_FLAGS__|$(CERN_FLAGS)|g" \
 	| sed "s|__IO_LIB_FLAGS__|$(IO_LIB_FLAGS)|g" \
 	| sed "s|__NEUT_VERSION__|$(NEUT_VERSION)|g" \
-	| sed "s|__LIB_FLAGS__|$(LIB_FLAGS)|g"   > neut.pc
+	| sed "s|__EXE_LINKFLAGS__|$(EXE_LINKFLAGS)|g" \
+	| sed "s|__LIB_FLAGS__|$(LIB_FLAGS)|g" \
+	| sed "s|__LIB_FLAGS_PRIVATE__|$(LIB_FLAGS_PRIVATE)|g"   > neut.pc
 
 setup.sh: setup.sh.in
 	cat ${top_srcdir}/tools/setup.sh.in \

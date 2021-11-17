@@ -56,8 +56,16 @@ while [[ ${#} -gt 0 ]]; do
         pkg-config ${INSTALL_ROOT}/neut.pc --libs
       ;;
 
+      --libs-static)
+        pkg-config ${INSTALL_ROOT}/neut.pc --libs --static
+      ;;
+
       --iolibs)
         pkg-config ${INSTALL_ROOT}/neut.pc --variable=IO_LIB_FLAGS
+      ;;
+
+      --exeflags)
+        pkg-config ${INSTALL_ROOT}/neut.pc --variable=EXE_LINKFLAGS
       ;;
 
       --features)
@@ -85,7 +93,9 @@ while [[ ${#} -gt 0 ]]; do
       echo -e "\t--cflags                   : Print recommended compiler flags for compiling against NEUT."
       echo -e "\t--libdir                   : Print location of installed libraries."
       echo -e "\t--libs                     : Print linker flags for linking against NEUT"
-      echo -e "\t--iolibs                  : Print linker flags required to read NEUT files"
+      echo -e "\t--libs-static              : Print linker flags for linking against NEUT and NEUT's dependencies"
+      echo -e "\t--iolibs                   : Print linker flags required to read NEUT files"
+      echo -e "\t--exeflags                 : Print recommended flags for linking executables against NEUT."
       echo -e "\t--features                 : Print list of features."
       echo -e "\t--has-feature <feature>    : Returns 0 if has feature, 1 if not."
       echo -e "\t--version                  : Print NEUT version."
