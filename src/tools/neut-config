@@ -83,7 +83,7 @@ while [[ ${#} -gt 0 ]]; do
       ;;
 
       --version)
-        pkg-config ${INSTALL_ROOT}/neut.pc --modeversion
+        pkg-config ${INSTALL_ROOT}/neut.pc --modversion
       ;;
 
       -?|--help)
