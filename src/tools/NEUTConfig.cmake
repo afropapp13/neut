@@ -5,7 +5,9 @@ cmake_minimum_required (VERSION 3.14 FATAL_ERROR)
 #
 # and the following imported targets
 #
-#     NEUT::Core
+#    NEUT::IO
+#    NEUT::Generator
+#    NEUT::ReWeight
 #
 
 # Colorful messaging facilities
@@ -72,6 +74,10 @@ find_path(NEUT_INCLUDE_DIR
 pkg_get_variable(NEUT_PREFIX NEUT prefix)
 pkg_get_variable(NEUT_EXE_LINKFLAGS NEUT EXE_LINKFLAGS)
 
+pkg_get_variable(NEUT_ROOT_LINKFLAGS NEUT ROOT_FLAGS)
+pkg_get_variable(NEUT_CERN_LINKFLAGS NEUT CERN_FLAGS)
+pkg_get_variable(NEUT_LIB_LINKFLAGS NEUT LIB_FLAGS)
+
 find_path(NEUT_BIN_DIR
   NAMES neutroot2
   PATHS ${NEUT_PREFIX}
@@ -86,7 +92,15 @@ set(NEUT_VERSION ${NEUT_VERSION})
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(NEUT
-    REQUIRED_VARS NEUT_INCLUDE_DIR NEUT_BIN_DIR MANUAL_NEUT_LIBRARY_DIR
+    REQUIRED_VARS 
+      NEUT_INCLUDE_DIR 
+      NEUT_BIN_DIR 
+      MANUAL_NEUT_LIBRARY_DIR
+      NEUT_PREFIX
+      NEUT_EXE_LINKFLAGS
+      NEUT_ROOT_LINKFLAGS
+      NEUT_CERN_LINKFLAGS
+      NEUT_LIB_LINKFLAGS
     VERSION_VAR NEUT_VERSION
 )
 
@@ -98,27 +112,43 @@ if(NEUT_FOUND)
   #We should let CMake set this
   list(REMOVE_ITEM NEUT_CFLAGS_OTHER "-fPIC")
 
-  cmessage(STATUS "NEUT Found: ${NEUT_PREFIX} ")
-  cmessage(STATUS "    NEUT_INCLUDE_DIRS: ${NEUT_INCLUDE_DIRS}")
-  cmessage(STATUS "    NEUT_CFLAGS_OTHER: ${NEUT_CFLAGS_OTHER}")
-  cmessage(STATUS "    NEUT_LIBRARY_DIRS: ${NEUT_LIBRARY_DIRS}")
-  cmessage(STATUS "    NEUT_LIBRARIES: ${NEUT_LIBRARIES}")
-  cmessage(STATUS "    NEUT_LINK_OPTIONS: ${NEUT_LINK_OPTIONS}")
-
   #This horrow show lets us add the exe-flag only for executable targets.
   SET(NEUT_LINK_OPTIONS ${NEUT_LDFLAGS_OTHER})
   foreach(opt ${NEUT_EXE_LINKFLAGS})
     LIST(APPEND NEUT_LINK_OPTIONS $<IF:$<STREQUAL:"$<TARGET_PROPERTY:TYPE>","EXECUTABLE">,${opt},>)
   endforeach()
 
-  if(NOT TARGET NEUT::Core)
-      add_library(NEUT::Core INTERFACE IMPORTED)
-      set_target_properties(NEUT::Core PROPERTIES
+  cmessage(STATUS "NEUT Found: ${NEUT_PREFIX} ")
+  cmessage(STATUS "    NEUT_INCLUDE_DIRS: ${NEUT_INCLUDE_DIRS}")
+  cmessage(STATUS "    NEUT_CFLAGS_OTHER: ${NEUT_CFLAGS_OTHER}")
+  cmessage(STATUS "    NEUT_LIBRARY_DIRS: ${NEUT_LIBRARY_DIRS}")
+  cmessage(STATUS "    NEUT_ROOT_LINKFLAGS: ${NEUT_ROOT_LINKFLAGS}")
+  cmessage(STATUS "    NEUT_CERN_LINKFLAGS: ${NEUT_CERN_LINKFLAGS}")
+  cmessage(STATUS "    NEUT_LIB_LINKFLAGS: ${NEUT_LIB_LINKFLAGS}")
+  cmessage(STATUS "    NEUT_LINK_OPTIONS: ${NEUT_LINK_OPTIONS}")
+
+  if(NOT TARGET NEUT::IO)
+      add_library(NEUT::IO INTERFACE IMPORTED)
+      set_target_properties(NEUT::IO PROPERTIES
           INTERFACE_INCLUDE_DIRECTORIES "${NEUT_INCLUDE_DIRS}"
           INTERFACE_COMPILE_OPTIONS "${NEUT_CFLAGS_OTHER}"
           INTERFACE_LINK_DIRECTORIES "${NEUT_LIBRARY_DIRS}"
-          INTERFACE_LINK_LIBRARIES "${NEUT_LIBRARIES}"
+          INTERFACE_LINK_LIBRARIES "NEUTClass;${NEUT_ROOT_LINKFLAGS}"
           INTERFACE_LINK_OPTIONS "${NEUT_LINK_OPTIONS}"
+      )
+  endif()
+
+  if(NOT TARGET NEUT::Generator)
+      add_library(NEUT::Generator INTERFACE IMPORTED)
+      set_target_properties(NEUT::Generator PROPERTIES
+          INTERFACE_LINK_LIBRARIES "NEUT;NEUT::IO;${NEUT_CERN_LINKFLAGS};gfortran"
+      )
+  endif()
+
+    if(NOT TARGET NEUT::ReWeight)
+      add_library(NEUT::ReWeight INTERFACE IMPORTED)
+      set_target_properties(NEUT::ReWeight PROPERTIES
+          INTERFACE_LINK_LIBRARIES "NEUTReWeight;NEUTClassUtils;NEUT::Generator"
       )
   endif()
 
