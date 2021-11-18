@@ -37,8 +37,8 @@ IO_LIB_FLAGS_PRIVATE = $(HEPMC_FLAGS) $(ROOT_FLAGS)
 LIB_FLAGS = -lNEUTReWeight -lNEUT $(IO_LIB_FLAGS)
 LIB_FLAGS_PRIVATE = $(IO_LIB_FLAGS_PRIVATE) $(CERN_FLAGS)
 
-neut.pc: neut.pc.in
-	cat ${top_srcdir}/tools/neut.pc.in \
+NEUT.pc: NEUT.pc.in
+	cat ${top_srcdir}/tools/NEUT.pc.in \
 	| sed "s|__INST_ROOT__|$(INST_ROOT)|g" \
 	| sed "s|__FEATURES__|$(FEATURES)|g" \
 	| sed "s|__ROOT_FLAGS__|$(ROOT_FLAGS)|g" \
@@ -48,7 +48,7 @@ neut.pc: neut.pc.in
 	| sed "s|__NEUT_VERSION__|$(NEUT_VERSION)|g" \
 	| sed "s|__EXE_LINKFLAGS__|$(EXE_LINKFLAGS)|g" \
 	| sed "s|__LIB_FLAGS__|$(LIB_FLAGS)|g" \
-	| sed "s|__LIB_FLAGS_PRIVATE__|$(LIB_FLAGS_PRIVATE)|g"   > neut.pc
+	| sed "s|__LIB_FLAGS_PRIVATE__|$(LIB_FLAGS_PRIVATE)|g" > NEUT.pc
 
 setup.sh: setup.sh.in
 	cat ${top_srcdir}/tools/setup.sh.in \
@@ -57,11 +57,13 @@ setup.sh: setup.sh.in
 	| sed "s|__USE_HEPMC__|$(USE_HEPMC)|g" \
 	| sed "s|__HEPMC_LIBDIR__|$(HEPMC_LIBDIR)|g" > setup.sh
 
-install-exec-hook: neut-config setup.sh neut.pc
+install-exec-hook: neut-config setup.sh NEUT.pc
 	-cp ${top_srcdir}/tools/neut-config ${bindir}/
+	-mkdir -p ${prefix}/cmake
+	-cp ${top_srcdir}/tools/NEUTConfig.cmake ${prefix}/cmake
 	chmod +x ${bindir}/neut-config
-	-cp setup.sh neut.pc ${prefix}/
+	-cp setup.sh NEUT.pc ${prefix}/
 
 uninstall-hook:
 	-(cd ${bindir}; rm -f neut-config)
-	-(cd ${prefix}; rm -f setup.sh neut.pc)
+	-(cd ${prefix}; rm -f setup.sh NEUT.pc)

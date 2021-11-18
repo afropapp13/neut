@@ -16,9 +16,9 @@ if ! hash pkg-config; then
   exit 1
 fi
 
-PKGCONFIG_NEUT_INSTALL_ROOT=$(pkg-config ${INSTALL_ROOT}/neut.pc --variable=prefix)
+PKGCONFIG_NEUT_INSTALL_ROOT=$(pkg-config ${INSTALL_ROOT}/NEUT.pc --variable=prefix)
 if [ "$?" != "0" ]; then
-  echo "[ERROR]: Failed to read NEUT pkg-config file: ${INSTALL_ROOT}/neut.pc"
+  echo "[ERROR]: Failed to read NEUT pkg-config file: ${INSTALL_ROOT}/NEUT.pc"
   exit 1
 fi
 
@@ -33,7 +33,7 @@ if [ ${#} -eq 0 ]; then
   echo "${SCRIPTNAME} [--features] [--has-feature <feature name>] [--incdir] [--cflags] [--libdir] [--libs] [--iolibs] [--version]"
 fi
 
-FEATURES=$(pkg-config ${INSTALL_ROOT}/neut.pc --variable=FEATURES)
+FEATURES=$(pkg-config ${INSTALL_ROOT}/NEUT.pc --variable=FEATURES)
 
 while [[ ${#} -gt 0 ]]; do
 
@@ -41,31 +41,31 @@ while [[ ${#} -gt 0 ]]; do
   case $key in
 
       --incdir)
-        pkg-config ${INSTALL_ROOT}/neut.pc --variable=includedir
+        pkg-config ${INSTALL_ROOT}/NEUT.pc --variable=includedir
       ;;
 
       --libdir)
-        pkg-config ${INSTALL_ROOT}/neut.pc --variable=libdir
+        pkg-config ${INSTALL_ROOT}/NEUT.pc --variable=libdir
       ;;
 
       --cflags)
-        pkg-config ${INSTALL_ROOT}/neut.pc --cflags
+        pkg-config ${INSTALL_ROOT}/NEUT.pc --cflags
       ;;
 
       --libs)
-        pkg-config ${INSTALL_ROOT}/neut.pc --libs
+        pkg-config ${INSTALL_ROOT}/NEUT.pc --libs
       ;;
 
       --libs-static)
-        pkg-config ${INSTALL_ROOT}/neut.pc --libs --static
+        pkg-config ${INSTALL_ROOT}/NEUT.pc --libs --static
       ;;
 
       --iolibs)
-        pkg-config ${INSTALL_ROOT}/neut.pc --variable=IO_LIB_FLAGS
+        pkg-config ${INSTALL_ROOT}/NEUT.pc --variable=IO_LIB_FLAGS
       ;;
 
       --exeflags)
-        pkg-config ${INSTALL_ROOT}/neut.pc --variable=EXE_LINKFLAGS
+        pkg-config ${INSTALL_ROOT}/NEUT.pc --variable=EXE_LINKFLAGS
       ;;
 
       --features)
@@ -83,7 +83,7 @@ while [[ ${#} -gt 0 ]]; do
       ;;
 
       --version)
-        pkg-config ${INSTALL_ROOT}/neut.pc --modversion
+        pkg-config ${INSTALL_ROOT}/NEUT.pc --modversion
       ;;
 
       -?|--help)
