@@ -34,14 +34,24 @@ make install
 source /path/to/neut/build/Linux/setup.sh
 ```
 
-### Using neut-config
+### Linking to NEUT
+
+#### Using neut-config
 If the environment is set up then `neut-config` should be available. To build and link an app that needs to be able to read neut vectors you could use
 ```
--I$(neut-config --incdir) -L$(neut-config --libdir) $(neut-config --iolibflags)
+-I$(neut-config --incdir) -L$(neut-config --libdir) $(neut-config --libs)
 ```
 which might produce compiler/linker flags like:
 ```
 -I/path/to/neut/build/Linux/include -L/path/to/neut/build/Linux/lib -lneutclassUtils -lneutclass
+```
+
+#### Using NEUTConfig.cmake
+Make sure that the NEUT_ROOT environment variable is defined and `ls $NEUT_ROOT/cmake` shows `NEUTConfig.cmake`. 
+
+In your cmake script run:
+```
+find_package(NEUT)
 ```
 
 ## When you found issues or bugs in the existing code
