@@ -338,7 +338,7 @@ FEATURES = reweight common-iface $(am__append_24) $(am__append_25) \
 	$(am__append_26) $(am__append_27)
 ROOT_FLAGS = $(HEPMC_FLAGS) $(ROOT_LINKFLAGS) $(ROOT_LIBS)
 NEUT_CFLAGS = -fPIC $(ROOT_CFLAGS)
-CERN_FLAGS = $(CERN_LINKFLAGS) $(CERN_LIBS)
+CERN_FLAGS = $(CERN_LINKFLAGS) $(CERN_LIBS) -lgfortran
 IO_LIB_FLAGS = -lNEUTClassUtils -lNEUTClass
 IO_LIB_FLAGS_PRIVATE = $(HEPMC_FLAGS) $(ROOT_FLAGS)
 LIB_FLAGS = -lNEUTReWeight -lNEUT $(IO_LIB_FLAGS)
