@@ -2,6 +2,8 @@
 #include "NReWeightEngineI.h"
 #include "NSyst.h"
 
+#include "neworkC.h"
+
 #include <iostream>
 #include <stdexcept>
 #include <vector>
@@ -36,6 +38,11 @@ void NReWeight::Reconfigure() {
 }
 
 double NReWeight::CalcWeight() {
+  if (nework_.modene ==
+      0) { // This event is considered invalid and should be squished.
+    return 0;
+  }
+
   double weight = 1;
   for (auto &wght_engine : WeightEngines) {
     weight *= wght_engine.second->CalcWeight();
