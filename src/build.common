@@ -11,6 +11,18 @@ NEUT_STATIC_LIBS =  $(top_builddir)/neutcore/libneutcore.@NEUT_VERSION_NUM@.a  $
 
 if NEUT_USE_TAUOLA
 NEUT_STATIC_LIBS += $(top_builddir)/tauola/libtauola.@NEUT_VERSION_NUM@.a
+
+NEUT_INCLUDES += -I$(top_srcdir)/tauola -I$(top_builddir)/tauola
+endif
+
+if NEUT_USE_ZBS
+NEUT_STATIC_LIBS += $(top_builddir)/zbs/libzbs.@NEUT_VERSION_NUM@.a \
+					$(top_builddir)/zbsfns/libzbsfns.@NEUT_VERSION_NUM@.a \
+					$(top_builddir)/t2kflux_zbs/libt2kflux_zbs.@NEUT_VERSION_NUM@.a
+
+NEUT_INCLUDES += -I$(top_srcdir)/zbs \
+				-I$(top_srcdir)/zbsfns \
+				-I$(top_srcdir)/t2kflux_zbs -I$(top_builddir)/t2kflux_zbs
 endif
 
 NEUT_LIBS = $(top_builddir)/neutclass/libNEUTClassUtils.@NEUT_VERSION_NUM@.a $(top_builddir)/neutclass/libNEUTClass.la $(top_builddir)/libNEUT.@NEUT_VERSION_NUM@.a 

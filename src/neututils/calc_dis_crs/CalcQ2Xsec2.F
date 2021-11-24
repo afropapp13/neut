@@ -249,14 +249,3 @@ Cx         DSIGMA1320=DSIGMA1320*(LMPI/XXMAX)*scale
      $        IP,EE,Q2,DSIGMA,DSIGMA1320,NEBODEK
  30   CONTINUE
       END
-
-      SUBROUTINE RMARIN(istau1, istau2, istau3)
-
-      write(*,*) "***********************************************"
-      write(*,*) "*****  Dummy RMARIN function was called.  *****"
-      write(*,*) "*****  This subroutine should not be used *****"
-      write(*,*) "*****  if you are trying to use tauola.   *****"
-      write(*,*) "***********************************************"
-
-      return
-      end

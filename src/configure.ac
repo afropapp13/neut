@@ -1,6 +1,6 @@
 AC_PREREQ([2.63])
 
-AC_INIT([neut], [5.4.1])
+AC_INIT([neut], [5.5.0])
 
 AC_SUBST(NEUT_VERSION, AC_PACKAGE_VERSION)
 AC_SUBST(NEUT_VERSION_NUM, $(echo AC_PACKAGE_VERSION | tr -d '.' ))
@@ -188,7 +188,9 @@ AC_CONFIG_FILES([
   tauola/Makefile
   specfunc/Makefile
   skmcsvc/Makefile
+  zbs/Makefile
   zbsfns/Makefile
+  t2kflux_zbs/Makefile
   partnuck/Makefile
   neutclass/Makefile
   neutsmpl/Makefile

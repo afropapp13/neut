@@ -63,10 +63,3 @@
       call nechadir(cost,phi,tdir,tgdir)
 
       end
-      
-      subroutine rmarin(i,j,k)
-      write(*,*) 'custom rmarin'
-      
-      return
-      end
-      

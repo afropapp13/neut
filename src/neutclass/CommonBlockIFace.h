@@ -85,11 +85,11 @@ public:
   nievesqepar_common fnievesqepar_gen;
 
 private:
-  void SetGenCard(std::string const &GenCardLocation);
+  void SetGenCard(std::string const &GenCardLocation, bool IsBMCard);
 
 public:
   static void Initialize(std::string const &GenCardLocation,
-                         bool quiet = false);
+                         bool IsBMCard = false, bool quiet = false);
   static CommonBlockIFace const &Get();
 
 #ifdef USE_HEPMC

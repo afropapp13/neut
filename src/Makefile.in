@@ -81,32 +81,44 @@ build_triplet = @build@
 host_triplet = @host@
 DIST_COMMON = $(srcdir)/build.common $(srcdir)/Makefile.in \
 	$(srcdir)/Makefile.am $(top_srcdir)/configure \
-	$(am__configure_deps) $(include_HEADERS) compile config.guess \
-	config.sub depcomp install-sh missing ltmain.sh
+	$(am__configure_deps) $(am__include_HEADERS_DIST) compile \
+	config.guess config.sub depcomp install-sh missing ltmain.sh
 @NEUT_USE_TAUOLA_TRUE@am__append_1 = $(top_builddir)/tauola/libtauola.@NEUT_VERSION_NUM@.a
-@NEUT_USE_TAUOLA_TRUE@am__append_2 = -DNEUT_USE_TAUOLA
-@NEUT_USE_GPERF_TRUE@am__append_3 = -DNEUT_USE_GPERF
-@NEUT_HEPMC_TRUE@am__append_4 = -DUSE_HEPMC
-@NEUT_HEPMC_TRUE@am__append_5 = $(shell HepMC3-config --cflags) -I$(shell NuHepMC-config --incdir)
-@NEUT_DEBUG_TRUE@am__append_6 = -O0 -g
-@NEUT_DEBUG_TRUE@am__append_7 = -O0 -g
-@NEUT_DEBUG_TRUE@am__append_8 = -O0 -g
-@NEUT_DEBUG_FALSE@am__append_9 = -O0
-@NEUT_DEBUG_FALSE@am__append_10 = -O0
-@NEUT_DEBUG_FALSE@am__append_11 = -O0
-@NEUT_WRITE_NUCFSI_TRUE@am__append_12 = -DNEUT_WRITE_NUCFSI -DNEUT_READ_NUCFSI
-@NEUT_WRITE_NUCFSI_TRUE@am__append_13 = -DNEUT_WRITE_NUCFSI -DNEUT_READ_NUCFSI
-@NEUT_WRITE_NUCFSI_TRUE@am__append_14 = -DNEUT_WRITE_NUCFSI -DNEUT_READ_NUCFSI
-@FC_ALLOW_ARG_MISMATCH_TRUE@am__append_15 = -fallow-argument-mismatch
-@FC_ALLOW_ARG_MISMATCH_TRUE@am__append_16 = -Wl,--allow-multiple-definition
-@FC_COMMON_TRUE@am__append_17 = -fcommon -Wl,--allow-multiple-definition
-@FC_COMMON_TRUE@am__append_18 = -Wl,--allow-multiple-definition
-@NEUT_HEPMC_TRUE@am__append_19 = -L$(HEPMC_LIBDIR) -L$(NUHEPMC_LIBDIR)
-@NEUT_HEPMC_TRUE@am__append_20 = -lNuHepMC -lHepMC3 -lHepMC3rootIO
-@FC_HAS_PIE_TRUE@am__append_21 = -no-pie
-@NEUT_USE_GPERF_TRUE@am__append_22 = -L@NEUT_GPERF@ -lprofiler
-@NEUT_USE_ZBS_TRUE@am__append_23 = zbs zbsfns t2kflux_zbs
-@NEUT_USE_NEUTGEOM_TRUE@am__append_24 = neutgeom
+@NEUT_USE_TAUOLA_TRUE@am__append_2 = -I$(top_srcdir)/tauola -I$(top_builddir)/tauola
+@NEUT_USE_ZBS_TRUE@am__append_3 = $(top_builddir)/zbs/libzbs.@NEUT_VERSION_NUM@.a \
+@NEUT_USE_ZBS_TRUE@					$(top_builddir)/zbsfns/libzbsfns.@NEUT_VERSION_NUM@.a \
+@NEUT_USE_ZBS_TRUE@					$(top_builddir)/t2kflux_zbs/libt2kflux_zbs.@NEUT_VERSION_NUM@.a
+
+@NEUT_USE_ZBS_TRUE@am__append_4 = -I$(top_srcdir)/zbs \
+@NEUT_USE_ZBS_TRUE@				-I$(top_srcdir)/zbsfns \
+@NEUT_USE_ZBS_TRUE@				-I$(top_srcdir)/t2kflux_zbs -I$(top_builddir)/t2kflux_zbs
+
+@NEUT_USE_TAUOLA_TRUE@am__append_5 = -DNEUT_USE_TAUOLA
+@NEUT_USE_GPERF_TRUE@am__append_6 = -DNEUT_USE_GPERF
+@NEUT_HEPMC_TRUE@am__append_7 = -DUSE_HEPMC
+@NEUT_HEPMC_TRUE@am__append_8 = $(shell HepMC3-config --cflags) -I$(shell NuHepMC-config --incdir)
+@NEUT_DEBUG_TRUE@am__append_9 = -O0 -g
+@NEUT_DEBUG_TRUE@am__append_10 = -O0 -g
+@NEUT_DEBUG_TRUE@am__append_11 = -O0 -g
+@NEUT_DEBUG_FALSE@am__append_12 = -O0
+@NEUT_DEBUG_FALSE@am__append_13 = -O0
+@NEUT_DEBUG_FALSE@am__append_14 = -O0
+@NEUT_WRITE_NUCFSI_TRUE@am__append_15 = -DNEUT_WRITE_NUCFSI -DNEUT_READ_NUCFSI
+@NEUT_WRITE_NUCFSI_TRUE@am__append_16 = -DNEUT_WRITE_NUCFSI -DNEUT_READ_NUCFSI
+@NEUT_WRITE_NUCFSI_TRUE@am__append_17 = -DNEUT_WRITE_NUCFSI -DNEUT_READ_NUCFSI
+@FC_ALLOW_ARG_MISMATCH_TRUE@am__append_18 = -fallow-argument-mismatch
+@FC_ALLOW_ARG_MISMATCH_TRUE@am__append_19 = -Wl,--allow-multiple-definition
+@FC_COMMON_TRUE@am__append_20 = -fcommon -Wl,--allow-multiple-definition
+@FC_COMMON_TRUE@am__append_21 = -Wl,--allow-multiple-definition
+@NEUT_HEPMC_TRUE@am__append_22 = -L$(HEPMC_LIBDIR) -L$(NUHEPMC_LIBDIR)
+@NEUT_HEPMC_TRUE@am__append_23 = -lNuHepMC -lHepMC3 -lHepMC3rootIO
+@FC_HAS_PIE_TRUE@am__append_24 = -no-pie
+@NEUT_USE_GPERF_TRUE@am__append_25 = -L@NEUT_GPERF@ -lprofiler
+@NEUT_USE_ZBS_TRUE@am__append_26 = t2kflux_zbs/necardbmC.h t2kflux_zbs/beamntplC.h t2kflux_zbs/skheadC.h
+@NEUT_USE_ZBS_TRUE@am__append_27 = zbs zbsfns t2kflux_zbs
+@NEUT_USE_TAUOLA_TRUE@am__append_28 = tauola/tacardC.h
+@NEUT_USE_TAUOLA_TRUE@am__append_29 = tauola
+@NEUT_USE_NEUTGEOM_TRUE@am__append_30 = neutgeom
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
@@ -209,6 +221,16 @@ am__can_run_installinfo = \
     n|no|NO) false;; \
     *) (install-info --version) >/dev/null 2>&1;; \
   esac
+am__include_HEADERS_DIST = neutcore/cardnameC.h neutcore/necardC.h \
+	neutcore/neworkC.h neutcore/neutfilepathC.h \
+	neutcore/posinnucC.h neutcore/neutparamsC.h \
+	neutcore/neutmodelC.h neutcore/nefillverC.h \
+	neutcore/neutcrsC.h neutcore/rsconsC.h skmcsvc/necardevC.h \
+	skmcsvc/vcworkC.h skmcsvc/vcvrtxC.h n1p1h/nieves1p1hC.h \
+	nuccorspl/nrcardC.h nuceff/fsihistC.h nuceff/efpionC.h \
+	nuccorspl/nucleonfsihistC.h nuccorspl/fsinucleonreweightC.h \
+	nuccorspl/nrintC.h t2kflux_zbs/necardbmC.h \
+	t2kflux_zbs/beamntplC.h t2kflux_zbs/skheadC.h tauola/tacardC.h
 HEADERS = $(include_HEADERS)
 RECURSIVE_CLEAN_TARGETS = mostlyclean-recursive clean-recursive	\
   distclean-recursive maintainer-clean-recursive
@@ -239,9 +261,9 @@ ETAGS = etags
 CTAGS = ctags
 CSCOPE = cscope
 DIST_SUBDIRS = neutcore nuccorspl nuceff n1p1h mec ht2p2h radcorr \
-	skmcsvc partnuck neutclass specfunc . reweight neutsmpl tools \
-	neututils nuclsmpl pionsmpl test zbs zbsfns t2kflux_zbs \
-	neutgeom
+	skmcsvc partnuck neutclass specfunc zbs zbsfns t2kflux_zbs \
+	tauola . reweight neutsmpl tools neututils nuclsmpl pionsmpl \
+	test neutgeom
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -422,7 +444,15 @@ top_srcdir = @top_srcdir@
 ACLOCAL_AMFLAGS = -I m4
 
 # top_builddir dependencies are needed for fh2h.pl-generated headers
-NEUT_INCLUDES = -I$(top_srcdir)/radcorr -I$(top_srcdir)/mec -I$(top_srcdir)/ht2p2h/inc -I$(top_srcdir)/nuccorspl -I$(top_srcdir)/n1p1h/inc -I$(top_srcdir)/nuceff -I$(top_srcdir)/nuclsmpl -I$(top_srcdir)/skmcsvc -I$(top_srcdir)/neutcore -I$(top_srcdir)/partnuck -I$(top_srcdir)/specfunc  -I$(top_srcdir)/tools -I$(top_builddir)/neutcore -I$(top_builddir)/skmcsvc -I$(top_builddir)/n1p1h -I$(top_builddir)/nuccorspl -I$(top_builddir)/nuceff
+NEUT_INCLUDES = -I$(top_srcdir)/radcorr -I$(top_srcdir)/mec \
+	-I$(top_srcdir)/ht2p2h/inc -I$(top_srcdir)/nuccorspl \
+	-I$(top_srcdir)/n1p1h/inc -I$(top_srcdir)/nuceff \
+	-I$(top_srcdir)/nuclsmpl -I$(top_srcdir)/skmcsvc \
+	-I$(top_srcdir)/neutcore -I$(top_srcdir)/partnuck \
+	-I$(top_srcdir)/specfunc -I$(top_srcdir)/tools \
+	-I$(top_builddir)/neutcore -I$(top_builddir)/skmcsvc \
+	-I$(top_builddir)/n1p1h -I$(top_builddir)/nuccorspl \
+	-I$(top_builddir)/nuceff $(am__append_2) $(am__append_4)
 NEUT_CLASS_INCLUDES = -I$(top_srcdir)/neutclass
 NEUT_REWEIGHT_INCLUDES = -I$(top_srcdir)/reweight
 NEUT_REWEIGHT_LIBS = $(top_builddir)/reweight/libNEUTReWeight.@NEUT_VERSION_NUM@.a
@@ -438,32 +468,32 @@ NEUT_STATIC_LIBS =  \
 	$(top_builddir)/specfunc/libspecfunc.@NEUT_VERSION_NUM@.a \
 	$(top_builddir)/skmcsvc/libskmcsvc.@NEUT_VERSION_NUM@.a \
 	$(top_builddir)/partnuck/libpartnuck.@NEUT_VERSION_NUM@.a \
-	$(am__append_1)
+	$(am__append_1) $(am__append_3)
 NEUT_LIBS = $(top_builddir)/neutclass/libNEUTClassUtils.@NEUT_VERSION_NUM@.a \
 	$(top_builddir)/neutclass/libNEUTClass.la \
-	$(top_builddir)/libNEUT.@NEUT_VERSION_NUM@.a $(am__append_20)
+	$(top_builddir)/libNEUT.@NEUT_VERSION_NUM@.a $(am__append_23)
 CERN_ROOT = $(CERN)/$(CERN_LEVEL)
 CERN_LINKFLAGS = -L$(CERN_ROOT)/lib
 CERN_LIBS = -ljetset74 -lpdflib804 -lphotos202 -lmathlib -lpacklib -lkernlib
-NEUT_DEFINES = -DgFortran $(am__append_2) $(am__append_3) \
-	$(am__append_4)
+NEUT_DEFINES = -DgFortran $(am__append_5) $(am__append_6) \
+	$(am__append_7)
 @NEUT_HEPMC_FALSE@USE_HEPMC = no
 @NEUT_HEPMC_TRUE@USE_HEPMC = yes
 NEUT_FFLAGS = -fno-backslash -fno-automatic -fno-second-underscore -ffixed-line-length-132 -fdollar-ok -fPIC -fbounds-check -Wall -Wextra -ffpe-trap=invalid,zero,overflow -DstrictF77 -Df2cFortran $(NEUT_DEFINES)
 DEFAULT_FFLAGS = $(NEUT_FFLAGS) $(NEUT_INCLUDES) \
-	-I$(CERN_ROOT)/include $(am__append_6) $(am__append_9) \
-	$(am__append_12) $(am__append_15) $(am__append_17)
+	-I$(CERN_ROOT)/include $(am__append_9) $(am__append_12) \
+	$(am__append_15) $(am__append_18) $(am__append_20)
 ROOT_CFLAGS = $(shell root-config --cflags)
 DEFAULT_CXXFLAGS = -fPIC $(NEUT_DEFINES) $(NEUT_INCLUDES) \
 	-I$(CERN_ROOT)/include -std=c++11 $(ROOT_CFLAGS) \
-	$(am__append_5) $(am__append_7) $(am__append_10) \
-	$(am__append_13) $(am__append_18)
+	$(am__append_8) $(am__append_10) $(am__append_13) \
+	$(am__append_16) $(am__append_21)
 DEFAULT_CFLAGS = -fPIC $(NEUT_DEFINES) $(NEUT_INCLUDES) \
-	-I$(CERN_ROOT)/include $(am__append_8) $(am__append_11) \
-	$(am__append_14)
-DEFAULT_LINKFLAGS = -version-info @NEUT_VERSION_NUM@ $(am__append_16)
+	-I$(CERN_ROOT)/include $(am__append_11) $(am__append_14) \
+	$(am__append_17)
+DEFAULT_LINKFLAGS = -version-info @NEUT_VERSION_NUM@ $(am__append_19)
 ROOT_LINKFLAGS = $(shell root-config --ldflags) -pthread -rdynamic \
-	-L$(shell root-config --libdir) $(am__append_19)
+	-L$(shell root-config --libdir) $(am__append_22)
 ROOT_VERSION_COMPILE = $(shell root-config --version)
 ROOT_ROOT_COMPILE = $(ROOTSYS)
 @ROOT_MAJOR_IS_SIX_FALSE@ROOT_LIBS = -lCore -lCint -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lm -ldl
@@ -474,16 +504,24 @@ ROOT_ROOT_COMPILE = $(ROOTSYS)
 @NEUT_HEPMC_TRUE@NUHEPMC_INCDIR = $(shell NuHepMC-config --incdir)
 
 # I know... but this seems to work
-EXE_LINKFLAGS = -fno-PIE -fno-pie $(am__append_21)
-EXE_RTLIBS = -lstdc++ -lgfortran $(am__append_22)
-BUILT_SOURCES = neutcore/cardnameC.h neutcore/necardC.h neutcore/neworkC.h neutcore/neutfilepathC.h neutcore/posinnucC.h neutcore/neutparamsC.h neutcore/neutmodelC.h neutcore/nefillverC.h neutcore/neutcrsC.h neutcore/rsconsC.h skmcsvc/necardevC.h skmcsvc/vcworkC.h skmcsvc/vcvrtxC.h n1p1h/nieves1p1hC.h nuccorspl/nrcardC.h nuceff/fsihistC.h nuceff/efpionC.h nuccorspl/nucleonfsihistC.h nuccorspl/fsinucleonreweightC.h nuccorspl/nrintC.h 
+EXE_LINKFLAGS = -fno-PIE -fno-pie $(am__append_24)
+EXE_RTLIBS = -lstdc++ -lgfortran $(am__append_25)
+BUILT_SOURCES = neutcore/cardnameC.h neutcore/necardC.h \
+	neutcore/neworkC.h neutcore/neutfilepathC.h \
+	neutcore/posinnucC.h neutcore/neutparamsC.h \
+	neutcore/neutmodelC.h neutcore/nefillverC.h \
+	neutcore/neutcrsC.h neutcore/rsconsC.h skmcsvc/necardevC.h \
+	skmcsvc/vcworkC.h skmcsvc/vcvrtxC.h n1p1h/nieves1p1hC.h \
+	nuccorspl/nrcardC.h nuceff/fsihistC.h nuceff/efpionC.h \
+	nuccorspl/nucleonfsihistC.h nuccorspl/fsinucleonreweightC.h \
+	nuccorspl/nrintC.h $(am__append_26) $(am__append_28)
 CLEANFILES = $(BUILT_SOURCES)
 include_HEADERS = $(BUILT_SOURCES)
 # Order here matters, should build core libraries, combine them in this dir (.), then build reweight, programs, and tools.
 SUBDIRS = neutcore nuccorspl nuceff n1p1h mec ht2p2h radcorr skmcsvc \
-	partnuck neutclass specfunc . reweight neutsmpl tools \
-	neututils nuclsmpl pionsmpl test $(am__append_23) \
-	$(am__append_24)
+	partnuck neutclass specfunc $(am__append_27) $(am__append_29) \
+	. reweight neutsmpl tools neututils nuclsmpl pionsmpl test \
+	$(am__append_30)
 
 # Combine all of the core static libraries into one!
 # The lines below trick/override automake into building this library out of all

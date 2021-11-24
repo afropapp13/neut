@@ -54,9 +54,3 @@ C#include "nesolact.h"
 
       CALL NECHADIR(COST,PHI,DIR,POS)
       END
-
-C      SUBROUTINE RMARIN(int i1,int i2,int i3)
-C
-C      write(*,*) "RMARIN: Dummy routine"
-C      return
-C      end

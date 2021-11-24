@@ -18,7 +18,10 @@ if NEUT_USE_ZBS
 
 libneutcore_@NEUT_VERSION_NUM@_a_SOURCES += nemknpos.F
 
-endif
+else
 
+libCERNOverride_@NEUT_VERSION_NUM@_a_SOURCES += rmarin_noop.F
+
+endif
 # Unused sources that live in the directory
 UNUSED_srcs = calcqecrs.F rs.tcrsdump.F nencelsvct.F fnelspau.F rs.wdist.F rs.spivcttest.F ddifcrs.F neelsvcp.F dnels.F
