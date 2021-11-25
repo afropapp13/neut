@@ -129,18 +129,6 @@ AS_IF([test "x$enable_hepmc" = "xyes"], [
 
 AM_CONDITIONAL([NEUT_HEPMC], [test "x$enable_hepmc" = "xyes"])
 
-######## Check use tauola
-AC_ARG_ENABLE([tauola],
-    AS_HELP_STRING([--enable-tauola], [Enable tauola, requires ZEBRA!]))
-
-AM_CONDITIONAL([NEUT_USE_TAUOLA], [test "x$enable_tauola" = "xyes"])
-
-######## Check use ZEBRA
-AC_ARG_ENABLE([zebra],
-    AS_HELP_STRING([--enable-zebra], [Enable ZEBRA]))
-
-AM_CONDITIONAL([NEUT_USE_ZBS], [test "x$enable_zebra" = "xyes"])
-
 ######## Check use nucfsi
 AC_ARG_ENABLE([nucfsi],
     AS_HELP_STRING([--enable-nucfsi], [Remove nucleon fsi step information in vector output. Included for backward compatibility]))

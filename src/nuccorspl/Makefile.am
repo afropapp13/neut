@@ -7,13 +7,14 @@ LIBNAME = libnuccorspl.@NEUT_VERSION_NUM@.a
 
 noinst_LIBRARIES = $(LIBNAME)
 
-libnuccorspl_@NEUT_VERSION_NUM@_a_SOURCES = nr2iso.F nrcst.F nrhis.F nrllor.F nrprton.F nrstp.F nrazio.F nrctpnh.F nrinit.F nrloren.F nrranve.F nrcard.F nrcard_toml.cc nrctpnl.F nrintr.F nrnuc.F nrrodis.F nrcfd.F nrctpp.F nrkin.F nrprbin.F nrroxy.F wgproton.F nrcone.F nrfermi.F nrlibver.F nrprd.F
+libnuccorspl_@NEUT_VERSION_NUM@_a_SOURCES = nr2iso.F nrcst.F nrhis.F nrllor.F nrprton.F \
+											nrstp.F nrazio.F nrctpnh.F nrinit.F nrloren.F \
+											nrranve.F nrcard.F nrcard_toml.cc nrctpnl.F \
+											nrintr.F nrnuc.F nrrodis.F nrcfd.F nrctpp.F \
+											nrkin.F nrprbin.F nrroxy.F wgproton.F nrcone.F \
+											nrfermi.F nrlibver.F nrprd.F vcmkvcbf.F \
+											nrsetxpos.F
 
-if NEUT_USE_ZBS
-
-libnuccorspl_@NEUT_VERSION_NUM@_a_SOURCES += vcmkvcbf.F nrsetxpos.F
-
-endif
 
 # Unused sources that live in the directory
 UNUSED_srcs = proton_nuceff.F

@@ -6,6 +6,8 @@
       write(*,*) "*****  if you are trying to use tauola.   *****"
       write(*,*) "***********************************************"
 
+      STOP
+
       return
       end
       

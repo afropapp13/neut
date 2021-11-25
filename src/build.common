@@ -1,29 +1,34 @@
 ACLOCAL_AMFLAGS = -I m4
 
 # top_builddir dependencies are needed for fh2h.pl-generated headers
-NEUT_INCLUDES = -I$(top_srcdir)/radcorr -I$(top_srcdir)/mec -I$(top_srcdir)/ht2p2h/inc -I$(top_srcdir)/nuccorspl -I$(top_srcdir)/n1p1h/inc -I$(top_srcdir)/nuceff -I$(top_srcdir)/nuclsmpl -I$(top_srcdir)/skmcsvc -I$(top_srcdir)/neutcore -I$(top_srcdir)/partnuck -I$(top_srcdir)/specfunc  -I$(top_srcdir)/tools -I$(top_builddir)/neutcore -I$(top_builddir)/skmcsvc -I$(top_builddir)/n1p1h -I$(top_builddir)/nuccorspl -I$(top_builddir)/nuceff
+NEUT_INCLUDES = -I$(top_srcdir)/radcorr -I$(top_srcdir)/mec -I$(top_srcdir)/ht2p2h/inc \
+			-I$(top_srcdir)/nuccorspl -I$(top_srcdir)/n1p1h/inc -I$(top_srcdir)/nuceff \
+			-I$(top_srcdir)/nuclsmpl -I$(top_srcdir)/skmcsvc -I$(top_srcdir)/neutcore \
+			-I$(top_srcdir)/partnuck -I$(top_srcdir)/specfunc  -I$(top_srcdir)/tools \
+			-I$(top_builddir)/neutcore -I$(top_builddir)/skmcsvc -I$(top_builddir)/n1p1h \
+			-I$(top_builddir)/nuccorspl -I$(top_builddir)/nuceff -I$(top_srcdir)/tauola \
+			-I$(top_builddir)/tauola -I$(top_srcdir)/zbs -I$(top_srcdir)/zbsfns \
+			-I$(top_srcdir)/t2kflux_zbs -I$(top_builddir)/t2kflux_zbs
 
 NEUT_CLASS_INCLUDES = -I$(top_srcdir)/neutclass
 NEUT_REWEIGHT_INCLUDES = -I$(top_srcdir)/reweight
 NEUT_REWEIGHT_LIBS = $(top_builddir)/reweight/libNEUTReWeight.@NEUT_VERSION_NUM@.a
 
-NEUT_STATIC_LIBS =  $(top_builddir)/neutcore/libneutcore.@NEUT_VERSION_NUM@.a  $(top_builddir)/neutcore/libCERNOverride.@NEUT_VERSION_NUM@.a $(top_builddir)/mec/libneutmec.@NEUT_VERSION_NUM@.a $(top_builddir)/n1p1h/libn1p1h.@NEUT_VERSION_NUM@.a $(top_builddir)/ht2p2h/libht2p2h.@NEUT_VERSION_NUM@.a $(top_builddir)/nuccorspl/libnuccorspl.@NEUT_VERSION_NUM@.a $(top_builddir)/nuceff/libnuceff.@NEUT_VERSION_NUM@.a $(top_builddir)/radcorr/libradcorr.@NEUT_VERSION_NUM@.a $(top_builddir)/specfunc/libspecfunc.@NEUT_VERSION_NUM@.a $(top_builddir)/skmcsvc/libskmcsvc.@NEUT_VERSION_NUM@.a  $(top_builddir)/partnuck/libpartnuck.@NEUT_VERSION_NUM@.a
-
-if NEUT_USE_TAUOLA
-NEUT_STATIC_LIBS += $(top_builddir)/tauola/libtauola.@NEUT_VERSION_NUM@.a
-
-NEUT_INCLUDES += -I$(top_srcdir)/tauola -I$(top_builddir)/tauola
-endif
-
-if NEUT_USE_ZBS
-NEUT_STATIC_LIBS += $(top_builddir)/zbs/libzbs.@NEUT_VERSION_NUM@.a \
+NEUT_STATIC_LIBS = $(top_builddir)/neutcore/libneutcore.@NEUT_VERSION_NUM@.a \
+					$(top_builddir)/neutcore/libCERNOverride.@NEUT_VERSION_NUM@.a \
+					$(top_builddir)/mec/libneutmec.@NEUT_VERSION_NUM@.a \
+					$(top_builddir)/n1p1h/libn1p1h.@NEUT_VERSION_NUM@.a \
+					$(top_builddir)/ht2p2h/libht2p2h.@NEUT_VERSION_NUM@.a \
+					$(top_builddir)/nuccorspl/libnuccorspl.@NEUT_VERSION_NUM@.a \
+					$(top_builddir)/nuceff/libnuceff.@NEUT_VERSION_NUM@.a \
+					$(top_builddir)/radcorr/libradcorr.@NEUT_VERSION_NUM@.a \
+					$(top_builddir)/specfunc/libspecfunc.@NEUT_VERSION_NUM@.a \
+					$(top_builddir)/skmcsvc/libskmcsvc.@NEUT_VERSION_NUM@.a \
+					$(top_builddir)/partnuck/libpartnuck.@NEUT_VERSION_NUM@.a \
+					$(top_builddir)/tauola/libtauola.@NEUT_VERSION_NUM@.a \
+					$(top_builddir)/zbs/libzbs.@NEUT_VERSION_NUM@.a \
 					$(top_builddir)/zbsfns/libzbsfns.@NEUT_VERSION_NUM@.a \
 					$(top_builddir)/t2kflux_zbs/libt2kflux_zbs.@NEUT_VERSION_NUM@.a
-
-NEUT_INCLUDES += -I$(top_srcdir)/zbs \
-				-I$(top_srcdir)/zbsfns \
-				-I$(top_srcdir)/t2kflux_zbs -I$(top_builddir)/t2kflux_zbs
-endif
 
 NEUT_LIBS = $(top_builddir)/neutclass/libNEUTClassUtils.@NEUT_VERSION_NUM@.a $(top_builddir)/neutclass/libNEUTClass.la $(top_builddir)/libNEUT.@NEUT_VERSION_NUM@.a 
 
@@ -33,9 +38,7 @@ CERN_LINKFLAGS = -L$(CERN_ROOT)/lib
 CERN_LIBS = -ljetset74 -lpdflib804 -lphotos202 -lmathlib -lpacklib -lkernlib
 
 NEUT_DEFINES = -DgFortran
-if NEUT_USE_TAUOLA
-NEUT_DEFINES += -DNEUT_USE_TAUOLA
-endif
+
 if NEUT_USE_GPERF
 NEUT_DEFINES += -DNEUT_USE_GPERF
 endif

@@ -642,10 +642,6 @@ NEUT_USE_NEUTGEOM_FALSE
 NEUT_USE_NEUTGEOM_TRUE
 NEUT_WRITE_NUCFSI_FALSE
 NEUT_WRITE_NUCFSI_TRUE
-NEUT_USE_ZBS_FALSE
-NEUT_USE_ZBS_TRUE
-NEUT_USE_TAUOLA_FALSE
-NEUT_USE_TAUOLA_TRUE
 NEUT_HEPMC_FALSE
 NEUT_HEPMC_TRUE
 FOUND_NuHepMCCONFIG
@@ -803,8 +799,6 @@ with_gnu_ld
 with_sysroot
 enable_libtool_lock
 enable_hepmc
-enable_tauola
-enable_zebra
 enable_nucfsi
 enable_neutgeom
 enable_debug
@@ -1458,8 +1452,6 @@ Optional Features:
   --disable-libtool-lock  avoid locking (might break parallel builds)
   --enable-hepmc          Enable HepMC as an output format, expect to find
                           HepMC-config in PATH.
-  --enable-tauola         Enable tauola, requires ZEBRA!
-  --enable-zebra          Enable ZEBRA
   --enable-nucfsi         Remove nucleon fsi step information in vector
                           output. Included for backward compatibility
   --enable-neutgeom       Build neutgeom components, requires X11 support from
@@ -18527,38 +18519,6 @@ else
 fi
 
 
-######## Check use tauola
-# Check whether --enable-tauola was given.
-if test "${enable_tauola+set}" = set; then :
-  enableval=$enable_tauola;
-fi
-
-
- if test "x$enable_tauola" = "xyes"; then
-  NEUT_USE_TAUOLA_TRUE=
-  NEUT_USE_TAUOLA_FALSE='#'
-else
-  NEUT_USE_TAUOLA_TRUE='#'
-  NEUT_USE_TAUOLA_FALSE=
-fi
-
-
-######## Check use ZEBRA
-# Check whether --enable-zebra was given.
-if test "${enable_zebra+set}" = set; then :
-  enableval=$enable_zebra;
-fi
-
-
- if test "x$enable_zebra" = "xyes"; then
-  NEUT_USE_ZBS_TRUE=
-  NEUT_USE_ZBS_FALSE='#'
-else
-  NEUT_USE_ZBS_TRUE='#'
-  NEUT_USE_ZBS_FALSE=
-fi
-
-
 ######## Check use nucfsi
 # Check whether --enable-nucfsi was given.
 if test "${enable_nucfsi+set}" = set; then :
@@ -18837,14 +18797,6 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${NEUT_HEPMC_TRUE}" && test -z "${NEUT_HEPMC_FALSE}"; then
   as_fn_error $? "conditional \"NEUT_HEPMC\" was never defined.
-Usually this means the macro was only invoked conditionally." "$LINENO" 5
-fi
-if test -z "${NEUT_USE_TAUOLA_TRUE}" && test -z "${NEUT_USE_TAUOLA_FALSE}"; then
-  as_fn_error $? "conditional \"NEUT_USE_TAUOLA\" was never defined.
-Usually this means the macro was only invoked conditionally." "$LINENO" 5
-fi
-if test -z "${NEUT_USE_ZBS_TRUE}" && test -z "${NEUT_USE_ZBS_FALSE}"; then
-  as_fn_error $? "conditional \"NEUT_USE_ZBS\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${NEUT_WRITE_NUCFSI_TRUE}" && test -z "${NEUT_WRITE_NUCFSI_FALSE}"; then

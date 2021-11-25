@@ -18,31 +18,16 @@ BUILT_SOURCES = neutcore/cardnameC.h neutcore/necardC.h neutcore/neworkC.h \
 				neutcore/rsconsC.h skmcsvc/necardevC.h skmcsvc/vcworkC.h \
 				skmcsvc/vcvrtxC.h n1p1h/nieves1p1hC.h nuccorspl/nrcardC.h nuceff/fsihistC.h \
 				nuceff/efpionC.h nuccorspl/nucleonfsihistC.h nuccorspl/fsinucleonreweightC.h \
-				nuccorspl/nrintC.h 
+				nuccorspl/nrintC.h t2kflux_zbs/necardbmC.h t2kflux_zbs/beamntplC.h \
+				t2kflux_zbs/skheadC.h tauola/tacardC.h
 
 CLEANFILES = $(BUILT_SOURCES)
 
 include_HEADERS = $(BUILT_SOURCES)
 # Order here matters, should build core libraries, combine them in this dir (.), then build reweight, programs, and tools.
-SUBDIRS = neutcore nuccorspl nuceff n1p1h mec ht2p2h radcorr skmcsvc partnuck neutclass specfunc 
-
-if NEUT_USE_ZBS
-
-BUILT_SOURCES += t2kflux_zbs/necardbmC.h t2kflux_zbs/beamntplC.h t2kflux_zbs/skheadC.h
-
-SUBDIRS += zbs zbsfns t2kflux_zbs
-
-endif
-
-if NEUT_USE_TAUOLA
-
-BUILT_SOURCES += tauola/tacardC.h
-
-SUBDIRS += tauola
-
-endif
-
-SUBDIRS += . reweight neutsmpl tools neututils nuclsmpl pionsmpl test
+SUBDIRS = neutcore nuccorspl nuceff n1p1h mec ht2p2h radcorr skmcsvc \
+		partnuck neutclass specfunc zbs zbsfns t2kflux_zbs tauola . \
+		reweight neutsmpl tools neututils nuclsmpl pionsmpl test
 
 
 if NEUT_USE_NEUTGEOM

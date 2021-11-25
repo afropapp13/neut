@@ -80,39 +80,26 @@ build_triplet = @build@
 host_triplet = @host@
 DIST_COMMON = $(top_srcdir)/build.common $(srcdir)/Makefile.in \
 	$(srcdir)/Makefile.am $(top_srcdir)/depcomp
-@NEUT_USE_TAUOLA_TRUE@am__append_1 = $(top_builddir)/tauola/libtauola.@NEUT_VERSION_NUM@.a
-@NEUT_USE_TAUOLA_TRUE@am__append_2 = -I$(top_srcdir)/tauola -I$(top_builddir)/tauola
-@NEUT_USE_ZBS_TRUE@am__append_3 = $(top_builddir)/zbs/libzbs.@NEUT_VERSION_NUM@.a \
-@NEUT_USE_ZBS_TRUE@					$(top_builddir)/zbsfns/libzbsfns.@NEUT_VERSION_NUM@.a \
-@NEUT_USE_ZBS_TRUE@					$(top_builddir)/t2kflux_zbs/libt2kflux_zbs.@NEUT_VERSION_NUM@.a
-
-@NEUT_USE_ZBS_TRUE@am__append_4 = -I$(top_srcdir)/zbs \
-@NEUT_USE_ZBS_TRUE@				-I$(top_srcdir)/zbsfns \
-@NEUT_USE_ZBS_TRUE@				-I$(top_srcdir)/t2kflux_zbs -I$(top_builddir)/t2kflux_zbs
-
-@NEUT_USE_TAUOLA_TRUE@am__append_5 = -DNEUT_USE_TAUOLA
-@NEUT_USE_GPERF_TRUE@am__append_6 = -DNEUT_USE_GPERF
-@NEUT_HEPMC_TRUE@am__append_7 = -DUSE_HEPMC
-@NEUT_HEPMC_TRUE@am__append_8 = $(shell HepMC3-config --cflags) -I$(shell NuHepMC-config --incdir)
-@NEUT_DEBUG_TRUE@am__append_9 = -O0 -g
-@NEUT_DEBUG_TRUE@am__append_10 = -O0 -g
-@NEUT_DEBUG_TRUE@am__append_11 = -O0 -g
-@NEUT_DEBUG_FALSE@am__append_12 = -O0
-@NEUT_DEBUG_FALSE@am__append_13 = -O0
-@NEUT_DEBUG_FALSE@am__append_14 = -O0
-@NEUT_WRITE_NUCFSI_TRUE@am__append_15 = -DNEUT_WRITE_NUCFSI -DNEUT_READ_NUCFSI
-@NEUT_WRITE_NUCFSI_TRUE@am__append_16 = -DNEUT_WRITE_NUCFSI -DNEUT_READ_NUCFSI
-@NEUT_WRITE_NUCFSI_TRUE@am__append_17 = -DNEUT_WRITE_NUCFSI -DNEUT_READ_NUCFSI
-@FC_ALLOW_ARG_MISMATCH_TRUE@am__append_18 = -fallow-argument-mismatch
-@FC_ALLOW_ARG_MISMATCH_TRUE@am__append_19 = -Wl,--allow-multiple-definition
-@FC_COMMON_TRUE@am__append_20 = -fcommon -Wl,--allow-multiple-definition
-@FC_COMMON_TRUE@am__append_21 = -Wl,--allow-multiple-definition
-@NEUT_HEPMC_TRUE@am__append_22 = -L$(HEPMC_LIBDIR) -L$(NUHEPMC_LIBDIR)
-@NEUT_HEPMC_TRUE@am__append_23 = -lNuHepMC -lHepMC3 -lHepMC3rootIO
-@FC_HAS_PIE_TRUE@am__append_24 = -no-pie
-@NEUT_USE_GPERF_TRUE@am__append_25 = -L@NEUT_GPERF@ -lprofiler
-@NEUT_USE_ZBS_TRUE@am__append_26 = nemknpos.F
-@NEUT_USE_ZBS_FALSE@am__append_27 = rmarin_noop.F
+@NEUT_USE_GPERF_TRUE@am__append_1 = -DNEUT_USE_GPERF
+@NEUT_HEPMC_TRUE@am__append_2 = -DUSE_HEPMC
+@NEUT_HEPMC_TRUE@am__append_3 = $(shell HepMC3-config --cflags) -I$(shell NuHepMC-config --incdir)
+@NEUT_DEBUG_TRUE@am__append_4 = -O0 -g
+@NEUT_DEBUG_TRUE@am__append_5 = -O0 -g
+@NEUT_DEBUG_TRUE@am__append_6 = -O0 -g
+@NEUT_DEBUG_FALSE@am__append_7 = -O0
+@NEUT_DEBUG_FALSE@am__append_8 = -O0
+@NEUT_DEBUG_FALSE@am__append_9 = -O0
+@NEUT_WRITE_NUCFSI_TRUE@am__append_10 = -DNEUT_WRITE_NUCFSI -DNEUT_READ_NUCFSI
+@NEUT_WRITE_NUCFSI_TRUE@am__append_11 = -DNEUT_WRITE_NUCFSI -DNEUT_READ_NUCFSI
+@NEUT_WRITE_NUCFSI_TRUE@am__append_12 = -DNEUT_WRITE_NUCFSI -DNEUT_READ_NUCFSI
+@FC_ALLOW_ARG_MISMATCH_TRUE@am__append_13 = -fallow-argument-mismatch
+@FC_ALLOW_ARG_MISMATCH_TRUE@am__append_14 = -Wl,--allow-multiple-definition
+@FC_COMMON_TRUE@am__append_15 = -fcommon -Wl,--allow-multiple-definition
+@FC_COMMON_TRUE@am__append_16 = -Wl,--allow-multiple-definition
+@NEUT_HEPMC_TRUE@am__append_17 = -L$(HEPMC_LIBDIR) -L$(NUHEPMC_LIBDIR)
+@NEUT_HEPMC_TRUE@am__append_18 = -lNuHepMC -lHepMC3 -lHepMC3rootIO
+@FC_HAS_PIE_TRUE@am__append_19 = -no-pie
+@NEUT_USE_GPERF_TRUE@am__append_20 = -L@NEUT_GPERF@ -lprofiler
 subdir = neutcore
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
@@ -132,62 +119,12 @@ am__v_AR_0 = @echo "  AR      " $@;
 am__v_AR_1 = 
 libCERNOverride_@NEUT_VERSION_NUM@_a_AR = $(AR) $(ARFLAGS)
 libCERNOverride_@NEUT_VERSION_NUM@_a_LIBADD =
-am__libCERNOverride_@NEUT_VERSION_NUM@_a_SOURCES_DIST = pdfset.F \
-	structm.F grv94di.F grv98_lo.F rmarin_noop.F
-@NEUT_USE_ZBS_FALSE@am__objects_1 = rmarin_noop.$(OBJEXT)
 am_libCERNOverride_@NEUT_VERSION_NUM@_a_OBJECTS = pdfset.$(OBJEXT) \
-	structm.$(OBJEXT) grv94di.$(OBJEXT) grv98_lo.$(OBJEXT) \
-	$(am__objects_1)
+	structm.$(OBJEXT) grv94di.$(OBJEXT) grv98_lo.$(OBJEXT)
 libCERNOverride_@NEUT_VERSION_NUM@_a_OBJECTS =  \
 	$(am_libCERNOverride_@NEUT_VERSION_NUM@_a_OBJECTS)
 libneutcore_@NEUT_VERSION_NUM@_a_AR = $(AR) $(ARFLAGS)
 libneutcore_@NEUT_VERSION_NUM@_a_LIBADD =
-am__libneutcore_@NEUT_VERSION_NUM@_a_SOURCES_DIST = bbba05.F \
-	fnelspau_sf.F rsifl6g.F fnelspf.F neelsvct.F qgdisg.F rsifl7.F \
-	cohcrsneberger.F fnels_rpascl.F neelsvnp.F rnazi.F rslzbte.F \
-	cohcrsne.F fnf2.F neelsvnt.F rnelq2.F rslzbt.F cohcrsnekart.F \
-	fngamfct.F neffect.F rnmass.F rslzbtg.F cohcrsnerein.F \
-	nefillmodel.F rnncelq2.F rslzbtk.F cohkartlamda.F nefillver.F \
-	rnrot.F rspauli.F cohkartq2min.F fnncelscrs.F nefrmmom.F \
-	rnw1320.F rsrotvec.F cohkarttmin.F fnncq2max.F negamnuc.F \
-	rnw13.F rssetcrs.F cohkartwmax.F fnncq2min.F negenseed.F rnw.F \
-	rssetvct.F cohma.F fnnpot.F negetr.F rnxy.F rssgcrs.F \
-	dcohmxneberger.F fnpkno2.F nejet.F rs3drt.F rssgvct.F \
-	dcohmxnekart.F fnpkno.F nek0.F rsasum.F rsskcrs.F \
-	dcohmxnerein.F fnq2max.F nekindpa.F rsasumg.F rsskvct.F \
-	dcohneberger.F fnq2min.F neknopar.F rsclfme.F rsspicrs.F \
-	dcohnekart.F fnrworld.F nelibver.F rsclfm.F rsspivct.F \
-	dcohnerein.F fntotpau.F rsclfmg.F fnxf3.F rsclfmk.F ddifmx.F \
-	rsdcrse.F rstcrset.F difcrsne.F fvfrmgev.F nemkgam.F rsdcrs.F \
-	rstcrsetm.F difcrsnerein.F rsdcrsg.F rstcrsetrd.F dndxdy.F \
-	nemodgam.F rsdcrsk.F rstcrsett.F dnela.F lenstr.F nemodsel.F \
-	rsdiste.F rstcrs.F nemultip.F rsdist.F rstcrsgamrd.F dnelsnl.F \
-	neapivct.F nencelslpv.F rsdistg.F rstcrsg.F dnelsq2.F necard.F \
-	nencelsspff.F rsdistk.F rstcrsgm.F dnncela.F nechadir.F \
-	nencelsvcp.F rsdt33e.F rstcrsgt.F dnncelsq2.F necharge.F \
-	rsdt33.F rstcrsk.F elaxff.F nechkfb.F nencelsvnp.F rsdt33g.F \
-	rstcrskm.F evdifcrs.F neclpos.F nencelsvnt.F rsdt33k.F \
-	rstcrskrd.F fnapicrs.F neclrcrs.F neomega.F rsifl1e.F \
-	rstcrskt.F fndsigmapidt.F neclrwrk.F rsifl1.F rstcrsm.F \
-	fnelscrn.F necohvct.F neranbll.F rsifl1k.F rstcrsrd.F \
-	fnelscrs.F necpnewk.F nerdseed.F rsifl2e.F rstcrst.F \
-	fnels_erpascl.F necrosel.F nesetfgparams.F rsifl2.F fnelsint.F \
-	necrosin.F nesettarg.F rsifl2g.F fnelspan_effsf.F necrosto.F \
-	nesortdl.F rsifl2k.F fnelspan.F necrsmode.F nevect.F rsifl3e.F \
-	fnelspan_intpol.F nedcy2bd.F nevent.F rsifl3.F fnelspan_sf.F \
-	nedifvct.F nrsettarg.F rsifl3k.F fnelspau_effsf.F neelslpv.F \
-	nudeex.F rsifl4.F neelslvc.F nudeex_n.F rsifl4g.F \
-	fnelspau_intpol.F neelsspf.F nudeex_org.F rsifl5.F \
-	fnelspau_select.F neelsspff.F nudeex_p.F rsifl6.F structg.f \
-	bbba07.cc fa3comp.cc fazexp.cc ddifnerein.c qedifcrs.c \
-	resolvecardname.F mkadler.F mkdcrs.F mkdt33.F res_q2_limits.F \
-	rsy.F mk_imode1.cc mk_imode2.cc mk_imode3.cc mk_imode4.cc \
-	mk_imode5.cc mk_imode6.cc mk_imode7.cc mk_imode11.cc \
-	mk_imode12.cc mk_imode13.cc mk_imode14.cc mk_imode15.cc \
-	mk_imode16.cc mk_imode17.cc necard_toml.cc cardistoml.cc \
-	bykvec.F fnr1998.F byabpar.F bykax.F evpiw.F rscalcy.F \
-	rhocalc.F nemknpos.F
-@NEUT_USE_ZBS_TRUE@am__objects_2 = nemknpos.$(OBJEXT)
 am_libneutcore_@NEUT_VERSION_NUM@_a_OBJECTS = bbba05.$(OBJEXT) \
 	fnelspau_sf.$(OBJEXT) rsifl6g.$(OBJEXT) fnelspf.$(OBJEXT) \
 	neelsvct.$(OBJEXT) qgdisg.$(OBJEXT) rsifl7.$(OBJEXT) \
@@ -265,7 +202,7 @@ am_libneutcore_@NEUT_VERSION_NUM@_a_OBJECTS = bbba05.$(OBJEXT) \
 	necard_toml.$(OBJEXT) cardistoml.$(OBJEXT) bykvec.$(OBJEXT) \
 	fnr1998.$(OBJEXT) byabpar.$(OBJEXT) bykax.$(OBJEXT) \
 	evpiw.$(OBJEXT) rscalcy.$(OBJEXT) rhocalc.$(OBJEXT) \
-	$(am__objects_2)
+	nemknpos.$(OBJEXT)
 libneutcore_@NEUT_VERSION_NUM@_a_OBJECTS =  \
 	$(am_libneutcore_@NEUT_VERSION_NUM@_a_OBJECTS)
 AM_V_P = $(am__v_P_@AM_V@)
@@ -351,9 +288,8 @@ am__v_F77_0 = @echo "  F77     " $@;
 am__v_F77_1 = 
 SOURCES = $(libCERNOverride_@NEUT_VERSION_NUM@_a_SOURCES) \
 	$(libneutcore_@NEUT_VERSION_NUM@_a_SOURCES)
-DIST_SOURCES =  \
-	$(am__libCERNOverride_@NEUT_VERSION_NUM@_a_SOURCES_DIST) \
-	$(am__libneutcore_@NEUT_VERSION_NUM@_a_SOURCES_DIST)
+DIST_SOURCES = $(libCERNOverride_@NEUT_VERSION_NUM@_a_SOURCES) \
+	$(libneutcore_@NEUT_VERSION_NUM@_a_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -499,56 +435,58 @@ top_srcdir = @top_srcdir@
 ACLOCAL_AMFLAGS = -I m4
 
 # top_builddir dependencies are needed for fh2h.pl-generated headers
-NEUT_INCLUDES = -I$(top_srcdir)/radcorr -I$(top_srcdir)/mec \
-	-I$(top_srcdir)/ht2p2h/inc -I$(top_srcdir)/nuccorspl \
-	-I$(top_srcdir)/n1p1h/inc -I$(top_srcdir)/nuceff \
-	-I$(top_srcdir)/nuclsmpl -I$(top_srcdir)/skmcsvc \
-	-I$(top_srcdir)/neutcore -I$(top_srcdir)/partnuck \
-	-I$(top_srcdir)/specfunc -I$(top_srcdir)/tools \
-	-I$(top_builddir)/neutcore -I$(top_builddir)/skmcsvc \
-	-I$(top_builddir)/n1p1h -I$(top_builddir)/nuccorspl \
-	-I$(top_builddir)/nuceff $(am__append_2) $(am__append_4)
+NEUT_INCLUDES = -I$(top_srcdir)/radcorr -I$(top_srcdir)/mec -I$(top_srcdir)/ht2p2h/inc \
+			-I$(top_srcdir)/nuccorspl -I$(top_srcdir)/n1p1h/inc -I$(top_srcdir)/nuceff \
+			-I$(top_srcdir)/nuclsmpl -I$(top_srcdir)/skmcsvc -I$(top_srcdir)/neutcore \
+			-I$(top_srcdir)/partnuck -I$(top_srcdir)/specfunc  -I$(top_srcdir)/tools \
+			-I$(top_builddir)/neutcore -I$(top_builddir)/skmcsvc -I$(top_builddir)/n1p1h \
+			-I$(top_builddir)/nuccorspl -I$(top_builddir)/nuceff -I$(top_srcdir)/tauola \
+			-I$(top_builddir)/tauola -I$(top_srcdir)/zbs -I$(top_srcdir)/zbsfns \
+			-I$(top_srcdir)/t2kflux_zbs -I$(top_builddir)/t2kflux_zbs
+
 NEUT_CLASS_INCLUDES = -I$(top_srcdir)/neutclass
 NEUT_REWEIGHT_INCLUDES = -I$(top_srcdir)/reweight
 NEUT_REWEIGHT_LIBS = $(top_builddir)/reweight/libNEUTReWeight.@NEUT_VERSION_NUM@.a
-NEUT_STATIC_LIBS =  \
-	$(top_builddir)/neutcore/libneutcore.@NEUT_VERSION_NUM@.a \
-	$(top_builddir)/neutcore/libCERNOverride.@NEUT_VERSION_NUM@.a \
-	$(top_builddir)/mec/libneutmec.@NEUT_VERSION_NUM@.a \
-	$(top_builddir)/n1p1h/libn1p1h.@NEUT_VERSION_NUM@.a \
-	$(top_builddir)/ht2p2h/libht2p2h.@NEUT_VERSION_NUM@.a \
-	$(top_builddir)/nuccorspl/libnuccorspl.@NEUT_VERSION_NUM@.a \
-	$(top_builddir)/nuceff/libnuceff.@NEUT_VERSION_NUM@.a \
-	$(top_builddir)/radcorr/libradcorr.@NEUT_VERSION_NUM@.a \
-	$(top_builddir)/specfunc/libspecfunc.@NEUT_VERSION_NUM@.a \
-	$(top_builddir)/skmcsvc/libskmcsvc.@NEUT_VERSION_NUM@.a \
-	$(top_builddir)/partnuck/libpartnuck.@NEUT_VERSION_NUM@.a \
-	$(am__append_1) $(am__append_3)
+NEUT_STATIC_LIBS = $(top_builddir)/neutcore/libneutcore.@NEUT_VERSION_NUM@.a \
+					$(top_builddir)/neutcore/libCERNOverride.@NEUT_VERSION_NUM@.a \
+					$(top_builddir)/mec/libneutmec.@NEUT_VERSION_NUM@.a \
+					$(top_builddir)/n1p1h/libn1p1h.@NEUT_VERSION_NUM@.a \
+					$(top_builddir)/ht2p2h/libht2p2h.@NEUT_VERSION_NUM@.a \
+					$(top_builddir)/nuccorspl/libnuccorspl.@NEUT_VERSION_NUM@.a \
+					$(top_builddir)/nuceff/libnuceff.@NEUT_VERSION_NUM@.a \
+					$(top_builddir)/radcorr/libradcorr.@NEUT_VERSION_NUM@.a \
+					$(top_builddir)/specfunc/libspecfunc.@NEUT_VERSION_NUM@.a \
+					$(top_builddir)/skmcsvc/libskmcsvc.@NEUT_VERSION_NUM@.a \
+					$(top_builddir)/partnuck/libpartnuck.@NEUT_VERSION_NUM@.a \
+					$(top_builddir)/tauola/libtauola.@NEUT_VERSION_NUM@.a \
+					$(top_builddir)/zbs/libzbs.@NEUT_VERSION_NUM@.a \
+					$(top_builddir)/zbsfns/libzbsfns.@NEUT_VERSION_NUM@.a \
+					$(top_builddir)/t2kflux_zbs/libt2kflux_zbs.@NEUT_VERSION_NUM@.a
+
 NEUT_LIBS = $(top_builddir)/neutclass/libNEUTClassUtils.@NEUT_VERSION_NUM@.a \
 	$(top_builddir)/neutclass/libNEUTClass.la \
-	$(top_builddir)/libNEUT.@NEUT_VERSION_NUM@.a $(am__append_23)
+	$(top_builddir)/libNEUT.@NEUT_VERSION_NUM@.a $(am__append_18)
 CERN_ROOT = $(CERN)/$(CERN_LEVEL)
 CERN_LINKFLAGS = -L$(CERN_ROOT)/lib
 CERN_LIBS = -ljetset74 -lpdflib804 -lphotos202 -lmathlib -lpacklib -lkernlib
-NEUT_DEFINES = -DgFortran $(am__append_5) $(am__append_6) \
-	$(am__append_7)
+NEUT_DEFINES = -DgFortran $(am__append_1) $(am__append_2)
 @NEUT_HEPMC_FALSE@USE_HEPMC = no
 @NEUT_HEPMC_TRUE@USE_HEPMC = yes
 NEUT_FFLAGS = -fno-backslash -fno-automatic -fno-second-underscore -ffixed-line-length-132 -fdollar-ok -fPIC -fbounds-check -Wall -Wextra -ffpe-trap=invalid,zero,overflow -DstrictF77 -Df2cFortran $(NEUT_DEFINES)
 DEFAULT_FFLAGS = $(NEUT_FFLAGS) $(NEUT_INCLUDES) \
-	-I$(CERN_ROOT)/include $(am__append_9) $(am__append_12) \
-	$(am__append_15) $(am__append_18) $(am__append_20)
+	-I$(CERN_ROOT)/include $(am__append_4) $(am__append_7) \
+	$(am__append_10) $(am__append_13) $(am__append_15)
 ROOT_CFLAGS = $(shell root-config --cflags)
 DEFAULT_CXXFLAGS = -fPIC $(NEUT_DEFINES) $(NEUT_INCLUDES) \
 	-I$(CERN_ROOT)/include -std=c++11 $(ROOT_CFLAGS) \
-	$(am__append_8) $(am__append_10) $(am__append_13) \
-	$(am__append_16) $(am__append_21)
+	$(am__append_3) $(am__append_5) $(am__append_8) \
+	$(am__append_11) $(am__append_16)
 DEFAULT_CFLAGS = -fPIC $(NEUT_DEFINES) $(NEUT_INCLUDES) \
-	-I$(CERN_ROOT)/include $(am__append_11) $(am__append_14) \
-	$(am__append_17)
-DEFAULT_LINKFLAGS = -version-info @NEUT_VERSION_NUM@ $(am__append_19)
+	-I$(CERN_ROOT)/include $(am__append_6) $(am__append_9) \
+	$(am__append_12)
+DEFAULT_LINKFLAGS = -version-info @NEUT_VERSION_NUM@ $(am__append_14)
 ROOT_LINKFLAGS = $(shell root-config --ldflags) -pthread -rdynamic \
-	-L$(shell root-config --libdir) $(am__append_22)
+	-L$(shell root-config --libdir) $(am__append_17)
 ROOT_VERSION_COMPILE = $(shell root-config --version)
 ROOT_ROOT_COMPILE = $(ROOTSYS)
 @ROOT_MAJOR_IS_SIX_FALSE@ROOT_LIBS = -lCore -lCint -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lm -ldl
@@ -559,63 +497,65 @@ ROOT_ROOT_COMPILE = $(ROOTSYS)
 @NEUT_HEPMC_TRUE@NUHEPMC_INCDIR = $(shell NuHepMC-config --incdir)
 
 # I know... but this seems to work
-EXE_LINKFLAGS = -fno-PIE -fno-pie $(am__append_24)
-EXE_RTLIBS = -lstdc++ -lgfortran $(am__append_25)
+EXE_LINKFLAGS = -fno-PIE -fno-pie $(am__append_19)
+EXE_RTLIBS = -lstdc++ -lgfortran $(am__append_20)
 AM_FFLAGS = -DNECORE_VERSION=@NEUT_VERSION_NUM@ $(DEFAULT_FFLAGS)
 AM_CXXFLAGS = -DNECORE_VERSION=@NEUT_VERSION_NUM@ $(DEFAULT_CXXFLAGS)
 # automake determines that a few of the c files are pure C and thus wont use the CXX flags.
 AM_CFLAGS = -DNECORE_VERSION=@NEUT_VERSION_NUM@ $(DEFAULT_CFLAGS)
 LIBNAME = libneutcore.@NEUT_VERSION_NUM@.a
 noinst_LIBRARIES = $(LIBNAME) libCERNOverride.@NEUT_VERSION_NUM@.a
-libneutcore_@NEUT_VERSION_NUM@_a_SOURCES = bbba05.F fnelspau_sf.F \
-	rsifl6g.F fnelspf.F neelsvct.F qgdisg.F rsifl7.F \
-	cohcrsneberger.F fnels_rpascl.F neelsvnp.F rnazi.F rslzbte.F \
-	cohcrsne.F fnf2.F neelsvnt.F rnelq2.F rslzbt.F cohcrsnekart.F \
-	fngamfct.F neffect.F rnmass.F rslzbtg.F cohcrsnerein.F \
-	nefillmodel.F rnncelq2.F rslzbtk.F cohkartlamda.F nefillver.F \
-	rnrot.F rspauli.F cohkartq2min.F fnncelscrs.F nefrmmom.F \
-	rnw1320.F rsrotvec.F cohkarttmin.F fnncq2max.F negamnuc.F \
-	rnw13.F rssetcrs.F cohkartwmax.F fnncq2min.F negenseed.F rnw.F \
-	rssetvct.F cohma.F fnnpot.F negetr.F rnxy.F rssgcrs.F \
-	dcohmxneberger.F fnpkno2.F nejet.F rs3drt.F rssgvct.F \
-	dcohmxnekart.F fnpkno.F nek0.F rsasum.F rsskcrs.F \
-	dcohmxnerein.F fnq2max.F nekindpa.F rsasumg.F rsskvct.F \
-	dcohneberger.F fnq2min.F neknopar.F rsclfme.F rsspicrs.F \
-	dcohnekart.F fnrworld.F nelibver.F rsclfm.F rsspivct.F \
-	dcohnerein.F fntotpau.F rsclfmg.F fnxf3.F rsclfmk.F ddifmx.F \
-	rsdcrse.F rstcrset.F difcrsne.F fvfrmgev.F nemkgam.F rsdcrs.F \
-	rstcrsetm.F difcrsnerein.F rsdcrsg.F rstcrsetrd.F dndxdy.F \
-	nemodgam.F rsdcrsk.F rstcrsett.F dnela.F lenstr.F nemodsel.F \
-	rsdiste.F rstcrs.F nemultip.F rsdist.F rstcrsgamrd.F dnelsnl.F \
-	neapivct.F nencelslpv.F rsdistg.F rstcrsg.F dnelsq2.F necard.F \
-	nencelsspff.F rsdistk.F rstcrsgm.F dnncela.F nechadir.F \
-	nencelsvcp.F rsdt33e.F rstcrsgt.F dnncelsq2.F necharge.F \
-	rsdt33.F rstcrsk.F elaxff.F nechkfb.F nencelsvnp.F rsdt33g.F \
-	rstcrskm.F evdifcrs.F neclpos.F nencelsvnt.F rsdt33k.F \
-	rstcrskrd.F fnapicrs.F neclrcrs.F neomega.F rsifl1e.F \
-	rstcrskt.F fndsigmapidt.F neclrwrk.F rsifl1.F rstcrsm.F \
-	fnelscrn.F necohvct.F neranbll.F rsifl1k.F rstcrsrd.F \
-	fnelscrs.F necpnewk.F nerdseed.F rsifl2e.F rstcrst.F \
-	fnels_erpascl.F necrosel.F nesetfgparams.F rsifl2.F fnelsint.F \
-	necrosin.F nesettarg.F rsifl2g.F fnelspan_effsf.F necrosto.F \
-	nesortdl.F rsifl2k.F fnelspan.F necrsmode.F nevect.F rsifl3e.F \
-	fnelspan_intpol.F nedcy2bd.F nevent.F rsifl3.F fnelspan_sf.F \
-	nedifvct.F nrsettarg.F rsifl3k.F fnelspau_effsf.F neelslpv.F \
-	nudeex.F rsifl4.F neelslvc.F nudeex_n.F rsifl4g.F \
-	fnelspau_intpol.F neelsspf.F nudeex_org.F rsifl5.F \
-	fnelspau_select.F neelsspff.F nudeex_p.F rsifl6.F structg.f \
-	bbba07.cc fa3comp.cc fazexp.cc ddifnerein.c qedifcrs.c \
-	resolvecardname.F mkadler.F mkdcrs.F mkdt33.F res_q2_limits.F \
-	rsy.F mk_imode1.cc mk_imode2.cc mk_imode3.cc mk_imode4.cc \
-	mk_imode5.cc mk_imode6.cc mk_imode7.cc mk_imode11.cc \
-	mk_imode12.cc mk_imode13.cc mk_imode14.cc mk_imode15.cc \
-	mk_imode16.cc mk_imode17.cc necard_toml.cc cardistoml.cc \
-	bykvec.F fnr1998.F byabpar.F bykax.F evpiw.F rscalcy.F \
-	rhocalc.F $(am__append_26)
+libneutcore_@NEUT_VERSION_NUM@_a_SOURCES = bbba05.F fnelspau_sf.F rsifl6g.F fnelspf.F neelsvct.F \
+										qgdisg.F rsifl7.F cohcrsneberger.F fnels_rpascl.F neelsvnp.F \
+										rnazi.F rslzbte.F cohcrsne.F fnf2.F neelsvnt.F rnelq2.F rslzbt.F \
+										cohcrsnekart.F fngamfct.F neffect.F rnmass.F rslzbtg.F \
+										cohcrsnerein.F nefillmodel.F rnncelq2.F rslzbtk.F cohkartlamda.F \
+										nefillver.F rnrot.F rspauli.F cohkartq2min.F fnncelscrs.F \
+										nefrmmom.F rnw1320.F rsrotvec.F cohkarttmin.F fnncq2max.F \
+										negamnuc.F rnw13.F rssetcrs.F cohkartwmax.F fnncq2min.F \
+										negenseed.F rnw.F rssetvct.F cohma.F fnnpot.F negetr.F rnxy.F \
+										rssgcrs.F dcohmxneberger.F fnpkno2.F nejet.F rs3drt.F rssgvct.F \
+										dcohmxnekart.F fnpkno.F nek0.F rsasum.F rsskcrs.F dcohmxnerein.F \
+										fnq2max.F nekindpa.F rsasumg.F rsskvct.F dcohneberger.F \
+										fnq2min.F neknopar.F rsclfme.F rsspicrs.F dcohnekart.F \
+										fnrworld.F nelibver.F rsclfm.F rsspivct.F dcohnerein.F \
+										fntotpau.F rsclfmg.F fnxf3.F rsclfmk.F ddifmx.F rsdcrse.F \
+										rstcrset.F difcrsne.F fvfrmgev.F nemkgam.F rsdcrs.F rstcrsetm.F \
+										difcrsnerein.F rsdcrsg.F rstcrsetrd.F dndxdy.F nemodgam.F \
+										rsdcrsk.F rstcrsett.F dnela.F lenstr.F nemodsel.F rsdiste.F \
+										rstcrs.F nemultip.F rsdist.F rstcrsgamrd.F dnelsnl.F neapivct.F \
+										nencelslpv.F rsdistg.F rstcrsg.F dnelsq2.F necard.F \
+										nencelsspff.F rsdistk.F rstcrsgm.F dnncela.F nechadir.F \
+										nencelsvcp.F rsdt33e.F rstcrsgt.F dnncelsq2.F necharge.F \
+										rsdt33.F rstcrsk.F elaxff.F nechkfb.F nencelsvnp.F rsdt33g.F \
+										rstcrskm.F evdifcrs.F neclpos.F nencelsvnt.F rsdt33k.F \
+										rstcrskrd.F fnapicrs.F neclrcrs.F neomega.F rsifl1e.F \
+										rstcrskt.F fndsigmapidt.F neclrwrk.F rsifl1.F rstcrsm.F \
+										fnelscrn.F necohvct.F neranbll.F rsifl1k.F rstcrsrd.F fnelscrs.F \
+										necpnewk.F nerdseed.F rsifl2e.F rstcrst.F fnels_erpascl.F \
+										necrosel.F nesetfgparams.F rsifl2.F fnelsint.F necrosin.F \
+										nesettarg.F rsifl2g.F fnelspan_effsf.F necrosto.F nesortdl.F \
+										rsifl2k.F fnelspan.F necrsmode.F nevect.F rsifl3e.F \
+										fnelspan_intpol.F nedcy2bd.F nevent.F rsifl3.F fnelspan_sf.F \
+										nedifvct.F nrsettarg.F rsifl3k.F fnelspau_effsf.F neelslpv.F \
+										nudeex.F rsifl4.F  neelslvc.F nudeex_n.F rsifl4g.F \
+										fnelspau_intpol.F neelsspf.F nudeex_org.F rsifl5.F \
+										fnelspau_select.F neelsspff.F nudeex_p.F rsifl6.F structg.f \
+										bbba07.cc fa3comp.cc fazexp.cc ddifnerein.c  qedifcrs.c \
+										resolvecardname.F mkadler.F mkdcrs.F mkdt33.F res_q2_limits.F \
+										rsy.F mk_imode1.cc mk_imode2.cc mk_imode3.cc mk_imode4.cc \
+										mk_imode5.cc mk_imode6.cc mk_imode7.cc mk_imode11.cc \
+										mk_imode12.cc mk_imode13.cc mk_imode14.cc mk_imode15.cc \
+										mk_imode16.cc mk_imode17.cc necard_toml.cc cardistoml.cc \
+										bykvec.F fnr1998.F byabpar.F bykax.F evpiw.F rscalcy.F \
+										rhocalc.F nemknpos.F
+
 
 #CERN Override
-libCERNOverride_@NEUT_VERSION_NUM@_a_SOURCES = pdfset.F structm.F \
-	grv94di.F grv98_lo.F $(am__append_27)
+libCERNOverride_@NEUT_VERSION_NUM@_a_SOURCES = pdfset.F structm.F grv94di.F grv98_lo.F
+
+# Enable this to make rmarin a NO-OP
+# libCERNOverride_@NEUT_VERSION_NUM@_a_SOURCES += rmarin_noop.F
 
 # Unused sources that live in the directory
 UNUSED_srcs = calcqecrs.F rs.tcrsdump.F nencelsvct.F fnelspau.F rs.wdist.F rs.spivcttest.F ddifcrs.F neelsvcp.F dnels.F
