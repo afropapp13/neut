@@ -7,10 +7,11 @@ std::string dial_name = "";
 std::string neut_card = "";
 double tweak_value = 0;
 bool is_tweak = true;
+bool card_is_bm = false;
 
 void Usage(char const *argv[]) {
   std::cout << "[USAGE]: " << argv[0]
-            << "--neut-card <neut.card> [--dial <name>] "
+            << " [--neut-card|--neut-cardbm] <neut.card> [--dial <name>] "
                "[--one-up|--one-down|--get-value-for-tweak "
                "<value>|--get-tweak-for-value <value>]"
             << std::endl;
@@ -24,6 +25,9 @@ void ParseOpts(int argc, char const *argv[]) {
       exit(0);
     } else if ((opt_it + 1) < argc) {
       if (arg == "--neut-card") {
+        neut_card = argv[++opt_it];
+      } else if (arg == "--neut-cardbm") {
+        card_is_bm = true;
         neut_card = argv[++opt_it];
       } else if (arg == "--dial") {
         dial_name = argv[++opt_it];
@@ -54,7 +58,8 @@ int main(int argc, char const *argv[]) {
   if (dial_name.size()) {
     silencelibgfortran_();
   }
-  neut::CommonBlockIFace::Initialize(neut_card, bool(dial_name.size()));
+  neut::CommonBlockIFace::Initialize(neut_card, card_is_bm,
+                                     bool(dial_name.size()));
   if (dial_name.size()) {
     unsilencelibgfortran_();
   }
