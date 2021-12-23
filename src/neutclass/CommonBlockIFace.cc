@@ -28,6 +28,7 @@
 extern "C" {
 void necard_();
 void necardev_();
+void necardbm_();
 }
 
 template <size_t N> std::string fstr_to_stdstring(char const (&fstr)[N]) {
@@ -49,7 +50,8 @@ namespace neut {
 
 static CommonBlockIFace *gCommonBlockIFace = NULL;
 
-void CommonBlockIFace::SetGenCard(std::string const &GenCardLocation) {
+void CommonBlockIFace::SetGenCard(std::string const &GenCardLocation,
+                                  bool IsBMCard) {
   if (!GenCardLocation.size()) {
     std::cout << "[ERROR]: CommonBlockIFace::SetGenCard passed empty string as "
                  "card location to read."
@@ -67,7 +69,11 @@ void CommonBlockIFace::SetGenCard(std::string const &GenCardLocation) {
 
   // Read Card
   necard_();
-  necardev_();
+  if (IsBMCard) {
+    necardbm_();
+  } else {
+    necardev_();
+  }
 
   // Call final common block setup functions
   NEUTSetParams();
@@ -96,13 +102,13 @@ void CommonBlockIFace::SetGenCard(std::string const &GenCardLocation) {
 }
 
 void CommonBlockIFace::Initialize(std::string const &GenCardLocation,
-                                  bool quiet) {
+                                  bool IsBMCard, bool quiet) {
   if (!quiet) {
     std::cout << "Initializing with " << GenCardLocation << std::endl;
   }
   if (!gCommonBlockIFace) {
     gCommonBlockIFace = new CommonBlockIFace();
-    gCommonBlockIFace->SetGenCard(GenCardLocation);
+    gCommonBlockIFace->SetGenCard(GenCardLocation, IsBMCard);
   }
 }
 

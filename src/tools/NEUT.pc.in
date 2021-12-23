@@ -1,0 +1,20 @@
+prefix=__INST_ROOT__
+exec_prefix=${prefix}
+includedir=${prefix}/include
+libdir=${exec_prefix}/lib
+
+FEATURES=__FEATURES__
+ROOT_FLAGS=__ROOT_FLAGS__
+NEUT_CFLAGS=-I${includedir} __NEUT_CFLAGS__
+CERN_FLAGS=__CERN_FLAGS__
+IO_LIB_FLAGS=__IO_LIB_FLAGS__
+LIB_FLAGS=__LIB_FLAGS__
+LIB_FLAGS_PRIVATE=__LIB_FLAGS_PRIVATE__
+EXE_LINKFLAGS=__EXE_LINKFLAGS__
+
+Name: NEUT
+Description: The NEUT Neutrino Interaction Simulation: https://arxiv.org/abs/2106.15809
+Version: __NEUT_VERSION__
+Cflags: ${NEUT_CFLAGS}
+Libs: -L${libdir} ${LIB_FLAGS}
+Libs.private: ${LIB_FLAGS_PRIVATE}

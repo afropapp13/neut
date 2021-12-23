@@ -44,9 +44,3 @@ C      REAL*4   R1314
  2000 continue
 
       END
-
-      SUBROUTINE RMARIN(int i1,int i2,int i3)
-
-      write(*,*) "RMARIN: Dummy routine"
-      return
-      end

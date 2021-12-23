@@ -35,14 +35,6 @@ extern "C"{
   void necard_();
   void necardbm_();
 
-  /*
-  void rmarin_(int *,int *,int *);
-  void rmarin_(int *i,int *j, int *k)
-  {
-	printf("rmarin was called.\n");
-	return;
-  }
-  */
 #ifdef gFortran
   void _gfortran_set_args(int, char **);
 #else

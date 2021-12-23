@@ -29,7 +29,7 @@
       EQUIVALENCE(IDATA(1),RDATA(1))
       CHARACTER*32 CNAME
 
-      integer*4 NWMAST,LSEGM,NSEGM,ierr,iseg
+      integer*4 NWMAST,LSEGM,NSEGM,ierr,iseg,I
 C
 C     -- MAKE EMB
 C

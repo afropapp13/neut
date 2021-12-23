@@ -6,7 +6,10 @@ LIBNAME = libtauola.@NEUT_VERSION_NUM@.a
 
 noinst_LIBRARIES = $(LIBNAME)
 
-libtauola_@NEUT_VERSION_NUM@_a_SOURCES = choice.F dcdmas.F filhep.F formf.F lunpik.F pkorb.F tacard.F tainicom.F tainidcy.F tainimas.F tainipar.F tapricom.F taudecay.F tauola.F taurdf.F tauvect.F tralo4.F
+libtauola_@NEUT_VERSION_NUM@_a_SOURCES = choice.F dcdmas.F filhep.F formf.F lunpik.F pkorb.F \
+										tacard.F tainicom.F tainidcy.F tainimas.F tainipar.F \
+										tapricom.F taudecay.F tauola.F taurdf.F tauvect.F tralo4.F \
+										mrst2002.f taupol.f
 
 # Unused sources that live in the directory
 UNUSED_srcs =

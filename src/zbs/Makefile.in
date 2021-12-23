@@ -79,7 +79,7 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 DIST_COMMON = $(top_srcdir)/build.common $(srcdir)/Makefile.in \
-	$(srcdir)/Makefile.am $(top_srcdir)/depcomp
+	$(srcdir)/Makefile.am
 @NEUT_USE_GPERF_TRUE@am__append_1 = -DNEUT_USE_GPERF
 @NEUT_HEPMC_TRUE@am__append_2 = -DUSE_HEPMC
 @NEUT_HEPMC_TRUE@am__append_3 = $(shell HepMC3-config --cflags) -I$(shell NuHepMC-config --incdir)
@@ -100,7 +100,7 @@ DIST_COMMON = $(top_srcdir)/build.common $(srcdir)/Makefile.in \
 @NEUT_HEPMC_TRUE@am__append_18 = -lNuHepMC -lHepMC3 -lHepMC3rootIO
 @FC_HAS_PIE_TRUE@am__append_19 = -no-pie
 @NEUT_USE_GPERF_TRUE@am__append_20 = -L@NEUT_GPERF@ -lprofiler
-subdir = skmcsvc
+subdir = zbs
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
 	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
@@ -117,17 +117,40 @@ AM_V_AR = $(am__v_AR_@AM_V@)
 am__v_AR_ = $(am__v_AR_@AM_DEFAULT_V@)
 am__v_AR_0 = @echo "  AR      " $@;
 am__v_AR_1 = 
-libskmcsvc_@NEUT_VERSION_NUM@_a_AR = $(AR) $(ARFLAGS)
-libskmcsvc_@NEUT_VERSION_NUM@_a_LIBADD =
-am_libskmcsvc_@NEUT_VERSION_NUM@_a_OBJECTS = excard.$(OBJEXT) \
-	getuni.$(OBJEXT) mcmass.$(OBJEXT) mcmassgv.$(OBJEXT) \
-	mcvecbst.$(OBJEXT) necardev.$(OBJEXT) necardev_toml.$(OBJEXT) \
-	nesetpos.$(OBJEXT) rlu.$(OBJEXT) rndir.$(OBJEXT) \
-	rnferm.$(OBJEXT) rnpwav.$(OBJEXT) rnswav.$(OBJEXT) \
-	vcclcm.$(OBJEXT) vcphsvct.$(OBJEXT) vcppwave.$(OBJEXT) \
-	vcpswave.$(OBJEXT) vcrambo.$(OBJEXT) vcwtrmbo.$(OBJEXT)
-libskmcsvc_@NEUT_VERSION_NUM@_a_OBJECTS =  \
-	$(am_libskmcsvc_@NEUT_VERSION_NUM@_a_OBJECTS)
+libzbs_@NEUT_VERSION_NUM@_a_AR = $(AR) $(ARFLAGS)
+libzbs_@NEUT_VERSION_NUM@_a_LIBADD =
+am_libzbs_@NEUT_VERSION_NUM@_a_OBJECTS = kzaddn.$(OBJEXT) \
+	kzbcr0.$(OBJEXT) kzbcr1.$(OBJEXT) kzbcr2.$(OBJEXT) \
+	kzbcr3.$(OBJEXT) kzbcre.$(OBJEXT) kzbdel.$(OBJEXT) \
+	kzbloc.$(OBJEXT) kzbtyp.$(OBJEXT) kzchg0.$(OBJEXT) \
+	kzcldt.$(OBJEXT) kzcmpn.$(OBJEXT) kzcrb0.$(OBJEXT) \
+	kzcrb1.$(OBJEXT) kzcrb2.$(OBJEXT) kzcrb3.$(OBJEXT) \
+	kzcrd0.$(OBJEXT) kzcrd1.$(OBJEXT) kzcrd2.$(OBJEXT) \
+	kzcrd3.$(OBJEXT) kzcreh.$(OBJEXT) kzcrem.$(OBJEXT) \
+	kzcrmh.$(OBJEXT) kzddiv.$(OBJEXT) kzdevt.$(OBJEXT) \
+	kzdsev.$(OBJEXT) kzdsto.$(OBJEXT) kzdtab.$(OBJEXT) \
+	kzeclr.$(OBJEXT) kzecur.$(OBJEXT) kzefst.$(OBJEXT) \
+	kzejmp.$(OBJEXT) kzelst.$(OBJEXT) kzemrg.$(OBJEXT) \
+	kzemrk.$(OBJEXT) kzend.$(OBJEXT) kzenew.$(OBJEXT) \
+	kzenum.$(OBJEXT) kzenxt.$(OBJEXT) kzeprv.$(OBJEXT) \
+	kzexb0.$(OBJEXT) kzexb1.$(OBJEXT) kzexb2.$(OBJEXT) \
+	kzexdi.$(OBJEXT) kzexdr.$(OBJEXT) kzfile.$(OBJEXT) \
+	kzform.$(OBJEXT) kzget.$(OBJEXT) kzget0.$(OBJEXT) \
+	kzget1.$(OBJEXT) kzget2.$(OBJEXT) kzgeth.$(OBJEXT) \
+	kzinit.$(OBJEXT) kziofm.$(OBJEXT) kzleng.$(OBJEXT) \
+	kzlimit.$(OBJEXT) kzlseg.$(OBJEXT) kzldat.$(OBJEXT) \
+	kzlogl.$(OBJEXT) kzmcur.$(OBJEXT) kzmfst.$(OBJEXT) \
+	kzmjmp.$(OBJEXT) kzmkdt.$(OBJEXT) kzmlst.$(OBJEXT) \
+	kzmnum.$(OBJEXT) kzmnxt.$(OBJEXT) kzmprv.$(OBJEXT) \
+	kzname.$(OBJEXT) kznseg.$(OBJEXT) kznsg0.$(OBJEXT) \
+	kznssg.$(OBJEXT) kzoptn.$(OBJEXT) kzpdir.$(OBJEXT) \
+	kzput0.$(OBJEXT) kzput1.$(OBJEXT) kzput2.$(OBJEXT) \
+	kzputh.$(OBJEXT) kzread.$(OBJEXT) kzrep0.$(OBJEXT) \
+	kzrep1.$(OBJEXT) kzrep2.$(OBJEXT) kzwpos.$(OBJEXT) \
+	kzwps2.$(OBJEXT) kzwrit.$(OBJEXT) kzctoi.$(OBJEXT) \
+	kzitoc.$(OBJEXT) kzreda.$(OBJEXT) msgout.$(OBJEXT)
+libzbs_@NEUT_VERSION_NUM@_a_OBJECTS =  \
+	$(am_libzbs_@NEUT_VERSION_NUM@_a_OBJECTS)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -141,9 +164,6 @@ am__v_at_ = $(am__v_at_@AM_DEFAULT_V@)
 am__v_at_0 = @
 am__v_at_1 = 
 DEFAULT_INCLUDES = -I.@am__isrc@
-depcomp = $(SHELL) $(top_srcdir)/depcomp
-am__depfiles_maybe = depfiles
-am__mv = mv -f
 PPF77COMPILE = $(F77) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_FFLAGS) $(FFLAGS)
 AM_V_lt = $(am__v_lt_@AM_V@)
@@ -166,44 +186,8 @@ AM_V_F77LD = $(am__v_F77LD_@AM_V@)
 am__v_F77LD_ = $(am__v_F77LD_@AM_DEFAULT_V@)
 am__v_F77LD_0 = @echo "  F77LD   " $@;
 am__v_F77LD_1 = 
-CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
-	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
-LTCXXCOMPILE = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) \
-	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
-	$(AM_CXXFLAGS) $(CXXFLAGS)
-AM_V_CXX = $(am__v_CXX_@AM_V@)
-am__v_CXX_ = $(am__v_CXX_@AM_DEFAULT_V@)
-am__v_CXX_0 = @echo "  CXX     " $@;
-am__v_CXX_1 = 
-CXXLD = $(CXX)
-CXXLINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
-	$(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
-AM_V_CXXLD = $(am__v_CXXLD_@AM_V@)
-am__v_CXXLD_ = $(am__v_CXXLD_@AM_DEFAULT_V@)
-am__v_CXXLD_0 = @echo "  CXXLD   " $@;
-am__v_CXXLD_1 = 
-COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
-	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
-LTCOMPILE = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) \
-	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
-	$(AM_CFLAGS) $(CFLAGS)
-AM_V_CC = $(am__v_CC_@AM_V@)
-am__v_CC_ = $(am__v_CC_@AM_DEFAULT_V@)
-am__v_CC_0 = @echo "  CC      " $@;
-am__v_CC_1 = 
-CCLD = $(CC)
-LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
-	$(AM_LDFLAGS) $(LDFLAGS) -o $@
-AM_V_CCLD = $(am__v_CCLD_@AM_V@)
-am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
-am__v_CCLD_0 = @echo "  CCLD    " $@;
-am__v_CCLD_1 = 
-SOURCES = $(libskmcsvc_@NEUT_VERSION_NUM@_a_SOURCES)
-DIST_SOURCES = $(libskmcsvc_@NEUT_VERSION_NUM@_a_SOURCES)
+SOURCES = $(libzbs_@NEUT_VERSION_NUM@_a_SOURCES)
+DIST_SOURCES = $(libzbs_@NEUT_VERSION_NUM@_a_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -413,18 +397,32 @@ ROOT_ROOT_COMPILE = $(ROOTSYS)
 # I know... but this seems to work
 EXE_LINKFLAGS = -fno-PIE -fno-pie $(am__append_19)
 EXE_RTLIBS = -lstdc++ -lgfortran $(am__append_20)
-AM_FFLAGS = -DSKMCSVCVER=@NEUT_VERSION_NUM@ $(DEFAULT_FFLAGS)
-AM_CXXFLAGS = -DSKMCSVC_VERSION=@NEUT_VERSION_NUM@ $(DEFAULT_CXXFLAGS)
-LIBNAME = libskmcsvc.@NEUT_VERSION_NUM@.a
+AM_FFLAGS = -DZBSVER=@NEUT_VERSION_NUM@ $(DEFAULT_FFLAGS)
+LIBNAME = libzbs.@NEUT_VERSION_NUM@.a
 noinst_LIBRARIES = $(LIBNAME)
-libskmcsvc_@NEUT_VERSION_NUM@_a_SOURCES = excard.F getuni.F mcmass.F mcmassgv.F mcvecbst.F necardev.F necardev_toml.cc nesetpos.F rlu.F rndir.F rnferm.F rnpwav.F rnswav.F vcclcm.F vcphsvct.F vcppwave.F vcpswave.F vcrambo.F vcwtrmbo.F
+libzbs_@NEUT_VERSION_NUM@_a_SOURCES = kzaddn.F kzbcr0.F kzbcr1.F kzbcr2.F kzbcr3.F kzbcre.F \
+									kzbdel.F kzbloc.F kzbtyp.F kzchg0.F kzcldt.F kzcmpn.F \
+									kzcrb0.F kzcrb1.F kzcrb2.F kzcrb3.F kzcrd0.F kzcrd1.F \
+									kzcrd2.F kzcrd3.F kzcreh.F kzcrem.F	kzcrmh.F kzddiv.F \
+									kzdevt.F kzdsev.F kzdsto.F kzdtab.F kzeclr.F kzecur.F \
+									kzefst.F kzejmp.F kzelst.F kzemrg.F kzemrk.F kzend.F \
+									kzenew.F kzenum.F kzenxt.F kzeprv.F kzexb0.F kzexb1.F \
+									kzexb2.F kzexdi.F kzexdr.F kzfile.F kzform.F kzget.F \
+									kzget0.F kzget1.F kzget2.F kzgeth.F kzinit.F kziofm.F \
+									kzleng.F kzlimit.F kzlseg.F kzldat.F kzlogl.F kzmcur.F \
+									kzmfst.F kzmjmp.F kzmkdt.F kzmlst.F kzmnum.F kzmnxt.F \
+									kzmprv.F kzname.F kznseg.F kznsg0.F kznssg.F kzoptn.F \
+									kzpdir.F kzput0.F kzput1.F kzput2.F kzputh.F kzread.F \
+									kzrep0.F kzrep1.F kzrep2.F kzwpos.F kzwps2.F kzwrit.F \
+									kzctoi.F kzitoc.F kzreda.F msgout.F
+
 
 # Unused sources that live in the directory
 UNUSED_srcs = 
 all: all-am
 
 .SUFFIXES:
-.SUFFIXES: .F .cc .f .lo .o .obj
+.SUFFIXES: .F .f .lo .o .obj
 $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am $(top_srcdir)/build.common $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
@@ -434,9 +432,9 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am $(top_srcdir)/build.common $(am__c
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign skmcsvc/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign zbs/Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --foreign skmcsvc/Makefile
+	  $(AUTOMAKE) --foreign zbs/Makefile
 .PRECIOUS: Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
@@ -460,18 +458,16 @@ $(am__aclocal_m4_deps):
 clean-noinstLIBRARIES:
 	-test -z "$(noinst_LIBRARIES)" || rm -f $(noinst_LIBRARIES)
 
-libskmcsvc.@NEUT_VERSION_NUM@.a: $(libskmcsvc_@NEUT_VERSION_NUM@_a_OBJECTS) $(libskmcsvc_@NEUT_VERSION_NUM@_a_DEPENDENCIES) $(EXTRA_libskmcsvc_@NEUT_VERSION_NUM@_a_DEPENDENCIES) 
-	$(AM_V_at)-rm -f libskmcsvc.@NEUT_VERSION_NUM@.a
-	$(AM_V_AR)$(libskmcsvc_@NEUT_VERSION_NUM@_a_AR) libskmcsvc.@NEUT_VERSION_NUM@.a $(libskmcsvc_@NEUT_VERSION_NUM@_a_OBJECTS) $(libskmcsvc_@NEUT_VERSION_NUM@_a_LIBADD)
-	$(AM_V_at)$(RANLIB) libskmcsvc.@NEUT_VERSION_NUM@.a
+libzbs.@NEUT_VERSION_NUM@.a: $(libzbs_@NEUT_VERSION_NUM@_a_OBJECTS) $(libzbs_@NEUT_VERSION_NUM@_a_DEPENDENCIES) $(EXTRA_libzbs_@NEUT_VERSION_NUM@_a_DEPENDENCIES) 
+	$(AM_V_at)-rm -f libzbs.@NEUT_VERSION_NUM@.a
+	$(AM_V_AR)$(libzbs_@NEUT_VERSION_NUM@_a_AR) libzbs.@NEUT_VERSION_NUM@.a $(libzbs_@NEUT_VERSION_NUM@_a_OBJECTS) $(libzbs_@NEUT_VERSION_NUM@_a_LIBADD)
+	$(AM_V_at)$(RANLIB) libzbs.@NEUT_VERSION_NUM@.a
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
 
 distclean-compile:
 	-rm -f *.tab.c
-
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/necardev_toml.Po@am__quote@
 
 .F.o:
 	$(AM_V_PPF77)$(PPF77COMPILE) -c -o $@ $<
@@ -483,30 +479,6 @@ distclean-compile:
 	$(AM_V_PPF77)$(LTPPF77COMPILE) -c -o $@ $<
 .F.f:
 	$(F77COMPILE) -F $<
-
-.cc.o:
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
-@am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ $< &&\
-@am__fastdepCXX_TRUE@	$(am__mv) $$depbase.Tpo $$depbase.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXXCOMPILE) -c -o $@ $<
-
-.cc.obj:
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.obj$$||'`;\
-@am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ `$(CYGPATH_W) '$<'` &&\
-@am__fastdepCXX_TRUE@	$(am__mv) $$depbase.Tpo $$depbase.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXXCOMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
-
-.cc.lo:
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.lo$$||'`;\
-@am__fastdepCXX_TRUE@	$(LTCXXCOMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ $< &&\
-@am__fastdepCXX_TRUE@	$(am__mv) $$depbase.Tpo $$depbase.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LTCXXCOMPILE) -c -o $@ $<
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -590,7 +562,6 @@ clean-am: clean-generic clean-libtool clean-noinstLIBRARIES \
 	mostlyclean-am
 
 distclean: distclean-am
-	-rm -rf ./$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic
 
@@ -635,7 +606,6 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
-	-rm -rf ./$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 

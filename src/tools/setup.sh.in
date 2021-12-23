@@ -1,5 +1,7 @@
 #!/bin/bash
 
+if ! type add_to_PATH &> /dev/null; then
+
 ### Adapted from https://unix.stackexchange.com/questions/4965/keep-duplicates-out-of-path-on-source
 function add_to_PATH () {
   for d; do
@@ -21,6 +23,10 @@ function add_to_PATH () {
   done
 }
 
+fi
+
+if ! type add_to_LD_LIBRARY_PATH &> /dev/null; then
+
 function add_to_LD_LIBRARY_PATH () {
   for d; do
 
@@ -41,6 +47,32 @@ function add_to_LD_LIBRARY_PATH () {
   done
 }
 
+fi
+
+if ! type add_to_PKG_CONFIG_PATH &> /dev/null; then
+
+function add_to_PKG_CONFIG_PATH () {
+  for d; do
+
+    d=$(cd -- "$d" && { pwd -P || pwd; }) 2>/dev/null  # canonicalize symbolic links
+    if [ -z "$d" ]; then continue; fi  # skip nonexistent directory
+
+    if [ "$d" == "/usr/lib" ] || [ "$d" == "/usr/lib64" ] || [ "$d" == "/usr/local/lib" ] || [ "$d" == "/usr/local/lib64" ]; then
+      case ":$PKG_CONFIG_PATH:" in
+        *":$d:"*) :;;
+        *) export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$d;;
+      esac
+    else
+      case ":$PKG_CONFIG_PATH:" in
+        *":$d:"*) :;;
+        *) export PKG_CONFIG_PATH=$d:$PKG_CONFIG_PATH;;
+      esac
+    fi
+  done
+}
+
+fi
+
 #if it was sourced as . setup.sh then you can't scrub off the end... assume that
 #we are in the correct directory.
 if ! echo "${BASH_SOURCE}" | grep "/" --silent; then
@@ -55,12 +87,13 @@ if [ "__ROOT_VERSION_COMPILE__" != $(root-config --version) ]; then
   return 1
 fi
 
-export NEUT=${SETUPDIR}
+export NEUT_ROOT=${SETUPDIR}
 export NEUT_CARDS=${SETUPDIR}/share/neut/Cards
 export NEUT_CRSPATH=${SETUPDIR}/share/neut/crsdat
 
-add_to_PATH ${NEUT}/bin
-add_to_LD_LIBRARY_PATH ${NEUT}/lib
+add_to_PATH ${NEUT_ROOT}/bin
+add_to_LD_LIBRARY_PATH ${NEUT_ROOT}/lib
+add_to_PKG_CONFIG_PATH ${NEUT_ROOT}
 
 
 if [ "__USE_HEPMC__" == "yes" ]; then

@@ -34,9 +34,3 @@
 
       end
       
-      subroutine rmarin(i,j,k)
-      write(*,*) 'custom rmarin'
-      
-      return
-      end
-      

@@ -7,12 +7,6 @@ using namespace std;
 extern "C"{
   void hlimit_(int *);
   void necard_();
-  void rmarin_(int *,int *,int *);
-  void rmarin_(int *i,int *j, int *k)
-  {
-	printf("rmarin was called.\n");
-	return;
-  }
 
 };
 
