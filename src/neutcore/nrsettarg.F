@@ -231,6 +231,13 @@
          NRAF    = 0.57 
          NRWPARM = 0.   
          NRDFACT = 1.0 
+      else if (NUMBNDP.eq.74) then ! 184W
+         NRRMSRAD= 5.42
+         NRC     = 6.51
+         NRCNN   = 6.51
+         NRAF    = 0.535
+         NRWPARM = 0.
+         NRDFACT = 1.0 
       else if (NUMBNDP.eq.79) then ! 197Au
          NRRMSRAD= 5.33  
          NRC     = 6.38  

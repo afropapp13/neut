@@ -10,7 +10,7 @@ bool is_tweak = true;
 
 void Usage(char const *argv[]) {
   std::cout << "[USAGE]: " << argv[0]
-            << "--neut-card <neut.card> [--dial <name>] "
+            << " --neut-card <neut.card> [--dial <name>] "
                "[--one-up|--one-down|--get-value-for-tweak "
                "<value>|--get-tweak-for-value <value>]"
             << std::endl;

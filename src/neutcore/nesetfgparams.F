@@ -194,6 +194,11 @@ C       write(*,*) "NESETFGPARAMS: ", NUMBNDP, NUMBNDN, IZ, IA
          PFMAX  = 0.250
          VNUINI =-0.035
          VNUFIN = 0.
+      else if (IZ.EQ.74) then  ! Tungsten (Assumed to be the same as 73Ta from Phys. Rev. Lett. 26, 445 (1971))
+         PFSURF = 0.265
+         PFMAX  = 0.265
+         VNUINI =-0.042
+         VNUFIN = 0.
       else if (IZ.EQ.79) then  ! Gold
          PFSURF = 0.250
          PFMAX  = 0.250
