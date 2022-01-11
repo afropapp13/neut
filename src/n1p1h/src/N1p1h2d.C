@@ -1022,8 +1022,7 @@ void N1p1h2d::ComputeHintegrals(int nuclei){
 
 	  double xsl = DoubleDifferential(id,nuclei,Enu,tl,xcos);
 	  xcos=cosH;
-	  //	  if( xsl < 0. || std::isnan(xsl)  ) xsl=0.;
-	  if( xsl < 0. || isnan(xsl)  ) xsl=0.;
+	  if( xsl < 0. || std::isnan(xsl)  ) xsl=0.;
 
 	  xs =  xsl*intfactor4;
 	  xs2 =  xsl*xsl*intfactor4;
