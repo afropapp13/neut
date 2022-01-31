@@ -508,8 +508,7 @@ void N1p1h::ComputeIntegrals(int nuclei){
 
 	  if(tmommin > tmommax)  continue;
 
-//	  if(std::isnan(tmommin))tmommin=0;
-	  if(isnan(tmommin))tmommin=0;
+ 	  if(std::isnan(tmommin))tmommin=0;
 
 	  ldp = tmommin+Random()*(tmommax-tmommin);
 
@@ -534,8 +533,7 @@ void N1p1h::ComputeIntegrals(int nuclei){
 
 	  double xsl = FourDifferential(id,nuclei,Enu,tl,xcos,lr,ldp,vc);
 
-	  //	  if( xsl < 0. || std::isnan(xsl)  ) xsl=0.;
-	  if( xsl < 0. || isnan(xsl)  ) xsl=0.;
+	  if( xsl < 0. || std::isnan(xsl)  ) xsl=0.;
 
 	  xs =  xsl*intfactor4;
 	  xs2 =  xsl*xsl*intfactor4;
@@ -1125,8 +1123,7 @@ void N1p1h::GenerateVectors(int id,int nuclei,double pnu[4],  double p[4][4], in
     else if(id > 0.)
       tmommin = targetminmon_(&q0,&dq,&neutronmass,&protonmass);
 
-	//    if(std::isnan(tmommin))tmommin=0;
-	if(isnan(tmommin))tmommin=0;
+    if(std::isnan(tmommin))tmommin=0;
 
     tmomminkept = tmommin;
 
@@ -1276,8 +1273,7 @@ double N1p1h::EmuMax(double E,double xcos,double ml, int id,double pfermi, doubl
 	pmu = 0;
   }
 
-  //  if( std::isnan(pmu) || (emin-vc) < 0. ) { pmu2=pmu=0; }
-  if( isnan(pmu) || (emin-vc) < 0. ) { pmu2=pmu=0; }
+  if( std::isnan(pmu) || (emin-vc) < 0. ) { pmu2=pmu=0; }
   p = sqrt(E2+pmu2-pmu*ecos2)-pfermi;
 
   d1 = Ep-sqrt(p*p+ms2);
@@ -1376,8 +1372,7 @@ double N1p1h::EmuMin(double E,double xcos,double ml, int id,double pfermi, doubl
 	 pmu =0.;
    }
 
-   //   if(std::isnan(pmu)){pmu2=pmu=0;}
-   if(isnan(pmu)){pmu2=pmu=0;}
+   if(std::isnan(pmu)){pmu2=pmu=0;}
    p = sqrt(E2+pmu2-pmu*ecos2)+pfermi;
 
    d1 = Ep-sqrt(p*p+ms2);
@@ -1561,8 +1556,7 @@ void N1p1h::ComputeHintegrals(int nuclei){
 
 	  double xsl = DoubleDifferential(id,nuclei,Enu,tl,xcos);
 	  xcos=cosH;
-	  //	  if( xsl < 0. || std::isnan(xsl)  ) xsl=0.;
-	  if( xsl < 0. || isnan(xsl)  ) xsl=0.;
+	  if( xsl < 0. || std::isnan(xsl)  ) xsl=0.;
 
 	  xs =  xsl*intfactor4;
 	  xs2 =  xsl*xsl*intfactor4;

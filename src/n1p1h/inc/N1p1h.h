@@ -6,6 +6,7 @@
 #include <vector> 
 #include <fstream>
 #include <string>
+#include <cmath>
 #include "Nucleus.h" 
 
 typedef  std::pair<int,int>  Precompindx;  // It defines the precomputed table indeces.

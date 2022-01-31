@@ -223,6 +223,13 @@
          AF    = 0.57
          WPARM = 0.
          DFACT = 1.0 
+      else if (NUMBNDP.eq.74) then ! 184W
+         RMSRAD= 5.42
+         C     = 6.51
+         CNN   = 6.51
+         AF    = 0.535
+         WPARM = 0.
+         DFACT = 1.0 
       else if (NUMBNDP.eq.79) then ! 197Au
          RMSRAD= 5.33
          C     = 6.38
