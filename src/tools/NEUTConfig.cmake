@@ -1,3 +1,5 @@
+if(NOT DEFINED NEUT_FOUND OR NOT NEUT_FOUND)
+
 cmake_minimum_required (VERSION 3.14 FATAL_ERROR)
 # This will define the following variables
 #
@@ -63,7 +65,7 @@ if(NOT COMMAND cmessage)
 endif()
 
 
-find_package(PkgConfig REQUIRED)
+find_dependency(PkgConfig)
 pkg_check_modules(NEUT QUIET NEUT)
 
 find_path(NEUT_INCLUDE_DIR
@@ -153,3 +155,5 @@ if(NEUT_FOUND)
   endif()
 
 endif()
+
+endif() # Only run this whole file if it hasn't been run already.
