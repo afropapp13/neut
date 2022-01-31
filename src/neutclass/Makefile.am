@@ -10,12 +10,12 @@ NEUTCLASSHEADERS = neutctrl.h neutfsipart.h neutfsivert.h neutnucfsistep.h neutn
 
 if ROOT_MAJOR_IS_SIX
 neutclassDict.cc neutclassDict_rdict.pcm: $(NEUTCLASSHEADERS) neutclassLinkDef.h
-	rootcint -f neutclassDict.cc -c $^
+	rootcint -f neutclassDict.cc -c $(NEUT_DEFINES) $^
 pcmdir = $(prefix)/lib
 pcm_DATA = neutclassDict_rdict.pcm
 else
 neutclassDict.cc: $(NEUTCLASSHEADERS) neutclassLinkDef.h
-	rootcint -f neutclassDict.cc -c $^
+	rootcint -f neutclassDict.cc -c $(NEUT_DEFINES) $^
 endif
 
 BUILT_SOURCES = neutclassDict.cc

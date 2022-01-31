@@ -1,4 +1,3 @@
-
 #include "CommonBlockIFace.h"
 
 #include "cardnameC.h"
@@ -6,8 +5,9 @@
 #include "fsihistC.h"
 #include "neutcrsC.h"
 #include "neworkC.h"
-#include "nucleonfsihistC.h"
 #include "vcworkC.h"
+#include "nucleonfsihistC.h"
+#include "nrintC.h"
 
 // Must come after vcworkC.h
 #include "posinnucC.h"
@@ -416,6 +416,8 @@ void CommonBlockIFace::ReadFSIHIST(NeutVect *nvect) {
 /**/
 void CommonBlockIFace::ReadNUCLEONFSIHIST(NeutVect *nvect) {
 
+  nrint_.pcascprob = nvect->NrintNucleonCascadeProb;
+
   NeutNucFsiVert *nucfsivinfo = nullptr;
   nucleonfsihist_.nfnvert = nvect->NnucFsiVert();
   if (nucleonfsihist_.nfnvert == 1) {
@@ -449,6 +451,14 @@ void CommonBlockIFace::ReadNUCLEONFSIHIST(NeutVect *nvect) {
     nucfsisinfo = nvect->NucFsiStepInfo(i);
     nucleonfsihist_.nfecms2[i] = nucfsisinfo->fECMS2;
     nucleonfsihist_.nfptot[i] = nucfsisinfo->fProb;
+
+#ifdef NEUT_READ_NUCFSI
+      nucleonfsihist_.nfiflagstep[i] = nucfsisinfo->fVertFlagStep;
+      nucleonfsihist_.nfirhon[i] = nucfsisinfo->fVertFsiRhon;
+      nucleonfsihist_.nfipel[i] = nucfsisinfo->fStepPel;
+      nucleonfsihist_.nfipsp[i] = nucfsisinfo->fStepPsp;
+      nucleonfsihist_.nfipdp[i] = nucfsisinfo->fStepPdp;
+#endif
   }
 }
 

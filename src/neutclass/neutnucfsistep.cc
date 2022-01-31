@@ -5,7 +5,7 @@ NeutNucFsiStep::NeutNucFsiStep() {
   fECMS2 = 0.;
   fProb = -1.;
 
-#ifdef NEUT_WRITE_NUCFSI
+#if defined(NEUT_WRITE_NUCFSI) or defined(NEUT_READ_NUCFSI)
   fVertFlagStep = -999;
   fVertFsiRhon = -999;
   fStepPel = -999;

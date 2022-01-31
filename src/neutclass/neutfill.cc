@@ -427,7 +427,7 @@ int neutfillvect(char *filename, char *treename, char *branchname) {
 
       //          nucfsisinfo.fECMS2 = nucleonfsihist_.nfecms2[i];
       nucfsisinfo.fProb = nucleonfsihist_.nfptot[i];
-#ifdef NEUT_READ_NUCFSI
+#ifdef NEUT_WRITE_NUCFSI
       nucfsisinfo.fVertFlagStep = nucleonfsihist_.nfiflagstep[i];
       nucfsisinfo.fVertFsiRhon = nucleonfsihist_.nfirhon[i];
       nucfsisinfo.fStepPel = nucleonfsihist_.nfipel[i];

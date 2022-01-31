@@ -14,13 +14,13 @@ public:
 
   // Variables
 
-#ifdef NEUT_WRITE_NUCFSI
+#if defined(NEUT_WRITE_NUCFSI) or defined(NEUT_READ_NUCFSI)
   Int_t fVertFlagStep; // Vertex flag
   Double_t fVertFsiRhon;
 #endif
   Double_t fECMS2; // CMS energy squared
   Double_t fProb;  // Probability
-#ifdef NEUT_WRITE_NUCFSI
+#if defined(NEUT_WRITE_NUCFSI) or defined(NEUT_READ_NUCFSI)
   Double_t fStepPel;
   Double_t fStepPsp;
   Double_t fStepPdp;
