@@ -126,12 +126,12 @@ void TNeutOutput::InitTree(Float_t fluxVersion){
     // New nucleon FSI pass through from Feb 2022
 
     fOutputTree->Branch("PCascProb",      &fPCascProb,        "PCascProb/F"             );
-    fOutputTree->Branch("Prob",            fProb,             "Prob[kNFmaxstep]/F"      );
-    fOutputTree->Branch("VertFlagStep",    fVertFlagStep,     "VertFlagStep[kNFmaxstep]/F");
-    fOutputTree->Branch("VertFsiRhon",     fVertFsiRhon,      "VertFsiRhon[kNFmaxstep]/F");
-    fOutputTree->Branch("StepPel",         fStepPel,          "StepPel[kNFmaxstep]/F"   );
-    fOutputTree->Branch("StepPsp",         fStepPsp,          "StepPsp[kNFmaxstep]/F"   );
-    fOutputTree->Branch("StepPdp",         fStepPdp,          "StepPdp[kNFmaxstep]/F"   );
+    fOutputTree->Branch("Prob",            fProb,             "Prob[NFnstep]/F"      );
+    fOutputTree->Branch("VertFlagStep",    fVertFlagStep,     "VertFlagStep[NFnstep]/F");
+    fOutputTree->Branch("VertFsiRhon",     fVertFsiRhon,      "VertFsiRhon[NFnstep]/F");
+    fOutputTree->Branch("StepPel",         fStepPel,          "StepPel[NFnstep]/F"   );
+    fOutputTree->Branch("StepPsp",         fStepPsp,          "StepPsp[NFnstep]/F"   );
+    fOutputTree->Branch("StepPdp",         fStepPdp,          "StepPdp[NFnstep]/F"   );
 
     //SPI Delta
     fOutputTree->Branch("SPIDelta",       &fSPIDelta,         "SPIDelta/I"              );
