@@ -147,7 +147,8 @@ am__v_AR_1 =
 libNEUTReWeight_@NEUT_VERSION_NUM@_a_AR = $(AR) $(ARFLAGS)
 libNEUTReWeight_@NEUT_VERSION_NUM@_a_LIBADD =
 am__objects_1 = NReWeight.$(OBJEXT) NSyst.$(OBJEXT) \
-	NuXSecCCQE.$(OBJEXT) NuXSecRES.$(OBJEXT) CascadePion.$(OBJEXT)
+	NuXSecCCQE.$(OBJEXT) NuXSecRES.$(OBJEXT) CascadePion.$(OBJEXT) \
+	CascadeNucleon.$(OBJEXT)
 am_libNEUTReWeight_@NEUT_VERSION_NUM@_a_OBJECTS = $(am__objects_1)
 libNEUTReWeight_@NEUT_VERSION_NUM@_a_OBJECTS =  \
 	$(am_libNEUTReWeight_@NEUT_VERSION_NUM@_a_OBJECTS)
@@ -424,9 +425,9 @@ LIBNAME = libNEUTReWeight.@NEUT_VERSION_NUM@.a
 lib_LIBRARIES = $(LIBNAME)
 
 # Don't seem to be able to have canonical names easily build from makefile variables, this is ugly, but works
-SRCLIST = NReWeight.cc NSyst.cc NuXSecCCQE.cc NuXSecRES.cc CascadePion.cc
+SRCLIST = NReWeight.cc NSyst.cc NuXSecCCQE.cc NuXSecRES.cc CascadePion.cc CascadeNucleon.cc
 libNEUTReWeight_@NEUT_VERSION_NUM@_a_SOURCES = $(SRCLIST)
-include_HEADERS = NReWeight.h NSyst.h NReWeightEngineI.h NuXSecCCQE.h NuXSecRES.h CascadePion.h NReWeightFactory.h
+include_HEADERS = NReWeight.h NSyst.h NReWeightEngineI.h NuXSecCCQE.h NuXSecRES.h CascadePion.h CascadeNucleon.h NReWeightFactory.h
 
 # Unused sources that live in the directory
 UNUSED_srcs = 
@@ -509,6 +510,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/CascadeNucleon.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/CascadePion.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NReWeight.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NSyst.Po@am__quote@

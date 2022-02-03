@@ -458,6 +458,14 @@ void CommonBlockIFace::ReadNUCLEONFSIHIST(NeutVect *nvect) {
       nucleonfsihist_.nfipel[i] = nucfsisinfo->fStepPel;
       nucleonfsihist_.nfipsp[i] = nucfsisinfo->fStepPsp;
       nucleonfsihist_.nfipdp[i] = nucfsisinfo->fStepPdp;
+      //std::cout << "[DEBUG] Filling essential step info in CBI" << std::endl;
+      //std::cout << "[DEBUG] nucfsisinfo->fECMS2 = " << nucfsisinfo->fECMS2 << std::endl;
+      //std::cout << "[DEBUG] nucfsisinfo->fProb = " << nucfsisinfo->fProb << std::endl;
+      //std::cout << "[DEBUG] nucfsisinfo->fVertFlagStep = " << nucfsisinfo->fVertFlagStep << std::endl;
+      //std::cout << "[DEBUG] nucfsisinfo->fVertFsiRhon = " << nucfsisinfo->fVertFsiRhon << std::endl;
+      //std::cout << "[DEBUG] nucfsisinfo->fStepPel     = " << nucfsisinfo->fStepPel     << std::endl;
+      //std::cout << "[DEBUG] nucfsisinfo->fStepPsp     = " << nucfsisinfo->fStepPsp     << std::endl;
+      //std::cout << "[DEBUG] nucfsisinfo->fStepPdp     = " << nucfsisinfo->fStepPdp     << std::endl;
 #endif
   }
 }

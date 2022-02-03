@@ -162,10 +162,14 @@ C     If it is equal to 1, we are reweighting, and perform only a small fraction
 C      write(*,*) 'Starting nrprton.F, NReweightFlag = ',NReweightFlag
 
 
+      pcascprob=1;!Reitialise the FSI prob for RWing
+
+
       if(NReweightFlag.eq.1) then
 
          RW_step_i =0 !RW_step_i is the counter for steps in reweighting
          nucresflg=1
+C         print *,'Entering nrprton routine in RW mode ...'
          goto 200 !head straight to main cascade
       endif
 
@@ -174,7 +178,6 @@ C      write(*,*) 'Starting nrprton.F, NReweightFlag = ',NReweightFlag
 
 
       nucresflg=1;!nucresflg is always set to 1
-
 
 
 

@@ -433,6 +433,12 @@ int neutfillvect(char *filename, char *treename, char *branchname) {
       nucfsisinfo.fStepPel = nucleonfsihist_.nfipel[i];
       nucfsisinfo.fStepPsp = nucleonfsihist_.nfipsp[i];
       nucfsisinfo.fStepPdp = nucleonfsihist_.nfipdp[i];
+      //std::cout << "[DEBUG] Filling essential step info in neutfill"  << std::endl;
+      //std::cout << "[DEBUG] nfptot = " << nucleonfsihist_.nfptot[i] << std::endl;
+      //std::cout << "[DEBUG] nfirhon = " << nucleonfsihist_.nfirhon[i] << std::endl;
+      //std::cout << "[DEBUG] nfipel  = " << nucleonfsihist_.nfipel[i]  << std::endl;
+      //std::cout << "[DEBUG] nfipsp  = " << nucleonfsihist_.nfipsp[i]  << std::endl;
+      //std::cout << "[DEBUG] nfipdp  = " << nucleonfsihist_.nfipdp[i]  << std::endl;
 #endif
       // std::cout << "fvertflag step in neutfill.cc = " <<
       // nucfsisinfo.fVertFlagStep << std::endl; std::cout << "Step number in

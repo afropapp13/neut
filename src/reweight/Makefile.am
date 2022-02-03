@@ -7,11 +7,11 @@ LIBNAME = libNEUTReWeight.@NEUT_VERSION_NUM@.a
 lib_LIBRARIES = $(LIBNAME)
 
 # Don't seem to be able to have canonical names easily build from makefile variables, this is ugly, but works
-SRCLIST = NReWeight.cc NSyst.cc NuXSecCCQE.cc NuXSecRES.cc CascadePion.cc
+SRCLIST = NReWeight.cc NSyst.cc NuXSecCCQE.cc NuXSecRES.cc CascadePion.cc CascadeNucleon.cc
 
 libNEUTReWeight_@NEUT_VERSION_NUM@_a_SOURCES = $(SRCLIST)
 
-include_HEADERS = NReWeight.h NSyst.h NReWeightEngineI.h NuXSecCCQE.h NuXSecRES.h CascadePion.h NReWeightFactory.h
+include_HEADERS = NReWeight.h NSyst.h NReWeightEngineI.h NuXSecCCQE.h NuXSecRES.h CascadePion.h CascadeNucleon.h NReWeightFactory.h
 
 # Unused sources that live in the directory
 UNUSED_srcs =

@@ -3,6 +3,7 @@
 #include "NReWeight.h"
 
 #include "CascadePion.h"
+#include "CascadeNucleon.h"
 #include "NuXSecCCQE.h"
 #include "NuXSecRES.h"
 
@@ -15,6 +16,8 @@ inline std::unique_ptr<NReWeight> MakeNReWeightInstance() {
 
   nrw->AdoptWeightEngine("CascadePion", std::unique_ptr<NReWeightEngineI>(
                                             new CascadePionEngine()));
+  nrw->AdoptWeightEngine("CascadeNucleon", std::unique_ptr<NReWeightEngineI>(
+                                            new CascadeNucleonEngine()));
   nrw->AdoptWeightEngine(
       "NuXSecCCQE", std::unique_ptr<NReWeightEngineI>(new NuXSecCCQEEngine()));
   nrw->AdoptWeightEngine(
