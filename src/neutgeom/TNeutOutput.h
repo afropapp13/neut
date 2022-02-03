@@ -345,6 +345,21 @@ private:
   //  NFecms2 > 0: proton,  NFecms2 < 0: neutron (same as "T" in NFiflag)
   float  fNFecms2[kNFmaxstep];
 
+  //
+  // Extra nucleon fsi history (incl. step info) for systematic reweighting
+  // added 2022-02-03 by S. Dolan
+  //
+  float fPCascProb;
+  float fProb[kNFmaxstep];
+  float fVertFlagStep[kNFmaxstep];
+  float fVertFsiRhon[kNFmaxstep];
+  float fStepPel[kNFmaxstep];
+  float fStepPsp[kNFmaxstep];
+  float fStepPdp[kNFmaxstep];
+
+  // SPIDelta flag for resonance decay reweighting
+  int fSPIDelta;
+
 
   // FLUX INFORMATION
 

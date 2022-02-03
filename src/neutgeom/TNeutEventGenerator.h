@@ -29,6 +29,9 @@
 #include "nucleonfsihistC.h"
 #include "neutcrsC.h"
 #include "posinnucC.h"
+#include "nrintC.h"
+#include "neutmodelC.h"
+
 
 extern"C" {
   void neutev_(int* nu_id, float e[], int* iz, int* ia, int* ierr);
@@ -171,6 +174,19 @@ public:
   int getNNFnstep()   { return nucleonfsihist_.nfnstep;   }
   float getNNFecms2(int is)   { return nucleonfsihist_.nfecms2[is];   }
   float getNNFptot(int is)   { return nucleonfsihist_.nfptot[is];   }
+
+  // Extra Feb 2022 NUCLEON FSI history information
+  float getNNPCascProb()          {return nrint_.pcascprob;}
+  float getNNProb(int is)         {return nucleonfsihist_.nfptot[is]     ;}
+  float getNNVertFlagStep(int is) {return nucleonfsihist_.nfiflagstep[is];}
+  float getNNVertFsiRhon(int is)  {return nucleonfsihist_.nfirhon[is]    ;}
+  float getNNStepPel(int is)      {return nucleonfsihist_.nfipel[is]     ;}
+  float getNNStepPsp(int is)      {return nucleonfsihist_.nfipsp[is]     ;}
+  float getNNStepPdp(int is)      {return nucleonfsihist_.nfipdp[is]     ;}
+
+  // SPIDelta flag for resonance decay reweighting (T2K TN 414)
+  int getSPIDelta()      {return nemdls_.spidelta;}
+
 
 
   // Cross section and bound proton info

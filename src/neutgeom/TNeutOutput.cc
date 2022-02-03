@@ -123,6 +123,20 @@ void TNeutOutput::InitTree(Float_t fluxVersion){
     fOutputTree->Branch("NFnstep",        &fNFnstep     ,     "NFnstep/I"               );
     fOutputTree->Branch("NFecms2",         fNFecms2     ,     "NFecms2[NFnstep]/F"      );
 
+    // New nucleon FSI pass through from Feb 2022
+
+    fOutputTree->Branch("PCascProb",      &fPCascProb,        "PCascProb/F"             );
+    fOutputTree->Branch("Prob",            fProb,             "Prob[kNFmaxstep]/F"      );
+    fOutputTree->Branch("VertFlagStep",    fVertFlagStep,     "VertFlagStep[kNFmaxstep]/F");
+    fOutputTree->Branch("VertFsiRhon",     fVertFsiRhon,      "VertFsiRhon[kNFmaxstep]/F");
+    fOutputTree->Branch("StepPel",         fStepPel,          "StepPel[kNFmaxstep]/F"   );
+    fOutputTree->Branch("StepPsp",         fStepPsp,          "StepPsp[kNFmaxstep]/F"   );
+    fOutputTree->Branch("StepPdp",         fStepPdp,          "StepPdp[kNFmaxstep]/F"   );
+
+    //SPI Delta
+    fOutputTree->Branch("SPIDelta",       &fSPIDelta,         "SPIDelta/I"              );
+
+
     if(fNuFileName) { 
       std::cout << "Warning in TNeutOutput.cc: fNuFileName has non-zero memory address at initialization" << std::endl;
       fNuFileName = NULL;
@@ -166,11 +180,11 @@ void TNeutOutput::InitTree(Float_t fluxVersion){
 
       // jnubeam >= 2011a
       if (2011 <= fluxVersion) {
-	fOutputTree->Branch("NuGmat",          fNuGmat,          "NuGmat[NuNg]/I"         );
-	fOutputTree->Branch("NuGdistc",        fNuGdistc,        "NuGdistc[NuNg]/F"       );
-	fOutputTree->Branch("NuGdistal",       fNuGdistal,       "NuGdistal[NuNg]/F"      );
-	fOutputTree->Branch("NuGdistti",       fNuGdistti,       "NuGdistti[NuNg]/F"      );
-	fOutputTree->Branch("NuGdistfe",       fNuGdistfe,       "NuGdistfe[NuNg]/F"      );
+	      fOutputTree->Branch("NuGmat",          fNuGmat,          "NuGmat[NuNg]/I"         );
+	      fOutputTree->Branch("NuGdistc",        fNuGdistc,        "NuGdistc[NuNg]/F"       );
+	      fOutputTree->Branch("NuGdistal",       fNuGdistal,       "NuGdistal[NuNg]/F"      );
+	      fOutputTree->Branch("NuGdistti",       fNuGdistti,       "NuGdistti[NuNg]/F"      );
+	      fOutputTree->Branch("NuGdistfe",       fNuGdistfe,       "NuGdistfe[NuNg]/F"      );
       }
 
       // Beam parameters
@@ -306,6 +320,7 @@ void TNeutOutput::ClearRooTrackerTree(){
   }
 
   fNEneutmode = -999999;
+  fSPIDelta   = -999999;
   fNEnvert = 0;
   for(int iv = 0; iv < kNEmaxvert; iv++){
     fNEiflgvert[iv] = -999999;
@@ -338,9 +353,16 @@ void TNeutOutput::ClearRooTrackerTree(){
     fNFe[ip] = -999999;
     fNFfirststep[ip] = -999999;
   }
-  fNFnstep = 0;  
+  fPCascProb = -999999;
+  fNFnstep = 0;
   for(int ip = 0; ip < kNFmaxstep; ip++){
     fNFecms2[ip] = -999999;
+    fProb[ip] = -999999;
+    fVertFlagStep[ip] = -999999;
+    fVertFsiRhon[ip] = -999999;
+    fStepPel[ip] = -999999;
+    fStepPsp[ip] = -999999;
+    fStepPdp[ip] = -999999;
   }
 
   fNuParentPdg     = -999999;
@@ -768,11 +790,20 @@ void TNeutOutput::FillRooTrackerTree(Int_t                eventNumber,
     fNFpz[iv] = theNuFinalState->getNNFpz(iv);
     fNFe[iv] = theNuFinalState->getNNFe(iv);
     fNFfirststep[iv] = theNuFinalState->getNNFfirststep(iv);
-  }  
+  }
+  fPCascProb = theNuFinalState->getNNPCascProb();  
   fNFnstep = theNuFinalState->getNNFnstep();
   for(int is = 0; is < fNFnstep; is++) {
     fNFecms2[is] = theNuFinalState->getNNFecms2(is);
+    fProb[is] = theNuFinalState->getNNProb(is);
+    fVertFlagStep[is] = theNuFinalState->getNNVertFlagStep(is);
+    fVertFsiRhon[is] = theNuFinalState->getNNVertFsiRhon(is);
+    fStepPel[is] = theNuFinalState->getNNStepPel(is);
+    fStepPsp[is] = theNuFinalState->getNNStepPsp(is);
+    fStepPdp[is] = theNuFinalState->getNNStepPdp(is);
   }
+  // SPI DELTA
+  fSPIDelta = theNuFinalState->getSPIDelta();
 
   // Fill in the Beam Information
   // beam information
