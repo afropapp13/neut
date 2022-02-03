@@ -1,4 +1,4 @@
-if(NOT DEFINED NEUT_FOUND OR NOT NEUT_FOUND)
+if(NOT TARGET NEUT::IO OR NOT TARGET NEUT::Generator OR NOT TARGET NEUT::ReWeight)
 
 cmake_minimum_required (VERSION 3.14 FATAL_ERROR)
 # This will define the following variables
