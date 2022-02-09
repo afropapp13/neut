@@ -21,7 +21,7 @@ void Nucleus2p2h::InitializeNucleus(int nuclei){
 
   double uma = 0.9314941;
   
-  if( nuclei == 12 ) {
+  if( nuclei < 14 ) {
     Nl->DZZ=6.; 
     Nl->DAA=12.; 
     DNCXP=DNCXN=1.692;
@@ -38,7 +38,7 @@ void Nucleus2p2h::InitializeNucleus(int nuclei){
     Nl->bindEnergyP = (Nl->BindEnergyPN+Nl->BindEnergyNN)/2.;
     Nl->bindEnergyN = (Nl->BindEnergyPP+Nl->BindEnergyPN)/2.;
   }
-  else if( nuclei == 16 ) {
+  else if( nuclei < 20 ) {
     Nl->DZZ=8.;
     Nl->DAA=16.; 
     Nl->klave=1;
@@ -56,7 +56,7 @@ void Nucleus2p2h::InitializeNucleus(int nuclei){
     Nl->bindEnergyP = (Nl->BindEnergyPN+Nl->BindEnergyNN)/2.;
     Nl->bindEnergyN = (Nl->BindEnergyPP+Nl->BindEnergyPN)/2.;
   }
-  else if ( nuclei == 27 ) {
+  else if ( nuclei < 27 ) {
     Nl->DZZ=13.;
     Nl->DAA=27.;
     Nl->klave=0;       
@@ -74,7 +74,7 @@ void Nucleus2p2h::InitializeNucleus(int nuclei){
     Nl->bindEnergyP = (Nl->BindEnergyPN+Nl->BindEnergyNN)/2.;
     Nl->bindEnergyN = (Nl->BindEnergyPP+Nl->BindEnergyPN)/2.;
   }
-  else if ( nuclei == 28 ) {
+  else if ( nuclei < 35 ) {
     Nl->DZZ=14.;
     Nl->DAA=28.;
     Nl->klave=0;
@@ -92,7 +92,7 @@ void Nucleus2p2h::InitializeNucleus(int nuclei){
     Nl->bindEnergyP = (Nl->BindEnergyPN+Nl->BindEnergyNN)/2.;
     Nl->bindEnergyN = (Nl->BindEnergyPP+Nl->BindEnergyPN)/2.;
   }
-  else if( nuclei == 40 ) {
+  else if( nuclei < 45 ) {
     Nl->DZZ=18.; 
     Nl->DAA=40.; 
     Nl->klave =0;    
@@ -112,7 +112,7 @@ void Nucleus2p2h::InitializeNucleus(int nuclei){
     Nl->bindEnergyP = (Nl->BindEnergyPN+Nl->BindEnergyNN)/2.;
     Nl->bindEnergyN = (Nl->BindEnergyPP+Nl->BindEnergyPN)/2.;
   }
-  else if( nuclei == 56 ) {
+  else if( nuclei < 80 ) {
     Nl->DZZ=26.; 
     Nl->DAA=56.; 
     Nl->klave =0;    
@@ -132,7 +132,7 @@ void Nucleus2p2h::InitializeNucleus(int nuclei){
     Nl->bindEnergyP = (Nl->BindEnergyPN+Nl->BindEnergyNN)/2.;
     Nl->bindEnergyN = (Nl->BindEnergyPP+Nl->BindEnergyPN)/2.;
   }
-  else if ( nuclei == 112 ) {  // Copied from Lead.
+  else if ( nuclei < 140 ) {  // Copied from Lead.
     Nl->DZZ=56.; 
     Nl->DAA=112.;   
     Nl->klave =0;    
@@ -152,7 +152,7 @@ void Nucleus2p2h::InitializeNucleus(int nuclei){
     Nl->bindEnergyP = (Nl->BindEnergyPN+Nl->BindEnergyNN)/2.;
     Nl->bindEnergyN = (Nl->BindEnergyPP+Nl->BindEnergyPN)/2.;
   }
-  else if ( nuclei == 208 ) {
+  else if ( nuclei < 210 ) {
     Nl->DZZ=82.; 
     Nl->DAA=208.; 
     Nl->klave =0;    
