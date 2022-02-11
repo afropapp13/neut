@@ -51,7 +51,7 @@ void Nucleus2p2h::InitializeNucleus(int nuclei){
     // NN -> PN  16O -> 16F* -> 14O + p + n 
     Nl->BindEnergyPN = (14.00859-15.9949149)*uma+0.938272+0.9395654133;
     // NP -> NN  16O -> 16N* -> 14N + n + n
-    Nl->BindEnergyNN = (14.0307-15.9949149)*uma+2.*0.9395654133;
+    Nl->BindEnergyNN = (14.00307-15.9949149)*uma+2.*0.9395654133;
 
     Nl->bindEnergyP = (Nl->BindEnergyPN+Nl->BindEnergyNN)/2.;
     Nl->bindEnergyN = (Nl->BindEnergyPP+Nl->BindEnergyPN)/2.;
