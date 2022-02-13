@@ -10,7 +10,7 @@ NEUT-MDLQE 2002
 NEUT-MAQE 1.05
 NEUT-MDL2P2H 1
 NEUT-RAND 1
-NEUT-CRSPATH '../src/crsdat'
+NEUT-CRSPATH '../../src/crsdat'
 C--------------------------------------------------
 C **** TARGET INFORMATION ****
 C
