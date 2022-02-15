@@ -2,6 +2,7 @@ include $(top_srcdir)/build.common
 
 AM_FFLAGS = $(DEFAULT_FFLAGS)
 AM_CXXFLAGS = $(DEFAULT_CXXFLAGS)
+AM_CFLAGS = $(DEFAULT_CFLAGS)
 
 bin_PROGRAMS = calc_ccqe_crs
 
