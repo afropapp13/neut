@@ -7,7 +7,11 @@ trapfpe ()
 {
   /* Enable some exceptions.  At startup all exceptions are masked.  */
 
+#ifdef ARCH_AARM64
+   fpu_control_t cw = _FPU_DEFAULT;
+#else
    fpu_control_t cw = (_FPU_DEFAULT & ~_FPU_EXTENDED) | _FPU_DOUBLE;
+#endif
    _FPU_SETCW(cw);
 
   feenableexcept (FE_INVALID|FE_DIVBYZERO|FE_OVERFLOW);
