@@ -96,36 +96,18 @@ void HT2p2h::ReadTensors(std::string dirname ){
       Tensor[nuclei+PNOFFSET] = ht;
       Tensor_fname[nuclei+PNOFFSET] = dirname+"/"+std::string(ent->d_name);
       Tensor_init[nuclei+PNOFFSET] = false;
-        //if( nuclei == 28 ) { // Create a copy for 27 (Al) 
-        //  Tensor[27+PNOFFSET] = ht;
-        //  Tensor_fname[nuclei+PNOFFSET] = dirname+"/"+std::string(ent->d_name);
-        //  Tensor_init[27+PNOFFSET] = false;
-        //}
       }
       else{
         Tensor[nuclei] = ht;
         Tensor_init[nuclei] = false;
-        //if( nuclei == 28 ) { // Create a copy for 27 (Al) 
-        //  Tensor[27] = ht;
-        //  Tensor_init[27] = false;
-        //}
       }
     
       std::cout << " Tensor for nuclei " << nuclei << " has been read " << std::endl; 
-    
-      /*
-    InitializeNucleus(nuclei); 
-  
-    Precompindx pindx1(1,nuclei);
-    
-    Precompindx pindx2(-1,nuclei);
-    
-    if( !ht->IsPN() )   // Only for the total. 
-    ComputeIntegrals(nuclei);
-      */
       
     }
     // Add the missing tensors here all the way to lead (and a bit extra)
+    // Note that this code only does anything if there wasn't a table found
+    // As of Feb. 2022 almost all nuclei should have tables, so this won't do much
     for(int i=0; i<210; i++){
       if(Tensor[i] == NULL){
         if(i<14){
