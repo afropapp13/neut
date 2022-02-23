@@ -104,6 +104,10 @@ else
 fi
 AM_CONDITIONAL([ROOT_MAJOR_IS_SIX], [test ${ROOT_MAJOR_VERSION} = 6])
 
+######### Check for ARM arch
+echo "Arch = $(uname -m)"
+AM_CONDITIONAL([IS_AARM64], [test $(uname -m) = "aarch64"])
+
 ######## Check use HepMC
 AC_ARG_ENABLE([hepmc],
     AS_HELP_STRING([--enable-hepmc], [Enable HepMC as an output format, expect to find HepMC-config in PATH.]))
