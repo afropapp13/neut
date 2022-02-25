@@ -82,73 +82,116 @@ void HT2p2h::ReadTensors(std::string dirname ){
   if ( ( dir = opendir (dirname.c_str()) ) != 0 ) {
 
     std::cout << " HT2p2h reading directory " << dirname << std::endl; 
-  
+	
     while( ( ent = readdir(dir) ) != 0 ) {
-    
+	  
       if( ent->d_name[0] == '.' ) continue; 
-    
+	  
       HadronTensor *ht = new HadronTensor();
-      ht->Initialize(dirname+"/"+std::string(ent->d_name));
+	  ht->Initialize(dirname+"/"+std::string(ent->d_name));
       int nuclei = ht->GetNuclei();
-      if( nuclei == -1 ) continue;  // This is not a proper file.
+      std::cout << ">>>>>> " << dirname+"/"+std::string(ent->d_name) << " " << nuclei << std::endl;
 
+      if( nuclei == -1 ) continue;  // This is not a proper file. 
       if( ht->IsPN()  ){
-      Tensor[nuclei+PNOFFSET] = ht;
-      Tensor_fname[nuclei+PNOFFSET] = dirname+"/"+std::string(ent->d_name);
-      Tensor_init[nuclei+PNOFFSET] = false;
+		Tensor[nuclei+PNOFFSET] = ht;
+		Tensor_fname[nuclei+PNOFFSET] = dirname+"/"+std::string(ent->d_name);
+		Tensor_init[nuclei+PNOFFSET] = false;
+#if 0		
+		if( nuclei == 12 ) { // Create a copy for 10 (B) and 11 (B) 
+		  std::cout << " Creating a copy for 10B, 11B, 13C and 14N " << std::endl;
+		  Tensor[10+PNOFFSET] = ht;
+		  Tensor_fname[10+PNOFFSET] = dirname+"/"+std::string(ent->d_name);
+		  Tensor_init[10+PNOFFSET] = false;
+		  Tensor[11+PNOFFSET] = ht;
+		  Tensor_fname[11+PNOFFSET] = dirname+"/"+std::string(ent->d_name);
+		  Tensor_init[11+PNOFFSET] = false;
+		  std::cout << " Creating a copy for 13C " << std::endl;
+		  Tensor[13+PNOFFSET] = ht;
+		  Tensor_fname[13+PNOFFSET] = dirname+"/"+std::string(ent->d_name);
+		  Tensor_init[13+PNOFFSET] = false;
+		  Tensor[14+PNOFFSET] = ht;
+		  Tensor_fname[14+PNOFFSET] = dirname+"/"+std::string(ent->d_name);
+		  Tensor_init[14+PNOFFSET] = false;
+		}
+		else if( nuclei == 16 ) { // Create a copy for 10 (B) and 11 (B) 
+		  std::cout << " Creating a copy for 15N and 17O and 18O " << std::endl;
+		  Tensor[15+PNOFFSET] = ht;
+		  Tensor_fname[15+PNOFFSET] = dirname+"/"+std::string(ent->d_name);
+		  Tensor_init[15+PNOFFSET] = false;
+		  Tensor[17+PNOFFSET] = ht;
+		  Tensor_fname[17+PNOFFSET] = dirname+"/"+std::string(ent->d_name);
+		  Tensor_init[17+PNOFFSET] = false;
+		  Tensor[18+PNOFFSET] = ht;
+		  Tensor_fname[18+PNOFFSET] = dirname+"/"+std::string(ent->d_name);
+		  Tensor_init[18+PNOFFSET] = false;
+		  Tensor[19+PNOFFSET] = ht;
+		  Tensor_fname[19+PNOFFSET] = dirname+"/"+std::string(ent->d_name);
+		  Tensor_init[19+PNOFFSET] = false;
+		  Tensor[20+PNOFFSET] = ht;
+		  Tensor_fname[20+PNOFFSET] = dirname+"/"+std::string(ent->d_name);
+		  Tensor_init[20+PNOFFSET] = false;
+		}
+		else if( nuclei == 28 ) { 
+		  Tensor[23+PNOFFSET] = ht;
+		  Tensor_fname[23+PNOFFSET] = dirname+"/"+std::string(ent->d_name);
+		  Tensor_init[23+PNOFFSET] = false;
+		  Tensor[27+PNOFFSET] = ht;
+		  Tensor_fname[27+PNOFFSET] = dirname+"/"+std::string(ent->d_name);
+		  Tensor_init[27+PNOFFSET] = false;
+		  Tensor[29+PNOFFSET] = ht;
+		  Tensor_fname[29+PNOFFSET] = dirname+"/"+std::string(ent->d_name);
+		  Tensor_init[29+PNOFFSET] = false;
+		  Tensor[30+PNOFFSET] = ht;
+		  Tensor_fname[30+PNOFFSET] = dirname+"/"+std::string(ent->d_name);
+		  Tensor_init[30+PNOFFSET] = false;
+		  Tensor[35+PNOFFSET] = ht;
+		  Tensor_fname[35+PNOFFSET] = dirname+"/"+std::string(ent->d_name);
+		  Tensor_init[35+PNOFFSET] = false;
+		  Tensor[40+PNOFFSET] = ht;
+		  Tensor_fname[40+PNOFFSET] = dirname+"/"+std::string(ent->d_name);
+		  Tensor_init[40+PNOFFSET] = false;
+		}
+#endif 
       }
       else{
-        Tensor[nuclei] = ht;
-        Tensor_init[nuclei] = false;
+		Tensor[nuclei] = ht;
+		Tensor_init[nuclei] = false;
+#if 0
+		if( nuclei == 28 ) { // Create a copy for 27 (Al) 
+		  Tensor[27] = ht;
+		  Tensor_init[27] = false;
+		}
+		else if( nuclei == 12 ) { // Create a copy for 10 (B) 
+		  std::cout << " Creating a copy for 10B and 11B " << std::endl;
+		  Tensor[10] = ht;
+		  Tensor_init[10] = false;
+		  Tensor[11] = ht;
+		  Tensor_init[11] = false;
+		  Tensor[13] = ht;
+		  Tensor_init[13] = false;
+		  Tensor[14] = ht;
+		  Tensor_init[14] = false;
+
+		}
+#endif 
+
       }
-    
+	  
       std::cout << " Tensor for nuclei " << nuclei << " has been read " << std::endl; 
+	  
+      /*
+		InitializeNucleus(nuclei); 
+	
+		Precompindx pindx1(1,nuclei);
+		
+		Precompindx pindx2(-1,nuclei);
+		
+		if( !ht->IsPN() )   // Only for the total. 
+		ComputeIntegrals(nuclei);
+      */
       
     }
-    // Add the missing tensors here all the way to lead (and a bit extra)
-    // Note that this code only does anything if there wasn't a table found
-    // As of Feb. 2022 almost all nuclei should have tables, so this won't do much
-    for(int i=0; i<210; i++){
-      if(Tensor[i] == NULL){
-        if(i<14){
-          Tensor[i] = Tensor[12];
-          Tensor_init[i] = false;
-          Tensor[i+PNOFFSET] = Tensor[12+PNOFFSET];
-          Tensor_init[i+PNOFFSET] = false;
-        }
-        else if (i<20){
-          Tensor[i] = Tensor[16];
-          Tensor_init[i] = false;
-          Tensor[i+PNOFFSET] = Tensor[16+PNOFFSET];
-          Tensor_init[i+PNOFFSET] = false;
-        }
-        else if (i<45){
-          Tensor[i] = Tensor[40];
-          Tensor_init[i] = false;
-          Tensor[i+PNOFFSET] = Tensor[12+PNOFFSET];
-          Tensor_init[i+PNOFFSET] = false;
-        }
-        else if (i<80){
-          Tensor[i] = Tensor[56];
-          Tensor_init[i] = false;
-          Tensor[i+PNOFFSET] = Tensor[56+PNOFFSET];
-          Tensor_init[i+PNOFFSET] = false;
-        }
-        else if (i<140){
-          Tensor[i] = Tensor[112];
-          Tensor_init[i] = false;
-          Tensor[i+PNOFFSET] = Tensor[112+PNOFFSET];
-          Tensor_init[i+PNOFFSET] = false;
-        }
-        else{
-          Tensor[i] = Tensor[208];
-          Tensor_init[i] = false; 
-          Tensor[i+PNOFFSET] = Tensor[208+PNOFFSET];
-          Tensor_init[i+PNOFFSET] = false;         
-        }
-      }
-    }
-
   }
   else {
     std::cout << " Directory " << dirname << " not found " << std::endl; 
@@ -173,137 +216,97 @@ int HT2p2h::ReadIntegrals(int nuclei){
   item = (char *)malloc(LOCALBUFSIZ);
   infile.open (fname.c_str());
   if (infile.fail()){
-    if(nuclei < 14){
-       fname = Tensor_fname[12+PNOFFSET];
-    }
-    else if (nuclei < 20){
-       fname = Tensor_fname[16+PNOFFSET];
-    }
-    else if (nuclei < 45){
-       fname = Tensor_fname[40+PNOFFSET];
-    }
-    else if (nuclei < 80){
-       fname = Tensor_fname[56+PNOFFSET];
-    }
-    else if (nuclei < 140){
-       fname = Tensor_fname[112+PNOFFSET];
-    }
-    else if (nuclei < 210){
-       fname = Tensor_fname[208+PNOFFSET];
-    }
-
-    infile.open (fname.c_str());
-    if (infile.fail()){
-      std::cout << "Failed to open Tensor file:" 
-            << fname << ", for nuclei:" << nuclei
-            << std::endl;
-      exit(1);
-    }
+	std::cout << "Failed to open Tensor file" 
+			  << fname 
+			  << std::endl;
+	exit(1);
   }
-  
 
   std::cout << " Reading Cross-section from the Tensor File " 
-      << fname << std::endl; 
+			<< fname << std::endl; 
 
   int crstbl_exists = 0;
   int param_agreed = 0;
 
   while (param_agreed==0){
-    /* search for the Cross-sections block  */
-    while(infile.getline(line,LOCALBUFSIZ)){
-      if (strstr (line,"#Cross-section Table")){
-        crstbl_exists = 1;
-        break;
-      }
-    }
-    if ((crstbl_exists == 0)||(infile.eof())){
-      free(line);
-      free(item);
-      std::cout << "Reached EOF with no xsec table " << std::endl; 
-      return -1;
-    }
-    /* search for the parameters block  */
-    while(infile.getline(line,LOCALBUFSIZ)){
-      if ( strstr(line,"#PARAMSTART") ){
-        break;
-      }
-    }
-    /* search for the table with same parameter value */
-    while(infile.getline(line,LOCALBUFSIZ)){  
-      if (line[0] == 0) continue;
-      if (line[0] != '#') break;
-      if (strncmp (line,"#NV2P2HQVAL",11)==0){
-        sscanf(line,"%s %d",item, &ipar);
-        if (ipar == nieves2p2hpar_.nv2p2hqval){
-          param_agreed = 1;
-          break;
-        }
-      }
-    }  
+	/* search for the Cross-sections block  */
+	while(infile.getline(line,LOCALBUFSIZ)){
+	  if (strstr (line,"#Cross-section Table")){
+		crstbl_exists = 1;
+		break;
+	  }
+	}
+	if ((crstbl_exists == 0)||(infile.eof())){
+	  free(line);
+	  free(item);
+	  return -1;
+	}
+
+	/* search for the parameters block  */
+	while(infile.getline(line,LOCALBUFSIZ)){
+	  if ( strstr(line,"#PARAMSTART") ){
+		break;
+	  }
+	}
+	/* search for the table with same parameter value */
+	while(infile.getline(line,LOCALBUFSIZ)){  
+	  if (line[0] == 0) continue;
+	  if (line[0] != '#') break;
+	  if (strncmp (line,"#NV2P2HQVAL",11)==0){
+		sscanf(line,"%s %d",item, &ipar);
+		if (ipar == nieves2p2hpar_.nv2p2hqval){
+		  param_agreed = 1;
+		  break;
+		}
+	  }
+	}  
   }
   
   if (param_agreed == 0){
-    free(line);
-    free(item);
-    std::cout << "Inconsistent qval found" << std::endl; 
-    return -1;
+	free(line);
+	free(item);
+	return -1;
   }
 
 
   int    nuclei_file;
   int    ebinmax;
   double enubin;
-  bool needToScale=false;
-  double scaleFact;
 
   /* read # of nuclei */
   if (infile.getline(line,LOCALBUFSIZ)){
-    nuclei_file = atoi(line);
-  }
-  else{
-    free(line);
-    free(item);
-    std::cout << "Issue reading tensor file: 1" << std::endl; 
-    return -1;
+	nuclei_file = atoi(line);
+  }else{
+	free(line);
+	free(item);
+	return -1;
   }
 
   if (nuclei_file != nuclei){
-    std::cout << "Warning: possible inconsistent nuclei was stored" << std::endl;
-    std::cout << "nuclei_file = " << nuclei_file << std::endl;
-    std::cout << "nuclei = " << nuclei << std::endl;
-    std::cout << "infile = " << fname << std::endl;
-    std::cout << "This might be because we're missing a tensor table for " << std::endl
-              << "this nucleus, or it might be because we have an issue in " << std::endl
-              << "a new table that's just been added. In either case, if you " << std::endl
-              << "didn't expect this you should proceed with caution ... " << std::endl;
-    // If we do use a stand-in table, let's make sure we scale the xsec as needed.
-    needToScale = true;
-    scaleFact = (double)nuclei/(double)nuclei_file;
-    //free(line);
-    //free(item);
-    //return -2;
+	std::cout << "Inconsistent nuclei was stored" << std::endl;
+	std::cout << fname << std::endl; 
+	free(line);
+	free(item);
+	return -2;
   }
+
 
   /* read # of energy bins */
   if (infile.getline(line,LOCALBUFSIZ)){
-    ebinmax = atoi(line);
-  }
-  else{
-    free(line);
-    free(item);
-    std::cout << "Issue reading tensor file: 3" << std::endl; 
-    return -3;
+	ebinmax = atoi(line);
+  }else{
+	free(line);
+	free(item);
+	return -3;
   }
 
   /* read energy bin size */
   if (infile.getline(line,LOCALBUFSIZ)){
-    enubin = atof(line);
-  }
-  else{
-    free(line);
-    free(item);
-    std::cout << "Issue reading tensor file: 4" << std::endl; 
-    return -4;
+	enubin = atof(line);
+  }else{
+	free(line);
+	free(item);
+	return -4;
   }
 
   std::vector<double> integrals[neutrinoIdlist.size()];
@@ -314,50 +317,37 @@ int HT2p2h::ReadIntegrals(int nuclei){
   double enu;
 
   for (i = 0 ; i < ebinmax ; i++){
-    infile.getline(line,LOCALBUFSIZ);
-    ret = sscanf(line,"%d %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf",
-           &ipar, &enu, 
-           &crs[0], &max[0], &crs[1], &max[1], &crs[2], &max[2],
-           &crs[3], &max[3], &crs[4], &max[4], &crs[5], &max[5]);
-    // If we're using a stand-in table for a nuclei we don't have a table for
-    // then we need to take care of the A-scaling. 
-    if(needToScale){
-      for( unsigned int il = 0; il < 6;  il++ ) { 
-        crs[il]*=scaleFact;
-        max[il]*=scaleFact*1.1; // extra saftey factor seems needed when scaling        
-      }
-    }
-    if (ret != 14){
-      std::cout << "Issue reading xsec table format" << std::endl; 
-      free(line);
-      free(item);
-      return -2;
-    }
-    if ( enu - ((double)i*enubin+enubin*0.5) > enubin/100. ){
-      std::cout << "Issue reading xsec table binning" << std::endl; 
-      free(line);
-      free(item);
-      return -3;
-    }
-    for( unsigned int il = 0; il < 6;  il++ ) { 
-      integrals[il].push_back(crs[il]);
-      maximals[il].push_back(max[il]);
-    }
+	infile.getline(line,LOCALBUFSIZ);
+	ret = sscanf(line,"%d %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf",
+				 &ipar, &enu, 
+				 &crs[0], &max[0], &crs[1], &max[1], &crs[2], &max[2],
+				 &crs[3], &max[3], &crs[4], &max[4], &crs[5], &max[5]);
+	if (ret != 14){
+	  free(line);
+	  free(item);
+	  return -2;
+	}
+	if ( enu - ((double)i*enubin+enubin*0.5) > enubin/100. ){
+	  free(line);
+	  free(item);
+	  return -3;
+	}
+
+	for( unsigned int il = 0; il < 6;  il++ ) {	
+	  integrals[il].push_back(crs[il]);
+	  maximals[il].push_back(max[il]);
+	}
   }
 
-  for( unsigned int il = 0; il < 6;  il++ ) { 
-    int id = neutrinoIdlist[il]; 
-    Precompindx pindx(id,nuclei);
+  for( unsigned int il = 0; il < 6;  il++ ) {	
+	int id = neutrinoIdlist[il]; 
+	Precompindx pindx(id,nuclei);
     IntCrossSection[pindx] = integrals[il];
     MaxCrossSection[pindx] = maximals[il]; 
   }
 
   free(line);
   free(item);
-
-  std::cout << "Successfully read xsec table from tensor file" << std::endl; 
-
-  infile.close();
 
   return 0;
 
@@ -375,10 +365,11 @@ void HT2p2h::ComputeIntegrals(int nuclei){
 
   ret = ReadIntegrals(nuclei);
   if (ret == 0){
-    /* cross-section was stored in the tensor file */
-    return;
+  std::cout << "HT2p2h: cross-section was stored in the tensor file " << std::endl; 
+	return;
   }
 
+  std::cout << " HT2p2h: recomputing the X-sections " << std::endl;
 
   for( unsigned int il = 0; il < neutrinoIdlist.size(); il++ ) {
     int id = neutrinoIdlist[il]; 
@@ -403,68 +394,68 @@ void HT2p2h::ComputeIntegrals(int nuclei){
       double stepQ0stepQ3 = tlc->GetQ0Step()*tlc->GetQ3Step();
       
       for( double q0 = 0. ; q0 < tlc->GetMaxQ0(); q0 += tlc->GetQ0Step()  ) {
-        double Q0 = q0+tlc->GetQ0Step()/2.;
-      
-        //  std::cout << " Enu " << Enu << " Q0  " << Q0 << "  " << tlc->GetQ0Step() << "  " << tlc->GetMaxQ0() << std::endl; 
-        if( Enu-Q0 < 0. ) continue; 
-        double El = Enu-Q0;
-        if( El < ml ) continue; 
-        double pl = sqrt(El*El-ml*ml); 
-        double tl = El-ml;
-        double Enu2 = Enu*Enu;
-        double pl2 = pl*pl;
-        double plEnu = pl*Enu;
-        
-        for( double q3 = q0; q3 < tlc->GetMaxQ3(); q3 += tlc->GetQ3Step()  ) {
-          double Q3 = q3+tlc->GetQ3Step()/2.;
-          double xcos = (Q3*Q3-Enu2-pl2)/(-2.*plEnu);
-          if ( xcos > 1. || xcos < -1. ) continue; 
-          
-          double xs = 0.;
-      
-          switch (nieves2p2hpar_.nv2p2hqval){
-          case 1:
-          {
-            double R = 0.01;
-            xs = DoubleDifferential(id,nuclei,Enu,tl,xcos,R);
-          }
-          if (xs > MaxXsect ) MaxXsect = xs*1.05;     
-          break;
-          case 2:
-          if (nieves2p2hpar_.nv2p2hqval == 2){
-            for(  int i = 0; i < 20; i++ ) {
-            double R = GenerateR(nuclei,-1);
-            double lxs = DoubleDifferential(id,nuclei,Enu,tl,xcos,R);
-            if( lxs > 0. ) 
-              xs += lxs/20.;
-            if( lxs > MaxXsect ) MaxXsect = lxs*1.05; 
-            }
-          }
-          break;
-          default:
-          std::cout << "HT2p2h Error : " 
-                << "Config param. nv2p2hqval is not properly set"
-                << "nv2p2hqval is " << nieves2p2hpar_.nv2p2hqval
-                << std::endl;
-          exit(1);
-          }
-      
-          double Jacobian = Q3; 
-          
-          if( isnan(xs) ) { std::cout << " xs isnan " << xs << "  " << El << "  " << xcos << "  " << Q0 << "  " << Q3 << std::endl; continue; }
-      
-          if( xs < 0. ) break; // IF this condition is fulfilled, next q3 will also, so we break. 
-          
-          
-          double alocal = xs*Jacobian/plEnu;
-          Xsect += alocal;
-        }
+	double Q0 = q0+tlc->GetQ0Step()/2.;
+
+	//	std::cout << " Enu " << Enu << " Q0  " << Q0 << "  " << tlc->GetQ0Step() << "  " << tlc->GetMaxQ0() << std::endl; 
+	if( Enu-Q0 < 0. ) continue; 
+	double El = Enu-Q0;
+	if( El < ml ) continue; 
+	double pl = sqrt(El*El-ml*ml); 
+	double tl = El-ml;
+	double Enu2 = Enu*Enu;
+	double pl2 = pl*pl;
+	double plEnu = pl*Enu;
+	
+	for( double q3 = q0; q3 < tlc->GetMaxQ3(); q3 += tlc->GetQ3Step()  ) {
+	  double Q3 = q3+tlc->GetQ3Step()/2.;
+	  double xcos = (Q3*Q3-Enu2-pl2)/(-2.*plEnu);
+	  if ( xcos > 1. || xcos < -1. ) continue; 
+	  
+	  double xs = 0.;
+
+	  switch (nieves2p2hpar_.nv2p2hqval){
+	  case 1:
+		{
+		  double R = 0.01;
+		  xs = DoubleDifferential(id,nuclei,Enu,tl,xcos,R);
+		}
+		if (xs > MaxXsect ) MaxXsect = xs*1.05; 		
+		break;
+	  case 2:
+		if (nieves2p2hpar_.nv2p2hqval == 2){
+		  for(  int i = 0; i < 20; i++ ) {
+			double R = GenerateR(nuclei,-1);
+			double lxs = DoubleDifferential(id,nuclei,Enu,tl,xcos,R);
+			if( lxs > 0. ) 
+			  xs += lxs/20.;
+			if( lxs > MaxXsect ) MaxXsect = lxs*1.05; 
+		  }
+		}
+		break;
+	  default:
+		std::cout << "HT2p2h Error : " 
+				  << "Config param. nv2p2hqval is not properly set"
+				  << "nv2p2hqval is " << nieves2p2hpar_.nv2p2hqval
+				  << std::endl;
+		exit(1);
+	  }
+
+	  double Jacobian = Q3; 
+	  
+	  if( isnan(xs) ) { std::cout << " xs isnan " << xs << "  " << El << "  " << xcos << "  " << Q0 << "  " << Q3 << std::endl; continue; }
+
+	  if( xs < 0. ) break; // IF this condition is fulfilled, next q3 will also, so we break. 
+	  
+	  
+	  double alocal = xs*Jacobian/plEnu;
+	  Xsect += alocal;
+	}
       }
      
       integral.push_back(Xsect*stepQ0stepQ3); 
       maximal.push_back(MaxXsect);
       if( debug ) 
-        std::cout << " nuclei " << nuclei << " Lepton " << id << " Enu " << Enu << " xsect " << Xsect << " max " << MaxXsect << std::endl; 
+	std::cout << " nuclei " << nuclei << " Lepton " << id << " Enu " << Enu << " xsect " << Xsect << " max " << MaxXsect << std::endl; 
     }
 
     IntCrossSection[pindx] = integral;
@@ -478,7 +469,7 @@ void HT2p2h::ComputeIntegrals(int nuclei){
   for( unsigned int il = 0; il < neutrinoIdlist.size(); il++ ) {
     int id = neutrinoIdlist[il]; 
     Precompindx pindx(id,nuclei);
-  
+	
     integral_dump[il] = IntCrossSection[pindx];
     maximal_dump[il]  = MaxCrossSection[pindx];
 
@@ -489,7 +480,7 @@ void HT2p2h::ComputeIntegrals(int nuclei){
 
   std::ofstream offile(fname.c_str(),std::ofstream::app);
   if (offile.fail()){
-    return;
+	return;
   }
 
   offile << "#Cross-section Table" << std::endl;
@@ -500,15 +491,15 @@ void HT2p2h::ComputeIntegrals(int nuclei){
   offile << Enubin << std::endl;
 
   for( int i = 0; i < binmax; i++ ) {
-  offile << i << " ";
-  offile << (double)i*Enubin+Enubin*0.5 << " ";
-  for( unsigned int il = 0; il < neutrinoIdlist.size(); il++ ) {
-    offile << std::setprecision(std::numeric_limits<double>::digits10 + 1)
-       << integral_dump[il][i] << " "
-       << std::setprecision(std::numeric_limits<double>::digits10 + 1)
-       << maximal_dump[il][i] << " ";
-  }
-  offile << std::endl;
+	offile << i << " ";
+	offile << (double)i*Enubin+Enubin*0.5 << " ";
+	for( unsigned int il = 0; il < neutrinoIdlist.size(); il++ ) {
+	  offile << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+			 << integral_dump[il][i] << " "
+			 << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+			 << maximal_dump[il][i] << " ";
+	}
+	offile << std::endl;
   }
   
   return; 
@@ -575,9 +566,7 @@ int HT2p2h::GenerateLeptonKinematics(int id,int nuclei,double Enu,double &TLepto
   if( debug ) 
     std::cout <<  "  y =  " << y << " max =  "<< max << " xs  " << xs  <<  std::endl; 
   
-  if( xs > max ) {
-    std::cout << " Cross-Section " << xs << " larger than maximum " << max << " cos " << cos << std::endl; MaxCrossSection[pindx][ibin] = max*1.1; 
-  }
+  if( xs > max ) {std::cout << " Cross-Section " << xs << " larger than maximum " << max << " cos " << cos << std::endl; MaxCrossSection[pindx][ibin] = max*1.1; }
   
   if( xs < y ) return -1;
   
@@ -616,22 +605,21 @@ int HT2p2h::GenerateHadronKinematics( int id, int nuclei, double frac, double q[
       idNucleon[1] = idNucleon[3] = idneutron;
       idNucleon[2] = idproton;
       if( RFG ) 
-        FermiLevel = GetFermiRFG(nuclei);
+	FermiLevel = GetFermiRFG(nuclei);
       else 
-        FermiLevel = GetFermiLFG(R,nuclei,-1);
-      } 
-      else {
-       m1 = neutronmass; // neutron
-       mf2 = m2 = protonmass; // proton
-       mf1 = protonmass; // proton
-       idNucleon[0] = idneutron;
-       idNucleon[1] = idNucleon[3] = idproton;
-       idNucleon[2] = idproton;
-       if( RFG ) 
-          FermiLevel = GetFermiRFG(nuclei);
-        else 
-          FermiLevel = GetFermiLFG(R,nuclei,1);
-      }
+	FermiLevel = GetFermiLFG(R,nuclei,-1);
+    } else {
+      m1 = neutronmass; // neutron
+      mf2 = m2 = protonmass; // proton
+      mf1 = protonmass; // proton
+      idNucleon[0] = idneutron;
+      idNucleon[1] = idNucleon[3] = idproton;
+      idNucleon[2] = idproton;
+      if( RFG ) 
+	FermiLevel = GetFermiRFG(nuclei);
+      else 
+	FermiLevel = GetFermiLFG(R,nuclei,1);
+    }
   }
   else {    // Anti-Neutrinos p --> n 
     if ( Random() > frac ) {
@@ -642,21 +630,20 @@ int HT2p2h::GenerateHadronKinematics( int id, int nuclei, double frac, double q[
       idNucleon[1] = idNucleon[3] = idproton;
       idNucleon[2] = idneutron;
       if( RFG ) 
-        FermiLevel = GetFermiRFG(nuclei);
+	FermiLevel = GetFermiRFG(nuclei);
       else 
-        FermiLevel = GetFermiLFG(R,nuclei,1);
-      } 
-      else {
-        m1 = protonmass; // proton
-        mf2 = m2 = neutronmass; // neutron
-        mf1 = neutronmass; // neutron
-        idNucleon[0] = idproton;
-        idNucleon[1] = idNucleon[3] = idneutron;
-        idNucleon[2] = idneutron;
-        if( RFG ) 
-          FermiLevel = GetFermiRFG(nuclei);
-        else 
-          FermiLevel = GetFermiLFG(R,nuclei,-1);
+	FermiLevel = GetFermiLFG(R,nuclei,1);
+    } else {
+      m1 = protonmass; // proton
+      mf2 = m2 = neutronmass; // neutron
+      mf1 = neutronmass; // neutron
+      idNucleon[0] = idproton;
+      idNucleon[1] = idNucleon[3] = idneutron;
+      idNucleon[2] = idneutron;
+      if( RFG ) 
+	FermiLevel = GetFermiRFG(nuclei);
+      else 
+	FermiLevel = GetFermiLFG(R,nuclei,-1);
     }
   }
 
@@ -728,11 +715,11 @@ int HT2p2h::GenerateHadronKinematics( int id, int nuclei, double frac, double q[
     else if( HadKinMode == 1  ){  // Back to Back 
       ni1[0] = ni2[0];
       for(int ii = 1; ii < 4;ii++ )
-       ni1[ii] = -ni2[ii];
+	ni1[ii] = -ni2[ii];
     }
     else if( HadKinMode == 2  ){  // In the same direction
       for(int ii = 0; ii < 4;ii++ )
-        ni1[ii] = ni2[ii];
+	ni1[ii] = ni2[ii];
     }
     
 
@@ -784,17 +771,15 @@ int HT2p2h::GenerateHadronKinematics( int id, int nuclei, double frac, double q[
       double aaaa;
 
       do {     
-        do {
-          cosangRF = 2.*Random()-1.;
-          aaaa = 1.+4.*cosangRF*HFSparam1;
-        } 
-        while( aaaa <= 0. ); 
-        cosangRF = (-1. + sqrt(aaaa) )/2./HFSparam1;
-        } 
-        while( cosangRF > 1. || cosangRF < -1. );
-    
-    } 
-    else
+	do {
+	  cosangRF = 2.*Random()-1.;
+	  aaaa = 1.+4.*cosangRF*HFSparam1;
+	} while( aaaa <= 0. ); 
+	
+	cosangRF = (-1. + sqrt(aaaa) )/2./HFSparam1;
+      } while( cosangRF > 1. || cosangRF < -1. );
+	
+    } else
       cosangRF = 2.*Random()-1.;
 
     double sinangRF = sqrt(1.-cosangRF*cosangRF);
@@ -923,14 +908,12 @@ double   HT2p2h::DoubleDifferential(int id,int nuclei,double Enu,double TLep,dou
     HadronTensor *tlc = NULL;
 
     if( !pn ) 
-      tlc = Tensor[nuclei];
+	tlc = Tensor[nuclei];
     if( tlc == NULL ){
       tlc = Tensor[PNOFFSET+nuclei];
-    if( tlc == NULL ) return -1; 
-  }
-
-    int nuclei_tensor = tlc->GetNuclei();
-    
+      if( tlc == NULL ) return -1; 
+    }
+	  
     double T00 = tlc->Interpolate(0,0,qm,q[0]);    
     double T11 = tlc->Interpolate(1,1,qm,q[0]);
     double T33 = tlc->Interpolate(3,3,qm,q[0]);
@@ -988,19 +971,8 @@ double   HT2p2h::DoubleDifferential(int id,int nuclei,double Enu,double TLep,dou
       std::cout << " GFermi      " << GFermi  << std::endl; 
     }
 
-    double scaleFact = 1.0;
-
-    if(nuclei != nuclei_tensor){
-      scaleFact = (double)nuclei/(double)nuclei_tensor;
-      if( debug ) {
-        std::cout << " nuclei is " << nuclei << std::endl; 
-        std::cout << " nuclei_tensor is " << nuclei_tensor << std::endl; 
-        std::cout << " scale factor is " << scaleFact << std::endl;
-      }
-    }
-
     diffCS /= 1000.; // in 10^{-38} cm^2/GeV
-    diffCS *= scaleFact;
+
   }
   else
     diffCS=0.0;
@@ -1092,13 +1064,12 @@ int HT2p2h::GenerateVectors(int id, int nuclei, double pnu[4],  double p[6][4], 
       hadrontries = GenerateHadronKinematics(id,nuclei,fractionpn,q,qi1,qi2,qf1,qf2,idNucleon,R);
 
       if ( hadrontries >= 0 ){
-        break;
-      }
-      else{
-        ntry++;
-        if ( ntry > 10 ){
-          break;
-        }
+	break;
+      }else{
+	ntry++;
+	if ( ntry > 10 ){
+	  break;
+	}
       }
       std::cout << "HT2p2h: Retry different R" << std::endl;
     }
@@ -1123,7 +1094,7 @@ int HT2p2h::GenerateVectors(int id, int nuclei, double pnu[4],  double p[6][4], 
   double pavy = 0;
   double pavz = 0;
 
-      
+			
   parent[0] = parent[1] = parent[2] = 0; // Original particles. 
   parent[3] = 1;
   parent[4] = 2;
@@ -1162,17 +1133,17 @@ void HT2p2h::CheckNuclei(int nuclei){
 
   int offset = 0;
   if (Tensor[nuclei] == NULL){
-    offset = PNOFFSET;
+	offset = PNOFFSET;
   }
   if (Tensor[nuclei+offset] == NULL){
     std::cout << " HT2p2h Error: nuclei " << nuclei << " not available " << std::endl;
-    exit(1);
-  }
+    exit(0);
+  }  
 
   if( Tensor_init[nuclei+offset] == false ) {
-    InitializeNucleus(nuclei); 
     Precompindx pindx1(1,nuclei);
     Precompindx pindx2(-1,nuclei);
+    InitializeNucleus(nuclei); 
     if(!Tensor[nuclei+offset]->IsPN() )   // Only for the total. 
       ComputeIntegrals(nuclei);
     Tensor_init[nuclei+offset]=true;
@@ -1182,20 +1153,20 @@ void HT2p2h::CheckNuclei(int nuclei){
 void HT2p2h::CheckNuclei_2(int nuclei){
 
   if( Tensor_init[nuclei] == false ) {
-    /*
-      std::cout << " HT2p2h Error: nuclei " << nuclei << " not available " << std::endl;
-      exit(1);
-    */
-    int offset = 0;
-    if (Tensor[nuclei+PNOFFSET] != NULL){
-      if (Tensor[nuclei+PNOFFSET]->IsPN()){
-        offset = PNOFFSET;
-      }
-    }
-    else{
-      std::cout << " HT2p2h Error: nuclei " << nuclei << " not available " << std::endl;
-      exit(1);
-    }
+	/*
+    std::cout << " HT2p2h Error: nuclei " << nuclei << " not available " << std::endl;
+    exit(1);
+	*/
+	int offset = 0;
+	if (Tensor[nuclei+PNOFFSET] != NULL){
+	  if (Tensor[nuclei+PNOFFSET]->IsPN()){
+		offset = PNOFFSET;
+	  }
+	}else{
+	  std::cout << " HT2p2h Error: nuclei " << nuclei << " not available " << std::endl;
+
+	  exit(1);
+	}
   }
 }
 
@@ -1204,8 +1175,8 @@ double HT2p2h::GetQ0Fermivalue(int nuclei,int id,double R){
   
   double qval;
   if (nieves2p2hpar_.nv2p2hqval == 1){
-  qval = 0.;
-  return qval; 
+	qval = 0.;
+	return qval; 
   }
   
   double pfermi = GetFermiLFG(R,nuclei,-1);
@@ -1213,11 +1184,11 @@ double HT2p2h::GetQ0Fermivalue(int nuclei,int id,double R){
   qval = pfermi*pfermi/2.*(1./protonmass+1./neutronmass);
 
   if ((nieves2p2hpar_.nv2p2hqval != 1) &&
-    (nieves2p2hpar_.nv2p2hqval != 2)){
-  std::cout << "HT2p2h Error : Config param. nv2p2hqval is not properly set"
-        << "nv2p2hqval is " << nieves2p2hpar_.nv2p2hqval
-        << std::endl;
-  exit(1);
+	  (nieves2p2hpar_.nv2p2hqval != 2)){
+	std::cout << "HT2p2h Error : Config param. nv2p2hqval is not properly set"
+			  << "nv2p2hqval is " << nieves2p2hpar_.nv2p2hqval
+			  << std::endl;
+	exit(1);
   }
 
   return qval; 

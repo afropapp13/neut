@@ -110,7 +110,7 @@ extern "C" {
       exit(0); 
     }
 
-    //printf( " >>>>>>>>>> FERMI LEVEL %f \n ", nenupr_.pfmax); 
+    printf( " >>>>>>>>>> FERMI LEVEL %f \n ", nenupr_.pfmax); 
     
     int nuclei = neuttarget_.numatom;
 
