@@ -21,7 +21,7 @@ void Nucleus2p2h::InitializeNucleus(int nuclei){
 
   double uma = 0.9314941;
   
-   if( nuclei <= 10 ) { // 10B with proper parameters
+  if( nuclei <= 10 ) { // 10B with proper parameters
      Nl->DZZ=5.;
      Nl->DAA=10.; 
      DNCXP=DNCXN=1.71;
@@ -36,7 +36,7 @@ void Nucleus2p2h::InitializeNucleus(int nuclei){
      Nl->BindEnergyNN = (8.00530510-10.0129370)*uma+2.*0.9395654133;
      
      Nl->bindEnergyP = (Nl->BindEnergyPN+Nl->BindEnergyNN)/2.;
-      Nl->bindEnergyN = (Nl->BindEnergyPP+Nl->BindEnergyPN)/2.;
+     Nl->bindEnergyN = (Nl->BindEnergyPP+Nl->BindEnergyPN)/2.;
    }
    else if( nuclei == 11 ) { // 11B with proper parameters
      Nl->DZZ=5.;
@@ -627,7 +627,7 @@ void Nucleus2p2h::InitializeNucleus(int nuclei){
      
      Nl->bindEnergyP = (Nl->BindEnergyPN+Nl->BindEnergyNN)/2.;
      Nl->bindEnergyN = (Nl->BindEnergyPP+Nl->BindEnergyPN)/2.;
-   }
+  }
   else {
     std::cout << " Nuclei " << nuclei << " is not implemented " << std::endl;
     exit(0); 

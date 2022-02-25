@@ -1,0 +1,34 @@
+EVCT-NEVT  1
+EVCT-IDPT  12
+EVCT-MPOS 2
+EVCT-RAD  100.
+EVCT-MDIR 1
+EVCT-DIR 0. 0. 1.
+EVCT-MPV  1
+EVCT-PV  1000.
+NEUT-MDLQE 2002
+NEUT-MAQE 1.05
+NEUT-MDL2P2H 1
+NEUT-RAND 1
+NEUT-CRSPATH '../../src/crsdat'
+C--------------------------------------------------
+C **** TARGET INFORMATION ****
+C
+C NUMBNDN : total number of neutron
+C           (e.g. CH => 6, H2O => 8, Ar => 22, Fe => 30)
+C
+C NUMBNDP : total number of bound proton
+C           (e.g. CH => 6, H2O => 8, Ar => 18, Fe => 26)
+C
+C NUMFREP : total number of free proton
+C           (e.g. CH => 1, H2O => 2, Ar => 0, Fe => 0)
+C
+C NUMATOM : atomic number of atom heavier than hydrogen
+C           (e.g. CH => 12, H2O =>16, Ar => 40, Fe => 56)
+C
+
+NEUT-NUMBNDP 7
+NEUT-NUMBNDN 7
+NEUT-NUMFREP 0
+NEUT-NUMATOM 14
+
