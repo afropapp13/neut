@@ -9,13 +9,13 @@ Nucleus::Nucleus(int type){
   double uma =  931.4940954; 
   double electronmass = 0.5109989461;
   
-  if(type == 10 ) { // 10B with proper parameters
+   if(type == 10 ) { // 10B with proper parameters
     DZZ=5.; 
     DAA=11.; 
     DNCXN=1.71;
-    DNCXP=1.71;
+	DNCXP=1.71;
     DNCA0N=0.837;
-    DNCA0P=0.837;
+	DNCA0P=0.837;
     KLAVE=1;
     
     //    qp_Neut =0.601;
@@ -36,9 +36,9 @@ Nucleus::Nucleus(int type){
     DZZ=5.; 
     DAA=11.; 
     DNCXN=1.692;
-    DNCXP=1.692;
+	DNCXP=1.692;
     DNCA0N=1.082;
-    DNCA0P=1.082;
+	DNCA0P=1.082;
 
     KLAVE=1;
     
@@ -296,9 +296,9 @@ Nucleus::Nucleus(int type){
     DAA=27.;
     KLAVE=0;       
     DNCXP=3.05;
-    DNCXN=3.05;
+	DNCXN=3.05;
     DNCA0P=0.535;
-    DNCA0N=0.535;
+	DNCA0N=0.535;
     FermiRFG = 0.225;
 
     //    qp_Neut = -0.536; 
@@ -316,9 +316,9 @@ Nucleus::Nucleus(int type){
     DAA=28.;
     KLAVE=0;
     DNCXP=3.14;
-    DNCXN=3.14;
+	DNCXN=3.14;
     DNCA0P=0.537;
-    DNCA0N=0.537;
+	DNCA0N=0.537;
     FermiRFG = 0.225;
 
     // Si28 -> Si27 + proton
@@ -333,9 +333,9 @@ Nucleus::Nucleus(int type){
     DAA=29.;
     KLAVE=0;
     DNCXP=3.17;
-    DNCXN=3.17;
+	DNCXN=3.17;
     DNCA0P=0.52;
-    DNCA0N=0.52;
+	DNCA0N=0.52;
     FermiRFG = 0.225;
 
     // Si29 -> Si28 + proton
@@ -350,9 +350,9 @@ Nucleus::Nucleus(int type){
     DAA=30.;
     KLAVE=0;
     DNCXP=3.17;
-    DNCXN=3.17;
+	DNCXN=3.17;
     DNCA0P=0.52;
-    DNCA0N=0.52;
+	DNCA0N=0.52;
     FermiRFG = 0.225;
 
     // Si30 -> Si29 + proton
@@ -421,10 +421,10 @@ Nucleus::Nucleus(int type){
     DNCXN=4.05;
     DNCA0N=0.5935;
     FermiRFG = 0.225;
-    
+	
     // Ti46 -> Ti45 + proton
     qvalue_Neut = (44.9581256-45.9526316)*uma+protonmass; 
-    
+	
     // Ti46 -> Sc45 + neutron
     qvalue_ANeut = (44.9559119-45.9526316)*uma+neutronmass+electronmass; 
   }
@@ -437,10 +437,10 @@ Nucleus::Nucleus(int type){
     DNCXN=4.05;
     DNCA0N=0.5935;
     FermiRFG = 0.225;
-    
+	
     // Ti47 -> Ti46 + proton
     qvalue_Neut = (45.9526316-46.9517631)*uma+protonmass; 
-    
+	
     // Ti47 -> Sc46 + neutron
     qvalue_ANeut = (45.9551719-46.9517631)*uma+neutronmass+electronmass; 
   }
@@ -453,10 +453,10 @@ Nucleus::Nucleus(int type){
     DNCXN=4.05;
     DNCA0N=0.5935;
     FermiRFG = 0.225;
-    
+	
     // Ti48 -> Ti47 + proton
     qvalue_Neut = (46.9517631-47.9479463)*uma+protonmass; 
-    
+	
     // Ti48 -> Sc47 + neutron
     qvalue_ANeut = (46.9524075-47.9479463)*uma+neutronmass+electronmass; 
   }
@@ -469,12 +469,12 @@ Nucleus::Nucleus(int type){
     DNCXN=4.05;
     DNCA0N=0.5935;
     FermiRFG = 0.225;
-    
-    // Ti48 -> Ti47 + proton
-    qvalue_Neut = (46.9517631-47.9479463)*uma+protonmass; 
-    
-    // Ti48 -> Sc47 + neutron
-    qvalue_ANeut = (46.9524075-47.9479463)*uma+neutronmass+electronmass; 
+	
+    // Ti49 -> Ti48 + proton
+    qvalue_Neut = (47.9479463-48.9478700)*uma+protonmass; 
+	
+    // Ti49 -> Sc48 + neutron
+    qvalue_ANeut = (47.952231-48.9478700)*uma+neutronmass+electronmass; 
   }
   else if( type == 50 ) { //50Ti
     DZZ=22.; 
@@ -485,10 +485,10 @@ Nucleus::Nucleus(int type){
     DNCXN=4.05;
     DNCA0N=0.5935;
     FermiRFG = 0.225;
-    
+	
     // Ti50 -> Ti49 + proton
     qvalue_Neut = (48.9478700-49.9447912)*uma+protonmass; 
-    
+	
     // Ti50 -> Sc49 + neutron
     qvalue_ANeut = (48.950024-49.9447912)*uma+neutronmass+electronmass; 
   }
@@ -501,10 +501,10 @@ Nucleus::Nucleus(int type){
     DNCXN=4.14;
     DNCA0N=0.5935;
     FermiRFG = 0.225;
-    
+	
     // Fe56 -> Fe55 + proton
     qvalue_Neut = (54.9382934-55.9349363)*uma+protonmass; 
-    
+	
     // Fe56 -> Mn55 + neutron
     qvalue_ANeut = (54.9380451-55.9349363)*uma+neutronmass+electronmass; 
   }
@@ -525,7 +525,7 @@ Nucleus::Nucleus(int type){
     qvalue_ANeut = (57.9332744-58.9331950)*uma+neutronmass+electronmass; 
   }
   else if( type == 63 ) { // 63Cu 
-    DZZ=29.; 
+	DZZ=29.; 
     DAA=63.; 
     KLAVE =0;    
     DNCXP=4.214;
@@ -541,7 +541,7 @@ Nucleus::Nucleus(int type){
     qvalue_ANeut = (61.9283451-62.9295975)*uma+neutronmass+electronmass; 
   }
   else if( type == 64 ) { // 64Zn 
-    DZZ=30.; 
+	DZZ=30.; 
     DAA=64.; 
     KLAVE =0;    
     DNCXP=3.971;
@@ -608,7 +608,7 @@ Nucleus::Nucleus(int type){
   }
   else if ( type == 209 ) { // 209Bi
     DZZ=83.; 
-    DAA=208.; 
+    DAA=209.; 
     KLAVE =0;    
     DNCXP=6.64;
     DNCA0P=0.54; 
@@ -692,8 +692,8 @@ Nucleus::Nucleus(int type){
       dsg20r_(&double0,&r,&int5,DRP,&NRP);
       
       for(int irp = 0; irp< NRP; irp++ ) {
-    double rp=DRP[irp];  
-    df0[irp] = (rp*rp)*densq_(&rp)/r; 
+	double rp=DRP[irp];  
+	df0[irp] = (rp*rp)*densq_(&rp)/r; 
       }                  
             
       double f1; 
@@ -703,8 +703,8 @@ Nucleus::Nucleus(int type){
       dsg20r_(&r,&RMAX,&int5,DRP,&NRP);
       
       for(int irp =  0; irp < NRP; irp++ ) {
-    double rp = DRP[irp];
-    df0[irp] = rp*densq_(&rp);
+	double rp = DRP[irp];
+	df0[irp] = rp*densq_(&rp);
       }                  
      
       double f2;       
@@ -809,7 +809,7 @@ double Nucleus::FindRMaximumDensity(void){
       rmax = rmid; 
     } else {
       if( (Density(rmid+deltar)-Density(rmid))*(Density(rmax)-Density(rmax-deltar)) < 0 ) {
-    rmin = rmid; 
+	rmin = rmid; 
       }
     }
     
@@ -861,12 +861,12 @@ double Nucleus::VC(double R ){
     while ( (IMAX-IMIN) > 1 ){
                      
       int IMID = (IMIN+IMAX)/2;
-    
+	
       if( R < DR[IMID] ) {
-    IMAX = IMID;
+	IMAX = IMID;
       }
       else {
-    IMIN = IMID;
+	IMIN = IMID;
       }
     }
   }
