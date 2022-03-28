@@ -82,22 +82,23 @@ DIST_COMMON = $(top_srcdir)/build.common $(srcdir)/Makefile.in \
 	$(srcdir)/Makefile.am $(top_srcdir)/depcomp README
 @NEUT_USE_GPERF_TRUE@am__append_1 = -DNEUT_USE_GPERF
 @NEUT_HEPMC_TRUE@am__append_2 = -DUSE_HEPMC
-@NEUT_WRITE_NUCFSI_TRUE@am__append_3 = -DNEUT_WRITE_NUCFSI -DNEUT_READ_NUCFSI
-@NEUT_HEPMC_TRUE@am__append_4 = $(shell HepMC3-config --cflags) -I$(shell NuHepMC-config --incdir)
-@NEUT_DEBUG_TRUE@am__append_5 = -O0 -g
+@IS_AARM64_TRUE@am__append_3 = -DARCH_AARM64
+@NEUT_WRITE_NUCFSI_TRUE@am__append_4 = -DNEUT_WRITE_NUCFSI -DNEUT_READ_NUCFSI
+@NEUT_HEPMC_TRUE@am__append_5 = $(shell HepMC3-config --cflags) -I$(shell NuHepMC-config --incdir)
 @NEUT_DEBUG_TRUE@am__append_6 = -O0 -g
 @NEUT_DEBUG_TRUE@am__append_7 = -O0 -g
-@NEUT_DEBUG_FALSE@am__append_8 = -O0
+@NEUT_DEBUG_TRUE@am__append_8 = -O0 -g
 @NEUT_DEBUG_FALSE@am__append_9 = -O0
 @NEUT_DEBUG_FALSE@am__append_10 = -O0
-@FC_ALLOW_ARG_MISMATCH_TRUE@am__append_11 = -fallow-argument-mismatch
-@FC_ALLOW_ARG_MISMATCH_TRUE@am__append_12 = -Wl,--allow-multiple-definition
-@FC_COMMON_TRUE@am__append_13 = -fcommon -Wl,--allow-multiple-definition
-@FC_COMMON_TRUE@am__append_14 = -Wl,--allow-multiple-definition
-@NEUT_HEPMC_TRUE@am__append_15 = -L$(HEPMC_LIBDIR) -L$(NUHEPMC_LIBDIR)
-@NEUT_HEPMC_TRUE@am__append_16 = -lNuHepMC -lHepMC3 -lHepMC3rootIO
-@FC_HAS_PIE_TRUE@am__append_17 = -no-pie
-@NEUT_USE_GPERF_TRUE@am__append_18 = -L@NEUT_GPERF@ -lprofiler
+@NEUT_DEBUG_FALSE@am__append_11 = -O0
+@FC_ALLOW_ARG_MISMATCH_TRUE@am__append_12 = -fallow-argument-mismatch
+@FC_ALLOW_ARG_MISMATCH_TRUE@am__append_13 = -Wl,--allow-multiple-definition
+@FC_COMMON_TRUE@am__append_14 = -fcommon -Wl,--allow-multiple-definition
+@FC_COMMON_TRUE@am__append_15 = -Wl,--allow-multiple-definition
+@NEUT_HEPMC_TRUE@am__append_16 = -L$(HEPMC_LIBDIR) -L$(NUHEPMC_LIBDIR)
+@NEUT_HEPMC_TRUE@am__append_17 = -lNuHepMC -lHepMC3 -lHepMC3rootIO
+@FC_HAS_PIE_TRUE@am__append_18 = -no-pie
+@NEUT_USE_GPERF_TRUE@am__append_19 = -L@NEUT_GPERF@ -lprofiler
 bin_PROGRAMS = calc_res_crs$(EXEEXT) calc_res_crs_newff$(EXEEXT)
 subdir = neututils/calc_res_crs
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -387,28 +388,28 @@ NEUT_STATIC_LIBS = $(top_builddir)/neutcore/libneutcore.@NEUT_VERSION_NUM@.a \
 
 NEUT_LIBS = $(top_builddir)/neutclass/libNEUTClassUtils.@NEUT_VERSION_NUM@.a \
 	$(top_builddir)/neutclass/libNEUTClass.la \
-	$(top_builddir)/libNEUT.@NEUT_VERSION_NUM@.a $(am__append_16)
+	$(top_builddir)/libNEUT.@NEUT_VERSION_NUM@.a $(am__append_17)
 CERN_ROOT = $(CERN)/$(CERN_LEVEL)
 CERN_LINKFLAGS = -L$(CERN_ROOT)/lib
 CERN_LIBS = -ljetset74 -lpdflib804 -lphotos202 -lmathlib -lpacklib -lkernlib
 NEUT_DEFINES = -DgFortran $(am__append_1) $(am__append_2) \
-	$(am__append_3)
+	$(am__append_3) $(am__append_4)
 @NEUT_HEPMC_FALSE@USE_HEPMC = no
 @NEUT_HEPMC_TRUE@USE_HEPMC = yes
 NEUT_FFLAGS = -fno-backslash -fno-automatic -fno-second-underscore -ffixed-line-length-132 -fdollar-ok -fPIC -fbounds-check -Wall -Wextra -ffpe-trap=invalid,zero,overflow -DstrictF77 -Df2cFortran $(NEUT_DEFINES)
 DEFAULT_FFLAGS = $(NEUT_FFLAGS) $(NEUT_INCLUDES) \
-	-I$(CERN_ROOT)/include $(am__append_5) $(am__append_8) \
-	$(am__append_11) $(am__append_13)
+	-I$(CERN_ROOT)/include $(am__append_6) $(am__append_9) \
+	$(am__append_12) $(am__append_14)
 ROOT_CFLAGS = $(shell root-config --cflags)
 DEFAULT_CXXFLAGS = -fPIC $(NEUT_DEFINES) $(NEUT_INCLUDES) \
 	-I$(CERN_ROOT)/include -std=c++11 $(ROOT_CFLAGS) \
-	$(am__append_4) $(am__append_6) $(am__append_9) \
-	$(am__append_14)
+	$(am__append_5) $(am__append_7) $(am__append_10) \
+	$(am__append_15)
 DEFAULT_CFLAGS = -fPIC $(NEUT_DEFINES) $(NEUT_INCLUDES) \
-	-I$(CERN_ROOT)/include $(am__append_7) $(am__append_10)
-DEFAULT_LINKFLAGS = -version-info @NEUT_VERSION_NUM@ $(am__append_12)
+	-I$(CERN_ROOT)/include $(am__append_8) $(am__append_11)
+DEFAULT_LINKFLAGS = -version-info @NEUT_VERSION_NUM@ $(am__append_13)
 ROOT_LINKFLAGS = $(shell root-config --ldflags) -pthread -rdynamic \
-	-L$(shell root-config --libdir) $(am__append_15)
+	-L$(shell root-config --libdir) $(am__append_16)
 ROOT_VERSION_COMPILE = $(shell root-config --version)
 ROOT_ROOT_COMPILE = $(ROOTSYS)
 @ROOT_MAJOR_IS_SIX_FALSE@ROOT_LIBS = -lCore -lCint -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lm -ldl
@@ -419,10 +420,11 @@ ROOT_ROOT_COMPILE = $(ROOTSYS)
 @NEUT_HEPMC_TRUE@NUHEPMC_INCDIR = $(shell NuHepMC-config --incdir)
 
 # I know... but this seems to work
-EXE_LINKFLAGS = -fno-PIE -fno-pie $(am__append_17)
-EXE_RTLIBS = -lstdc++ -lgfortran $(am__append_18)
+EXE_LINKFLAGS = -fno-PIE -fno-pie $(am__append_18)
+EXE_RTLIBS = -lstdc++ -lgfortran $(am__append_19)
 AM_FFLAGS = $(DEFAULT_FFLAGS)
 AM_CXXFLAGS = $(DEFAULT_CXXFLAGS)
+AM_CFLAGS = $(DEFAULT_CFLAGS)
 calc_res_crs_SOURCES = crs.F res_lambda.F res_q2_limits.F trapfpe.c
 calc_res_crs_LDADD = $(NEUT_LIBS) $(CERN_LIBS) $(ROOT_LIBS) $(EXE_RTLIBS)
 calc_res_crs_LDFLAGS = $(EXE_LINKFLAGS) $(CERN_LINKFLAGS) $(ROOT_LINKFLAGS)

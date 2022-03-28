@@ -1,6 +1,7 @@
 include $(top_srcdir)/build.common
 
 AM_CXXFLAGS = -DNEUTCLASSVER=@NEUT_VERSION_NUM@ $(DEFAULT_CXXFLAGS)
+AM_FFLAGS = -DNEUTCLASSVER=@NEUT_VERSION_NUM@ $(DEFAULT_FFLAGS)
 AM_LDFLAGS = $(ROOT_LINKFLAGS) $(DEFAULT_LINKFLAGS)
 
 NEUTCLASSUTILS_SRCS = neutrootfortwrapper.cc NeutRootHandlers.cc neutrootTreeSingleton.cc neutfill.cc fill_dsdq2.cc CommonBlockIFace.cc silence.F

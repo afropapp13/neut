@@ -646,6 +646,8 @@ NEUT_HEPMC_FALSE
 NEUT_HEPMC_TRUE
 FOUND_NuHepMCCONFIG
 FOUND_HEPMC3CONFIG
+IS_AARM64_FALSE
+IS_AARM64_TRUE
 ROOT_MAJOR_IS_SIX_FALSE
 ROOT_MAJOR_IS_SIX_TRUE
 FOUND_ROOTCONFIG
@@ -18404,6 +18406,17 @@ else
 fi
 
 
+######### Check for ARM arch
+echo "Arch = $(uname -m)"
+ if test $(uname -m) = "aarch64"; then
+  IS_AARM64_TRUE=
+  IS_AARM64_FALSE='#'
+else
+  IS_AARM64_TRUE='#'
+  IS_AARM64_FALSE=
+fi
+
+
 ######## Check use HepMC
 # Check whether --enable-hepmc was given.
 if test "${enable_hepmc+set}" = set; then :
@@ -18793,6 +18806,10 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${ROOT_MAJOR_IS_SIX_TRUE}" && test -z "${ROOT_MAJOR_IS_SIX_FALSE}"; then
   as_fn_error $? "conditional \"ROOT_MAJOR_IS_SIX\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${IS_AARM64_TRUE}" && test -z "${IS_AARM64_FALSE}"; then
+  as_fn_error $? "conditional \"IS_AARM64\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${NEUT_HEPMC_TRUE}" && test -z "${NEUT_HEPMC_FALSE}"; then
