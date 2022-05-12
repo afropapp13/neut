@@ -25,7 +25,7 @@ NuXSecCCQEEngine::NuXSecCCQEEngine() { // Get the parameter values at generation
 
   FAxlCCQEAlpha = RegisterDial("FAxlCCQEAlpha", cbfa.fnemdls_gen.axffalpha,0.123,0.123);
   FAxlCCQEGamma = RegisterDial("FAxlCCQEGamma", cbfa.fnemdls_gen.axffgamma,0.121,0.121);
-  FAxlCCQEBeta = RegisterDial("FAxlCCQEBeta", cbfa.fnemdls_gen.axffbeta),0.178,0.178;
+  FAxlCCQEBeta = RegisterDial("FAxlCCQEBeta", cbfa.fnemdls_gen.axffbeta,0.178,0.178);
   FAxlCCQETheta = RegisterDial("FAxlCCQETheta", cbfa.fnemdls_gen.axfftheta,0.031,0.031);
 
   // Not current used for reweighting, but could be
