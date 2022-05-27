@@ -64,7 +64,7 @@ if(NOT COMMAND cmessage)
   endfunction()
 endif()
 
-
+include(CMakeFindDependencyMacro)
 find_dependency(PkgConfig)
 pkg_check_modules(NEUT QUIET NEUT)
 
