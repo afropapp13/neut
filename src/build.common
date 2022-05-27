@@ -54,10 +54,6 @@ if IS_AARM64
 NEUT_DEFINES += -DARCH_AARM64
 endif
 
-if NEUT_WRITE_NUCFSI
-NEUT_DEFINES += -DNEUT_WRITE_NUCFSI -DNEUT_READ_NUCFSI
-endif
-
 NEUT_FFLAGS = -fno-backslash -fno-automatic -fno-second-underscore -ffixed-line-length-132 -fdollar-ok -fPIC -fbounds-check -Wall -Wextra -ffpe-trap=invalid,zero,overflow -DstrictF77 -Df2cFortran $(NEUT_DEFINES)
 
 DEFAULT_FFLAGS = $(NEUT_FFLAGS) $(NEUT_INCLUDES) -I$(CERN_ROOT)/include

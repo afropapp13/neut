@@ -19,10 +19,6 @@ if NEUT_USE_NEUTGEOM
 FEATURES += neutgeom
 endif
 
-if NEUT_WRITE_NUCFSI
-FEATURES += neutvect-nucfsistep
-endif
-
 if NEUT_DEBUG
 FEATURES += debug
 endif

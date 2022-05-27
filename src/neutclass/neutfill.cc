@@ -427,7 +427,6 @@ int neutfillvect(char *filename, char *treename, char *branchname) {
 
       //          nucfsisinfo.fECMS2 = nucleonfsihist_.nfecms2[i];
       nucfsisinfo.fProb = nucleonfsihist_.nfptot[i];
-#ifdef NEUT_WRITE_NUCFSI
       nucfsisinfo.fVertFlagStep = nucleonfsihist_.nfiflagstep[i];
       nucfsisinfo.fVertFsiRhon = nucleonfsihist_.nfirhon[i];
       nucfsisinfo.fStepPel = nucleonfsihist_.nfipel[i];
@@ -439,7 +438,6 @@ int neutfillvect(char *filename, char *treename, char *branchname) {
       //std::cout << "[DEBUG] nfipel  = " << nucleonfsihist_.nfipel[i]  << std::endl;
       //std::cout << "[DEBUG] nfipsp  = " << nucleonfsihist_.nfipsp[i]  << std::endl;
       //std::cout << "[DEBUG] nfipdp  = " << nucleonfsihist_.nfipdp[i]  << std::endl;
-#endif
       // std::cout << "fvertflag step in neutfill.cc = " <<
       // nucfsisinfo.fVertFlagStep << std::endl; std::cout << "Step number in
       // neutfill.cc = " << i << std::endl;

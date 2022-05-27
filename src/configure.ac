@@ -1,6 +1,6 @@
 AC_PREREQ([2.63])
 
-AC_INIT([neut], [5.5.0])
+AC_INIT([neut], [5.6.0])
 
 AC_SUBST(NEUT_VERSION, AC_PACKAGE_VERSION)
 AC_SUBST(NEUT_VERSION_NUM, $(echo AC_PACKAGE_VERSION | tr -d '.' ))
@@ -132,12 +132,6 @@ AS_IF([test "x$enable_hepmc" = "xyes"], [
 ])
 
 AM_CONDITIONAL([NEUT_HEPMC], [test "x$enable_hepmc" = "xyes"])
-
-######## Check use nucfsi
-AC_ARG_ENABLE([nucfsi],
-    AS_HELP_STRING([--enable-nucfsi], [Remove nucleon fsi step information in vector output. Included for backward compatibility]))
-
-AM_CONDITIONAL([NEUT_WRITE_NUCFSI], [test "x$enable_nucfsi" = "xyes"])
 
 ######## Check use neutgeom
 AC_ARG_ENABLE([neutgeom],
